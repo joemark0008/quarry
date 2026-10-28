@@ -52,7 +52,7 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 - `npm install` and `npm run lint` pass in `quarry` (no apps yet beyond placeholders)
 - `docker compose up` starts Postgres with both databases, and the `warehouse` database has the jaffle_shop tables
-- Upstream runs: you can sign up, create a project and get a chat answer — _sign-up and project work; chat answer needs an LLM key_
+- Upstream runs: you can sign up, create a project and get a chat answer — verified, see [docs/upstream-baseline.md](docs/upstream-baseline.md)
 
 ### Verify
 
