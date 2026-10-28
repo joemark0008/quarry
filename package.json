@@ -1,0 +1,42 @@
+{
+	"name": "quarry",
+	"private": true,
+	"type": "module",
+	"workspaces": [
+		"apps/*"
+	],
+	"packageManager": "npm@11.10.1",
+	"engines": {
+		"node": ">=22.23.4 <23",
+		"npm": "11.10.1"
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"test": "if ls apps/*/package.json >/dev/null 2>&1; then npm run test --workspaces --if-present; else echo \"No apps yet\"; fi",
+		"db:up": "docker compose up -d --wait",
+		"db:down": "docker compose stop",
+		"db:reset": "docker compose down -v",
+		"warehouse:load": "./scripts/load-warehouse.sh",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.{ts,tsx,js,mjs,cjs}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,md,yml,yaml,css}": "prettier --write"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.39.5",
+		"eslint": "^9.39.5",
+		"eslint-plugin-simple-import-sort": "^12.1.1",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.6.0",
+		"prettier": "^3.9.10",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.72.1"
+	}
+}

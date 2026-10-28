@@ -1,0 +1,4 @@
+package-lock.json
+apps/*/prisma/migrations/
+schema.gql
+*.gen.ts
