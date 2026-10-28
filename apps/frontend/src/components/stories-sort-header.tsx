@@ -1,0 +1,61 @@
+import { ChevronDown } from 'lucide-react';
+import type { SortField, SortState } from '@/lib/stories-page';
+import { defaultSortDirection } from '@/lib/stories-page';
+import { cn } from '@/lib/utils';
+
+export function SortHeader({ value, onChange }: { value: SortState; onChange: (next: SortState) => void }) {
+	return (
+		<div className='flex items-center gap-3 px-3 pb-2 mb-1'>
+			<div className='flex-1 min-w-0 flex items-center'>
+				<SortPill label='Name' field='name' value={value} onChange={onChange} />
+			</div>
+			<div className='hidden md:flex w-32 shrink-0 items-center'>
+				<SortPill label='Owner' field='owner' value={value} onChange={onChange} />
+			</div>
+			<div className='hidden lg:flex w-16 shrink-0 items-center'>
+				<SortPill label='Views' field='views' value={value} onChange={onChange} />
+			</div>
+			<div className='hidden sm:flex w-24 shrink-0 items-center'>
+				<SortPill label='Updated' field='updated' value={value} onChange={onChange} />
+			</div>
+			<div className='w-26 shrink-0' />
+		</div>
+	);
+}
+
+function SortPill({
+	label,
+	field,
+	value,
+	onChange,
+}: {
+	label: string;
+	field: SortField;
+	value: SortState;
+	onChange: (next: SortState) => void;
+}) {
+	const isActive = value.field === field;
+	const showsAscending = isActive ? value.direction === 'asc' : defaultSortDirection(field) === 'asc';
+
+	function handleClick() {
+		if (!isActive) {
+			onChange({ field, direction: defaultSortDirection(field) });
+		} else {
+			onChange({ field, direction: value.direction === 'desc' ? 'asc' : 'desc' });
+		}
+	}
+
+	return (
+		<button
+			type='button'
+			onClick={handleClick}
+			className={cn(
+				'flex items-center gap-0.5 px-1.5 py-1 rounded text-xs transition-colors cursor-pointer select-none',
+				isActive ? 'text-muted-foreground' : 'text-muted-foreground/40 hover:text-muted-foreground/70',
+			)}
+		>
+			<span>{label}</span>
+			<ChevronDown size={12} className={cn('transition-transform', showsAscending && 'rotate-180')} />
+		</button>
+	);
+}

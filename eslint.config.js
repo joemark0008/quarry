@@ -22,5 +22,5 @@ export default tseslint.config(
 			curly: 'warn',
 		},
 	},
-	{ ignores: ['**/dist/', '**/node_modules/', '**/src/generated/'] },
+	{ ignores: ['**/dist/', '**/node_modules/', '**/src/generated/', 'apps/frontend/'] },
 );

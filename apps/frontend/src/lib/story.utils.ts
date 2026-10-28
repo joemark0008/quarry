@@ -1,0 +1,111 @@
+import type { UIMessage, UIToolPart } from '@nao/shared/backend/chat';
+
+export interface StorySummary {
+	id: string;
+	title: string;
+}
+
+export interface StoryDraft {
+	id: string;
+	title: string;
+	code: string;
+	isStreaming: boolean;
+}
+
+const storiesByMessages = new WeakMap<UIMessage[], StorySummary[]>();
+
+/** The slug a story tool call acts on, from its output when available and from the (possibly partial) input otherwise. */
+export function getStoryToolPartSlug(part: UIToolPart<'story'>): string | undefined {
+	return part.output?.id ?? part.input?.id;
+}
+
+const isStoryIdMatch = (expectedId: string, candidateId: string) => {
+	return expectedId === candidateId;
+};
+
+const isStoryIdPrefixMatch = (expectedId: string, candidateId: string) => {
+	return expectedId.startsWith(candidateId) || candidateId.startsWith(expectedId);
+};
+
+/**
+ * Scans messages for story tool calls to find distinct stories.
+ * Uses completed tool outputs only.
+ */
+export function findStories(messages: UIMessage[]): StorySummary[] {
+	const cachedStories = storiesByMessages.get(messages);
+	if (cachedStories) {
+		return cachedStories;
+	}
+
+	const seen = new Map<string, string>();
+
+	for (const message of messages) {
+		for (const part of message.parts) {
+			if (part.type !== 'tool-story') {
+				continue;
+			}
+
+			const output = part.output;
+			if (output?.success && output.id && !output.story_chat_id) {
+				seen.set(output.id, output.title);
+			}
+		}
+	}
+
+	const stories = [...seen.entries()].map(([id, title]) => ({ id, title }));
+	storiesByMessages.set(messages, stories);
+	return stories;
+}
+
+export function findStoryIds(messages: UIMessage[]): string[] {
+	return findStories(messages).map((s) => s.id);
+}
+
+/**
+ * Finds the latest tool-story state for a specific story ID.
+ * Prefers currently-streaming tool input, then falls back to latest code-bearing input/output.
+ * A failed call never produced a version, so its input is not a draft to show.
+ */
+export function findStoryDraft(messages: UIMessage[], storyId: string): StoryDraft | null {
+	let prefixMatchedDraft: StoryDraft | null = null;
+
+	for (let m = messages.length - 1; m >= 0; m--) {
+		const parts = messages[m]?.parts ?? [];
+
+		for (let p = parts.length - 1; p >= 0; p--) {
+			const part = parts[p];
+			if (part.type !== 'tool-story' || part.state === 'output-error') {
+				continue;
+			}
+
+			const input = part.input;
+			const output = part.output;
+			const id = getStoryToolPartSlug(part);
+			if (!id) {
+				continue;
+			}
+
+			const code = part.state === 'input-streaming' ? input?.code : (output?.code ?? input?.code);
+			if (!code) {
+				continue;
+			}
+
+			const draft: StoryDraft = {
+				id,
+				title: output?.title ?? input?.title ?? id,
+				code,
+				isStreaming: part.state === 'input-streaming',
+			};
+
+			if (isStoryIdMatch(storyId, id)) {
+				return draft;
+			}
+
+			if (!prefixMatchedDraft && isStoryIdPrefixMatch(storyId, id)) {
+				prefixMatchedDraft = draft;
+			}
+		}
+	}
+
+	return prefixMatchedDraft;
+}

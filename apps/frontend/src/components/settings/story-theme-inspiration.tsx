@@ -1,0 +1,906 @@
+import { joinWithAnd } from '@nao/shared';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { BadgeCheck, Globe, Loader2, PenLine, Sparkles, X } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+	MAX_IMAGE_BYTES,
+	MAX_PDF_BYTES,
+	MAX_SOURCE_IMAGES,
+	MAX_THEME_INSTRUCTIONS_LENGTH,
+	MAX_ZIP_BYTES,
+	SOURCE_IMAGE_MEDIA_TYPES,
+} from '@nao/shared/story-theme-source';
+
+import { describeStoryThemeSources } from '@nao/shared/story-theme-generation';
+import { STORY_LOGO_MEDIA_TYPES } from '@nao/shared/story-theme';
+import type { inferRouterOutputs } from '@trpc/server';
+import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { SourceImageMediaType } from '@nao/shared/story-theme-source';
+import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
+import type { StoryLogoMediaType } from '@nao/shared/story-theme';
+import type { RenderedPdf } from '@/components/settings/story-theme-pdf';
+import type { ViewedThemeVersion } from '@/components/settings/story-theme-recorded-sources';
+import { renderPdfPages, renderZipPdfs } from '@/components/settings/story-theme-pdf';
+import {
+	GenerationSummary,
+	RecordedSources,
+	SOURCE_ICONS,
+	WELL_CLASS,
+} from '@/components/settings/story-theme-recorded-sources';
+import { Button } from '@/components/ui/button';
+import { Favicon } from '@/components/ui/favicon';
+import { Switch } from '@/components/ui/switch';
+import { NakedInput } from '@/components/ui/input';
+import { SettingsCard } from '@/components/ui/settings-card';
+import { Textarea } from '@/components/ui/textarea';
+import { cn, formatBytes } from '@/lib/utils';
+import { trpc } from '@/main';
+
+export type GenerateResult = inferRouterOutputs<TrpcRouter>['storyTheme']['generate'];
+type FileSourceKind = 'image' | 'pdf' | 'zip';
+
+interface PickedFile {
+	name: string;
+	size: number;
+	mediaType: string;
+	data: string;
+}
+
+const IMAGE_MEDIA_TYPE_ALIASES: Record<string, SourceImageMediaType> = { 'image/jpg': 'image/jpeg' };
+const ZIP_MEDIA_TYPES = ['application/zip', 'application/x-zip-compressed', 'application/x-zip'];
+const MAX_BYTES: Record<FileSourceKind, number> = {
+	image: MAX_IMAGE_BYTES,
+	pdf: MAX_PDF_BYTES,
+	zip: MAX_ZIP_BYTES,
+};
+const MAX_SOURCE_FILE_NAME_LENGTH = 200;
+const SOURCE_NAMES: Record<FileSourceKind, string> = { image: 'Image', pdf: 'PDF', zip: 'ZIP' };
+const TEXT_WELL_CLASS = cn(WELL_CLASS, 'border-solid transition-colors focus-within:border-foreground/30');
+
+export interface InspirationOutcome {
+	label: string;
+	generation: StoryThemeGeneration | null;
+}
+
+export function StoryThemeInspiration({
+	disabled,
+	outcome,
+	viewedVersion,
+	onGenerated,
+	onDismiss,
+	onLeaveVersion,
+	logo,
+}: {
+	disabled: boolean;
+	outcome: InspirationOutcome | null;
+	viewedVersion: ViewedThemeVersion | null;
+	onGenerated: (label: string, result: GenerateResult) => void;
+	onDismiss: () => void;
+	onLeaveVersion: () => void;
+	/** The logo set in the Brand header card, sent along as a source so the model reads it. */
+	logo: string | null;
+}) {
+	const [url, setUrl] = useState('');
+	const [image, setImage] = useState<PickedFile | null>(null);
+	const [zip, setZip] = useState<PickedFile | null>(null);
+	const [pdf, setPdf] = useState<PickedFile | null>(null);
+	const [instructions, setInstructions] = useState('');
+	const [useWhiteLabel, setUseWhiteLabel] = useState(true);
+	const whiteLabel = useWhiteLabelSource();
+	const readsWhiteLabel = whiteLabel !== null && useWhiteLabel;
+	const [error, setError] = useState<string | null>(null);
+	const [running, setRunning] = useState(false);
+
+	const onError = (mutationError: { message: string }) => setError(mutationError.message);
+	const generateTheme = useMutation({ ...trpc.storyTheme.generate.mutationOptions(), onError });
+	const sourceLocked = disabled || running;
+	const logoInput = logoSource(logo);
+	const hasSource = Boolean(url.trim() || image || zip || pdf || instructions.trim() || readsWhiteLabel || logoInput);
+	const canGenerate = hasSource && !sourceLocked;
+
+	const generate = () => {
+		if (!canGenerate) {
+			return;
+		}
+		const trimmed = url.trim();
+		const trimmedInstructions = instructions.trim();
+		const normalized = trimmed ? (/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`) : undefined;
+		if (!normalized && !image && !zip && !pdf && !trimmedInstructions && !readsWhiteLabel && !logoInput) {
+			return;
+		}
+		setRunning(true);
+		renderPdfSources(pdf, zip).then(
+			(pdfs) =>
+				generateTheme.mutate(
+					{
+						url: normalized,
+						image: image
+							? {
+									data: image.data,
+									mediaType: image.mediaType as SourceImageMediaType,
+									fileName: toSourceFileName(image.name, DEFAULT_FILE_NAMES.image),
+								}
+							: undefined,
+						zip: zip ? { data: zip.data, fileName: toSourceFileName(zip.name, 'brand.zip') } : undefined,
+						logo: logoInput,
+						pdfs,
+						instructions: trimmedInstructions || undefined,
+						useWhiteLabel: readsWhiteLabel,
+					},
+					{
+						onSuccess: (result) => {
+							onGenerated(
+								sourceLabel(
+									normalized,
+									image,
+									pdf,
+									zip,
+									trimmedInstructions,
+									readsWhiteLabel ? whiteLabel : null,
+									Boolean(logoInput),
+								),
+								result,
+							);
+							setError(null);
+						},
+						onSettled: () => {
+							setRunning(false);
+						},
+					},
+				),
+			() => {
+				setError(
+					`${pdf?.name ?? 'The PDF'} could not be read. Export it again or use a screenshot of its pages.`,
+				);
+				setRunning(false);
+			},
+		);
+	};
+
+	return (
+		<SettingsCard
+			title='Start from a brand'
+			description='Describe the theme you want, then optionally add a website, image, PDF or ZIP so nao can ground it in brand assets.'
+			className={cn('gap-0', (outcome || viewedVersion) && 'overflow-hidden pb-0')}
+		>
+			{viewedVersion ? (
+				<RecordedSources version={viewedVersion} onLeave={onLeaveVersion} />
+			) : (
+				<div className='flex flex-col gap-2'>
+					<InstructionSource value={instructions} onChange={setInstructions} disabled={sourceLocked} />
+					<UrlSource url={url} onUrlChange={setUrl} disabled={sourceLocked} onSubmit={generate} />
+					<FileSource
+						kind='image'
+						file={image}
+						onFile={setImage}
+						disabled={sourceLocked}
+						setError={setError}
+					/>
+					<FileSource kind='pdf' file={pdf} onFile={setPdf} disabled={sourceLocked} setError={setError} />
+					<FileSource kind='zip' file={zip} onFile={setZip} disabled={sourceLocked} setError={setError} />
+					{whiteLabel && (
+						<WhiteLabelSource
+							source={whiteLabel}
+							checked={useWhiteLabel}
+							onCheckedChange={setUseWhiteLabel}
+							disabled={sourceLocked}
+						/>
+					)}
+					{error && <p className='text-xs text-destructive'>{error}</p>}
+					<div className='flex flex-wrap items-center justify-between gap-3'>
+						<p className='min-w-0 flex-1 text-xs text-muted-foreground'>
+							Assets are optional but help with exact colours, typography and shape language.
+						</p>
+						<GenerateButton
+							pending={running}
+							disabled={!hasSource || disabled}
+							onClick={generate}
+							label={pendingLabel(
+								url,
+								image,
+								pdf,
+								zip,
+								instructions,
+								readsWhiteLabel ? whiteLabel : null,
+								Boolean(logoInput),
+							)}
+						/>
+					</div>
+				</div>
+			)}
+			{viewedVersion ? (
+				<GenerationSummary
+					sentence={describeViewedThemeVersion(viewedVersion)}
+					generation={viewedVersion.generation}
+				/>
+			) : (
+				outcome && (
+					<GenerationSummary
+						sentence={`Theme applied from ${outcome.label}.`}
+						generation={outcome.generation}
+						onDismiss={onDismiss}
+					/>
+				)
+			)}
+		</SettingsCard>
+	);
+}
+
+function UrlSource({
+	url,
+	onUrlChange,
+	disabled,
+	onSubmit,
+}: {
+	url: string;
+	onUrlChange: (url: string) => void;
+	disabled: boolean;
+	onSubmit: () => void;
+}) {
+	const inputRef = useRef<HTMLInputElement>(null);
+	const preview = websitePreview(url);
+
+	useEffect(() => {
+		if (disabled) {
+			return;
+		}
+		const onPaste = (event: ClipboardEvent) => {
+			if (isTypingTarget(event.target) || imageFromClipboard(event)) {
+				return;
+			}
+			const pasted = urlFromTransfer(event.clipboardData);
+			if (!pasted) {
+				return;
+			}
+			event.preventDefault();
+			onUrlChange(pasted);
+		};
+		document.addEventListener('paste', onPaste);
+		return () => document.removeEventListener('paste', onPaste);
+	}, [disabled, onUrlChange]);
+
+	return (
+		<div className={cn(TEXT_WELL_CLASS, disabled && 'pointer-events-none opacity-50')}>
+			<div
+				className='flex min-w-0 flex-1 cursor-text items-center gap-3'
+				onClick={() => inputRef.current?.focus()}
+			>
+				<span className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded bg-transparent'>
+					{preview ? (
+						<Favicon
+							url={preview.href}
+							className='size-10 object-contain'
+							fallback={<Globe className='size-4 text-muted-foreground' />}
+						/>
+					) : (
+						<Globe className='size-4 text-muted-foreground' />
+					)}
+				</span>
+				<div className='min-w-0 flex-1'>
+					<NakedInput
+						ref={inputRef}
+						value={url}
+						onChange={(event) => onUrlChange(event.target.value)}
+						onKeyDown={(event) => {
+							if (event.key === 'Enter') {
+								onSubmit();
+							}
+						}}
+						placeholder='acme.com'
+						disabled={disabled}
+						aria-label='Website URL'
+						className='h-5 w-full text-sm placeholder:text-muted-foreground'
+					/>
+					<p className='truncate text-xs text-muted-foreground/70'>{preview ? preview.host : 'Website'}</p>
+				</div>
+			</div>
+			{url ? <ClearButton disabled={disabled} onClick={() => onUrlChange('')} label='Clear website' /> : null}
+		</div>
+	);
+}
+
+function FileSource({
+	kind,
+	file,
+	onFile,
+	disabled,
+	setError,
+}: {
+	kind: FileSourceKind;
+	file: PickedFile | null;
+	onFile: (file: PickedFile | null) => void;
+	disabled: boolean;
+	setError: (message: string | null) => void;
+}) {
+	const [isDragging, setIsDragging] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const isImage = kind === 'image';
+
+	const pick = useCallback(
+		(picked: File) => {
+			const rejection = rejectionFor(picked, kind);
+			if (rejection) {
+				setError(rejection);
+				return;
+			}
+			readAsBase64(picked)
+				.then((data) => {
+					onFile({
+						name: picked.name || DEFAULT_FILE_NAMES[kind],
+						size: picked.size,
+						mediaType: isImage ? imageMediaTypeOf(picked) : picked.type || DEFAULT_MEDIA_TYPES[kind],
+						data,
+					});
+					setError(null);
+				})
+				.catch(() => setError('The file could not be read.'));
+		},
+		[isImage, kind, onFile, setError],
+	);
+
+	useEffect(() => {
+		if (!isImage || disabled) {
+			return;
+		}
+		const onPaste = (event: ClipboardEvent) => {
+			const image = imageFromClipboard(event);
+			if (!image) {
+				return;
+			}
+			event.preventDefault();
+			pick(image);
+		};
+		document.addEventListener('paste', onPaste);
+		return () => document.removeEventListener('paste', onPaste);
+	}, [disabled, isImage, pick]);
+
+	return (
+		<div
+			className={cn(
+				WELL_CLASS,
+				disabled && 'pointer-events-none opacity-50',
+				isDragging && 'border-foreground/40 bg-accent',
+			)}
+			onDragEnter={(event) => {
+				event.preventDefault();
+				if (!disabled) {
+					setIsDragging(true);
+				}
+			}}
+			onDragOver={(event) => event.preventDefault()}
+			onDragLeave={(event) => {
+				if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+					setIsDragging(false);
+				}
+			}}
+			onDrop={(event) => {
+				event.preventDefault();
+				setIsDragging(false);
+				const dropped = event.dataTransfer.files[0];
+				if (!disabled && dropped) {
+					pick(dropped);
+				}
+			}}
+		>
+			<label
+				aria-disabled={disabled}
+				aria-label={ADD_LABELS[kind]}
+				tabIndex={disabled ? -1 : 0}
+				onKeyDown={(event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault();
+						inputRef.current?.click();
+					}
+				}}
+				className='flex min-w-0 flex-1 cursor-pointer items-center gap-3'
+			>
+				{file ? (
+					<>
+						<span className='flex size-10 shrink-0 items-center justify-center rounded bg-background'>
+							{isImage ? (
+								<img
+									src={`data:${file.mediaType};base64,${file.data}`}
+									alt=''
+									className='size-10 shrink-0 rounded object-cover'
+								/>
+							) : (
+								<SourceIcon kind={kind} />
+							)}
+						</span>
+						<span className='min-w-0 truncate'>
+							{file.name}
+							<span className='text-muted-foreground'> · {formatBytes(file.size)}</span>
+						</span>
+					</>
+				) : (
+					<>
+						<div className='flex items-center px-3'>
+							<SourceIcon kind={kind} />
+						</div>
+						<span className='min-w-0 flex-1'>
+							<span className='block text-muted-foreground'>{DROP_PROMPTS[kind]}</span>
+							<span className='block truncate text-xs text-muted-foreground/70'>
+								{acceptedFormatsHint(kind)}
+							</span>
+						</span>
+					</>
+				)}
+				<input
+					ref={inputRef}
+					type='file'
+					accept={ACCEPTED_TYPES[kind]}
+					className='hidden'
+					disabled={disabled}
+					onChange={(event) => {
+						const picked = event.target.files?.[0];
+						if (picked) {
+							pick(picked);
+						}
+						event.target.value = '';
+					}}
+				/>
+			</label>
+			{file ? <ClearButton disabled={disabled} onClick={() => onFile(null)} label={REMOVE_LABELS[kind]} /> : null}
+		</div>
+	);
+}
+
+function InstructionSource({
+	value,
+	onChange,
+	disabled,
+}: {
+	value: string;
+	onChange: (value: string) => void;
+	disabled: boolean;
+}) {
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+	return (
+		<div className={cn(TEXT_WELL_CLASS, 'items-start', disabled && 'pointer-events-none opacity-50')}>
+			<div
+				className='flex min-w-0 flex-1 cursor-text items-start gap-3'
+				onClick={() => textareaRef.current?.focus()}
+			>
+				<span className='mt-1 flex size-10 shrink-0 items-center justify-center'>
+					<PenLine className='size-4 text-muted-foreground' />
+				</span>
+				<div className='min-w-0 flex-1 py-1'>
+					<Textarea
+						ref={textareaRef}
+						value={value}
+						onChange={(event) => onChange(event.target.value)}
+						placeholder='Dark and premium, navy with an amber accent, square cards, no purple.'
+						disabled={disabled}
+						maxLength={MAX_THEME_INSTRUCTIONS_LENGTH}
+						aria-label='Theme instructions'
+						className='resize-none rounded-none border-0 bg-transparent p-0 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-0 dark:bg-transparent md:text-sm'
+					/>
+					<p className='truncate text-xs text-muted-foreground/70'>
+						Instructions · take priority over the sources below
+					</p>
+				</div>
+			</div>
+			{value ? (
+				<ClearButton
+					className='mt-1'
+					disabled={disabled}
+					onClick={() => onChange('')}
+					label='Clear instructions'
+				/>
+			) : null}
+		</div>
+	);
+}
+
+const DEFAULT_FILE_NAMES: Record<FileSourceKind, string> = {
+	image: 'pasted-image.png',
+	pdf: 'brand.pdf',
+	zip: 'upload.zip',
+};
+const DEFAULT_MEDIA_TYPES: Record<FileSourceKind, string> = {
+	image: 'image/png',
+	pdf: 'application/pdf',
+	zip: 'application/zip',
+};
+const ADD_LABELS: Record<FileSourceKind, string> = {
+	image: 'Add an image',
+	pdf: 'Add a PDF',
+	zip: 'Add a ZIP',
+};
+const REMOVE_LABELS: Record<FileSourceKind, string> = {
+	image: 'Remove image',
+	pdf: 'Remove PDF',
+	zip: 'Remove ZIP',
+};
+const DROP_PROMPTS: Record<FileSourceKind, string> = {
+	image: 'Drop, paste or click to add an image',
+	pdf: 'Drop or click to add a PDF',
+	zip: 'Drop or click to add a ZIP',
+};
+const ACCEPTED_TYPES: Record<FileSourceKind, string> = {
+	image: SOURCE_IMAGE_MEDIA_TYPES.join(','),
+	pdf: '.pdf,application/pdf',
+	zip: '.zip,application/zip',
+};
+
+function SourceIcon({ kind }: { kind: FileSourceKind }) {
+	const Icon = SOURCE_ICONS[kind];
+	return <Icon className='size-4 shrink-0 text-muted-foreground' />;
+}
+
+/** The browser renders PDF pages (the file itself and any PDF inside the ZIP) and sends them as images. */
+async function renderPdfSources(pdf: PickedFile | null, zip: PickedFile | null) {
+	const standalone = pdf ? [await renderPdfPages(pdf.name, base64ToBytes(pdf.data))] : [];
+	const remainingPages = MAX_SOURCE_IMAGES - standalone.reduce((total, item) => total + item.pages.length, 0);
+	const fromZip = zip && remainingPages > 0 ? await renderZipPdfs(base64ToBytes(zip.data), remainingPages) : [];
+	return [
+		...standalone.map((item) => toPdfInput(item, false)),
+		...fromZip.map((item) => toPdfInput(item, true)),
+	].filter((item) => item.pages.length > 0);
+}
+
+function toPdfInput(pdf: RenderedPdf, fromZip: boolean) {
+	return {
+		fileName: toSourceFileName(pdf.fileName, 'document.pdf'),
+		pageCount: pdf.pageCount,
+		pages: pdf.pages,
+		fromZip,
+	};
+}
+
+/** The server accepts names up to this length; a longer or blank one must not fail an otherwise valid source. */
+function toSourceFileName(name: string, fallback: string): string {
+	return name.trim().slice(0, MAX_SOURCE_FILE_NAME_LENGTH) || fallback;
+}
+
+function base64ToBytes(data: string): Uint8Array {
+	return Uint8Array.from(atob(data), (character) => character.charCodeAt(0));
+}
+
+function acceptedFormatsHint(kind: FileSourceKind): string {
+	if (kind === 'image') {
+		return `PNG, JPEG or WebP · up to ${formatBytes(MAX_IMAGE_BYTES)}`;
+	}
+	if (kind === 'pdf') {
+		return `Brand guidelines or a deck · up to ${formatBytes(MAX_PDF_BYTES)}`;
+	}
+	return `PDF, CSS, HTML, SVG, JSON, YAML, images · up to ${formatBytes(MAX_ZIP_BYTES)}`;
+}
+
+function ClearButton({
+	disabled,
+	onClick,
+	label,
+	className,
+}: {
+	disabled: boolean;
+	onClick: () => void;
+	label: string;
+	className?: string;
+}) {
+	return (
+		<Button
+			type='button'
+			variant='ghost'
+			size='icon-xs'
+			className={cn('shrink-0', className)}
+			disabled={disabled}
+			onClick={onClick}
+			aria-label={label}
+		>
+			<X className='size-3.5' />
+		</Button>
+	);
+}
+
+function GenerateButton({
+	pending,
+	disabled,
+	onClick,
+	label,
+}: {
+	pending: boolean;
+	disabled: boolean;
+	onClick: () => void;
+	label: string;
+}) {
+	return (
+		<Button
+			type='button'
+			variant='primary-gradient'
+			className='rounded-full transition-colors'
+			onClick={onClick}
+			disabled={disabled || pending}
+			aria-busy={pending}
+		>
+			{pending ? <Loader2 className='size-3.5 animate-spin' /> : <Sparkles className='size-3.5' />}
+			{pending ? label : 'Generate theme'}
+		</Button>
+	);
+}
+
+function describeViewedThemeVersion({ label, generation }: ViewedThemeVersion): string {
+	if (!generation) {
+		return `${label} was set by hand.`;
+	}
+	const edited = generation.editedByHand ? ', then edited by hand' : '';
+	return `${label} was generated from ${describeStoryThemeSources(generation.sources)}${edited}.`;
+}
+
+const LOGO_DATA_URI = /^data:([^;,]+);base64,(.+)$/;
+
+function logoSource(logo: string | null) {
+	const match = logo?.match(LOGO_DATA_URI);
+	const mediaType = match?.[1] as StoryLogoMediaType | undefined;
+	if (!match || !mediaType || !STORY_LOGO_MEDIA_TYPES.includes(mediaType)) {
+		return undefined;
+	}
+	return { data: match[2], mediaType, fileName: 'Brand header logo' };
+}
+
+interface WhiteLabelSourceInfo {
+	name: string;
+	hasName: boolean;
+	brandColor: string | null;
+	logoUrl: string | null;
+}
+
+/** The white-label identity, when this instance has one worth reading. */
+function useWhiteLabelSource(): WhiteLabelSourceInfo | null {
+	const state = useQuery(trpc.storyTheme.getState.queryOptions());
+	const identity = state.data?.whiteLabelIdentity;
+	if (!identity) {
+		return null;
+	}
+	return {
+		name: identity.name || 'White-label settings',
+		hasName: Boolean(identity.name),
+		brandColor: identity.brandColor,
+		logoUrl: identity.logo,
+	};
+}
+
+function WhiteLabelSource({
+	source,
+	checked,
+	onCheckedChange,
+	disabled,
+}: {
+	source: WhiteLabelSourceInfo;
+	checked: boolean;
+	onCheckedChange: (checked: boolean) => void;
+	disabled: boolean;
+}) {
+	const details = [source.hasName ? 'brand name' : 'white-label', source.brandColor, source.logoUrl ? 'logo' : null]
+		.filter(Boolean)
+		.join(' · ');
+	return (
+		<div className={cn(WELL_CLASS, 'border-solid', disabled && 'pointer-events-none opacity-50')}>
+			<span className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md'>
+				{source.logoUrl ? (
+					<img src={source.logoUrl} alt='' className='max-h-8 max-w-8 object-contain' />
+				) : (
+					<BadgeCheck className='size-4 text-muted-foreground' />
+				)}
+			</span>
+			<div className='min-w-0 flex-1'>
+				<p className='truncate'>{source.name}</p>
+				<p className='flex items-center gap-1.5 truncate text-xs text-muted-foreground'>
+					{source.brandColor && (
+						<span className='size-2.5 shrink-0 rounded-full' style={{ background: source.brandColor }} />
+					)}
+					{details}
+				</p>
+			</div>
+			<Switch
+				checked={checked}
+				onCheckedChange={onCheckedChange}
+				disabled={disabled}
+				aria-label='Use the white-label branding'
+			/>
+		</div>
+	);
+}
+
+function sourceLabel(
+	url: string | undefined,
+	image: PickedFile | null,
+	pdf: PickedFile | null,
+	zip: PickedFile | null,
+	instructions: string,
+	whiteLabel: WhiteLabelSourceInfo | null,
+	hasLogo: boolean,
+): string {
+	const parts = [
+		url ? displaySourceLabel(url) : null,
+		image?.name ?? null,
+		pdf?.name ?? null,
+		zip?.name ?? null,
+		instructions ? 'instructions' : null,
+		whiteLabel ? whiteLabelSourceLabel(whiteLabel) : null,
+		hasLogo ? 'the logo' : null,
+	].filter((part): part is string => Boolean(part));
+	return joinWithAnd(parts);
+}
+
+function pendingLabel(
+	url: string,
+	image: PickedFile | null,
+	pdf: PickedFile | null,
+	zip: PickedFile | null,
+	instructions: string,
+	whiteLabel: WhiteLabelSourceInfo | null,
+	hasLogo: boolean,
+): string {
+	const count = [url.trim(), image, pdf, zip, instructions.trim(), whiteLabel, hasLogo].filter(Boolean).length;
+	if (count > 1) {
+		return 'Reading your sources…';
+	}
+	if (url.trim()) {
+		return 'Reading the site…';
+	}
+	if (image) {
+		return 'Reading the image…';
+	}
+	if (pdf) {
+		return 'Reading the PDF…';
+	}
+	if (zip) {
+		return 'Reading the ZIP…';
+	}
+	if (instructions.trim()) {
+		return 'Applying instructions…';
+	}
+	if (whiteLabel) {
+		return `Reading ${whiteLabelSourceLabel(whiteLabel)}…`;
+	}
+	if (hasLogo) {
+		return 'Reading the logo…';
+	}
+	return 'Generating theme…';
+}
+
+function whiteLabelSourceLabel(source: WhiteLabelSourceInfo): string {
+	const parts = [
+		source.hasName ? 'brand name' : null,
+		source.logoUrl ? 'logo' : null,
+		source.brandColor ? 'brand colour' : null,
+	].filter((part): part is string => Boolean(part));
+	return parts.length > 0 ? `the ${joinWithAnd(parts)}` : 'the white-label settings';
+}
+
+function displaySourceLabel(label: string): string {
+	try {
+		const parsed = new URL(label);
+		if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+			return label;
+		}
+		return parsed.host.replace(/^www\./, '');
+	} catch {
+		return label;
+	}
+}
+
+function websitePreview(raw: string): { href: string; host: string } | null {
+	const trimmed = raw.trim();
+	if (!trimmed || /\s/.test(trimmed)) {
+		return null;
+	}
+	try {
+		const parsed = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
+		if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+			return null;
+		}
+		if (parsed.hostname !== 'localhost' && !parsed.hostname.includes('.')) {
+			return null;
+		}
+		return { href: parsed.origin, host: parsed.hostname };
+	} catch {
+		return null;
+	}
+}
+
+function urlFromTransfer(data: DataTransfer | null): string | null {
+	if (!data) {
+		return null;
+	}
+	const fromList = data
+		.getData('text/uri-list')
+		.split(/\r?\n/)
+		.find((line) => line && !line.startsWith('#'));
+	const candidate = (fromList ?? data.getData('text/plain')).trim();
+	if (!candidate || /\s/.test(candidate)) {
+		return null;
+	}
+	try {
+		const parsed = new URL(/^https?:\/\//i.test(candidate) ? candidate : `https://${candidate}`);
+		if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+			return null;
+		}
+		return candidate;
+	} catch {
+		return null;
+	}
+}
+
+function isTypingTarget(target: EventTarget | null): boolean {
+	if (!(target instanceof HTMLElement)) {
+		return false;
+	}
+	if (target.isContentEditable) {
+		return true;
+	}
+	const tag = target.tagName;
+	return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+}
+
+function rejectionFor(picked: File, kind: FileSourceKind): string | null {
+	const maxBytes = MAX_BYTES[kind];
+	if (picked.size > maxBytes) {
+		return `${SOURCE_NAMES[kind]} too large (${formatBytes(picked.size)}). Max ${formatBytes(maxBytes)}.`;
+	}
+	if (kind === 'image' && !isSupportedImage(picked.type)) {
+		return 'Use a PNG, JPEG or WebP image.';
+	}
+	if (kind === 'pdf' && !looksLikePdf(picked)) {
+		return 'Use a PDF.';
+	}
+	if (kind === 'zip' && !looksLikeZip(picked)) {
+		return 'Use a ZIP.';
+	}
+	return null;
+}
+
+function looksLikePdf(file: File): boolean {
+	return file.type === 'application/pdf' || (!file.type && /\.pdf$/i.test(file.name));
+}
+
+function isSupportedImage(type: string): boolean {
+	return type in IMAGE_MEDIA_TYPE_ALIASES || SOURCE_IMAGE_MEDIA_TYPES.includes(type as SourceImageMediaType);
+}
+
+function imageMediaTypeOf(file: File): SourceImageMediaType {
+	return IMAGE_MEDIA_TYPE_ALIASES[file.type] ?? ((file.type || 'image/png') as SourceImageMediaType);
+}
+
+/** Browsers often report an empty type for ZIPs, so the extension is the fallback. */
+function looksLikeZip(file: File): boolean {
+	return ZIP_MEDIA_TYPES.includes(file.type) || (!file.type && /\.zip$/i.test(file.name));
+}
+
+function imageFromClipboard(event: ClipboardEvent): File | null {
+	for (const item of Array.from(event.clipboardData?.items ?? [])) {
+		if (item.kind !== 'file' || !isSupportedImage(item.type)) {
+			continue;
+		}
+		const file = item.getAsFile();
+		if (!file) {
+			continue;
+		}
+		const type = IMAGE_MEDIA_TYPE_ALIASES[file.type || item.type] ?? (file.type || item.type);
+		const extension = type === 'image/jpeg' ? 'jpg' : type === 'image/webp' ? 'webp' : 'png';
+		if (file.type && file.name) {
+			return file;
+		}
+		return new File([file], file.name || `pasted-image.${extension}`, { type });
+	}
+	for (const file of Array.from(event.clipboardData?.files ?? [])) {
+		if (isSupportedImage(file.type)) {
+			return file;
+		}
+	}
+	return null;
+}
+
+function readAsBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result as string;
+			resolve(result.slice(result.indexOf(',') + 1));
+		};
+		reader.onerror = () => reject(reader.error);
+		reader.readAsDataURL(file);
+	});
+}

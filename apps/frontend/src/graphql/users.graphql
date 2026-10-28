@@ -1,0 +1,26 @@
+query HasUsers {
+	hasUsers
+}
+
+query Me {
+	me {
+		id
+		name
+		email
+		image
+		emailVerified
+		requiresPasswordReset
+		isActive
+	}
+}
+
+mutation UpdateProfile($input: UpdateProfileInput!) {
+	updateProfile(input: $input) {
+		id
+		name
+	}
+}
+
+mutation ModifyPassword($input: ModifyPasswordInput!) {
+	modifyPassword(input: $input)
+}

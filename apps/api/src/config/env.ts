@@ -28,7 +28,7 @@ function blankToUndefined(value: unknown): unknown {
 
 const baseEnvSchema = z.object({
 	MODE: z.enum(['dev', 'prod', 'test']).default('dev'),
-	PORT: z.coerce.number().int().positive().default(5005),
+	PORT: z.coerce.number().int().positive().default(5006),
 
 	DATABASE_URL: z.string().min(1, { message: 'DATABASE_URL is required' }),
 	DB_SSL: z

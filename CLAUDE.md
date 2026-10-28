@@ -53,4 +53,8 @@ npm install
 cp .env.example .env            # fill in BETTER_AUTH_SECRET and an LLM key
 docker compose up -d --wait     # Postgres on localhost:5434: quarry, warehouse, nao_baseline
 npm run warehouse:load          # jaffle_shop → warehouse (needs `brew install duckdb`)
+npm run db:deploy -w @quarry/api   # apply Prisma migrations to the quarry database
+npm run db:seed -w @quarry/api     # test@test.test / test1234
+npm run dev:api                    # apps/api on :5006
+npm run dev:frontend               # frontend on :3000 (proxy split: docs/proxy-split.md)
 ```

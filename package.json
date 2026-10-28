@@ -20,7 +20,10 @@
 		"db:down": "docker compose stop",
 		"db:reset": "docker compose down -v",
 		"warehouse:load": "./scripts/load-warehouse.sh",
-		"prepare": "husky"
+		"prepare": "husky",
+		"dev:api": "npm run dev -w @quarry/api",
+		"dev:frontend": "npm run dev -w @quarry/frontend",
+		"codegen": "npm run codegen -w @quarry/frontend"
 	},
 	"lint-staged": {
 		"*.{ts,tsx,js,mjs,cjs}": [

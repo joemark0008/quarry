@@ -88,17 +88,17 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Milestone 1c — frontend on Apollo
 
-- [ ] Copy `fork-reference/apps/frontend` → `quarry/apps/frontend`, delete enterprise-licensed files (PLAN.md §8 step 1)
-- [ ] Create `apps/shared` and move the type exports the frontend imports from `@nao/backend/*` into it
-- [ ] Add Apollo Client (`ApolloProvider`, `InMemoryCache`, credentials: include) and GraphQL Code Generator (`npm run codegen`)
-- [ ] Vite proxy: `/graphql`, `/api/auth/*`, `/health` → `apps/api`; everything else → upstream backend
-- [ ] Switch login, sign-up, logout, current user and public config to generated Apollo hooks
+- [x] Copy `fork-reference/apps/frontend` → `quarry/apps/frontend`, delete enterprise-licensed files (PLAN.md §8 step 1) — _15 files and their 3 tests; importers (auth form, sidebar, root, appearance, budgets, org settings, user groups, settings nav/search) edited. Billing UI is not enterprise-licensed and stays until it is removed separately_
+- [x] Create `apps/shared` and move the type exports the frontend imports from `@nao/backend/*` into it — _`apps/shared` is upstream's `@nao/shared`; the `@nao/backend/*` types become `@nao/shared/backend/*` bridges that re-export upstream until each module is ported ([docs/proxy-split.md](docs/proxy-split.md))_
+- [x] Add Apollo Client (`ApolloProvider`, `InMemoryCache`, credentials: include) and GraphQL Code Generator (`npm run codegen`)
+- [x] Vite proxy: `/graphql`, `/api/auth/*`, `/health` → `apps/api`; everything else → upstream backend — _`apps/api` moves to port 5006; upstream keeps 5005_
+- [x] Switch login, sign-up, logout, current user and public config to generated Apollo hooks — _login/sign-up/logout keep the better-auth client (now served by `apps/api`); their public config, auth providers and `hasUsers`, the sidebar user (`me`) and every `system.getPublicConfig` call site use Apollo_
 
 ### Done when
 
-- Sign up, log in, see the current user and log out in the frontend, all served by `apps/api`
-- `prisma migrate reset` builds the schema from scratch and seeds it
-- Any other screen still works through the upstream backend
+- Sign up, log in, see the current user and log out in the frontend, all served by `apps/api` — _checked in the browser, see [docs/proxy-split.md](docs/proxy-split.md)_
+- `prisma migrate reset` builds the schema from scratch and seeds it — _checked as `migrate deploy` + `db:seed` on a new empty database; `migrate reset` itself was not run: Prisma refuses it for AI agents without the user's consent_
+- Any other screen still works through the upstream backend — _home, chat list, chat view and settings checked; both backends share the `nao_baseline` database and auth secret in this mode_
 
 ### Verify
 
