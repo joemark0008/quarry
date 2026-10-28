@@ -38,6 +38,7 @@ quarry/
 │   ├── frontend/                 React (copied from upstream, then migrated)
 │   └── shared/                   types/utils shared by api + frontend (replaces `@nao/backend/*` type exports)
 ├── package.json                  npm workspaces
+├── PHASES.md
 └── PLAN.md
 ```
 
@@ -79,7 +80,6 @@ Hand-written SQL in upstream queries (usage, analytics, logs) moves to Prisma Ty
 | `POST /api/agent` (AI SDK UI stream, SSE) | `routes/agent.ts` | 2 |
 | `ALL /api/auth/*` (better-auth) | `routes/auth.ts` | 1 |
 | `GET /api/auth/error` redirect | `routes/auth-error-redirect.ts` | 1 |
-| `POST /api/cli-auth/*` | `routes/cli-auth.ts` | 1 |
 | `POST /api/attachments` (multipart, 100 MB) | `routes/attachment.ts` | 2 |
 | `POST /api/transcribe` (audio upload) | `trpc/transcribe.routes.ts` | 2 |
 | `GET /c/:id` chart image, `GET /i/:id` image | `routes/chart.ts`, `routes/image.ts` | 2 |
@@ -107,7 +107,7 @@ Upstream paths are relative to `fork-reference/apps/backend/src`. "trpc" = `trpc
 |---|---|
 | `config` | `env.ts` |
 | `prisma` | `db/*` |
-| `auth` | `auth.ts`, `middleware/auth.ts`, `routes/auth.ts`, `routes/cli-auth.ts`, `services/cli-auth.service.ts`, trpc `auth-config` |
+| `auth` | `auth.ts`, `middleware/auth.ts`, `routes/auth.ts`, trpc `auth-config` (CLI login dropped with the CLI) |
 | `users` | trpc `user`, `account`; `queries/user*`, `account.queries.ts`, `services/account-status.service.ts`, `auth-user-onboarding.service.ts` |
 | `system` | trpc `system`; `services/version-check.service.ts`, `ping.ts` |
 | `jobs` | `services/scheduler.service.ts` (re-implemented on pg-boss) |
@@ -199,6 +199,8 @@ Upstream semantics to keep: per-project resolution (`resolveProjectId`), retry b
 During phases 1–7 the frontend's Vite proxy sends `/graphql` and migrated REST paths to `apps/api`, everything else to the upstream backend, so each area switches independently.
 
 ## 9. Phases
+
+Detailed checklists per phase: [PHASES.md](PHASES.md).
 
 Phases 3–7 are **optional and independently skippable**; decide after phase 2.
 
