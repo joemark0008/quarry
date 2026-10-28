@@ -1,0 +1,89 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AppVersion {
+  buildDate: String!
+  commit: String!
+  version: String!
+}
+
+"""Sign-in methods available on the login page."""
+type AuthProviders {
+  github: Boolean!
+  gitlab: Boolean!
+  google: Boolean!
+
+  """Whether SMTP is configured (password reset and invitation emails)."""
+  smtp: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input ModifyPasswordInput {
+  confirmPassword: String!
+  newPassword: String!
+}
+
+type Mutation {
+  modifyPassword(input: ModifyPasswordInput!): Boolean!
+  updateProfile(input: UpdateProfileInput!): User!
+}
+
+type PublicConfig {
+  authProviders: AuthProviders!
+  betaAutomationsEnabled: Boolean!
+  betaContextRecommendationsEnabled: Boolean!
+  betaCustomStoriesEnabled: Boolean!
+  betaStoryFiltersEnabled: Boolean!
+  betaSubagentsEnabled: Boolean!
+  emailVerificationEnabled: Boolean!
+  enableUserLogin: Boolean!
+  enableUserSignup: Boolean!
+
+  """Always "self-hosted": quarry has no cloud mode."""
+  naoMode: String!
+  version: String!
+}
+
+type Query {
+  checkUpdate: UpdateCheck!
+
+  """
+  Whether anyone has signed up yet (the login page offers sign-up when not).
+  """
+  hasUsers: Boolean!
+
+  """The signed-in user."""
+  me: User!
+  publicConfig: PublicConfig!
+  version: AppVersion!
+}
+
+type UpdateCheck {
+  currentVersion: String!
+  latestVersion: String
+  updateAvailable: Boolean!
+}
+
+input UpdateProfileInput {
+  name: String!
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  emailVerified: Boolean!
+  id: ID!
+  image: String
+
+  """Whether the account is active (not deactivated by an admin)."""
+  isActive: Boolean!
+  name: String!
+
+  """Set for invited users until they choose their own password."""
+  requiresPasswordReset: Boolean!
+}

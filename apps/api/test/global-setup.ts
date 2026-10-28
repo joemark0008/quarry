@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process';
 import path from 'node:path';
 
 import pg from 'pg';
+import type { TestProject } from 'vitest/node';
 
 import { loadDotenv } from '../src/config/env.js';
 
@@ -9,7 +10,7 @@ import { loadDotenv } from '../src/config/env.js';
  * e2e tests run against their own database (`<DATABASE_URL database>_test`), created and migrated here,
  * so they never touch the development data.
  */
-export default async function setup() {
+export default async function setup(project: TestProject) {
 	loadDotenv();
 	const baseUrl = process.env.DATABASE_URL;
 	if (!baseUrl) {
@@ -39,6 +40,11 @@ export default async function setup() {
 		stdio: 'pipe',
 	});
 
-	process.env.DATABASE_URL = testUrl.toString();
-	process.env.MODE = 'test';
+	project.provide('testDatabaseUrl', testUrl.toString());
+}
+
+declare module 'vitest' {
+	export interface ProvidedContext {
+		testDatabaseUrl: string;
+	}
 }

@@ -10,6 +10,14 @@ export type OrgRole = 'admin' | 'user' | 'viewer';
 
 export type UserOrgMembership = OrgMember & { organization: Organization };
 
+export interface GoogleConfig {
+	orgId: string | undefined;
+	clientId: string;
+	clientSecret: string;
+	authDomains: string;
+	usingDbOverride: boolean;
+}
+
 /** Port of upstream `queries/organization.queries.ts` (the part Phase 1 needs: membership and first-user setup). */
 @Injectable()
 export class OrganizationRepository {
@@ -21,6 +29,19 @@ export class OrganizationRepository {
 
 	getFirstOrganization(executor: DbExecutor = this.prisma): Promise<Organization | null> {
 		return executor.organization.findFirst();
+	}
+
+	/** Google sign-in settings: the first organization's credential, with the env as fallback. */
+	async getGoogleConfig(): Promise<GoogleConfig> {
+		const org = await this.getFirstOrganization();
+		const { env } = this.config;
+		return {
+			orgId: org?.id,
+			clientId: org?.googleClientId || env.GOOGLE_CLIENT_ID || '',
+			clientSecret: org?.googleClientSecret || env.GOOGLE_CLIENT_SECRET || '',
+			authDomains: org?.googleAuthDomains || env.GOOGLE_AUTH_DOMAINS || '',
+			usingDbOverride: !!(org?.googleClientId && org?.googleClientSecret),
+		};
 	}
 
 	getOrganizationBySlug(slug: string): Promise<Organization | null> {

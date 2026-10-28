@@ -77,14 +77,14 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Milestone 1b — GraphQL, auth and guards
 
-- [ ] `GraphQLModule.forRoot` (Apollo driver, code-first, `autoSchemaFile: schema.gql`, playground in dev only)
-- [ ] `auth` module: better-auth instance (email + password, same plugins as upstream minus enterprise SSO) mounted at `/api/auth/*` with the Prisma adapter
-- [ ] `getRequest(context)` helper for GraphQL and REST
-- [ ] Global `AuthGuard` + decorators: `@Public()`, `@CurrentUser()`, `@ProjectAccess()`, `@OrgMember()`, `@OrgAdmin()`, `@ProjectAdmin()` (PLAN.md §3)
-- [ ] DataLoader base: request-scoped loader factory attached to the GraphQL context
-- [ ] `users` module: `me` query, profile update, account status
-- [ ] `system` module: public config query (auth providers, version), version check
-- [ ] `jobs` module: pg-boss start/stop, `@Job(name)` decorator and boot-time handler discovery, cron schedules via `boss.schedule()`
+- [x] `GraphQLModule.forRoot` (Apollo driver, code-first, `autoSchemaFile: schema.gql`, playground in dev only) — _GraphiQL in dev (Apollo 5 dropped the playground); `apps/api/schema.gql` is committed for codegen_
+- [x] `auth` module: better-auth instance (email + password, same plugins as upstream minus enterprise SSO) mounted at `/api/auth/*` with the Prisma adapter — _email + password, Google, GitHub, GitLab, `bearer`; the OAuth-provider + JWT plugins (MCP) wait for Phase 7, emails for Phase 5_
+- [x] `getRequest(context)` helper for GraphQL and REST
+- [x] Global `AuthGuard` + decorators: `@Public()`, `@CurrentUser()`, `@ProjectAccess()`, `@OrgMember()`, `@OrgAdmin()`, `@ProjectAdmin()` (PLAN.md §3) — _plus `@ProjectNonViewer()` and `@Current{Session,Project,UserRole,Organization,OrgRole}()`_
+- [x] DataLoader base: request-scoped loader factory attached to the GraphQL context
+- [x] `users` module: `me` query, profile update, account status — _also `hasUsers`, `modifyPassword`, `UserLoader`_
+- [x] `system` module: public config query (auth providers, version), version check
+- [x] `jobs` module: pg-boss start/stop, `@Job(name)` decorator and boot-time handler discovery, cron schedules via `boss.schedule()`
 
 ### Milestone 1c — frontend on Apollo
 
@@ -102,9 +102,9 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Verify
 
-- e2e (Jest + Supertest): sign up → session cookie → `me` query → logout
-- Unit tests for each guard: allowed and denied cases per access level
-- A pg-boss test job is scheduled, runs and is retried on failure
+- e2e (Jest + Supertest): sign up → session cookie → `me` query → logout — _on Vitest + Supertest instead of Jest: the API is ESM and the ported upstream tests are Vitest (`apps/api/test/auth.e2e-spec.ts`)_
+- Unit tests for each guard: allowed and denied cases per access level — _`apps/api/src/common/guards/auth.guard.spec.ts`_
+- A pg-boss test job is scheduled, runs and is retried on failure — _`apps/api/test/jobs.e2e-spec.ts`_
 
 ---
 
