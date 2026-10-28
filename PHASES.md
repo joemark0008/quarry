@@ -37,22 +37,22 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Tasks
 
-- [ ] Create the GitHub repo for quarry and add it as `origin`
-- [ ] Root `package.json` with npm workspaces (`apps/*`), `.nvmrc` = `v22.23.4` (same as upstream)
-- [ ] ESLint + Prettier config (start from upstream's `eslint.config.js` / `prettier.config.js`), Husky pre-commit with lint-staged
-- [ ] `docker-compose.yml` with one Postgres server and two databases:
+- [ ] Create the GitHub repo for quarry and add it as `origin` — _not done: `gh` CLI not installed_
+- [x] Root `package.json` with npm workspaces (`apps/*`), `.nvmrc` = `v22.23.4` (same as upstream)
+- [x] ESLint + Prettier config (start from upstream's `eslint.config.js` / `prettier.config.js`), Husky pre-commit with lint-staged
+- [x] `docker-compose.yml` with one Postgres server and two databases:
     - `quarry` — the app database (Prisma)
     - `warehouse` — the test warehouse the agent queries
-- [ ] Load the upstream example dataset (`fork-reference/example/jaffle_shop.duckdb`) into the `warehouse` database (DuckDB `postgres` extension → `COPY` each table)
-- [ ] `.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, LLM provider keys
-- [ ] `CLAUDE.md` with the conventions from PLAN.md §2 (kebab-case files, thin resolvers, Prisma only in repositories, tests with every port)
-- [ ] Run upstream locally against a separate Postgres database as the baseline (`fork-reference`: `npm install`, `npm run db:migrate`, `npm run dev`)
+- [x] Load the upstream example dataset (`fork-reference/example/jaffle_shop.duckdb`) into the `warehouse` database (DuckDB `postgres` extension → `COPY` each table)
+- [x] `.env.example` with `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, LLM provider keys
+- [x] `CLAUDE.md` with the conventions from PLAN.md §2 (kebab-case files, thin resolvers, Prisma only in repositories, tests with every port)
+- [x] Run upstream locally against a separate Postgres database as the baseline (`fork-reference`: `npm install`, `npm run db:migrate`, `npm run dev`) — notes in [docs/upstream-baseline.md](docs/upstream-baseline.md)
 
 ### Done when
 
 - `npm install` and `npm run lint` pass in `quarry` (no apps yet beyond placeholders)
 - `docker compose up` starts Postgres with both databases, and the `warehouse` database has the jaffle_shop tables
-- Upstream runs: you can sign up, create a project and get a chat answer
+- Upstream runs: you can sign up, create a project and get a chat answer — _sign-up and project work; chat answer needs an LLM key_
 
 ### Verify
 
