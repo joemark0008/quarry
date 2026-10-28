@@ -67,13 +67,13 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Milestone 1a — Nest app and database
 
-- [ ] `nest new apps/api` (NestJS 11, Express), strict TypeScript, path aliases
-- [ ] `config` module: typed env validated with zod (port of upstream `env.ts`, minus billing, SSO enterprise and cloud vars)
-- [ ] Generate `schema.prisma` (PLAN.md §4): run upstream migrations on an empty database → `prisma db pull` → rename models/fields → drop enterprise, billing and `scheduled_job` tables → `0000_init` migration
-- [ ] `prisma` module with `PrismaService` (connect/disconnect hooks)
-- [ ] Seed script (port of `scripts/db.seed.ts`)
-- [ ] `GET /health` (checks the database)
-- [ ] Global exception filter: maps domain errors to GraphQL errors and HTTP status codes
+- [x] `nest new apps/api` (NestJS 11, Express), strict TypeScript, path aliases (`@/*` → `src/*`) — _ESM package (better-auth and pg-boss are ESM-only), run through `@swc-node/register` so `@nao/shared` TS sources load; tests on Vitest + SWC (see note below)_
+- [x] `config` module: typed env validated with zod (port of upstream `env.ts`, minus billing, SSO enterprise and cloud vars)
+- [x] Generate `schema.prisma` (PLAN.md §4): run upstream migrations on an empty database → `prisma db pull` → rename models/fields → drop enterprise, billing and `scheduled_job` tables → `0000_init` migration — _73 of 87 tables kept; dropped: branding, member budgets, credits/wallet/Stripe/org billing, managed AI usage, example-chat allowance, warehouse provisioning, `scheduled_job` (+ `automation.scheduled_job_id`, `organization.bypass_billing`/`license`, `user_group.sso_mappings`); upstream CHECK constraints appended to the migration by hand_
+- [x] `prisma` module with `PrismaService` (connect/disconnect hooks)
+- [x] Seed script (port of `scripts/db.seed.ts`)
+- [x] `GET /health` (checks the database)
+- [x] Global exception filter: maps domain errors to GraphQL errors and HTTP status codes
 
 ### Milestone 1b — GraphQL, auth and guards
 

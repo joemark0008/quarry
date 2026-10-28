@@ -11,11 +11,11 @@
 		"npm": "11.10.1"
 	},
 	"scripts": {
-		"lint": "eslint .",
+		"lint": "eslint . && npm run lint --workspaces --if-present",
 		"lint:fix": "eslint . --fix",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
-		"test": "if ls apps/*/package.json >/dev/null 2>&1; then npm run test --workspaces --if-present; else echo \"No apps yet\"; fi",
+		"test": "npm run test --workspaces --if-present",
 		"db:up": "docker compose up -d --wait",
 		"db:down": "docker compose stop",
 		"db:reset": "docker compose down -v",

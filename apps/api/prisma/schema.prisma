@@ -1,0 +1,1408 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  userId                String    @map("user_id")
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at") @db.Timestamp(6)
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at") @db.Timestamp(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt             DateTime  @updatedAt @map("updated_at") @db.Timestamp(6)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "account_user_id_user_id_fk")
+
+  @@index([userId], map: "account_userId_idx")
+  @@map("account")
+}
+
+model Activity {
+  id            String       @id @default(uuid())
+  projectId     String       @map("project_id")
+  userId        String?      @map("user_id")
+  type          String
+  status        String       @default("completed")
+  trigger       String       @default("system")
+  storyId       String?      @map("story_id")
+  chatId        String?      @map("chat_id")
+  sharedStoryId String?      @map("shared_story_id")
+  sharedChatId  String?      @map("shared_chat_id")
+  payload       Json?
+  errorMessage  String?      @map("error_message")
+  startedAt     DateTime     @default(now()) @map("started_at") @db.Timestamp(6)
+  completedAt   DateTime?    @map("completed_at") @db.Timestamp(6)
+  chat          Chat?        @relation(fields: [chatId], references: [id], onUpdate: NoAction, map: "activity_chat_id_chat_id_fk")
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "activity_project_id_project_id_fk")
+  sharedChat    SharedChat?  @relation(fields: [sharedChatId], references: [id], onUpdate: NoAction, map: "activity_shared_chat_id_shared_chat_id_fk")
+  sharedStory   SharedStory? @relation(fields: [sharedStoryId], references: [id], onUpdate: NoAction, map: "activity_shared_story_id_shared_story_id_fk")
+  story         Story?       @relation(fields: [storyId], references: [id], onUpdate: NoAction, map: "activity_story_id_story_id_fk")
+  user          User?        @relation(fields: [userId], references: [id], onUpdate: NoAction, map: "activity_user_id_user_id_fk")
+
+  @@index([chatId], map: "activity_chatId_idx")
+  @@index([projectId], map: "activity_projectId_idx")
+  @@index([sharedChatId], map: "activity_sharedChatId_idx")
+  @@index([sharedStoryId], map: "activity_sharedStoryId_idx")
+  @@index([startedAt], map: "activity_startedAt_idx")
+  @@index([storyId], map: "activity_storyId_idx")
+  @@index([type])
+  @@index([userId], map: "activity_userId_idx")
+  @@map("activity")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model AnalyticsEvent {
+  id            String       @id @default(uuid())
+  projectId     String       @map("project_id")
+  type          String
+  assetType     String       @map("asset_type")
+  actorUserId   String?      @map("actor_user_id")
+  chatId        String?      @map("chat_id")
+  storyId       String?      @map("story_id")
+  sharedChatId  String?      @map("shared_chat_id")
+  sharedStoryId String?      @map("shared_story_id")
+  metadata      Json?
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  user          User?        @relation(fields: [actorUserId], references: [id], onUpdate: NoAction, map: "analytics_event_actor_user_id_user_id_fk")
+  chat          Chat?        @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "analytics_event_chat_id_chat_id_fk")
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "analytics_event_project_id_project_id_fk")
+  sharedChat    SharedChat?  @relation(fields: [sharedChatId], references: [id], onUpdate: NoAction, map: "analytics_event_shared_chat_id_shared_chat_id_fk")
+  sharedStory   SharedStory? @relation(fields: [sharedStoryId], references: [id], onUpdate: NoAction, map: "analytics_event_shared_story_id_shared_story_id_fk")
+  story         Story?       @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "analytics_event_story_id_story_id_fk")
+
+  @@index([actorUserId], map: "analytics_event_actorUserId_idx")
+  @@index([chatId], map: "analytics_event_chatId_idx")
+  @@index([projectId], map: "analytics_event_projectId_idx")
+  @@index([projectId, type, assetType, storyId], map: "analytics_event_project_type_asset_story_idx")
+  @@index([sharedChatId], map: "analytics_event_sharedChatId_idx")
+  @@index([sharedStoryId], map: "analytics_event_sharedStoryId_idx")
+  @@index([storyId], map: "analytics_event_storyId_idx")
+  @@index([type, createdAt], map: "analytics_event_type_createdAt_idx")
+  @@map("analytics_event")
+}
+
+model ApiKey {
+  id           String       @id @default(uuid())
+  orgId        String       @map("org_id")
+  name         String
+  keyHash      String       @unique(map: "api_key_key_hash_unique") @map("key_hash")
+  keyPrefix    String       @map("key_prefix")
+  createdBy    String       @map("created_by")
+  lastUsedAt   DateTime?    @map("last_used_at") @db.Timestamp(6)
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_key_created_by_user_id_fk")
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_key_org_id_organization_id_fk")
+
+  @@index([orgId], map: "api_key_orgId_idx")
+  @@map("api_key")
+}
+
+model Automation {
+  id                  String          @id @default(uuid())
+  projectId           String          @map("project_id")
+  userId              String          @map("user_id")
+  title               String
+  prompt              String
+  scheduleDescription String?         @map("schedule_description")
+  timezone            String?
+  modelProvider       String?         @map("model_provider")
+  modelId             String?         @map("model_id")
+  mcpEnabled          Boolean         @default(true) @map("mcp_enabled")
+  mcpServers          Json?           @map("mcp_servers")
+  integrations        Json            @default("{}")
+  createdAt           DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  webhookEnabled      Boolean         @default(false) @map("webhook_enabled")
+  project             Project         @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "automation_project_id_project_id_fk")
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "automation_user_id_user_id_fk")
+  automationRuns      AutomationRun[]
+
+  @@index([projectId], map: "automation_projectId_idx")
+  @@index([userId], map: "automation_userId_idx")
+  @@map("automation")
+}
+
+model AutomationRun {
+  id                 String     @id @default(uuid())
+  automationId       String     @map("automation_id")
+  chatId             String?    @map("chat_id")
+  status             String     @default("running")
+  startedAt          DateTime   @default(now()) @map("started_at") @db.Timestamp(6)
+  completedAt        DateTime?  @map("completed_at") @db.Timestamp(6)
+  errorMessage       String?    @map("error_message")
+  integrationResults Json       @default("[]") @map("integration_results")
+  readAt             DateTime?  @map("read_at") @db.Timestamp(6)
+  automation         Automation @relation(fields: [automationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "automation_run_automation_id_automation_id_fk")
+  chat               Chat?      @relation(fields: [chatId], references: [id], onUpdate: NoAction, map: "automation_run_chat_id_chat_id_fk")
+
+  @@index([automationId], map: "automation_run_automationId_idx")
+  @@index([chatId], map: "automation_run_chatId_idx")
+  @@index([status])
+  @@map("automation_run")
+}
+
+model BudgetNotification {
+  id          String   @id @default(uuid())
+  projectId   String   @map("project_id")
+  provider    String
+  scope       String
+  periodStart DateTime @map("period_start") @db.Timestamp(6)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "budget_notification_project_id_project_id_fk")
+
+  @@unique([projectId, provider, scope, periodStart], map: "budget_notification_project_provider_scope_period")
+  @@index([projectId], map: "budget_notification_projectId_idx")
+  @@map("budget_notification")
+}
+
+model ChartImage {
+  id         String   @id @default(uuid())
+  toolCallId String   @unique(map: "chart_image_tool_call_id_unique") @map("tool_call_id")
+  data       String
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@map("chart_image")
+}
+
+model Chat {
+  id                        String                     @id @default(uuid())
+  userId                    String                     @map("user_id")
+  title                     String                     @default("New Conversation")
+  createdAt                 DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                 DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  slackThreadId             String?                    @map("slack_thread_id")
+  projectId                 String                     @map("project_id")
+  teamsThreadId             String?                    @map("teams_thread_id")
+  isStarred                 Boolean                    @default(false) @map("is_starred")
+  telegramThreadId          String?                    @map("telegram_thread_id")
+  whatsappThreadId          String?                    @map("whatsapp_thread_id")
+  deletedAt                 DateTime?                  @map("deleted_at") @db.Timestamp(6)
+  forkMetadata              Json?                      @map("fork_metadata")
+  mattermostThreadId        String?                    @map("mattermost_thread_id")
+  discordThreadId           String?                    @map("discord_thread_id")
+  activities                Activity[]
+  analyticsEvents           AnalyticsEvent[]
+  automationRuns            AutomationRun[]
+  project                   Project                    @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "chat_project_id_project_id_fk")
+  user                      User                       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "chat_user_id_user_id_fk")
+  chatMessages              ChatMessage[]
+  contextRecommendationRuns ContextRecommendationRun[]
+  llmInferences             LlmInference[]
+  memories                  Memory[]
+  sharedChat                SharedChat?
+  stories                   Story[]
+
+  @@index([discordThreadId], map: "chat_discord_thread_idx")
+  @@index([mattermostThreadId], map: "chat_mattermost_thread_idx")
+  @@index([projectId], map: "chat_projectId_idx")
+  @@index([slackThreadId], map: "chat_slack_thread_idx")
+  @@index([teamsThreadId], map: "chat_teams_thread_idx")
+  @@index([telegramThreadId], map: "chat_telegram_thread_idx")
+  @@index([userId], map: "chat_userId_idx")
+  @@index([whatsappThreadId], map: "chat_whatsapp_thread_idx")
+  @@map("chat")
+}
+
+model ChatMessage {
+  id                                   String                                @id @default(uuid())
+  chatId                               String                                @map("chat_id")
+  role                                 String
+  createdAt                            DateTime                              @default(now()) @map("created_at") @db.Timestamp(6)
+  stopReason                           String?                               @map("stop_reason")
+  errorMessage                         String?                               @map("error_message")
+  llmProvider                          String?                               @map("llm_provider")
+  llmModelId                           String?                               @map("llm_model_id")
+  inputTotalTokens                     Int?                                  @map("input_total_tokens")
+  inputNoCacheTokens                   Int?                                  @map("input_no_cache_tokens")
+  inputCacheReadTokens                 Int?                                  @map("input_cache_read_tokens")
+  inputCacheWriteTokens                Int?                                  @map("input_cache_write_tokens")
+  outputTotalTokens                    Int?                                  @map("output_total_tokens")
+  outputTextTokens                     Int?                                  @map("output_text_tokens")
+  outputReasoningTokens                Int?                                  @map("output_reasoning_tokens")
+  totalTokens                          Int?                                  @map("total_tokens")
+  supersededAt                         DateTime?                             @map("superseded_at") @db.Timestamp(6)
+  source                               String?
+  isForked                             Boolean?
+  citation                             Json?
+  versionGroupId                       String?                               @map("version_group_id")
+  senderUserId                         String?                               @map("sender_user_id")
+  discordMessageId                     String?                               @map("discord_message_id")
+  chat                                 Chat                                  @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "chat_message_chat_id_chat_id_fk")
+  user                                 User?                                 @relation(fields: [senderUserId], references: [id], onUpdate: NoAction, map: "chat_message_sender_user_id_user_id_fk")
+  contextRecommendationLinkedFeedbacks ContextRecommendationLinkedFeedback[]
+  messageFeedback                      MessageFeedback?
+  messageParts                         MessagePart[]
+
+  @@index([chatId, createdAt], map: "chat_message_chatId_createdAt_idx")
+  @@index([chatId], map: "chat_message_chatId_idx")
+  @@index([createdAt], map: "chat_message_createdAt_idx")
+  @@index([discordMessageId], map: "chat_message_discordMessageId_idx")
+  @@index([senderUserId], map: "chat_message_senderUserId_idx")
+  @@index([versionGroupId], map: "chat_message_versionGroupId_idx")
+  @@map("chat_message")
+}
+
+model ContextBranchOwnership {
+  id                String   @id @default(uuid())
+  projectId         String   @map("project_id")
+  branch            String
+  userId            String   @map("user_id")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  reviewRequestUrl  String?  @map("review_request_url")
+  reviewRequestKind String?  @map("review_request_kind")
+  project           Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_branch_ownership_project_id_project_id_fk")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_branch_ownership_user_id_user_id_fk")
+
+  @@unique([projectId, branch], map: "context_branch_ownership_project_branch_unique")
+  @@index([userId], map: "context_branch_ownership_userId_idx")
+  @@map("context_branch_ownership")
+}
+
+model ContextRecommendation {
+  id                                   String                                @id @default(uuid())
+  projectId                            String                                @map("project_id")
+  runId                                String                                @map("run_id")
+  fingerprint                          String
+  suggestedFile                        String                                @map("suggested_file")
+  subjectKey                           String                                @map("subject_key")
+  status                               String                                @default("open")
+  impactScore                          Int                                   @default(0) @map("impact_score")
+  impact                               Json?
+  insights                             Json                                  @default("[]")
+  title                                String
+  summary                              String
+  suggestedAction                      String                                @map("suggested_action")
+  fixKind                              String?                               @map("fix_kind")
+  proposedEdits                        Json?                                 @map("proposed_edits")
+  fixGuidance                          String?                               @map("fix_guidance")
+  fixPrompt                            String?                               @map("fix_prompt")
+  prUrl                                String?                               @map("pr_url")
+  prBranch                             String?                               @map("pr_branch")
+  prCreatedAt                          DateTime?                             @map("pr_created_at") @db.Timestamp(6)
+  llmProvider                          String?                               @map("llm_provider")
+  llmModelId                           String?                               @map("llm_model_id")
+  firstSeenAt                          DateTime                              @default(now()) @map("first_seen_at") @db.Timestamp(6)
+  lastSeenAt                           DateTime                              @default(now()) @map("last_seen_at") @db.Timestamp(6)
+  occurrenceCount                      Int                                   @default(1) @map("occurrence_count")
+  statusChangedAt                      DateTime?                             @map("status_changed_at") @db.Timestamp(6)
+  statusChangedBy                      String?                               @map("status_changed_by")
+  createdAt                            DateTime                              @default(now()) @map("created_at") @db.Timestamp(6)
+  fixTarget                            String?                               @map("fix_target")
+  category                             String?
+  rootCause                            String?                               @map("root_cause")
+  rootCauseKind                        String?                               @map("root_cause_kind")
+  project                              Project                               @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_recommendation_project_id_project_id_fk")
+  contextRecommendationRun             ContextRecommendationRun              @relation(fields: [runId, projectId], references: [id, projectId], onDelete: NoAction, onUpdate: NoAction, map: "context_recommendation_run_fk")
+  user                                 User?                                 @relation(fields: [statusChangedBy], references: [id], onUpdate: NoAction, map: "context_recommendation_status_changed_by_user_id_fk")
+  contextRecommendationLinkedFeedbacks ContextRecommendationLinkedFeedback[]
+
+  @@unique([projectId, fingerprint], map: "context_recommendation_project_fingerprint_unique")
+  @@index([projectId, status], map: "context_recommendation_projectId_status_idx")
+  @@index([runId], map: "context_recommendation_runId_idx")
+  @@map("context_recommendation")
+}
+
+model ContextRecommendationConfig {
+  projectId                      String   @id @map("project_id")
+  frequency                      String?
+  customSystemPromptInstructions String?  @map("custom_system_prompt_instructions")
+  repoFullName                   String?  @map("repo_full_name")
+  autoCreatePrs                  Boolean? @map("auto_create_prs")
+  maxAutoPrsPerRun               Int?     @map("max_auto_prs_per_run")
+  createdAt                      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  repoProvider                   String?  @map("repo_provider")
+  project                        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_recommendation_config_project_id_project_id_fk")
+
+  @@map("context_recommendation_config")
+}
+
+model ContextRecommendationLinkedFeedback {
+  recommendationId      String                @map("recommendation_id")
+  messageId             String                @map("message_id")
+  createdAt             DateTime              @default(now()) @map("created_at") @db.Timestamp(6)
+  chatMessage           ChatMessage           @relation(fields: [messageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_recommendation_linked_feedback_message_id_chat_message_")
+  contextRecommendation ContextRecommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_recommendation_linked_feedback_recommendation_id_contex")
+
+  @@id([recommendationId, messageId], map: "context_recommendation_linked_feedback_recommendation_id_messag")
+  @@index([messageId])
+  @@map("context_recommendation_linked_feedback")
+}
+
+model ContextRecommendationRun {
+  id                     String                  @id @default(uuid())
+  projectId              String                  @map("project_id")
+  chatId                 String?                 @map("chat_id")
+  trigger                String                  @default("schedule")
+  status                 String                  @default("running")
+  windowStart            DateTime?               @map("window_start") @db.Timestamp(6)
+  windowEnd              DateTime?               @map("window_end") @db.Timestamp(6)
+  startedAt              DateTime                @default(now()) @map("started_at") @db.Timestamp(6)
+  completedAt            DateTime?               @map("completed_at") @db.Timestamp(6)
+  errorMessage           String?                 @map("error_message")
+  llmProvider            String?                 @map("llm_provider")
+  llmModelId             String?                 @map("llm_model_id")
+  inputTotalTokens       Int?                    @map("input_total_tokens")
+  outputTotalTokens      Int?                    @map("output_total_tokens")
+  totalTokens            Int?                    @map("total_tokens")
+  contextRecommendations ContextRecommendation[]
+  chat                   Chat?                   @relation(fields: [chatId], references: [id], onUpdate: NoAction, map: "context_recommendation_run_chat_id_chat_id_fk")
+  project                Project                 @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "context_recommendation_run_project_id_project_id_fk")
+
+  @@unique([id, projectId], map: "context_recommendation_run_id_project_unique")
+  @@index([chatId], map: "context_recommendation_run_chatId_idx")
+  @@index([projectId], map: "context_recommendation_run_projectId_idx")
+  @@index([status])
+  @@map("context_recommendation_run")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Favorite {
+  id          String       @id @default(uuid())
+  userId      String       @map("user_id")
+  storyId     String?      @map("story_id")
+  folderId    String?      @map("folder_id")
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  storyFolder StoryFolder? @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "favorite_folder_id_story_folder_id_fk")
+  story       Story?       @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "favorite_story_id_story_id_fk")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "favorite_user_id_user_id_fk")
+
+  @@unique([userId, folderId], map: "favorite_user_id_folder_id_unique")
+  @@unique([userId, storyId], map: "favorite_user_id_story_id_unique")
+  @@index([userId])
+  @@map("favorite")
+}
+
+model Jwks {
+  id         String    @id @default(uuid())
+  publicKey  String    @map("public_key")
+  privateKey String    @map("private_key")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  expiresAt  DateTime? @map("expires_at") @db.Timestamp(6)
+
+  @@map("jwks")
+}
+
+model KeyedLock {
+  key       String   @id
+  owner     String
+  expiresAt DateTime @map("expires_at") @db.Timestamp(6)
+
+  @@map("keyed_lock")
+}
+
+model LlmInference {
+  id                    String   @id @default(uuid())
+  projectId             String   @map("project_id")
+  userId                String   @map("user_id")
+  chatId                String?  @map("chat_id")
+  type                  String
+  llmProvider           String   @map("llm_provider")
+  llmModelId            String   @map("llm_model_id")
+  inputTotalTokens      Int?     @map("input_total_tokens")
+  inputNoCacheTokens    Int?     @map("input_no_cache_tokens")
+  inputCacheReadTokens  Int?     @map("input_cache_read_tokens")
+  inputCacheWriteTokens Int?     @map("input_cache_write_tokens")
+  outputTotalTokens     Int?     @map("output_total_tokens")
+  outputTextTokens      Int?     @map("output_text_tokens")
+  outputReasoningTokens Int?     @map("output_reasoning_tokens")
+  totalTokens           Int?     @map("total_tokens")
+  createdAt             DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  chat                  Chat?    @relation(fields: [chatId], references: [id], onUpdate: NoAction, map: "llm_inference_chat_id_chat_id_fk")
+  project               Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "llm_inference_project_id_project_id_fk")
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "llm_inference_user_id_user_id_fk")
+
+  @@index([createdAt], map: "llm_inference_createdAt_idx")
+  @@index([projectId], map: "llm_inference_projectId_idx")
+  @@index([type])
+  @@index([userId], map: "llm_inference_userId_idx")
+  @@map("llm_inference")
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  level     String
+  message   String
+  context   Json?
+  source    String
+  projectId String?  @map("project_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "log_project_id_project_id_fk")
+
+  @@index([createdAt], map: "log_createdAt_idx")
+  @@index([level])
+  @@index([projectId], map: "log_projectId_idx")
+  @@map("log")
+}
+
+model McpCallLog {
+  id         String   @id @default(uuid())
+  projectId  String   @map("project_id")
+  userId     String   @map("user_id")
+  toolName   String   @map("tool_name")
+  durationMs Int?     @map("duration_ms")
+  success    Boolean
+  toolInput  Json?    @map("tool_input")
+  toolOutput Json?    @map("tool_output")
+  calledAt   DateTime @default(now()) @map("called_at") @db.Timestamp(6)
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_call_log_project_id_project_id_fk")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_call_log_user_id_user_id_fk")
+
+  @@index([calledAt], map: "mcp_call_log_calledAt_idx")
+  @@index([projectId], map: "mcp_call_log_projectId_idx")
+  @@index([userId], map: "mcp_call_log_userId_idx")
+  @@map("mcp_call_log")
+}
+
+model McpChartEmbed {
+  chartEmbedId String       @id @map("chart_embed_id")
+  queryId      String       @map("query_id")
+  chartConfig  Json         @map("chart_config")
+  sourceChatId String?      @map("source_chat_id")
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  mcpQueryData McpQueryData @relation(fields: [queryId], references: [queryId], onDelete: Cascade, onUpdate: NoAction, map: "mcp_chart_embed_query_id_mcp_query_data_query_id_fk")
+
+  @@index([queryId])
+  @@map("mcp_chart_embed")
+}
+
+model McpMapEmbed {
+  mapEmbedId   String       @id @map("map_embed_id")
+  queryId      String       @map("query_id")
+  mapConfig    Json         @map("map_config")
+  sourceChatId String?      @map("source_chat_id")
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  mcpQueryData McpQueryData @relation(fields: [queryId], references: [queryId], onDelete: Cascade, onUpdate: NoAction, map: "mcp_map_embed_query_id_mcp_query_data_query_id_fk")
+
+  @@index([queryId])
+  @@map("mcp_map_embed")
+}
+
+model McpOauthClient {
+  projectId       String   @map("project_id")
+  serverName      String   @map("server_name")
+  clientId        String   @map("client_id")
+  clientSecret    String?  @map("client_secret")
+  clientData      String?  @map("client_data")
+  discoveryUserId String?  @map("discovery_user_id")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  user            User?    @relation(fields: [discoveryUserId], references: [id], onUpdate: NoAction, map: "mcp_oauth_client_discovery_user_id_user_id_fk")
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_oauth_client_project_id_project_id_fk")
+
+  @@id([projectId, serverName], map: "mcp_oauth_client_project_id_server_name_pk")
+  @@map("mcp_oauth_client")
+}
+
+model McpQueryData {
+  queryId        String          @id @map("query_id")
+  callLogId      String?         @map("call_log_id")
+  projectId      String          @map("project_id")
+  sourceChatId   String?         @map("source_chat_id")
+  columns        Json
+  data           Json
+  expiresAt      DateTime        @map("expires_at") @db.Timestamp(6)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
+  mcpChartEmbeds McpChartEmbed[]
+  mcpMapEmbeds   McpMapEmbed[]
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_query_data_project_id_project_id_fk")
+
+  @@index([callLogId], map: "mcp_query_data_callLogId_idx")
+  @@index([projectId])
+  @@map("mcp_query_data")
+}
+
+model McpUserToken {
+  userId       String    @map("user_id")
+  projectId    String    @map("project_id")
+  serverName   String    @map("server_name")
+  accessToken  String?   @map("access_token")
+  refreshToken String?   @map("refresh_token")
+  expiresAt    DateTime? @map("expires_at") @db.Timestamp(6)
+  scope        String?
+  codeVerifier String?   @map("code_verifier")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project      Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_user_token_project_id_project_id_fk")
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mcp_user_token_user_id_user_id_fk")
+
+  @@id([userId, projectId, serverName], map: "mcp_user_token_user_id_project_id_server_name_pk")
+  @@index([projectId, serverName], map: "mcp_user_token_project_server_idx")
+  @@map("mcp_user_token")
+}
+
+model Memory {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  content      String
+  category     String
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  chatId       String?  @map("chat_id")
+  supersededBy String?  @map("superseded_by")
+  chat         Chat?    @relation(fields: [chatId], references: [id], onUpdate: NoAction, map: "memories_chat_id_chat_id_fk")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "memories_user_id_user_id_fk")
+
+  @@index([chatId], map: "memories_chatId_idx")
+  @@index([supersededBy], map: "memories_supersededBy_idx")
+  @@index([userId], map: "memories_userId_idx")
+  @@map("memories")
+}
+
+model MessageFeedback {
+  messageId   String      @id @map("message_id")
+  vote        String
+  explanation String?
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  chatMessage ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "message_feedback_message_id_chat_message_id_fk")
+
+  @@map("message_feedback")
+}
+
+model MessageImage {
+  id           String        @id @default(uuid())
+  data         String
+  mediaType    String        @map("media_type")
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  messageParts MessagePart[]
+
+  @@map("message_image")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model MessagePart {
+  id                   String        @id @default(uuid())
+  messageId            String        @map("message_id")
+  order                Int
+  createdAt            DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  type                 String
+  text                 String?
+  reasoningText        String?       @map("reasoning_text")
+  toolCallId           String?       @unique(map: "message_part_tool_call_id_unique") @map("tool_call_id")
+  toolName             String?       @map("tool_name")
+  toolState            String?       @map("tool_state")
+  toolErrorText        String?       @map("tool_error_text")
+  toolInput            Json?         @map("tool_input")
+  toolOutput           Json?         @map("tool_output")
+  toolApprovalId       String?       @map("tool_approval_id")
+  toolApprovalApproved Boolean?      @map("tool_approval_approved")
+  toolApprovalReason   String?       @map("tool_approval_reason")
+  toolRawInput         Json?         @map("tool_raw_input")
+  toolProviderMetadata Json?         @map("tool_provider_metadata")
+  providerMetadata     Json?         @map("provider_metadata")
+  mediaType            String?       @map("media_type")
+  imageId              String?       @map("image_id")
+  storagePath          String?       @map("storage_path")
+  filename             String?
+  messageImage         MessageImage? @relation(fields: [imageId], references: [id], onUpdate: NoAction, map: "message_part_image_id_message_image_id_fk")
+  chatMessage          ChatMessage   @relation(fields: [messageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "message_part_message_id_chat_message_id_fk")
+
+  @@index([messageId], map: "parts_message_id_idx")
+  @@index([messageId, order], map: "parts_message_id_order_idx")
+  @@map("message_part")
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String    @map("user_id")
+  projectId String    @map("project_id")
+  category  String
+  title     String
+  body      String?
+  linkUrl   String?   @map("link_url")
+  payload   Json?
+  readAt    DateTime? @map("read_at") @db.Timestamp(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notification_project_id_project_id_fk")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notification_user_id_user_id_fk")
+
+  @@index([createdAt], map: "notification_createdAt_idx")
+  @@index([userId, projectId, readAt], map: "notification_user_project_read_idx")
+  @@index([userId, readAt], map: "notification_user_read_idx")
+  @@map("notification")
+}
+
+model NotificationUnsubscribe {
+  userId    String   @map("user_id")
+  scope     String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notification_unsubscribe_user_id_user_id_fk")
+
+  @@id([userId, scope], map: "notification_unsubscribe_user_id_scope_pk")
+  @@index([scope])
+  @@index([userId], map: "notification_unsubscribe_userId_idx")
+  @@map("notification_unsubscribe")
+}
+
+model OauthAccessToken {
+  id                String             @id @default(uuid())
+  token             String             @unique(map: "oauth_access_token_token_unique")
+  clientId          String             @map("client_id")
+  sessionId         String?            @map("session_id")
+  userId            String?            @map("user_id")
+  referenceId       String?            @map("reference_id")
+  refreshId         String?            @map("refresh_id")
+  expiresAt         DateTime           @map("expires_at") @db.Timestamp(6)
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamp(6)
+  scopes            Json
+  oauthClient       OauthClient        @relation(fields: [clientId], references: [clientId], onDelete: Cascade, onUpdate: NoAction, map: "oauth_access_token_client_id_oauth_client_client_id_fk")
+  oauthRefreshToken OauthRefreshToken? @relation(fields: [refreshId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "oauth_access_token_refresh_id_oauth_refresh_token_id_fk")
+  session           Session?           @relation(fields: [sessionId], references: [id], onUpdate: NoAction, map: "oauth_access_token_session_id_session_id_fk")
+  user              User?              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "oauth_access_token_user_id_user_id_fk")
+
+  @@index([clientId], map: "oauth_access_token_clientId_idx")
+  @@index([refreshId], map: "oauth_access_token_refreshId_idx")
+  @@index([userId], map: "oauth_access_token_userId_idx")
+  @@map("oauth_access_token")
+}
+
+model OauthClient {
+  id                      String              @id @default(uuid())
+  clientId                String              @unique(map: "oauth_client_client_id_unique") @map("client_id")
+  clientSecret            String?             @map("client_secret")
+  disabled                Boolean?            @default(false)
+  skipConsent             Boolean?            @map("skip_consent")
+  enableEndSession        Boolean?            @map("enable_end_session")
+  subjectType             String?             @map("subject_type")
+  scopes                  Json?
+  userId                  String?             @map("user_id")
+  name                    String?
+  uri                     String?
+  icon                    String?
+  contacts                Json?
+  tos                     String?
+  policy                  String?
+  softwareId              String?             @map("software_id")
+  softwareVersion         String?             @map("software_version")
+  softwareStatement       String?             @map("software_statement")
+  redirectUris            Json                @map("redirect_uris")
+  postLogoutRedirectUris  Json?               @map("post_logout_redirect_uris")
+  tokenEndpointAuthMethod String?             @map("token_endpoint_auth_method")
+  grantTypes              Json?               @map("grant_types")
+  responseTypes           Json?               @map("response_types")
+  public                  Boolean?
+  type                    String?
+  requirePkce             Boolean?            @map("require_pkce")
+  referenceId             String?             @map("reference_id")
+  metadata                Json?
+  createdAt               DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt               DateTime            @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  oauthAccessTokens       OauthAccessToken[]
+  user                    User?               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "oauth_client_user_id_user_id_fk")
+  oauthConsents           OauthConsent[]
+  oauthRefreshTokens      OauthRefreshToken[]
+
+  @@index([userId], map: "oauth_client_userId_idx")
+  @@map("oauth_client")
+}
+
+model OauthConsent {
+  id          String      @id @default(uuid())
+  clientId    String      @map("client_id")
+  userId      String?     @map("user_id")
+  referenceId String?     @map("reference_id")
+  scopes      Json
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  oauthClient OauthClient @relation(fields: [clientId], references: [clientId], onDelete: Cascade, onUpdate: NoAction, map: "oauth_consent_client_id_oauth_client_client_id_fk")
+  user        User?       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "oauth_consent_user_id_user_id_fk")
+
+  @@index([clientId], map: "oauth_consent_clientId_idx")
+  @@index([userId], map: "oauth_consent_userId_idx")
+  @@map("oauth_consent")
+}
+
+model OauthRefreshToken {
+  id                String             @id @default(uuid())
+  token             String             @unique(map: "oauth_refresh_token_token_unique")
+  clientId          String             @map("client_id")
+  sessionId         String?            @map("session_id")
+  userId            String             @map("user_id")
+  referenceId       String?            @map("reference_id")
+  expiresAt         DateTime           @map("expires_at") @db.Timestamp(6)
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamp(6)
+  revoked           DateTime?          @db.Timestamp(6)
+  authTime          DateTime?          @map("auth_time") @db.Timestamp(6)
+  scopes            Json
+  oauthAccessTokens OauthAccessToken[]
+  oauthClient       OauthClient        @relation(fields: [clientId], references: [clientId], onDelete: Cascade, onUpdate: NoAction, map: "oauth_refresh_token_client_id_oauth_client_client_id_fk")
+  session           Session?           @relation(fields: [sessionId], references: [id], onUpdate: NoAction, map: "oauth_refresh_token_session_id_session_id_fk")
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "oauth_refresh_token_user_id_user_id_fk")
+
+  @@index([clientId], map: "oauth_refresh_token_clientId_idx")
+  @@index([sessionId], map: "oauth_refresh_token_sessionId_idx")
+  @@index([userId], map: "oauth_refresh_token_userId_idx")
+  @@map("oauth_refresh_token")
+}
+
+model OrgMember {
+  orgId        String       @map("org_id")
+  userId       String       @map("user_id")
+  role         String
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "org_member_org_id_organization_id_fk")
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "org_member_user_id_user_id_fk")
+
+  @@id([orgId, userId], map: "org_member_org_id_user_id_pk")
+  @@index([userId], map: "org_member_userId_idx")
+  @@map("org_member")
+}
+
+model Organization {
+  id                 String      @id @default(uuid())
+  name               String
+  slug               String      @unique(map: "organization_slug_unique")
+  googleClientId     String?     @map("google_client_id")
+  googleClientSecret String?     @map("google_client_secret")
+  googleAuthDomains  String?     @map("google_auth_domains")
+  createdAt          DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  apiKeys            ApiKey[]
+  orgMembers         OrgMember[]
+  projects           Project[]
+
+  @@map("organization")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Project {
+  id                          String                       @id @default(uuid())
+  name                        String
+  type                        String
+  path                        String?
+  createdAt                   DateTime                     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                   DateTime                     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  orgId                       String?                      @map("org_id")
+  agentSettings               Json?                        @map("agent_settings")
+  enabledTools                Json                         @default("[]") @map("enabled_tools")
+  knownMcpServers             Json                         @default("[]") @map("known_mcp_servers")
+  slackSettings               Json?                        @map("slack_settings")
+  teamsSettings               Json?                        @map("teams_settings")
+  telegramSettings            Json?                        @map("telegram_settings")
+  whatsappSettings            Json?                        @map("whatsapp_settings")
+  envVars                     Json                         @default("{}") @map("env_vars")
+  mcpEndpointSettings         Json?                        @map("mcp_endpoint_settings")
+  displaySettings             Json?                        @map("display_settings")
+  disabledMcpServers          Json                         @default("[]") @map("disabled_mcp_servers")
+  disabledMcpTools            Json                         @default("[]") @map("disabled_mcp_tools")
+  mapSettings                 Json?                        @map("map_settings")
+  defaultModels               Json?                        @map("default_models")
+  mattermostSettings          Json?                        @map("mattermost_settings")
+  rowSecurity                 Json?                        @map("row_security")
+  discordSettings             Json?                        @map("discord_settings")
+  activities                  Activity[]
+  analyticsEvents             AnalyticsEvent[]
+  automations                 Automation[]
+  budgetNotifications         BudgetNotification[]
+  chats                       Chat[]
+  contextBranchOwnerships     ContextBranchOwnership[]
+  contextRecommendations      ContextRecommendation[]
+  contextRecommendationConfig ContextRecommendationConfig?
+  contextRecommendationRuns   ContextRecommendationRun[]
+  llmInferences               LlmInference[]
+  logs                        Log[]
+  mcpCallLogs                 McpCallLog[]
+  mcpOauthClients             McpOauthClient[]
+  mcpQueryDatas               McpQueryData[]
+  mcpUserTokens               McpUserToken[]
+  notifications               Notification[]
+  organization                Organization?                @relation(fields: [orgId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_org_id_organization_id_fk")
+  projectDiscordLinks         ProjectDiscordLink[]
+  projectGroupBudgets         ProjectGroupBudget[]
+  projectLlmConfigs           ProjectLlmConfig[]
+  projectMembers              ProjectMember[]
+  projectProviderBudgets      ProjectProviderBudget[]
+  projectSavedPrompts         ProjectSavedPrompt[]
+  projectStoryThemes          ProjectStoryTheme[]
+  projectWarehouseCredentials ProjectWarehouseCredentials?
+  projectWhatsappLinks        ProjectWhatsappLink[]
+  sandboxSecrets              SandboxSecret[]
+  sharedStories               SharedStory[]
+  stories                     Story[]
+  storyDeliveries             StoryDelivery[]
+  storyFolders                StoryFolder[]
+  userGroups                  UserGroup[]
+
+  @@index([orgId], map: "project_orgId_idx")
+  @@map("project")
+}
+
+model ProjectDiscordLink {
+  projectId     String   @map("project_id")
+  discordUserId String   @map("discord_user_id")
+  userId        String   @map("user_id")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_discord_link_project_id_project_id_fk")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_discord_link_user_id_user_id_fk")
+
+  @@id([projectId, discordUserId], map: "project_discord_link_project_id_discord_user_id_pk")
+  @@index([userId], map: "project_discord_link_userId_idx")
+  @@map("project_discord_link")
+}
+
+model ProjectGroupBudget {
+  groupId   String    @id @map("group_id")
+  projectId String    @map("project_id")
+  limitUsd  Int       @map("limit_usd")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  userGroup UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_group_budget_group_id_user_group_id_fk")
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_group_budget_project_id_project_id_fk")
+
+  @@index([projectId], map: "project_group_budget_projectId_idx")
+  @@map("project_group_budget")
+}
+
+model ProjectLlmConfig {
+  id            String   @id @default(uuid())
+  projectId     String   @map("project_id")
+  provider      String
+  apiKey        String   @map("api_key")
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  enabledModels Json     @default("[]") @map("enabled_models")
+  baseUrl       String?  @map("base_url")
+  credentials   Json?
+  customModels  Json     @default("[]") @map("custom_models")
+  modelSettings Json     @default("{}") @map("model_settings")
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_llm_config_project_id_project_id_fk")
+
+  @@unique([projectId, provider], map: "project_llm_config_project_provider")
+  @@index([projectId], map: "project_llm_config_projectId_idx")
+  @@map("project_llm_config")
+}
+
+model ProjectMember {
+  projectId String   @map("project_id")
+  userId    String   @map("user_id")
+  role      String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_member_project_id_project_id_fk")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_member_user_id_user_id_fk")
+
+  @@id([projectId, userId], map: "project_member_project_id_user_id_pk")
+  @@index([userId], map: "project_member_userId_idx")
+  @@map("project_member")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ProjectProviderBudget {
+  id                 String    @id @default(uuid())
+  projectId          String    @map("project_id")
+  provider           String
+  limitUsd           Int       @map("limit_usd")
+  period             String
+  currentPeriodStart DateTime  @default(now()) @map("current_period_start") @db.Timestamp(6)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  notifiedAt         DateTime? @map("notified_at") @db.Timestamp(6)
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  perUserLimitUsd    Int?      @map("per_user_limit_usd")
+  project            Project   @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_provider_budget_project_id_project_id_fk")
+
+  @@unique([projectId, provider], map: "project_provider_budget_project_provider")
+  @@index([projectId], map: "project_provider_budget_projectId_idx")
+  @@map("project_provider_budget")
+}
+
+model ProjectSavedPrompt {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  title     String
+  prompt    String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_saved_prompt_project_id_project_id_fk")
+
+  @@index([projectId], map: "project_saved_prompt_projectId_idx")
+  @@map("project_saved_prompt")
+}
+
+model ProjectStoryTheme {
+  id         String   @id @default(uuid())
+  projectId  String   @map("project_id")
+  version    Int
+  theme      Json?
+  enabled    Boolean  @default(false)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  generation Json?
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_story_theme_project_id_project_id_fk")
+
+  @@unique([projectId, version], map: "project_story_theme_project_version_unique")
+  @@index([projectId], map: "project_story_theme_projectId_idx")
+  @@map("project_story_theme")
+}
+
+model ProjectWarehouseCredentials {
+  projectId            String   @id @map("project_id")
+  provider             String
+  encryptedCredentials String   @map("encrypted_credentials")
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project              Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_warehouse_credentials_project_id_project_id_fk")
+
+  @@map("project_warehouse_credentials")
+}
+
+model ProjectWhatsappLink {
+  projectId      String   @map("project_id")
+  whatsappUserId String   @map("whatsapp_user_id")
+  userId         String   @map("user_id")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_whatsapp_link_project_id_project_id_fk")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "project_whatsapp_link_user_id_user_id_fk")
+
+  @@id([projectId, whatsappUserId], map: "project_whatsapp_link_project_id_whatsapp_user_id_pk")
+  @@index([userId], map: "project_whatsapp_link_userId_idx")
+  @@map("project_whatsapp_link")
+}
+
+model SandboxSecret {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  projectId      String   @map("project_id")
+  name           String
+  encryptedValue String   @map("encrypted_value")
+  description    String?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sandbox_secret_project_id_project_id_fk")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sandbox_secret_user_id_user_id_fk")
+
+  @@unique([userId, projectId, name], map: "sandbox_secret_user_project_name_idx")
+  @@map("sandbox_secret")
+}
+
+model Session {
+  id                 String              @id @default(uuid())
+  expiresAt          DateTime            @map("expires_at") @db.Timestamp(6)
+  token              String              @unique(map: "session_token_unique")
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt          DateTime            @updatedAt @map("updated_at") @db.Timestamp(6)
+  ipAddress          String?             @map("ip_address")
+  userAgent          String?             @map("user_agent")
+  userId             String              @map("user_id")
+  oauthAccessTokens  OauthAccessToken[]
+  oauthRefreshTokens OauthRefreshToken[]
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "session_user_id_user_id_fk")
+
+  @@index([userId], map: "session_userId_idx")
+  @@map("session")
+}
+
+model SharedChat {
+  id               String             @id @default(uuid())
+  chatId           String             @unique(map: "shared_chat_chatId_unique") @map("chat_id")
+  visibility       String             @default("project")
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(6)
+  activities       Activity[]
+  analyticsEvents  AnalyticsEvent[]
+  chat             Chat               @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_chat_chat_id_chat_id_fk")
+  sharedChatAccess SharedChatAccess[]
+
+  @@map("shared_chat")
+}
+
+model SharedChatAccess {
+  sharedChatId String     @map("shared_chat_id")
+  userId       String     @map("user_id")
+  sharedChat   SharedChat @relation(fields: [sharedChatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_chat_access_shared_chat_id_shared_chat_id_fk")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_chat_access_user_id_user_id_fk")
+
+  @@id([sharedChatId, userId], map: "shared_chat_access_shared_chat_id_user_id_pk")
+  @@map("shared_chat_access")
+}
+
+model SharedStory {
+  id                     String                   @id @default(uuid())
+  projectId              String                   @map("project_id")
+  userId                 String                   @map("user_id")
+  storyId                String                   @map("story_id")
+  visibility             String                   @default("project")
+  createdAt              DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  isPinned               Boolean                  @default(false) @map("is_pinned")
+  activities             Activity[]
+  analyticsEvents        AnalyticsEvent[]
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_project_id_project_id_fk")
+  story                  Story                    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_story_id_story_id_fk")
+  user                   User                     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_user_id_user_id_fk")
+  sharedStoryAccess      SharedStoryAccess[]
+  sharedStoryGroupAccess SharedStoryGroupAccess[]
+
+  @@unique([projectId, storyId], map: "shared_story_project_story_unique")
+  @@index([projectId], map: "shared_story_projectId_idx")
+  @@index([storyId], map: "shared_story_storyId_idx")
+  @@map("shared_story")
+}
+
+model SharedStoryAccess {
+  sharedStoryId String      @map("shared_story_id")
+  userId        String      @map("user_id")
+  sharedStory   SharedStory @relation(fields: [sharedStoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_access_shared_story_id_shared_story_id_fk")
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_access_user_id_user_id_fk")
+
+  @@id([sharedStoryId, userId], map: "shared_story_access_shared_story_id_user_id_pk")
+  @@map("shared_story_access")
+}
+
+model SharedStoryGroupAccess {
+  sharedStoryId String      @map("shared_story_id")
+  groupId       String      @map("group_id")
+  userGroup     UserGroup   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_group_access_group_id_user_group_id_fk")
+  sharedStory   SharedStory @relation(fields: [sharedStoryId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "shared_story_group_access_shared_story_id_shared_story_id_fk")
+
+  @@id([sharedStoryId, groupId], map: "shared_story_group_access_shared_story_id_group_id_pk")
+  @@index([groupId], map: "shared_story_group_access_groupId_idx")
+  @@map("shared_story_group_access")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Story {
+  id                       String           @id @default(uuid())
+  chatId                   String?          @map("chat_id")
+  slug                     String
+  title                    String
+  isLive                   Boolean          @default(false) @map("is_live")
+  isLiveTextDynamic        Boolean          @default(true) @map("is_live_text_dynamic")
+  cacheSchedule            String?          @map("cache_schedule")
+  cacheScheduleDescription String?          @map("cache_schedule_description")
+  archivedAt               DateTime?        @map("archived_at") @db.Timestamp(6)
+  createdAt                DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                DateTime         @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  projectId                String?          @map("project_id")
+  userId                   String?          @map("user_id")
+  certifiedAt              DateTime?        @map("certified_at") @db.Timestamp(6)
+  certifiedBy              String?          @map("certified_by")
+  format                   String           @default("classic")
+  activities               Activity[]
+  analyticsEvents          AnalyticsEvent[]
+  favorites                Favorite[]
+  sharedStories            SharedStory[]
+  certifiedByUser          User?            @relation("story_certified_byTouser", fields: [certifiedBy], references: [id], onUpdate: NoAction, map: "story_certified_by_user_id_fk")
+  chat                     Chat?            @relation(fields: [chatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_chat_id_chat_id_fk")
+  project                  Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_project_id_project_id_fk")
+  user                     User?            @relation("story_user_idTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_user_id_user_id_fk")
+  storyAppStates           StoryAppState[]
+  storyDataCache           StoryDataCache?
+  storyDelivery            StoryDelivery?
+  storyDraftFiles          StoryDraftFile[]
+  storyFeedbacks           StoryFeedback[]
+  storyFolderItem          StoryFolderItem?
+  storyVersions            StoryVersion[]
+
+  @@unique([chatId, slug], map: "story_chat_slug_unique")
+  @@unique([projectId, userId, slug], map: "story_standalone_slug_unique", where: raw("(chat_id IS NULL)"))
+  @@index([chatId], map: "story_chatId_idx")
+  @@index([projectId], map: "story_projectId_idx")
+  @@index([userId], map: "story_userId_idx")
+  @@map("story")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model StoryAppState {
+  id            String   @id @default(uuid())
+  storyId       String   @map("story_id")
+  scope         String
+  userId        String?  @map("user_id")
+  key           String
+  value         Json
+  updatedBy     String?  @map("updated_by")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  story         Story    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_app_state_story_id_story_id_fk")
+  updatedByUser User?    @relation("story_app_state_updated_byTouser", fields: [updatedBy], references: [id], onUpdate: NoAction, map: "story_app_state_updated_by_user_id_fk")
+  user          User?    @relation("story_app_state_user_idTouser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_app_state_user_id_user_id_fk")
+
+  @@unique([storyId, key], map: "story_app_state_project_key_unique", where: raw("(scope = 'project'::text)"))
+  @@unique([storyId, userId, key], map: "story_app_state_user_key_unique", where: raw("(scope = 'user'::text)"))
+  @@index([storyId], map: "story_app_state_storyId_idx")
+  @@map("story_app_state")
+}
+
+model StoryBundle {
+  storyVersionId String       @id @map("story_version_id")
+  kind           String
+  bundle         String?
+  pageShell      String?      @map("page_shell")
+  bundleError    String?      @map("bundle_error")
+  builtAt        DateTime     @default(now()) @map("built_at") @db.Timestamp(6)
+  thumbnail      String?
+  thumbnailTheme String?      @map("thumbnail_theme")
+  storyVersion   StoryVersion @relation(fields: [storyVersionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_bundle_story_version_id_story_version_id_fk")
+
+  @@map("story_bundle")
+}
+
+model StoryDataCache {
+  storyId         String   @id @map("story_id")
+  queryData       Json     @map("query_data")
+  analysisResults Json?    @map("analysis_results")
+  cachedAt        DateTime @default(now()) @map("cached_at") @db.Timestamp(6)
+  querySources    Json?    @map("query_sources")
+  story           Story    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_data_cache_story_id_story_id_fk")
+
+  @@map("story_data_cache")
+}
+
+model StoryDelivery {
+  id                  String   @id @default(uuid())
+  storyId             String   @unique(map: "story_delivery_story_id_unique") @map("story_id")
+  projectId           String?  @map("project_id")
+  enabled             Boolean  @default(false)
+  cron                String?
+  scheduleDescription String?  @map("schedule_description")
+  channels            Json
+  recipientMode       String   @default("specific") @map("recipient_mode")
+  recipientUserIds    Json     @map("recipient_user_ids")
+  createdBy           String?  @map("created_by")
+  createdAt           DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  recipientGroupIds   Json     @default("[]") @map("recipient_group_ids")
+  user                User?    @relation(fields: [createdBy], references: [id], onUpdate: NoAction, map: "story_delivery_created_by_user_id_fk")
+  project             Project? @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_delivery_project_id_project_id_fk")
+  story               Story    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_delivery_story_id_story_id_fk")
+
+  @@map("story_delivery")
+}
+
+model StoryDraftFile {
+  id        String   @id @default(uuid())
+  storyId   String   @map("story_id")
+  path      String
+  content   String
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_draft_file_story_id_story_id_fk")
+
+  @@unique([storyId, path], map: "story_draft_file_story_path_unique")
+  @@index([storyId], map: "story_draft_file_storyId_idx")
+  @@map("story_draft_file")
+}
+
+model StoryFeedback {
+  storyId     String   @map("story_id")
+  userId      String   @map("user_id")
+  vote        String
+  explanation String?
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  story       Story    @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_feedback_story_id_story_id_fk")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_feedback_user_id_user_id_fk")
+
+  @@id([storyId, userId], map: "story_feedback_story_id_user_id_pk")
+  @@index([userId], map: "story_feedback_userId_idx")
+  @@map("story_feedback")
+}
+
+model StoryFile {
+  id             String        @id @default(uuid())
+  storyVersionId String        @map("story_version_id")
+  path           String
+  contentHash    String        @map("content_hash")
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamp(6)
+  storyFileBlob  StoryFileBlob @relation(fields: [contentHash], references: [contentHash], onDelete: NoAction, onUpdate: NoAction, map: "story_file_content_hash_story_file_blob_content_hash_fk")
+  storyVersion   StoryVersion  @relation(fields: [storyVersionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_file_story_version_id_story_version_id_fk")
+
+  @@unique([storyVersionId, path], map: "story_file_version_path_unique")
+  @@index([storyVersionId], map: "story_file_storyVersionId_idx")
+  @@map("story_file")
+}
+
+model StoryFileBlob {
+  contentHash String      @id @map("content_hash")
+  content     String
+  size        Int
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp(6)
+  storyFiles  StoryFile[]
+
+  @@map("story_file_blob")
+}
+
+model StoryFolder {
+  id                String            @id @default(uuid())
+  ownerId           String            @map("owner_id")
+  projectId         String            @map("project_id")
+  parentId          String?           @map("parent_id")
+  name              String
+  visibility        String            @default("public")
+  systemType        String?           @map("system_type")
+  archivedAt        DateTime?         @map("archived_at") @db.Timestamp(6)
+  createdAt         DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  favorites         Favorite[]
+  user              User              @relation(fields: [ownerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_folder_owner_id_user_id_fk")
+  storyFolder       StoryFolder?      @relation("story_folderTostory_folder", fields: [parentId], references: [id], onUpdate: NoAction, map: "story_folder_parent_id_story_folder_id_fk")
+  otherStoryFolders StoryFolder[]     @relation("story_folderTostory_folder")
+  project           Project           @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_folder_project_id_project_id_fk")
+  storyFolderItems  StoryFolderItem[]
+
+  @@unique([projectId, ownerId], map: "story_folder_private_root_unique", where: raw("(system_type = 'private_folder'::text)"))
+  @@index([ownerId, projectId, parentId], map: "story_folder_ownerProjectParent_idx")
+  @@index([projectId], map: "story_folder_projectId_idx")
+  @@map("story_folder")
+}
+
+model StoryFolderItem {
+  storyId     String      @id @map("story_id")
+  folderId    String      @map("folder_id")
+  storyFolder StoryFolder @relation(fields: [folderId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_folder_item_folder_id_story_folder_id_fk")
+  story       Story       @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_folder_item_story_id_story_id_fk")
+
+  @@index([folderId], map: "story_folder_item_folderId_idx")
+  @@map("story_folder_item")
+}
+
+model StoryVersion {
+  id          String       @id @default(uuid())
+  storyId     String       @map("story_id")
+  version     Int
+  code        String
+  action      String
+  source      String
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  storyBundle StoryBundle?
+  storyFiles  StoryFile[]
+  story       Story        @relation(fields: [storyId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "story_version_story_id_story_id_fk")
+
+  @@unique([storyId, version], map: "story_version_story_version_unique")
+  @@index([storyId], map: "story_version_storyId_idx")
+  @@map("story_version")
+}
+
+model User {
+  id                        String                     @id @default(uuid())
+  name                      String
+  email                     String                     @unique(map: "user_email_unique")
+  emailVerified             Boolean                    @default(false) @map("email_verified")
+  image                     String?
+  createdAt                 DateTime                   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt                 DateTime                   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  requiresPasswordReset     Boolean                    @default(false) @map("requires_password_reset")
+  memoryEnabled             Boolean                    @default(true) @map("memory_enabled")
+  messagingProviderCode     String?                    @unique(map: "user_messaging_provider_code_unique") @map("messaging_provider_code")
+  githubAccessToken         String?                    @map("github_access_token")
+  gitlabAccessToken         String?                    @map("gitlab_access_token")
+  deactivatedAt             DateTime?                  @map("deactivated_at") @db.Timestamp(6)
+  accounts                  Account[]
+  activities                Activity[]
+  analyticsEvents           AnalyticsEvent[]
+  apiKeys                   ApiKey[]
+  automations               Automation[]
+  chats                     Chat[]
+  chatMessages              ChatMessage[]
+  contextBranchOwnerships   ContextBranchOwnership[]
+  contextRecommendations    ContextRecommendation[]
+  favorites                 Favorite[]
+  llmInferences             LlmInference[]
+  mcpCallLogs               McpCallLog[]
+  mcpOauthClients           McpOauthClient[]
+  mcpUserTokens             McpUserToken[]
+  memories                  Memory[]
+  notifications             Notification[]
+  notificationUnsubscribes  NotificationUnsubscribe[]
+  oauthAccessTokens         OauthAccessToken[]
+  oauthClients              OauthClient[]
+  oauthConsents             OauthConsent[]
+  oauthRefreshTokens        OauthRefreshToken[]
+  orgMembers                OrgMember[]
+  projectDiscordLinks       ProjectDiscordLink[]
+  projectMembers            ProjectMember[]
+  projectWhatsappLinks      ProjectWhatsappLink[]
+  sandboxSecrets            SandboxSecret[]
+  sessions                  Session[]
+  sharedChatAccess          SharedChatAccess[]
+  sharedStories             SharedStory[]
+  sharedStoryAccess         SharedStoryAccess[]
+  certifiedStories          Story[]                    @relation("story_certified_byTouser")
+  stories                   Story[]                    @relation("story_user_idTouser")
+  updatedStoryAppStates     StoryAppState[]            @relation("story_app_state_updated_byTouser")
+  storyAppStates            StoryAppState[]            @relation("story_app_state_user_idTouser")
+  storyDeliveries           StoryDelivery[]
+  storyFeedbacks            StoryFeedback[]
+  storyFolders              StoryFolder[]
+  userGroupMembers          UserGroupMember[]
+  userPreference            UserPreference?
+  warehouseConnectionChecks WarehouseConnectionCheck[]
+
+  @@map("user")
+}
+
+model UserGroup {
+  id                     String                   @id @default(uuid())
+  projectId              String                   @map("project_id")
+  name                   String
+  isDefault              Boolean                  @default(false) @map("is_default")
+  featureGrants          Json                     @default("{\"version\": 2, \"features\": [], \"toolCallDensity\": {\"canChange\": true, \"defaultDensity\": \"detailed\"}}") @map("feature_grants")
+  contextGrants          Json?                    @map("context_grants")
+  rowPolicies            Json?                    @map("row_policies")
+  createdAt              DateTime                 @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt              DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  projectGroupBudget     ProjectGroupBudget?
+  sharedStoryGroupAccess SharedStoryGroupAccess[]
+  project                Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_group_project_id_project_id_fk")
+  userGroupMembers       UserGroupMember[]
+
+  @@unique([projectId], map: "user_group_project_default_unique", where: raw("(is_default = true)"))
+  @@unique([projectId, name], map: "user_group_project_name_unique")
+  @@index([projectId], map: "user_group_projectId_idx")
+  @@map("user_group")
+}
+
+model UserGroupMember {
+  groupId   String    @map("group_id")
+  userId    String    @map("user_id")
+  provider  String    @default("manual")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  userGroup UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_group_member_group_id_user_group_id_fk")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_group_member_user_id_user_id_fk")
+
+  @@id([groupId, userId, provider], map: "user_group_member_group_id_user_id_provider_pk")
+  @@index([userId, provider], map: "user_group_member_user_provider_idx")
+  @@map("user_group_member")
+}
+
+model UserPreference {
+  userId      String   @id @map("user_id")
+  preferences Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_preference_user_id_user_id_fk")
+
+  @@map("user_preference")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at") @db.Timestamp(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model WarehouseConnectionCheck {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  provider  String
+  outcome   String
+  error     String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "warehouse_connection_check_user_id_user_id_fk")
+
+  @@index([userId], map: "warehouse_connection_check_userId_idx")
+  @@map("warehouse_connection_check")
+}
