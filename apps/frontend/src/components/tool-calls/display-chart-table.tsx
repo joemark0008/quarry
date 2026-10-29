@@ -17,6 +17,7 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useStoryIds } from '@/hooks/use-story-ids';
 import { useSourceQuery } from '@/hooks/use-source-query';
+import { chartsApi } from '@/lib/charts-api';
 import { trpc } from '@/main';
 
 const EMPTY_COLUMNS: string[] = [];
@@ -42,7 +43,7 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 	const { sourceData, isLoadingRows } = useSourceQuery(config?.query_id);
 
 	const { mutateAsync: updateChart, isPending: isUpdatingChart } = useMutation(
-		trpc.chart.updateConfig.mutationOptions({
+		chartsApi.chart.updateConfig.mutationOptions({
 			onSuccess: () => queryClient.invalidateQueries({ queryKey: [['chat', 'get']] }),
 		}),
 	);

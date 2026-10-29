@@ -25,6 +25,7 @@ import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import { GitlabRepoList } from '@/components/settings/gitlab-repo-list';
 import { setActiveProjectId } from '@/lib/active-project';
 import { trpc } from '@/main';
+import { refetchProjectQueries } from '@/hooks/use-current-project';
 
 interface GitLabRepoPickerProps {
 	open: boolean;
@@ -48,7 +49,7 @@ export function GitLabRepoPicker({ open, onOpenChange }: GitLabRepoPickerProps) 
 		trpc.gitlab.createProjectFromRepo.mutationOptions({
 			onSuccess: (data) => {
 				setActiveProjectId(data.projectId);
-				queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() });
+				refetchProjectQueries();
 				queryClient.invalidateQueries({ queryKey: trpc.organization.getProjects.queryKey() });
 				queryClient.invalidateQueries({ queryKey: trpc.gitlab.getProjectGitInfo.queryKey() });
 				queryClient.invalidateQueries({ queryKey: trpc.userGroup.effectiveAccess.queryKey() });

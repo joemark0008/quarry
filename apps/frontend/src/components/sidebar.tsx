@@ -39,6 +39,8 @@ import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings
 import { useUnreadAutomationRunCount, useUnreadCount } from '@/queries/use-notifications';
 import { useSession } from '@/lib/auth-client';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 const SIDEBAR_TRANSITION_STYLE: React.CSSProperties = {
 	transitionDuration: `${SIDE_PANEL_ANIMATION_DURATION}ms`,
@@ -59,8 +61,8 @@ export function Sidebar() {
 	} = useSidebar();
 	const [toggleHintOpen, setToggleHintOpen] = useState(false);
 	const { fire: openCommandMenu } = useCommandMenuCallback();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const project = useCurrentProject();
+	const projects = useProjects();
 	const switchProject = useProjectSwitch(project.data?.id);
 	const config = usePublicConfig();
 	const { isAdmin, isContextAdmin, isOrgAdmin, isViewer } = usePermissions();
@@ -430,10 +432,10 @@ function SidebarNav({
 	isTrial: boolean;
 }) {
 	const groupedChats = useQuery({
-		...trpc.chat.listGrouped.queryOptions({ groupBy, filters }),
+		...chatApi.chat.listGrouped.queryOptions({ groupBy, filters }),
 		placeholderData: keepPreviousData,
 	});
-	const unfilteredChats = useQuery(trpc.chat.listGrouped.queryOptions({ groupBy: 'none', filters: ['all'] }));
+	const unfilteredChats = useQuery(chatApi.chat.listGrouped.queryOptions({ groupBy: 'none', filters: ['all'] }));
 	const onboardingChat = unfilteredChats.data?.groups
 		.flatMap((group) => group.chats)
 		.find((chat) => chat.isOnboarding);

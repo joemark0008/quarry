@@ -55,12 +55,16 @@ export default defineConfig({
 		proxy: {
 			'/graphql': { target: QUARRY_API_URL },
 			'/api/auth': { target: QUARRY_API_URL },
+			'/api/agent': { target: QUARRY_API_URL },
+			'/api/attachments': { target: QUARRY_API_URL },
+			'/api/transcribe': { target: QUARRY_API_URL },
+			'/api/map-boundaries': { target: QUARRY_API_URL },
 			'/health': { target: QUARRY_API_URL },
 			'/api': { target: UPSTREAM_API_URL },
 			'/mcp': { target: UPSTREAM_API_URL },
 			'/.well-known': { target: UPSTREAM_API_URL },
-			'/i/': { target: UPSTREAM_API_URL },
-			'/c/': { target: UPSTREAM_API_URL },
+			'/i/': { target: QUARRY_API_URL },
+			'/c/': { target: QUARRY_API_URL },
 		},
 	},
 });

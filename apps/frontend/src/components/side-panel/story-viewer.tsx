@@ -48,6 +48,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useRegisterStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { StoryThemeProvider, useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
 import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 interface StoryViewerProps {
 	chatId: string;
@@ -158,7 +159,7 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 	const outerAgent = useOptionalAgentContext();
 	const outerAgentHasCorrectChat = outerAgent?.chatId === chatId;
 	const chatQuery = useQuery({
-		...trpc.chat.get.queryOptions({ chatId }),
+		...chatApi.chat.get.queryOptions({ chatId }),
 		staleTime: Infinity,
 		enabled: !outerAgentHasCorrectChat,
 	});

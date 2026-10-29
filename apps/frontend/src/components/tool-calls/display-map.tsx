@@ -43,6 +43,8 @@ import type { DataExportFormat } from '@/components/export-data-menu';
 import type { MapStyleId } from '@/hooks/use-map-style';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { cn } from '@/lib/utils';
+import { chartsApi } from '@/lib/charts-api';
+import { projectApi } from '@/lib/project-api';
 import { trpc } from '@/main';
 import { useBreakoutStyle } from '@/hooks/use-breakout-width';
 import { useChatId } from '@/hooks/use-chat-id';
@@ -84,7 +86,7 @@ export const DisplayMapToolCall = ({
 	const isEditable = Boolean(agent && !agent.isReadonly && !agent.isRunning);
 	const storyIds = useStoryIds();
 	const { mutate: logDownload } = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
-	const { data: customBoundaries = [] } = useQuery(trpc.project.getMapBoundaries.queryOptions());
+	const { data: customBoundaries = [] } = useQuery(projectApi.project.getMapBoundaries.queryOptions());
 
 	const { mutate: addToStory } = useMutation(
 		trpc.story.createVersion.mutationOptions({
@@ -107,7 +109,7 @@ export const DisplayMapToolCall = ({
 	);
 
 	const { mutateAsync: updateMap, isPending: isUpdatingMap } = useMutation(
-		trpc.map.updateConfig.mutationOptions({
+		chartsApi.map.updateConfig.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: [['chat', 'get']] });
 			},

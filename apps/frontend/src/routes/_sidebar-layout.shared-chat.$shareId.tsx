@@ -8,13 +8,13 @@ import { SharedChatButton } from '@/components/shared-chat-button';
 import { SidePanel } from '@/components/side-panel/side-panel';
 import { Spinner } from '@/components/ui/spinner';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { ReadonlyAgentMessagesProvider } from '@/contexts/agent.provider';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { SidePanelProvider } from '@/contexts/side-panel';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
+import { chatApi } from '@/lib/chat-api';
 
 export const Route = createFileRoute('/_sidebar-layout/shared-chat/$shareId')({
 	component: SharedChatPage,
@@ -26,10 +26,10 @@ function SharedChatPage() {
 	const navigate = useNavigate();
 
 	const queryClient = useQueryClient();
-	const chatQuery = useQuery(trpc.sharedChat.getSharedChat.queryOptions({ shareId }));
+	const chatQuery = useQuery(chatApi.sharedChat.getSharedChat.queryOptions({ shareId }));
 	const isViewer = chatQuery.data?.userRole === 'viewer';
 	const forkMutation = useMutation(
-		trpc.chatFork.fork.mutationOptions({
+		chatApi.chatFork.fork.mutationOptions({
 			onSuccess: (data) => {
 				queryClient.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
 				navigate({ to: '/$chatId', params: { chatId: data.chatId } });

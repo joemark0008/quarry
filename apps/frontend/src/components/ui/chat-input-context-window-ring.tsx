@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { trpc } from '@/main';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
+import { chatApi } from '@/lib/chat-api';
 
 const RADIUS = 8;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -111,7 +112,7 @@ export function ContextWindowRing({ className }: { className?: string }) {
 	const hasAssistantMessage = useAgentMessagesSelector(hasSomeAssistantMessage);
 
 	const contextUsage = useQuery(
-		trpc.chat.getContextUsage.queryOptions(
+		chatApi.chat.getContextUsage.queryOptions(
 			{
 				chatId: chatId ?? '',
 				model: selectedModel ? { provider: selectedModel.provider, modelId: selectedModel.modelId } : undefined,

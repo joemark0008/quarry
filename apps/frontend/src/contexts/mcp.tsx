@@ -1,9 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import type { McpServerStatus } from '@quarry/shared';
-import { trpc, trpcClient } from '@/main';
+import { trpcClient } from '@/main';
 import { useMemoObject } from '@/hooks/useMemoObject';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 interface McpContextValue {
 	servers: McpServerStatus[] | undefined;
@@ -16,7 +16,7 @@ const McpContext = createContext<McpContextValue | null>(null);
 export function McpProvider({ children }: { children: ReactNode }) {
 	const [servers, setServers] = useState<McpServerStatus[] | undefined>(undefined);
 	const [configError, setConfigError] = useState<string | null>(null);
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const projectIdRef = useRef(projectId);
 	const refreshIdRef = useRef(0);

@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { requestAsk } from '@/stores/ask-bar';
+import { chatApi } from '@/lib/chat-api';
 
 /** Continues the shared chat, with the user's quick questions about it a chevron away. */
 export function SharedChatButton({
@@ -21,7 +21,7 @@ export function SharedChatButton({
 	isPending?: boolean;
 	onClick: () => void;
 }) {
-	const quickQuestions = useQuery(trpc.chatFork.listSharedChatQuickQuestions.queryOptions({ shareId }));
+	const quickQuestions = useQuery(chatApi.chatFork.listSharedChatQuickQuestions.queryOptions({ shareId }));
 	const chats = quickQuestions.data ?? [];
 	const hasQuickQuestions = quickQuestions.isError || chats.length > 0;
 

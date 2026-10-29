@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 
-import { ProjectRepository } from './project.repository.js';
+import { OrganizationsModule } from '../organizations/organizations.module.js';
+import { ProjectSavedPromptRepository } from './project-saved-prompt.repository.js';
+import { ProjectsResolver } from './projects.resolver.js';
+import { ProjectsService } from './projects.service.js';
+import { ProjectsCoreModule } from './projects-core.module.js';
 
-/** Grows into the full projects module in Phase 2; for now project lookup and membership for access checks. */
+/** Port of upstream trpc `project` (core: list, current, create, rename, delete, saved prompts). */
 @Module({
-	providers: [ProjectRepository],
-	exports: [ProjectRepository],
+	imports: [ProjectsCoreModule, OrganizationsModule],
+	providers: [ProjectSavedPromptRepository, ProjectsService, ProjectsResolver],
+	exports: [ProjectsCoreModule, ProjectsService],
 })
 export class ProjectsModule {}

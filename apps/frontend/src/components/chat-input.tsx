@@ -81,6 +81,9 @@ import { SelectionCitationBanner } from '@/components/selection-citation-banner'
 import { ChatInputSuggestions, SuggestionCard } from '@/components/chat-input-suggestions';
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
+import { storageApi } from '@/lib/storage-api';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -197,11 +200,11 @@ function ChatInputBase({
 		navigate({ to: '/', search: { admin: true } });
 	}, [adminModeLocked, isAdminMode, setAdminMode, navigate]);
 	const { canCycleModels, cycleModel } = useModelSelection();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const hasProject = project.data != null;
 	const isTrial = useIsCloud() && project.data === null;
 	const uploadLimits = useQuery({
-		...trpc.storage.getUploadLimits.queryOptions(),
+		...storageApi.storage.getUploadLimits.queryOptions(),
 		enabled: hasProject,
 	});
 	const attachmentUpload = useAttachmentUpload({
@@ -212,11 +215,11 @@ function ChatInputBase({
 	const chatInputRestore = useChatInputRestore(!!allowQueueing);
 
 	const agentSettings = useQuery({
-		...trpc.project.getAgentSettings.queryOptions(),
+		...projectApi.project.getAgentSettings.queryOptions(),
 		enabled: hasProject,
 	});
 	const transcribeModels = useQuery({
-		...trpc.project.getKnownTranscribeModels.queryOptions(),
+		...projectApi.project.getKnownTranscribeModels.queryOptions(),
 		enabled: hasProject,
 	});
 	const isTranscribeEnabled = hasProject && (agentSettings.data?.transcribe?.enabled ?? false);
@@ -750,7 +753,7 @@ function ChatInputAdminBadge() {
 function BudgetBanner() {
 	const { error, clearError, selectedModel } = useAgentContext();
 	const { isAdmin, isOrgAdmin } = usePermissions();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const hasProject = project.data != null;
 	const selectedProvider = selectedModel?.provider;
 	const prevProviderRef = useRef(selectedProvider);

@@ -63,6 +63,7 @@ import { requireContextAdminOrAdmin } from '@/lib/route-guards';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { projectApi } from '@/lib/project-api';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/recommendations')({
 	beforeLoad: requireContextAdminOrAdmin,
@@ -1210,12 +1211,12 @@ function ConfigTab({ enabled }: { enabled: boolean }) {
 
 	const availableModels = useQuery({ ...trpc.contextRecommendation.listAvailableModels.queryOptions(), enabled });
 	const config = useQuery({ ...trpc.contextRecommendation.getConfig.queryOptions(), enabled });
-	const defaultModels = useQuery({ ...trpc.project.getDefaultModels.queryOptions(), enabled });
+	const defaultModels = useQuery({ ...projectApi.project.getDefaultModels.queryOptions(), enabled });
 	const setConfig = useMutation(trpc.contextRecommendation.setConfig.mutationOptions());
 
 	const invalidateConfig = () => {
 		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.getConfig.queryKey() });
-		queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultModels.queryOptions().queryKey });
+		queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey });
 	};
 
 	const selectedModel = selectBackgroundModel(defaultModels.data?.settings, 'context_recommendation');

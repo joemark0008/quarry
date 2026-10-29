@@ -59,3 +59,17 @@ service on :8005. Open http://localhost:3000.
    and a Library counter (one entry per query result).
 8. `llm_inference` in `nao_baseline` records the side calls (`title_generation`, `memory_extraction`) on
    `openai / gpt-4.1-mini`.
+
+## Phase 2c comparison (2026-10-29)
+
+Same two questions, same session and model ("Auto", resolved to the OpenAI default), asked live on both backends:
+upstream on its `example` project (DuckDB jaffle_shop, with the FastAPI SQL service on :8005 — without it every query
+fails with `ECONNREFUSED`), quarry on the `jaffle` project (Postgres `warehouse`, synced context).
+
+| Question                                                         | Upstream                                                                                                   | Quarry (`apps/api`)                                                                                 |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| How many orders are there, and what is the total payment amount? | 99 orders, 1,672 — one `execute_semantic_query` (`orders`, `revenue`) after reading `semantics/`           | 99 orders, 1,672 — one `execute_sql` after reading the synced `columns.md` / `preview.md` files     |
+| How do orders and payment amounts trend by month?                | Jan 29 / 496, Feb 27 / 415, Mar 35 / 622, Apr 8 / 139 (semantic query), mixed bar/line chart, 2 follow-ups | Same figures (`execute_sql` joining `stg_payments`), mixed bar/line chart, a table and 3 follow-ups |
+
+Both cite the figures (`<citation-number>`), flag April as possibly incomplete and match the Phase 0 baseline. The
+only difference is the route to the data: quarry has no semantic layer until Phase 3, so it writes SQL itself.

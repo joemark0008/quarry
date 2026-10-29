@@ -11,6 +11,8 @@ const mocks = vi.hoisted(() => ({
 	storage: new Map<string, string>(),
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@tanstack/react-query', () => ({
 	useQuery: (options: { queryKey: string[] }) => {
 		switch (options.queryKey[0]) {

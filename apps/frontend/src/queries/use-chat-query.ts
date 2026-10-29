@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { createQuerySetter } from './create-query-setter';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import type { Updater } from '@tanstack/react-query';
 import type { inferRouterOutputs } from '@trpc/server';
 import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import { isRetryableTrpcError } from '@/lib/trpc-error';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 export type Chat = inferRouterOutputs<TrpcRouter>['chat']['get'];
 
@@ -19,7 +20,7 @@ export const useChatQuery = <TSelected = Chat>({
 	select?: (chat: Chat) => TSelected;
 }) => {
 	return useQuery({
-		...trpc.chat.get.queryOptions(
+		...chatApi.chat.get.queryOptions(
 			{ chatId: chatId ?? '' },
 			{
 				enabled: !!chatId,
@@ -32,4 +33,13 @@ export const useChatQuery = <TSelected = Chat>({
 	});
 };
 
-export const useSetChat = createQuerySetter(() => trpc.chat.get);
+/** Writes the cached chat (streamed messages, renames, feedback…). */
+export const useSetChat = () => {
+	const queryClient = useQueryClient();
+	return useCallback(
+		(input: { chatId?: string }, updater: Updater<Chat | undefined, Chat | undefined>) => {
+			queryClient.setQueryData(chatApi.chat.get.queryKey(input as { chatId: string }), updater);
+		},
+		[queryClient],
+	);
+};

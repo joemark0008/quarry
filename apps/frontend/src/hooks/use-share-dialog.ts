@@ -3,10 +3,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useActiveProjectId } from '@/lib/active-project';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function useShareAudience() {
 	const activeProjectId = useActiveProjectId();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const access = useQuery({
@@ -25,7 +26,7 @@ export function useMemberPicker(currentUserId: string | undefined, initialIds: s
 	const [search, setSearch] = useState('');
 
 	const activeProjectId = useActiveProjectId();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const membersQuery = useQuery({

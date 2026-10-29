@@ -23,6 +23,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { chatApi } from '@/lib/chat-api';
 
 export function AssistantMessageActions({
 	message,
@@ -76,10 +77,10 @@ export function AssistantMessageActions({
 	};
 
 	const submitFeedback = useMutation(
-		trpc.feedback.submit.mutationOptions({
+		chatApi.feedback.submit.mutationOptions({
 			onSuccess: (data, variables, __, ctx) => {
 				setFeedbackCelebration((prev) => ({ vote: variables.vote, key: (prev?.key ?? 0) + 1 }));
-				ctx.client.setQueryData(trpc.chat.get.queryKey({ chatId }), (prev) =>
+				ctx.client.setQueryData(chatApi.chat.get.queryKey({ chatId }), (prev) =>
 					prev
 						? {
 								...prev,

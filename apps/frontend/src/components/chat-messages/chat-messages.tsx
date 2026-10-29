@@ -29,7 +29,7 @@ import { useVisibleMessages } from '@/hooks/use-visible-messages';
 import { useScrollToBottomOnNewUserMessage } from '@/hooks/use-scroll-to-bottom-on-new-user-message';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useChatQuery } from '@/queries/use-chat-query';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 const DEBUG_MESSAGES = false;
 
@@ -77,7 +77,7 @@ export const ChatMessagesContent = memo(function ChatMessagesContent() {
 	const lastMessageId = visibleMessages.at(-1)?.id;
 
 	const forkMetadata = useQuery({
-		...trpc.chat.getForkMetadata.queryOptions({ chatId: chatId ?? '' }),
+		...chatApi.chat.getForkMetadata.queryOptions({ chatId: chatId ?? '' }),
 		enabled: !!chatId,
 	});
 	const storyIntroMessageId =

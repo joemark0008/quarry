@@ -15,6 +15,7 @@ import { useToggleFavorite } from '@/hooks/use-toggle-favorite';
 import { useToggleStoryCertification } from '@/hooks/use-toggle-story-certification';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 interface ShareButtonProps {
 	isShared: boolean;
@@ -49,7 +50,7 @@ export function ShareButton({ isShared, onShare, disabled = false }: ShareButton
 export function StoryDuplicateMenuItem({ storyId }: { storyId: string }) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-	const { data: currentProject } = useQuery(trpc.project.getCurrent.queryOptions());
+	const { data: currentProject } = useCurrentProject();
 	const switchProject = useProjectSwitch(currentProject?.id);
 	const { data: resolvedStory } = useQuery(trpc.story.resolve.queryOptions({ storyId }));
 	const duplicateMutation = useMutation(

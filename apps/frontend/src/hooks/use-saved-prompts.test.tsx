@@ -11,6 +11,8 @@ const mocks = vi.hoisted(() => ({
 	savedPromptsData: [{ id: 'prompt-id' }],
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@tanstack/react-query', () => ({
 	useQuery: (options: { queryKey: string[]; enabled?: boolean }) => {
 		mocks.queries.push(options);
@@ -19,6 +21,12 @@ vi.mock('@tanstack/react-query', () => ({
 			: { data: mocks.savedPromptsData, isPending: false, isError: false, isLoading: false };
 	},
 }));
+
+/** The project procedures moved to apps/api read the same mocked procedures as `trpc.project`. */
+vi.mock('@/lib/project-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: { project: unknown } };
+	return { projectApi: { project: trpc.project } };
+});
 
 vi.mock('@/main', () => ({
 	trpc: {

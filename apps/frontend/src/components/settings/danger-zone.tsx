@@ -13,14 +13,14 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 export function DangerZone() {
 	const [isOpen, setIsOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const deleteAllNonStarred = useMutation(
-		trpc.chat.deleteAllNonStarred.mutationOptions({
+		chatApi.chat.deleteAllNonStarred.mutationOptions({
 			onSuccess: (_data, _, __, ctx) => {
 				ctx.client.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
 				setIsOpen(false);

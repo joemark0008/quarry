@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => ({
 	getConfigError: vi.fn(),
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@tanstack/react-query', () => ({
 	useQuery: () => mocks.project,
 }));

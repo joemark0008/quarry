@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { usePostHog } from '@/contexts/posthog.provider';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 /**
  * Sets the PostHog session id to the user id when they are logged in, otherwise posthog uses a persisted id in the local storage.
@@ -12,10 +11,7 @@ export const useIdentifyPostHog = () => {
 	const posthog = usePostHog();
 	const wasConnectedRef = useRef(false);
 
-	const { data: project } = useQuery({
-		...trpc.project.getCurrent.queryOptions(),
-		enabled: !!session.data?.user && !!posthog,
-	});
+	const { data: project } = useCurrentProject({ skip: !session.data?.user || !posthog });
 
 	useEffect(() => {
 		if (!posthog || session.isPending) {

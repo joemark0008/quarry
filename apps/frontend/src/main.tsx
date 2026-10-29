@@ -57,6 +57,7 @@ export const queryClient = new QueryClient({
 
 subscribeToExternalActiveProjectChanges(() => {
 	void queryClient.invalidateQueries();
+	void apolloClient.resetStore();
 	void router.invalidate();
 });
 

@@ -19,6 +19,7 @@ import { lastUserMessagePayload } from '@/lib/mcp-auth-retry';
 import { openMcpConnectPopup } from '@/lib/mcp-oauth';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 /**
  * Milliseconds of inactivity before we ask the user how the conversation went, indexed by how many
@@ -520,9 +521,9 @@ function useConversationFeedback(): ConversationFeedback {
 	const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false);
 
 	const submitFeedback = useMutation(
-		trpc.feedback.submit.mutationOptions({
+		chatApi.feedback.submit.mutationOptions({
 			onSuccess: (data, variables, _, ctx) => {
-				ctx.client.setQueryData(trpc.chat.get.queryKey({ chatId: variables.chatId }), (prev) =>
+				ctx.client.setQueryData(chatApi.chat.get.queryKey({ chatId: variables.chatId }), (prev) =>
 					prev
 						? {
 								...prev,

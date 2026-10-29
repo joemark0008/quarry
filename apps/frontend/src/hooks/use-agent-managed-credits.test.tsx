@@ -34,6 +34,8 @@ const mocks = vi.hoisted(() => {
 	};
 });
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@ai-sdk/react', () => ({
 	Chat: class {
 		messages: unknown[] = [];
@@ -117,6 +119,12 @@ vi.mock('@/lib/ai', () => ({
 vi.mock('@/lib/local-storage', () => ({
 	createLocalStorage: () => ({}),
 }));
+
+/** The project procedures moved to apps/api read the same mocked procedures as `trpc.project`. */
+vi.mock('@/lib/project-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: { project: unknown } };
+	return { projectApi: { project: trpc.project } };
+});
 
 vi.mock('@/main', () => ({
 	trpc: {

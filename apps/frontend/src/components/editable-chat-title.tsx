@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 interface Props {
 	chatId: string;
@@ -16,9 +16,9 @@ export function EditableChatTitle({ chatId, title: currentTitle, className }: Pr
 	const [draft, setDraft] = useState(currentTitle);
 
 	const renameChat = useMutation(
-		trpc.chat.rename.mutationOptions({
+		chatApi.chat.rename.mutationOptions({
 			onSuccess: (_data, vars, _res, ctx) => {
-				ctx.client.setQueryData(trpc.chat.get.queryKey({ chatId }), (prev) => {
+				ctx.client.setQueryData(chatApi.chat.get.queryKey({ chatId }), (prev) => {
 					if (!prev) {
 						return prev;
 					}

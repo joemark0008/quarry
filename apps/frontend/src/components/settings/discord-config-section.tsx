@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 /** View channels, send messages (and in threads), create public threads, embed links, attach files, read history, add reactions. */
 const DISCORD_BOT_PERMISSIONS = '309237763136';
@@ -21,7 +22,7 @@ interface DiscordConfigSectionProps {
 export function DiscordConfigSection({ isAdmin, onCancelSetup }: DiscordConfigSectionProps) {
 	const queryClient = useQueryClient();
 	const discordConfig = useQuery(trpc.project.getDiscordConfig.queryOptions());
-	const { data: availableModels } = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const { data: availableModels } = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 
 	const [isEditing, setIsEditing] = useState(false);
 	type AvailableModel = NonNullable<typeof availableModels>[number];

@@ -4,7 +4,7 @@ import type { SemanticLayerMode } from '@quarry/shared/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface SettingsSemanticLayerProps {
 	isAdmin: boolean;
@@ -31,12 +31,14 @@ const MODE_LABELS: Record<SemanticLayerMode, { label: string; description: strin
 
 export function SettingsSemanticLayer({ isAdmin }: SettingsSemanticLayerProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.project.getAgentSettings.queryOptions().queryKey });
+				queryClient.invalidateQueries({
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
+				});
 			},
 		}),
 	);

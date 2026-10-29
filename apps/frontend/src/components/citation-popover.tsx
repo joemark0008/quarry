@@ -4,9 +4,9 @@ import { ArrowUpRight } from 'lucide-react';
 import type { CitationPayload, ColumnLineageNode } from '@quarry/shared';
 import { cn } from '@/lib/utils';
 import { formatSQL } from '@/lib/sql-formatter';
-import { trpc } from '@/main';
 import { useSidePanel } from '@/contexts/side-panel';
 import { SidePanelHeader } from '@/components/side-panel/side-panel-header';
+import { chatApi } from '@/lib/chat-api';
 
 const HOVER_DELAY_MS = 500;
 const POPOVER_MAX_HEIGHT = 400;
@@ -31,7 +31,7 @@ export const CitationPopover = memo(
 		}
 
 		const { data } = useQuery({
-			...trpc.citation.get.queryOptions({ queryId, column }),
+			...chatApi.citation.get.queryOptions({ queryId, column }),
 			enabled: hasOpened.current,
 		});
 

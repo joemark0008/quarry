@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface SettingsWebSearchProps {
 	isAdmin: boolean;
@@ -10,13 +10,13 @@ interface SettingsWebSearchProps {
 
 export function SettingsWebSearch({ isAdmin }: SettingsWebSearchProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.project.getAgentSettings.queryOptions().queryKey,
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
 				});
 			},
 		}),

@@ -3,6 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
 import { setActiveProjectId } from '@/lib/active-project';
+import { apolloClient } from '@/lib/apollo-client';
 
 export function useProjectSwitch(currentProjectId?: string) {
 	const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ export function useProjectSwitch(currentProjectId?: string) {
 			}
 
 			setActiveProjectId(projectId);
-			await queryClient.invalidateQueries();
+			await Promise.all([queryClient.invalidateQueries(), apolloClient.resetStore()]);
 			await router.invalidate();
 			return true;
 		},

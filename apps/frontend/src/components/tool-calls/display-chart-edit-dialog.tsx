@@ -31,7 +31,7 @@ import type { executeSql } from '@quarry/shared/tools';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
 import { acceptNumericKind, useColumnDropTarget, useDraggedColumnKind } from '@/hooks/use-column-drag';
-import { trpc } from '@/main';
+import { chartsApi } from '@/lib/charts-api';
 import { cn } from '@/lib/utils';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
 import { summarizeChartSelection } from '@/lib/chart-selection-summary';
@@ -919,7 +919,7 @@ export function DisplayChartEditDialog({
 	const messages = useAgentMessages();
 
 	const updateMutation = useMutation(
-		trpc.chart.updateConfig.mutationOptions({
+		chartsApi.chart.updateConfig.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: [['chat', 'get']] });
 			},

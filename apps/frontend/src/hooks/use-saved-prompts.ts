@@ -1,16 +1,17 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
-import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
 
 /** Saved prompts of `projectId`, or of the current project when it is omitted. */
 export function useSavedPromptsQuery(projectId?: string) {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const savedPromptsQuery = useQuery({
-		...trpc.project.getSavedPrompts.queryOptions(),
+		...projectApi.project.getSavedPrompts.queryOptions(),
 		enabled: !projectId && (project.isError || project.data != null),
 	});
 	const projectSavedPromptsQuery = useQuery({
-		...trpc.project.getProjectSavedPrompts.queryOptions({ projectId: projectId ?? '' }),
+		...projectApi.project.getProjectSavedPrompts.queryOptions({ projectId: projectId ?? '' }),
 		enabled: !!projectId,
 	});
 	if (projectId) {
@@ -26,9 +27,9 @@ export function useSavedPromptsQuery(projectId?: string) {
 /** CRUD mutations for saved prompts */
 export function useSavedPromptMutations() {
 	const createMutation = useMutation(
-		trpc.project.createSavedPrompt.mutationOptions({
+		projectApi.project.createSavedPrompt.mutationOptions({
 			onSuccess: (newPrompt, _, __, ctx) => {
-				ctx.client.setQueryData(trpc.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) => [
+				ctx.client.setQueryData(projectApi.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) => [
 					...prev,
 					newPrompt,
 				]);
@@ -37,9 +38,9 @@ export function useSavedPromptMutations() {
 	);
 
 	const updateMutation = useMutation(
-		trpc.project.updateSavedPrompt.mutationOptions({
+		projectApi.project.updateSavedPrompt.mutationOptions({
 			onSuccess: (updatedPrompt, _, __, ctx) => {
-				ctx.client.setQueryData(trpc.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) =>
+				ctx.client.setQueryData(projectApi.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) =>
 					prev.map((p) => (p.id === updatedPrompt.id ? updatedPrompt : p)),
 				);
 			},
@@ -47,9 +48,9 @@ export function useSavedPromptMutations() {
 	);
 
 	const deleteMutation = useMutation(
-		trpc.project.deleteSavedPrompt.mutationOptions({
+		projectApi.project.deleteSavedPrompt.mutationOptions({
 			onSuccess: (_, variables, __, ctx) => {
-				ctx.client.setQueryData(trpc.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) =>
+				ctx.client.setQueryData(projectApi.project.getSavedPrompts.queryKey(), (prev: SavedPrompt[] = []) =>
 					prev.filter((p) => p.id !== variables.promptId),
 				);
 			},

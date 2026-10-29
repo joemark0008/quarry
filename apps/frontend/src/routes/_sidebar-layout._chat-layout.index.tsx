@@ -25,6 +25,7 @@ import { useSession } from '@/lib/auth-client';
 import { buildStoryItems } from '@/lib/stories-page';
 import { capitalize, cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 
 export const Route = createFileRoute('/_sidebar-layout/_chat-layout/')({
 	validateSearch: (search: Record<string, unknown>): { admin?: boolean; example?: boolean } => ({
@@ -58,8 +59,8 @@ function HomePage() {
 		setAdminMode(adminSearch === true);
 	}, [canChatWithQuarryData, adminSearch, setAdminMode]);
 
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const project = useCurrentProject();
+	const projects = useProjects();
 	const switchProject = useProjectSwitch(project.data?.id);
 	const multiProjectMode = useMultiProject();
 	const isCloud = useIsCloud();

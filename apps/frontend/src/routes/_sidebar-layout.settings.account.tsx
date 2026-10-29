@@ -23,6 +23,7 @@ import { SettingsControlRow, SettingsToggleRow } from '@/components/ui/settings-
 import { trpc } from '@/main';
 import { clearApolloCache } from '@/lib/apollo-client';
 import { QUARRY_NEWSLETTER_SUBSCRIBE_URL } from '@/lib/quarry-links';
+import { refetchProjectQueries } from '@/hooks/use-current-project';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/account')({
 	component: GeneralPage,
@@ -58,7 +59,7 @@ function GeneralPage() {
 		await modifyUser.mutateAsync(data);
 		await Promise.all([
 			queryClient.invalidateQueries({ queryKey: trpc.project.listAllUsersWithRoles.queryKey() }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() }),
+			refetchProjectQueries(),
 		]);
 		await refetch();
 	};

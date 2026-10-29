@@ -5,7 +5,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
 import { useLicenseFeatures } from '@/hooks/use-license';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface SettingsExcludeColumnsProps {
 	isAdmin: boolean;
@@ -13,14 +13,14 @@ interface SettingsExcludeColumnsProps {
 
 export function SettingsExcludeColumns({ isAdmin }: SettingsExcludeColumnsProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 	const features = useLicenseFeatures();
 
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.project.getAgentSettings.queryOptions().queryKey,
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
 				});
 			},
 		}),

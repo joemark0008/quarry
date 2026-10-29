@@ -26,6 +26,7 @@ import {
 import { GithubRepoList } from '@/components/settings/github-repo-list';
 import { setActiveProjectId } from '@/lib/active-project';
 import { trpc } from '@/main';
+import { refetchProjectQueries } from '@/hooks/use-current-project';
 
 interface GitHubRepoPickerProps {
 	open: boolean;
@@ -48,7 +49,7 @@ export function GitHubRepoPicker({ open, onOpenChange, onImported, dialogStyle }
 		trpc.github.createProjectFromRepo.mutationOptions({
 			onSuccess: (data) => {
 				setActiveProjectId(data.projectId);
-				queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() });
+				refetchProjectQueries();
 				queryClient.invalidateQueries({ queryKey: trpc.organization.getProjects.queryKey() });
 				queryClient.invalidateQueries({ queryKey: trpc.github.getProjectGitInfo.queryKey() });
 				queryClient.invalidateQueries({ queryKey: trpc.userGroup.effectiveAccess.queryKey() });

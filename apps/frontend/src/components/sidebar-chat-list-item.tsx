@@ -23,7 +23,7 @@ import { useTimeAgo } from '@/hooks/use-time-ago';
 import { useToggleStarred } from '@/hooks/use-toggle-starred';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {
 	chat: GroupedChatItem;
@@ -42,7 +42,7 @@ export function ChatListItem({ chat, needsAttention = false, resumeOnboarding = 
 	const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
 	const deleteChat = useMutation(
-		trpc.chat.delete.mutationOptions({
+		chatApi.chat.delete.mutationOptions({
 			onSuccess: (_data, vars, _res, ctx) => {
 				if (chat.isOnboarding && session?.user.id) {
 					const storage = getOnboardingChatIdStorage(session.user.id);
@@ -57,9 +57,9 @@ export function ChatListItem({ chat, needsAttention = false, resumeOnboarding = 
 	);
 
 	const renameChat = useMutation(
-		trpc.chat.rename.mutationOptions({
+		chatApi.chat.rename.mutationOptions({
 			onSuccess: (_data, vars, _res, ctx) => {
-				ctx.client.setQueryData(trpc.chat.get.queryKey({ chatId: vars.chatId }), (prev) => {
+				ctx.client.setQueryData(chatApi.chat.get.queryKey({ chatId: vars.chatId }), (prev) => {
 					if (!prev) {
 						return prev;
 					}

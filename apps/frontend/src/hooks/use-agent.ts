@@ -41,6 +41,9 @@ import { cancellingMessageIdStore } from '@/stores/chat-cancelling-message';
 import { editedMessageIdStore } from '@/stores/chat-edited-message';
 import { chatInputRestoreStore } from '@/stores/chat-input-restore';
 import { messageQueueStore } from '@/stores/chat-message-queue';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
+import { projectApi } from '@/lib/project-api';
 
 export type AgentMode = 'default' | 'onboarding' | 'example';
 
@@ -116,10 +119,10 @@ export const useAgent = ({
 
 	// A null pick means "quarry default": no model is sent and the server resolves the admin default.
 	const [pinnedModel, setSelectedModel] = useLocalStorage(selectedModelStorage);
-	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProject = useCurrentProject();
 	const hasProject = currentProject.data != null;
 	const defaultChatModel = useQuery({
-		...trpc.project.getDefaultChatModel.queryOptions(),
+		...projectApi.project.getDefaultChatModel.queryOptions(),
 		enabled: hasProject,
 	});
 	const usesDefaultModel = pinnedModel === null;
@@ -275,7 +278,7 @@ export const useAgent = ({
 					queryClient.invalidateQueries({ queryKey: trpc.account.listCreditLedger.queryKey() });
 					queryClient.invalidateQueries({ queryKey: trpc.account.listManagedAiUsage.queryKey() });
 					queryClient.invalidateQueries({
-						queryKey: trpc.project.listAvailableTranscribeModels.queryKey(),
+						queryKey: projectApi.project.listAvailableTranscribeModels.queryKey(),
 					});
 				}
 				const canSendNextMessage = !isAbort && !isError && !isDisconnect;
@@ -287,7 +290,7 @@ export const useAgent = ({
 				} else {
 					chatActivityStore.setRunning(agentId, false);
 					if (agentId !== NEW_CHAT_ID && !isAbort) {
-						queryClient.invalidateQueries({ queryKey: trpc.chat.get.queryKey({ chatId: agentId }) });
+						queryClient.invalidateQueries({ queryKey: chatApi.chat.get.queryKey({ chatId: agentId }) });
 					}
 					if (chatIdRef.current !== agentId) {
 						chatActivityStore.setUnread(agentId, true);
@@ -316,9 +319,9 @@ export const useAgent = ({
 	const messagesRef = useRef(messages);
 	messagesRef.current = messages;
 
-	const stopAgentMutation = useMutation(trpc.chat.stop.mutationOptions());
-	const cancelAgentMutation = useMutation(trpc.chat.cancel.mutationOptions());
-	const switchMessageVersionMutation = useMutation(trpc.chat.switchMessageVersion.mutationOptions());
+	const stopAgentMutation = useMutation(chatApi.chat.stop.mutationOptions());
+	const cancelAgentMutation = useMutation(chatApi.chat.cancel.mutationOptions());
+	const switchMessageVersionMutation = useMutation(chatApi.chat.switchMessageVersion.mutationOptions());
 	const isRunning = checkIsAgentRunning({ status });
 
 	useEffect(() => {
@@ -558,7 +561,7 @@ export const useAgent = ({
 			}
 
 			await switchMessageVersionMutation.mutateAsync({ chatId: targetChatId, messageId });
-			await queryClient.invalidateQueries({ queryKey: trpc.chat.get.queryKey({ chatId: targetChatId }) });
+			await queryClient.invalidateQueries({ queryKey: chatApi.chat.get.queryKey({ chatId: targetChatId }) });
 		},
 		[isRunning, switchMessageVersionMutation.mutateAsync, queryClient], // eslint-disable-line
 	);

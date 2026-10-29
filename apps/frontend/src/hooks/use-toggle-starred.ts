@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 export const useToggleStarred = () => {
 	return useMutation(
-		trpc.chat.toggleStarred.mutationOptions({
+		chatApi.chat.toggleStarred.mutationOptions({
 			onMutate: (vars, ctx) => {
-				const getKey = trpc.chat.get.queryKey({ chatId: vars.chatId });
+				const getKey = chatApi.chat.get.queryKey({ chatId: vars.chatId });
 				const previousChat = ctx.client.getQueryData(getKey);
 
 				ctx.client.setQueryData(getKey, (prev) => {
@@ -21,12 +21,12 @@ export const useToggleStarred = () => {
 				if (!context) {
 					return;
 				}
-				ctx.client.setQueryData(trpc.chat.get.queryKey({ chatId: vars.chatId }), context.previousChat);
+				ctx.client.setQueryData(chatApi.chat.get.queryKey({ chatId: vars.chatId }), context.previousChat);
 			},
 			onSettled: (_data, _err, vars, _context, ctx) => {
 				ctx.client.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
 				ctx.client.invalidateQueries({
-					queryKey: trpc.chat.get.queryKey({ chatId: vars.chatId }),
+					queryKey: chatApi.chat.get.queryKey({ chatId: vars.chatId }),
 				});
 			},
 		}),

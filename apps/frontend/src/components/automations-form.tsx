@@ -30,6 +30,7 @@ import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 type IntegrationConfig = {
 	email?: {
@@ -316,7 +317,7 @@ function useAutomationFormController({
 	const promptRef = useRef<PromptHandle>(null);
 	const autoSaveInFlightRef = useRef(false);
 	const { data: session } = useSession();
-	const availableModels = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const availableModels = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 	const mcpServersQuery = useQuery(trpc.mcp.getServers.queryOptions());
 	const isDirty = !areAutomationValuesEqual(value, savedValue);
 	const userEmail = session?.user?.email;

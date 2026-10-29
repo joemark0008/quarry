@@ -8,9 +8,10 @@ import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import { OrgApiKeys } from '@/components/settings/org-api-keys';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
-import { queryClient, trpc } from '@/main';
+import { trpc } from '@/main';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { Empty } from '@/components/ui/empty';
+import { fetchCurrentProject, useCurrentProject } from '@/hooks/use-current-project';
 
 declare module '@tanstack/react-router' {
 	interface StaticDataRouteOption {
@@ -21,7 +22,7 @@ declare module '@tanstack/react-router' {
 
 export const Route = createFileRoute('/_sidebar-layout/settings/project')({
 	beforeLoad: async () => {
-		const project = await queryClient.ensureQueryData(trpc.project.getCurrent.queryOptions());
+		const project = await fetchCurrentProject();
 		if (project?.userRole === 'viewer') {
 			throw redirect({ to: '/settings/account' });
 		}
@@ -30,7 +31,7 @@ export const Route = createFileRoute('/_sidebar-layout/settings/project')({
 });
 
 function ProjectPage() {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const { isOrgAdmin } = usePermissions();
 	const pageHeader = useMatches().at(-1)?.staticData;
 	const isCloud = useIsCloud();

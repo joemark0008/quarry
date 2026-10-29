@@ -19,6 +19,7 @@ import { useActiveProjectId } from '@/lib/active-project';
 import { toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export const STORY_MENTION_ID = story.MENTION_ID;
 export const CUSTOM_STORY_MENTION_ID = story.CUSTOM_MENTION_ID;
@@ -111,7 +112,7 @@ export function ChatPrompt({
 	onEnter,
 }: ChatPromptProps) {
 	const activeProjectId = useActiveProjectId();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const skillsQuery = useQuery({

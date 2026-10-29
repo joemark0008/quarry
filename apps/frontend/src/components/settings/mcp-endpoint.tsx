@@ -15,6 +15,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
 
 interface ProjectItem {
 	id: string;
@@ -53,7 +55,9 @@ export function McpEndpointSettings({ isAdmin }: Props) {
 			},
 			onSettled: () => {
 				queryClient.invalidateQueries({ queryKey: trpc.mcpEndpoint.getSettings.queryOptions().queryKey });
-				queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultModels.queryOptions().queryKey });
+				queryClient.invalidateQueries({
+					queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey,
+				});
 			},
 		}),
 	);
@@ -136,8 +140,8 @@ function SubAgentModelField({
 	disabled: boolean;
 	onChange: (selection: LlmSelectedModel | null) => void;
 }) {
-	const availableModels = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
-	const defaultChatModel = useQuery(trpc.project.getDefaultChatModel.queryOptions());
+	const availableModels = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
+	const defaultChatModel = useQuery(projectApi.project.getDefaultChatModel.queryOptions());
 	const models = availableModels.data ?? [];
 	const chatDefault = defaultChatModel.data
 		? {
@@ -182,7 +186,7 @@ type Provider = {
 const TOKEN_PLACEHOLDER = '<token>';
 
 function ConnectionCard() {
-	const projectQuery = useQuery(trpc.project.getCurrent.queryOptions());
+	const projectQuery = useCurrentProject();
 	const project = projectQuery.data;
 
 	if (!project) {

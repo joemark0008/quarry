@@ -3,7 +3,7 @@ import { keepPreviousData, skipToken, useQuery, useQueryClient } from '@tanstack
 import type { TableServerPagination, TableSort } from '@quarry/shared/table-display';
 import type { executeSql } from '@quarry/shared/tools';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 type QueryRow = Record<string, unknown>;
 
@@ -43,7 +43,7 @@ export function useFullQueryOutput<T extends executeSql.Output>(
 ): { output: T | null; isLoadingRows: boolean } {
 	const shouldLoad = Boolean(source && enabled);
 	const { data, isLoading, isError } = useQuery(
-		trpc.chat.getQueryRows.queryOptions(source && shouldLoad ? allRowsInput(source) : skipToken),
+		chatApi.chat.getQueryRows.queryOptions(source && shouldLoad ? allRowsInput(source) : skipToken),
 	);
 
 	return useMemo(() => {
@@ -61,7 +61,7 @@ export function useLoadAllQueryRows(source: QueryRowsSource | undefined): (() =>
 		if (!source) {
 			return [];
 		}
-		const page = await queryClient.fetchQuery(trpc.chat.getQueryRows.queryOptions(allRowsInput(source)));
+		const page = await queryClient.fetchQuery(chatApi.chat.getQueryRows.queryOptions(allRowsInput(source)));
 		return page.rows;
 	}, [queryClient, source]);
 
@@ -83,7 +83,7 @@ export function useServerPaginatedRows(
 	const isWithinPreview = !page.sort && offset + page.pageSize <= previewRows.length;
 
 	const { data, isLoading } = useQuery({
-		...trpc.chat.getQueryRows.queryOptions(
+		...chatApi.chat.getQueryRows.queryOptions(
 			source && !isWithinPreview
 				? {
 						chatId: source.chatId,

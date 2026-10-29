@@ -1,0 +1,62 @@
+query WarehouseConnections {
+	warehouseConnections {
+		name
+		type
+		supported
+		host
+		port
+		database
+		user
+		schemaName
+		ssl
+		allowListedOnly
+		hasPassword
+	}
+}
+
+mutation ConnectWarehouse($input: WarehouseConnectionInput!) {
+	connectWarehouse(input: $input) {
+		success
+		message
+		fields
+	}
+}
+
+mutation TestWarehouseConnection($name: String) {
+	testWarehouseConnection(name: $name) {
+		success
+		message
+	}
+}
+
+mutation DisconnectWarehouse($name: String!) {
+	disconnectWarehouse(name: $name)
+}
+
+fragment ContextSyncStatusFields on ContextSyncStatus {
+	state
+	requestedAt
+	startedAt
+	finishedAt
+	message
+	databases {
+		databaseName
+		schemasSynced
+		tablesSynced
+		renderErrors
+		removedPaths
+	}
+	log
+}
+
+query ContextSyncStatus {
+	contextSyncStatus {
+		...ContextSyncStatusFields
+	}
+}
+
+mutation SyncContext($select: [String!]) {
+	syncContext(select: $select) {
+		...ContextSyncStatusFields
+	}
+}

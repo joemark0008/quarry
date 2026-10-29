@@ -3,18 +3,19 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { LlmSelectedModel } from '@quarry/shared/types';
 import { useAgentContext } from '@/contexts/agent.provider';
-import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
 
 export function useModelSelection() {
 	const { selectedModel, usesDefaultModel, setSelectedModel } = useAgentContext();
-	const currentProjectQuery = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProjectQuery = useCurrentProject();
 	const hasProject = currentProjectQuery.isError || currentProjectQuery.data != null;
 	const availableModelsQuery = useQuery({
-		...trpc.project.listAvailableTranscribeModels.queryOptions(),
+		...projectApi.project.listAvailableTranscribeModels.queryOptions(),
 		enabled: hasProject,
 	});
 	const defaultModelQuery = useQuery({
-		...trpc.project.getDefaultChatModel.queryOptions(),
+		...projectApi.project.getDefaultChatModel.queryOptions(),
 		enabled: hasProject,
 	});
 	const availableModels = hasProject ? availableModelsQuery.data : undefined;

@@ -58,6 +58,12 @@ const settingsNavGroups: NavGroup[] = [
 				exact: true,
 			},
 			{
+				label: 'Warehouse',
+				to: '/settings/project/warehouse',
+				visible: ({ isViewer }) => !isViewer,
+				requiresProject: true,
+			},
+			{
 				label: 'Budget',
 				to: '/settings/project/budgets',
 				visible: ({ isViewer }) => !isViewer,

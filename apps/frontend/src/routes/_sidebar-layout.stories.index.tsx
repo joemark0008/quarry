@@ -58,6 +58,7 @@ import { invalidateStoryArchiveCaches, invalidateStoryPlacementCaches } from '@/
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { selectedStoryReferencesStore, storyDragOverNewChatStore } from '@/stores/story-references';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 
 export const Route = createFileRoute('/_sidebar-layout/stories/')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -141,8 +142,8 @@ function StoriesPage() {
 	const [selectionMode, setSelectionMode] = useState(false);
 	const selectionActive = selectionMode || selectedStoryIds.size + selectedFolderIds.size > 0;
 
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const project = useCurrentProject();
+	const projects = useProjects();
 	const activeProjectId = project.data?.id;
 	const isTrial = useIsCloud() && project.isSuccess && project.data === null;
 	const storiesProjectId = activeProjectId ?? (isTrial ? SYSTEM_EXAMPLE_PROJECT_ID : undefined);

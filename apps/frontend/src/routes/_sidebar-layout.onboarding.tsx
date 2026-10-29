@@ -41,6 +41,8 @@ import { NEW_CHAT_ID } from '@/lib/ai';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { refetchProjectQueries, useCurrentProject } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 interface OnboardingSearch {
 	chatId?: string;
@@ -97,7 +99,7 @@ function OnboardingPage() {
 	const queryClient = useQueryClient();
 	const waitingForDeployment = isDeployStepReached(progress);
 	const onboardingChat = useQuery({
-		...trpc.chat.get.queryOptions({ chatId: isSavedChat ? chatId! : '' }),
+		...chatApi.chat.get.queryOptions({ chatId: isSavedChat ? chatId! : '' }),
 		enabled: isSavedChat,
 	});
 	const onboardingStartedAt = onboardingChat.data?.createdAt;
@@ -118,7 +120,7 @@ function OnboardingPage() {
 		},
 		refetchOnWindowFocus: 'always',
 	});
-	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProject = useCurrentProject();
 	const config = usePublicConfig();
 	const billingAccess = useCloudBillingAccess({
 		enabled: config.data?.cloudBillingEnabled === true,
@@ -156,7 +158,7 @@ function OnboardingPage() {
 
 	useEffect(() => {
 		if (warehouseReady) {
-			queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() }).catch(console.error);
+			refetchProjectQueries().catch(console.error);
 		}
 	}, [queryClient, warehouseReady]);
 

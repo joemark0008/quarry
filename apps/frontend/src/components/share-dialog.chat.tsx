@@ -15,9 +15,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
 import { useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
+import { chatApi } from '@/lib/chat-api';
 
 interface ShareChatDialogProps {
 	open: boolean;
@@ -27,7 +27,7 @@ interface ShareChatDialogProps {
 
 export function ShareChatDialog({ open, onOpenChange, chatId }: ShareChatDialogProps) {
 	const shareQuery = useQuery({
-		...trpc.sharedChat.getShareOptionsByChatId.queryOptions({ chatId }),
+		...chatApi.sharedChat.getShareOptionsByChatId.queryOptions({ chatId }),
 		enabled: open,
 	});
 	const shareData = shareQuery.data;
@@ -67,8 +67,8 @@ export function ShareChatDialog({ open, onOpenChange, chatId }: ShareChatDialogP
 function useInvalidateShareQueries(chatId: string) {
 	const queryClient = useQueryClient();
 	return useCallback(() => {
-		queryClient.invalidateQueries({ queryKey: trpc.sharedChat.getShareOptionsByChatId.queryKey({ chatId }) });
-		queryClient.invalidateQueries({ queryKey: trpc.sharedChat.list.queryKey() });
+		queryClient.invalidateQueries({ queryKey: chatApi.sharedChat.getShareOptionsByChatId.queryKey({ chatId }) });
+		queryClient.invalidateQueries({ queryKey: chatApi.sharedChat.list.queryKey() });
 	}, [queryClient, chatId]);
 }
 
@@ -102,7 +102,7 @@ function CreateShareDialog({ open, onOpenChange, chatId }: ShareChatDialogProps)
 		}
 	}, [open, reset]);
 
-	const shareMutation = useMutation(trpc.sharedChat.create.mutationOptions());
+	const shareMutation = useMutation(chatApi.sharedChat.create.mutationOptions());
 
 	const handleShare = useCallback(() => {
 		const blobPromise = shareMutation
@@ -238,7 +238,7 @@ function ManageShareDialog({
 	);
 
 	const deleteMutation = useMutation(
-		trpc.sharedChat.delete.mutationOptions({
+		chatApi.sharedChat.delete.mutationOptions({
 			onSuccess: () => {
 				invalidateShareQueries();
 				onOpenChange(false);
@@ -247,7 +247,7 @@ function ManageShareDialog({
 	);
 
 	const updateAccessMutation = useMutation(
-		trpc.sharedChat.updateAccess.mutationOptions({
+		chatApi.sharedChat.updateAccess.mutationOptions({
 			onSuccess: () => {
 				invalidateShareQueries();
 				onOpenChange(false);
