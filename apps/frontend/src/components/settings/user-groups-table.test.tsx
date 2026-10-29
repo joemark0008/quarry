@@ -81,6 +81,16 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/lib/auth-client', () => ({
 	useSession: () => ({ data: { user: { id: 'admin-id' } } }),
 }));
+// The context explorer moved to apps/api; its procedures keep the shape of the `trpc` mock below.
+vi.mock('@/lib/context-explorer-api', async () => {
+	const { trpc } = await import('@/main');
+	return { contextExplorerApi: { contextExplorer: trpc.contextExplorer } };
+});
+vi.mock('@/lib/skill-api', async () => {
+	const { trpc } = await import('@/main');
+	return { skillApi: { skill: trpc.skill } };
+});
+
 vi.mock('@/main', () => ({
 	trpc: {
 		account: {

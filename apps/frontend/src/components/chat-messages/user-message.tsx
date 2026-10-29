@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { useTimeAgo } from '@/hooks/use-time-ago';
 import { editedMessageIdStore } from '@/stores/chat-edited-message';
-import { trpc } from '@/main';
+import { skillApi } from '@/lib/skill-api';
 import { customStoryMentionOption, storyMentionOption } from '@/components/chat-input-prompt';
 import { useMentionedStoryOptions, useReferenceMentionMenu } from '@/hooks/use-reference-mention-menu';
 import DiscordIcon from '@/components/icons/discord.svg';
@@ -79,7 +79,7 @@ function MessageSourceBadge({ source }: { source: UIMessage['source'] }) {
 function useMentionConfigs(text: string): MessageMentionConfig[] {
 	const project = useCurrentProject();
 	const hasProject = project.data != null;
-	const skillsQuery = useQuery({ ...trpc.skill.list.queryOptions(), enabled: hasProject });
+	const skillsQuery = useQuery({ ...skillApi.skill.list.queryOptions(), enabled: hasProject });
 	const skills = hasProject ? skillsQuery.data : undefined;
 	const { searchOptions } = useReferenceMentionMenu();
 	const mentionedStoryOptions = useMentionedStoryOptions(text, searchOptions);

@@ -6,7 +6,8 @@ import { FileDiffBody } from '@/components/settings/file-diff';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { computeLineDiff } from '@/lib/line-diff';
-import { trpc } from '@/main';
+import { getTrpcErrorCode } from '@/lib/trpc-error';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 
 interface ContextFileDiffProps {
 	path: string;
@@ -15,7 +16,9 @@ interface ContextFileDiffProps {
 
 export function ContextFileDiff({ path, range }: ContextFileDiffProps) {
 	const fileDiff = useQuery(
-		trpc.contextExplorer.getFileDiff.queryOptions(range ? { path, from: range.from, to: range.to } : { path }),
+		contextExplorerApi.contextExplorer.getFileDiff.queryOptions(
+			range ? { path, from: range.from, to: range.to } : { path },
+		),
 	);
 	const diff = useMemo(
 		() => (fileDiff.data ? computeLineDiff(fileDiff.data.oldContent, fileDiff.data.newContent) : null),
@@ -30,7 +33,7 @@ export function ContextFileDiff({ path, range }: ContextFileDiffProps) {
 		);
 	}
 
-	if (fileDiff.isError && fileDiff.error.data?.code === 'BAD_REQUEST') {
+	if (fileDiff.isError && getTrpcErrorCode(fileDiff.error) === 'BAD_REQUEST') {
 		return (
 			<div className='flex h-full items-center justify-center text-sm text-muted-foreground'>
 				<p>{range ? 'This historical change is unavailable.' : 'This file no longer has changes.'}</p>

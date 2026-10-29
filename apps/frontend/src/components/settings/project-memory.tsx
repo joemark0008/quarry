@@ -2,18 +2,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
-import { trpc } from '@/main';
+import { memoryApi } from '@/lib/memory-api';
 import { projectApi } from '@/lib/project-api';
 
 export function SettingsProjectMemory() {
 	const queryClient = useQueryClient();
-	const projectMemorySettings = useQuery(trpc.project.getMemorySettings.queryOptions());
+	const projectMemorySettings = useQuery(memoryApi.project.getMemorySettings.queryOptions());
 
 	const updateProjectMemory = useMutation(
 		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.project.getMemorySettings.queryOptions().queryKey,
+					queryKey: memoryApi.project.getMemorySettings.queryOptions().queryKey,
 				});
 			},
 		}),

@@ -42,7 +42,7 @@ export function isInternalServerError(error: unknown): boolean {
 	return getTrpcErrorCode(error) === 'INTERNAL_SERVER_ERROR';
 }
 
-function getTrpcErrorCode(error: unknown): string | undefined {
+export function getTrpcErrorCode(error: unknown): string | undefined {
 	if (typeof error !== 'object' || error === null || !('data' in error)) {
 		return undefined;
 	}

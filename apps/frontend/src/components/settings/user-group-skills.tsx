@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { skillApi } from '@/lib/skill-api';
 
 interface UserGroupSkillsProps {
 	isDefaultGroup: boolean;
@@ -50,8 +50,8 @@ export function UserGroupSkills({
 	allUsersPreloadedSkills,
 	onChange,
 }: UserGroupSkillsProps) {
-	const skills = useQuery(trpc.skill.catalog.queryOptions());
-	const skillLoadErrors = useQuery(trpc.skill.listLoadErrors.queryOptions());
+	const skills = useQuery(skillApi.skill.catalog.queryOptions());
+	const skillLoadErrors = useQuery(skillApi.skill.listLoadErrors.queryOptions());
 	const discoveredSkills = skills.data ?? [];
 	const missingSkills = skills.isSuccess ? getMissingSkillGrants(skillsAccess, discoveredSkills) : [];
 	const inheritedAccess: SkillsAccess = isDefaultGroup ? { mode: 'restricted', skills: [] } : allUsersSkillsAccess;

@@ -18,7 +18,7 @@ import { useReferenceableStories, useReferenceMentionMenu } from '@/hooks/use-re
 import { useActiveProjectId } from '@/lib/active-project';
 import { toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { skillApi } from '@/lib/skill-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
 
 export const STORY_MENTION_ID = story.MENTION_ID;
@@ -116,7 +116,7 @@ export function ChatPrompt({
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const skillsQuery = useQuery({
-		...trpc.skill.list.queryOptions(),
+		...skillApi.skill.list.queryOptions(),
 		enabled: hasProject,
 	});
 	const skills = hasProject && !skillsQuery.isFetching ? skillsQuery.data : undefined;

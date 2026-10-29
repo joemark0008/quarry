@@ -1,0 +1,24 @@
+fragment SkillFields on Skill {
+	name
+	description
+	location
+}
+
+query Skills {
+	skills {
+		...SkillFields
+	}
+}
+
+query SkillCatalog {
+	skillCatalog {
+		...SkillFields
+	}
+}
+
+query SkillLoadErrors {
+	skillLoadErrors {
+		location
+		message
+	}
+}

@@ -44,7 +44,7 @@ import { useTimeAgo } from '@/hooks/use-time-ago';
 import { computeLineDiff } from '@/lib/line-diff';
 import { RecommendationText } from '@/lib/recommendation-text';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 
 type RouterOutputs = inferRouterOutputs<TrpcRouter>;
 type Recommendation = RouterOutputs['contextRecommendation']['list'][number];
@@ -207,7 +207,7 @@ export function RecommendationCard({
 	}, [highlightOpen, setCollapsed]);
 
 	const chatMetadata = useQuery({
-		...trpc.contextRecommendation.listRecoTriggerChatMetadata.queryOptions({
+		...contextRecommendationApi.contextRecommendation.listRecoTriggerChatMetadata.queryOptions({
 			chatIds: metaChatIds,
 		}),
 		enabled: metaChatIds.length > 0 && !collapsed,
@@ -230,15 +230,17 @@ export function RecommendationCard({
 	}, [chatMetadata.data, feedbacks]);
 
 	const createPr = useMutation(
-		trpc.contextRecommendation.createPullRequest.mutationOptions({
+		contextRecommendationApi.contextRecommendation.createPullRequest.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.list.queryKey({}) });
+				queryClient.invalidateQueries({
+					queryKey: contextRecommendationApi.contextRecommendation.list.queryKey({}),
+				});
 			},
 		}),
 	);
 
 	const prStatus = useQuery({
-		...trpc.contextRecommendation.getPrStatus.queryOptions({ id: rec.id }),
+		...contextRecommendationApi.contextRecommendation.getPrStatus.queryOptions({ id: rec.id }),
 		enabled: !!rec.prUrl,
 		staleTime: 30_000,
 	});
@@ -265,7 +267,7 @@ export function RecommendationCard({
 		setPromptError(null);
 		try {
 			const prompt = await queryClient.fetchQuery(
-				trpc.contextRecommendation.getAgentPrompt.queryOptions({ ids: [rec.id] }),
+				contextRecommendationApi.contextRecommendation.getAgentPrompt.queryOptions({ ids: [rec.id] }),
 			);
 			await copy(prompt);
 		} catch (err) {

@@ -21,7 +21,7 @@ import {
 	hasHistoricalPullRange,
 } from '@/lib/live-context-history';
 import { buildCommitUrl } from '@/lib/live-context-links';
-import { trpc } from '@/main';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 
 interface LiveContextUpdateStatus {
 	enabled: boolean;
@@ -65,20 +65,20 @@ export function LiveContextUpdateSettings({ status, repository, isAdmin }: LiveC
 	const [isDirtyWorktreeDialogOpen, setIsDirtyWorktreeDialogOpen] = useState(false);
 	const [isWorktreeUpdateBlocked, setIsWorktreeUpdateBlocked] = useState(false);
 	const [isCheckingHistoricalDiff, setIsCheckingHistoricalDiff] = useState(false);
-	const history = useQuery(trpc.contextExplorer.getLiveContextPullHistory.queryOptions());
+	const history = useQuery(contextExplorerApi.contextExplorer.getLiveContextPullHistory.queryOptions());
 	const pullContext = useMutation(
-		trpc.contextExplorer.pullLiveContext.mutationOptions({
+		contextExplorerApi.contextExplorer.pullLiveContext.mutationOptions({
 			onSettled: async () => {
 				await invalidateContextQueries(queryClient);
 			},
 		}),
 	);
-	const updateWorktree = useMutation(trpc.contextExplorer.updateWorktree.mutationOptions());
+	const updateWorktree = useMutation(contextExplorerApi.contextExplorer.updateWorktree.mutationOptions());
 	const latestRecordedError = history.data?.[0]?.status === 'failed' ? history.data[0].errorMessage : null;
 
 	const navigateToHistoricalDiff = (input: { path: string; from: string; to: string }) => {
 		queryClient.removeQueries({
-			queryKey: trpc.contextExplorer.getFileDiff.queryKey(input),
+			queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey(input),
 			exact: true,
 		});
 		return navigate({
@@ -93,7 +93,7 @@ export function LiveContextUpdateSettings({ status, repository, isAdmin }: LiveC
 		let action: HistoricalDiffAction;
 		try {
 			action = await queryClient.fetchQuery({
-				...trpc.contextExplorer.getHistoricalDiffAction.queryOptions({
+				...contextExplorerApi.contextExplorer.getHistoricalDiffAction.queryOptions({
 					from: input.from,
 					to: input.to,
 				}),
@@ -404,12 +404,14 @@ function PullFileList({
 
 async function invalidateContextQueries(queryClient: QueryClient): Promise<void> {
 	await Promise.all([
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getRepositoryStatus.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileTree.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getChangedFiles.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.readFile.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileDiff.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.searchContent.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getLiveContextPullHistory.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getRepositoryStatus.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileTree.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getChangedFiles.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.readFile.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.searchContent.queryKey() }),
+		queryClient.invalidateQueries({
+			queryKey: contextExplorerApi.contextExplorer.getLiveContextPullHistory.queryKey(),
+		}),
 	]);
 }

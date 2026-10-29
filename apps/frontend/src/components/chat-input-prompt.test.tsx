@@ -65,14 +65,15 @@ vi.mock('@/hooks/use-effective-user-group-features', () => ({
 	useEffectiveUserGroupFeatures: () => ({ customStoryCreationEnabled: false }),
 }));
 
+vi.mock('@/lib/skill-api', () => ({
+	skillApi: { skill: { list: { queryOptions: () => ({ queryKey: ['skills'] }) } } },
+}));
+
 vi.mock('@/main', () => ({
 	trpc: {
 		project: {
 			getCurrent: { queryOptions: () => ({ queryKey: ['project'] }) },
 			getDatabaseObjects: { queryOptions: () => ({ queryKey: ['database-objects'] }) },
-		},
-		skill: {
-			list: { queryOptions: () => ({ queryKey: ['skills'] }) },
 		},
 		story: {
 			listReferenceable: { queryOptions: () => ({ queryKey: ['referenceable-stories'] }) },

@@ -34,7 +34,7 @@ import { joinMarkdownFrontmatter, markdownPlugins, parseMarkdownFrontmatter } fr
 import { isMac } from '@/lib/platform';
 import { isForbiddenError } from '@/lib/trpc-error';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
 
 export { isRootRulesPath } from '@quarry/shared/rules-template';
@@ -178,7 +178,7 @@ function EditableFileViewer({
 	const saveInProgressRef = useRef(false);
 	activePathRef.current = filePath;
 
-	const saveMutation = useMutation(trpc.contextExplorer.writeFile.mutationOptions());
+	const saveMutation = useMutation(contextExplorerApi.contextExplorer.writeFile.mutationOptions());
 	const isMarkdown = isMarkdownPath(filePath);
 	const isRootRules = isRootRulesPath(filePath);
 	const isSourceOpen = isSourceOpenPreference || isSourceAutoOpened;
@@ -249,7 +249,7 @@ function EditableFileViewer({
 				onSuccess: (result) => {
 					saveInProgressRef.current = false;
 					queryClient.setQueryData(
-						trpc.contextExplorer.readFile.queryOptions({ path: pathToSave }).queryKey,
+						contextExplorerApi.contextExplorer.readFile.queryOptions({ path: pathToSave }).queryKey,
 						(previous) =>
 							previous ? { ...previous, content: contentToSave, hash: result.hash } : previous,
 					);
@@ -259,14 +259,15 @@ function EditableFileViewer({
 						setSaveError(null);
 					}
 					void queryClient.invalidateQueries({
-						queryKey: trpc.contextExplorer.getChangedFiles.queryKey(),
+						queryKey: contextExplorerApi.contextExplorer.getChangedFiles.queryKey(),
 					});
 				},
 				onError: (error) => {
 					saveInProgressRef.current = false;
 					if (isForbiddenError(error)) {
 						void queryClient.invalidateQueries({
-							queryKey: trpc.contextExplorer.readFile.queryOptions({ path: pathToSave }).queryKey,
+							queryKey: contextExplorerApi.contextExplorer.readFile.queryOptions({ path: pathToSave })
+								.queryKey,
 						});
 						return;
 					}

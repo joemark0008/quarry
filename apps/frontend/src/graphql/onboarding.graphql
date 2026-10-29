@@ -1,0 +1,3 @@
+mutation GenerateOnboardingRules($input: GenerateOnboardingRulesInput!) {
+	generateOnboardingRules(input: $input)
+}

@@ -1,0 +1,207 @@
+{
+	"example": [
+		{
+			"metrics": ["revenue"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["metric_time__month"],
+			"orderBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["revenue", "orders"],
+			"groupBy": ["metric_time__month"],
+			"where": ["{{ Dimension('order__status') }} = 'completed'"],
+			"orderBy": ["-metric_time__month"],
+			"limit": 12,
+			"startTime": "2018-02-01"
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["customer__first_name"],
+			"where": ["{{ Dimension('customer__first_name') }} IS NOT NULL"],
+			"orderBy": ["-revenue"],
+			"limit": 10
+		},
+		{
+			"metrics": ["average_order_value"],
+			"groupBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["completion_rate"],
+			"groupBy": ["order__status"]
+		},
+		{
+			"metrics": ["completed_revenue", "revenue"],
+			"groupBy": ["metric_time__week"]
+		},
+		{
+			"metrics": ["cumulative_revenue"],
+			"groupBy": ["metric_time__month"],
+			"orderBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["customers"],
+			"groupBy": ["customer__first_order__month"]
+		},
+		{
+			"metrics": ["customers", "revenue"],
+			"groupBy": ["metric_time__year"]
+		},
+		{
+			"metrics": ["largest_order"],
+			"groupBy": ["order__order_date__quarter"],
+			"endTime": "2018-03-31"
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["customer__first_name"],
+			"where": ["{{ Metric('revenue', group_by=['customer']) }} > 100"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["order__status", "metric_time__day"],
+			"where": ["{{ TimeDimension('metric_time', 'day') }} >= '2018-03-01'"],
+			"limit": 5
+		},
+		{
+			"metrics": ["total_lifetime_value"],
+			"groupBy": ["customer__last_name"],
+			"orderBy": ["-total_lifetime_value"],
+			"limit": 3
+		}
+	],
+	"extended": [
+		{
+			"metrics": ["avg_amount", "order_id_count", "median_amount", "p90_amount", "coupon_orders", "min_amount"],
+			"groupBy": ["order__status"]
+		},
+		{
+			"metrics": ["returned_revenue"],
+			"groupBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["net_revenue"],
+			"groupBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["completed_share"],
+			"groupBy": ["customer__first_name"]
+		},
+		{
+			"metrics": ["revenue_per_customer"],
+			"groupBy": ["metric_time__year"]
+		},
+		{
+			"metrics": ["revenue_7d"],
+			"groupBy": ["metric_time__day"]
+		},
+		{
+			"metrics": ["revenue_mtd"],
+			"groupBy": ["metric_time__day"]
+		},
+		{
+			"metrics": ["revenue_mtd"],
+			"groupBy": ["metric_time__week"]
+		},
+		{
+			"metrics": ["revenue_cum_last", "revenue_cum_avg"],
+			"groupBy": ["metric_time__month"]
+		},
+		{
+			"metrics": ["cumulative_revenue"],
+			"groupBy": ["metric_time__month"],
+			"startTime": "2018-02-15",
+			"endTime": "2018-03-20"
+		},
+		{
+			"metrics": ["cumulative_revenue"]
+		},
+		{
+			"metrics": ["cumulative_revenue"],
+			"groupBy": ["metric_time__month", "order__status"]
+		},
+		{
+			"metrics": ["cumulative_revenue"],
+			"groupBy": ["metric_time__day"],
+			"where": [
+				"{{ TimeDimension('metric_time', 'day') }} >= '2018-03-01'",
+				"{{ Dimension('order__status') }} = 'completed'"
+			]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["metric_time__month"],
+			"startTime": "2018-02-15"
+		},
+		{
+			"metrics": ["revenue", "customers"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["customer"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["order__order_date"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["metric_time"],
+			"where": ["{{ Dimension('order__order_date').grain('month') }} = '2018-01-01'"]
+		},
+		{
+			"metrics": ["revenue"],
+			"where": ["{{ Entity('customer') }} = 1"]
+		},
+		{
+			"metrics": ["revenue", "orders", "average_order_value"],
+			"groupBy": ["order__status", "customer__last_name"],
+			"orderBy": ["-revenue"],
+			"limit": 5
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["metric_time__month"],
+			"where": ["{{ Dimension('customer__first_order').grain('month') }} = '2018-01-01'"],
+			"orderBy": ["metric_time"]
+		},
+		{
+			"metrics": ["revenue", "orders"],
+			"groupBy": ["customer__first_name"],
+			"where": ["{{ Metric('revenue', group_by=['customer']) }} > 30"]
+		},
+		{
+			"metrics": ["completion_rate", "customers"],
+			"groupBy": ["metric_time__quarter"],
+			"startTime": "2018-01-10",
+			"endTime": "2018-02-20"
+		},
+		{
+			"metrics": ["revenue_7d"],
+			"groupBy": ["metric_time__month", "customer__first_name"],
+			"where": ["{{ Dimension('customer__first_name') }} LIKE 'A%'"]
+		}
+	],
+	"errors": [
+		{
+			"metrics": ["revenu"]
+		},
+		{
+			"metrics": ["customers"],
+			"groupBy": ["order__status"]
+		},
+		{
+			"metrics": ["revenue"],
+			"groupBy": ["customer__nope"]
+		},
+		{
+			"metrics": ["revenue"],
+			"orderBy": ["orders"]
+		},
+		{
+			"metrics": ["revenue"],
+			"startTime": "yesterday-ish"
+		}
+	]
+}

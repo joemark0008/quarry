@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import {
 	getSchemaKeyFromMentionId,
 	isSchemaMentionId,
+	isSkillGranted,
 	isStoryFolderMentionId,
 	isStoryReferenceMentionId,
 	normalizeCitationMarkers,
@@ -35,6 +36,7 @@ import {
 import { type CompactionService, RunCompaction } from './services/compaction.js';
 import { interactiveStopConditions } from './stop-conditions.js';
 import { llmTelemetry } from './telemetry.js';
+import type { AgentSettings } from './types/agent-settings.js';
 import type {
 	AgentTools,
 	ForkMetadata,
@@ -53,7 +55,7 @@ import { sanitizeToolCalls } from './utils/model-message.js';
 import { addPromptCache, cachedSystemInstructions } from './utils/prompt-cache.js';
 import { sanitizeTitle, TITLE_MAX_OUTPUT_TOKENS, titleFromPrompt, titleGenerationUserMessage } from './utils/title.js';
 import { isStoragePath } from './utils/tools.js';
-import { formatErrorMessageForUI } from './utils/utils.js';
+import { formatErrorMessageForUI, truncateMiddle } from './utils/utils.js';
 
 export const MAX_OUTPUT_TOKENS = 16_000;
 const MAX_SCHEMA_TABLES_WITH_COLUMNS = 15;
@@ -66,10 +68,17 @@ export interface AgentChat {
 	forkMetadata?: ForkMetadata | null;
 }
 
-/** How a run is set up (upstream `AgentProfile`, the web chat's `defaultProfile`). */
+/** How a run is set up (upstream `agents/profiles/types.ts` `AgentProfile`, the web chat's `defaultProfile`). */
 export interface AgentProfile {
 	source?: UIMessage['source'];
+	/** Ends non-interactive runs after this many steps instead of when the agent suggests follow-ups. */
 	maxSteps?: number;
+	/** The run's tool set; defaults to the analytics tools. */
+	tools?: (context: { agentSettings: AgentSettings | null }) => Record<string, unknown>;
+	/** Replaces the project system prompt (RULES.md, memories, connections) for runs with a dedicated purpose. */
+	systemPrompt?: (context: { timezone?: string }) => string;
+	/** Background runs (context recommendations) don't extract memories from their own prompt. */
+	skipMemoryExtraction?: boolean;
 }
 
 export interface AgentManagerDependencies {
@@ -80,14 +89,18 @@ export interface AgentManagerDependencies {
 	getImageById: (id: string) => Promise<{ data: string; mediaType: string } | undefined>;
 	/** Renders the project system prompt for the run (`_buildDefaultSystemPrompt`). */
 	buildSystemPrompt: (args: { toolNames: string[]; timezone?: string }) => Promise<string>;
+	/** `skillService.getSkillContent`: the raw file of a project skill mentioned with `/`. */
+	getSkillContent?: (skillName: string) => string | null;
+	/** `memoryService.safeScheduleMemoryExtraction`, called once the request reaches the model. */
+	scheduleMemoryExtraction?: (args: { messages: UIMessage[]; provider: LlmProvider; modelId: string }) => void;
 }
 
 /**
  * Port of upstream `services/agent.ts` `AgentManager`: one agent run on a chat. It streams the answer as an AI SDK
  * UI message stream, persists the assistant message when the run ends (stopped or not), and generates the chat
  * title for a new chat. Long conversations are compacted (`RunCompaction` in the step preparation, summary rebuilt
- * from the last `data-compaction` part). Not ported yet: memory extraction, skills and story mentions, PostHog
- * tracking.
+ * from the last `data-compaction` part). Memory extraction is scheduled once the request is sent and `/` skill
+ * mentions are expanded in the last user message. Not ported: story mentions (Phase 4), PostHog tracking.
  */
 export class AgentManager {
 	private readonly _agent: ToolLoopAgent<never, AgentTools, never>;
@@ -215,6 +228,9 @@ export class AgentManager {
 					experimental_transform: normalizeCitationMarkersStream(),
 				});
 
+				// Extract memory immediately after the request to the agent is sent
+				this._scheduleMemoryExtraction(uiMessages);
+
 				if (opts.events?.newChat) {
 					this._scheduleTitleGeneration(getLastUserMessageText(uiMessages));
 				}
@@ -297,7 +313,8 @@ export class AgentManager {
 		const settled = await settleToolParts(uiMessages);
 		const withoutStaleQueries = markSupersededExecuteSqlParts(settled);
 		const withCitation = this._addCitationContext(withoutStaleQueries);
-		const withDbContext = this._addDatabaseContext(withCitation, mentions);
+		const withSkills = this._addSkills(withCitation, mentions);
+		const withDbContext = this._addDatabaseContext(withSkills, mentions);
 		const withCompaction = this._deps.compaction.useLastCompaction(withDbContext);
 		const withResolvedAttachments = await resolveAttachments(withCompaction, this._deps.getImageById);
 
@@ -391,6 +408,41 @@ export class AgentManager {
 		}
 		const context = describeCitation(lastUserMessage.citation);
 		return this._transformLastUserMessageText(messages, (text) => (text ? `${context}\n\n${text}` : context));
+	}
+
+	private _scheduleMemoryExtraction(uiMessages: UIMessage[]): void {
+		if (this._profile.skipMemoryExtraction) {
+			return;
+		}
+		this._deps.scheduleMemoryExtraction?.({
+			messages: uiMessages,
+			provider: this._modelSelection.provider,
+			modelId: this._modelSelection.modelId,
+		});
+	}
+
+	private _addSkills(messages: UIMessage[], mentions?: Mention[]): UIMessage[] {
+		const skillMention = mentions?.find(
+			(mention) => mention.trigger === '/' && isSkillGranted(this._toolContext.skillsAccess, mention.id),
+		);
+		const skillContent = skillMention ? this._deps.getSkillContent?.(skillMention.id) : undefined;
+		if (!skillMention || !skillContent) {
+			return messages;
+		}
+		const skill = truncateMiddle(skillContent, 16_000);
+		return this._transformLastUserMessageText(messages, (text) =>
+			this._expandSkillMention(text, skillMention, skill),
+		);
+	}
+
+	private _expandSkillMention(text: string, mention: Mention, skill: string): string {
+		const tokens = [`${mention.trigger}[${mention.label}]`, `${mention.trigger}[${mention.id}]`];
+		const matchedToken = tokens.find((token) => text.includes(token));
+		if (matchedToken) {
+			return text.replaceAll(matchedToken, () => skill).trim();
+		}
+		const rest = text.trim();
+		return rest ? `${skill}\n\n${rest}` : skill;
 	}
 
 	private _addDatabaseContext(messages: UIMessage[], mentions?: Mention[]): UIMessage[] {

@@ -114,6 +114,14 @@ type ChatShareOptions {
   visibility: String
 }
 
+input ContextRecommendationIdsInput {
+  ids: [String!]!
+}
+
+input ContextRecommendationTriggerChatsInput {
+  chatIds: [String!]!
+}
+
 """State of the last context sync of the project."""
 type ContextSyncStatus {
   databases: [DatabaseSyncResult!]!
@@ -160,9 +168,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input EditMemoryInput {
+  content: String!
+  memoryId: ID!
+}
+
 input ForkSharedChatInput {
   selection: SelectionInput
   shareId: ID!
+}
+
+input GenerateOnboardingRulesInput {
+  """
+  What the business does; a public https URL in it is fetched for more context.
+  """
+  additionalContext: String
 }
 
 """Upstream `chat.listGrouped`."""
@@ -174,6 +194,24 @@ type GroupedChatList {
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+"""
+A memory the agent extracted from (or the user edited after) a conversation.
+"""
+type Memory {
+  """`global_rule` (an instruction) or `personal_fact` (about the user)."""
+  category: String!
+  chatId: String
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  supersededBy: String
+  updatedAt: DateTime!
+}
+
+type MemorySettings {
+  memoryEnabled: Boolean!
+}
 
 type MessageBubble {
   charCount: Int!
@@ -214,10 +252,35 @@ type Mutation {
   askSharedChat(input: ForkSharedChatInput!): ChatIdResult!
   cancelChat(chatId: ID!): CancelChatResult!
 
+  """The run, with `alreadyTerminal` when it had already ended."""
+  cancelContextRecommendationRun(runId: String!): JSON!
+
+  """Upstream `contextExplorer.commitChanges`: `{ paths, message }`."""
+  commitContextChanges(input: JSON!): JSON!
+
+  """
+  Upstream `contextExplorer.connectRepository`: `{ provider, repoFullName }`.
+  """
+  connectContextRepository(input: JSON!): JSON!
+
   """
   Checks the credentials on a live connection, then saves them (encrypted) for the project.
   """
   connectWarehouse(input: WarehouseConnectionInput!): WarehouseConnectionResult!
+
+  """Upstream `contextExplorer.createBranch`."""
+  createContextBranch(branch: String!): JSON!
+
+  """
+  Upstream `contextExplorer.createBranchAndCommit`: `{ branch?, paths, message }`.
+  """
+  createContextBranchAndCommit(input: JSON!): JSON!
+
+  """Not available until GitHub/GitLab land (Phase 7)."""
+  createContextRecommendationBatchPullRequest(input: ContextRecommendationIdsInput!): JSON!
+
+  """Not available until GitHub/GitLab land (Phase 7)."""
+  createContextRecommendationPullRequest(id: String!): JSON!
   createProject(input: CreateProjectInput!): ProjectSummary!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
@@ -229,21 +292,52 @@ type Mutation {
 
   """Upstream `project.deleteMapBoundary`: the updated boundary sets."""
   deleteMapBoundary(key: String!): JSON!
+  deleteMemory(memoryId: ID!): Boolean!
   deleteProject(projectId: ID!): Boolean!
   deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
+
+  """Upstream `contextExplorer.discardAllChanges`."""
+  discardAllContextChanges: JSON!
+
+  """Upstream `contextExplorer.discardLocalChange`."""
+  discardContextFileChange(path: String!): JSON!
+
+  """Upstream `contextExplorer.disconnectRepository`."""
+  disconnectContextRepository: JSON!
   disconnectWarehouse(name: String!): Boolean!
+  editMemory(input: EditMemoryInput!): Memory!
 
   """Forks a shared chat, or a selection of it (upstream `chatFork.fork`)."""
   forkSharedChat(input: ForkSharedChatInput!): ChatIdResult!
+
+  """
+  Writes the project's RULES.md from its synced context with the default chat model; overwrites it.
+  """
+  generateOnboardingRules(input: GenerateOnboardingRulesInput!): Boolean!
   modifyPassword(input: ModifyPasswordInput!): Boolean!
 
   """Runs an edited query without saving it (`execute_sql` output)."""
   previewSqlQuery(input: SqlEditInput!): JSON!
+
+  """
+  Upstream `contextExplorer.pullLiveContext` (project admins only, not context admins).
+  """
+  pullLiveContext: JSON!
+
+  """Upstream `contextExplorer.pushBranch`."""
+  pushContextBranch: JSON!
   renameChat(input: RenameChatInput!): Boolean!
   renameProject(input: RenameProjectInput!): ProjectSummary!
+
+  """Starts a manual run in the background: `{ started: true }`."""
+  runContextRecommendations: JSON!
   setChatStarred(chatId: ID!, isStarred: Boolean!): Boolean!
+  setContextRecommendationConfig(input: SetContextRecommendationConfigInput!): Boolean!
+  setContextRecommendationRepo(input: SetContextRecommendationRepoInput!): Boolean!
+  setContextRecommendationStatus(input: SetContextRecommendationStatusInput!): Boolean!
+  setMemoryEnabled(memoryEnabled: Boolean!): MemorySettings!
 
   """Creates a secret, or replaces the value of the one with that name."""
   setSandboxSecret(input: SetSandboxSecretInput!): SandboxSecret!
@@ -253,6 +347,9 @@ type Mutation {
 
   """Upstream `feedback.submit`."""
   submitMessageFeedback(input: MessageFeedbackInput!): MessageFeedback!
+
+  """Upstream `contextExplorer.switchBranch`."""
+  switchContextBranch(branch: String!): JSON!
   switchMessageVersion(chatId: ID!, messageId: ID!): Boolean!
 
   """
@@ -266,6 +363,9 @@ type Mutation {
 
   """Upstream `chart.updateConfig`: the chat owner edits a `display_chart`."""
   updateChartConfig(config: JSON!, toolCallId: String!): Boolean!
+
+  """Upstream `contextExplorer.updateWorktree`."""
+  updateContextWorktree(requiredCommits: [String!]): JSON!
 
   """Upstream `project.updateDefaultModels`."""
   updateDefaultModels(settings: JSON!): JSON!
@@ -288,6 +388,11 @@ type Mutation {
 
   """Upstream `project.validateMapBoundaryUrl`: keys, count, GeoJSON."""
   validateMapBoundaryUrl(url: String!): JSON!
+
+  """
+  Upstream `contextExplorer.writeFile`: `{ path, content, expectedHash }`.
+  """
+  writeContextFile(input: JSON!): JSON!
 }
 
 """A project the user can access, with their role in it."""
@@ -356,6 +461,58 @@ type Query {
 
   """SQL and column lineage behind a cited value (upstream `citation.get`)."""
   citation(column: String!, queryId: String!): JSON!
+
+  """Upstream `contextExplorer.suggestBranchName`."""
+  contextBranchNameSuggestion: JSON!
+
+  """Upstream `contextExplorer.getChangedFiles`."""
+  contextChangedFiles: JSON!
+
+  """Upstream `contextExplorer.readFile`."""
+  contextFile(path: String!): JSON!
+
+  """Upstream `contextExplorer.getFileDiff`: `{ path, from?, to? }`."""
+  contextFileDiff(input: JSON!): JSON!
+
+  """Upstream `contextExplorer.getFileTree`: `{ entries }`."""
+  contextFileTree: JSON!
+
+  """Upstream `contextExplorer.getHistoricalDiffAction`: `{ from, to }`."""
+  contextHistoricalDiffAction(input: JSON!): JSON!
+
+  """Upstream `contextExplorer.getLiveContextPullHistory`."""
+  contextPullHistory: JSON!
+
+  """Upstream `contextRecommendation.getAgentPrompt`."""
+  contextRecommendationAgentPrompt(input: ContextRecommendationIdsInput!): String!
+  contextRecommendationAvailableModels: JSON!
+  contextRecommendationConfig: JSON
+
+  """Upstream `contextRecommendation.listLinkedRepos`."""
+  contextRecommendationLinkedRepos: JSON!
+
+  """
+  Upstream `contextRecommendation.getPrStatus`: null until GitHub/GitLab land (Phase 7).
+  """
+  contextRecommendationPrStatus(id: String!): JSON
+
+  """Upstream `contextRecommendation.getRepo`."""
+  contextRecommendationRepo: JSON
+
+  """Upstream `contextRecommendation.listRecoTriggerChatMetadata`."""
+  contextRecommendationTriggerChats(input: ContextRecommendationTriggerChatsInput!): JSON!
+
+  """Upstream `contextRecommendation.list`: by impact, with their feedback."""
+  contextRecommendations(status: String): JSON!
+
+  """Upstream `contextExplorer.getRepositoryStatus`."""
+  contextRepositoryStatus: JSON!
+
+  """Upstream `contextExplorer.getRulesPreviewGroups`."""
+  contextRulesPreviewGroups: JSON!
+
+  """Upstream `contextExplorer.searchContent`."""
+  contextSearch(query: String!): JSON!
   contextSyncStatus: ContextSyncStatus!
 
   """The selected project (`x-nao-project-id`)."""
@@ -379,6 +536,8 @@ type Query {
   Transcription models per provider and whether a key is set (upstream `getKnownTranscribeModels`).
   """
   knownTranscribeModels: JSON!
+  latestContextRecommendationRun: JSON
+  latestSuccessfulContextRecommendationRun: JSON
 
   """Upstream `project.getLlmConfigs`: provider configs, keys previewed."""
   llmConfigs: JSON!
@@ -388,6 +547,15 @@ type Query {
 
   """The signed-in user."""
   me: User!
+
+  """The signed-in user's active memories."""
+  memories: [Memory!]!
+
+  """Whether the signed-in user has memory turned on."""
+  memorySettings: MemorySettings!
+
+  """Whether the project allows memory (admin agent setting)."""
+  projectMemorySettings: MemorySettings!
 
   """A project's saved prompts; empty when the user is not in it."""
   projectSavedPrompts(projectId: ID!): [SavedPrompt!]!
@@ -411,6 +579,13 @@ type Query {
 
   """Chats shared in the projects the user can access."""
   sharedChats: [SharedChat!]!
+
+  """Every project skill, for the admin settings."""
+  skillCatalog: [Skill!]!
+  skillLoadErrors: [SkillLoadError!]!
+
+  """The project skills the signed-in user may use (the `/` picker)."""
+  skills: [Skill!]!
 
   """Upstream `storage.getConfig`: the storage backend, secrets masked."""
   storageConfig: JSON!
@@ -511,6 +686,29 @@ input SelectionInput {
   text: String!
 }
 
+input SetContextRecommendationConfigInput {
+  autoCreatePrs: Boolean
+
+  """Trimmed; an empty value clears the instructions. Omit to keep them."""
+  customSystemPromptInstructions: String
+  frequency: String
+  maxAutoPrsPerRun: Int
+  modelId: String
+  modelProvider: String
+}
+
+input SetContextRecommendationRepoInput {
+  provider: String
+
+  """Repository in "owner/name" format; null disconnects it."""
+  repoFullName: String
+}
+
+input SetContextRecommendationStatusInput {
+  id: String!
+  status: String!
+}
+
 input SetSandboxSecretInput {
   description: String
   name: String!
@@ -537,6 +735,21 @@ type SharedChatView {
   chat: Chat!
   share: SharedChat!
   userRole: String
+}
+
+"""A project skill: a Markdown playbook in `agent/skills/`."""
+type Skill {
+  description: String!
+
+  """Project path of the skill file, e.g. `/agent/skills/churn.md`."""
+  location: String!
+  name: String!
+}
+
+"""A skill file that could not be loaded."""
+type SkillLoadError {
+  location: String!
+  message: String!
 }
 
 input SqlEditInput {

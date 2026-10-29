@@ -8,15 +8,15 @@ import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { trpc } from '@/main';
+import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 
 export function RecommendationRepoCard() {
 	const repo = useQuery({
-		...trpc.contextRecommendation.getRepo.queryOptions(),
+		...contextRecommendationApi.contextRecommendation.getRepo.queryOptions(),
 		staleTime: 30_000,
 	});
 	const linkedRepos = useQuery({
-		...trpc.contextRecommendation.listLinkedRepos.queryOptions(),
+		...contextRecommendationApi.contextRecommendation.listLinkedRepos.queryOptions(),
 		staleTime: 30_000,
 	});
 

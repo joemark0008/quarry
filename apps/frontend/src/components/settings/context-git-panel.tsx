@@ -39,7 +39,7 @@ import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import { useSidebarSectionOpen } from '@/hooks/use-sidebar-section-open';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 
 interface ContextGitPanelProps {
 	selectedDiffPath: string | null;
@@ -78,7 +78,7 @@ export function ContextGitPanel({
 	const knownChangedPathsRef = useRef<Set<string>>(new Set());
 
 	const repositoryStatus = useQuery({
-		...trpc.contextExplorer.getRepositoryStatus.queryOptions(),
+		...contextExplorerApi.contextExplorer.getRepositoryStatus.queryOptions(),
 		staleTime: 30_000,
 	});
 	const status = repositoryStatus.data;
@@ -89,11 +89,11 @@ export function ContextGitPanel({
 	const isGitAvailable = status?.gitUnavailableReason === null && branches !== null && repo !== null;
 
 	const changedFiles = useQuery({
-		...trpc.contextExplorer.getChangedFiles.queryOptions(),
+		...contextExplorerApi.contextExplorer.getChangedFiles.queryOptions(),
 		enabled: isGitAvailable,
 	});
 	const suggestedBranchName = useQuery({
-		...trpc.contextExplorer.suggestBranchName.queryOptions(),
+		...contextExplorerApi.contextExplorer.suggestBranchName.queryOptions(),
 		enabled: isGitAvailable && currentBranch === defaultBranch,
 	});
 	const changedFileList = changedFiles.data ?? [];
@@ -130,7 +130,7 @@ export function ContextGitPanel({
 	};
 
 	const switchBranch = useMutation(
-		trpc.contextExplorer.switchBranch.mutationOptions({
+		contextExplorerApi.contextExplorer.switchBranch.mutationOptions({
 			onSuccess: async () => {
 				await refreshExplorer(true);
 			},
@@ -138,7 +138,7 @@ export function ContextGitPanel({
 	);
 
 	const updateWorktree = useMutation(
-		trpc.contextExplorer.updateWorktree.mutationOptions({
+		contextExplorerApi.contextExplorer.updateWorktree.mutationOptions({
 			onSuccess: () => {
 				setIsUpdateWorktreeOpen(false);
 				setIsUpdateWorktreeBlocked(false);
@@ -154,7 +154,7 @@ export function ContextGitPanel({
 	);
 
 	const createBranch = useMutation(
-		trpc.contextExplorer.createBranch.mutationOptions({
+		contextExplorerApi.contextExplorer.createBranch.mutationOptions({
 			onSuccess: async (result) => {
 				setIsCreateBranchOpen(false);
 				setNewBranchName('');
@@ -165,7 +165,7 @@ export function ContextGitPanel({
 	);
 
 	const commitChanges = useMutation(
-		trpc.contextExplorer.commitChanges.mutationOptions({
+		contextExplorerApi.contextExplorer.commitChanges.mutationOptions({
 			onSuccess: async (_result, variables) => {
 				await handleCommitSuccess(variables.paths, currentBranch, false);
 				await refreshExplorer(false);
@@ -174,7 +174,7 @@ export function ContextGitPanel({
 	);
 
 	const createBranchAndCommit = useMutation(
-		trpc.contextExplorer.createBranchAndCommit.mutationOptions({
+		contextExplorerApi.contextExplorer.createBranchAndCommit.mutationOptions({
 			onSuccess: async (result, variables) => {
 				await handleCommitSuccess(variables.paths, result.branch, result.usedFallbackBase);
 				await refreshExplorer(false);
@@ -183,7 +183,7 @@ export function ContextGitPanel({
 	);
 
 	const pushBranch = useMutation(
-		trpc.contextExplorer.pushBranch.mutationOptions({
+		contextExplorerApi.contextExplorer.pushBranch.mutationOptions({
 			onSuccess: async (result) => {
 				setPushedReviewRequest(result.reviewRequest);
 				await refreshExplorer(false);
@@ -192,7 +192,7 @@ export function ContextGitPanel({
 	);
 
 	const discardChange = useMutation(
-		trpc.contextExplorer.discardLocalChange.mutationOptions({
+		contextExplorerApi.contextExplorer.discardLocalChange.mutationOptions({
 			onSuccess: async (_result, variables) => {
 				await Promise.all([invalidateExplorerQueries(queryClient), onDiscarded(variables.path)]);
 				setDiscardFile(null);
@@ -201,7 +201,7 @@ export function ContextGitPanel({
 	);
 
 	const discardAllChanges = useMutation(
-		trpc.contextExplorer.discardAllChanges.mutationOptions({
+		contextExplorerApi.contextExplorer.discardAllChanges.mutationOptions({
 			onSuccess: async () => {
 				await Promise.all([invalidateExplorerQueries(queryClient), onDiscardAll()]);
 				setIsDiscardAllOpen(false);
@@ -1004,14 +1004,16 @@ function getChangeDisplay(kind: ContextChangedFile['kind']) {
 
 export async function invalidateExplorerQueries(queryClient: QueryClient): Promise<void> {
 	await Promise.all([
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getRepositoryStatus.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getChangedFiles.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.suggestBranchName.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getLiveContextPullHistory.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileTree.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.readFile.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileDiff.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.searchContent.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getRepositoryStatus.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getChangedFiles.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.suggestBranchName.queryKey() }),
+		queryClient.invalidateQueries({
+			queryKey: contextExplorerApi.contextExplorer.getLiveContextPullHistory.queryKey(),
+		}),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileTree.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.readFile.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.searchContent.queryKey() }),
 	]);
 }
 

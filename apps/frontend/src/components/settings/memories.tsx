@@ -21,10 +21,10 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { SettingsMemoryItem, SettingsMemorySkeleton } from '@/components/settings/memory-item';
 import { useMemoriesQuery, useMemoryMutations, useMemorySettingsQuery } from '@/queries/use-memories';
-import { trpc } from '@/main';
+import { memoryApi } from '@/lib/memory-api';
 
 export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
-	const projectMemorySettings = useQuery(trpc.project.getMemorySettings.queryOptions());
+	const projectMemorySettings = useQuery(memoryApi.project.getMemorySettings.queryOptions());
 	const memorySettings = useMemorySettingsQuery();
 
 	const { updateMemorySettingsMutation, updateMutation, deleteMutation } = useMemoryMutations();

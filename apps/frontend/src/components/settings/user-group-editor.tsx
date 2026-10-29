@@ -57,6 +57,7 @@ import { TabBar, TabPanel } from '@/components/ui/tab-bar';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useLicenseFeatures } from '@/hooks/use-license';
 import { useOfferedUserGroupFeatures } from '@/hooks/use-offered-user-group-features';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 import { trpc } from '@/main';
 
 type UserGroupFeature = (typeof USER_GROUP_FEATURE_DEFINITIONS)[number]['key'];
@@ -921,7 +922,7 @@ function DefaultGroupSsoStatus({
 export function ConditionalRulesHelp({ groupName }: { groupName: string }) {
 	const { isCopied, copy } = useCopyToClipboard();
 	const normalizedName = groupName.trim();
-	const rulesFile = useQuery(trpc.contextExplorer.readFile.queryOptions({ path: 'RULES.md' }));
+	const rulesFile = useQuery(contextExplorerApi.contextExplorer.readFile.queryOptions({ path: 'RULES.md' }));
 	const groupSpecificRules = useMemo(() => {
 		if (!normalizedName || !rulesFile.data?.content) {
 			return '';

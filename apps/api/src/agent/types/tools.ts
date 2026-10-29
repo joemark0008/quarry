@@ -1,11 +1,12 @@
 import type { McpAccess, UserGroupFeature, WarehouseRowSecurity } from '@quarry/shared';
 import type { UserRulesGroupAccess } from '@quarry/shared/rules-template';
-import type { displayChart, displayMap } from '@quarry/shared/tools';
+import type { displayChart, displayMap, generateOnboardingRules } from '@quarry/shared/tools';
 import type { executeSql } from '@quarry/shared/tools';
 import type { LlmSelectedModel, SemanticLayerMode, StoryFormat } from '@quarry/shared/types';
 
 import type { ChatImage } from '../../attachments/image.repository.js';
 import type { ResolvedSandboxSecret } from '../../sandbox/sandbox-secret.service.js';
+import type { SkillService } from '../../skills/skill.service.js';
 import type { WarehouseSqlOptions, WarehouseSqlResult } from '../../warehouse/warehouse-sql.service.js';
 import type { ProviderModelResult } from '../providers/providers.js';
 import type { WarehouseTableAccess } from '../services/context-access.js';
@@ -72,6 +73,14 @@ export interface AgentToolServices {
 	resolveSandboxSecrets(userId: string, projectId: string): Promise<ResolvedSandboxSecret[]>;
 	/** `image.queries` `getImagesByChatId`: the images attached to the chat, copied into the sandbox. */
 	getImagesByChatId(chatId: string): Promise<ChatImage[]>;
+	/** Upstream's `skillService` singleton (`load_skill`); skills are initialized before the run. */
+	skills: Pick<SkillService, 'getSkill' | 'getSkills' | 'getSkillBody'>;
+	/** `queueWarehouseFinalization`: quarry writes RULES.md for the run's project in the background instead. */
+	scheduleOnboardingRules(
+		projectId: string,
+		businessContext: generateOnboardingRules.Input['businessContext'],
+		modelSelection: LlmSelectedModel,
+	): void;
 }
 
 export interface ToolContext {

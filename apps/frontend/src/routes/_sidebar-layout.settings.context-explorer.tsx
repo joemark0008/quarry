@@ -31,7 +31,7 @@ import {
 } from '@/lib/context-explorer-search';
 import { createLocalStorage } from '@/lib/local-storage';
 import { requireContextAdminOrAdmin } from '@/lib/route-guards';
-import { trpc } from '@/main';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
 
 const contentSearchStorage = createLocalStorage<boolean>('quarry-file-explorer-content-search', true);
 
@@ -98,19 +98,19 @@ function ContextExplorerPage() {
 		});
 	}, [historicalFrom, historicalTo, initialPath, navigate]);
 
-	const fileTree = useQuery(trpc.contextExplorer.getFileTree.queryOptions());
-	const rulesPreviewGroups = useQuery(trpc.contextExplorer.getRulesPreviewGroups.queryOptions());
+	const fileTree = useQuery(contextExplorerApi.contextExplorer.getFileTree.queryOptions());
+	const rulesPreviewGroups = useQuery(contextExplorerApi.contextExplorer.getRulesPreviewGroups.queryOptions());
 	const rulesPreviewGroupsState = rulesPreviewGroups.isLoading
 		? ({ status: 'loading' } as const)
 		: rulesPreviewGroups.isError || !rulesPreviewGroups.data
 			? ({ status: 'error' } as const)
 			: ({ status: 'ready', ...rulesPreviewGroups.data } as const);
 	const fileContent = useQuery({
-		...trpc.contextExplorer.readFile.queryOptions({ path: selectedPath! }),
+		...contextExplorerApi.contextExplorer.readFile.queryOptions({ path: selectedPath! }),
 		enabled: !!selectedPath,
 	});
 	const contentSearch = useQuery({
-		...trpc.contextExplorer.searchContent.queryOptions({ query: debouncedSearch }),
+		...contextExplorerApi.contextExplorer.searchContent.queryOptions({ query: debouncedSearch }),
 		enabled: shouldSearchContent,
 		placeholderData: keepPreviousData,
 	});
@@ -180,7 +180,7 @@ function ContextExplorerPage() {
 		const committedDiffPath = selectedDiffPath;
 		setSelectedDiffPath(null);
 		await queryClient.cancelQueries({
-			queryKey: trpc.contextExplorer.getFileDiff.queryKey({ path: committedDiffPath }),
+			queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey({ path: committedDiffPath }),
 		});
 	};
 
@@ -202,7 +202,7 @@ function ContextExplorerPage() {
 		}
 		setIsViewerDirty(false);
 		await queryClient.invalidateQueries({
-			queryKey: trpc.contextExplorer.readFile.queryKey({ path }),
+			queryKey: contextExplorerApi.contextExplorer.readFile.queryKey({ path }),
 		});
 		setViewerRevision((current) => current + 1);
 	};
@@ -212,7 +212,7 @@ function ContextExplorerPage() {
 		setIsViewerDirty(false);
 		if (selectedPath) {
 			await queryClient.invalidateQueries({
-				queryKey: trpc.contextExplorer.readFile.queryKey({ path: selectedPath }),
+				queryKey: contextExplorerApi.contextExplorer.readFile.queryKey({ path: selectedPath }),
 			});
 			setViewerRevision((current) => current + 1);
 		}

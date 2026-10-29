@@ -30,6 +30,8 @@ import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card
 import { Spinner } from '@/components/ui/spinner';
 import { usePermissions } from '@/hooks/use-permissions';
 import { requireContextAdminOrAdmin } from '@/lib/route-guards';
+import { contextExplorerApi } from '@/lib/context-explorer-api';
+import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 import { trpc } from '@/main';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/git')({
@@ -103,7 +105,7 @@ function GitSettingsPage() {
 	const [isDisconnectingRepository, setIsDisconnectingRepository] = useState(false);
 	const [showRecommendedSetup, setShowRecommendedSetup] = useState(false);
 
-	const repositoryStatus = useQuery(trpc.contextExplorer.getRepositoryStatus.queryOptions());
+	const repositoryStatus = useQuery(contextExplorerApi.contextExplorer.getRepositoryStatus.queryOptions());
 	const githubAvailable = useQuery(trpc.github.isAvailable.queryOptions());
 	const gitlabAvailable = useQuery(trpc.gitlab.isAvailable.queryOptions());
 	const selectedProvider =
@@ -123,7 +125,7 @@ function GitSettingsPage() {
 	});
 
 	const connectRepository = useMutation(
-		trpc.contextExplorer.connectRepository.mutationOptions({
+		contextExplorerApi.contextExplorer.connectRepository.mutationOptions({
 			onSuccess: async () => {
 				await invalidateRepositoryQueries(queryClient);
 				setIsConfirmingRepository(false);
@@ -132,7 +134,7 @@ function GitSettingsPage() {
 		}),
 	);
 	const disconnectRepository = useMutation(
-		trpc.contextExplorer.disconnectRepository.mutationOptions({
+		contextExplorerApi.contextExplorer.disconnectRepository.mutationOptions({
 			onSuccess: async () => {
 				await invalidateRepositoryQueries(queryClient);
 				setIsDisconnectingRepository(false);
@@ -821,13 +823,15 @@ function getProviderSwitchDescription(request: ProviderSwitchRequest): string {
 
 async function invalidateRepositoryQueries(queryClient: QueryClient): Promise<void> {
 	await Promise.all([
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getRepositoryStatus.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileTree.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getChangedFiles.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.readFile.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getFileDiff.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getLiveContextPullHistory.queryKey() }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.getRepo.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getRepositoryStatus.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileTree.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getChangedFiles.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.readFile.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey() }),
+		queryClient.invalidateQueries({
+			queryKey: contextExplorerApi.contextExplorer.getLiveContextPullHistory.queryKey(),
+		}),
+		queryClient.invalidateQueries({ queryKey: contextRecommendationApi.contextRecommendation.getRepo.queryKey() }),
 		queryClient.invalidateQueries({ queryKey: trpc.github.getProjectGitInfo.queryKey() }),
 		queryClient.invalidateQueries({ queryKey: trpc.gitlab.getProjectGitInfo.queryKey() }),
 	]);
@@ -840,7 +844,7 @@ async function invalidateProviderAccountQueries(queryClient: QueryClient, provid
 	await Promise.all([
 		queryClient.invalidateQueries({ queryKey: accountQueryKey }),
 		queryClient.invalidateQueries({ queryKey: repositoriesQueryKey }),
-		queryClient.invalidateQueries({ queryKey: trpc.contextExplorer.getRepositoryStatus.queryKey() }),
+		queryClient.invalidateQueries({ queryKey: contextExplorerApi.contextExplorer.getRepositoryStatus.queryKey() }),
 	]);
 }
 

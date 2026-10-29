@@ -51,6 +51,7 @@ import { SimpleTooltip } from '@/components/ui/tooltip';
 
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
 import { Callout } from '@/components/ui/callout';
+import { skillApi } from '@/lib/skill-api';
 import { trpc } from '@/main';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useRegisterSetChatInputCallback } from '@/contexts/set-chat-input-callback';
@@ -516,7 +517,7 @@ function ChatInputBase({
 	const pendingCitation = useChatPendingCitation(chatId);
 	const isInputEmpty = !inputText.trim() && !attachmentUpload.hasAttachments && !pendingCitation;
 
-	const skills = useQuery({ ...trpc.skill.list.queryOptions(), enabled: hasProject });
+	const skills = useQuery({ ...skillApi.skill.list.queryOptions(), enabled: hasProject });
 	const databaseObjects = useQuery({ ...trpc.project.getDatabaseObjects.queryOptions(), enabled: hasProject });
 	const hasSkills = hasProject && Boolean(skills.data?.length);
 	const hasDatabases = hasProject && Boolean(databaseObjects.data?.length);

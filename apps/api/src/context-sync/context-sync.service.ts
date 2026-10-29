@@ -7,8 +7,10 @@ import { HandlerError } from '../common/errors/handler-error.js';
 import type { Project } from '../generated/prisma/client.js';
 import { JobsService } from '../jobs/jobs.service.js';
 import { ProjectRepository } from '../projects/project.repository.js';
+import type { SemanticLayerConfig } from '../semantic-layer/metricflow/index.js';
+import { type SemanticLayerSyncResult, syncSemanticLayerProvider } from '../semantic-layer/semantic-layer-sync.js';
 import { getDatabaseFolderNames } from '../sql-engine/database-config.js';
-import { loadProjectConfig } from '../sql-engine/project-config.js';
+import { loadProjectConfig, type ProjectConfig } from '../sql-engine/project-config.js';
 import { SqlEngineService } from '../sql-engine/sql-engine.service.js';
 import { requireProjectPath } from '../warehouse/warehouse-connection.service.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
@@ -135,6 +137,11 @@ export class ContextSyncService {
 				}
 			}
 
+			const semanticLayer = select.length === 0 ? this.syncSemanticLayer(config, projectPath, log) : null;
+			if (semanticLayer && !semanticLayer.success) {
+				failures.push(`semantic layer: ${semanticLayer.error}`);
+			}
+
 			const tables = results.reduce((total, result) => total + result.tablesSynced, 0);
 			Object.assign(status, {
 				state: failures.length > 0 && results.length === 0 ? 'failed' : 'succeeded',
@@ -156,6 +163,37 @@ export class ContextSyncService {
 		await writeStatus(projectPath, status);
 		return status;
 	}
+
+	/** Upstream `nao sync`'s semantic layer provider: `semantics/` docs and the `.meta/` manifest copy. */
+	private syncSemanticLayer(
+		config: ProjectConfig | null,
+		projectPath: string,
+		log: (line: string) => void,
+	): SemanticLayerSyncResult | null {
+		const semanticLayer = readSemanticLayerSection(config);
+		if (!semanticLayer) {
+			return null;
+		}
+		const result = syncSemanticLayerProvider(semanticLayer, projectPath);
+		log(result.success ? `Semantic layer: ${result.summary}` : `Semantic layer not synced: ${result.error}`);
+		return result;
+	}
+}
+
+function readSemanticLayerSection(config: ProjectConfig | null): SemanticLayerConfig | null {
+	const section = config?.raw.semantic_layer;
+	if (typeof section !== 'object' || section === null || Array.isArray(section)) {
+		return null;
+	}
+	const { manifest_path: manifestPath, database } = section as Record<string, unknown>;
+	if (typeof manifestPath !== 'string' || !manifestPath.trim()) {
+		return null;
+	}
+	return {
+		type: 'metricflow',
+		manifest_path: manifestPath,
+		database: typeof database === 'string' ? database : null,
+	};
 }
 
 function statusPath(projectPath: string): string {

@@ -40,6 +40,12 @@ vi.mock('@/components/ui/tooltip', () => ({
 
 vi.mock('@/hooks/use-preview-highlights', () => ({ usePreviewHighlights: vi.fn() }));
 
+// The context explorer moved to apps/api; its procedures keep the shape of the `trpc` mock below.
+vi.mock('@/lib/context-explorer-api', async () => {
+	const { trpc } = await import('@/main');
+	return { contextExplorerApi: { contextExplorer: trpc.contextExplorer } };
+});
+
 vi.mock('@/main', () => ({
 	trpc: {
 		contextExplorer: {

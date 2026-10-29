@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { isSkillGranted } from '@quarry/shared';
 import { documentMediaType, type ImageUploadData } from '@quarry/shared/attachments';
 import { markSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
 import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
@@ -11,8 +12,11 @@ import { ChatRepository } from '../chats/chat.repository.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
 import type { Project } from '../generated/prisma/client.js';
+import { MemoryService } from '../memory/memory.service.js';
+import { OnboardingService } from '../onboarding/onboarding.service.js';
 import { ProjectRepository } from '../projects/project.repository.js';
 import { SandboxSecretService } from '../sandbox/sandbox-secret.service.js';
+import { SkillService } from '../skills/skill.service.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
 import { WarehouseSqlService } from '../warehouse/warehouse-sql.service.js';
 import { type AgentChat, AgentManager, type AgentProfile } from './agent-manager.js';
@@ -23,6 +27,7 @@ import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
 import { CompactionService } from './services/compaction.js';
+import { resolveSemanticLayerMode } from './services/semantic-layer.service.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
 import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
@@ -76,6 +81,9 @@ export class AgentService {
 		private readonly config: ConfigService,
 		private readonly sandboxSecrets: SandboxSecretService,
 		private readonly images: ImageRepository,
+		private readonly skills: SkillService,
+		private readonly memory: MemoryService,
+		private readonly onboarding: OnboardingService,
 	) {}
 
 	/** `POST /api/agent`: `authorizeAgentRun` + `handleAgentRoute`. */
@@ -134,6 +142,7 @@ export class AgentService {
 		const [agentSettings, customBoundaries] = await Promise.all([
 			this.llmConfigs.getAgentSettings(chat.projectId) as Promise<AgentSettings | null>,
 			this.projects.getCustomBoundaries(chat.projectId),
+			this.safeInitializeSkills(chat.projectId),
 		]);
 		const toolContext = await this.buildToolContext({
 			projectId: chat.projectId,
@@ -143,12 +152,16 @@ export class AgentService {
 			modelSelection,
 		});
 		const webTools = await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
-		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`).
-		const tools = getTools(agentSettings, webTools ?? {}, {
-			customBoundaries,
-			semanticLayerMode: toolContext.semanticLayerMode,
-			subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
-		}) as AgentTools;
+		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`) unless the profile brings its own.
+		const tools = (
+			profile.tools
+				? profile.tools({ agentSettings })
+				: getTools(agentSettings, webTools ?? {}, {
+						customBoundaries,
+						semanticLayerMode: toolContext.semanticLayerMode,
+						subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
+					})
+		) as AgentTools;
 		const agent = new AgentManager(
 			chat,
 			profile,
@@ -163,8 +176,20 @@ export class AgentService {
 				llm: this.llm,
 				compaction: this.compaction,
 				getImageById: (id) => this.images.getImageById(id),
-				buildSystemPrompt: ({ toolNames, timezone }) =>
-					this.buildProjectSystemPrompt(toolContext, toolNames, timezone),
+				buildSystemPrompt: async ({ toolNames, timezone }) =>
+					profile.systemPrompt
+						? profile.systemPrompt({ timezone })
+						: this.buildProjectSystemPrompt(toolContext, toolNames, timezone),
+				getSkillContent: (skillName) => this.skills.getSkillContent(chat.projectId, skillName),
+				scheduleMemoryExtraction: ({ messages, provider, modelId }) =>
+					this.memory.safeScheduleMemoryExtraction({
+						userId: chat.userId,
+						projectId: chat.projectId,
+						chatId: chat.id,
+						messages,
+						provider,
+						modelId,
+					}),
 			},
 		);
 		this.agents.set(chat.id, agent);
@@ -200,8 +225,12 @@ export class AgentService {
 		if (!projectId) {
 			return null;
 		}
-		const agentSettings = (await this.llmConfigs.getAgentSettings(projectId)) as AgentSettings | null;
-		const tools = getTools(agentSettings, undefined, { semanticLayerMode: null }) as Record<string, Tool>;
+		const [agentSettings, project] = await Promise.all([
+			this.llmConfigs.getAgentSettings(projectId) as Promise<AgentSettings | null>,
+			this.projects.getProjectById(projectId),
+		]);
+		const semanticLayerMode = project?.path ? resolveSemanticLayerMode(project.path, agentSettings) : null;
+		const tools = getTools(agentSettings, undefined, { semanticLayerMode }) as Record<string, Tool>;
 		const uiMessages = markSupersededExecuteSqlParts(await this.chats.getChatMessages(opts.chatId));
 		const systemMessage: Omit<UIMessage, 'id'> = {
 			role: 'system',
@@ -278,6 +307,9 @@ export class AgentService {
 					this.llm.resolveProviderModel(projectId, provider, modelId, applyUserSettings),
 				resolveSandboxSecrets: (userId, projectId) => this.sandboxSecrets.resolve(userId, projectId),
 				getImagesByChatId: (chatId) => this.images.getImagesByChatId(chatId),
+				skills: this.skills,
+				scheduleOnboardingRules: (projectId, businessContext, modelSelection) =>
+					this.onboarding.scheduleRules(projectId, businessContext, modelSelection),
 			},
 			projectFolder: project.path,
 			chatId: opts.chatId,
@@ -286,7 +318,7 @@ export class AgentService {
 			supportsCustomCharts: true,
 			agentSettings: opts.agentSettings,
 			...(opts.modelSelection && { modelSelection: opts.modelSelection }),
-			semanticLayerMode: null,
+			semanticLayerMode: resolveSemanticLayerMode(project.path, opts.agentSettings),
 			envVars,
 			warehouseTableAccess: access.warehouseTableAccess,
 			warehouseRowSecurity: access.warehouseRowSecurity,
@@ -315,10 +347,20 @@ export class AgentService {
 			return override;
 		}
 		const { repos, templates, presence } = readProjectContext(toolContext.projectFolder);
-		const sandboxSecrets = toolNames.includes('execute_sandboxed_code')
-			? await this.sandboxSecrets.safeListDefinitions(toolContext.userId, toolContext.projectId)
-			: [];
+		const [sandboxSecrets, memories] = await Promise.all([
+			toolNames.includes('execute_sandboxed_code')
+				? this.sandboxSecrets.safeListDefinitions(toolContext.userId, toolContext.projectId)
+				: Promise.resolve([]),
+			this.memory.safeGetUserMemories(toolContext.userId, toolContext.projectId, toolContext.chatId),
+		]);
+		const skills = this.skills
+			.getSkills(toolContext.projectId)
+			.filter((skill) => isSkillGranted(toolContext.skillsAccess, skill.name));
+		const preloadedSkills = this.skills.getPreloadedSkills(toolContext.projectId, toolContext.preloadedSkillNames);
 		const defaultPrompt = renderSystemPrompt({
+			memories,
+			skills,
+			preloadedSkills,
 			userRules: getUserRules(toolContext.projectFolder, toolContext.userRulesGroupAccess),
 			connections: getConnections(toolContext.projectFolder),
 			configuredDatabases: extractConfiguredDatabases(toolContext.projectFolder),
@@ -337,6 +379,15 @@ export class AgentService {
 			},
 		});
 		return override ? injectNaoPrompt(override, defaultPrompt) : defaultPrompt;
+	}
+
+	/** Upstream `safeInitializeSkills`: a broken skills folder must not block the run. */
+	private async safeInitializeSkills(projectId: string): Promise<void> {
+		try {
+			await this.skills.initializeSkills(projectId);
+		} catch (error) {
+			this.logger.warn(`Failed to initialize skills for project ${projectId}: ${String(error)}`);
+		}
 	}
 
 	private async resolveProjectId(currentProject: Project | null, body: AgentRequest): Promise<string> {

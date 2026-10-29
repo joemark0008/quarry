@@ -1,0 +1,1388 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`semantic query compiler > compiles example query {"metrics":["average_order_value"],"groupBy":["metric_time__month"]} 1`] = `
+"SELECT
+  metric_time__month
+  , CAST(revenue AS DOUBLE PRECISION) / CAST(NULLIF(orders, 0) AS DOUBLE PRECISION) AS average_order_value
+FROM (
+  SELECT
+    COALESCE(subq_3.metric_time__month, subq_4.metric_time__month) AS metric_time__month
+    , MAX(subq_3.revenue) AS revenue
+    , MAX(subq_4.orders) AS orders
+  FROM (
+    SELECT
+      metric_time__month
+      , SUM(revenue) AS revenue
+    FROM (
+      SELECT
+        DATE_TRUNC('month', order_date) AS metric_time__month
+        , amount AS revenue
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_1
+    GROUP BY
+      metric_time__month
+  ) subq_3
+  FULL OUTER JOIN (
+    SELECT
+      metric_time__month
+      , SUM(orders) AS orders
+    FROM (
+      SELECT
+        DATE_TRUNC('month', order_date) AS metric_time__month
+        , 1 AS orders
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_2
+    GROUP BY
+      metric_time__month
+  ) subq_4
+  ON subq_3.metric_time__month = subq_4.metric_time__month
+  GROUP BY
+    COALESCE(subq_3.metric_time__month, subq_4.metric_time__month)
+) subq_5"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["completed_revenue","revenue"],"groupBy":["metric_time__week"]} 1`] = `
+"SELECT
+  COALESCE(subq_3.metric_time__week, subq_4.metric_time__week) AS metric_time__week
+  , MAX(subq_3.completed_revenue) AS completed_revenue
+  , MAX(subq_4.revenue) AS revenue
+FROM (
+  SELECT
+    metric_time__week
+    , SUM(completed_revenue) AS completed_revenue
+  FROM (
+    SELECT
+      DATE_TRUNC('week', order_date) AS metric_time__week
+      , status AS order__status
+      , amount AS completed_revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+  WHERE order__status = 'completed'
+  GROUP BY
+    metric_time__week
+) subq_3
+FULL OUTER JOIN (
+  SELECT
+    metric_time__week
+    , SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      DATE_TRUNC('week', order_date) AS metric_time__week
+      , amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_2
+  GROUP BY
+    metric_time__week
+) subq_4
+ON subq_3.metric_time__week = subq_4.metric_time__week
+GROUP BY
+  COALESCE(subq_3.metric_time__week, subq_4.metric_time__week)"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["completion_rate"],"groupBy":["order__status"]} 1`] = `
+"SELECT
+  order__status
+  , CAST(completed_orders AS DOUBLE PRECISION) / CAST(NULLIF(orders, 0) AS DOUBLE PRECISION) AS completion_rate
+FROM (
+  SELECT
+    COALESCE(subq_3.order__status, subq_4.order__status) AS order__status
+    , MAX(subq_3.completed_orders) AS completed_orders
+    , MAX(subq_4.orders) AS orders
+  FROM (
+    SELECT
+      order__status
+      , SUM(completed_orders) AS completed_orders
+    FROM (
+      SELECT
+        status AS order__status
+        , 1 AS completed_orders
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_1
+    WHERE order__status = 'completed'
+    GROUP BY
+      order__status
+  ) subq_3
+  FULL OUTER JOIN (
+    SELECT
+      order__status
+      , SUM(orders) AS orders
+    FROM (
+      SELECT
+        status AS order__status
+        , 1 AS orders
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_2
+    GROUP BY
+      order__status
+  ) subq_4
+  ON subq_3.order__status = subq_4.order__status
+  GROUP BY
+    COALESCE(subq_3.order__status, subq_4.order__status)
+) subq_5"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["cumulative_revenue"],"groupBy":["metric_time__month"],"orderBy":["metric_time__month"]} 1`] = `
+"SELECT
+  metric_time__month
+  , cumulative_revenue
+FROM (
+  SELECT
+    metric_time__month
+    , FIRST_VALUE(cumulative_revenue) OVER (
+      PARTITION BY metric_time__month
+      ORDER BY metric_time__day
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) AS cumulative_revenue
+  FROM (
+    SELECT
+      metric_time__day
+      , metric_time__month
+      , SUM(cumulative_revenue) AS cumulative_revenue
+    FROM (
+      SELECT
+        time_spine_src.date_day AS metric_time__day
+        , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+        , subq_1.cumulative_revenue
+      FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+      INNER JOIN (
+        SELECT
+          DATE_TRUNC('day', order_date) AS __agg_day
+          , amount AS cumulative_revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_1
+      ON subq_1.__agg_day <= time_spine_src.date_day
+    ) subq_2
+    GROUP BY
+      metric_time__day
+      , metric_time__month
+  ) subq_3
+) subq_4
+GROUP BY
+  metric_time__month
+  , cumulative_revenue
+ORDER BY metric_time__month"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["customers","revenue"],"groupBy":["metric_time__year"]} 1`] = `
+"SELECT
+  COALESCE(subq_3.metric_time__year, subq_4.metric_time__year) AS metric_time__year
+  , MAX(subq_3.customers) AS customers
+  , MAX(subq_4.revenue) AS revenue
+FROM (
+  SELECT
+    metric_time__year
+    , COUNT(DISTINCT customers) AS customers
+  FROM (
+    SELECT
+      DATE_TRUNC('year', first_order) AS metric_time__year
+      , customer_id AS customers
+    FROM "jaffle_shop"."main"."customers" customers_src
+  ) subq_1
+  GROUP BY
+    metric_time__year
+) subq_3
+FULL OUTER JOIN (
+  SELECT
+    metric_time__year
+    , SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      DATE_TRUNC('year', order_date) AS metric_time__year
+      , amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_2
+  GROUP BY
+    metric_time__year
+) subq_4
+ON subq_3.metric_time__year = subq_4.metric_time__year
+GROUP BY
+  COALESCE(subq_3.metric_time__year, subq_4.metric_time__year)"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["customers"],"groupBy":["customer__first_order__month"]} 1`] = `
+"SELECT
+  customer__first_order__month
+  , COUNT(DISTINCT customers) AS customers
+FROM (
+  SELECT
+    DATE_TRUNC('month', first_order) AS customer__first_order__month
+    , customer_id AS customers
+  FROM "jaffle_shop"."main"."customers" customers_src
+) subq_1
+GROUP BY
+  customer__first_order__month"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["largest_order"],"groupBy":["order__order_date__quarter"],"endTime":"2018-03-31"} 1`] = `
+"SELECT
+  order__order_date__quarter
+  , MAX(largest_order) AS largest_order
+FROM (
+  SELECT
+    DATE_TRUNC('quarter', order_date) AS order__order_date__quarter
+    , amount AS largest_order
+  FROM "jaffle_shop"."main"."orders" orders_src
+  WHERE DATE_TRUNC('day', order_date) BETWEEN '2000-01-01' AND '2018-03-31'
+) subq_1
+GROUP BY
+  order__order_date__quarter"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue","orders"],"groupBy":["metric_time__month"],"where":["{{ Dimension('order__status') }} = 'completed'"],"orderBy":["-metric_time__month"],"limit":12,"startTime":"2018-02-01"} 1`] = `
+"SELECT
+  COALESCE(subq_3.metric_time__month, subq_4.metric_time__month) AS metric_time__month
+  , MAX(subq_3.revenue) AS revenue
+  , MAX(subq_4.orders) AS orders
+FROM (
+  SELECT
+    metric_time__month
+    , SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      DATE_TRUNC('month', order_date) AS metric_time__month
+      , status AS order__status
+      , amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+    WHERE DATE_TRUNC('day', order_date) BETWEEN '2018-02-01' AND '2040-12-31'
+  ) subq_1
+  WHERE order__status = 'completed'
+  GROUP BY
+    metric_time__month
+) subq_3
+FULL OUTER JOIN (
+  SELECT
+    metric_time__month
+    , SUM(orders) AS orders
+  FROM (
+    SELECT
+      DATE_TRUNC('month', order_date) AS metric_time__month
+      , status AS order__status
+      , 1 AS orders
+    FROM "jaffle_shop"."main"."orders" orders_src
+    WHERE DATE_TRUNC('day', order_date) BETWEEN '2018-02-01' AND '2040-12-31'
+  ) subq_2
+  WHERE order__status = 'completed'
+  GROUP BY
+    metric_time__month
+) subq_4
+ON subq_3.metric_time__month = subq_4.metric_time__month
+GROUP BY
+  COALESCE(subq_3.metric_time__month, subq_4.metric_time__month)
+ORDER BY metric_time__month DESC
+LIMIT 12"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue"],"groupBy":["customer__first_name"],"where":["{{ Dimension('customer__first_name') }} IS NOT NULL"],"orderBy":["-revenue"],"limit":10} 1`] = `
+"SELECT
+  customer__first_name
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    customers_src.first_name AS customer__first_name
+    , orders_src.amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+  LEFT OUTER JOIN (
+    SELECT
+      customer_id AS customer
+      , first_name
+    FROM "jaffle_shop"."main"."customers"
+  ) customers_src
+  ON orders_src.customer_id = customers_src.customer
+) subq_1
+WHERE customer__first_name IS NOT NULL
+GROUP BY
+  customer__first_name
+ORDER BY revenue DESC
+LIMIT 10"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue"],"groupBy":["customer__first_name"],"where":["{{ Metric('revenue', group_by=['customer']) }} > 100"]} 1`] = `
+"SELECT
+  customer__first_name
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    customers_src.first_name AS customer__first_name
+    , subq_2.revenue AS customer__revenue
+    , orders_src.amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+  LEFT OUTER JOIN (
+    SELECT
+      customer_id AS customer
+      , first_name
+    FROM "jaffle_shop"."main"."customers"
+  ) customers_src
+  ON orders_src.customer_id = customers_src.customer
+  LEFT OUTER JOIN (
+    SELECT
+      customer
+      , SUM(revenue) AS revenue
+    FROM (
+      SELECT
+        customer_id AS customer
+        , amount AS revenue
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_1
+    GROUP BY
+      customer
+  ) subq_2
+  ON orders_src.customer_id = subq_2.customer
+) subq_3
+WHERE customer__revenue > 100
+GROUP BY
+  customer__first_name"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue"],"groupBy":["metric_time__month"],"orderBy":["metric_time__month"]} 1`] = `
+"SELECT
+  metric_time__month
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    DATE_TRUNC('month', order_date) AS metric_time__month
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+GROUP BY
+  metric_time__month
+ORDER BY metric_time__month"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue"],"groupBy":["order__status","metric_time__day"],"where":["{{ TimeDimension('metric_time', 'day') }} >= '2018-03-01'"],"limit":5} 1`] = `
+"SELECT
+  order__status
+  , metric_time__day
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    status AS order__status
+    , DATE_TRUNC('day', order_date) AS metric_time__day
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+WHERE metric_time__day >= '2018-03-01'
+GROUP BY
+  order__status
+  , metric_time__day
+LIMIT 5"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["revenue"]} 1`] = `
+"SELECT
+  SUM(revenue) AS revenue
+FROM (
+  SELECT
+    amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1"
+`;
+
+exports[`semantic query compiler > compiles example query {"metrics":["total_lifetime_value"],"groupBy":["customer__last_name"],"orderBy":["-total_lifetime_value"],"limit":3} 1`] = `
+"SELECT
+  customer__last_name
+  , SUM(total_lifetime_value) AS total_lifetime_value
+FROM (
+  SELECT
+    last_name AS customer__last_name
+    , customer_lifetime_value AS total_lifetime_value
+  FROM "jaffle_shop"."main"."customers" customers_src
+) subq_1
+GROUP BY
+  customer__last_name
+ORDER BY total_lifetime_value DESC
+LIMIT 3"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["avg_amount","order_id_count","median_amount","p90_amount","coupon_orders","min_amount"],"groupBy":["order__status"]} 1`] = `
+"SELECT
+  COALESCE(subq_7.order__status, subq_8.order__status, subq_9.order__status, subq_10.order__status, subq_11.order__status, subq_12.order__status) AS order__status
+  , MAX(subq_7.avg_amount) AS avg_amount
+  , MAX(subq_8.order_id_count) AS order_id_count
+  , MAX(subq_9.median_amount) AS median_amount
+  , MAX(subq_10.p90_amount) AS p90_amount
+  , MAX(subq_11.coupon_orders) AS coupon_orders
+  , MAX(subq_12.min_amount) AS min_amount
+FROM (
+  SELECT
+    order__status
+    , AVG(avg_amount) AS avg_amount
+  FROM (
+    SELECT
+      status AS order__status
+      , amount AS avg_amount
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+  GROUP BY
+    order__status
+) subq_7
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , COUNT(order_id_count) AS order_id_count
+  FROM (
+    SELECT
+      status AS order__status
+      , order_id AS order_id_count
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_2
+  GROUP BY
+    order__status
+) subq_8
+ON subq_7.order__status = subq_8.order__status
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY median_amount) AS median_amount
+  FROM (
+    SELECT
+      status AS order__status
+      , amount AS median_amount
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_3
+  GROUP BY
+    order__status
+) subq_9
+ON COALESCE(subq_7.order__status, subq_8.order__status) = subq_9.order__status
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY p90_amount) AS p90_amount
+  FROM (
+    SELECT
+      status AS order__status
+      , amount AS p90_amount
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_4
+  GROUP BY
+    order__status
+) subq_10
+ON COALESCE(subq_7.order__status, subq_8.order__status, subq_9.order__status) = subq_10.order__status
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , SUM(CASE WHEN coupon_orders THEN 1 ELSE 0 END) AS coupon_orders
+  FROM (
+    SELECT
+      status AS order__status
+      , coupon_amount > 0 AS coupon_orders
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_5
+  GROUP BY
+    order__status
+) subq_11
+ON COALESCE(subq_7.order__status, subq_8.order__status, subq_9.order__status, subq_10.order__status) = subq_11.order__status
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , MIN(min_amount) AS min_amount
+  FROM (
+    SELECT
+      status AS order__status
+      , amount AS min_amount
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_6
+  GROUP BY
+    order__status
+) subq_12
+ON COALESCE(subq_7.order__status, subq_8.order__status, subq_9.order__status, subq_10.order__status, subq_11.order__status) = subq_12.order__status
+GROUP BY
+  COALESCE(subq_7.order__status, subq_8.order__status, subq_9.order__status, subq_10.order__status, subq_11.order__status, subq_12.order__status)"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["completed_share"],"groupBy":["customer__first_name"]} 1`] = `
+"SELECT
+  customer__first_name
+  , done / total AS completed_share
+FROM (
+  SELECT
+    COALESCE(subq_3.customer__first_name, subq_4.customer__first_name) AS customer__first_name
+    , MAX(subq_3.done) AS done
+    , MAX(subq_4.total) AS total
+  FROM (
+    SELECT
+      customer__first_name
+      , SUM(done) AS done
+    FROM (
+      SELECT
+        customers_src.first_name AS customer__first_name
+        , orders_src.status AS order__status
+        , orders_src.amount AS done
+      FROM "jaffle_shop"."main"."orders" orders_src
+      LEFT OUTER JOIN (
+        SELECT
+          customer_id AS customer
+          , first_name
+        FROM "jaffle_shop"."main"."customers"
+      ) customers_src
+      ON orders_src.customer_id = customers_src.customer
+    ) subq_1
+    WHERE order__status = 'completed'
+    GROUP BY
+      customer__first_name
+  ) subq_3
+  FULL OUTER JOIN (
+    SELECT
+      customer__first_name
+      , SUM(total) AS total
+    FROM (
+      SELECT
+        customers_src.first_name AS customer__first_name
+        , orders_src.amount AS total
+      FROM "jaffle_shop"."main"."orders" orders_src
+      LEFT OUTER JOIN (
+        SELECT
+          customer_id AS customer
+          , first_name
+        FROM "jaffle_shop"."main"."customers"
+      ) customers_src
+      ON orders_src.customer_id = customers_src.customer
+    ) subq_2
+    GROUP BY
+      customer__first_name
+  ) subq_4
+  ON subq_3.customer__first_name = subq_4.customer__first_name
+  GROUP BY
+    COALESCE(subq_3.customer__first_name, subq_4.customer__first_name)
+) subq_5"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["completion_rate","customers"],"groupBy":["metric_time__quarter"],"startTime":"2018-01-10","endTime":"2018-02-20"} 1`] = `
+"SELECT
+  COALESCE(subq_7.metric_time__quarter, subq_8.metric_time__quarter) AS metric_time__quarter
+  , MAX(subq_7.completion_rate) AS completion_rate
+  , MAX(subq_8.customers) AS customers
+FROM (
+  SELECT
+    metric_time__quarter
+    , CAST(completed_orders AS DOUBLE PRECISION) / CAST(NULLIF(orders, 0) AS DOUBLE PRECISION) AS completion_rate
+  FROM (
+    SELECT
+      COALESCE(subq_3.metric_time__quarter, subq_4.metric_time__quarter) AS metric_time__quarter
+      , MAX(subq_3.completed_orders) AS completed_orders
+      , MAX(subq_4.orders) AS orders
+    FROM (
+      SELECT
+        metric_time__quarter
+        , SUM(completed_orders) AS completed_orders
+      FROM (
+        SELECT
+          DATE_TRUNC('quarter', order_date) AS metric_time__quarter
+          , status AS order__status
+          , 1 AS completed_orders
+        FROM "jaffle_shop"."main"."orders" orders_src
+        WHERE DATE_TRUNC('day', order_date) BETWEEN '2018-01-01' AND '2018-03-31'
+      ) subq_1
+      WHERE order__status = 'completed'
+      GROUP BY
+        metric_time__quarter
+    ) subq_3
+    FULL OUTER JOIN (
+      SELECT
+        metric_time__quarter
+        , SUM(orders) AS orders
+      FROM (
+        SELECT
+          DATE_TRUNC('quarter', order_date) AS metric_time__quarter
+          , 1 AS orders
+        FROM "jaffle_shop"."main"."orders" orders_src
+        WHERE DATE_TRUNC('day', order_date) BETWEEN '2018-01-01' AND '2018-03-31'
+      ) subq_2
+      GROUP BY
+        metric_time__quarter
+    ) subq_4
+    ON subq_3.metric_time__quarter = subq_4.metric_time__quarter
+    GROUP BY
+      COALESCE(subq_3.metric_time__quarter, subq_4.metric_time__quarter)
+  ) subq_5
+) subq_7
+FULL OUTER JOIN (
+  SELECT
+    metric_time__quarter
+    , COUNT(DISTINCT customers) AS customers
+  FROM (
+    SELECT
+      DATE_TRUNC('quarter', first_order) AS metric_time__quarter
+      , customer_id AS customers
+    FROM "jaffle_shop"."main"."customers" customers_src
+    WHERE DATE_TRUNC('day', first_order) BETWEEN '2018-01-01' AND '2018-03-31'
+  ) subq_6
+  GROUP BY
+    metric_time__quarter
+) subq_8
+ON subq_7.metric_time__quarter = subq_8.metric_time__quarter
+GROUP BY
+  COALESCE(subq_7.metric_time__quarter, subq_8.metric_time__quarter)"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["cumulative_revenue"],"groupBy":["metric_time__day"],"where":["{{ TimeDimension('metric_time', 'day') }} >= '2018-03-01'","{{ Dimension('order__status') }} = 'completed'"]} 1`] = `
+"SELECT
+  metric_time__day
+  , SUM(cumulative_revenue) AS cumulative_revenue
+FROM (
+  SELECT
+    time_spine_src.date_day AS metric_time__day
+    , subq_1.order__status
+    , subq_1.cumulative_revenue
+  FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+  INNER JOIN (
+    SELECT
+      DATE_TRUNC('day', order_date) AS __agg_day
+      , status AS order__status
+      , amount AS cumulative_revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+  ON subq_1.__agg_day <= time_spine_src.date_day
+) subq_2
+WHERE (metric_time__day >= '2018-03-01') AND (order__status = 'completed')
+GROUP BY
+  metric_time__day"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["cumulative_revenue"],"groupBy":["metric_time__month","order__status"]} 1`] = `
+"SELECT
+  metric_time__month
+  , order__status
+  , cumulative_revenue
+FROM (
+  SELECT
+    metric_time__month
+    , order__status
+    , FIRST_VALUE(cumulative_revenue) OVER (
+      PARTITION BY metric_time__month, order__status
+      ORDER BY metric_time__day
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) AS cumulative_revenue
+  FROM (
+    SELECT
+      metric_time__day
+      , metric_time__month
+      , order__status
+      , SUM(cumulative_revenue) AS cumulative_revenue
+    FROM (
+      SELECT
+        time_spine_src.date_day AS metric_time__day
+        , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+        , subq_1.order__status
+        , subq_1.cumulative_revenue
+      FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+      INNER JOIN (
+        SELECT
+          DATE_TRUNC('day', order_date) AS __agg_day
+          , status AS order__status
+          , amount AS cumulative_revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_1
+      ON subq_1.__agg_day <= time_spine_src.date_day
+    ) subq_2
+    GROUP BY
+      metric_time__day
+      , metric_time__month
+      , order__status
+  ) subq_3
+) subq_4
+GROUP BY
+  metric_time__month
+  , order__status
+  , cumulative_revenue"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["cumulative_revenue"],"groupBy":["metric_time__month"],"startTime":"2018-02-15","endTime":"2018-03-20"} 1`] = `
+"SELECT
+  metric_time__month
+  , cumulative_revenue
+FROM (
+  SELECT
+    metric_time__month
+    , FIRST_VALUE(cumulative_revenue) OVER (
+      PARTITION BY metric_time__month
+      ORDER BY metric_time__day
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) AS cumulative_revenue
+  FROM (
+    SELECT
+      metric_time__day
+      , metric_time__month
+      , SUM(cumulative_revenue) AS cumulative_revenue
+    FROM (
+      SELECT
+        time_spine_src.date_day AS metric_time__day
+        , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+        , subq_1.cumulative_revenue
+      FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+      INNER JOIN (
+        SELECT
+          DATE_TRUNC('day', order_date) AS __agg_day
+          , amount AS cumulative_revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_1
+      ON subq_1.__agg_day <= time_spine_src.date_day
+      WHERE time_spine_src.date_day BETWEEN '2018-02-01' AND '2018-03-31'
+    ) subq_2
+    GROUP BY
+      metric_time__day
+      , metric_time__month
+  ) subq_3
+) subq_4
+GROUP BY
+  metric_time__month
+  , cumulative_revenue"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["cumulative_revenue"]} 1`] = `
+"SELECT
+  SUM(cumulative_revenue) AS cumulative_revenue
+FROM (
+  SELECT
+    amount AS cumulative_revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["net_revenue"],"groupBy":["metric_time__month"]} 1`] = `
+"SELECT
+  metric_time__month
+  , revenue - coupon_revenue AS net_revenue
+FROM (
+  SELECT
+    COALESCE(subq_3.metric_time__month, subq_4.metric_time__month) AS metric_time__month
+    , MAX(subq_3.revenue) AS revenue
+    , MAX(subq_4.coupon_revenue) AS coupon_revenue
+  FROM (
+    SELECT
+      metric_time__month
+      , SUM(revenue) AS revenue
+    FROM (
+      SELECT
+        DATE_TRUNC('month', order_date) AS metric_time__month
+        , amount AS revenue
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_1
+    GROUP BY
+      metric_time__month
+  ) subq_3
+  FULL OUTER JOIN (
+    SELECT
+      metric_time__month
+      , SUM(coupon_revenue) AS coupon_revenue
+    FROM (
+      SELECT
+        DATE_TRUNC('month', order_date) AS metric_time__month
+        , coupon_amount AS coupon_revenue
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_2
+    GROUP BY
+      metric_time__month
+  ) subq_4
+  ON subq_3.metric_time__month = subq_4.metric_time__month
+  GROUP BY
+    COALESCE(subq_3.metric_time__month, subq_4.metric_time__month)
+) subq_5"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["returned_revenue"],"groupBy":["metric_time__month"]} 1`] = `
+"SELECT
+  metric_time__month
+  , COALESCE(SUM(returned_revenue), 0) AS returned_revenue
+FROM (
+  SELECT
+    DATE_TRUNC('month', order_date) AS metric_time__month
+    , status AS order__status
+    , amount AS returned_revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+WHERE order__status = 'returned'
+GROUP BY
+  metric_time__month"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue","customers"]} 1`] = `
+"SELECT
+  MAX(subq_3.revenue) AS revenue
+  , MAX(subq_4.customers) AS customers
+FROM (
+  SELECT
+    SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+) subq_3
+CROSS JOIN (
+  SELECT
+    COUNT(DISTINCT customers) AS customers
+  FROM (
+    SELECT
+      customer_id AS customers
+    FROM "jaffle_shop"."main"."customers" customers_src
+  ) subq_2
+) subq_4"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue","orders","average_order_value"],"groupBy":["order__status","customer__last_name"],"orderBy":["-revenue"],"limit":5} 1`] = `
+"SELECT
+  COALESCE(subq_8.order__status, subq_9.order__status, subq_10.order__status) AS order__status
+  , COALESCE(subq_8.customer__last_name, subq_9.customer__last_name, subq_10.customer__last_name) AS customer__last_name
+  , MAX(subq_8.revenue) AS revenue
+  , MAX(subq_9.orders) AS orders
+  , MAX(subq_10.average_order_value) AS average_order_value
+FROM (
+  SELECT
+    order__status
+    , customer__last_name
+    , SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      orders_src.status AS order__status
+      , customers_src.last_name AS customer__last_name
+      , orders_src.amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+    LEFT OUTER JOIN (
+      SELECT
+        customer_id AS customer
+        , last_name
+      FROM "jaffle_shop"."main"."customers"
+    ) customers_src
+    ON orders_src.customer_id = customers_src.customer
+  ) subq_1
+  GROUP BY
+    order__status
+    , customer__last_name
+) subq_8
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , customer__last_name
+    , SUM(orders) AS orders
+  FROM (
+    SELECT
+      orders_src.status AS order__status
+      , customers_src.last_name AS customer__last_name
+      , 1 AS orders
+    FROM "jaffle_shop"."main"."orders" orders_src
+    LEFT OUTER JOIN (
+      SELECT
+        customer_id AS customer
+        , last_name
+      FROM "jaffle_shop"."main"."customers"
+    ) customers_src
+    ON orders_src.customer_id = customers_src.customer
+  ) subq_2
+  GROUP BY
+    order__status
+    , customer__last_name
+) subq_9
+ON (subq_8.order__status = subq_9.order__status) AND (subq_8.customer__last_name = subq_9.customer__last_name)
+FULL OUTER JOIN (
+  SELECT
+    order__status
+    , customer__last_name
+    , CAST(revenue AS DOUBLE PRECISION) / CAST(NULLIF(orders, 0) AS DOUBLE PRECISION) AS average_order_value
+  FROM (
+    SELECT
+      COALESCE(subq_5.order__status, subq_6.order__status) AS order__status
+      , COALESCE(subq_5.customer__last_name, subq_6.customer__last_name) AS customer__last_name
+      , MAX(subq_5.revenue) AS revenue
+      , MAX(subq_6.orders) AS orders
+    FROM (
+      SELECT
+        order__status
+        , customer__last_name
+        , SUM(revenue) AS revenue
+      FROM (
+        SELECT
+          orders_src.status AS order__status
+          , customers_src.last_name AS customer__last_name
+          , orders_src.amount AS revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+        LEFT OUTER JOIN (
+          SELECT
+            customer_id AS customer
+            , last_name
+          FROM "jaffle_shop"."main"."customers"
+        ) customers_src
+        ON orders_src.customer_id = customers_src.customer
+      ) subq_3
+      GROUP BY
+        order__status
+        , customer__last_name
+    ) subq_5
+    FULL OUTER JOIN (
+      SELECT
+        order__status
+        , customer__last_name
+        , SUM(orders) AS orders
+      FROM (
+        SELECT
+          orders_src.status AS order__status
+          , customers_src.last_name AS customer__last_name
+          , 1 AS orders
+        FROM "jaffle_shop"."main"."orders" orders_src
+        LEFT OUTER JOIN (
+          SELECT
+            customer_id AS customer
+            , last_name
+          FROM "jaffle_shop"."main"."customers"
+        ) customers_src
+        ON orders_src.customer_id = customers_src.customer
+      ) subq_4
+      GROUP BY
+        order__status
+        , customer__last_name
+    ) subq_6
+    ON (subq_5.order__status = subq_6.order__status) AND (subq_5.customer__last_name = subq_6.customer__last_name)
+    GROUP BY
+      COALESCE(subq_5.order__status, subq_6.order__status)
+      , COALESCE(subq_5.customer__last_name, subq_6.customer__last_name)
+  ) subq_7
+) subq_10
+ON (COALESCE(subq_8.order__status, subq_9.order__status) = subq_10.order__status) AND (COALESCE(subq_8.customer__last_name, subq_9.customer__last_name) = subq_10.customer__last_name)
+GROUP BY
+  COALESCE(subq_8.order__status, subq_9.order__status, subq_10.order__status)
+  , COALESCE(subq_8.customer__last_name, subq_9.customer__last_name, subq_10.customer__last_name)
+ORDER BY revenue DESC
+LIMIT 5"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue","orders"],"groupBy":["customer__first_name"],"where":["{{ Metric('revenue', group_by=['customer']) }} > 30"]} 1`] = `
+"SELECT
+  COALESCE(subq_7.customer__first_name, subq_8.customer__first_name) AS customer__first_name
+  , MAX(subq_7.revenue) AS revenue
+  , MAX(subq_8.orders) AS orders
+FROM (
+  SELECT
+    customer__first_name
+    , SUM(revenue) AS revenue
+  FROM (
+    SELECT
+      customers_src.first_name AS customer__first_name
+      , subq_2.revenue AS customer__revenue
+      , orders_src.amount AS revenue
+    FROM "jaffle_shop"."main"."orders" orders_src
+    LEFT OUTER JOIN (
+      SELECT
+        customer_id AS customer
+        , first_name
+      FROM "jaffle_shop"."main"."customers"
+    ) customers_src
+    ON orders_src.customer_id = customers_src.customer
+    LEFT OUTER JOIN (
+      SELECT
+        customer
+        , SUM(revenue) AS revenue
+      FROM (
+        SELECT
+          customer_id AS customer
+          , amount AS revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_1
+      GROUP BY
+        customer
+    ) subq_2
+    ON orders_src.customer_id = subq_2.customer
+  ) subq_3
+  WHERE customer__revenue > 30
+  GROUP BY
+    customer__first_name
+) subq_7
+FULL OUTER JOIN (
+  SELECT
+    customer__first_name
+    , SUM(orders) AS orders
+  FROM (
+    SELECT
+      customers_src.first_name AS customer__first_name
+      , subq_5.revenue AS customer__revenue
+      , 1 AS orders
+    FROM "jaffle_shop"."main"."orders" orders_src
+    LEFT OUTER JOIN (
+      SELECT
+        customer_id AS customer
+        , first_name
+      FROM "jaffle_shop"."main"."customers"
+    ) customers_src
+    ON orders_src.customer_id = customers_src.customer
+    LEFT OUTER JOIN (
+      SELECT
+        customer
+        , SUM(revenue) AS revenue
+      FROM (
+        SELECT
+          customer_id AS customer
+          , amount AS revenue
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_4
+      GROUP BY
+        customer
+    ) subq_5
+    ON orders_src.customer_id = subq_5.customer
+  ) subq_6
+  WHERE customer__revenue > 30
+  GROUP BY
+    customer__first_name
+) subq_8
+ON subq_7.customer__first_name = subq_8.customer__first_name
+GROUP BY
+  COALESCE(subq_7.customer__first_name, subq_8.customer__first_name)"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"groupBy":["customer"]} 1`] = `
+"SELECT
+  customer
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    customer_id AS customer
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+GROUP BY
+  customer"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"groupBy":["metric_time"],"where":["{{ Dimension('order__order_date').grain('month') }} = '2018-01-01'"]} 1`] = `
+"SELECT
+  metric_time__day
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    DATE_TRUNC('day', order_date) AS metric_time__day
+    , DATE_TRUNC('month', order_date) AS order__order_date__month
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+WHERE order__order_date__month = '2018-01-01'
+GROUP BY
+  metric_time__day"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"groupBy":["metric_time__month"],"startTime":"2018-02-15"} 1`] = `
+"SELECT
+  metric_time__month
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    DATE_TRUNC('month', order_date) AS metric_time__month
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+  WHERE DATE_TRUNC('day', order_date) BETWEEN '2018-02-01' AND '2040-12-31'
+) subq_1
+GROUP BY
+  metric_time__month"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"groupBy":["metric_time__month"],"where":["{{ Dimension('customer__first_order').grain('month') }} = '2018-01-01'"],"orderBy":["metric_time"]} 1`] = `
+"SELECT
+  metric_time__month
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    DATE_TRUNC('month', orders_src.order_date) AS metric_time__month
+    , DATE_TRUNC('month', customers_src.first_order) AS customer__first_order__month
+    , orders_src.amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+  LEFT OUTER JOIN (
+    SELECT
+      customer_id AS customer
+      , first_order
+    FROM "jaffle_shop"."main"."customers"
+  ) customers_src
+  ON orders_src.customer_id = customers_src.customer
+) subq_1
+WHERE customer__first_order__month = '2018-01-01'
+GROUP BY
+  metric_time__month
+ORDER BY metric_time__month"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"groupBy":["order__order_date"]} 1`] = `
+"SELECT
+  order__order_date__day
+  , SUM(revenue) AS revenue
+FROM (
+  SELECT
+    DATE_TRUNC('day', order_date) AS order__order_date__day
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+GROUP BY
+  order__order_date__day"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue"],"where":["{{ Entity('customer') }} = 1"]} 1`] = `
+"SELECT
+  SUM(revenue) AS revenue
+FROM (
+  SELECT
+    customer_id AS customer
+    , amount AS revenue
+  FROM "jaffle_shop"."main"."orders" orders_src
+) subq_1
+WHERE customer = 1"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_7d"],"groupBy":["metric_time__day"]} 1`] = `
+"SELECT
+  metric_time__day
+  , SUM(revenue_7d) AS revenue_7d
+FROM (
+  SELECT
+    time_spine_src.date_day AS metric_time__day
+    , subq_1.revenue_7d
+  FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+  INNER JOIN (
+    SELECT
+      DATE_TRUNC('day', order_date) AS __agg_day
+      , amount AS revenue_7d
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+  ON (subq_1.__agg_day <= time_spine_src.date_day) AND (subq_1.__agg_day > time_spine_src.date_day - MAKE_INTERVAL(days => 7))
+) subq_2
+GROUP BY
+  metric_time__day"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_7d"],"groupBy":["metric_time__month","customer__first_name"],"where":["{{ Dimension('customer__first_name') }} LIKE 'A%'"]} 1`] = `
+"SELECT
+  metric_time__month
+  , customer__first_name
+  , revenue_7d
+FROM (
+  SELECT
+    metric_time__month
+    , customer__first_name
+    , FIRST_VALUE(revenue_7d) OVER (
+      PARTITION BY metric_time__month, customer__first_name
+      ORDER BY metric_time__day
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) AS revenue_7d
+  FROM (
+    SELECT
+      metric_time__day
+      , metric_time__month
+      , customer__first_name
+      , SUM(revenue_7d) AS revenue_7d
+    FROM (
+      SELECT
+        time_spine_src.date_day AS metric_time__day
+        , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+        , subq_1.customer__first_name
+        , subq_1.revenue_7d
+      FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+      INNER JOIN (
+        SELECT
+          DATE_TRUNC('day', orders_src.order_date) AS __agg_day
+          , customers_src.first_name AS customer__first_name
+          , orders_src.amount AS revenue_7d
+        FROM "jaffle_shop"."main"."orders" orders_src
+        LEFT OUTER JOIN (
+          SELECT
+            customer_id AS customer
+            , first_name
+          FROM "jaffle_shop"."main"."customers"
+        ) customers_src
+        ON orders_src.customer_id = customers_src.customer
+      ) subq_1
+      ON (subq_1.__agg_day <= time_spine_src.date_day) AND (subq_1.__agg_day > time_spine_src.date_day - MAKE_INTERVAL(days => 7))
+    ) subq_2
+    WHERE customer__first_name LIKE 'A%'
+    GROUP BY
+      metric_time__day
+      , metric_time__month
+      , customer__first_name
+  ) subq_3
+) subq_4
+GROUP BY
+  metric_time__month
+  , customer__first_name
+  , revenue_7d"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_cum_last","revenue_cum_avg"],"groupBy":["metric_time__month"]} 1`] = `
+"SELECT
+  COALESCE(subq_9.metric_time__month, subq_10.metric_time__month) AS metric_time__month
+  , MAX(subq_9.revenue_cum_last) AS revenue_cum_last
+  , MAX(subq_10.revenue_cum_avg) AS revenue_cum_avg
+FROM (
+  SELECT
+    metric_time__month
+    , revenue_cum_last
+  FROM (
+    SELECT
+      metric_time__month
+      , LAST_VALUE(revenue_cum_last) OVER (
+        PARTITION BY metric_time__month
+        ORDER BY metric_time__day
+        ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+      ) AS revenue_cum_last
+    FROM (
+      SELECT
+        metric_time__day
+        , metric_time__month
+        , SUM(revenue_cum_last) AS revenue_cum_last
+      FROM (
+        SELECT
+          time_spine_src.date_day AS metric_time__day
+          , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+          , subq_1.revenue_cum_last
+        FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+        INNER JOIN (
+          SELECT
+            DATE_TRUNC('day', order_date) AS __agg_day
+            , amount AS revenue_cum_last
+          FROM "jaffle_shop"."main"."orders" orders_src
+        ) subq_1
+        ON subq_1.__agg_day <= time_spine_src.date_day
+      ) subq_2
+      GROUP BY
+        metric_time__day
+        , metric_time__month
+    ) subq_3
+  ) subq_4
+  GROUP BY
+    metric_time__month
+    , revenue_cum_last
+) subq_9
+FULL OUTER JOIN (
+  SELECT
+    metric_time__month
+    , revenue_cum_avg
+  FROM (
+    SELECT
+      metric_time__month
+      , AVG(revenue_cum_avg) OVER (PARTITION BY metric_time__month) AS revenue_cum_avg
+    FROM (
+      SELECT
+        metric_time__day
+        , metric_time__month
+        , SUM(revenue_cum_avg) AS revenue_cum_avg
+      FROM (
+        SELECT
+          time_spine_src.date_day AS metric_time__day
+          , DATE_TRUNC('month', time_spine_src.date_day) AS metric_time__month
+          , subq_5.revenue_cum_avg
+        FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+        INNER JOIN (
+          SELECT
+            DATE_TRUNC('day', order_date) AS __agg_day
+            , amount AS revenue_cum_avg
+          FROM "jaffle_shop"."main"."orders" orders_src
+        ) subq_5
+        ON subq_5.__agg_day <= time_spine_src.date_day
+      ) subq_6
+      GROUP BY
+        metric_time__day
+        , metric_time__month
+    ) subq_7
+  ) subq_8
+  GROUP BY
+    metric_time__month
+    , revenue_cum_avg
+) subq_10
+ON subq_9.metric_time__month = subq_10.metric_time__month
+GROUP BY
+  COALESCE(subq_9.metric_time__month, subq_10.metric_time__month)"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_mtd"],"groupBy":["metric_time__day"]} 1`] = `
+"SELECT
+  metric_time__day
+  , SUM(revenue_mtd) AS revenue_mtd
+FROM (
+  SELECT
+    time_spine_src.date_day AS metric_time__day
+    , subq_1.revenue_mtd
+  FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+  INNER JOIN (
+    SELECT
+      DATE_TRUNC('day', order_date) AS __agg_day
+      , amount AS revenue_mtd
+    FROM "jaffle_shop"."main"."orders" orders_src
+  ) subq_1
+  ON (subq_1.__agg_day <= time_spine_src.date_day) AND (subq_1.__agg_day >= DATE_TRUNC('month', time_spine_src.date_day))
+) subq_2
+GROUP BY
+  metric_time__day"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_mtd"],"groupBy":["metric_time__week"]} 1`] = `
+"SELECT
+  metric_time__week
+  , revenue_mtd
+FROM (
+  SELECT
+    metric_time__week
+    , FIRST_VALUE(revenue_mtd) OVER (
+      PARTITION BY metric_time__week
+      ORDER BY metric_time__day
+      ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+    ) AS revenue_mtd
+  FROM (
+    SELECT
+      metric_time__day
+      , metric_time__week
+      , SUM(revenue_mtd) AS revenue_mtd
+    FROM (
+      SELECT
+        time_spine_src.date_day AS metric_time__day
+        , DATE_TRUNC('week', time_spine_src.date_day) AS metric_time__week
+        , subq_1.revenue_mtd
+      FROM "jaffle_shop"."main"."metricflow_time_spine" time_spine_src
+      INNER JOIN (
+        SELECT
+          DATE_TRUNC('day', order_date) AS __agg_day
+          , amount AS revenue_mtd
+        FROM "jaffle_shop"."main"."orders" orders_src
+      ) subq_1
+      ON (subq_1.__agg_day <= time_spine_src.date_day) AND (subq_1.__agg_day >= DATE_TRUNC('month', time_spine_src.date_day))
+    ) subq_2
+    GROUP BY
+      metric_time__day
+      , metric_time__week
+  ) subq_3
+) subq_4
+GROUP BY
+  metric_time__week
+  , revenue_mtd"
+`;
+
+exports[`semantic query compiler > compiles extended query {"metrics":["revenue_per_customer"],"groupBy":["metric_time__year"]} 1`] = `
+"SELECT
+  metric_time__year
+  , revenue / customers AS revenue_per_customer
+FROM (
+  SELECT
+    COALESCE(subq_3.metric_time__year, subq_4.metric_time__year) AS metric_time__year
+    , MAX(subq_3.revenue) AS revenue
+    , MAX(subq_4.customers) AS customers
+  FROM (
+    SELECT
+      metric_time__year
+      , SUM(revenue) AS revenue
+    FROM (
+      SELECT
+        DATE_TRUNC('year', order_date) AS metric_time__year
+        , amount AS revenue
+      FROM "jaffle_shop"."main"."orders" orders_src
+    ) subq_1
+    GROUP BY
+      metric_time__year
+  ) subq_3
+  FULL OUTER JOIN (
+    SELECT
+      metric_time__year
+      , COUNT(DISTINCT customers) AS customers
+    FROM (
+      SELECT
+        DATE_TRUNC('year', first_order) AS metric_time__year
+        , customer_id AS customers
+      FROM "jaffle_shop"."main"."customers" customers_src
+    ) subq_2
+    GROUP BY
+      metric_time__year
+  ) subq_4
+  ON subq_3.metric_time__year = subq_4.metric_time__year
+  GROUP BY
+    COALESCE(subq_3.metric_time__year, subq_4.metric_time__year)
+) subq_5"
+`;

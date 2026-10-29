@@ -5,7 +5,7 @@ import type { SkillsAccess } from '@quarry/shared';
 
 import { EffectiveAccessStatusRow } from '@/components/settings/user-group-effective-access-status-row';
 import { Badge } from '@/components/ui/badge';
-import { trpc } from '@/main';
+import { skillApi } from '@/lib/skill-api';
 
 export function UserGroupEffectiveSkills({
 	skillsAccess,
@@ -14,7 +14,7 @@ export function UserGroupEffectiveSkills({
 	skillsAccess: SkillsAccess;
 	preloadedSkills: string[];
 }) {
-	const skills = useQuery(trpc.skill.catalog.queryOptions());
+	const skills = useQuery(skillApi.skill.catalog.queryOptions());
 	const discoveredSkills = skills.data ?? [];
 	const grantedSkills = discoveredSkills.filter((skill) => isSkillGranted(skillsAccess, skill.name));
 	const preloadedSkillNames = new Set(preloadedSkills);

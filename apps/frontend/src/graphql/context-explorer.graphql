@@ -1,0 +1,87 @@
+query ContextRepositoryStatus {
+	contextRepositoryStatus
+}
+
+query ContextPullHistory {
+	contextPullHistory
+}
+
+query ContextFileTree {
+	contextFileTree
+}
+
+query ContextRulesPreviewGroups {
+	contextRulesPreviewGroups
+}
+
+query ContextFile($path: String!) {
+	contextFile(path: $path)
+}
+
+query ContextSearch($query: String!) {
+	contextSearch(query: $query)
+}
+
+query ContextChangedFiles {
+	contextChangedFiles
+}
+
+query ContextFileDiff($input: JSON!) {
+	contextFileDiff(input: $input)
+}
+
+query ContextHistoricalDiffAction($input: JSON!) {
+	contextHistoricalDiffAction(input: $input)
+}
+
+query ContextBranchNameSuggestion {
+	contextBranchNameSuggestion
+}
+
+mutation PullLiveContext {
+	pullLiveContext
+}
+
+mutation ConnectContextRepository($input: JSON!) {
+	connectContextRepository(input: $input)
+}
+
+mutation DisconnectContextRepository {
+	disconnectContextRepository
+}
+
+mutation WriteContextFile($input: JSON!) {
+	writeContextFile(input: $input)
+}
+
+mutation UpdateContextWorktree($requiredCommits: [String!]) {
+	updateContextWorktree(requiredCommits: $requiredCommits)
+}
+
+mutation SwitchContextBranch($branch: String!) {
+	switchContextBranch(branch: $branch)
+}
+
+mutation CreateContextBranch($branch: String!) {
+	createContextBranch(branch: $branch)
+}
+
+mutation CreateContextBranchAndCommit($input: JSON!) {
+	createContextBranchAndCommit(input: $input)
+}
+
+mutation CommitContextChanges($input: JSON!) {
+	commitContextChanges(input: $input)
+}
+
+mutation DiscardContextFileChange($path: String!) {
+	discardContextFileChange(path: $path)
+}
+
+mutation DiscardAllContextChanges {
+	discardAllContextChanges
+}
+
+mutation PushContextBranch {
+	pushContextBranch
+}

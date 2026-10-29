@@ -1,0 +1,63 @@
+query ContextRecommendations($status: String) {
+	contextRecommendations(status: $status)
+}
+
+query LatestContextRecommendationRun {
+	latestContextRecommendationRun
+}
+
+query LatestSuccessfulContextRecommendationRun {
+	latestSuccessfulContextRecommendationRun
+}
+
+query ContextRecommendationAvailableModels {
+	contextRecommendationAvailableModels
+}
+
+query ContextRecommendationConfig {
+	contextRecommendationConfig
+}
+
+query ContextRecommendationRepo {
+	contextRecommendationRepo
+}
+
+query ContextRecommendationLinkedRepos {
+	contextRecommendationLinkedRepos
+}
+
+query ContextRecommendationPrStatus($id: String!) {
+	contextRecommendationPrStatus(id: $id)
+}
+
+query ContextRecommendationAgentPrompt($input: ContextRecommendationIdsInput!) {
+	contextRecommendationAgentPrompt(input: $input)
+}
+
+query ContextRecommendationTriggerChats($input: ContextRecommendationTriggerChatsInput!) {
+	contextRecommendationTriggerChats(input: $input)
+}
+
+mutation RunContextRecommendations {
+	runContextRecommendations
+}
+
+mutation CancelContextRecommendationRun($runId: String!) {
+	cancelContextRecommendationRun(runId: $runId)
+}
+
+mutation SetContextRecommendationConfig($input: SetContextRecommendationConfigInput!) {
+	setContextRecommendationConfig(input: $input)
+}
+
+mutation SetContextRecommendationStatus($input: SetContextRecommendationStatusInput!) {
+	setContextRecommendationStatus(input: $input)
+}
+
+mutation CreateContextRecommendationPullRequest($id: String!) {
+	createContextRecommendationPullRequest(id: $id)
+}
+
+mutation CreateContextRecommendationBatchPullRequest($input: ContextRecommendationIdsInput!) {
+	createContextRecommendationBatchPullRequest(input: $input)
+}

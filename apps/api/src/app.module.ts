@@ -18,13 +18,18 @@ import { GuardsModule } from './common/guards/guards.module.js';
 import type { QuarryRequest } from './common/request.js';
 import { ConfigModule } from './config/config.module.js';
 import { ConfigService } from './config/config.service.js';
+import { ContextExplorerModule } from './context-explorer/context-explorer.module.js';
+import { ContextRecommendationsModule } from './context-recommendations/context-recommendations.module.js';
 import { ContextSyncModule } from './context-sync/context-sync.module.js';
 import { HealthModule } from './health/health.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
+import { MemoryModule } from './memory/memory.module.js';
 import { ModelSettingsModule } from './model-settings/model-settings.module.js';
+import { OnboardingModule } from './onboarding/onboarding.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
 import { SandboxModule } from './sandbox/sandbox.module.js';
+import { SkillsModule } from './skills/skills.module.js';
 import { SystemModule } from './system/system.module.js';
 import { TranscribeModule } from './transcribe/transcribe.module.js';
 import { UsersModule } from './users/users.module.js';
@@ -71,6 +76,11 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		ModelSettingsModule,
 		SandboxModule,
 		TranscribeModule,
+		ContextExplorerModule,
+		ContextRecommendationsModule,
+		SkillsModule,
+		MemoryModule,
+		OnboardingModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

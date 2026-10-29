@@ -6,8 +6,8 @@ import type { SandboxSecretDefinition } from '../../sandbox/sandbox-secret.servi
 import { Block, Bold, Br, CodeBlock, Link, List, ListItem, Location, Span, Title } from '../markdown/index.js';
 import type { PreloadedSkill, Skill } from '../services/skill.js';
 import { tokenCounter } from '../services/token-counter.js';
-import type { InternalSkill } from '../skills.js';
-import { listInternalSkills } from '../skills.js';
+import type { InternalSkill } from '../skills/index.js';
+import { listInternalSkills } from '../skills/index.js';
 import type { UserMemory } from '../types/memory.js';
 import { MEMORY_CATEGORIES, MemoryCategory } from '../types/memory.js';
 import type { StorySummary } from '../types/story-reference.js';

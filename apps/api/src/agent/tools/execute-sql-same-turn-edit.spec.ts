@@ -16,6 +16,8 @@ const services = {
 	resolveProviderModel: vi.fn(),
 	resolveSandboxSecrets: vi.fn(),
 	getImagesByChatId: vi.fn(),
+	skills: vi.fn(),
+	scheduleOnboardingRules: vi.fn(),
 } satisfies Record<keyof AgentToolServices, ReturnType<typeof vi.fn>>;
 
 describe('execute_sql in-place edit of a query created in the current turn', () => {

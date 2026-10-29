@@ -27,7 +27,7 @@ export function query<TInput, TOutput>(path: Path, fetch: (input: TInput) => Pro
 	const keyOf = (input: TInput | undefined) =>
 		(input === undefined ? [path, { type: 'query' }] : [path, { input, type: 'query' }]) as unknown as Key;
 	return {
-		queryKey: (input: TInput) => keyOf(input),
+		queryKey: (input?: TInput) => keyOf(input),
 		queryOptions: <TData = TOutput>(
 			input: TInput | SkipToken,
 			opts?: Omit<UseQueryOptions<TOutput, Error, TData, Key>, 'queryKey' | 'queryFn'>,
@@ -90,4 +90,28 @@ function toCodedError(error: unknown): unknown {
 		return coded;
 	}
 	return error;
+}
+
+const DATE_KEY_PATTERN = /(At|^windowStart|^windowEnd)$/;
+const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/;
+
+/**
+ * Upstream's tRPC used superjson, so dates arrived as `Date`; results passed through a `JSON` scalar carry ISO
+ * strings. Turns the ISO strings under date-like keys (`createdAt`, `windowStart`…) back into `Date`s.
+ */
+export function reviveDates<T>(value: unknown): T {
+	if (Array.isArray(value)) {
+		return value.map((item) => reviveDates(item)) as T;
+	}
+	if (value === null || typeof value !== 'object') {
+		return value as T;
+	}
+	return Object.fromEntries(
+		Object.entries(value).map(([key, item]) => [
+			key,
+			typeof item === 'string' && DATE_KEY_PATTERN.test(key) && ISO_DATE_PATTERN.test(item)
+				? new Date(item)
+				: reviveDates(item),
+		]),
+	) as T;
 }

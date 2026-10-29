@@ -61,7 +61,7 @@ import { useContentCenteredStyle } from '@/hooks/use-sidebar-content-offset';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { requireContextAdminOrAdmin } from '@/lib/route-guards';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { projectApi } from '@/lib/project-api';
 
@@ -179,20 +179,23 @@ function RecommendationsPage() {
 	});
 	const systemConfig = usePublicConfig();
 	const isEnabled = systemConfig.data?.betaContextRecommendationsEnabled === true;
-	const recommendations = useQuery({ ...trpc.contextRecommendation.list.queryOptions({}), enabled: isEnabled });
+	const recommendations = useQuery({
+		...contextRecommendationApi.contextRecommendation.list.queryOptions({}),
+		enabled: isEnabled,
+	});
 	const latestRun = useQuery({
-		...trpc.contextRecommendation.latestRun.queryOptions(),
+		...contextRecommendationApi.contextRecommendation.latestRun.queryOptions(),
 		enabled: isEnabled,
 		refetchInterval: (query) => (query.state.data?.status === 'running' ? 3000 : false),
 	});
 	const latestSuccessfulRun = useQuery({
-		...trpc.contextRecommendation.latestSuccessfulRun.queryOptions(),
+		...contextRecommendationApi.contextRecommendation.latestSuccessfulRun.queryOptions(),
 		enabled: isEnabled,
 	});
 
-	const setStatus = useMutation(trpc.contextRecommendation.setStatus.mutationOptions());
-	const run = useMutation(trpc.contextRecommendation.run.mutationOptions());
-	const cancelRun = useMutation(trpc.contextRecommendation.cancelRun.mutationOptions());
+	const setStatus = useMutation(contextRecommendationApi.contextRecommendation.setStatus.mutationOptions());
+	const run = useMutation(contextRecommendationApi.contextRecommendation.run.mutationOptions());
+	const cancelRun = useMutation(contextRecommendationApi.contextRecommendation.cancelRun.mutationOptions());
 
 	const runningRun = latestRun.data?.status === 'running' ? latestRun.data : null;
 	const isRunning = run.isPending || runningRun !== null;
@@ -211,7 +214,9 @@ function RecommendationsPage() {
 
 	const handleRun = async () => {
 		await run.mutateAsync();
-		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.latestRun.queryKey() });
+		queryClient.invalidateQueries({
+			queryKey: contextRecommendationApi.contextRecommendation.latestRun.queryKey(),
+		});
 	};
 
 	const handleCancelRun = async () => {
@@ -219,15 +224,21 @@ function RecommendationsPage() {
 			return;
 		}
 		await cancelRun.mutateAsync({ runId: runningRun.id });
-		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.latestRun.queryKey() });
+		queryClient.invalidateQueries({
+			queryKey: contextRecommendationApi.contextRecommendation.latestRun.queryKey(),
+		});
 	};
 
 	const previousRunStatus = useRef(latestRun.data?.status);
 	useEffect(() => {
 		const status = latestRun.data?.status;
 		if (previousRunStatus.current === 'running' && status && status !== 'running') {
-			queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.list.queryKey({}) });
-			queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.latestSuccessfulRun.queryKey() });
+			queryClient.invalidateQueries({
+				queryKey: contextRecommendationApi.contextRecommendation.list.queryKey({}),
+			});
+			queryClient.invalidateQueries({
+				queryKey: contextRecommendationApi.contextRecommendation.latestSuccessfulRun.queryKey(),
+			});
 		}
 		previousRunStatus.current = status;
 	}, [latestRun.data?.status, queryClient]);
@@ -358,7 +369,7 @@ function RecommendationsPage() {
 
 	const chatMetadata = useQueries({
 		queries: triggerChatIdChunks.map((chatIds) => ({
-			...trpc.contextRecommendation.listRecoTriggerChatMetadata.queryOptions({ chatIds }),
+			...contextRecommendationApi.contextRecommendation.listRecoTriggerChatMetadata.queryOptions({ chatIds }),
 			enabled: isEnabled && activeTab !== 'config' && chatIds.length > 0,
 			staleTime: 60_000,
 		})),
@@ -475,7 +486,7 @@ function RecommendationsPage() {
 
 	const changeStatus = async (id: string, status: 'applied' | 'dismissed') => {
 		await setStatus.mutateAsync({ id, status });
-		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.list.queryKey({}) });
+		queryClient.invalidateQueries({ queryKey: contextRecommendationApi.contextRecommendation.list.queryKey({}) });
 	};
 
 	if (systemConfig.data && !isEnabled) {
@@ -884,9 +895,11 @@ function BatchActionBar({ selectedIds, recommendations, onSelectAll, onClear }: 
 	const allSelected = recommendations.length > 0 && recommendations.every((rec) => selectedIds.has(rec.id));
 
 	const createBatchPr = useMutation(
-		trpc.contextRecommendation.createBatchPullRequest.mutationOptions({
+		contextRecommendationApi.contextRecommendation.createBatchPullRequest.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.list.queryKey({}) });
+				queryClient.invalidateQueries({
+					queryKey: contextRecommendationApi.contextRecommendation.list.queryKey({}),
+				});
 				onClear();
 			},
 		}),
@@ -917,7 +930,7 @@ function BatchActionBar({ selectedIds, recommendations, onSelectAll, onClear }: 
 		setCopyError(null);
 		try {
 			const prompt = await queryClient.fetchQuery(
-				trpc.contextRecommendation.getAgentPrompt.queryOptions({ ids: [...selectedIds] }),
+				contextRecommendationApi.contextRecommendation.getAgentPrompt.queryOptions({ ids: [...selectedIds] }),
 			);
 			await copy(prompt);
 		} catch (err) {
@@ -1209,13 +1222,18 @@ function ConfigTab({ enabled }: { enabled: boolean }) {
 	const [customSystemPromptInstructions, setCustomSystemPromptInstructions] = useState('');
 	const [customSystemPromptInstructionsEnabled, setCustomSystemPromptInstructionsEnabled] = useState(false);
 
-	const availableModels = useQuery({ ...trpc.contextRecommendation.listAvailableModels.queryOptions(), enabled });
-	const config = useQuery({ ...trpc.contextRecommendation.getConfig.queryOptions(), enabled });
+	const availableModels = useQuery({
+		...contextRecommendationApi.contextRecommendation.listAvailableModels.queryOptions(),
+		enabled,
+	});
+	const config = useQuery({ ...contextRecommendationApi.contextRecommendation.getConfig.queryOptions(), enabled });
 	const defaultModels = useQuery({ ...projectApi.project.getDefaultModels.queryOptions(), enabled });
-	const setConfig = useMutation(trpc.contextRecommendation.setConfig.mutationOptions());
+	const setConfig = useMutation(contextRecommendationApi.contextRecommendation.setConfig.mutationOptions());
 
 	const invalidateConfig = () => {
-		queryClient.invalidateQueries({ queryKey: trpc.contextRecommendation.getConfig.queryKey() });
+		queryClient.invalidateQueries({
+			queryKey: contextRecommendationApi.contextRecommendation.getConfig.queryKey(),
+		});
 		queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey });
 	};
 

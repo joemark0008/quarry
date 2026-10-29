@@ -5,7 +5,7 @@ import type { CustomBoundarySet } from '@quarry/shared';
 import { writeFile } from '@quarry/shared/tools';
 import type { SemanticLayerMode } from '@quarry/shared/types';
 
-import { isWarehouseSqlEnabled } from '../services/semantic-layer.service.js';
+import { isSemanticQueryToolEnabled, isWarehouseSqlEnabled } from '../services/semantic-layer.service.js';
 import { isStorageEnabled } from '../services/storage.js';
 import { isCustomStoriesEnabled } from '../services/story-mount.js';
 import type { AgentSettings } from '../types/agent-settings.js';
@@ -14,9 +14,15 @@ import displayChart from './display-chart.js';
 import { createDisplayMapTool } from './display-map.js';
 import executePython from './execute-python.js';
 import executeSandboxedCode from './execute-sandboxed-code.js';
+import executeSemanticQuery from './execute-semantic-query.js';
 import executeSql, { localOnlyExecuteSql } from './execute-sql.js';
+import generateOnboardingRules from './generate-onboarding-rules.js';
 import grep from './grep.js';
 import list from './list.js';
+import loadSkill from './load-skill.js';
+import onboardingAgentPrompt from './onboarding-agent-prompt.js';
+import onboardingCommand from './onboarding-command.js';
+import onboardingProgress from './onboarding-progress.js';
 import read from './read.js';
 import readQueryResult from './read-query-result.js';
 import requestWarehouseCredentials from './request-warehouse-credentials.js';
@@ -34,11 +40,11 @@ export { createWebSearchTools } from './web-search.js';
 
 /**
  * Port of upstream `agents/tools/index.ts`. Tools of modules quarry doesn't have yet stay out (PHASES.md): `story`
- * (Phase 4), `load_skill`, `execute_semantic_query`, `onboarding_*`, `generate_onboarding_rules` (Phase 3),
- * `mcp_call`/`mcp_connect` (Phase 7). Upstream's gating is kept: `task` needs `BETA_SUBAGENTS_ENABLED`,
+ * (Phase 4), `mcp_call`/`mcp_connect` (Phase 7). Upstream's gating is kept: `execute_semantic_query` needs a semantic
+ * layer in `nao_config.yaml` and a querying mode, `task` needs `BETA_SUBAGENTS_ENABLED`,
  * `write`/`str_replace` need permanent storage (Phase 2d) or custom stories (Phase 4), `execute_python` and
  * `execute_sandboxed_code` need their runtime and the experimental agent setting, `display_map` the map setting,
- * `request_warehouse_*` an onboarding run. `web_search` comes in as an extra tool resolved from the provider settings
+ * `request_warehouse_*`, `onboarding_*` and `generate_onboarding_rules` an onboarding run. `web_search` comes in as an extra tool resolved from the provider settings
  * (`createWebSearchTools`); `query_app_db`, `record_recommendation` and `propose_*_fix` are built by the context
  * recommendations run (Phase 3) with the factories exported here.
  *
@@ -52,11 +58,17 @@ export const tools = {
 	...(executePython && { execute_python: executePython }),
 	...(executeSandboxedCode && { execute_sandboxed_code: executeSandboxedCode }),
 	execute_sql: executeSql,
+	execute_semantic_query: executeSemanticQuery,
 	read_query_result: readQueryResult,
 	grep,
 	list,
+	load_skill: loadSkill,
+	onboarding_agent_prompt: onboardingAgentPrompt,
+	onboarding_command: onboardingCommand,
+	onboarding_progress: onboardingProgress,
 	request_warehouse_credentials: requestWarehouseCredentials,
 	request_warehouse_selection: requestWarehouseSelection,
+	generate_onboarding_rules: generateOnboardingRules,
 	read,
 	search,
 	task,
@@ -91,9 +103,14 @@ export const getTools = (
 	const {
 		execute_python,
 		execute_sandboxed_code,
+		execute_semantic_query,
 		execute_sql,
+		onboarding_agent_prompt: onboardingAgentPromptTool,
+		onboarding_command: onboardingCommandTool,
+		onboarding_progress: onboardingProgressTool,
 		request_warehouse_credentials: requestWarehouseCredentialsTool,
 		request_warehouse_selection: requestWarehouseSelectionTool,
+		generate_onboarding_rules: generateOnboardingRulesTool,
 		suggest_follow_ups,
 		task: taskTool,
 		write: writeTool,
@@ -104,6 +121,7 @@ export const getTools = (
 		...rest,
 		...(options.subagentsEnabled && { task: taskTool }),
 		execute_sql: isWarehouseSqlEnabled(options.semanticLayerMode) ? execute_sql : localOnlyExecuteSql,
+		...(isSemanticQueryToolEnabled(options.semanticLayerMode) && { execute_semantic_query }),
 		...((isStorageEnabled() || customStoryAuthoring) && {
 			write: writeTool,
 			str_replace: {
@@ -117,8 +135,12 @@ export const getTools = (
 	const allTools = {
 		...baseTools,
 		...(options.onboarding && {
+			onboarding_agent_prompt: onboardingAgentPromptTool,
+			onboarding_command: onboardingCommandTool,
+			onboarding_progress: onboardingProgressTool,
 			request_warehouse_credentials: requestWarehouseCredentialsTool,
 			request_warehouse_selection: requestWarehouseSelectionTool,
+			generate_onboarding_rules: generateOnboardingRulesTool,
 		}),
 		...(agentSettings?.experimental?.pythonSandboxing && execute_python && { execute_python }),
 		...(agentSettings?.experimental?.sandboxes && execute_sandboxed_code && { execute_sandboxed_code }),
