@@ -169,10 +169,10 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ### Verify
 
-- Ported upstream tests for tools, agent and chats (`apps/backend/tests`, `tests/tool-outputs`)
+- Ported upstream tests for tools, agent and chats (`apps/backend/tests`, `tests/tool-outputs`) — _done: about 70 spec files under `src/agent/` and `src/chats/` (api suite 1213 + 3 e2e); skipped cases are commented in each spec_
 - Ported Python guard tests pass on the Node SQL engine
-- e2e: stream a chat, assert tool calls and the final message are saved
-- Same questions asked on upstream and quarry give equivalent answers (manual comparison against the Phase 0 baseline)
+- e2e: stream a chat, assert tool calls and the final message are saved — _done: `test/agent-chat.e2e-spec.ts` streams `POST /api/agent` with a scripted mock model (no key) against the jaffle_shop warehouse, then checks the saved `execute_sql` part, its rows (`queryRows`) and the answer through GraphQL_
+- Same questions asked on upstream and quarry give equivalent answers (manual comparison against the Phase 0 baseline) — _done 2026-10-29: identical figures for both baseline questions, see [docs/upstream-baseline.md](docs/upstream-baseline.md#phase-2c-comparison-2026-10-29)_
 
 **→ Decision point:** choose which of Phases 3–7 to build.
 
