@@ -48,8 +48,14 @@ service on :8005. Open http://localhost:3000.
    **"No model config found"** with a Retry button.
 5. Migrations: 92 Drizzle migrations apply cleanly on Postgres 16 (identifier-truncation NOTICEs only).
 
-## Not yet observed
-
-A chat answer (SQL + chart + follow-ups) needs an LLM provider key in `fork-reference/.env` (or a model configured in
-Settings → Project → Models). Add one, restart `npm run dev`, and ask e.g. "How many orders are there?" — the
-`example` project queries `example/jaffle_shop.duckdb` (99 orders).
+6. With `OPENAI_API_KEY` set (model picker shows "Auto"), the question "How many orders are there, and what is the total
+   payment amount?" is answered in about 15 s: the agent explores the context folders ("Explored 2 folders, 1 search,
+   4 files"), runs a **Semantic query** (MetricFlow, 1 row) and answers "99 orders, total payment amount 1,672" — the
+   same figures as the quarry `warehouse` database. Two follow-up suggestions are shown under the answer.
+7. Clicking a suggestion only fills the input; sending "How do orders and payment amounts trend by month?" runs another
+   semantic query (4 rows) and renders a **chart** (orders and payment amount by month, two axes) plus a **table**:
+   Jan 29 / 496, Feb 27 / 415, Mar 35 / 622, Apr 8 / 139, then a short analysis, new suggestions and a "How did this
+   conversation go?" feedback prompt. The chat gets an auto-generated title ("Order count and total payment amount")
+   and a Library counter (one entry per query result).
+8. `llm_inference` in `nao_baseline` records the side calls (`title_generation`, `memory_extraction`) on
+   `openai / gpt-4.1-mini`.
