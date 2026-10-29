@@ -11,11 +11,11 @@ Both backends must read the same users and sessions, so in this mode:
 - Both use the same `BETTER_AUTH_SECRET` (the session cookie is signed with it).
 - `BETTER_AUTH_URL` is the frontend origin you open in the browser (better-auth checks the request origin).
 
-| Process          | Port | Command                                                                                                                                                                     |
-| ---------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| upstream backend | 5005 | `cd ../fork-reference && npm run dev:backend` (or `npm run dev` for the whole upstream app)                                                                                 |
-| `apps/api`       | 5006 | `DATABASE_URL=postgresql://quarry:quarry@localhost:5434/nao_baseline BETTER_AUTH_SECRET=<upstream secret> BETTER_AUTH_URL=http://localhost:3000 npm run dev -w @quarry/api` |
-| quarry frontend  | 3000 | `npm run dev -w @quarry/frontend`                                                                                                                                           |
+| Process          | Port | Command                                                                                                                                                                                                                                  |
+| ---------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| upstream backend | 5005 | `cd ../fork-reference && npm run dev:backend` (or `npm run dev` for the whole upstream app)                                                                                                                                              |
+| `apps/api`       | 5006 | `npm run dev:api:split` (sets the three variables below), or `DATABASE_URL=postgresql://quarry:quarry@localhost:5434/nao_baseline BETTER_AUTH_SECRET=<upstream secret> BETTER_AUTH_URL=http://localhost:3000 npm run dev -w @quarry/api` |
+| quarry frontend  | 3000 | `npm run dev -w @quarry/frontend`                                                                                                                                                                                                        |
 
 If the upstream frontend already uses port 3000, run quarry's on another port and use that origin as
 `BETTER_AUTH_URL`; set `TANSTACK_DEVTOOLS_PORT` (default 42069) too, since both Vite servers start a devtools
