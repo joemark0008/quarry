@@ -73,7 +73,7 @@ describe('context explorer edit → commit → push → live pull', () => {
 		const live = path.join(root, 'live');
 		fs.mkdirSync(seed);
 		runGit(seed, ['init', '--quiet', '--initial-branch=main']);
-		fs.writeFileSync(path.join(seed, 'nao_config.yaml'), 'project_name: flow\n');
+		fs.writeFileSync(path.join(seed, 'quarry_config.yaml'), 'project_name: flow\n');
 		fs.writeFileSync(path.join(seed, 'RULES.md'), 'Revenue is the order amount.\n');
 		commitAll(seed, 'initial context');
 		runGit(root, ['init', '--bare', '--quiet', '--initial-branch=main', bare]);

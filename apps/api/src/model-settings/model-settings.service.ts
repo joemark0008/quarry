@@ -95,7 +95,7 @@ type AvailableModel = Awaited<ReturnType<LlmService['getProjectAvailableModels']
  * Port of the model and agent settings procedures of upstream `trpc/project.routes.ts` (`getLlmConfigs`,
  * `upsertLlmConfig`, `deleteLlmConfig`, `getKnownModels`, `getDefaultModels`, `updateDefaultModels`,
  * `getDefaultChatModel`, `getAgentSettings`, `updateAgentSettings`) and of `services/default-models.service.ts`.
- * Not ported: the `llm` block of `nao_config.yaml` (no `configProviders`), messaging integrations (Phase 7, so no
+ * Not ported: the `llm` block of `quarry_config.yaml` (no `configProviders`), messaging integrations (Phase 7, so no
  * integration models) and the MCP endpoint (Phase 6).
  */
 @Injectable()

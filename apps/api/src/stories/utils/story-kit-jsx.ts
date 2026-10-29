@@ -41,7 +41,7 @@ interface SourceEdit extends SourceRange {
 
 export class StoryKitJsxEditError extends Error {}
 
-export const STORY_KIT_MODULE = '@nao/story-kit';
+export const STORY_KIT_MODULE = '@quarry/story-kit';
 const DYNAMIC = Symbol('dynamic');
 const IGNORED_ATTRIBUTES = new Set(['key', 'ref']);
 const JS_IDENTIFIER = /^[A-Za-z_$][\w$]*$/;

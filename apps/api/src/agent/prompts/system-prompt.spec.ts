@@ -275,9 +275,9 @@ describe('SystemPrompt saved files rules', () => {
 			}),
 		);
 		expect(markdown).toContain('useStoryState("key", initial)');
-		expect(markdown).toContain('nao.state.set(key, value)');
+		expect(markdown).toContain('quarry.state.set(key, value)');
 		expect(markdown).toContain('useSharedStoryState("key", initial)');
-		expect(markdown).toContain('nao.sharedState');
+		expect(markdown).toContain('quarry.sharedState');
 		expect(markdown).toContain('Saved state works like localStorage');
 	});
 

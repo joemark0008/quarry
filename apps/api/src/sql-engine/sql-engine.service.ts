@@ -152,7 +152,7 @@ export class SqlEngineService implements OnModuleDestroy {
 
 		const projectConfig = await loadProjectConfig(request.projectFolder, request.envVars ?? {});
 		if (!projectConfig) {
-			throw new ProjectConfigError(`No nao_config.yaml found in the project folder`);
+			throw new ProjectConfigError(`No quarry_config.yaml found in the project folder`);
 		}
 		const { config, databaseFolder } = resolveDatabase(projectConfig, request.databaseId);
 		const driver = this.getDriver(config);

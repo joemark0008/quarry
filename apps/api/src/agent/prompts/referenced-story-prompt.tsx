@@ -68,7 +68,7 @@ function storyAttributes(story: StorySummary): string {
 function CustomStoryFiles({ files }: { files: StoryFile[] }) {
 	return (
 		<Block separator={'\n'}>
-			<Span>Custom story (a React app built with @nao/story-kit). Published source files:</Span>
+			<Span>Custom story (a React app built with @quarry/story-kit). Published source files:</Span>
 			{files.map((file) =>
 				file.omitted ? (
 					<Span key={file.path}>{`${file.path} (not included, too large)`}</Span>

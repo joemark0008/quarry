@@ -8,7 +8,7 @@ import type { ProjectLlmConfigRepository } from './project-llm-config.repository
  * Ports of upstream `tests/disabled-providers.test.ts`, `tests/annotation-model.test.ts` and
  * `tests/project-available-models.test.ts` (the parts covering `utils/llm.ts`). Upstream's query modules
  * are replaced by a mocked `ProjectLlmConfigRepository`. Quarry drops the managed `nao` provider (billing)
- * and the `llm` block of `nao_config.yaml`, so the cases about those are not ported.
+ * and the `llm` block of `quarry_config.yaml`, so the cases about those are not ported.
  */
 const mocks = vi.hoisted(() => ({
 	getProjectLlmConfigs: vi.fn(),
@@ -91,14 +91,6 @@ describe('DISABLED_PROVIDERS', () => {
 		expect(getEnvProviders()).not.toContain('bedrock');
 	});
 
-	it('never auto-registers the nao-managed key as an environment provider', () => {
-		// Upstream's `isManagedAiEnabled` assertions are dropped: quarry has no managed AI (billing).
-		process.env.NAO_MANAGED_OPENAI_API_KEY = 'managed-key';
-		setDisabledProviders(undefined);
-		expect(hasEnvApiKey('nao')).toBe(false);
-		expect(getEnvProviders()).not.toContain('nao');
-	});
-
 	it('overrides credentials configured in the database', async () => {
 		mocks.getProjectLlmConfigByProvider.mockResolvedValue({
 			apiKey: 'db-key',
@@ -167,37 +159,5 @@ describe('resolveAnnotationModelId', () => {
 	});
 });
 
-describe('getProjectAvailableModels', () => {
-	let originalEnv: NodeJS.ProcessEnv;
-
-	beforeEach(() => {
-		originalEnv = { ...process.env };
-		vi.clearAllMocks();
-		mocks.getProjectLlmConfigs.mockResolvedValue([]);
-		mocks.getProjectLlmConfigByProvider.mockResolvedValue(null);
-	});
-
-	afterEach(() => {
-		process.env = originalEnv;
-	});
-
-	// Upstream's managed `nao` cases (credits, BYOK alongside curated models) and the `nao_config.yaml`
-	// named openai-compatible endpoints case are skipped: quarry ports neither.
-
-	it('never exposes the managed provider in self-hosted mode', async () => {
-		process.env.NAO_MANAGED_OPENAI_API_KEY = 'managed-key';
-		process.env.NAO_MODE = 'self-hosted';
-
-		const models = await llm.getProjectAvailableModels('project-1');
-		expect(models.some(({ provider }) => provider === 'nao')).toBe(false);
-		await expect(
-			llm.resolveProviderModel('project-1', 'nao', 'gpt-6-luna', true, {
-				userId: 'user-1',
-				projectId: 'project-1',
-				runId: 'run-1',
-				category: 'chat',
-				billingMode: 'unbilled',
-			}),
-		).resolves.toBeNull();
-	});
-});
+// Upstream's `getProjectAvailableModels` cases are not ported: the managed `nao` provider (credits, BYOK alongside
+// curated models) is dropped, and quarry does not read named openai-compatible endpoints from quarry_config.yaml.

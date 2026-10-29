@@ -54,7 +54,7 @@ function getFileTreeCatalog(projectFolder: string, scope: FileTreeScope): FileTr
 	return { syncState: 'ready', entries: scanFileTreeDirectory(rootFolder, '', projectFolder, scope) };
 }
 
-/** The agent can never read `nao_config.yaml` wherever it lives, so a grant on it would be unusable. */
+/** The agent can never read `quarry_config.yaml` wherever it lives, so a grant on it would be unusable. */
 function isProjectConfigFile(entryName: string): boolean {
 	return entryName.toLowerCase() === CONTEXT_CONFIG_FILENAME;
 }

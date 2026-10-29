@@ -92,7 +92,7 @@ export function isDocsProjectPath(virtualPath: string): boolean {
 	return parseProjectPath(virtualPath).kind === 'docs';
 }
 
-/** `nao_config.yaml` can hold plaintext LLM keys and warehouse credentials, so the agent never sees it. */
+/** `quarry_config.yaml` can hold plaintext LLM keys and warehouse credentials, so the agent never sees it. */
 function isProjectConfigPath(virtualPath: string): boolean {
 	return path.posix.basename(virtualPath).toLowerCase() === CONTEXT_CONFIG_FILENAME;
 }

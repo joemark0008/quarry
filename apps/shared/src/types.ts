@@ -149,8 +149,6 @@ export type ChatReplayFeedbackState = (typeof CHAT_REPLAY_FEEDBACK_STATES)[numbe
 export const NO_CACHE_SCHEDULE = 'no-cache';
 
 export const LLM_PROVIDERS = [
-	// Upstream's managed-AI provider id (cloud credits). quarry has no managed AI; rename or drop at cut-over.
-	'nao',
 	'openai',
 	'anthropic',
 	'google',
@@ -169,7 +167,6 @@ export const LLM_PROVIDERS = [
 ] as const;
 
 export const providerLabels: Record<LlmProviderKind, string> = {
-	nao: 'Managed AI',
 	openai: 'OpenAI',
 	anthropic: 'Anthropic',
 	google: 'Google',

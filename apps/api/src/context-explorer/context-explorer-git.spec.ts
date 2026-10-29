@@ -719,19 +719,19 @@ describe('live deployment context updates', { timeout: 15_000 }, () => {
 
 	it('rejects a configured context subfolder without a tracked nao config', () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: root\n',
+			'quarry_config.yaml': 'name: root\n',
 			'example/context.md': 'context\n',
 		});
 
 		expect(() => validateDeploymentContextSubpath(fixture.seed, 'example')).toThrow(
-			'No tracked nao_config.yaml was found in the configured context subfolder "example".',
+			'No tracked quarry_config.yaml was found in the configured context subfolder "example".',
 		);
 	});
 
 	it.each([
-		[undefined, '', { 'nao_config.yaml': 'name: root\n' }],
-		['///', '', { 'nao_config.yaml': 'name: root\n' }],
-		['example', 'example', { 'example/nao_config.yaml': 'name: example\n' }],
+		[undefined, '', { 'quarry_config.yaml': 'name: root\n' }],
+		['///', '', { 'quarry_config.yaml': 'name: root\n' }],
+		['example', 'example', { 'example/quarry_config.yaml': 'name: example\n' }],
 	] as const)('accepts configured context subpath %s', (configuredSubpath, expectedPrefix, files) => {
 		const fixture = createFixture(temporaryRoots, files);
 
@@ -1032,7 +1032,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 				configuredBranch: 'main',
 				files: expect.arrayContaining([
 					{ path: '/context.md', additions: 1, deletions: 0 },
-					{ path: '/nao_config.yaml', additions: 1, deletions: 0 },
+					{ path: '/quarry_config.yaml', additions: 1, deletions: 0 },
 				]),
 			});
 			expect(fs.readFileSync(path.join(fixture.live, 'context.md'), 'utf8')).toBe('repository content\n');
@@ -1087,7 +1087,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		const before = snapshot(fixture.live);
 
 		await expect(pullLiveContext(fixture.context)).rejects.toThrow(
-			'No tracked nao_config.yaml was found in the connected repository.',
+			'No tracked quarry_config.yaml was found in the connected repository.',
 		);
 
 		expect(snapshot(fixture.live)).toEqual(before);
@@ -1097,11 +1097,11 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 	it('rejects unsafe non-Git targets before cloning', async () => {
 		const fixture = createFixture(temporaryRoots);
 		fixture.context.providerOverride = localProvider(fixture.bare, fixture.bare);
-		fs.rmSync(path.join(fixture.live, 'nao_config.yaml'));
+		fs.rmSync(path.join(fixture.live, 'quarry_config.yaml'));
 		const before = snapshot(fixture.live);
 
 		await expect(pullLiveContext(fixture.context)).rejects.toThrow(
-			'The live project folder must contain its expected nao_config.yaml before replacement.',
+			'The live project folder must contain its expected quarry_config.yaml before replacement.',
 		);
 		expect(snapshot(fixture.live)).toEqual(before);
 	});
@@ -1167,7 +1167,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 
 	it('keeps a nested project at the same path through a restart-style resolution', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'analytics/nao_config.yaml': 'name: analytics\n',
+			'analytics/quarry_config.yaml': 'name: analytics\n',
 			'analytics/context.md': 'nested context\n',
 		});
 		fixture.context.providerOverride = localProvider(fixture.bare, fixture.bare);
@@ -1504,7 +1504,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('rejects a repository connection when the live project clone points elsewhere', async () => {
 		const fixture = createLocalCloneFixture(temporaryRoots);
 		const selected = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: selected\n',
+			'quarry_config.yaml': 'name: selected\n',
 			'context.md': 'selected repository content\n',
 		});
 		const updateConfig = vi.fn().mockResolvedValue(undefined);
@@ -1721,7 +1721,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('creates a branch and commits selected dirty files while leaving others uncommitted', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'context.md': 'repository content\n',
 			'other.md': 'other\n',
 		});
@@ -1960,7 +1960,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('reports line changes for tracked, untracked, and binary files without changing the live folder', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'context.md': 'repository content\n',
 			'binary.dat': 'plain text\n',
 		});
@@ -1993,7 +1993,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('returns the restored hash when discarding a tracked binary file', async () => {
 		const restoredContent = Buffer.from([0, 1, 2, 3]);
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'binary.dat': restoredContent.toString(),
 		});
 		const repo = await ensureContextWorktree(fixture.context);
@@ -2008,7 +2008,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('returns the restored hash when discarding a tracked oversized file', async () => {
 		const restoredContent = 'x'.repeat(MAX_CONTEXT_FILE_SIZE + 1);
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'oversized.md': restoredContent,
 		});
 		const repo = await ensureContextWorktree(fixture.context);
@@ -2041,7 +2041,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('rejects discard through a symlinked parent before touching the external file', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'nested/context.md': 'repository content\n',
 		});
 		const repo = await ensureContextWorktree(fixture.context);
@@ -2061,7 +2061,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('reads modified, added, and deleted files across a historical commit range', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'context.md': 'old context\n',
 			'deleted.md': 'remove me\n',
 		});
@@ -2407,7 +2407,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('switches clean existing branches and discards one or all changed paths', async () => {
 		const fixture = createFixture(temporaryRoots, {
-			'nao_config.yaml': 'name: test\n',
+			'quarry_config.yaml': 'name: test\n',
 			'context.md': 'repository content\n',
 			'other.md': 'other\n',
 		});
@@ -2434,7 +2434,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('resolves a subdirectory project and never touches a same-named root file', async () => {
 		const fixture = createFixture(temporaryRoots, {
 			'context.md': 'root context\n',
-			'analytics/nao_config.yaml': 'name: analytics\n',
+			'analytics/quarry_config.yaml': 'name: analytics\n',
 			'analytics/context.md': 'analytics repository\n',
 		});
 		const access = await fileAccess(fixture.context);
@@ -2581,7 +2581,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('degrades missing and ambiguous projects to read-only live browsing', async () => {
 		for (const files of [
 			{ 'context.md': 'repository\n' },
-			{ 'one/nao_config.yaml': 'one\n', 'two/nao_config.yaml': 'two\n' },
+			{ 'one/quarry_config.yaml': 'one\n', 'two/quarry_config.yaml': 'two\n' },
 		] as Record<string, string>[]) {
 			const fixture = createFixture(temporaryRoots, files);
 			const before = snapshot(fixture.live);
@@ -2721,7 +2721,7 @@ type TokenGitContext = ContextExplorerGitContext & { token: string };
 function createFixture(
 	temporaryRoots: string[],
 	files: Record<string, string> = {
-		'nao_config.yaml': 'name: test\n',
+		'quarry_config.yaml': 'name: test\n',
 		'context.md': 'repository content\n',
 	},
 ): Fixture {
@@ -2738,7 +2738,7 @@ function createFixture(
 	runGit(seed, ['push', bare, 'main']);
 	runGit(root, ['--git-dir', bare, 'symbolic-ref', 'HEAD', 'refs/heads/main']);
 	fs.writeFileSync(path.join(live, 'context.md'), 'live content\n');
-	fs.writeFileSync(path.join(live, 'nao_config.yaml'), 'name: live\n');
+	fs.writeFileSync(path.join(live, 'quarry_config.yaml'), 'name: live\n');
 	return {
 		root,
 		bare,
@@ -2753,7 +2753,7 @@ function createFixture(
 
 function createLocalCloneFixture(temporaryRoots: string[]): Fixture {
 	const fixture = createFixture(temporaryRoots, {
-		'project/nao_config.yaml': 'name: test\n',
+		'project/quarry_config.yaml': 'name: test\n',
 		'project/context.md': 'repository content\n',
 	});
 	const clone = path.join(fixture.root, 'clone');

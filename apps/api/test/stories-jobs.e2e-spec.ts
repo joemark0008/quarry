@@ -113,7 +113,7 @@ describe('story jobs, favorites and story feedback (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	const call = async (

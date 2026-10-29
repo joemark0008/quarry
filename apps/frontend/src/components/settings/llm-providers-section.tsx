@@ -58,7 +58,7 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 			badges.push(hasOwnCredentials ? 'ENV (overridden)' : 'ENV');
 		}
 		if (configProviders.some((c) => c.provider === config.provider)) {
-			badges.push('nao_config.yaml (overridden)');
+			badges.push('quarry_config.yaml (overridden)');
 		}
 		return badges;
 	};
@@ -99,7 +99,7 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 				);
 			})}
 
-			{/* Providers declared in nao_config.yaml */}
+			{/* Providers declared in quarry_config.yaml */}
 			{unconfiguredConfigProviders.map((configProvider) => {
 				if (editingState?.isEditing && editingState.provider === configProvider.provider) {
 					return (
@@ -127,7 +127,7 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 						credentialPreviews={configProvider.credentialPreviews}
 						baseUrl={configProvider.baseUrl}
 						enabledModels={configProvider.enabledModels}
-						badges={['nao_config.yaml']}
+						badges={['quarry_config.yaml']}
 						isAdmin={isAdmin}
 						isFormActive={!!editingState}
 						onEdit={() => handleOverrideConfigProvider(configProvider)}

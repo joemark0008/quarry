@@ -36,7 +36,7 @@ export type ConfiguredSemanticLayer = {
 };
 
 export function extractRequiredEnvVars(projectFolder: string): string[] {
-	const configPath = path.join(projectFolder, 'nao_config.yaml');
+	const configPath = path.join(projectFolder, 'quarry_config.yaml');
 	const mcpConfigPath = path.join(projectFolder, 'agent', 'mcps', 'mcp.json');
 	const vars = new Set<string>();
 
@@ -159,7 +159,7 @@ function configuredTemplatesFrom(config: unknown): string[] {
 }
 
 function loadProjectConfig(projectFolder: string): unknown {
-	const configPath = path.join(projectFolder, 'nao_config.yaml');
+	const configPath = path.join(projectFolder, 'quarry_config.yaml');
 	return fs.existsSync(configPath) ? loadConfig(configPath) : null;
 }
 
@@ -193,7 +193,7 @@ function getDatabaseTemplates(database: Record<string, unknown>): string[] {
 }
 
 export function extractConfiguredDatabases(projectFolder: string): ConfiguredDatabase[] {
-	const configPath = path.join(projectFolder, 'nao_config.yaml');
+	const configPath = path.join(projectFolder, 'quarry_config.yaml');
 	if (!fs.existsSync(configPath)) {
 		return [];
 	}
@@ -233,9 +233,9 @@ export function extractConfiguredDatabases(projectFolder: string): ConfiguredDat
 	});
 }
 
-/** The `semantic_layer` section of nao_config.yaml, or null when the project declares none. */
+/** The `semantic_layer` section of quarry_config.yaml, or null when the project declares none. */
 export function extractConfiguredSemanticLayer(projectFolder: string): ConfiguredSemanticLayer | null {
-	const configPath = path.join(projectFolder, 'nao_config.yaml');
+	const configPath = path.join(projectFolder, 'quarry_config.yaml');
 	if (!fs.existsSync(configPath)) {
 		return null;
 	}

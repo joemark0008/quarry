@@ -23,18 +23,18 @@ interface StoryAppViewProps {
 	code: string;
 	queryData: QueryDataMap | null;
 	theme?: StoryThemePair | null;
-	naoUrl?: string;
+	quarryUrl?: string;
 	onDownload?: (format: DownloadFormat) => Promise<void>;
 }
 
-export function StoryAppView({ title, code, queryData, theme, naoUrl, onDownload }: StoryAppViewProps) {
+export function StoryAppView({ title, code, queryData, theme, quarryUrl, onDownload }: StoryAppViewProps) {
 	const storyTheme = useStoryThemeForCurrentMode(theme);
 
 	return (
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
 			<McpAppHeader title={title}>
 				{onDownload ? <StoryDownloadButton onDownload={onDownload} /> : null}
-				{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}
+				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
 			</McpAppHeader>
 			<StoryBody code={code} queryData={queryData} theme={storyTheme} />
 		</div>

@@ -45,7 +45,7 @@ export const embedRoutes = {
 			code: story.code,
 			queryData: story.queryData,
 			theme: story.theme,
-			openInNaoPath: storyPath(story.storyId),
+			openInQuarryPath: storyPath(story.storyId),
 		};
 	}),
 

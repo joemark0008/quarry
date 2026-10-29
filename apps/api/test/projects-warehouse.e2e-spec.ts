@@ -43,7 +43,7 @@ describe('projects, warehouse connection and context sync (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	it('creates a project with its own folder', async () => {
@@ -100,11 +100,11 @@ describe('projects, warehouse connection and context sync (e2e)', () => {
 		expect(list.body.data.warehouseConnections).toEqual([]);
 	});
 
-	it('connects the warehouse and keeps the password out of nao_config.yaml', async () => {
+	it('connects the warehouse and keeps the password out of quarry_config.yaml', async () => {
 		const res = await connect(decodeURIComponent(warehouse.password));
 		expect(res.body.data.connectWarehouse).toEqual({ success: true, message: 'Connected', fields: [] });
 
-		const yaml = await readFile(path.join(projectPath, 'nao_config.yaml'), 'utf8');
+		const yaml = await readFile(path.join(projectPath, 'quarry_config.yaml'), 'utf8');
 		expect(yaml).toContain("password: {{ env('QUARRY_WAREHOUSE_JAFFLE_PASSWORD') }}");
 		expect(yaml).not.toContain(decodeURIComponent(warehouse.password) + '\n');
 
@@ -162,6 +162,6 @@ describe('projects, warehouse connection and context sync (e2e)', () => {
 		expect(rename.body.data.renameProject.name).toBe('Jaffle');
 		const res = await graphql('mutation ($id: ID!) { deleteProject(projectId: $id) }', { id: projectId });
 		expect(res.body.data.deleteProject).toBe(true);
-		await expect(readFile(path.join(projectPath, 'nao_config.yaml'))).rejects.toThrow();
+		await expect(readFile(path.join(projectPath, 'quarry_config.yaml'))).rejects.toThrow();
 	});
 });

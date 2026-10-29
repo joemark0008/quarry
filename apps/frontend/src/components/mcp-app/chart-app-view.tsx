@@ -12,10 +12,10 @@ import { ChartDisplay } from '@/components/tool-calls/display-chart';
 interface ChartAppViewProps {
 	config: McpChartEmbedStoredConfig;
 	data: Record<string, unknown>[];
-	naoUrl?: string;
+	quarryUrl?: string;
 }
 
-export const ChartAppView = memo(function ChartAppView({ config, data, naoUrl }: ChartAppViewProps) {
+export const ChartAppView = memo(function ChartAppView({ config, data, quarryUrl }: ChartAppViewProps) {
 	const chartData = useMemo(
 		() => (config.xAxisType === 'date' ? sortByDateKey(data, config.xAxisKey) : data),
 		[data, config.xAxisKey, config.xAxisType],
@@ -79,7 +79,9 @@ export const ChartAppView = memo(function ChartAppView({ config, data, naoUrl }:
 
 	return (
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
-			<McpAppHeader title={config.title}>{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}</McpAppHeader>
+			<McpAppHeader title={config.title}>
+				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
+			</McpAppHeader>
 			<div className='min-h-0 flex-1 overflow-auto'>
 				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>{body}</div>
 			</div>

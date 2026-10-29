@@ -68,14 +68,14 @@ describe('attachments (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	const upload = (data: Buffer | string, filename: string) =>
 		request(app.getHttpServer())
 			.post('/api/attachments')
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.attach('file', Buffer.from(data), filename);
 
 	const today = () => new Date().toISOString().slice(0, 10);
@@ -108,7 +108,7 @@ describe('attachments (e2e)', () => {
 		const empty = await request(app.getHttpServer())
 			.post('/api/attachments')
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.field('note', 'no file')
 			.expect(400);
 		expect(empty.body.error).toBe('No file uploaded');
@@ -125,7 +125,7 @@ describe('attachments (e2e)', () => {
 			.get('/api/attachments/file')
 			.query({ path: filePath })
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.buffer(true)
 			.parse((response, callback) => {
 				let body = '';
@@ -142,7 +142,7 @@ describe('attachments (e2e)', () => {
 			.head('/api/attachments/file')
 			.query({ path: filePath })
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.expect(200);
 		expect(head.headers['content-length']).toBe(String(CSV.length));
 
@@ -150,7 +150,7 @@ describe('attachments (e2e)', () => {
 			.get('/api/attachments/file')
 			.query({ path: '/home/nope.csv' })
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.expect(404);
 		expect(missing.body.error).toBe('No such file in permanent storage: /home/nope.csv');
 
@@ -158,7 +158,7 @@ describe('attachments (e2e)', () => {
 			.get('/api/attachments/file')
 			.query({ path: '/RULES.md' })
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.expect(400);
 	});
 
@@ -182,7 +182,7 @@ describe('attachments (e2e)', () => {
 		const res = await request(app.getHttpServer())
 			.post('/api/agent')
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.send({
 				message: {
 					text: 'What is in these?',
@@ -225,7 +225,7 @@ describe('attachments (e2e)', () => {
 		const res = await request(app.getHttpServer())
 			.post('/api/agent')
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.send({ message: { text: 'Read it', documents: ['/home/missing.csv'] }, model: MODEL })
 			.expect(400);
 		expect(res.body.error).toBe('Attached file not found: /home/missing.csv');

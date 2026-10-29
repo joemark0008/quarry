@@ -22,7 +22,7 @@ export type InheritedKeySource = 'env' | 'config';
 
 const INHERITED_KEY_LABELS: Record<InheritedKeySource, string> = {
 	env: 'env',
-	config: 'nao_config.yaml',
+	config: 'quarry_config.yaml',
 };
 
 export interface LlmProviderFormProps {
@@ -285,9 +285,9 @@ export function LlmProviderForm({
 				<div className='flex items-start gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20'>
 					<TriangleAlert className='size-4 shrink-0 mt-0.5 text-amber-500' />
 					<p className='text-xs text-amber-700 dark:text-amber-400'>
-						This provider is defined in <span className='font-mono'>nao_config.yaml</span>. Settings saved
-						here are stored in the project and take precedence over the file, so later edits to{' '}
-						<span className='font-mono'>nao_config.yaml</span> are ignored until you delete this provider
+						This provider is defined in <span className='font-mono'>quarry_config.yaml</span>. Settings
+						saved here are stored in the project and take precedence over the file, so later edits to{' '}
+						<span className='font-mono'>quarry_config.yaml</span> are ignored until you delete this provider
 						here.
 					</p>
 				</div>

@@ -12,7 +12,7 @@ interface MapAppViewProps {
 	config: McpMapEmbedStoredConfig;
 	data: Record<string, unknown>[];
 	columns: string[];
-	naoUrl?: string;
+	quarryUrl?: string;
 	projectId?: string;
 	customBoundaries?: CustomBoundarySet[];
 }
@@ -20,7 +20,7 @@ interface MapAppViewProps {
 export const MapAppView = memo(function MapAppView({
 	config,
 	data,
-	naoUrl,
+	quarryUrl,
 	projectId,
 	customBoundaries,
 }: MapAppViewProps) {
@@ -34,7 +34,9 @@ export const MapAppView = memo(function MapAppView({
 
 	return (
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
-			<McpAppHeader title={config.title}>{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}</McpAppHeader>
+			<McpAppHeader title={config.title}>
+				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
+			</McpAppHeader>
 			<div className='min-h-0 flex-1 overflow-auto'>
 				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>
 					{errorMessage ? (

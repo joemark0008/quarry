@@ -91,7 +91,7 @@ const EXISTING_STORY_FIRST = `If a story in /${STORY_LIBRARY_MOUNT} already answ
 
 const STORY_MODE_INSTRUCTIONS = {
 	classic: `[Story mode: present your response as an interactive nao Story using the story tool (format "classic"), combining markdown and charts. ${EXISTING_STORY_FIRST}]`,
-	custom: `[Custom story mode: present your response as a custom story: call the story tool with format "custom" and build the app with @nao/story-kit blocks. ${EXISTING_STORY_FIRST}]`,
+	custom: `[Custom story mode: present your response as a custom story: call the story tool with format "custom" and build the app with @quarry/story-kit blocks. ${EXISTING_STORY_FIRST}]`,
 } as const;
 const MAX_SCHEMA_TABLES_WITH_COLUMNS = 15;
 const MAX_SCHEMA_TABLES_NAMED = 200;

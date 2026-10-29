@@ -99,7 +99,7 @@ export function CustomStoryFrame({
 
 	const syncThemeOnReady = useEffectEvent(() => {
 		if (theme !== bootTheme) {
-			reply({ type: 'nao-story:theme', theme });
+			reply({ type: 'quarry-story:theme', theme });
 		}
 	});
 
@@ -121,9 +121,9 @@ export function CustomStoryFrame({
 			try {
 				const options = queryDataOptions(dataSource, queryId);
 				const result = await queryClient.fetchQuery(fresh ? { ...options, staleTime: 0 } : options);
-				reply({ type: 'nao-story:query-result', requestId, result });
+				reply({ type: 'quarry-story:query-result', requestId, result });
 			} catch (error) {
-				reply({ type: 'nao-story:query-error', requestId, message: describeError(error) });
+				reply({ type: 'quarry-story:query-error', requestId, message: describeError(error) });
 			}
 		},
 		[dataSource, queryClient, reply],
@@ -133,9 +133,9 @@ export function CustomStoryFrame({
 		async (requestId: string, queryId: string) => {
 			try {
 				const { sqlQuery } = await queryClient.fetchQuery(querySqlOptions(dataSource, queryId));
-				reply({ type: 'nao-story:query-sql-result', requestId, sqlQuery });
+				reply({ type: 'quarry-story:query-sql-result', requestId, sqlQuery });
 			} catch (error) {
-				reply({ type: 'nao-story:query-sql-error', requestId, message: describeError(error) });
+				reply({ type: 'quarry-story:query-sql-error', requestId, message: describeError(error) });
 			}
 		},
 		[dataSource, queryClient, reply],
@@ -144,7 +144,7 @@ export function CustomStoryFrame({
 	const answerNarratives = useCallback(
 		async (requestId: string) => {
 			const narratives = await queryClient.fetchQuery(narrativesOptions(dataSource)).catch(() => ({}));
-			reply({ type: 'nao-story:narratives-result', requestId, narratives });
+			reply({ type: 'quarry-story:narratives-result', requestId, narratives });
 		},
 		[dataSource, queryClient, reply],
 	);
@@ -168,34 +168,34 @@ export function CustomStoryFrame({
 		};
 		const dispatch = (message: StoryFrameMessage) => {
 			switch (message.type) {
-				case 'nao-story:ready':
+				case 'quarry-story:ready':
 					isFrameReadyRef.current = true;
 					connectPort(handlePortMessage);
-					reply({ type: 'nao-story:editing', enabled: editable });
-					reply({ type: 'nao-story:shortcuts', shortcuts: getAppWideShortcuts() });
+					reply({ type: 'quarry-story:editing', enabled: editable });
+					reply({ type: 'quarry-story:shortcuts', shortcuts: getAppWideShortcuts() });
 					syncThemeOnReady();
 					onReady?.();
 					break;
-				case 'nao-story:query':
+				case 'quarry-story:query':
 					void answerQuery(message.requestId, message.queryId, message.fresh === true);
 					break;
-				case 'nao-story:narratives':
+				case 'quarry-story:narratives':
 					void answerNarratives(message.requestId);
 					break;
-				case 'nao-story:error':
+				case 'quarry-story:error':
 					onError?.({ message: message.message, stack: message.stack });
 					break;
-				case 'nao-story:copy-table':
+				case 'quarry-story:copy-table':
 					if (isUserGesture()) {
 						void navigator.clipboard.writeText(tableToTsv(message.columns, message.rows, dateFormat));
 					}
 					break;
-				case 'nao-story:export-table':
+				case 'quarry-story:export-table':
 					if (isUserGesture()) {
 						exportTable(message, dateFormat);
 					}
 					break;
-				case 'nao-story:edit-block':
+				case 'quarry-story:edit-block':
 					if (editable) {
 						onEditBlock?.({
 							block: message.block,
@@ -206,7 +206,7 @@ export function CustomStoryFrame({
 						});
 					}
 					break;
-				case 'nao-story:edit-table-format':
+				case 'quarry-story:edit-table-format':
 					if (editable) {
 						onEditTableFormat?.({
 							block: message.block,
@@ -216,18 +216,18 @@ export function CustomStoryFrame({
 						});
 					}
 					break;
-				case 'nao-story:ask-block':
+				case 'quarry-story:ask-block':
 					if (editable) {
 						onAskBlock?.(message.block);
 					}
 					break;
-				case 'nao-story:query-sql':
+				case 'quarry-story:query-sql':
 					void answerQuerySql(message.requestId, message.queryId);
 					break;
-				case 'nao-story:set-state':
+				case 'quarry-story:set-state':
 					recordStateChange({ key: message.key, value: message.value, shared: message.shared === true });
 					break;
-				case 'nao-story:keydown':
+				case 'quarry-story:keydown':
 					replayKeydown(document, message);
 					break;
 			}
@@ -256,13 +256,13 @@ export function CustomStoryFrame({
 
 	useEffect(() => {
 		if (isFrameReadyRef.current) {
-			reply({ type: 'nao-story:editing', enabled: editable });
+			reply({ type: 'quarry-story:editing', enabled: editable });
 		}
 	}, [editable, reply]);
 
 	useEffect(() => {
 		if (isFrameReadyRef.current) {
-			reply({ type: 'nao-story:theme', theme });
+			reply({ type: 'quarry-story:theme', theme });
 		}
 	}, [theme, reply]);
 
@@ -389,7 +389,7 @@ function useForwardHostKeydown(reply: (message: StoryHostMessage) => void) {
 			if (!event.isTrusted || event.defaultPrevented || hasModifier(event) || isTypingTarget(event)) {
 				return;
 			}
-			reply({ type: 'nao-story:keydown', ...snapshotKeydown(event) });
+			reply({ type: 'quarry-story:keydown', ...snapshotKeydown(event) });
 		};
 		document.addEventListener('keydown', handleKeyDown);
 		return () => document.removeEventListener('keydown', handleKeyDown);
@@ -408,7 +408,7 @@ function isUserGesture(): boolean {
 }
 
 function exportTable(
-	{ format, filename, columns, rows }: Extract<StoryFrameMessage, { type: 'nao-story:export-table' }>,
+	{ format, filename, columns, rows }: Extract<StoryFrameMessage, { type: 'quarry-story:export-table' }>,
 	dateFormat: ReturnType<typeof useDateFormat>,
 ) {
 	const safeName = toSafeFilename(filename);

@@ -36,7 +36,7 @@ export const SUPPORTED_DIALECTS = ['postgres'];
  */
 export const SYNCED_MANIFEST_RELATIVE_PATH = path.join('.meta', 'semantic_layer', 'semantic_manifest.json');
 
-/** The `semantic_layer` block of `nao_config.yaml`. */
+/** The `semantic_layer` block of `quarry_config.yaml`. */
 export interface SemanticLayerConfig {
 	type?: 'metricflow';
 	manifest_path: string;

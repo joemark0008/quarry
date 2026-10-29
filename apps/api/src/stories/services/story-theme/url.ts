@@ -16,7 +16,7 @@ const MAX_HTML_BYTES = 2_000_000;
 const MAX_CSS_BYTES = 1_500_000;
 const MAX_STYLESHEETS = 6;
 const FETCH_HEADERS = {
-	'user-agent': 'nao-story-theme-bot/1.0 (+https://getnao.io)',
+	'user-agent': 'quarry-story-theme-bot/1.0 (+https://getnao.io)',
 	accept: 'text/html,text/css,*/*',
 };
 

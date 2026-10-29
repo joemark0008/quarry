@@ -35,7 +35,7 @@ const FIGMA_NAV_TIMEOUT_MS = 35_000;
 const READ_TIMEOUT_MS = 30_000;
 const VIEWPORT = { width: 1440, height: 900 };
 const USER_AGENT =
-	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36 nao-story-theme-bot/1.0 (+https://getnao.io)';
+	'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36 quarry-story-theme-bot/1.0 (+https://getnao.io)';
 
 export class ProbeRefusedError extends Error {}
 

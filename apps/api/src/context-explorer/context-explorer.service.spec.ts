@@ -159,7 +159,7 @@ describe('context explorer file access', () => {
 	it('returns the source file tree without resolving Git', async () => {
 		const entries = [
 			{ name: 'folder', path: '/folder', type: 'directory', children: [] },
-			{ name: 'nao_config.yaml', path: '/nao_config.yaml', type: 'file' },
+			{ name: 'quarry_config.yaml', path: '/quarry_config.yaml', type: 'file' },
 		];
 		mocks.getFileTree.mockResolvedValue(entries);
 		mocks.resolveContextExplorerGit.mockRejectedValue(new Error('clone failed'));

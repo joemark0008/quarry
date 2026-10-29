@@ -54,7 +54,7 @@ describe('sandbox secrets (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	const setSecret = (input: Record<string, unknown>) =>

@@ -45,7 +45,7 @@ describe('project and user settings (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	it('lists the synced tables of the project', async () => {

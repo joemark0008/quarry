@@ -185,7 +185,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		search: { tab: 'models' },
 		title: 'Default models',
 		description:
-			'Choose the model new chats start on, the model each messaging integration and the MCP ask_nao tool answer with, and the models behind background tasks.',
+			'Choose the model new chats start on, the model each messaging integration and the MCP ask_quarry tool answer with, and the models behind background tasks.',
 		keywords: [
 			'default model',
 			'chat model',
@@ -196,7 +196,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 			'whatsapp model',
 			'mattermost model',
 			'mcp model',
-			'ask_nao',
+			'ask_quarry',
 			'background',
 			'live story',
 			'title generation',

@@ -840,7 +840,7 @@ async function proposeWithModel(
 		output: Output.object({ schema: modelProposalSchema }),
 		system: SYSTEM_PROMPT,
 		messages: [{ role: 'user', content: [{ type: 'text', text: prompt }, ...imageParts] }],
-		experimental_telemetry: llmTelemetry('nao-story-theme-generate', { projectId: scope.projectId }),
+		experimental_telemetry: llmTelemetry('quarry-story-theme-generate', { projectId: scope.projectId }),
 	});
 	// Upstream records the usage in `llm_inference`; usage tracking is not ported.
 	return toThemeProposal(output);

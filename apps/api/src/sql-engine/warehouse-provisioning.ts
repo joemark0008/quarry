@@ -2,7 +2,7 @@ import { type DatabaseConfig, postgresDatabaseConfigSchema } from './database-co
 
 /**
  * Port of upstream `fastapi/warehouse_provisioning.py` for Postgres: validate the credentials a user enters in
- * the app, and turn them into a `nao_config.yaml` database entry whose values are `{{ env('…') }}` references.
+ * the app, and turn them into a `quarry_config.yaml` database entry whose values are `{{ env('…') }}` references.
  * The env values are stored encrypted with the project (`project_warehouse_credentials`), never in the file.
  */
 

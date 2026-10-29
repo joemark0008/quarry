@@ -13,7 +13,7 @@ interface ProviderCardProps {
 	envBaseUrl?: string;
 	enabledModels?: string[] | null;
 	status?: string;
-	/** Where this provider comes from, e.g. `ENV` or `nao_config.yaml`. */
+	/** Where this provider comes from, e.g. `ENV` or `quarry_config.yaml`. */
 	badges?: string[];
 	isAdmin: boolean;
 	isFormActive: boolean;

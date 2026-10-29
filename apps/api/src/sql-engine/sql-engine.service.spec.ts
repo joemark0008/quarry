@@ -51,7 +51,7 @@ describe('SqlEngineService', () => {
 					`${index === 0 ? '  - ' : '    '}${key}: ${Array.isArray(value) ? JSON.stringify(value) : value}`,
 			),
 		].join('\n');
-		await writeFile(path.join(projectFolder, 'nao_config.yaml'), yaml);
+		await writeFile(path.join(projectFolder, 'quarry_config.yaml'), yaml);
 		await createContextTable(projectFolder, 'public', 'customers', { databaseFolder: 'warehouse' });
 		await createContextTable(projectFolder, 'public', 'orders', { databaseFolder: 'warehouse' });
 	});

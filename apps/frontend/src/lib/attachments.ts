@@ -24,7 +24,7 @@ export async function uploadAttachment(file: File): Promise<UploadedAttachmentIn
 	const response = await fetch('/api/attachments', {
 		method: 'POST',
 		body,
-		headers: projectId ? { 'x-nao-project-id': projectId } : undefined,
+		headers: projectId ? { 'x-quarry-project-id': projectId } : undefined,
 	});
 
 	if (!response.ok) {
@@ -38,7 +38,7 @@ export async function uploadAttachment(file: File): Promise<UploadedAttachmentIn
 export async function fetchAttachment(path: string): Promise<Blob> {
 	const projectId = getActiveProjectId();
 	const response = await fetch(`/api/attachments/file?path=${encodeURIComponent(path)}`, {
-		headers: projectId ? { 'x-nao-project-id': projectId } : undefined,
+		headers: projectId ? { 'x-quarry-project-id': projectId } : undefined,
 	});
 
 	if (!response.ok) {
@@ -53,7 +53,7 @@ export async function fetchAttachmentSize(path: string): Promise<number> {
 	const projectId = getActiveProjectId();
 	const response = await fetch(`/api/attachments/file?path=${encodeURIComponent(path)}`, {
 		method: 'HEAD',
-		headers: projectId ? { 'x-nao-project-id': projectId } : undefined,
+		headers: projectId ? { 'x-quarry-project-id': projectId } : undefined,
 	});
 
 	if (!response.ok) {

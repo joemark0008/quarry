@@ -38,7 +38,7 @@ describe('context explorer worktree writes', () => {
 		fs.mkdirSync(seed);
 		initRepository(seed);
 		writeFiles(seed, {
-			'nao_config.yaml': 'name: project\n',
+			'quarry_config.yaml': 'name: project\n',
 			'context.md': 'repository content\n',
 			'generated.md': '---\ntype: generated\n---\ngenerated\n',
 			'annotations.md': '---\ntype: manual\n---\nnotes\n',
@@ -55,7 +55,7 @@ describe('context explorer worktree writes', () => {
 		runGit(seed, ['push', bare, 'main']);
 		runGit(root, ['--git-dir', bare, 'symbolic-ref', 'HEAD', 'refs/heads/main']);
 		writeFiles(live, {
-			'nao_config.yaml': 'name: live\n',
+			'quarry_config.yaml': 'name: live\n',
 			'context.md': 'live content\n',
 			'generated.md': '---\ntype: generated\n---\nlive generated\n',
 			'annotations.md': 'live notes\n',
@@ -151,7 +151,7 @@ describe('context explorer worktree writes', () => {
 		});
 		expect(repoSource).toMatchObject({
 			reason: 'synced-source',
-			guidance: { actionKind: 'file', actionPath: '/nao_config.yaml' },
+			guidance: { actionKind: 'file', actionPath: '/quarry_config.yaml' },
 		});
 		expect(notion.reason).toBe('synced-source');
 		expect(untracked).toMatchObject({
@@ -223,10 +223,10 @@ describe('context explorer worktree writes', () => {
 	it.each([
 		['/generated.md', 'generated', 'file', '/annotations.md'],
 		['/rendered.md', 'rendered-template', 'file', '/rendered.md.j2'],
-		['/repos/source.md', 'synced-source', 'file', '/nao_config.yaml'],
-		['/docs/notion/page.md', 'synced-source', 'file', '/nao_config.yaml'],
-		['/docs/confluence/page.md', 'synced-source', 'file', '/nao_config.yaml'],
-		['/docs/obsidian/note.md', 'synced-source', 'file', '/nao_config.yaml'],
+		['/repos/source.md', 'synced-source', 'file', '/quarry_config.yaml'],
+		['/docs/notion/page.md', 'synced-source', 'file', '/quarry_config.yaml'],
+		['/docs/confluence/page.md', 'synced-source', 'file', '/quarry_config.yaml'],
+		['/docs/obsidian/note.md', 'synced-source', 'file', '/quarry_config.yaml'],
 		['/untracked.md', 'not-tracked', null, null],
 	])('reports guidance for %s', async (filePath, reason, actionKind, actionPath) => {
 		const file = await readFileContent(filePath, access);

@@ -22,8 +22,8 @@ const modules: Record<keyof typeof STORY_RUNTIME_MODULES, object> = {
 	'lucide-react': lucideReact,
 	leaflet,
 	'react-leaflet': reactLeaflet,
-	'@nao/story-kit': storyKit,
-	'@nao/story-host': storyHost,
+	'@quarry/story-kit': storyKit,
+	'@quarry/story-host': storyHost,
 };
 
 Object.assign(globalThis, { [STORY_STANDALONE_RUNTIME_GLOBAL]: modules });

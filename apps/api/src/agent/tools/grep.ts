@@ -226,7 +226,7 @@ const searchVirtualFiles = async (
 	if (files.length === 0) {
 		return { matches: [], totalMatches: 0 };
 	}
-	const directory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'nao-story-grep-'));
+	const directory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'quarry-story-grep-'));
 	try {
 		await writeFilesUnder(directory, files);
 		return await searchTarget(rgPath, storiesTarget(directory), { ...options, glob: undefined });

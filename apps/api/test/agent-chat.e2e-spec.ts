@@ -73,14 +73,14 @@ describe('agent chat (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	it('streams the run as an AI SDK UI message stream', async () => {
 		const res = await request(app.getHttpServer())
 			.post('/api/agent')
 			.set('Cookie', cookie)
-			.set('x-nao-project-id', projectId)
+			.set('x-quarry-project-id', projectId)
 			.send({ message: { text: 'How many orders are there?' }, model: MODEL })
 			.buffer(true)
 			.parse((response, callback) => {

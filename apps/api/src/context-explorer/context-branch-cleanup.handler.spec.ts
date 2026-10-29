@@ -253,7 +253,7 @@ function createFixture(temporaryRoots: string[]): Fixture {
 	fs.mkdirSync(seed);
 	fs.mkdirSync(live);
 	runGit(seed, ['init', '--quiet', '--initial-branch=main']);
-	fs.writeFileSync(path.join(seed, 'nao_config.yaml'), 'name: test\n');
+	fs.writeFileSync(path.join(seed, 'quarry_config.yaml'), 'name: test\n');
 	commitAll(seed, 'initial');
 	runGit(root, ['init', '--bare', '--quiet', '--initial-branch=main', bare]);
 	runGit(seed, ['push', bare, 'main']);

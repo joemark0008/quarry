@@ -6,7 +6,7 @@ import yaml from 'js-yaml';
 import { PROJECT_CONFIG_FILE } from '../sql-engine/project-config.js';
 
 /**
- * Edits `nao_config.yaml` without resolving its secrets. `{{ env('…') }}` references are written unquoted (they
+ * Edits `quarry_config.yaml` without resolving its secrets. `{{ env('…') }}` references are written unquoted (they
  * are substituted before the YAML is parsed, and the substituted value is a JSON scalar), so they are swapped
  * for plain tokens while the YAML is parsed and dumped, then put back.
  */

@@ -181,10 +181,10 @@ export function getFileEditability(
 		projectPath.startsWith('docs/obsidian/')
 	) {
 		return readOnly('synced-source', {
-			message: 'This path is replaced by nao sync. Change its source in nao_config.yaml.',
+			message: 'This path is replaced by nao sync. Change its source in quarry_config.yaml.',
 			actionKind: 'file',
-			actionPath: '/nao_config.yaml',
-			actionLabel: 'Open nao_config.yaml',
+			actionPath: '/quarry_config.yaml',
+			actionLabel: 'Open quarry_config.yaml',
 		});
 	}
 	if (!repo || !trackedPaths.has(projectPath)) {
@@ -568,7 +568,7 @@ function guidanceForReason(
 			actionLabel: 'Open Git settings',
 		},
 		'project-not-found': {
-			message: 'No tracked nao_config.yaml was found in the connected repository.',
+			message: 'No tracked quarry_config.yaml was found in the connected repository.',
 			actionKind: null,
 			actionPath: null,
 			actionLabel: null,
@@ -592,10 +592,10 @@ function guidanceForReason(
 			actionLabel: null,
 		},
 		'synced-source': {
-			message: 'This path is replaced by nao sync. Change its source in nao_config.yaml.',
+			message: 'This path is replaced by nao sync. Change its source in quarry_config.yaml.',
 			actionKind: 'file',
-			actionPath: '/nao_config.yaml',
-			actionLabel: 'Open nao_config.yaml',
+			actionPath: '/quarry_config.yaml',
+			actionLabel: 'Open quarry_config.yaml',
 		},
 		'not-tracked': {
 			message:

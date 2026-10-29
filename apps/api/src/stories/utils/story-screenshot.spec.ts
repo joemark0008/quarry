@@ -28,7 +28,7 @@ describe.skipIf(!isChromeAvailable)('rendering a story screenshot', () => {
 		const screenshot = await renderStoryScreenshot(
 			readyPage(
 				'<p>content</p>',
-				`window.postMessage({ type: 'nao-story:error', message: 'boundary error' }, '*');
+				`window.postMessage({ type: 'quarry-story:error', message: 'boundary error' }, '*');
 				setTimeout(() => { throw new Error('thrown error'); });`,
 			),
 			VIEWPORT,

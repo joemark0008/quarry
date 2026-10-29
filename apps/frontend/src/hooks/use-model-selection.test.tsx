@@ -17,7 +17,7 @@ vi.mock('@tanstack/react-query', () => ({
 		mocks.queries.push(options);
 		return options.queryKey[0] === 'current-project'
 			? mocks.currentProjectQuery
-			: { data: [{ provider: 'nao' }], isPending: false, isError: false };
+			: { data: [{ provider: 'openai' }], isPending: false, isError: false };
 	},
 }));
 
@@ -67,6 +67,6 @@ it('requests project models when the current project query fails', () => {
 
 	expect(mocks.queries.find((query) => query.queryKey[0] === 'available-models')?.enabled).toBe(true);
 	expect(mocks.queries.find((query) => query.queryKey[0] === 'default-model')?.enabled).toBe(true);
-	expect(result.current.availableModels).toEqual([{ provider: 'nao' }]);
+	expect(result.current.availableModels).toEqual([{ provider: 'openai' }]);
 	expect(result.current.hasProject).toBe(true);
 });

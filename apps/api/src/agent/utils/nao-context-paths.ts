@@ -3,7 +3,7 @@
  *
  * `nao sync` regenerates `databases/**` (from warehouse metadata + templates) and
  * `repos/**` (cloned source repos) on every run, so any edit to those is lost. The
- * remaining context (RULES.md, semantics, docs, queries, agent config, nao_config.yaml)
+ * remaining context (RULES.md, semantics, docs, queries, agent config, quarry_config.yaml)
  * is authored by humans and is the only safe target for an automated pull request.
  */
 

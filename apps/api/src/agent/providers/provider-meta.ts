@@ -362,29 +362,6 @@ const OPENAI_COMPATIBLE_CUSTOM: ModelCapabilities = {
 
 /** Provider metadata: models, auth config, env vars. No SDK imports — safe for frontend. */
 export const PROVIDER_META: ProviderMetaMap = {
-	nao: {
-		auth: { apiKey: 'none' },
-		managed: true,
-		extractorModelId: 'gpt-6-luna',
-		summaryModelId: 'gpt-6-luna',
-		models: [
-			{
-				id: 'gpt-6-luna',
-				name: 'GPT 6 Luna',
-				default: true,
-				contextWindow: 1_050_000,
-				costPerM: { inputNoCache: 0.1, inputCacheRead: 0.01, inputCacheWrite: 0.125, output: 0.5 },
-				capabilities: OPENAI_5_6_REASONING,
-			},
-			{
-				id: 'gpt-6-sol',
-				name: 'GPT 6 Sol',
-				contextWindow: 1_050_000,
-				costPerM: { inputNoCache: 2, inputCacheRead: 0.2, inputCacheWrite: 2.5, output: 10 },
-				capabilities: OPENAI_5_6_REASONING,
-			},
-		],
-	},
 	anthropic: {
 		auth: { apiKey: 'required' },
 		envVar: 'ANTHROPIC_API_KEY',
@@ -1189,7 +1166,6 @@ export function getModelCapabilities(provider: LlmProvider, modelId: string): Mo
 	switch (providerKind(provider)) {
 		case 'anthropic':
 			return ANTHROPIC_ADAPTIVE;
-		case 'nao':
 		case 'openai':
 			return OPENAI_REASONING_CUSTOM;
 		case 'azure':

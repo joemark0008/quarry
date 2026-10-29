@@ -56,7 +56,7 @@ function MapEmbedPage() {
 			</div>
 		);
 	} else {
-		const naoUrl =
+		const quarryUrl =
 			typeof map.sourceChatId === 'string' && map.sourceChatId.trim()
 				? `${window.location.origin}/${map.sourceChatId.trim()}`
 				: undefined;
@@ -65,7 +65,7 @@ function MapEmbedPage() {
 				config={map.mapConfig}
 				data={map.data}
 				columns={map.columns}
-				naoUrl={naoUrl}
+				quarryUrl={quarryUrl}
 				projectId={map.projectId}
 				customBoundaries={map.customBoundaries}
 			/>

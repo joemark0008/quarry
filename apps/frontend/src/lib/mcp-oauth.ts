@@ -1,7 +1,7 @@
 import { getActiveProjectId } from '@/lib/active-project';
 
 interface McpOAuthMessage {
-	type: 'nao-mcp-oauth';
+	type: 'quarry-mcp-oauth';
 	status: 'connected' | 'error';
 	server: string;
 	message?: string;
@@ -13,7 +13,7 @@ export interface McpConnectResult {
 }
 
 const isOAuthMessage = (data: unknown): data is McpOAuthMessage =>
-	!!data && typeof data === 'object' && (data as McpOAuthMessage).type === 'nao-mcp-oauth';
+	!!data && typeof data === 'object' && (data as McpOAuthMessage).type === 'quarry-mcp-oauth';
 
 /**
  * Opens the per-user MCP OAuth flow in a popup and resolves once the user connected, the flow
@@ -26,7 +26,11 @@ export function openMcpConnectPopup(server: string): Promise<McpConnectResult> {
 		params.set('projectId', projectId);
 	}
 
-	const popup = window.open(`/api/mcp-oauth/connect?${params.toString()}`, 'nao-mcp-oauth', 'width=520,height=720');
+	const popup = window.open(
+		`/api/mcp-oauth/connect?${params.toString()}`,
+		'quarry-mcp-oauth',
+		'width=520,height=720',
+	);
 	if (!popup) {
 		return Promise.resolve({ connected: false, error: 'The browser blocked the connection popup.' });
 	}

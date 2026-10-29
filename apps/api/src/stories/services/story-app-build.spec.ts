@@ -25,9 +25,9 @@ describe('buildStoryApp entry', () => {
 		});
 	});
 
-	it('refuses a non-script entry named in nao.json', async () => {
+	it('refuses a non-script entry named in quarry.json', async () => {
 		const result = await buildStoryApp([
-			{ path: 'nao.json', content: '{"entry": "styles.css"}' },
+			{ path: 'quarry.json', content: '{"entry": "styles.css"}' },
 			{ path: 'styles.css', content: 'body { color: red; }' },
 		]);
 
@@ -37,7 +37,7 @@ describe('buildStoryApp entry', () => {
 		});
 	});
 
-	it('does not guess an html entry without nao.json', async () => {
+	it('does not guess an html entry without quarry.json', async () => {
 		const result = await buildStoryApp([
 			{ path: 'index.html', content: '<html><head></head><body></body></html>' },
 		]);
@@ -47,7 +47,7 @@ describe('buildStoryApp entry', () => {
 });
 
 describe('buildStoryApp html entry', () => {
-	const manifest = { path: 'nao.json', content: '{"entry": "index.html"}' };
+	const manifest = { path: 'quarry.json', content: '{"entry": "index.html"}' };
 
 	it('moves inline and local scripts into the bundle and strips host-owned tags', async () => {
 		const result = await buildStoryApp([
@@ -68,7 +68,7 @@ describe('buildStoryApp html entry', () => {
 				].join('\n'),
 			},
 			{ path: 'page.css', content: 'h1 { color: red; }' },
-			{ path: 'main.js', content: 'export const fromMain = nao.theme();' },
+			{ path: 'main.js', content: 'export const fromMain = quarry.theme();' },
 		]);
 
 		expect(result.ok).toBe(true);
@@ -175,7 +175,7 @@ describe('buildStoryApp html entry', () => {
 
 	it('resolves inline script imports from the entry folder', async () => {
 		const result = await buildStoryApp([
-			{ path: 'nao.json', content: '{"entry": "pages/index.html"}' },
+			{ path: 'quarry.json', content: '{"entry": "pages/index.html"}' },
 			{
 				path: 'pages/index.html',
 				content: '<html><head></head><body><script type="module">import "./chart.js";</script></body></html>',
@@ -204,7 +204,7 @@ describe('buildStoryApp html entry', () => {
 
 	it('refuses imports that climb above the story root', async () => {
 		const result = await buildStoryApp([
-			{ path: 'nao.json', content: '{"entry": "pages/index.html"}' },
+			{ path: 'quarry.json', content: '{"entry": "pages/index.html"}' },
 			{
 				path: 'pages/index.html',
 				content: '<html><head></head><body><script type="module">import "../../lib.js";</script></body></html>',

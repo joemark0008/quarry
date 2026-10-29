@@ -22,7 +22,7 @@ interface ProviderAccess {
 /**
  * Port of upstream `utils/llm.ts`: which models a project can use and how to reach them. Sources, in order:
  * the project's LLM configs (Settings → Models), then provider keys from the environment (`OPENAI_API_KEY`,
- * `ANTHROPIC_API_KEY`…, `<PROVIDER>_BASE_URL`). Not ported: the `llm` block of `nao_config.yaml` and the
+ * `ANTHROPIC_API_KEY`…, `<PROVIDER>_BASE_URL`). Not ported: the `llm` block of `quarry_config.yaml` and the
  * managed `nao` provider (billing).
  */
 @Injectable()
@@ -205,7 +205,7 @@ export function isProviderDisabled(provider: LlmProvider): boolean {
 
 /** `hasEnvApiKey`. */
 export function hasEnvApiKey(provider: LlmProvider): boolean {
-	if (isProviderDisabled(provider) || provider === 'nao') {
+	if (isProviderDisabled(provider)) {
 		return false;
 	}
 	if (getEnvApiKey(provider)) {

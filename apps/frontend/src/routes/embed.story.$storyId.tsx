@@ -42,14 +42,14 @@ function StoryEmbedPage() {
 			</div>
 		);
 	} else {
-		const naoUrl = `${window.location.origin}${story.openInNaoPath}`;
+		const quarryUrl = `${window.location.origin}${story.openInQuarryPath}`;
 		inner = (
 			<StoryAppView
 				title={story.title}
 				code={story.code}
 				queryData={story.queryData as QueryDataMap | null}
 				theme={story.theme}
-				naoUrl={naoUrl}
+				quarryUrl={quarryUrl}
 				onDownload={(format) => downloadStory(storyId, token, format)}
 			/>
 		);

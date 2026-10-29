@@ -32,7 +32,7 @@ vi.mock('../services/story-library.js', () => ({
 let projectFolder: string;
 
 beforeEach(async () => {
-	projectFolder = await fs.mkdtemp(path.join(os.tmpdir(), 'nao-story-grep-test-'));
+	projectFolder = await fs.mkdtemp(path.join(os.tmpdir(), 'quarry-story-grep-test-'));
 });
 
 afterEach(async () => {

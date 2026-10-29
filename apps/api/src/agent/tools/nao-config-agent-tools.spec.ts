@@ -25,11 +25,11 @@ beforeEach(() => {
 	__reloadEnvForTesting();
 	__resetStorageForTesting();
 	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-tools-'));
-	fs.writeFileSync(path.join(projectFolder, 'nao_config.yaml'), `llm:\n  api_key: ${SECRET}\n`);
+	fs.writeFileSync(path.join(projectFolder, 'quarry_config.yaml'), `llm:\n  api_key: ${SECRET}\n`);
 	fs.writeFileSync(path.join(projectFolder, 'RULES.md'), 'Rules\n');
 	fs.mkdirSync(path.join(projectFolder, 'repos', 'other'), { recursive: true });
-	fs.writeFileSync(path.join(projectFolder, 'repos', 'other', 'nao_config.yaml'), `api_key: ${SECRET}\n`);
-	fs.symlinkSync(path.join(projectFolder, 'nao_config.yaml'), path.join(projectFolder, 'alias.yaml'));
+	fs.writeFileSync(path.join(projectFolder, 'repos', 'other', 'quarry_config.yaml'), `api_key: ${SECRET}\n`);
+	fs.symlinkSync(path.join(projectFolder, 'quarry_config.yaml'), path.join(projectFolder, 'alias.yaml'));
 });
 
 afterEach(() => {
@@ -39,8 +39,8 @@ afterEach(() => {
 	fs.rmSync(projectFolder, { recursive: true, force: true });
 });
 
-describe('nao_config.yaml is hidden from the agent file tools', () => {
-	it.each(['/nao_config.yaml', 'nao_config.yaml', '/repos/other/nao_config.yaml', '/alias.yaml'])(
+describe('quarry_config.yaml is hidden from the agent file tools', () => {
+	it.each(['/quarry_config.yaml', 'quarry_config.yaml', '/repos/other/quarry_config.yaml', '/alias.yaml'])(
 		'read denies %s',
 		async (filePath) => {
 			await expect(run(readTool, { file_path: filePath }, context())).rejects.toThrow('Access denied');
@@ -52,14 +52,14 @@ describe('nao_config.yaml is hidden from the agent file tools', () => {
 		const output = (await run(listTool, { path: '/' }, context())) as Extract<list.Output, { _version: '1' }>;
 
 		expect(output.entries.map((entry) => entry.name)).toContain('RULES.md');
-		expect(output.entries.map((entry) => entry.name)).not.toContain('nao_config.yaml');
+		expect(output.entries.map((entry) => entry.name)).not.toContain('quarry_config.yaml');
 	});
 
 	it('grep never matches inside it', async () => {
 		const wholeProject = await run(grepTool, { pattern: SECRET }, context());
 		expect(wholeProject).toMatchObject({ matches: [], total_matches: 0 });
 
-		await expect(run(grepTool, { pattern: SECRET, path: '/nao_config.yaml' }, context())).rejects.toThrow(
+		await expect(run(grepTool, { pattern: SECRET, path: '/quarry_config.yaml' }, context())).rejects.toThrow(
 			'Access denied',
 		);
 	});

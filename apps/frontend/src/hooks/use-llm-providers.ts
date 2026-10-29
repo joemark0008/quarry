@@ -147,7 +147,7 @@ export function useLlmProviders() {
 		});
 	};
 
-	/** Seed the form with the nao_config.yaml values so saving creates an override of them. */
+	/** Seed the form with the quarry_config.yaml values so saving creates an override of them. */
 	const handleOverrideConfigProvider = (configProvider: (typeof configProviders)[0]) => {
 		setEditingState({
 			provider: configProvider.provider,

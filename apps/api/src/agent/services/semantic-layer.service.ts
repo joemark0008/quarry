@@ -29,7 +29,7 @@ export type CompiledSemanticQuery = {
 
 /**
  * The semantic layer routing mode in effect for a run, or null when the project
- * declares no `semantic_layer` in nao_config.yaml. The repo decides whether a layer
+ * declares no `semantic_layer` in quarry_config.yaml. The repo decides whether a layer
  * exists; the admin settings decide how the agent uses it.
  */
 export function resolveSemanticLayerMode(
@@ -67,7 +67,7 @@ export async function compileSemanticQuery(query: SemanticQuery, context: ToolCo
 		const config = await loadProjectConfig(projectPath, context.envVars);
 		const semanticLayer = config ? readSemanticLayerConfig(config) : null;
 		if (!config || !semanticLayer) {
-			throw new SemanticLayerError('No semantic_layer configured in nao_config.yaml');
+			throw new SemanticLayerError('No semantic_layer configured in quarry_config.yaml');
 		}
 
 		const database = resolveSemanticLayerDatabase(config, semanticLayer.database);

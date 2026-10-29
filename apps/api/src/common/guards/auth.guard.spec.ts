@@ -131,7 +131,7 @@ describe('@ProjectAccess()', () => {
 	});
 
 	it('passes the selected project header to the lookup', async () => {
-		await run('projectRoute', { 'x-nao-project-id': 'project-1' });
+		await run('projectRoute', { 'x-quarry-project-id': 'project-1' });
 		expect(projects.getProjectByUserId).toHaveBeenCalledWith(USER.id, 'project-1');
 	});
 
@@ -189,13 +189,13 @@ describe('@OrgMember()', () => {
 	});
 
 	it('resolves the organization from the selected organization header first', async () => {
-		await run('orgMemberRoute', { 'x-nao-organization-id': 'org-1', 'x-nao-project-id': 'project-1' });
+		await run('orgMemberRoute', { 'x-quarry-organization-id': 'org-1', 'x-quarry-project-id': 'project-1' });
 		expect(organizations.getUserOrgMembership).toHaveBeenCalledWith(USER.id, 'org-1');
 		expect(organizations.getUserOrgMembershipByProject).not.toHaveBeenCalled();
 	});
 
 	it('falls back to the selected project organization', async () => {
-		await run('orgMemberRoute', { 'x-nao-project-id': 'project-1' });
+		await run('orgMemberRoute', { 'x-quarry-project-id': 'project-1' });
 		expect(organizations.getUserOrgMembershipByProject).toHaveBeenCalledWith(USER.id, 'project-1');
 	});
 

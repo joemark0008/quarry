@@ -96,7 +96,7 @@ function LinkedReposList({ repos }: { repos: LinkedRepo[] }) {
 	}
 	return (
 		<div className='flex flex-col gap-1.5 rounded-md border border-dashed bg-muted/30 p-2 text-xs'>
-			<div className='font-medium text-muted-foreground'>Linked repos from nao_config.yaml</div>
+			<div className='font-medium text-muted-foreground'>Linked repos from quarry_config.yaml</div>
 			<div className='flex flex-col gap-1'>
 				{repos.map((repo) => (
 					<div key={repo.name} className='flex flex-wrap items-center gap-x-1.5 gap-y-1'>

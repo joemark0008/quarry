@@ -22,7 +22,7 @@ afterEach(() => {
 function project(configLines: string[], manifest: string | null = MANIFEST): ToolContext {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-semantic-compile-'));
 	dirs.push(dir);
-	fs.writeFileSync(path.join(dir, 'nao_config.yaml'), configLines.join('\n'));
+	fs.writeFileSync(path.join(dir, 'quarry_config.yaml'), configLines.join('\n'));
 	if (manifest) {
 		fs.mkdirSync(path.join(dir, 'dbt/target'), { recursive: true });
 		fs.copyFileSync(manifest, path.join(dir, 'dbt/target/semantic_manifest.json'));

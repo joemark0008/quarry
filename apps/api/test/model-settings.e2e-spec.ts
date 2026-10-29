@@ -18,7 +18,7 @@ const MODEL_SETTINGS = {
 /**
  * Settings → Models on Postgres through GraphQL. The model-settings cases port upstream
  * `tests/project-llm-config-model-settings.test.ts` (a SQLite round-trip of the repository); upstream
- * `project-llm-config-override.test.ts` covers the `nao_config.yaml` `llm` block, which quarry does not port.
+ * `project-llm-config-override.test.ts` covers the `quarry_config.yaml` `llm` block, which quarry does not port.
  */
 describe('model settings (e2e)', () => {
 	let app: NestExpressApplication;
@@ -48,7 +48,7 @@ describe('model settings (e2e)', () => {
 		request(app.getHttpServer())
 			.post('/graphql')
 			.set('Cookie', cookie)
-			.set(projectId ? { 'x-nao-project-id': projectId } : {})
+			.set(projectId ? { 'x-quarry-project-id': projectId } : {})
 			.send({ query, variables });
 
 	const upsert = (input: Record<string, unknown>) =>

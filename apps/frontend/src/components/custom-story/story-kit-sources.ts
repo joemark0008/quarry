@@ -1,6 +1,6 @@
 import type { CustomStoryFileSummary } from '@/components/custom-story/custom-story-body';
 
-const STORY_KIT_FOLDER = '@nao/story-kit';
+const STORY_KIT_FOLDER = '@quarry/story-kit';
 const STORY_KIT_ENTRY_NAME = 'index.ts';
 
 const entrySource = import.meta.glob<string>('../../story-runtime/story-kit.ts', { query: '?raw', import: 'default' });
@@ -9,7 +9,7 @@ const moduleSources = import.meta.glob<string>('../../story-runtime/story-kit/*.
 	import: 'default',
 });
 
-/** Read-only sources of the kit stories import, shown next to the story's own files under `@nao/story-kit/`. */
+/** Read-only sources of the kit stories import, shown next to the story's own files under `@quarry/story-kit/`. */
 const loadersByPath = new Map<string, () => Promise<string>>([
 	...Object.values(entrySource).map((load) => [kitPath(STORY_KIT_ENTRY_NAME), load] as const),
 	...Object.entries(moduleSources).map(([source, load]) => [kitPath(fileName(source)), load] as const),

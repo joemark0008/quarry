@@ -48,11 +48,11 @@ function ChartEmbedPage() {
 			</div>
 		);
 	} else {
-		const naoUrl =
+		const quarryUrl =
 			typeof chart.sourceChatId === 'string' && chart.sourceChatId.trim()
 				? `${window.location.origin}/${chart.sourceChatId.trim()}`
 				: undefined;
-		inner = <ChartAppView config={chart.chartConfig} data={chart.data} naoUrl={naoUrl} />;
+		inner = <ChartAppView config={chart.chartConfig} data={chart.data} quarryUrl={quarryUrl} />;
 	}
 
 	return (

@@ -9,8 +9,8 @@ import { getArgs, getRequest, type QuarryRequest } from '../request.js';
 import { convertHeaders } from '../utils/auth-utils.js';
 import { AccessService } from './access.service.js';
 
-const PROJECT_HEADER = 'x-nao-project-id';
-const ORGANIZATION_HEADER = 'x-nao-organization-id';
+const PROJECT_HEADER = 'x-quarry-project-id';
+const ORGANIZATION_HEADER = 'x-quarry-organization-id';
 
 /** One session lookup per request: GraphQL runs the guard once per resolver, possibly in parallel. */
 const sessionLookups = new WeakMap<object, Promise<void>>();

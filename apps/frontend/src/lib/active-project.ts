@@ -64,5 +64,5 @@ export function useActiveProjectId(): string | null {
 export function getProjectRequestHeaders(): Record<string, string> {
 	const activeProjectId = getActiveProjectId();
 
-	return activeProjectId ? { 'x-nao-project-id': activeProjectId } : {};
+	return activeProjectId ? { 'x-quarry-project-id': activeProjectId } : {};
 }

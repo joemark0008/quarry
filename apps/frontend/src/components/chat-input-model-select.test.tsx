@@ -19,6 +19,9 @@ vi.mock('@tanstack/react-router', () => ({
 vi.mock('@/components/ui/llm-provider-icon', () => ({
 	LlmProviderIcon: ({ provider }: { provider: string }) => <span aria-label={`${provider} model`} />,
 }));
+vi.mock('@/components/icons/quarry-logo-greyscale.svg', () => ({
+	default: () => <span aria-label='quarry model' />,
+}));
 
 vi.mock('@/hooks/use-model-selection', () => ({
 	isSameModel: () => false,
@@ -46,7 +49,7 @@ afterEach(() => {
 it('shows the example model instead of setup for a project-less user', () => {
 	render(<ChatInputModelSelect />);
 
-	expect(screen.getByLabelText('nao model')).toBeTruthy();
+	expect(screen.getByLabelText('quarry model')).toBeTruthy();
 	expect(screen.queryByText('Auto')).toBeNull();
 	expect(screen.getByText('GPT 6 Sol')).toBeTruthy();
 	expect(screen.queryByText('Configure a model')).toBeNull();

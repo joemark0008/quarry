@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { applyKitBlockChange, parseKitSource } from './story-kit-jsx.js';
 
-const SOURCE = `import { KpiCard } from '@nao/story-kit';
+const SOURCE = `import { KpiCard } from '@quarry/story-kit';
 
 export default function App() {
 	return <KpiCard queryId="query_1" title="Revenue" format="currency" />;

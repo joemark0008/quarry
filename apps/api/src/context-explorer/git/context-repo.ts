@@ -136,7 +136,7 @@ export function validateDeploymentContextSubpath(
 			);
 		}
 	}
-	const configPath = prefix ? `${prefix}/nao_config.yaml` : 'nao_config.yaml';
+	const configPath = prefix ? `${prefix}/quarry_config.yaml` : 'quarry_config.yaml';
 	if (
 		tryRunGit(repositoryRoot, ['cat-file', '-t', `HEAD:${configPath}`])
 			?.toString()
@@ -145,8 +145,8 @@ export function validateDeploymentContextSubpath(
 		throw new ContextProjectResolutionError(
 			'project-not-found',
 			prefix
-				? `No tracked nao_config.yaml was found in the configured context subfolder "${prefix}".`
-				: 'No tracked nao_config.yaml was found at the repository root.',
+				? `No tracked quarry_config.yaml was found in the configured context subfolder "${prefix}".`
+				: 'No tracked quarry_config.yaml was found at the repository root.',
 		);
 	}
 	return prefix;
@@ -337,12 +337,12 @@ function resolveContextRepoPlatform(repo: ContextRepo): GitPlatform | null {
 }
 
 export function resolveTrackedContextProjectPrefix(worktreeRoot: string): string {
-	const output = runGit(worktreeRoot, ['ls-files', '-z', '--', 'nao_config.yaml', ':(glob)**/nao_config.yaml']);
+	const output = runGit(worktreeRoot, ['ls-files', '-z', '--', 'quarry_config.yaml', ':(glob)**/quarry_config.yaml']);
 	const candidates = parseNullDelimited(output);
 	if (candidates.length === 0) {
 		throw new ContextProjectResolutionError(
 			'project-not-found',
-			'No tracked nao_config.yaml was found in the connected repository.',
+			'No tracked quarry_config.yaml was found in the connected repository.',
 		);
 	}
 	if (candidates.length > 1) {

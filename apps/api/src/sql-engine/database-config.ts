@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Port of the database entries of `nao_config.yaml` (`nao_core/config/databases/base.py` + `postgres.py`).
+ * Port of the database entries of `quarry_config.yaml` (`nao_core/config/databases/base.py` + `postgres.py`).
  * quarry supports Postgres only; other types are rejected when the config is loaded.
  */
 

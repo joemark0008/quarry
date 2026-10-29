@@ -7,12 +7,12 @@ import { type DatabaseConfig, getDatabaseFolderNames, postgresDatabaseConfigSche
 
 /**
  * Port of the parts of `NaoConfig.try_load` (`nao_core/config/base.py`, `secrets.py`) the SQL engine and sync
- * need: read `nao_config.yaml` from the project folder, substitute `{{ env('VAR') }}` references (request env
+ * need: read `quarry_config.yaml` from the project folder, substitute `{{ env('VAR') }}` references (request env
  * first, then the process env), and validate the `databases` list. `aws()` / `k8s()` secrets are not supported.
  */
 
 /** The file name upstream reads; renamed at cut-over (PHASES.md 1c). */
-export const PROJECT_CONFIG_FILE = 'nao_config.yaml';
+export const PROJECT_CONFIG_FILE = 'quarry_config.yaml';
 
 const TEMPLATE_REGEX = /\$?\{\{\s*(env|aws|k8s)\(\s*['"]([^'"]+)['"]\s*\)\s*\}\}/g;
 

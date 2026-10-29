@@ -186,12 +186,12 @@ function ContextRecommendationsPrompt({
 
 function LinkedRepos({ repos }: { repos: LinkedContextRepo[] }) {
 	if (repos.length === 0) {
-		return <Span>No repositories are declared in nao_config.yaml for this project.</Span>;
+		return <Span>No repositories are declared in quarry_config.yaml for this project.</Span>;
 	}
 	return (
 		<Block>
 			<Span>
-				Linked repositories detected from <Code>nao_config.yaml</Code>:
+				Linked repositories detected from <Code>quarry_config.yaml</Code>:
 			</Span>
 			<List>
 				{repos.map((repo) => (

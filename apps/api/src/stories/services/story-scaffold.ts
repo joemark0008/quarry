@@ -18,7 +18,7 @@ export function scaffoldCustomStoryFiles(title: string, files: StoryFileInput[])
 }
 
 function starterApp(title: string): string {
-	return `import { BarChart, BrandHeader, DataTable, KpiCard, LineChart, Narrative } from "@nao/story-kit";
+	return `import { BarChart, BrandHeader, DataTable, KpiCard, LineChart, Narrative } from "@quarry/story-kit";
 
 // Starter layout, nothing here is wired to data yet: replace every REPLACE_ME with the id
 // of a query you ran with execute_sql in this chat, rename the titles, add format/xKey/series

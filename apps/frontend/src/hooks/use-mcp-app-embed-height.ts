@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export const QUARRY_MCP_APP_EMBED_SIZE_MSG = 'nao-embed-size' as const;
+export const QUARRY_MCP_APP_EMBED_SIZE_MSG = 'quarry-embed-size' as const;
 
 export const QUARRY_MCP_EMBED_MEASURE_ATTR = 'data-quarry-mcp-embed-measure';
 

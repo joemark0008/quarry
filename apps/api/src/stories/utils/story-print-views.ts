@@ -77,7 +77,7 @@ async function expandViewsInPage({ settleMs, slidePageHeightPx }: ExpandStoryVie
 				PREVIOUS_LABEL.test(label) ||
 				/slide/i.test(control.getAttribute('aria-label') ?? '')
 			) {
-				(control.parentElement ?? control).setAttribute('data-nao-print-hidden', '');
+				(control.parentElement ?? control).setAttribute('data-quarry-print-hidden', '');
 			}
 		}
 	};
@@ -126,7 +126,7 @@ async function expandViewsInPage({ settleMs, slidePageHeightPx }: ExpandStoryVie
 		return 'single';
 	}
 	const style = document.createElement('style');
-	style.textContent = '[data-nao-print-hidden]{display:none!important}';
+	style.textContent = '[data-quarry-print-hidden]{display:none!important}';
 	document.head.append(style);
 	const pages = [...(layout === 'slides' ? views.map(fitOnPage) : views), ...(truncated ? [truncationNotice()] : [])];
 	pages.forEach((page, index) => {

@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-@ObjectType({ description: 'A database configured in the project (`nao_config.yaml`), without its secrets.' })
+@ObjectType({ description: 'A database configured in the project (`quarry_config.yaml`), without its secrets.' })
 export class WarehouseConnection {
 	@Field()
 	name: string;

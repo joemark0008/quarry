@@ -11,11 +11,11 @@ vi.mock('./logger.js', () => ({
 }));
 
 describe('extractRequiredEnvVars', () => {
-	it('returns env vars declared in nao_config.yaml', () => {
+	it('returns env vars declared in quarry_config.yaml', () => {
 		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-'));
 		try {
 			fs.writeFileSync(
-				path.join(dir, 'nao_config.yaml'),
+				path.join(dir, 'quarry_config.yaml'),
 				[
 					'project_name: demo',
 					'databases:',
@@ -57,12 +57,12 @@ describe('extractRequiredEnvVars', () => {
 		}
 	});
 
-	it('deduplicates env vars across nao_config.yaml and mcp.json', () => {
+	it('deduplicates env vars across quarry_config.yaml and mcp.json', () => {
 		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-'));
 		try {
 			const mcpDir = path.join(dir, 'agent', 'mcps');
 			fs.mkdirSync(mcpDir, { recursive: true });
-			fs.writeFileSync(path.join(dir, 'nao_config.yaml'), 'password: "{{ env(\'DB_PASSWORD\') }}"\n');
+			fs.writeFileSync(path.join(dir, 'quarry_config.yaml'), 'password: "{{ env(\'DB_PASSWORD\') }}"\n');
 			fs.writeFileSync(
 				path.join(mcpDir, 'mcp.json'),
 				JSON.stringify({
@@ -98,11 +98,11 @@ describe('extractRequiredEnvVars', () => {
 });
 
 describe('extractConfiguredRepos', () => {
-	it('returns repos declared in nao_config.yaml with GitHub metadata', () => {
+	it('returns repos declared in quarry_config.yaml with GitHub metadata', () => {
 		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-'));
 		try {
 			fs.writeFileSync(
-				path.join(dir, 'nao_config.yaml'),
+				path.join(dir, 'quarry_config.yaml'),
 				[
 					'project_name: demo',
 					'repos:',
@@ -139,11 +139,11 @@ describe('extractConfiguredRepos', () => {
 		}
 	});
 
-	it('returns repos declared in nao_config.yaml with GitLab metadata', () => {
+	it('returns repos declared in quarry_config.yaml with GitLab metadata', () => {
 		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-'));
 		try {
 			fs.writeFileSync(
-				path.join(dir, 'nao_config.yaml'),
+				path.join(dir, 'quarry_config.yaml'),
 				[
 					'project_name: demo',
 					'repos:',
@@ -173,7 +173,7 @@ describe('extractConfiguredRepos', () => {
 		const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-'));
 		try {
 			fs.writeFileSync(
-				path.join(dir, 'nao_config.yaml'),
+				path.join(dir, 'quarry_config.yaml'),
 				[
 					'project_name: demo',
 					'repos:',

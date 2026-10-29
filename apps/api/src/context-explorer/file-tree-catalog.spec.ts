@@ -114,11 +114,11 @@ describe('project files context catalog', () => {
 		});
 	});
 
-	it('never offers nao_config.yaml at any depth or casing since the agent can never read it', () => {
+	it('never offers quarry_config.yaml at any depth or casing since the agent can never read it', () => {
 		const project = createProject();
 		fs.mkdirSync(path.join(project, 'envs'));
-		fs.writeFileSync(path.join(project, 'nao_config.yaml'), 'llm: {}');
-		fs.writeFileSync(path.join(project, 'envs', 'NAO_CONFIG.YAML'), 'llm: {}');
+		fs.writeFileSync(path.join(project, 'quarry_config.yaml'), 'llm: {}');
+		fs.writeFileSync(path.join(project, 'envs', 'QUARRY_CONFIG.YAML'), 'llm: {}');
 		fs.writeFileSync(path.join(project, 'RULES.md'), 'rules');
 
 		expect(getFilesContextCatalog(project)).toEqual({

@@ -7,7 +7,7 @@ const RENDER_SETTLE_MS = 1_800;
 const MAX_REPORTED_ERRORS = 5;
 const BLOCK_ERROR_SELECTOR = '.nao-block__state--error';
 const STORY_FRAME_SELECTOR = '#root, .nao-canvas, .nao-canvas__viewport, .nao-canvas__surface, .nao-slide';
-const STORY_ERRORS_GLOBAL = '__naoStoryErrors';
+const STORY_ERRORS_GLOBAL = '__quarryStoryErrors';
 
 export interface StoryScreenshot {
 	ready: boolean;
@@ -80,7 +80,7 @@ function listenToStoryErrors(errorsGlobal: string): void {
 	Object.assign(globalThis, { [errorsGlobal]: errors });
 	window.addEventListener('message', (event) => {
 		const data = event.data as { type?: unknown; message?: unknown } | null;
-		if (data?.type === 'nao-story:error' && typeof data.message === 'string') {
+		if (data?.type === 'quarry-story:error' && typeof data.message === 'string') {
 			errors.push(data.message);
 		}
 	});

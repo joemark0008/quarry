@@ -564,7 +564,7 @@ type ProjectSummary {
   name: String!
   orgId: String
 
-  """Folder holding the project context and `nao_config.yaml`."""
+  """Folder holding the project context and `quarry_config.yaml`."""
   path: String
   type: String!
   updatedAt: DateTime!
@@ -683,7 +683,7 @@ type Query {
   contextSearch(query: String!): JSON!
   contextSyncStatus: ContextSyncStatus!
 
-  """The selected project (`x-nao-project-id`)."""
+  """The selected project (`x-quarry-project-id`)."""
   currentProject: ProjectSummary
 
   """Upstream `trpc.customStoryViewer.getFile`."""
@@ -1201,7 +1201,7 @@ type User {
 }
 
 """
-A database configured in the project (`nao_config.yaml`), without its secrets.
+A database configured in the project (`quarry_config.yaml`), without its secrets.
 """
 type WarehouseConnection {
   """Only tables present in the synced context can be queried."""

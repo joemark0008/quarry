@@ -52,7 +52,7 @@ const FILE_NAME_ICONS: Record<string, IconDefinition> = {
 	'.prettierignore': { icon: IconSettingsCode, color: 'text-violet-600 dark:text-violet-400' },
 	'.prettierrc': { icon: IconSettingsCode, color: 'text-violet-600 dark:text-violet-400' },
 	dockerfile: { icon: IconBrandDocker, color: 'text-sky-600 dark:text-sky-400' },
-	'nao_config.yaml': { icon: IconSettingsCode, color: 'text-violet-600 dark:text-violet-400' },
+	'quarry_config.yaml': { icon: IconSettingsCode, color: 'text-violet-600 dark:text-violet-400' },
 	'pyproject.toml': { icon: IconSettingsCode, color: 'text-violet-600 dark:text-violet-400' },
 };
 

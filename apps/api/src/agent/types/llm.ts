@@ -104,7 +104,7 @@ export type ModelInferenceSettings = z.infer<typeof modelInferenceSettingsSchema
 export const modelSettingsMapSchema = z.record(z.string(), modelInferenceSettingsSchema);
 export type ModelSettingsMap = z.infer<typeof modelSettingsMapSchema>;
 
-/** Where a project's models and their credentials come from: its database config, nao_config.yaml, the environment, or nao. */
+/** Where a project's models and their credentials come from: its database config, quarry_config.yaml, the environment, or nao. */
 export type ModelSource = {
 	/** Serves the providers nao runs on its own keys. */
 	readonly managed?: boolean;
@@ -214,7 +214,7 @@ export const llmConfigSchema = z.object({
 	updatedAt: z.date(),
 });
 
-/** A provider declared in nao_config.yaml rather than saved from the settings UI. */
+/** A provider declared in quarry_config.yaml rather than saved from the settings UI. */
 export const configLlmProviderSchema = z.object({
 	provider: llmProviderSchema,
 	apiKeyPreview: z.string().nullable(),

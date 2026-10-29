@@ -55,7 +55,7 @@ export function SettingsSemanticLayer({ isAdmin }: SettingsSemanticLayerProps) {
 	return (
 		<SettingsCard
 			title='Semantic layer'
-			description='Decide how the agent uses the dbt MetricFlow semantic layer declared in nao_config.yaml.'
+			description='Decide how the agent uses the dbt MetricFlow semantic layer declared in quarry_config.yaml.'
 		>
 			<SettingsControlRow
 				id={MODE_SELECT_ID}
@@ -66,7 +66,7 @@ export function SettingsSemanticLayer({ isAdmin }: SettingsSemanticLayerProps) {
 					) : (
 						<>
 							No semantic layer is declared in this project. Add a <code>semantic_layer</code> section to{' '}
-							<code>nao_config.yaml</code> and run <code>quarry sync</code> to enable it.
+							<code>quarry_config.yaml</code> and run <code>quarry sync</code> to enable it.
 						</>
 					)
 				}

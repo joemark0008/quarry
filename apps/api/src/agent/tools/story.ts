@@ -60,7 +60,7 @@ export function buildStoryToolDescription({
 function customStoryDescription(canReplace: boolean): string {
 	const editTools = canReplace ? 'str_replace (or write for a new file)' : 'write';
 	return [
-		`format="custom" creates a React app instead: "create" seeds a @nao/story-kit starter under /${STORIES_MOUNT}/<id>/ (or takes "files"), edit it with ${editTools}, then "publish" builds and snapshots it.`,
+		`format="custom" creates a React app instead: "create" seeds a @quarry/story-kit starter under /${STORIES_MOUNT}/<id>/ (or takes "files"), edit it with ${editTools}, then "publish" builds and snapshots it.`,
 		'See the Custom Stories instructions for when to pick it.',
 	].join(' ');
 }

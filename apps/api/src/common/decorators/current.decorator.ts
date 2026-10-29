@@ -32,9 +32,9 @@ export const CurrentOrgRole = createParamDecorator(
 	(_data: unknown, context: ExecutionContext) => getRequest(context).orgRole,
 );
 
-/** The project id the client selected (`x-nao-project-id` header), for handlers without `@ProjectAccess()`. */
+/** The project id the client selected (`x-quarry-project-id` header), for handlers without `@ProjectAccess()`. */
 export const SelectedProjectId = createParamDecorator((_data: unknown, context: ExecutionContext) => {
-	const value = getRequest(context).headers['x-nao-project-id'];
+	const value = getRequest(context).headers['x-quarry-project-id'];
 	const id = Array.isArray(value) ? value[0] : value;
 	return id && id.trim() ? id.trim() : null;
 });

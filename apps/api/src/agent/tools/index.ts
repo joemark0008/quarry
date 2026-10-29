@@ -42,7 +42,7 @@ export { createWebSearchTools } from './web-search.js';
 /**
  * Port of upstream `agents/tools/index.ts`. Tools of modules quarry doesn't have yet stay out (PHASES.md):
  * `mcp_call`/`mcp_connect` (Phase 7). Upstream's gating is kept: `execute_semantic_query` needs a semantic
- * layer in `nao_config.yaml` and a querying mode, `task` needs `BETA_SUBAGENTS_ENABLED`,
+ * layer in `quarry_config.yaml` and a querying mode, `task` needs `BETA_SUBAGENTS_ENABLED`,
  * `write`/`str_replace` need permanent storage (Phase 2d) or custom stories (Phase 4), `execute_python` and
  * `execute_sandboxed_code` need their runtime and the experimental agent setting, `display_map` the map setting,
  * `request_warehouse_*`, `onboarding_*` and `generate_onboarding_rules` an onboarding run. `web_search` comes in as an extra tool resolved from the provider settings

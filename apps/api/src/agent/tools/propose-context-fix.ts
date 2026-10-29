@@ -101,7 +101,7 @@ export function createContextFixCollector(
 	const editTool = createTool<EditInput, Ack>({
 		description:
 			'Propose a concrete edit to a human-written context file (RULES.md, semantics/**, docs/**, queries/**, ' +
-			'nao_config.yaml, agent/**) or a linked repository file under repos/<name>/** to fix a recommendation ' +
+			'quarry_config.yaml, agent/**) or a linked repository file under repos/<name>/** to fix a recommendation ' +
 			'you just recorded. Never target generated warehouse files (databases/**) or unlinked repos/** paths — use ' +
 			'propose_manual_fix for those. Each recommendation is applied INDEPENDENTLY from a clean copy of the ' +
 			'current file, so include ONLY this recommendation\u2019s change — never another recommendation\u2019s edits, ' +

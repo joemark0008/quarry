@@ -13,7 +13,7 @@ export function renderStoryKitGuide(): string {
 	return renderToMarkdown(<List>{storyKitGuideItems()}</List>);
 }
 
-/** How to write a custom story with @nao/story-kit, shared by the agent prompt and the MCP authoring tools. */
+/** How to write a custom story with @quarry/story-kit, shared by the agent prompt and the MCP authoring tools. */
 export function storyKitGuideItems(): ReactElement[] {
 	return [
 		<ListItem key='imports'>
@@ -25,7 +25,7 @@ export function storyKitGuideItems(): ReactElement[] {
 			<Bold>sections/</Bold>) via relative imports, so the app stays readable and maintainable as it grows.
 		</ListItem>,
 		<ListItem key='blocks'>
-			Build with <Bold>@nao/story-kit</Bold> blocks — <Bold>KpiCard</Bold>, <Bold>BarChart</Bold>,{' '}
+			Build with <Bold>@quarry/story-kit</Bold> blocks — <Bold>KpiCard</Bold>, <Bold>BarChart</Bold>,{' '}
 			<Bold>LineChart</Bold>, <Bold>{'<Chart type="...">'}</Bold> for every other display_chart type (mixed, pie,
 			donut, scatter, radar), <Bold>DataTable</Bold>, <Bold>PointMap</Bold> — which match display_chart and
 			display_map and handle loading and errors themselves. Blocks draw their own card, so place them directly in

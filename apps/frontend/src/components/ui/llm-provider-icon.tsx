@@ -14,7 +14,6 @@ import GoogleVertexIcon from '@/components/icons/google-vertex.svg';
 import QwenIcon from '@/components/icons/qwen.svg';
 import MinimaxIcon from '@/components/icons/minimax.svg';
 import MoonshotIcon from '@/components/icons/moonshot.svg';
-import QuarryIcon from '@/components/icons/quarry-logo-greyscale.svg';
 import MetaIcon from '@/components/icons/meta.svg';
 
 import { Favicon } from '@/components/ui/favicon';
@@ -30,8 +29,6 @@ interface LlmProviderIconProps {
 export function LlmProviderIcon({ provider, baseUrl, className: customClassName }: LlmProviderIconProps) {
 	const className = cn('text-foreground opacity-50', customClassName);
 	switch (providerKind(provider as LlmProvider)) {
-		case 'nao':
-			return <QuarryIcon className={className} />;
 		case 'anthropic':
 			return <ClaudeIcon className={className} />;
 		case 'openai':

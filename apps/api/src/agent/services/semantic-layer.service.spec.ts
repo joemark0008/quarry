@@ -26,7 +26,7 @@ function writeProject(configLines: string[] | null): string {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-semantic-layer-'));
 	dirs.push(dir);
 	if (configLines) {
-		fs.writeFileSync(path.join(dir, 'nao_config.yaml'), configLines.join('\n'));
+		fs.writeFileSync(path.join(dir, 'quarry_config.yaml'), configLines.join('\n'));
 	}
 	return dir;
 }

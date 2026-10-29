@@ -41,9 +41,9 @@ export interface WarehouseConnectionResult {
 }
 
 /**
- * Connects a project to its warehouse from the app (quarry's replacement for editing `nao_config.yaml` and
+ * Connects a project to its warehouse from the app (quarry's replacement for editing `quarry_config.yaml` and
  * upstream's onboarding provisioning): credentials are checked on a live connection, the database entry is
- * written to `nao_config.yaml` with `{{ env('…') }}` references, and the values are stored encrypted.
+ * written to `quarry_config.yaml` with `{{ env('…') }}` references, and the values are stored encrypted.
  */
 @Injectable()
 export class WarehouseConnectionService {

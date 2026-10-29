@@ -11,7 +11,7 @@ const selectionHeadersLink = new SetContextLink((prevContext) => {
 		headers: {
 			...prevContext.headers,
 			...getProjectRequestHeaders(),
-			...(activeOrganizationId ? { 'x-nao-organization-id': activeOrganizationId } : {}),
+			...(activeOrganizationId ? { 'x-quarry-organization-id': activeOrganizationId } : {}),
 		},
 	};
 });

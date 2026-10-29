@@ -23,7 +23,7 @@ export class ProjectsResolver {
 		return this.projectsService.listForUser(user.id);
 	}
 
-	@Query(() => ProjectSummary, { nullable: true, description: 'The selected project (`x-nao-project-id`).' })
+	@Query(() => ProjectSummary, { nullable: true, description: 'The selected project (`x-quarry-project-id`).' })
 	currentProject(
 		@CurrentUser() user: AuthUser,
 		@SelectedProjectId() selectedProjectId: string | null,

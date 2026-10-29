@@ -32,7 +32,7 @@ type Connection = WarehouseConnectionsQuery['warehouseConnections'][number];
 
 /**
  * quarry: connect the project to a PostgreSQL warehouse and sync its context (replaces `nao init` / editing
- * `nao_config.yaml` and running `nao sync`).
+ * `quarry_config.yaml` and running `nao sync`).
  */
 function WarehouseSettingsPage() {
 	const { isAdmin } = usePermissions();

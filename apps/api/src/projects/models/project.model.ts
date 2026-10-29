@@ -11,7 +11,10 @@ export class ProjectSummary {
 	@Field()
 	type: string;
 
-	@Field(() => String, { nullable: true, description: 'Folder holding the project context and `nao_config.yaml`.' })
+	@Field(() => String, {
+		nullable: true,
+		description: 'Folder holding the project context and `quarry_config.yaml`.',
+	})
 	path: string | null;
 
 	@Field(() => String, { nullable: true })

@@ -8,6 +8,7 @@ import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import QuarryIcon from '@/components/icons/quarry-logo-greyscale.svg';
 import { isSameModel, useModelSelection } from '@/hooks/use-model-selection';
 import { usePermissions } from '@/hooks/use-permissions';
 import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
@@ -203,14 +204,14 @@ function ExampleModel() {
 			<SelectTrigger variant='ghost' className='p-0 gap-1 text-sm' size='sm' aria-label='Model'>
 				<SelectValue>
 					<div className='flex items-center gap-2'>
-						<LlmProviderIcon provider='nao' className='size-4' />
+						<QuarryIcon className='size-4 text-foreground opacity-50' />
 						<span className='leading-none'>{EXAMPLE_MODEL_NAME}</span>
 					</div>
 				</SelectValue>
 			</SelectTrigger>
 			<SelectContent align='center' position='popper' side='top' collisionPadding={12}>
 				<SelectItem value={EXAMPLE_MODEL_VALUE}>
-					<LlmProviderIcon provider='nao' className='size-4 opacity-100' />
+					<QuarryIcon className='size-4 text-foreground' />
 					{EXAMPLE_MODEL_NAME}
 				</SelectItem>
 				<SelectSeparator />

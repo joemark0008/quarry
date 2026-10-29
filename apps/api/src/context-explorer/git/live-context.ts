@@ -542,10 +542,10 @@ function assertSafeLiveReplacementTarget(context: ContextExplorerGitContext): vo
 	) {
 		throw new Error('Refusing to replace an unsafe live project path.');
 	}
-	const configPath = path.join(projectFolder, 'nao_config.yaml');
+	const configPath = path.join(projectFolder, 'quarry_config.yaml');
 	const configStat = fs.lstatSync(configPath, { throwIfNoEntry: false });
 	if (!configStat?.isFile() || configStat.isSymbolicLink()) {
-		throw new Error('The live project folder must contain its expected nao_config.yaml before replacement.');
+		throw new Error('The live project folder must contain its expected quarry_config.yaml before replacement.');
 	}
 	fs.accessSync(path.dirname(projectFolder), fs.constants.W_OK);
 }
@@ -572,11 +572,11 @@ function getManagedLiveRepositoryContainer(projectId: string, projectFolder: str
 }
 
 function validateLiveProjectAtHead(repositoryRoot: string, projectPrefix: string): void {
-	const configPath = projectPrefix ? `${projectPrefix}/nao_config.yaml` : 'nao_config.yaml';
+	const configPath = projectPrefix ? `${projectPrefix}/quarry_config.yaml` : 'quarry_config.yaml';
 	if (readOptionalGitValue(repositoryRoot, ['cat-file', '-t', `HEAD:${configPath}`]) !== 'blob') {
 		throw new ContextProjectResolutionError(
 			'project-not-found',
-			'No tracked nao_config.yaml was found for the live context project.',
+			'No tracked quarry_config.yaml was found for the live context project.',
 		);
 	}
 }

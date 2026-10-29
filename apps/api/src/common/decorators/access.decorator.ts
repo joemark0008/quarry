@@ -12,7 +12,7 @@ export interface ProjectAccessOptions {
 }
 
 /**
- * Resolves the selected project (`projectId` argument or `x-nao-project-id` header) and requires a role
+ * Resolves the selected project (`projectId` argument or `x-quarry-project-id` header) and requires a role
  * in it. Sets `request.project` and `request.userRole` (`@CurrentProject()`, `@CurrentUserRole()`).
  */
 export const ProjectAccess = (options: ProjectAccessOptions = {}) =>
@@ -25,7 +25,7 @@ export const ProjectAdmin = () => ProjectAccess({ roles: ['admin'] });
 export const ProjectNonViewer = () => ProjectAccess({ roles: ['admin', 'user', 'context_admin'] });
 
 /**
- * Resolves the user's organization (`x-nao-organization-id` header, else the selected project's, else the
+ * Resolves the user's organization (`x-quarry-organization-id` header, else the selected project's, else the
  * oldest membership). Sets `request.organization` and `request.orgRole` (`@CurrentOrganization()`).
  */
 export const OrgMember = () =>

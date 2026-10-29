@@ -69,9 +69,9 @@ function ContextRecommendationsSystemPrompt({
 			</Span>
 			<Span>
 				<Code>repos/&lt;name&gt;/**</Code> contains synced snapshots of repositories declared in{' '}
-				<Code>nao_config.yaml</Code>. Use those files to understand dbt models, SQL, source code, or docs that
-				generate the warehouse context. When a recommendation&apos;s real fix belongs in that upstream code,
-				target the matching <Code>repos/&lt;name&gt;/...</Code> file, not a generated warehouse file.
+				<Code>quarry_config.yaml</Code>. Use those files to understand dbt models, SQL, source code, or docs
+				that generate the warehouse context. When a recommendation&apos;s real fix belongs in that upstream
+				code, target the matching <Code>repos/&lt;name&gt;/...</Code> file, not a generated warehouse file.
 			</Span>
 
 			<Title level={2}>Tools</Title>
@@ -361,7 +361,8 @@ function ProposeFixesSection({
 			<List>
 				<ListItem>
 					<Bold>Human-written files</Bold> (<Code>RULES.md</Code>, <Code>semantics/**</Code>,{' '}
-					<Code>docs/**</Code>, <Code>queries/**</Code>, <Code>nao_config.yaml</Code>, <Code>agent/**</Code>):
+					<Code>docs/**</Code>, <Code>queries/**</Code>, <Code>quarry_config.yaml</Code>,{' '}
+					<Code>agent/**</Code>):
 					{contextRepoConnected ? (
 						<>
 							call <Code>edit_file</Code> with a precise <Code>old_string</Code> / <Code>new_string</Code>{' '}
@@ -378,7 +379,7 @@ function ProposeFixesSection({
 				</ListItem>
 				<ListItem>
 					<Bold>Linked upstream repositories</Bold> (<Code>repos/&lt;name&gt;/**</Code>): if{' '}
-					<Code>nao_config.yaml</Code> maps that repo name to a GitHub URL listed below, call{' '}
+					<Code>quarry_config.yaml</Code> maps that repo name to a GitHub URL listed below, call{' '}
 					<Code>edit_file</Code> with the context path (for example{' '}
 					<Code>repos/dbt-models/models/orders.sql</Code>). The tool will open the pull request against the
 					underlying GitHub repository and strip the <Code>repos/&lt;name&gt;/</Code> prefix.
@@ -444,15 +445,15 @@ function LinkedRepos({ repos }: { repos: LinkedContextRepo[] }) {
 	if (repos.length === 0) {
 		return (
 			<Span>
-				No repositories are declared in <Code>nao_config.yaml</Code>. Treat <Code>repos/**</Code> as generated
-				context only and use <Code>propose_manual_fix</Code> if the source must change.
+				No repositories are declared in <Code>quarry_config.yaml</Code>. Treat <Code>repos/**</Code> as
+				generated context only and use <Code>propose_manual_fix</Code> if the source must change.
 			</Span>
 		);
 	}
 	return (
 		<Block>
 			<Span>
-				Repositories declared in <Code>nao_config.yaml</Code>:
+				Repositories declared in <Code>quarry_config.yaml</Code>:
 			</Span>
 			<List>
 				{repos.map((repo) => (

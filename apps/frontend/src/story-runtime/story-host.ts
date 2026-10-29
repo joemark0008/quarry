@@ -78,7 +78,7 @@ export async function bootStory({
 		} else {
 			await mountReactStory(source);
 		}
-		send({ type: 'nao-story:ready' });
+		send({ type: 'quarry-story:ready' });
 		document.documentElement.dataset.quarryStoryReady = 'true';
 	} catch (error) {
 		reportError(error);
@@ -130,14 +130,14 @@ export function requestQueryData(
 	if (exportData) {
 		return readExportedQuery(exportData, queryId);
 	}
-	return awaitReply(pendingQueries, (requestId) => ({ type: 'nao-story:query', requestId, queryId, fresh }));
+	return awaitReply(pendingQueries, (requestId) => ({ type: 'quarry-story:query', requestId, queryId, fresh }));
 }
 
 export function requestNarratives(): Promise<StoryNarratives> {
 	if (exportData) {
 		return Promise.resolve(exportData.narratives);
 	}
-	return awaitReply(pendingNarratives, (requestId) => ({ type: 'nao-story:narratives', requestId })).catch(
+	return awaitReply(pendingNarratives, (requestId) => ({ type: 'quarry-story:narratives', requestId })).catch(
 		(): StoryNarratives => ({}),
 	);
 }
@@ -162,7 +162,7 @@ export function subscribeToTheme(listener: () => void): () => void {
 }
 
 export function copyTable(columns: string[], rows: Record<string, unknown>[]): void {
-	send({ type: 'nao-story:copy-table', columns, rows });
+	send({ type: 'quarry-story:copy-table', columns, rows });
 }
 
 export function exportTable(
@@ -171,7 +171,7 @@ export function exportTable(
 	columns: string[],
 	rows: Record<string, unknown>[],
 ): void {
-	send({ type: 'nao-story:export-table', format, filename, columns, rows });
+	send({ type: 'quarry-story:export-table', format, filename, columns, rows });
 }
 
 export function isEditingEnabled(): boolean {
@@ -187,7 +187,7 @@ export function subscribeToEditing(listener: () => void): () => void {
 
 export function requestBlockEdit({ block, config, columns, rows }: StoryBlockEditRequest): void {
 	send({
-		type: 'nao-story:edit-block',
+		type: 'quarry-story:edit-block',
 		block: { component: block.component, props: toJsonSafe(block.props) },
 		config,
 		columns,
@@ -198,7 +198,7 @@ export function requestBlockEdit({ block, config, columns, rows }: StoryBlockEdi
 
 export function requestTableFormatEdit({ block, formats, columns, rows }: StoryTableFormatEditRequest): void {
 	send({
-		type: 'nao-story:edit-table-format',
+		type: 'quarry-story:edit-table-format',
 		block: { component: block.component, props: toJsonSafe(block.props) },
 		formats: toJsonSafe(formats),
 		columns,
@@ -207,11 +207,11 @@ export function requestTableFormatEdit({ block, formats, columns, rows }: StoryT
 }
 
 export function requestBlockAsk(block: StoryBlockReference): void {
-	send({ type: 'nao-story:ask-block', block });
+	send({ type: 'quarry-story:ask-block', block });
 }
 
 export function requestQuerySql(queryId: string): Promise<string> {
-	return awaitReply(pendingQuerySql, (requestId) => ({ type: 'nao-story:query-sql', requestId, queryId }));
+	return awaitReply(pendingQuerySql, (requestId) => ({ type: 'quarry-story:query-sql', requestId, queryId }));
 }
 
 window.addEventListener('message', (event: MessageEvent<unknown>) => {
@@ -232,36 +232,36 @@ document.addEventListener('keydown', (event: KeyboardEvent) => {
 		return;
 	}
 	event.preventDefault();
-	send({ type: 'nao-story:keydown', ...snapshotKeydown(event) });
+	send({ type: 'quarry-story:keydown', ...snapshotKeydown(event) });
 });
 
 function handleHostMessage(message: unknown): void {
 	if (!isStoryHostMessage(message)) {
 		return;
 	}
-	if (message.type === 'nao-story:editing') {
+	if (message.type === 'quarry-story:editing') {
 		editingEnabled = message.enabled;
 		editingListeners.forEach((listener) => listener());
 		return;
 	}
-	if (message.type === 'nao-story:theme') {
+	if (message.type === 'quarry-story:theme') {
 		applyTheme(message.theme);
 		return;
 	}
-	if (message.type === 'nao-story:shortcuts') {
+	if (message.type === 'quarry-story:shortcuts') {
 		hostShortcuts = message.shortcuts;
 		return;
 	}
-	if (message.type === 'nao-story:keydown') {
+	if (message.type === 'quarry-story:keydown') {
 		replayKeydown(window, message);
 		return;
 	}
-	if (message.type === 'nao-story:narratives-result') {
+	if (message.type === 'quarry-story:narratives-result') {
 		pendingNarratives.get(message.requestId)?.resolve(message.narratives);
 		pendingNarratives.delete(message.requestId);
 		return;
 	}
-	if (message.type === 'nao-story:query-sql-result' || message.type === 'nao-story:query-sql-error') {
+	if (message.type === 'quarry-story:query-sql-result' || message.type === 'quarry-story:query-sql-error') {
 		settleQuerySql(message);
 		return;
 	}
@@ -270,7 +270,7 @@ function handleHostMessage(message: unknown): void {
 		return;
 	}
 	pendingQueries.delete(message.requestId);
-	if (message.type === 'nao-story:query-result') {
+	if (message.type === 'quarry-story:query-result') {
 		pending.resolve(message.result);
 	} else {
 		pending.reject(new Error(message.message));
@@ -301,11 +301,11 @@ function ensureFontStylesheet(href: string): void {
 }
 
 function settleQuerySql(
-	message: Extract<StoryHostMessage, { type: 'nao-story:query-sql-result' | 'nao-story:query-sql-error' }>,
+	message: Extract<StoryHostMessage, { type: 'quarry-story:query-sql-result' | 'quarry-story:query-sql-error' }>,
 ): void {
 	const pending = pendingQuerySql.get(message.requestId);
 	pendingQuerySql.delete(message.requestId);
-	if (message.type === 'nao-story:query-sql-result') {
+	if (message.type === 'quarry-story:query-sql-result') {
 		pending?.resolve(message.sqlQuery);
 	} else {
 		pending?.reject(new Error(message.message));
@@ -350,7 +350,7 @@ function bootStoryState(state: StoryStateSnapshot | undefined): void {
 		return;
 	}
 	initStoryState(state, ({ key, value, shared }) =>
-		send({ type: 'nao-story:set-state', key, value: toJsonSafe(value), shared }),
+		send({ type: 'quarry-story:set-state', key, value: toJsonSafe(value), shared }),
 	);
 }
 
@@ -404,12 +404,12 @@ function installGlobalErrorReporting(): void {
 
 function reportError(error: unknown): void {
 	const normalized = error instanceof Error ? error : new Error(String(error));
-	send({ type: 'nao-story:error', message: normalized.message, stack: normalized.stack });
+	send({ type: 'quarry-story:error', message: normalized.message, stack: normalized.stack });
 }
 
 function showCrash(error: unknown): void {
 	const box = document.createElement('pre');
-	box.className = 'nao-story-crash';
+	box.className = 'quarry-story-crash';
 	box.textContent = error instanceof Error ? error.message : String(error);
 	const container = document.getElementById('root');
 	if (container) {
@@ -432,7 +432,7 @@ class StoryErrorBoundary extends Component<{ children: ReactNode }, { error: Err
 
 	render() {
 		if (this.state.error) {
-			return createElement('pre', { className: 'nao-story-crash' }, this.state.error.message);
+			return createElement('pre', { className: 'quarry-story-crash' }, this.state.error.message);
 		}
 		return this.props.children;
 	}
