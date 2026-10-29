@@ -1,0 +1,64 @@
+fragment ProjectSummaryFields on ProjectSummary {
+	id
+	name
+	type
+	path
+	orgId
+	userRole
+	createdAt
+	updatedAt
+}
+
+query CurrentProject {
+	currentProject {
+		...ProjectSummaryFields
+	}
+}
+
+query Projects {
+	projects {
+		...ProjectSummaryFields
+	}
+}
+
+mutation CreateProject($input: CreateProjectInput!) {
+	createProject(input: $input) {
+		...ProjectSummaryFields
+	}
+}
+
+mutation RenameProject($input: RenameProjectInput!) {
+	renameProject(input: $input) {
+		...ProjectSummaryFields
+	}
+}
+
+mutation DeleteProject($projectId: ID!) {
+	deleteProject(projectId: $projectId)
+}
+
+query SavedPrompts {
+	savedPrompts {
+		id
+		title
+		prompt
+		createdAt
+		updatedAt
+	}
+}
+
+mutation CreateSavedPrompt($input: SavedPromptInput!) {
+	createSavedPrompt(input: $input) {
+		id
+	}
+}
+
+mutation UpdateSavedPrompt($input: UpdateSavedPromptInput!) {
+	updateSavedPrompt(input: $input) {
+		id
+	}
+}
+
+mutation DeleteSavedPrompt($promptId: ID!) {
+	deleteSavedPrompt(promptId: $promptId)
+}

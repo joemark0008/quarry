@@ -81,6 +81,7 @@ import { SelectionCitationBanner } from '@/components/selection-citation-banner'
 import { ChatInputSuggestions, SuggestionCard } from '@/components/chat-input-suggestions';
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -197,7 +198,7 @@ function ChatInputBase({
 		navigate({ to: '/', search: { admin: true } });
 	}, [adminModeLocked, isAdminMode, setAdminMode, navigate]);
 	const { canCycleModels, cycleModel } = useModelSelection();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const hasProject = project.data != null;
 	const isTrial = useIsCloud() && project.data === null;
 	const uploadLimits = useQuery({
@@ -750,7 +751,7 @@ function ChatInputAdminBadge() {
 function BudgetBanner() {
 	const { error, clearError, selectedModel } = useAgentContext();
 	const { isAdmin, isOrgAdmin } = usePermissions();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const hasProject = project.data != null;
 	const selectedProvider = selectedModel?.provider;
 	const prevProviderRef = useRef(selectedProvider);

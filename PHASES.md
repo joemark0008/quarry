@@ -140,11 +140,11 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ### Milestone 2b — projects, warehouse connection, context sync
 
-- [ ] `projects` module: create/list/update/delete, membership, LLM config, saved prompts, default models, example project
-- [ ] Warehouse credentials: store encrypted, test connection through `sql-engine`
-- [ ] `warehouse` module: run SQL from the UI (trpc `sql` replacement), query results and rows (`query-result.service.ts`, `query-rows.service.ts`)
-- [ ] Context sync: "Sync" mutation enqueues a `context.sync` job → port of `nao_core/commands/sync` writes the project's context files (schemas, columns, table previews) → status shown in the UI
-- [ ] Frontend: project screens, warehouse settings and the sync button on Apollo
+- [x] `projects` module: create/list/update/delete, membership, LLM config, saved prompts, default models, example project — _GraphQL `projects`, `currentProject`, `createProject`, `renameProject`, `deleteProject`, saved prompts CRUD. quarry addition: projects are created in the app (upstream self-hosted has one project from `NAO_DEFAULT_PROJECT_PATH`), each with a folder under `QUARRY_PROJECTS_DIR`; the selected project (`x-nao-project-id`) is honoured as in upstream's cloud mode. LLM config, default models and agent settings move with the agent (2c); the example project is not ported (it is a DuckDB project)_
+- [x] Warehouse credentials: store encrypted, test connection through `sql-engine` — _`connectWarehouse` checks the credentials on a live connection, writes the `nao_config.yaml` entry with `{{ env('QUARRY_WAREHOUSE_<NAME>_<FIELD>') }}` references and stores the values AES-256-GCM encrypted in `project_warehouse_credentials` (port of `warehouse-credentials.ts` / `utils/encryption.ts`); `testWarehouseConnection`, `disconnectWarehouse`, `warehouseConnections` (no secrets returned)_
+- [ ] `warehouse` module: run SQL from the UI (trpc `sql` replacement), query results and rows (`query-result.service.ts`, `query-rows.service.ts`) — _moved to 2c: both read the `execute_sql` tool results stored in chat messages_
+- [x] Context sync: "Sync" mutation enqueues a `context.sync` job → port of `nao_core/commands/sync` writes the project's context files (schemas, columns, table previews) → status shown in the UI — _`syncContext` → pg-boss `context.sync` → `databases/type=postgres/database=…/schema=…/table=…/{columns,preview,annotations}.md` and `.meta/…/columns.json` (stale tables and databases removed, `--select` supported). Status in `.meta/sync-status.json` (no new table, so split mode keeps upstream's schema). The `profiling`, `ai_summary` and `query_history` templates are not ported_
+- [x] Frontend: project screens, warehouse settings and the sync button on Apollo — _`useCurrentProject`/`useProjects` (Apollo) replace every `project.getCurrent` / `listForCurrentUser` call site; project rename on Apollo; new **Settings → Warehouse** page (connect, test, edit, remove, Sync with live status); **New project** in the project switcher (shown in self-hosted mode too). Still on upstream tRPC: saved prompts UI, LLM/model settings (2c)_
 
 ### Milestone 2c — chats and the agent
 

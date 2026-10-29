@@ -13,6 +13,7 @@ import { useChatId } from '@/hooks/use-chat-id';
 import { useActiveProjectId } from '@/lib/active-project';
 import { buildReferenceMentionMenu, QUICK_PICK_COUNT, toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 const NO_STORIES: ReferenceableStory[] = [];
 const NO_FOLDERS: StoryFolder[] = [];
@@ -57,7 +58,7 @@ export function useMentionedStoryOptions(text: string, knownOptions: MentionOpti
 
 function useProjectDatabaseObjects(): DatabaseObject[] {
 	const activeProjectId = useActiveProjectId();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const databaseObjectsQuery = useQuery({

@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { EditableProjectName } from '@/components/settings/editable-project-name';
@@ -7,7 +6,7 @@ import { ProjectIdentifier } from '@/components/settings/project-identifier';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissions } from '@/hooks/use-permissions';
-import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/project/')({
 	staticData: {
@@ -17,7 +16,7 @@ export const Route = createFileRoute('/_sidebar-layout/settings/project/')({
 });
 
 function ProjectSettingsPage() {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const { isAdmin } = usePermissions();
 
 	return (

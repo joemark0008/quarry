@@ -60,12 +60,13 @@ export function prepareWarehouseConfig(
 	provider: string,
 	credentials: Record<string, unknown>,
 	name: string = provider,
+	envPrefix: string = `${WAREHOUSE_ENV_PREFIX}${provider.toUpperCase()}_`,
 ): { databaseConfig: Record<string, unknown>; envVars: Record<string, string> } {
 	parseWarehouseCredentials(provider, credentials);
 	const databaseConfig: Record<string, unknown> = { type: provider, name };
 	const envVars: Record<string, string> = {};
 	for (const field of Object.keys(withoutEmptyValues(credentials)).sort()) {
-		const envName = `${WAREHOUSE_ENV_PREFIX}${provider.toUpperCase()}_${field.toUpperCase().replace(/-/g, '_')}`;
+		const envName = `${envPrefix}${field.toUpperCase().replace(/-/g, '_')}`;
 		if (envName in envVars) {
 			throw new Error(`Conflicting warehouse environment variable: ${envName}`);
 		}

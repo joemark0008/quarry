@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 /** Saved prompts of `projectId`, or of the current project when it is omitted. */
 export function useSavedPromptsQuery(projectId?: string) {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const savedPromptsQuery = useQuery({
 		...trpc.project.getSavedPrompts.queryOptions(),
 		enabled: !projectId && (project.isError || project.data != null),

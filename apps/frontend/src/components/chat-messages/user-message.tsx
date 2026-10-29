@@ -32,6 +32,7 @@ import TeamsIcon from '@/components/icons/microsoft-teams.svg';
 import McpIcon from '@/components/icons/model-context-protocol.svg';
 import TelegramIcon from '@/components/icons/telegram.svg';
 import WhatsAppIcon from '@/components/icons/whatsapp.svg';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 const messageTheme: PromptTheme = {
 	backgroundColor: 'transparent',
@@ -76,7 +77,7 @@ function MessageSourceBadge({ source }: { source: UIMessage['source'] }) {
 }
 
 function useMentionConfigs(text: string): MessageMentionConfig[] {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const hasProject = project.data != null;
 	const skillsQuery = useQuery({ ...trpc.skill.list.queryOptions(), enabled: hasProject });
 	const skills = hasProject ? skillsQuery.data : undefined;

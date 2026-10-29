@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useRef } from 'react';
 import type { TabBarItem } from '@/components/ui/tab-bar';
@@ -13,7 +12,7 @@ import { SidePanelProvider } from '@/contexts/side-panel';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { requireNonViewer } from '@/lib/route-guards';
-import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 type AppearanceTab = 'general' | 'stories';
 
@@ -39,7 +38,7 @@ function AppearancePage() {
 	const { tab } = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
 	const { isAdmin } = usePermissions();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const containerRef = useRef<HTMLDivElement>(null);
 	const sidePanelRef = useRef<HTMLDivElement>(null);
 	const sidePanel = useSidePanel({

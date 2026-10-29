@@ -16,6 +16,7 @@ import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
 import { trpc } from '@/main';
 import { requestAsk } from '@/stores/ask-bar';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export type StoryChatMode = 'edit' | 'ask' | 'mention';
 
@@ -154,7 +155,7 @@ function useStoryChatLists(storyId: string | null, canChat: boolean) {
 function useStoryChatActions(storyId: string | null, onOpenInChat: (() => void) | undefined) {
 	const navigate = useNavigate();
 	const startChatWithStories = useStartChatWithStories();
-	const { data: currentProject } = useQuery(trpc.project.getCurrent.queryOptions());
+	const { data: currentProject } = useCurrentProject();
 	const switchProject = useProjectSwitch(currentProject?.id);
 	const { data: resolvedStory } = useQuery({
 		...trpc.story.resolve.queryOptions({ storyId: storyId ?? '' }),

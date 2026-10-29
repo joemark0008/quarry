@@ -41,6 +41,7 @@ import { cancellingMessageIdStore } from '@/stores/chat-cancelling-message';
 import { editedMessageIdStore } from '@/stores/chat-edited-message';
 import { chatInputRestoreStore } from '@/stores/chat-input-restore';
 import { messageQueueStore } from '@/stores/chat-message-queue';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export type AgentMode = 'default' | 'onboarding' | 'example';
 
@@ -116,7 +117,7 @@ export const useAgent = ({
 
 	// A null pick means "quarry default": no model is sent and the server resolves the admin default.
 	const [pinnedModel, setSelectedModel] = useLocalStorage(selectedModelStorage);
-	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProject = useCurrentProject();
 	const hasProject = currentProject.data != null;
 	const defaultChatModel = useQuery({
 		...trpc.project.getDefaultChatModel.queryOptions(),

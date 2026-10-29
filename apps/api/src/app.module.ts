@@ -14,12 +14,14 @@ import { GuardsModule } from './common/guards/guards.module.js';
 import type { QuarryRequest } from './common/request.js';
 import { ConfigModule } from './config/config.module.js';
 import { ConfigService } from './config/config.service.js';
+import { ContextSyncModule } from './context-sync/context-sync.module.js';
 import { HealthModule } from './health/health.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
-import { SqlEngineModule } from './sql-engine/sql-engine.module.js';
+import { ProjectsModule } from './projects/projects.module.js';
 import { SystemModule } from './system/system.module.js';
 import { UsersModule } from './users/users.module.js';
+import { WarehouseModule } from './warehouse/warehouse.module.js';
 
 /** Emitted by the code-first schema; the frontend's GraphQL Code Generator reads it. */
 export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
@@ -52,7 +54,9 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		HealthModule,
 		UsersModule,
 		SystemModule,
-		SqlEngineModule,
+		ProjectsModule,
+		WarehouseModule,
+		ContextSyncModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

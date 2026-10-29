@@ -11,6 +11,7 @@ import { useAgentContext } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { setActiveProjectId } from '@/lib/active-project';
 import { trpc } from '@/main';
+import { refetchProjectQueries } from '@/hooks/use-current-project';
 
 export function GenerateOnboardingRulesToolCall({ toolPart }: ToolCallComponentProps<'generate_onboarding_rules'>) {
 	const jobId = toolPart.output?.jobId ?? null;
@@ -52,7 +53,7 @@ export function GenerateOnboardingRulesToolCall({ toolPart }: ToolCallComponentP
 		activatedProjectId.current = projectId;
 		setActiveProjectId(projectId);
 		void Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() }),
+			refetchProjectQueries(),
 			queryClient.invalidateQueries({ queryKey: trpc.organization.getProjects.queryKey() }),
 		]);
 	}, [isRunning, projectId, queryClient]);

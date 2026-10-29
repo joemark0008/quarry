@@ -375,6 +375,16 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 			'pattern',
 		],
 	},
+	// ── Project > Warehouse ──────────────────────────────────
+	{
+		page: '/settings/project/warehouse',
+		pageLabel: 'Warehouse',
+		section: 'Warehouse',
+		title: 'Warehouse connection',
+		description: 'Connect the project to a PostgreSQL warehouse and sync its context.',
+		keywords: ['warehouse', 'database', 'postgres', 'postgresql', 'connection', 'credentials', 'sync', 'context'],
+		adminOnly: true,
+	},
 	// ── Project > Agent > Models ─────────────────────────────
 	{
 		page: '/settings/project/agent',

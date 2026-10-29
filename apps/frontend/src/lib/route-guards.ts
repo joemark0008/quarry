@@ -2,12 +2,13 @@ import { redirect } from '@tanstack/react-router';
 
 import { queryClient, trpc } from '@/main';
 import { fetchPublicConfig } from '@/hooks/use-public-config';
+import { fetchCurrentProject } from '@/hooks/use-current-project';
 
 export async function requireAdvancedSettingsAccess(pathname: string) {
 	if (pathname.startsWith('/settings/account')) {
 		return;
 	}
-	const project = await queryClient.ensureQueryData(trpc.project.getCurrent.queryOptions());
+	const project = await fetchCurrentProject();
 	if (!project) {
 		return;
 	}
@@ -18,7 +19,7 @@ export async function requireAdvancedSettingsAccess(pathname: string) {
 }
 
 export async function requireAdmin() {
-	const project = await queryClient.ensureQueryData(trpc.project.getCurrent.queryOptions());
+	const project = await fetchCurrentProject();
 	if (!project || project.userRole !== 'admin') {
 		throw redirect({ to: '/settings/account' });
 	}
@@ -58,14 +59,14 @@ export async function requireNonViewerNonCloud() {
 }
 
 export async function requireContextAdminOrAdmin() {
-	const project = await queryClient.ensureQueryData(trpc.project.getCurrent.queryOptions());
+	const project = await fetchCurrentProject();
 	if (!project || (project.userRole !== 'admin' && project.userRole !== 'context_admin')) {
 		throw redirect({ to: '/settings/account' });
 	}
 }
 
 export async function requireNonViewer() {
-	const project = await queryClient.ensureQueryData(trpc.project.getCurrent.queryOptions());
+	const project = await fetchCurrentProject();
 	if (!project || project.userRole === 'viewer') {
 		throw redirect({ to: '/settings/account' });
 	}

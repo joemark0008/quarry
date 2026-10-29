@@ -8,9 +8,10 @@ import { getActiveProjectId } from '@/lib/active-project';
 import { getRenderableUserGroupAccess } from '@/lib/effective-user-group-features';
 import { trpc } from '@/main';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function useEffectiveUserGroupFeatures() {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const isCloud = useIsCloud();
 	const activeProjectId = getActiveProjectId();
 	const hasCurrentProject = Boolean(project.data?.id) && (!activeProjectId || project.data?.id === activeProjectId);

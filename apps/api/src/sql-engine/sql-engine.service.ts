@@ -126,8 +126,8 @@ export class SqlEngineService implements OnModuleDestroy {
 	}
 
 	/** `/warehouse/prepare`. */
-	prepareWarehouse(provider: string, credentials: Record<string, unknown>, name?: string) {
-		return prepareWarehouseConfig(provider, credentials, name);
+	prepareWarehouse(provider: string, credentials: Record<string, unknown>, name?: string, envPrefix?: string) {
+		return prepareWarehouseConfig(provider, credentials, name, envPrefix);
 	}
 
 	/** A pooled driver for a configured database (pools are reused across requests). */

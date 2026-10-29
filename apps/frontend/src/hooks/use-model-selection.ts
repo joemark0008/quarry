@@ -4,10 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import type { LlmSelectedModel } from '@quarry/shared/types';
 import { useAgentContext } from '@/contexts/agent.provider';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function useModelSelection() {
 	const { selectedModel, usesDefaultModel, setSelectedModel } = useAgentContext();
-	const currentProjectQuery = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProjectQuery = useCurrentProject();
 	const hasProject = currentProjectQuery.isError || currentProjectQuery.data != null;
 	const availableModelsQuery = useQuery({
 		...trpc.project.listAvailableTranscribeModels.queryOptions(),

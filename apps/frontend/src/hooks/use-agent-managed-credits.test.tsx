@@ -34,6 +34,8 @@ const mocks = vi.hoisted(() => {
 	};
 });
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@ai-sdk/react', () => ({
 	Chat: class {
 		messages: unknown[] = [];

@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function useCanSeeAdvancedSettings(): boolean {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const effectiveAccess = useQuery({
 		...trpc.userGroup.effectiveAccess.queryOptions(),
 		enabled: Boolean(project.data),

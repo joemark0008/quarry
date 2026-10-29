@@ -65,6 +65,7 @@ import { Route as SidebarLayoutSettingsProjectTeamRouteImport } from './routes/_
 import { Route as SidebarLayoutSettingsProjectTeamsRouteImport } from './routes/_sidebar-layout.settings.project.teams'
 import { Route as SidebarLayoutSettingsProjectTelegramRouteImport } from './routes/_sidebar-layout.settings.project.telegram'
 import { Route as SidebarLayoutSettingsProjectUserGroupsRouteImport } from './routes/_sidebar-layout.settings.project.user-groups'
+import { Route as SidebarLayoutSettingsProjectWarehouseRouteImport } from './routes/_sidebar-layout.settings.project.warehouse'
 import { Route as SidebarLayoutSettingsProjectWhatsappRouteImport } from './routes/_sidebar-layout.settings.project.whatsapp'
 import { Route as SidebarLayoutStoriesSharedShareIdRouteImport } from './routes/_sidebar-layout.stories.shared.$shareId'
 import { Route as SidebarLayoutStoriesStandaloneStoryIdRouteImport } from './routes/_sidebar-layout.stories.standalone.$storyId'
@@ -395,6 +396,12 @@ const SidebarLayoutSettingsProjectUserGroupsRoute =
     path: '/user-groups',
     getParentRoute: () => SidebarLayoutSettingsProjectRoute,
   } as any)
+const SidebarLayoutSettingsProjectWarehouseRoute =
+  SidebarLayoutSettingsProjectWarehouseRouteImport.update({
+    id: '/warehouse',
+    path: '/warehouse',
+    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+  } as any)
 const SidebarLayoutSettingsProjectWhatsappRoute =
   SidebarLayoutSettingsProjectWhatsappRouteImport.update({
     id: '/whatsapp',
@@ -521,6 +528,7 @@ export interface FileRoutesByFullPath {
   '/settings/project/teams': typeof SidebarLayoutSettingsProjectTeamsRoute
   '/settings/project/telegram': typeof SidebarLayoutSettingsProjectTelegramRoute
   '/settings/project/user-groups': typeof SidebarLayoutSettingsProjectUserGroupsRouteWithChildren
+  '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/settings/project/whatsapp': typeof SidebarLayoutSettingsProjectWhatsappRoute
   '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -584,6 +592,7 @@ export interface FileRoutesByTo {
   '/settings/project/team': typeof SidebarLayoutSettingsProjectTeamRoute
   '/settings/project/teams': typeof SidebarLayoutSettingsProjectTeamsRoute
   '/settings/project/telegram': typeof SidebarLayoutSettingsProjectTelegramRoute
+  '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/settings/project/whatsapp': typeof SidebarLayoutSettingsProjectWhatsappRoute
   '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -655,6 +664,7 @@ export interface FileRoutesById {
   '/_sidebar-layout/settings/project/teams': typeof SidebarLayoutSettingsProjectTeamsRoute
   '/_sidebar-layout/settings/project/telegram': typeof SidebarLayoutSettingsProjectTelegramRoute
   '/_sidebar-layout/settings/project/user-groups': typeof SidebarLayoutSettingsProjectUserGroupsRouteWithChildren
+  '/_sidebar-layout/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/_sidebar-layout/settings/project/whatsapp': typeof SidebarLayoutSettingsProjectWhatsappRoute
   '/_sidebar-layout/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/_sidebar-layout/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -725,6 +735,7 @@ export interface FileRouteTypes {
     | '/settings/project/teams'
     | '/settings/project/telegram'
     | '/settings/project/user-groups'
+    | '/settings/project/warehouse'
     | '/settings/project/whatsapp'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -788,6 +799,7 @@ export interface FileRouteTypes {
     | '/settings/project/team'
     | '/settings/project/teams'
     | '/settings/project/telegram'
+    | '/settings/project/warehouse'
     | '/settings/project/whatsapp'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -858,6 +870,7 @@ export interface FileRouteTypes {
     | '/_sidebar-layout/settings/project/teams'
     | '/_sidebar-layout/settings/project/telegram'
     | '/_sidebar-layout/settings/project/user-groups'
+    | '/_sidebar-layout/settings/project/warehouse'
     | '/_sidebar-layout/settings/project/whatsapp'
     | '/_sidebar-layout/stories/shared/$shareId'
     | '/_sidebar-layout/stories/standalone/$storyId'
@@ -1281,6 +1294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SidebarLayoutSettingsProjectUserGroupsRouteImport
       parentRoute: typeof SidebarLayoutSettingsProjectRoute
     }
+    '/_sidebar-layout/settings/project/warehouse': {
+      id: '/_sidebar-layout/settings/project/warehouse'
+      path: '/warehouse'
+      fullPath: '/settings/project/warehouse'
+      preLoaderRoute: typeof SidebarLayoutSettingsProjectWarehouseRouteImport
+      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+    }
     '/_sidebar-layout/settings/project/whatsapp': {
       id: '/_sidebar-layout/settings/project/whatsapp'
       path: '/whatsapp'
@@ -1463,6 +1483,7 @@ interface SidebarLayoutSettingsProjectRouteChildren {
   SidebarLayoutSettingsProjectTeamsRoute: typeof SidebarLayoutSettingsProjectTeamsRoute
   SidebarLayoutSettingsProjectTelegramRoute: typeof SidebarLayoutSettingsProjectTelegramRoute
   SidebarLayoutSettingsProjectUserGroupsRoute: typeof SidebarLayoutSettingsProjectUserGroupsRouteWithChildren
+  SidebarLayoutSettingsProjectWarehouseRoute: typeof SidebarLayoutSettingsProjectWarehouseRoute
   SidebarLayoutSettingsProjectWhatsappRoute: typeof SidebarLayoutSettingsProjectWhatsappRoute
   SidebarLayoutSettingsProjectIndexRoute: typeof SidebarLayoutSettingsProjectIndexRoute
 }
@@ -1498,6 +1519,8 @@ const SidebarLayoutSettingsProjectRouteChildren: SidebarLayoutSettingsProjectRou
       SidebarLayoutSettingsProjectTelegramRoute,
     SidebarLayoutSettingsProjectUserGroupsRoute:
       SidebarLayoutSettingsProjectUserGroupsRouteWithChildren,
+    SidebarLayoutSettingsProjectWarehouseRoute:
+      SidebarLayoutSettingsProjectWarehouseRoute,
     SidebarLayoutSettingsProjectWhatsappRoute:
       SidebarLayoutSettingsProjectWhatsappRoute,
     SidebarLayoutSettingsProjectIndexRoute:

@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => ({
 	resolvedStory: { storyId: 'story-1', chatId: 'origin-chat', slug: 'revenue', projectId: 'project-1' },
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@tanstack/react-query', () => ({
 	useQuery: (options: { queryKey?: string }) => QUERY_RESULTS[options.queryKey ?? ''],
 }));

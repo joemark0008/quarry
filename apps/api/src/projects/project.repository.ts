@@ -59,14 +59,73 @@ export class ProjectRepository {
 		return this.prisma.project.findFirst();
 	}
 
-	/** Self-hosted: the default project, when the user has a role in it. */
-	async getProjectByUserId(userId: string, _selectedProjectId?: string | null): Promise<Project | null> {
-		const project = await this.getDefaultProject();
-		if (!project) {
-			return null;
+	/**
+	 * The project a request works on. quarry is self-hosted but has several projects (upstream's cloud mode):
+	 * the selected project when the user can access it, else the default project (`QUARRY_DEFAULT_PROJECT_PATH`)
+	 * when the user has a role in it, else the user's first project.
+	 */
+	async getProjectByUserId(userId: string, selectedProjectId?: string | null): Promise<Project | null> {
+		const projects = await this.listUserProjectsWithRoles(userId);
+		if (selectedProjectId) {
+			const selected = projects.find(({ project }) => project.id === selectedProjectId);
+			if (selected) {
+				return selected.project;
+			}
 		}
-		const role = await this.getUserRoleInProject(project.id, userId);
-		return role ? project : null;
+		const defaultProject = await this.getDefaultProject();
+		if (defaultProject && projects.some(({ project }) => project.id === defaultProject.id)) {
+			return defaultProject;
+		}
+		return projects[0]?.project ?? null;
+	}
+
+	/** Projects the user reaches through a project membership or their organization (`listUserProjectsWithRoles`). */
+	async listUserProjectsWithRoles(userId: string): Promise<{ project: Project; userRole: UserRole }[]> {
+		const projects = await this.prisma.project.findMany({
+			where: {
+				OR: [{ projectMembers: { some: { userId } } }, { organization: { orgMembers: { some: { userId } } } }],
+			},
+			include: {
+				projectMembers: { where: { userId }, select: { role: true } },
+				organization: { select: { orgMembers: { where: { userId }, select: { role: true } } } },
+			},
+			orderBy: { name: 'asc' },
+		});
+		return projects.map(({ projectMembers, organization, ...project }) => ({
+			project,
+			userRole: (projectMembers[0]?.role ?? organization?.orgMembers[0]?.role ?? 'viewer') as UserRole,
+		}));
+	}
+
+	/** Renames unless another project of the organization already has the name (`renameProject`). */
+	renameProject(projectId: string, orgId: string | null, name: string): Promise<boolean> {
+		return this.prisma.$transaction(async (tx) => {
+			const conflict = await tx.project.findFirst({
+				where: { orgId, name: { equals: name, mode: 'insensitive' }, id: { not: projectId } },
+				select: { id: true },
+			});
+			if (conflict) {
+				return false;
+			}
+			await tx.project.update({ where: { id: projectId }, data: { name } });
+			return true;
+		});
+	}
+
+	async isProjectNameTaken(orgId: string | null, name: string): Promise<boolean> {
+		const project = await this.prisma.project.findFirst({
+			where: { orgId, name: { equals: name, mode: 'insensitive' } },
+			select: { id: true },
+		});
+		return project !== null;
+	}
+
+	updateProject(projectId: string, data: Prisma.ProjectUncheckedUpdateInput): Promise<Project> {
+		return this.prisma.project.update({ where: { id: projectId }, data });
+	}
+
+	async deleteProject(projectId: string): Promise<void> {
+		await this.prisma.project.delete({ where: { id: projectId } });
 	}
 
 	/** Project membership role, falling back to the user's organization role. */

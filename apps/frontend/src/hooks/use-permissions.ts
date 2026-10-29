@@ -3,9 +3,10 @@ import { useMemo } from 'react';
 
 import type { UserRole } from '@quarry/shared/types';
 import { trpc } from '@/main';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function usePermissions() {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const org = useQuery(trpc.organization.get.queryOptions());
 	const role = project.data?.userRole as UserRole | undefined;
 

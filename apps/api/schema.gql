@@ -18,6 +18,31 @@ type AuthProviders {
   smtp: Boolean!
 }
 
+"""State of the last context sync of the project."""
+type ContextSyncStatus {
+  databases: [DatabaseSyncResult!]!
+  finishedAt: String
+  log: [String!]!
+  message: String
+  requestedAt: String
+  startedAt: String
+
+  """idle, queued, running, succeeded or failed."""
+  state: String!
+}
+
+input CreateProjectInput {
+  name: String!
+}
+
+type DatabaseSyncResult {
+  databaseName: String!
+  removedPaths: Int!
+  renderErrors: Int!
+  schemasSynced: Int!
+  tablesSynced: Int!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -29,8 +54,41 @@ input ModifyPasswordInput {
 }
 
 type Mutation {
+  """
+  Checks the credentials on a live connection, then saves them (encrypted) for the project.
+  """
+  connectWarehouse(input: WarehouseConnectionInput!): WarehouseConnectionResult!
+  createProject(input: CreateProjectInput!): ProjectSummary!
+  createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
+  deleteProject(projectId: ID!): Boolean!
+  deleteSavedPrompt(promptId: ID!): Boolean!
+  disconnectWarehouse(name: String!): Boolean!
   modifyPassword(input: ModifyPasswordInput!): Boolean!
+  renameProject(input: RenameProjectInput!): ProjectSummary!
+
+  """
+  Queues a `context.sync` job that writes the warehouse schemas and table previews to the context.
+  """
+  syncContext(select: [String!]): ContextSyncStatus!
+  testWarehouseConnection(name: String): WarehouseConnectionResult!
   updateProfile(input: UpdateProfileInput!): User!
+  updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
+}
+
+"""A project the user can access, with their role in it."""
+type ProjectSummary {
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  orgId: String
+
+  """Folder holding the project context and `nao_config.yaml`."""
+  path: String
+  type: String!
+  updatedAt: DateTime!
+
+  """The user's role: admin, user, viewer or context_admin."""
+  userRole: String!
 }
 
 type PublicConfig {
@@ -51,6 +109,10 @@ type PublicConfig {
 
 type Query {
   checkUpdate: UpdateCheck!
+  contextSyncStatus: ContextSyncStatus!
+
+  """The selected project (`x-nao-project-id`)."""
+  currentProject: ProjectSummary
 
   """
   Whether anyone has signed up yet (the login page offers sign-up when not).
@@ -59,8 +121,33 @@ type Query {
 
   """The signed-in user."""
   me: User!
+
+  """Projects the signed-in user can access."""
+  projects: [ProjectSummary!]!
   publicConfig: PublicConfig!
+  savedPrompts: [SavedPrompt!]!
   version: AppVersion!
+
+  """Databases configured in the selected project."""
+  warehouseConnections: [WarehouseConnection!]!
+}
+
+input RenameProjectInput {
+  name: String!
+  projectId: ID!
+}
+
+type SavedPrompt {
+  createdAt: DateTime!
+  id: ID!
+  prompt: String!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input SavedPromptInput {
+  prompt: String!
+  title: String!
 }
 
 type UpdateCheck {
@@ -71,6 +158,12 @@ type UpdateCheck {
 
 input UpdateProfileInput {
   name: String!
+}
+
+input UpdateSavedPromptInput {
+  prompt: String
+  promptId: ID!
+  title: String
 }
 
 type User {
@@ -86,4 +179,50 @@ type User {
 
   """Set for invited users until they choose their own password."""
   requiresPasswordReset: Boolean!
+}
+
+"""
+A database configured in the project (`nao_config.yaml`), without its secrets.
+"""
+type WarehouseConnection {
+  """Only tables present in the synced context can be queried."""
+  allowListedOnly: Boolean!
+  database: String
+  hasPassword: Boolean!
+  host: String
+  name: String!
+  port: Int
+  schemaName: String
+  ssl: Boolean!
+  supported: Boolean!
+
+  """Warehouse type (`postgres`, or a type quarry cannot query yet)."""
+  type: String!
+  user: String
+}
+
+input WarehouseConnectionInput {
+  database: String!
+  host: String!
+
+  """
+  Connection name, used for the context folder when two connections share a database.
+  """
+  name: String!
+
+  """Leave empty to keep the stored password."""
+  password: String
+  port: Int! = 5432
+
+  """Limit the connection to one schema."""
+  schemaName: String
+  ssl: Boolean
+  user: String!
+}
+
+type WarehouseConnectionResult {
+  """Form fields the error most likely points at."""
+  fields: [String!]!
+  message: String!
+  success: Boolean!
 }

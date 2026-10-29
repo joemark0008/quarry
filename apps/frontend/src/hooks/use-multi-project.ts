@@ -1,9 +1,6 @@
-import { usePublicConfig } from '@/hooks/use-public-config';
-
 export type ProjectSwitcherMode = 'switch' | 'static';
 
+/** quarry lets self-hosted users create several projects (upstream only switches projects in cloud mode). */
 export function useMultiProject(): ProjectSwitcherMode {
-	const config = usePublicConfig();
-
-	return config.data?.quarryMode === 'cloud' ? 'switch' : 'static';
+	return 'switch';
 }

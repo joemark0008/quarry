@@ -1,11 +1,20 @@
 import { USER_ROLE_LABELS } from '@quarry/shared/types';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import type { UserRole } from '@quarry/shared/types';
 
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { CreateProjectDialog } from '@/components/create-project-dialog';
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+	CommandSeparator,
+} from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMultiProject } from '@/hooks/use-multi-project';
 import { cn } from '@/lib/utils';
@@ -95,7 +104,7 @@ function SidebarProjectSwitcher({
 		return null;
 	}
 
-	if (mode === 'static' || (mode === 'switch' && projects.length === 1)) {
+	if (mode === 'static') {
 		return (
 			<div className={cn('w-full', className)}>
 				<div className={getTriggerClassName('sidebar')}>
@@ -130,6 +139,7 @@ function ProjectDropdown({
 	mode: 'switch' | 'upgrade';
 }) {
 	const [open, setOpen] = useState(false);
+	const [isCreating, setIsCreating] = useState(false);
 	const wrapperClassName = variant === 'sidebar' ? 'w-full' : 'inline-flex max-w-full';
 
 	return (
@@ -187,12 +197,27 @@ function ProjectDropdown({
 											</CommandItem>
 										))}
 									</CommandGroup>
+									<CommandSeparator />
+									<CommandGroup>
+										<CommandItem
+											value='__new_project__'
+											keywords={['new', 'create', 'project']}
+											onSelect={() => {
+												setOpen(false);
+												setIsCreating(true);
+											}}
+										>
+											<Plus className='size-4' />
+											<span>New project</span>
+										</CommandItem>
+									</CommandGroup>
 								</>
 							)}
 						</CommandList>
 					</Command>
 				</PopoverContent>
 			</Popover>
+			<CreateProjectDialog open={isCreating} onOpenChange={setIsCreating} />
 		</div>
 	);
 }

@@ -27,6 +27,7 @@ import {
 	useUnreadCount,
 } from '@/queries/use-notifications';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 export const Route = createFileRoute('/_sidebar-layout/feed/')({
 	component: FeedPage,
@@ -40,7 +41,7 @@ function FeedPage() {
 	const { isViewer } = usePermissions();
 	const config = usePublicConfig();
 	const automationsEnabled = config.data?.betaAutomationsEnabled === true && !isViewer;
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
+	const project = useCurrentProject();
 	const [isCreating, setIsCreating] = useState(false);
 	const { automationCreationEnabled } = useEffectiveUserGroupFeatures();
 	const canCreateAutomation = automationsEnabled && automationCreationEnabled;

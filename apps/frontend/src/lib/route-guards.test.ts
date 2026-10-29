@@ -6,6 +6,8 @@ const mocks = vi.hoisted(() => ({
 	ensureQueryData: vi.fn(),
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@/main', () => ({
 	queryClient: {
 		ensureQueryData: mocks.ensureQueryData,

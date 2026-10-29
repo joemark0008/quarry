@@ -45,6 +45,7 @@ import { getTextOffset } from '@/lib/selection-dom.utils';
 import { findStories } from '@/lib/story.utils';
 import { isForbiddenError, shouldShowChatAccessError } from '@/lib/trpc-error';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 
 const SELECTION_FORK_TYPES: ForkMetadata['type'][] = ['chat_selection', 'chat_question', 'story_selection'];
 
@@ -101,8 +102,8 @@ function ChatPage() {
 		enabled: !!chat.data && !shouldShowChatError,
 	});
 	const isShared = !!shareQuery.data?.shareId;
-	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const currentProject = useCurrentProject();
+	const projects = useProjects();
 	const onboardingProgress = useOnboardingProgress();
 	const onboardingWarehouseJobId = useAgentMessagesSelector(findWarehouseJobId);
 	const onboardingWarehouseJob = useWarehouseProvisioningJob(onboardingWarehouseJobId);

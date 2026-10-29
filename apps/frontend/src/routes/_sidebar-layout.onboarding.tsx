@@ -41,6 +41,7 @@ import { NEW_CHAT_ID } from '@/lib/ai';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { refetchProjectQueries, useCurrentProject } from '@/hooks/use-current-project';
 
 interface OnboardingSearch {
 	chatId?: string;
@@ -118,7 +119,7 @@ function OnboardingPage() {
 		},
 		refetchOnWindowFocus: 'always',
 	});
-	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
+	const currentProject = useCurrentProject();
 	const config = usePublicConfig();
 	const billingAccess = useCloudBillingAccess({
 		enabled: config.data?.cloudBillingEnabled === true,
@@ -156,7 +157,7 @@ function OnboardingPage() {
 
 	useEffect(() => {
 		if (warehouseReady) {
-			queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() }).catch(console.error);
+			refetchProjectQueries().catch(console.error);
 		}
 	}, [queryClient, warehouseReady]);
 

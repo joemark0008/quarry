@@ -39,6 +39,7 @@ import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings
 import { useUnreadAutomationRunCount, useUnreadCount } from '@/queries/use-notifications';
 import { useSession } from '@/lib/auth-client';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 
 const SIDEBAR_TRANSITION_STYLE: React.CSSProperties = {
 	transitionDuration: `${SIDE_PANEL_ANIMATION_DURATION}ms`,
@@ -59,8 +60,8 @@ export function Sidebar() {
 	} = useSidebar();
 	const [toggleHintOpen, setToggleHintOpen] = useState(false);
 	const { fire: openCommandMenu } = useCommandMenuCallback();
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const project = useCurrentProject();
+	const projects = useProjects();
 	const switchProject = useProjectSwitch(project.data?.id);
 	const config = usePublicConfig();
 	const { isAdmin, isContextAdmin, isOrgAdmin, isViewer } = usePermissions();

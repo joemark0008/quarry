@@ -1,11 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useMutation as useApolloMutation } from '@apollo/client/react';
 import type { KeyboardEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { trpc } from '@/main';
+import { refetchProjectQueries } from '@/hooks/use-current-project';
+import { RenameProjectDocument } from '@/graphql/generated/graphql';
 
 interface EditableProjectNameProps {
 	projectId: string;
@@ -18,17 +21,16 @@ export function EditableProjectName({ projectId, name, canEdit }: EditableProjec
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [isEditing, setIsEditing] = useState(false);
 	const [draft, setDraft] = useState(name);
-	const rename = useMutation(
-		trpc.project.rename.mutationOptions({
-			onSuccess: async () => {
-				await Promise.all([
-					queryClient.invalidateQueries({ queryKey: trpc.project.getCurrent.queryKey() }),
-					queryClient.invalidateQueries({ queryKey: trpc.project.listForCurrentUser.queryKey() }),
-					queryClient.invalidateQueries({ queryKey: trpc.organization.getProjects.queryKey() }),
-				]);
-			},
-		}),
-	);
+	const [renameProject] = useApolloMutation(RenameProjectDocument);
+	const rename = useMutation({
+		mutationFn: (input: { projectId: string; name: string }) => renameProject({ variables: { input } }),
+		onSuccess: async () => {
+			await Promise.all([
+				refetchProjectQueries(),
+				queryClient.invalidateQueries({ queryKey: trpc.organization.getProjects.queryKey() }),
+			]);
+		},
+	});
 
 	useEffect(() => {
 		if (isEditing) {

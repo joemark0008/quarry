@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { useCurrentProject } from '@/hooks/use-current-project';
 
 interface ProjectItem {
 	id: string;
@@ -182,7 +183,7 @@ type Provider = {
 const TOKEN_PLACEHOLDER = '<token>';
 
 function ConnectionCard() {
-	const projectQuery = useQuery(trpc.project.getCurrent.queryOptions());
+	const projectQuery = useCurrentProject();
 	const project = projectQuery.data;
 
 	if (!project) {

@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => ({
 	queries: [] as Array<{ queryKey: string[]; enabled?: boolean }>,
 }));
 
+vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
+
 vi.mock('@tanstack/react-query', () => ({
 	useQuery: (options: { queryKey: string[]; enabled?: boolean }) => {
 		mocks.queries.push(options);

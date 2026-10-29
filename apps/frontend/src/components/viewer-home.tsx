@@ -12,10 +12,11 @@ import { useMultiProject } from '@/hooks/use-multi-project';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { VIEWER_DISPLAY_KEY, VIEWER_GROUP_KEY, filterItems, getStoredSetting, groupItems } from '@/lib/viewer-home';
 import { trpc } from '@/main';
+import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 
 export function ViewerHome() {
-	const project = useQuery(trpc.project.getCurrent.queryOptions());
-	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
+	const project = useCurrentProject();
+	const projects = useProjects();
 	const projectId = project.data?.id;
 	const switchProject = useProjectSwitch(projectId);
 	const multiProjectMode = useMultiProject();
