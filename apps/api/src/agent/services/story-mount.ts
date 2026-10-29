@@ -21,3 +21,20 @@ export async function findStoryMountFiles(
 export async function listStoryMountFilesToGrep(..._args: unknown[]): Promise<never[]> {
 	return [];
 }
+
+/** Upstream `customStoryAuthoringError`: custom stories are disabled until Phase 4. */
+export function customStoryAuthoringError(_userGroupFeatures: unknown[]): string | null {
+	return 'Custom stories are disabled on this instance.';
+}
+
+export async function writeStoryMountFile(
+	_scope: unknown,
+	virtualPath: string,
+	_content: string,
+): Promise<{ path: string; size: number }> {
+	throw new Error(`Cannot write '${virtualPath}': custom stories are disabled on this instance.`);
+}
+
+export function storyMountOwnerChatId(scope: { chatId: string }, _virtualPath: string): string {
+	return scope.chatId;
+}

@@ -5,20 +5,24 @@ import { convertToModelMessages, type InferUIMessageChunk, type Tool } from 'ai'
 
 import { ChatRepository } from '../chats/chat.repository.js';
 import { HandlerError } from '../common/errors/handler-error.js';
+import { ConfigService } from '../config/config.service.js';
 import type { Project } from '../generated/prisma/client.js';
 import { ProjectRepository } from '../projects/project.repository.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
 import { WarehouseSqlService } from '../warehouse/warehouse-sql.service.js';
 import { type AgentChat, AgentManager, type AgentProfile } from './agent-manager.js';
+import { AppDbRepository } from './app-db/app-db.repository.js';
 import { LlmService } from './llm/llm.service.js';
 import { ProjectLlmConfigRepository } from './llm/project-llm-config.repository.js';
 import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
+import { CompactionService } from './services/compaction.js';
+import { getCustomBoundaries } from './services/map-boundaries.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
 import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
-import { getTools } from './tools/index.js';
+import { createWebSearchTools, getTools } from './tools/index.js';
 import type { AgentSettings } from './types/agent-settings.js';
 import type { AgentRequest, AgentTools, ContextUsage, UIMessage, UIMessagePart } from './types/chat.js';
 import type { ToolContext } from './types/tools.js';
@@ -54,6 +58,9 @@ export class AgentService {
 		private readonly llmConfigs: ProjectLlmConfigRepository,
 		private readonly warehouseSql: WarehouseSqlService,
 		private readonly warehouseCredentials: WarehouseCredentialsService,
+		private readonly compaction: CompactionService,
+		private readonly appDb: AppDbRepository,
+		private readonly config: ConfigService,
 	) {}
 
 	/** `POST /api/agent`: `authorizeAgentRun` + `handleAgentRoute`. */
@@ -109,7 +116,10 @@ export class AgentService {
 		if (!modelConfig) {
 			throw new HandlerError('BAD_REQUEST', 'The selected model could not be resolved.');
 		}
-		const agentSettings = (await this.llmConfigs.getAgentSettings(chat.projectId)) as AgentSettings | null;
+		const [agentSettings, customBoundaries] = await Promise.all([
+			this.llmConfigs.getAgentSettings(chat.projectId) as Promise<AgentSettings | null>,
+			getCustomBoundaries(chat.projectId),
+		]);
 		const toolContext = await this.buildToolContext({
 			projectId: chat.projectId,
 			chatId: chat.id,
@@ -117,7 +127,13 @@ export class AgentService {
 			agentSettings,
 			modelSelection,
 		});
-		const tools = getTools(agentSettings, {}, { semanticLayerMode: toolContext.semanticLayerMode }) as AgentTools;
+		const webTools = await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
+		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`).
+		const tools = getTools(agentSettings, webTools ?? {}, {
+			customBoundaries,
+			semanticLayerMode: toolContext.semanticLayerMode,
+			subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
+		}) as AgentTools;
 		const agent = new AgentManager(
 			chat,
 			profile,
@@ -130,6 +146,7 @@ export class AgentService {
 			{
 				chats: this.chats,
 				llm: this.llm,
+				compaction: this.compaction,
 				buildSystemPrompt: ({ toolNames, timezone }) =>
 					this.buildProjectSystemPrompt(toolContext, toolNames, timezone),
 			},
@@ -183,6 +200,22 @@ export class AgentService {
 		};
 	}
 
+	/** Upstream `_resolveWebTools`: the provider's web search (and fetch) tools when the project enables them. */
+	private async resolveWebTools(
+		projectId: string,
+		provider: LlmProvider,
+		agentSettings: AgentSettings | null,
+	): Promise<Record<string, unknown> | null> {
+		if (!agentSettings?.webSearch?.enabled) {
+			return null;
+		}
+		const settings = await this.llm.resolveProviderSettings(projectId, provider);
+		if (!settings) {
+			return null;
+		}
+		return createWebSearchTools(provider, settings);
+	}
+
 	/** The chat's model, else the project default (upstream `_getResolvedLlmSelectedModel`). */
 	async resolveModelSelection(projectId: string, modelSelection?: LlmSelectedModel): Promise<LlmSelectedModel> {
 		if (modelSelection) {
@@ -193,6 +226,12 @@ export class AgentService {
 			return defaultModel;
 		}
 		throw new HandlerError('BAD_REQUEST', 'No model config found');
+	}
+
+	/** The tool context of a chat outside a run, with the project's agent settings (SQL edits from the UI). */
+	async buildChatToolContext(opts: { projectId: string; userId: string; chatId: string }): Promise<ToolContext> {
+		const agentSettings = (await this.llmConfigs.getAgentSettings(opts.projectId)) as AgentSettings | null;
+		return this.buildToolContext({ ...opts, agentSettings });
 	}
 
 	/** Upstream `buildToolContext`. */
@@ -217,6 +256,10 @@ export class AgentService {
 				updateExecuteSqlPart: (toolCallId, input, output) =>
 					this.chats.updateExecuteSqlPart(toolCallId, input, output),
 				getQueryResultByQueryId: (chatId, queryId) => this.chats.getQueryResultByQueryId(chatId, queryId),
+				runScopedAppDbQuery: (projectId, sql) => this.appDb.runScopedAppDbQuery(projectId, sql),
+				getProjectAvailableModels: (projectId) => this.llm.getProjectAvailableModels(projectId),
+				resolveProviderModel: (projectId, provider, modelId, applyUserSettings) =>
+					this.llm.resolveProviderModel(projectId, provider, modelId, applyUserSettings),
 			},
 			projectFolder: project.path,
 			chatId: opts.chatId,

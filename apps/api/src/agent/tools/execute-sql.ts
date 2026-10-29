@@ -11,25 +11,19 @@ import { ExecuteSqlOutput, renderToModelOutput } from '../tool-outputs/index.js'
 import { ToolContext } from '../types/tools.js';
 import { containsBlockedPassthroughCall, detectQueryRowLimit, isReadOnlySqlQuery } from '../utils/sql-filter.js';
 import { createTool } from '../utils/tools.js';
+import { queryAppDb } from './query-app-db.js';
 
 /** Story filter templates belong to stories (Phase 4). */
 const STORY_FILTERS_ENABLED = false;
 
 const EXECUTE_SEMANTIC_QUERY_TOOL_NAME = 'execute_semantic_query';
 
-/**
- * quarry: no local DuckDB (files and earlier results) and no app-database admin mode yet; upstream's
- * `local-query.service.ts` and `query-app-db.ts` are not ported.
- */
+/** quarry: no local DuckDB (files and earlier results) yet; upstream's `local-query.service.ts` is not ported. */
 async function runQueryOnLocalFiles(..._args: unknown[]): Promise<{
 	result: { columns: string[]; data: Record<string, unknown>[] };
 	savedFile?: { path: string; size: number };
 }> {
 	throw new Error(`The "${LOCAL_DATABASE_ID}" database is not available: query the warehouse instead.`);
-}
-
-async function queryAppDb(..._args: unknown[]): Promise<{ columns: string[]; rows: Record<string, unknown>[] }> {
-	throw new Error('Admin mode (querying the app database) is not available.');
 }
 
 /** Upstream gated this on the enterprise license; quarry enforces `exclude_columns` whenever it is configured. */
@@ -162,7 +156,7 @@ async function executeAppDbQuery(
 	context: ToolContext,
 	{ queryId, sqlQuery }: SameTurnQueryOptions,
 ): Promise<executeSql.Output> {
-	const { columns, rows } = await queryAppDb(context.projectId, effectiveSql);
+	const { columns, rows } = await queryAppDb(context.services.runScopedAppDbQuery, context.projectId, effectiveSql);
 	const id = queryId ?? (`query_${crypto.randomUUID().slice(0, 8)}` as const);
 	context.queryResults.set(id, { columns, data: rows, sqlQuery });
 	const appliedLimit = detectQueryRowLimit(effectiveSql);

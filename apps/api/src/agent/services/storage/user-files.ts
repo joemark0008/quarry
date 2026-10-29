@@ -33,3 +33,29 @@ export function grepRootForUser(_scope: StorageScope, _relativePath?: string): s
 export async function listUserDirectory(_scope: StorageScope, _relativePath: string): Promise<UserDirectoryEntry[]> {
 	return [];
 }
+
+/** Object written to storage (upstream `StorageObject`). */
+export interface StorageObject {
+	key: string;
+	size: number;
+}
+
+export async function readUserFileBytes(_scope: StorageScope, _relativePath: string): Promise<Buffer> {
+	throw unavailable();
+}
+
+export async function writeUserFile(
+	_scope: StorageScope,
+	_relativePath: string,
+	_content: string,
+): Promise<StorageObject> {
+	throw unavailable();
+}
+
+export async function writeUserFileBytes(
+	_scope: StorageScope,
+	_relativePath: string,
+	_data: Buffer,
+): Promise<StorageObject> {
+	throw unavailable();
+}

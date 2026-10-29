@@ -11,6 +11,9 @@ const services = {
 	getExecuteSqlPartByQueryIdInChat: vi.fn(),
 	updateExecuteSqlPart: vi.fn(),
 	getQueryResultByQueryId: vi.fn(),
+	runScopedAppDbQuery: vi.fn(),
+	getProjectAvailableModels: vi.fn(),
+	resolveProviderModel: vi.fn(),
 } satisfies Record<keyof AgentToolServices, ReturnType<typeof vi.fn>>;
 
 describe('execute_sql in-place edit of a query created in the current turn', () => {

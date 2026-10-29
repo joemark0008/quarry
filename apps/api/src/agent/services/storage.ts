@@ -14,3 +14,6 @@ export function isStorageEnabled(): boolean {
 export function relativePathFromKey(_scope: StorageScope, key: string): string {
 	return key;
 }
+
+/** Upstream `env.NAO_STORAGE_MAX_FILE_SIZE_MB` (quarry `QUARRY_STORAGE_MAX_FILE_SIZE_MB`, read by the Phase 2d storage). */
+export const STORAGE_MAX_FILE_SIZE_MB = 10;

@@ -16,11 +16,12 @@ import grepTool from './grep.js';
 import listTool from './list.js';
 import readTool from './read.js';
 import searchTool from './search.js';
+import writeTool from './write.js';
 
 /**
  * Port of upstream `storage-tools.test.ts`, project-folder cases only. quarry has no permanent storage
- * (`/home`) nor `write` tool yet (Phase 2d stand-ins in `services/storage*`), so the cases that write to or
- * read from `/home`, or that switch storage backends, are left out.
+ * (`/home`) yet (Phase 2d stand-ins in `services/storage*`), so the cases that write to or read from `/home`,
+ * or that switch storage backends, are left out; the `write` case kept is its refusal outside `/home`.
  */
 
 let outsideRoot: string;
@@ -158,6 +159,16 @@ describe('docs context access', () => {
 		expect(grep.matches).toHaveLength(1);
 		expect(grep.total_matches).toBe(4);
 		expect(grep.truncated).toBe(true);
+	});
+});
+
+describe('write', () => {
+	// Upstream also saves under /home (plain, without the leading slash, with ~) and refuses '..': needs storage (2d).
+	it('refuses to write anywhere else in the tree', async () => {
+		await expect(run(writeTool, { file_path: '/RULES.md', content: 'nope' })).rejects.toThrow(
+			'Project context files are read-only',
+		);
+		await expect(fs.readdir(projectFolder)).resolves.toEqual([]);
 	});
 });
 

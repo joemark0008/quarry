@@ -31,6 +31,7 @@ import {
 	getProviderMeta,
 	type ProviderModelResult,
 } from './providers/providers.js';
+import { type CompactionService, RunCompaction } from './services/compaction.js';
 import { interactiveStopConditions } from './stop-conditions.js';
 import { llmTelemetry } from './telemetry.js';
 import type { AgentTools, ForkMetadata, Mention, MessageCustomDataParts, TokenUsage, UIMessage } from './types/chat.js';
@@ -64,6 +65,7 @@ export interface AgentProfile {
 export interface AgentManagerDependencies {
 	chats: ChatRepository;
 	llm: LlmService;
+	compaction: CompactionService;
 	/** Renders the project system prompt for the run (`_buildDefaultSystemPrompt`). */
 	buildSystemPrompt: (args: { toolNames: string[]; timezone?: string }) => Promise<string>;
 }
@@ -71,7 +73,8 @@ export interface AgentManagerDependencies {
 /**
  * Port of upstream `services/agent.ts` `AgentManager`: one agent run on a chat. It streams the answer as an AI SDK
  * UI message stream, persists the assistant message when the run ends (stopped or not), and generates the chat
- * title for a new chat. Not ported yet: compaction, memory extraction, skills and story mentions, attachments
+ * title for a new chat. Long conversations are compacted (`RunCompaction` in the step preparation, summary rebuilt
+ * from the last `data-compaction` part). Not ported yet: memory extraction, skills and story mentions, attachments
  * resolution, PostHog tracking.
  */
 export class AgentManager {
@@ -80,6 +83,7 @@ export class AgentManager {
 	private _resolveFinished: (() => void) | undefined;
 	private _streamWriter?: UIMessageStreamWriter<UIMessage>;
 	private _systemPrompt = '';
+	private _runCompaction: RunCompaction;
 
 	constructor(
 		readonly chat: AgentChat,
@@ -92,6 +96,7 @@ export class AgentManager {
 		private readonly _toolContext: ToolContext,
 		private readonly _deps: AgentManagerDependencies,
 	) {
+		this._runCompaction = new RunCompaction(this._deps.compaction);
 		this._finished = new Promise((resolve) => {
 			this._resolveFinished = resolve;
 		});
@@ -109,7 +114,7 @@ export class AgentManager {
 				...args,
 				instructions: cachedSystemInstructions(this._systemPrompt, this._modelSelection),
 			}),
-			prepareStep: async ({ messages }) => ({ messages: this._addCache(this._pruneMessages(messages)) }),
+			prepareStep: async ({ messages }) => this._prepareStep(messages),
 			stopWhen: this._stopConditions,
 			experimental_context: this._toolContext,
 			experimental_telemetry: llmTelemetry('quarry-agent', {
@@ -128,6 +133,31 @@ export class AgentManager {
 
 	private get _stopConditions(): StopCondition<AgentTools>[] {
 		return this._profile.maxSteps ? [stepCountIs(this._profile.maxSteps)] : interactiveStopConditions;
+	}
+
+	private async _prepareStep(messages: ModelMessage[]): Promise<{ messages: ModelMessage[] }> {
+		const workingMessages: ModelMessage[] =
+			this._systemPrompt && messages[0]?.role !== 'system'
+				? [{ role: 'system', content: this._systemPrompt }, ...messages]
+				: messages;
+		await this._runCompaction.apply({
+			chat: this.chat,
+			provider: this._modelSelection.provider,
+			modelId: this._modelSelection.modelId,
+			messages: workingMessages,
+			tools: this._agentTools,
+			maxOutputTokens: this._maxOutputTokens,
+			contextWindow: this._modelConfig.contextWindow,
+			onCompactionStarted: () => {
+				this._streamWriter?.write({ type: 'data-compactionSummaryStarted', data: null });
+			},
+			onCompactionFinished: (result) => {
+				this._streamWriter?.write({ type: 'data-compaction', data: result });
+			},
+		});
+
+		const conversationMessages = workingMessages[0]?.role === 'system' ? workingMessages.slice(1) : workingMessages;
+		return { messages: this._addCache(this._pruneMessages(conversationMessages)) };
 	}
 
 	get generatedArtifacts(): ToolContext['generatedArtifacts'] {
@@ -256,9 +286,11 @@ export class AgentManager {
 		const withoutStaleQueries = markSupersededExecuteSqlParts(settled);
 		const withCitation = this._addCitationContext(withoutStaleQueries);
 		const withDbContext = this._addDatabaseContext(withCitation, mentions);
+		const withCompaction = this._deps.compaction.useLastCompaction(withDbContext);
 
 		this._systemPrompt = await this._deps.buildSystemPrompt({ toolNames: Object.keys(this._agentTools), timezone });
-		const conversation = withDbContext.filter((message) => message.role !== 'system');
+		this._runCompaction = new RunCompaction(this._deps.compaction);
+		const conversation = withCompaction.filter((message) => message.role !== 'system');
 		const modelMessages = await convertToModelMessages<UIMessage>(conversation, { tools: this._agentTools });
 		return sanitizeToolCalls(modelMessages, this._modelSelection.provider);
 	}

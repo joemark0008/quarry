@@ -5,6 +5,7 @@ import type { executeSql } from '@quarry/shared/tools';
 import type { LlmSelectedModel, SemanticLayerMode, StoryFormat } from '@quarry/shared/types';
 
 import type { WarehouseSqlOptions, WarehouseSqlResult } from '../../warehouse/warehouse-sql.service.js';
+import type { ProviderModelResult } from '../providers/providers.js';
 import type { WarehouseTableAccess } from '../services/context-access.js';
 import type {
 	ResolvedDocsContextAccess,
@@ -49,6 +50,22 @@ export interface AgentToolServices {
 		chatId: string,
 		queryId: string,
 	): Promise<{ columns: string[]; data: Record<string, unknown>[] } | null>;
+	/** `db/readonly-app-db` `runScopedAppDbQuery`: read-only SQL over the project-scoped app-database views. */
+	runScopedAppDbQuery(
+		projectId: string,
+		sql: string,
+	): Promise<{ columns: string[]; rows: Record<string, unknown>[] }>;
+	/** `utils/llm` `getProjectAvailableModels` (subagent model resolution). */
+	getProjectAvailableModels(
+		projectId: string,
+	): Promise<Array<{ provider: LlmSelectedModel['provider']; modelId: string; name: string }>>;
+	/** `utils/llm` `resolveProviderModel` (subagent model resolution). */
+	resolveProviderModel(
+		projectId: string,
+		provider: LlmSelectedModel['provider'],
+		modelId: string,
+		applyUserSettings?: boolean,
+	): Promise<ProviderModelResult | null>;
 }
 
 export interface ToolContext {
