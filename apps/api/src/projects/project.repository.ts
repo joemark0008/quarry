@@ -146,4 +146,17 @@ export class ProjectRepository {
 		});
 		return orgMember ? (orgMember.role as UserRole) : null;
 	}
+
+	/** Users who are project members or members of the project's organization (upstream `listUsersWithProjectAccess`). */
+	listUsersWithProjectAccess(
+		projectId: string,
+	): Promise<{ id: string; name: string; email: string; role: UserRole }[]> {
+		return this.prisma.$queryRaw`
+			SELECT u.id, u.name, u.email, coalesce(pm.role, om.role) AS role
+			FROM "user" u
+			LEFT JOIN project_member pm ON pm.user_id = u.id AND pm.project_id = ${projectId}
+			LEFT JOIN org_member om ON om.user_id = u.id
+				AND om.org_id = (SELECT org_id FROM project WHERE id = ${projectId})
+			WHERE pm.user_id IS NOT NULL OR om.user_id IS NOT NULL`;
+	}
 }

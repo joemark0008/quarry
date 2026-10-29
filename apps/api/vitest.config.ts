@@ -5,10 +5,10 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	// SWC instead of esbuild: Nest's dependency injection needs `emitDecoratorMetadata`.
-	plugins: [swc.vite({ module: { type: 'es6' } })],
+	plugins: [swc.vite({ module: { type: 'es6' }, jsc: { transform: { react: { runtime: 'automatic' } } } })],
 	resolve: { alias: { '@': path.join(import.meta.dirname, 'src') } },
 	test: {
-		include: ['src/**/*.spec.ts', 'test/**/*.e2e-spec.ts'],
+		include: ['src/**/*.spec.ts', 'src/**/*.spec.tsx', 'test/**/*.e2e-spec.ts'],
 		globalSetup: ['test/global-setup.ts'],
 		fileParallelism: false,
 		testTimeout: 20_000,

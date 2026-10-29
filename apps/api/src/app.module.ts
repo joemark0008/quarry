@@ -6,6 +6,7 @@ import { APP_FILTER, APP_PIPE, ModuleRef } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import type { Response } from 'express';
 
+import { AgentModule } from './agent/agent.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { RequestLoaders } from './common/dataloader/request-loaders.js';
 import { AllExceptionsFilter } from './common/errors/all-exceptions.filter.js';
@@ -57,6 +58,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		ProjectsModule,
 		WarehouseModule,
 		ContextSyncModule,
+		AgentModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

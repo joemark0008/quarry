@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import path from 'node:path';
 
+import { isLlmProvider, LLM_PROVIDERS, NAMED_PROVIDER_KIND } from '@quarry/shared/types';
 import dotenv from 'dotenv';
 import { z } from 'zod/v4';
 
@@ -153,7 +154,7 @@ const baseEnvSchema = z.object({
 
 	/**
 	 * Comma-separated providers to keep out of the deployment entirely, regardless of where their
-	 * credentials come from. Validated against the provider list once the agent module is ported.
+	 * credentials come from. Accepts provider kinds and named instances (openaiCompatible/name).
 	 */
 	DISABLED_PROVIDERS: z
 		.string()
@@ -163,7 +164,10 @@ const baseEnvSchema = z.object({
 				.split(',')
 				.map((entry) => entry.trim())
 				.filter(Boolean),
-		),
+		)
+		.refine((providers) => providers.every(isLlmProvider), {
+			message: `DISABLED_PROVIDERS must be a comma-separated list of provider kinds (${LLM_PROVIDERS.join(', ')}) or named instances (${NAMED_PROVIDER_KIND}/<name>)`,
+		}),
 
 	LANGFUSE_PUBLIC_KEY: optionalNonEmptyString,
 	LANGFUSE_SECRET_KEY: optionalNonEmptyString,
