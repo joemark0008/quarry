@@ -148,13 +148,17 @@ export class PostgresDriver implements WarehouseDriver {
 	}
 
 	/** Runs one query in a READ ONLY transaction with a statement timeout. */
-	async execute(sql: string, limits: ExecuteLimits = {}): Promise<QueryResult> {
+	async execute(sql: string, limits: ExecuteLimits = {}, params?: readonly unknown[]): Promise<QueryResult> {
 		const client = await this.pool.connect();
 		try {
 			await client.query('BEGIN READ ONLY');
 			const timeout = Math.max(1, Math.floor(limits.timeoutMs ?? DEFAULT_STATEMENT_TIMEOUT_MS));
 			await client.query(`SET LOCAL statement_timeout = ${timeout}`);
-			const result = await client.query({ text: sql, rowMode: 'array' });
+			const result = await client.query({
+				text: sql,
+				rowMode: 'array',
+				...(params && params.length > 0 && { values: [...params] }),
+			});
 			await client.query('COMMIT');
 			return toQueryResult(result, limits.maxRows);
 		} catch (error) {

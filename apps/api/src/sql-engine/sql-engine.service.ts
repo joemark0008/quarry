@@ -58,6 +58,8 @@ export interface SqlRequest {
 	tableAccess?: TableAccess;
 	rowSecurity?: RowSecurity;
 	limits?: ExecuteLimits;
+	/** Bind values for `$1…$n` in `sql` (saved query tools); the guards keep the parameter references. */
+	params?: readonly unknown[];
 }
 
 /** Same role as upstream's `WarehouseSqlError`: carries the HTTP status FastAPI would have answered. */
@@ -85,7 +87,7 @@ export class SqlEngineService implements OnModuleDestroy {
 	async executeSql(request: SqlRequest): Promise<QueryResult> {
 		return this.withErrors(async () => {
 			const { driver, validatedSql } = await this.prepare(request);
-			return driver.execute(validatedSql, request.limits);
+			return driver.execute(validatedSql, request.limits, request.params);
 		});
 	}
 

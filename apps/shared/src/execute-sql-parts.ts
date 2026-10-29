@@ -1,3 +1,5 @@
+import { QUERY_TOOL_NAME_PREFIX } from './query-tools';
+
 type MessageWithParts<TPart> = {
 	parts: TPart[];
 };
@@ -6,8 +8,14 @@ type MessageWithParts<TPart> = {
 export const QUERY_RESULT_PART_TYPES = ['tool-execute_sql', 'tool-execute_semantic_query'] as const;
 export type QueryResultPartType = (typeof QUERY_RESULT_PART_TYPES)[number];
 
+/** Parts of saved query tools (`qt_<name>`), whose output is an `execute_sql` result. */
+const SAVED_QUERY_TOOL_PART_PREFIX = `tool-${QUERY_TOOL_NAME_PREFIX}`;
+
 export function isQueryResultPartType(type: string): type is QueryResultPartType {
-	return (QUERY_RESULT_PART_TYPES as readonly string[]).includes(type);
+	return (
+		(QUERY_RESULT_PART_TYPES as readonly string[]).includes(type) ||
+		(type.startsWith(SAVED_QUERY_TOOL_PART_PREFIX) && type.length > SAVED_QUERY_TOOL_PART_PREFIX.length)
+	);
 }
 
 export function isQueryResultPart<TPart extends { type: string }>(

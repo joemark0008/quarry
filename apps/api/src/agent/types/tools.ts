@@ -21,6 +21,8 @@ export interface QueryResult {
 	columns: string[];
 	data: Record<string, unknown>[];
 	compiledBySemanticLayer?: boolean;
+	/** Set when a saved query tool (`qt_<name>`) produced the result. */
+	queryToolName?: string;
 	/** The SQL as the model wrote it (filter templates included), set for results produced in the current run. */
 	sqlQuery?: string;
 	databaseId?: string;
@@ -35,7 +37,8 @@ export interface GeneratedArtifacts {
 /** A stored `execute_sql` part, read back as SQL (upstream `getExecuteSqlPartByQueryIdInChat`). */
 export interface StoredQueryPart {
 	toolCallId: string;
-	toolName: 'execute_sql' | 'execute_semantic_query';
+	/** `qt_<name>` for saved query tools. */
+	toolName: 'execute_sql' | 'execute_semantic_query' | `qt_${string}`;
 	toolInput: executeSql.Input;
 	toolOutput: executeSql.Output;
 	adminMode: boolean;

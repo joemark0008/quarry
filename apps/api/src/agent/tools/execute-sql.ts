@@ -1,3 +1,4 @@
+import { isQueryToolAgentName } from '@quarry/shared/query-tools';
 import {
 	sqlIncludesFilterTemplate,
 	stripSqlFilterBlocks,
@@ -38,6 +39,12 @@ type SameTurnQueryOptions = {
 type ExecuteQueryOptions = {
 	/** SQL compiled by the semantic layer may reach the warehouse even when hand-written SQL may not. */
 	compiledBySemanticLayer?: boolean;
+	/** Bind values for `$1…$n` in `sql_query` (saved query tools); warehouse only. */
+	params?: readonly unknown[];
+	/** The SQL kept with the result (SQL view, re-runs), when it differs from the one sent with `params`. */
+	recordedSql?: string;
+	/** The saved query tool running the query. */
+	queryToolName?: string;
 };
 
 export async function executeQuery(
@@ -64,6 +71,10 @@ export async function executeQuery(
 		throw new Error(
 			'Write SQL operations are disabled. Only SELECT queries are allowed. Enable "Dangerous write permissions" in the admin panel to allow INSERT, UPDATE, DELETE and DDL queries.',
 		);
+	}
+
+	if (options.params && (context.adminMode || database_id === LOCAL_DATABASE_ID)) {
+		throw new Error('Query parameters are only supported on the warehouse.');
 	}
 
 	if (save_to && context.adminMode) {
@@ -99,15 +110,17 @@ export async function executeQuery(
 		enforceExcludedColumns,
 		tableAccess: context.warehouseTableAccess,
 		rowSecurity: context.warehouseRowSecurity ?? { enforced: false },
+		...(options.params && { params: options.params }),
 	});
 	const id = query_id ?? (`query_${crypto.randomUUID().slice(0, 8)}` as const);
 
 	context.queryResults.set(id, {
 		columns: data.columns,
 		data: data.data,
-		sqlQuery: sql_query,
+		sqlQuery: options.recordedSql ?? sql_query,
 		...(database_id && { databaseId: database_id }),
 		...(options.compiledBySemanticLayer && { compiledBySemanticLayer: true }),
+		...(options.queryToolName && { queryToolName: options.queryToolName }),
 	});
 
 	const appliedLimit = detectQueryRowLimit(effectiveSql);
@@ -186,6 +199,11 @@ async function updateExistingQuery(
 	if (existing.toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME) {
 		throw semanticQueryNotEditableError(input.query_id);
 	}
+	if (isQueryToolAgentName(existing.toolName)) {
+		throw new Error(
+			`Query ${input.query_id} comes from the saved tool ${existing.toolName} and cannot be edited as SQL. Call ${existing.toolName} again with other arguments, or run execute_sql without query_id.`,
+		);
+	}
 
 	const saveTo = input.save_to ?? existing.toolInput.save_to;
 	const nextInput: executeSql.Input = {
@@ -217,6 +235,11 @@ async function updateSameTurnQuery(
 	}
 	if (sameTurnResult.compiledBySemanticLayer) {
 		throw semanticQueryNotEditableError(input.query_id);
+	}
+	if (sameTurnResult.queryToolName) {
+		throw new Error(
+			`Query ${input.query_id} comes from the saved tool ${sameTurnResult.queryToolName} and cannot be edited as SQL. Call it again with other arguments, or run execute_sql without query_id.`,
+		);
 	}
 	return executeQuery(input, context);
 }

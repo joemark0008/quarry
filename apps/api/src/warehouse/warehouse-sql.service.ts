@@ -22,6 +22,8 @@ export interface WarehouseSqlOptions {
 	tableAccess: WarehouseTableAccess;
 	rowSecurity: WarehouseRowSecurity;
 	limits?: ExecuteLimits;
+	/** Bind values for `$1…$n` in the SQL (saved query tools). */
+	params?: readonly unknown[];
 }
 
 export interface WarehouseSqlResult {
@@ -53,6 +55,7 @@ export class WarehouseSqlService {
 				tableAccess: options.tableAccess,
 				rowSecurity: options.rowSecurity,
 				limits: options.limits,
+				params: options.params,
 			}),
 		);
 		return { data: result.data, row_count: result.row_count, columns: result.columns, dialect: result.dialect };

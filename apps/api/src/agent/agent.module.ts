@@ -5,6 +5,7 @@ import { ChatsCoreModule } from '../chats/chats-core.module.js';
 import { MemoryModule } from '../memory/memory.module.js';
 import { OnboardingModule } from '../onboarding/onboarding.module.js';
 import { ProjectsCoreModule } from '../projects/projects-core.module.js';
+import { QueryToolsModule } from '../query-tools/query-tools.module.js';
 import { SandboxModule } from '../sandbox/sandbox.module.js';
 import { SkillsModule } from '../skills/skills.module.js';
 import { StoriesCoreModule } from '../stories/stories-core.module.js';
@@ -28,6 +29,7 @@ import { CompactionService } from './services/compaction.js';
 		MemoryModule,
 		OnboardingModule,
 		StoriesCoreModule,
+		QueryToolsModule,
 	],
 	controllers: [AgentController],
 	providers: [AgentService, CompactionService, AppDbRepository],

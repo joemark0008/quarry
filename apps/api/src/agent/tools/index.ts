@@ -37,6 +37,7 @@ import write, { buildWriteToolDescription } from './write.js';
 export { createContextFixCollector } from './propose-context-fix.js';
 export { createQueryAppDbTool } from './query-app-db.js';
 export { createRecommendationCollector } from './record-recommendation.js';
+export { createSavedQueryTools } from './saved-query-tool.js';
 export { createWebSearchTools } from './web-search.js';
 
 /**

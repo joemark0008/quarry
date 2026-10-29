@@ -144,6 +144,15 @@ input CreateProjectInput {
   name: String!
 }
 
+input CreateProjectQueryToolInput {
+  databaseId: String
+  description: String!
+  enabled: Boolean
+  name: String!
+  parameters: [QueryToolParameterInput!]! = []
+  sqlTemplate: String!
+}
+
 input CreateSharedChatInput {
   allowedUserIds: [String!]
   chatId: ID!
@@ -300,6 +309,7 @@ type Mutation {
   """Not available until GitHub/GitLab land (Phase 7)."""
   createContextRecommendationPullRequest(id: String!): JSON!
   createProject(input: CreateProjectInput!): ProjectSummary!
+  createProjectQueryTool(input: CreateProjectQueryToolInput!): ProjectQueryTool!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
 
@@ -318,6 +328,9 @@ type Mutation {
   deleteMapBoundary(key: String!): JSON!
   deleteMemory(memoryId: ID!): Boolean!
   deleteProject(projectId: ID!): Boolean!
+
+  """Project admins and the creator of the tool only."""
+  deleteProjectQueryTool(id: ID!): Boolean!
   deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
@@ -350,6 +363,11 @@ type Mutation {
   """
   generateOnboardingRules(input: GenerateOnboardingRulesInput!): Boolean!
   modifyPassword(input: ModifyPasswordInput!): Boolean!
+
+  """
+  Runs a query tool draft on the warehouse with argument values (read-only, at most 200 rows).
+  """
+  previewProjectQueryTool(input: PreviewProjectQueryToolInput!): QueryToolPreview!
 
   """Runs an edited query without saving it (`execute_sql` output)."""
   previewSqlQuery(input: SqlEditInput!): JSON!
@@ -535,6 +553,9 @@ type Mutation {
   """Upstream `map.updateConfig`: the chat owner edits a `display_map`."""
   updateMapConfig(config: JSON!, mapId: String!): Boolean!
   updateProfile(input: UpdateProfileInput!): User!
+
+  """Project admins and the creator of the tool only."""
+  updateProjectQueryTool(input: UpdateProjectQueryToolInput!): ProjectQueryTool!
   updateSandboxSecretDescription(input: UpdateSandboxSecretDescriptionInput!): SandboxSecret!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
@@ -555,6 +576,44 @@ type Mutation {
   Upstream `contextExplorer.writeFile`: `{ path, content, expectedHash }`.
   """
   writeContextFile(input: JSON!): JSON!
+}
+
+input PreviewProjectQueryToolInput {
+  databaseId: String
+  parameters: [QueryToolParameterInput!]! = []
+  sqlTemplate: String!
+
+  """Argument values by parameter name."""
+  values: JSON
+}
+
+"""
+A named, parameterized SQL query on the project's warehouse, callable by the agent.
+"""
+type ProjectQueryTool {
+  """The tool name the agent sees."""
+  agentToolName: String!
+
+  """
+  Whether the signed-in user may edit or delete it (project admins and its creator).
+  """
+  canEdit: Boolean!
+  createdAt: DateTime!
+  createdBy: String
+
+  """Warehouse connection; null for the default one."""
+  databaseId: String
+  description: String!
+  enabled: Boolean!
+  id: ID!
+
+  """snake_case name; the agent calls it as `qt_<name>`."""
+  name: String!
+  parameters: [QueryToolParameter!]!
+
+  """SQL with `{{ name }}` placeholders."""
+  sqlTemplate: String!
+  updatedAt: DateTime!
 }
 
 """A project the user can access, with their role in it."""
@@ -769,6 +828,10 @@ type Query {
 
   """Whether the project allows memory (admin agent setting)."""
   projectMemorySettings: MemorySettings!
+  projectQueryTool(id: ID!): ProjectQueryTool!
+
+  """Saved query tools of the project."""
+  projectQueryTools: [ProjectQueryTool!]!
 
   """A project's saved prompts; empty when the user is not in it."""
   projectSavedPrompts(projectId: ID!): [SavedPrompt!]!
@@ -779,6 +842,9 @@ type Query {
 
   """Upstream `chat.getQueryRows`."""
   queryRows(input: QueryRowsInput!): QueryRowsPage!
+
+  """Columns of a synced warehouse table, for the query builder."""
+  queryToolTableColumns(database: String!, schema: String!, table: String!, type: String!): [QueryToolColumn!]!
 
   """Upstream `feedback.getRecent`."""
   recentFeedbacks(limit: Int): [RecentFeedback!]!
@@ -1007,6 +1073,51 @@ input QuerySortInput {
   direction: String!
 }
 
+"""A column of a synced warehouse table, for the query builder."""
+type QueryToolColumn {
+  name: String!
+
+  """Type name as the context sync recorded it."""
+  type: String!
+}
+
+"""
+A typed argument of a saved query tool, written `{{ name }}` in its SQL.
+"""
+type QueryToolParameter {
+  """Used when an optional argument is left out."""
+  default: JSON
+  description: String
+  name: String!
+  required: Boolean!
+
+  """string, number, integer, boolean or date (YYYY-MM-DD)."""
+  type: String!
+}
+
+input QueryToolParameterInput {
+  default: JSON
+  description: String
+  name: String!
+  required: Boolean!
+  type: String!
+}
+
+"""Rows of a query tool run from the editor."""
+type QueryToolPreview {
+  columns: [String!]!
+  rowCount: Int!
+
+  """Rows as objects keyed by column."""
+  rows: JSON!
+
+  """The query as run, with the argument values written in."""
+  sql: String!
+
+  """True when more rows matched than the preview returns."""
+  truncated: Boolean!
+}
+
 type QuickQuestionChat {
   chatId: ID!
   title: String!
@@ -1167,6 +1278,16 @@ type UpdateCheck {
 
 input UpdateProfileInput {
   name: String!
+}
+
+input UpdateProjectQueryToolInput {
+  databaseId: String
+  description: String
+  enabled: Boolean
+  id: ID!
+  name: String
+  parameters: [QueryToolParameterInput!]
+  sqlTemplate: String
 }
 
 input UpdateSandboxSecretDescriptionInput {

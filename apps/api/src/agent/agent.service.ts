@@ -15,6 +15,7 @@ import type { Project } from '../generated/prisma/client.js';
 import { MemoryService } from '../memory/memory.service.js';
 import { OnboardingService } from '../onboarding/onboarding.service.js';
 import { ProjectRepository } from '../projects/project.repository.js';
+import { QueryToolService } from '../query-tools/query-tool.service.js';
 import { SandboxSecretService } from '../sandbox/sandbox-secret.service.js';
 import { SkillService } from '../skills/skill.service.js';
 import { resolveLinkedStory } from '../stories/services/story-question.js';
@@ -31,12 +32,12 @@ import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
 import { CompactionService } from './services/compaction.js';
-import { resolveSemanticLayerMode } from './services/semantic-layer.service.js';
+import { isWarehouseSqlEnabled, resolveSemanticLayerMode } from './services/semantic-layer.service.js';
 import { customStoryAuthoringError } from './services/story-mount.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
 import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
-import { createWebSearchTools, getTools } from './tools/index.js';
+import { createSavedQueryTools, createWebSearchTools, getTools } from './tools/index.js';
 import type { AgentSettings } from './types/agent-settings.js';
 import type {
 	AgentRequest,
@@ -89,6 +90,7 @@ export class AgentService {
 		private readonly skills: SkillService,
 		private readonly memory: MemoryService,
 		private readonly onboarding: OnboardingService,
+		private readonly queryTools: QueryToolService,
 	) {}
 
 	/** `POST /api/agent`: `authorizeAgentRun` + `handleAgentRoute`. */
@@ -158,16 +160,23 @@ export class AgentService {
 		});
 		toolContext.linkedStory = await resolveLinkedStory(chat);
 		const webTools = await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
+		const savedQueryTools = profile.tools
+			? {}
+			: await this.resolveSavedQueryTools(chat.projectId, toolContext.semanticLayerMode);
 		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`) unless the profile brings its own.
 		const tools = (
 			profile.tools
 				? profile.tools({ agentSettings })
-				: getTools(agentSettings, webTools ?? {}, {
-						customBoundaries,
-						semanticLayerMode: toolContext.semanticLayerMode,
-						subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
-						customStoryAuthoring: customStoryAuthoringError(toolContext.userGroupFeatures) === null,
-					})
+				: getTools(
+						agentSettings,
+						{ ...webTools, ...savedQueryTools },
+						{
+							customBoundaries,
+							semanticLayerMode: toolContext.semanticLayerMode,
+							subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
+							customStoryAuthoring: customStoryAuthoringError(toolContext.userGroupFeatures) === null,
+						},
+					)
 		) as AgentTools;
 		const agent = new AgentManager(
 			chat,
@@ -237,7 +246,8 @@ export class AgentService {
 			this.projects.getProjectById(projectId),
 		]);
 		const semanticLayerMode = project?.path ? resolveSemanticLayerMode(project.path, agentSettings) : null;
-		const tools = getTools(agentSettings, undefined, { semanticLayerMode }) as Record<string, Tool>;
+		const savedQueryTools = await this.resolveSavedQueryTools(projectId, semanticLayerMode);
+		const tools = getTools(agentSettings, savedQueryTools, { semanticLayerMode }) as Record<string, Tool>;
 		const uiMessages = markSupersededExecuteSqlParts(await this.chats.getChatMessages(opts.chatId));
 		const systemMessage: Omit<UIMessage, 'id'> = {
 			role: 'system',
@@ -250,6 +260,25 @@ export class AgentService {
 			tokensUsed: messageTokens + toolTokens,
 			contextWindow: opts.model ? getContextWindow(opts.model.provider, opts.model.modelId) : null,
 		};
+	}
+
+	/**
+	 * The project's enabled saved query tools (`qt_<name>`). They run SQL on the warehouse, so they follow
+	 * `execute_sql`: left out when the semantic layer is the only way to the warehouse.
+	 */
+	private async resolveSavedQueryTools(
+		projectId: string,
+		semanticLayerMode: ToolContext['semanticLayerMode'],
+	): Promise<Record<string, unknown>> {
+		if (!isWarehouseSqlEnabled(semanticLayerMode)) {
+			return {};
+		}
+		try {
+			return createSavedQueryTools(await this.queryTools.listAgentDefinitions(projectId));
+		} catch (error) {
+			this.logger.error('Failed to load saved query tools', error);
+			return {};
+		}
 	}
 
 	/** Upstream `_resolveWebTools`: the provider's web search (and fetch) tools when the project enables them. */

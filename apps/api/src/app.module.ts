@@ -28,6 +28,7 @@ import { ModelSettingsModule } from './model-settings/model-settings.module.js';
 import { OnboardingModule } from './onboarding/onboarding.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
+import { QueryToolsModule } from './query-tools/query-tools.module.js';
 import { SandboxModule } from './sandbox/sandbox.module.js';
 import { SkillsModule } from './skills/skills.module.js';
 import { StoryFavoritesModule } from './stories/favorites/story-favorites.module.js';
@@ -80,6 +81,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		ChartsModule,
 		ModelSettingsModule,
 		SandboxModule,
+		QueryToolsModule,
 		TranscribeModule,
 		ContextExplorerModule,
 		ContextRecommendationsModule,

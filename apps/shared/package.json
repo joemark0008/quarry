@@ -45,6 +45,7 @@
 		"./story-validation": "./src/story-validation.ts",
 		"./rules-template": "./src/rules-template.ts",
 		"./sql-template": "./src/sql-template.ts",
+		"./query-tools": "./src/query-tools.ts",
 		"./execute-sql-parts": "./src/execute-sql-parts.ts"
 	},
 	"scripts": {

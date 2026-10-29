@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';
-import { executeSemanticQuery, executeSql } from '@quarry/shared/tools';
+import { isQueryToolAgentName, QUERY_TOOL_NAME_PREFIX } from '@quarry/shared/query-tools';
+import { executeSemanticQuery, executeSql, savedQueryTool } from '@quarry/shared/tools';
 import type { CitationData, LlmProvider } from '@quarry/shared/types';
 
 import type {
@@ -19,6 +20,7 @@ import { convertDBPartToUIPart, mapUIPartsToDBParts } from '../agent/utils/chat-
 import {
 	EXECUTE_SEMANTIC_QUERY_TOOL_NAME,
 	EXECUTE_SQL_TOOL_NAME,
+	QUERY_RESULT_TOOL_NAME_SQL,
 	QUERY_TOOL_NAMES,
 } from '../agent/utils/query-tools.js';
 import { getErrorMessage } from '../agent/utils/utils.js';
@@ -453,7 +455,7 @@ export class ChatRepository {
 			FROM message_part mp
 			JOIN chat_message m ON m.id = mp.message_id
 			WHERE m.chat_id = ${chatId} AND m.superseded_at IS NULL
-				AND mp.tool_name IN (${QUERY_TOOL_NAMES[0]}, ${QUERY_TOOL_NAMES[1]})
+				AND ${PrismaSql(QUERY_RESULT_TOOL_NAME_SQL)}
 				AND mp.tool_output->>'id' = ${queryId}
 			ORDER BY m.created_at DESC, mp.created_at DESC, mp."order" DESC
 			LIMIT 1`;
@@ -462,10 +464,7 @@ export class ChatRepository {
 		}
 		return {
 			toolCallId: row.toolCallId,
-			toolName:
-				row.toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME
-					? EXECUTE_SEMANTIC_QUERY_TOOL_NAME
-					: EXECUTE_SQL_TOOL_NAME,
+			toolName: storedQueryToolName(row.toolName),
 			...readQueryPart(row.toolName, row.toolInput, row.toolOutput),
 			adminMode: row.source === 'admin',
 		};
@@ -546,7 +545,11 @@ export class ChatRepository {
 	/** The stored output of one query part (upstream `getQueryToolOutputInChat`). */
 	async getQueryToolOutputInChat(chatId: string, toolCallId: string): Promise<executeSql.Output | null> {
 		const part = await this.prisma.messagePart.findFirst({
-			where: { toolCallId, toolName: { in: [...QUERY_TOOL_NAMES] }, chatMessage: { chatId } },
+			where: {
+				toolCallId,
+				OR: [{ toolName: { in: [...QUERY_TOOL_NAMES] } }, { toolName: { startsWith: QUERY_TOOL_NAME_PREFIX } }],
+				chatMessage: { chatId },
+			},
 			select: { toolOutput: true },
 		});
 		return (part?.toolOutput as executeSql.Output | null | undefined) ?? null;
@@ -692,7 +695,7 @@ export class ChatRepository {
 			JOIN chat_message m ON m.id = mp.message_id
 			JOIN chat c ON c.id = m.chat_id
 			WHERE m.superseded_at IS NULL
-				AND mp.tool_name IN (${QUERY_TOOL_NAMES[0]}, ${QUERY_TOOL_NAMES[1]})
+				AND ${PrismaSql(QUERY_RESULT_TOOL_NAME_SQL)}
 				AND mp.tool_output->>'id' = ${queryId}
 			ORDER BY m.created_at DESC, mp.created_at DESC, mp."order" DESC
 			LIMIT 1`;
@@ -704,10 +707,7 @@ export class ChatRepository {
 			userId: row.userId,
 			chatId: row.chatId,
 			toolCallId: row.toolCallId,
-			toolName:
-				row.toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME
-					? EXECUTE_SEMANTIC_QUERY_TOOL_NAME
-					: EXECUTE_SQL_TOOL_NAME,
+			toolName: storedQueryToolName(row.toolName),
 			...readQueryPart(row.toolName, row.toolInput, row.toolOutput),
 			adminMode: row.source === 'admin',
 		};
@@ -735,7 +735,7 @@ export class ChatRepository {
 			FROM message_part mp
 			JOIN chat_message m ON m.id = mp.message_id
 			WHERE m.chat_id = ANY(${chatIds}::text[]) AND m.superseded_at IS NULL
-				AND mp.tool_name IN (${QUERY_TOOL_NAMES[0]}, ${QUERY_TOOL_NAMES[1]})
+				AND ${PrismaSql(QUERY_RESULT_TOOL_NAME_SQL)}
 				AND mp.tool_output->>'id' = ANY(${queryIds}::text[])
 			ORDER BY m.created_at ASC, mp.created_at ASC, mp."order" ASC`;
 	}
@@ -840,6 +840,10 @@ function readStoredSql(
 		const output = toolOutput as { compiled_sql?: string; database_id?: string } | null;
 		return { sqlQuery: output?.compiled_sql, databaseId: output?.database_id };
 	}
+	if (isQueryToolAgentName(toolName)) {
+		const run = (toolOutput as { query_tool?: { sql_query?: string; database_id?: string } } | null)?.query_tool;
+		return { sqlQuery: run?.sql_query, databaseId: run?.database_id };
+	}
 	const input = toolInput as { sql_query?: string; database_id?: string } | null;
 	return { sqlQuery: input?.sql_query, databaseId: input?.database_id };
 }
@@ -943,11 +947,29 @@ function remapToolCallIds(parts: NewMessagePart[]): NewMessagePart[] {
 	});
 }
 
+function storedQueryToolName(toolName: string): StoredQueryPart['toolName'] {
+	if (toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME) {
+		return EXECUTE_SEMANTIC_QUERY_TOOL_NAME;
+	}
+	return isQueryToolAgentName(toolName) ? (toolName as `qt_${string}`) : EXECUTE_SQL_TOOL_NAME;
+}
+
 function readQueryPart(
 	toolName: string,
 	toolInput: unknown,
 	toolOutput: unknown,
 ): { toolInput: executeSql.Input; toolOutput: executeSql.Output } {
+	if (isQueryToolAgentName(toolName)) {
+		const output = savedQueryTool.OutputSchema.parse(toolOutput);
+		return {
+			toolInput: {
+				sql_query: output.query_tool.sql_query,
+				database_id: output.query_tool.database_id,
+				name: output.query_tool.name,
+			},
+			toolOutput: output,
+		};
+	}
 	if (toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME) {
 		const input = executeSemanticQuery.InputSchema.parse(toolInput);
 		const output = executeSemanticQuery.OutputSchema.parse(toolOutput);

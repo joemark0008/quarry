@@ -100,3 +100,19 @@ describe('filterSupersededExecuteSqlParts', () => {
 		expect(result[1]).toBe(messages[1]);
 	});
 });
+
+describe('saved query tool parts', () => {
+	it('count as query results', () => {
+		expect(isQueryResultPart({ type: 'tool-qt_orders_by_status' })).toBe(true);
+		expect(isQueryResultPart({ type: 'tool-qt_' })).toBe(false);
+		expect(isQueryResultPart({ type: 'tool-quote' })).toBe(false);
+	});
+
+	it('are superseded by a later run of the same query id', () => {
+		const messages: TestMessage[] = [
+			{ id: 'm1', parts: [{ type: 'tool-qt_orders', toolCallId: 'a', output: { id: 'query_1' } }] },
+			{ id: 'm2', parts: [executeSqlPart('query_1', 2)] },
+		];
+		expect(filterSupersededExecuteSqlParts(messages)[0].parts).toEqual([]);
+	});
+});

@@ -13,7 +13,8 @@ export interface WarehouseDriver extends GuardConnection {
 	describeTable(schema: string, table: string): Promise<TableDescription>;
 	countRows(schema: string, table: string): Promise<number>;
 	previewRows(schema: string, table: string, limit: number): Promise<Record<string, unknown>[]>;
-	execute(sql: string, limits?: ExecuteLimits): Promise<QueryResult>;
+	/** `params` are bind values for `$1…$n` in `sql` (saved query tools). */
+	execute(sql: string, limits?: ExecuteLimits, params?: readonly unknown[]): Promise<QueryResult>;
 	close(): Promise<void>;
 }
 

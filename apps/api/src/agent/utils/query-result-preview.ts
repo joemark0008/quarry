@@ -1,15 +1,13 @@
+import { isQueryResultPartType } from '@quarry/shared/execute-sql-parts';
 import type { executeSql } from '@quarry/shared/tools';
 import type { InferUIMessageChunk } from 'ai';
 
 import type { UIChat, UIMessage, UIMessagePart } from '../types/chat.js';
-import { QUERY_TOOL_NAMES } from './query-tools.js';
+import { isQueryResultToolName } from './query-tools.js';
 
 export const QUERY_RESULT_PREVIEW_ROWS = 100;
 
 type UIMessageChunk = InferUIMessageChunk<UIMessage>;
-
-const QUERY_TOOL_NAME_SET = new Set<string>(QUERY_TOOL_NAMES);
-const QUERY_TOOL_PART_TYPES = new Set<string>(QUERY_TOOL_NAMES.map((toolName) => `tool-${toolName}`));
 
 /**
  * Query results can hold hundreds of thousands of rows. The web app only receives the first ones
@@ -54,7 +52,7 @@ export function toQueryResultPreview<T>(output: T): T {
 }
 
 function toQueryResultPreviewPart(part: UIMessagePart): UIMessagePart {
-	if (!QUERY_TOOL_PART_TYPES.has(part.type) || !('output' in part) || !part.output) {
+	if (!isQueryResultPartType(part.type) || !('output' in part) || !part.output) {
 		return part;
 	}
 	return { ...part, output: toQueryResultPreview(part.output) } as UIMessagePart;
@@ -65,7 +63,7 @@ function isQueryToolInputChunk(
 ): chunk is Extract<UIMessageChunk, { type: 'tool-input-start' | 'tool-input-available' }> {
 	return (
 		(chunk.type === 'tool-input-start' || chunk.type === 'tool-input-available') &&
-		QUERY_TOOL_NAME_SET.has(chunk.toolName)
+		isQueryResultToolName(chunk.toolName)
 	);
 }
 
