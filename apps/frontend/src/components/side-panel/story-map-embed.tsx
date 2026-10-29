@@ -1,8 +1,8 @@
 import { FoldHorizontal, Pencil, UnfoldHorizontal } from 'lucide-react';
 import { memo, useMemo, useRef, useState } from 'react';
-import { mapBlockToInput } from '@nao/shared/story-segments';
+import { mapBlockToInput } from '@quarry/shared/story-segments';
 import { StoryEmbedFallback } from './story-embed-fallback';
-import type { ParsedMapBlock } from '@nao/shared/story-segments';
+import type { ParsedMapBlock } from '@quarry/shared/story-segments';
 
 import { StoryMapRender } from '@/components/story-map-embed';
 import { MapConfigEditDialog } from '@/components/tool-calls/display-map-edit-dialog';

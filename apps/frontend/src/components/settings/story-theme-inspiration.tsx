@@ -1,4 +1,4 @@
-import { joinWithAnd } from '@nao/shared';
+import { joinWithAnd } from '@quarry/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { BadgeCheck, Globe, Loader2, PenLine, Sparkles, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -9,15 +9,15 @@ import {
 	MAX_THEME_INSTRUCTIONS_LENGTH,
 	MAX_ZIP_BYTES,
 	SOURCE_IMAGE_MEDIA_TYPES,
-} from '@nao/shared/story-theme-source';
+} from '@quarry/shared/story-theme-source';
 
-import { describeStoryThemeSources } from '@nao/shared/story-theme-generation';
-import { STORY_LOGO_MEDIA_TYPES } from '@nao/shared/story-theme';
+import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
+import { STORY_LOGO_MEDIA_TYPES } from '@quarry/shared/story-theme';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
-import type { SourceImageMediaType } from '@nao/shared/story-theme-source';
-import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
-import type { StoryLogoMediaType } from '@nao/shared/story-theme';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { SourceImageMediaType } from '@quarry/shared/story-theme-source';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
+import type { StoryLogoMediaType } from '@quarry/shared/story-theme';
 import type { RenderedPdf } from '@/components/settings/story-theme-pdf';
 import type { ViewedThemeVersion } from '@/components/settings/story-theme-recorded-sources';
 import { renderPdfPages, renderZipPdfs } from '@/components/settings/story-theme-pdf';
@@ -160,7 +160,7 @@ export function StoryThemeInspiration({
 	return (
 		<SettingsCard
 			title='Start from a brand'
-			description='Describe the theme you want, then optionally add a website, image, PDF or ZIP so nao can ground it in brand assets.'
+			description='Describe the theme you want, then optionally add a website, image, PDF or ZIP so quarry can ground it in brand assets.'
 			className={cn('gap-0', (outcome || viewedVersion) && 'overflow-hidden pb-0')}
 		>
 			{viewedVersion ? (

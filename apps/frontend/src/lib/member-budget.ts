@@ -2,10 +2,10 @@ import {
 	MEMBER_BUDGET_MAX_PRESET_USD,
 	MEMBER_BUDGET_STATUS_LABELS,
 	MEMBER_BUDGET_STEP_USD,
-} from '@nao/shared/member-budget';
-import { MAX_BUDGET_LIMIT_USD } from '@nao/shared/types';
-import type { MemberBudgetStatus } from '@nao/shared/member-budget';
-import type { MemberBudgetPeriod } from '@nao/shared/types';
+} from '@quarry/shared/member-budget';
+import { MAX_BUDGET_LIMIT_USD } from '@quarry/shared/types';
+import type { MemberBudgetStatus } from '@quarry/shared/member-budget';
+import type { MemberBudgetPeriod } from '@quarry/shared/types';
 
 export const PERIOD_LABELS: Record<MemberBudgetPeriod, string> = {
 	week: 'Week',

@@ -1,5 +1,5 @@
 import { Slider } from 'radix-ui';
-import type { ToolCallDensity } from '@nao/shared/types';
+import type { ToolCallDensity } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
 
 const densityOptions: { value: ToolCallDensity; label: string }[] = [

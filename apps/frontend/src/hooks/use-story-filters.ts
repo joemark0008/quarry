@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { isFilterSelectionActive } from '@nao/shared/sql-template';
-import { getStoryFiltersFromCode } from '@nao/shared/story-segments';
-import type { StoryFilterSelection, StoryFilterSelections } from '@nao/shared/sql-template';
-import type { ParsedFilterBlock } from '@nao/shared/story-segments';
+import { isFilterSelectionActive } from '@quarry/shared/sql-template';
+import { getStoryFiltersFromCode } from '@quarry/shared/story-segments';
+import type { StoryFilterSelection, StoryFilterSelections } from '@quarry/shared/sql-template';
+import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';

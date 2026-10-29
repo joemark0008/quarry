@@ -1,7 +1,7 @@
-import { getGridClass, getGridTemplateColumns } from '@nao/shared/story-segments';
+import { getGridClass, getGridTemplateColumns } from '@quarry/shared/story-segments';
 import { Fragment, memo } from 'react';
 import { Streamdown } from 'streamdown';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock, Segment } from '@nao/shared/story-segments';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock, Segment } from '@quarry/shared/story-segments';
 
 import { MarkdownTable } from '@/components/chat-messages/markdown-table';
 import { StoryTableFrame } from '@/components/story-block';
@@ -102,11 +102,11 @@ const StoryGrid = memo(function StoryGrid({
 			<div
 				className={
 					widths !== null
-						? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--nao-grid-cols)]'
+						? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--quarry-grid-cols)]'
 						: `grid ${getGridClass(cols)} gap-4`
 				}
 				{...(widths !== null
-					? { style: { ['--nao-grid-cols' as string]: getGridTemplateColumns(widths) } }
+					? { style: { ['--quarry-grid-cols' as string]: getGridTemplateColumns(widths) } }
 					: {})}
 			>
 				{children.map((segment, i) => (

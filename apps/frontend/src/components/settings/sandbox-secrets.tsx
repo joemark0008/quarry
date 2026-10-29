@@ -5,7 +5,7 @@ import {
 	SANDBOX_SECRET_NAME_PATTERN,
 	SANDBOX_SECRET_VALUE_MAX_LENGTH,
 	SANDBOX_SECRET_VALUE_MIN_LENGTH,
-} from '@nao/shared/types';
+} from '@quarry/shared/types';
 import { useQuery } from '@tanstack/react-query';
 import { KeyRound, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';

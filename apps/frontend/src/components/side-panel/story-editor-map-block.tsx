@@ -1,4 +1,4 @@
-import { parseMapBlock, TAG_ATTRS } from '@nao/shared/story-segments';
+import { parseMapBlock, TAG_ATTRS } from '@quarry/shared/story-segments';
 import { mergeAttributes, Node } from '@tiptap/core';
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 import { useCallback, useMemo } from 'react';

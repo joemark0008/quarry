@@ -1,7 +1,7 @@
-import type { UserRole } from '@nao/shared/types';
 import type { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host.js';
+import type { UserRole } from '@quarry/shared/types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AuthService } from '../../auth/auth.service.js';

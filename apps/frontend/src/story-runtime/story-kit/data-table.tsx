@@ -1,5 +1,5 @@
-import { createCellBackgroundResolver, sanitizeConditionalFormats } from '@nao/shared/conditional-formatting';
-import { TableDisplay } from '@nao/shared/table-display';
+import { createCellBackgroundResolver, sanitizeConditionalFormats } from '@quarry/shared/conditional-formatting';
+import { TableDisplay } from '@quarry/shared/table-display';
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -20,10 +20,10 @@ import { Block, BlockState } from './block';
 import { isNumericColumn, withNumericValues } from './columns';
 import { useBlockData } from './use-block-data';
 import { useFittingPageSize } from './use-fitting-page-size';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
-import type { TablePaginationProps } from '@nao/shared/table-display';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
+import type { TablePaginationProps } from '@quarry/shared/table-display';
 import type { CSSProperties, ReactNode } from 'react';
-import type { StoryTableExportFormat } from '@nao/shared/story-app';
+import type { StoryTableExportFormat } from '@quarry/shared/story-app';
 import type { BlockDataSource, Row } from './use-block-data';
 import type { BlockProps } from './block';
 
@@ -67,8 +67,8 @@ export function DataTable(props: DataTableProps) {
 							rows,
 						});
 					return (
-						<div className='nao-table-wrap'>
-							<div className='nao-table__toolbar'>
+						<div className='quarry-table-wrap'>
+							<div className='quarry-table__toolbar'>
 								<TableActions
 									rows={rows}
 									columns={visible}
@@ -128,7 +128,7 @@ function TableActions({ rows, columns, filename, onEditFormat, onFullscreen }: T
 	};
 
 	return (
-		<div className='nao-table__actions'>
+		<div className='quarry-table__actions'>
 			{onEditFormat && (
 				<button type='button' onClick={onEditFormat} title='Edit formatting' aria-label='Edit formatting'>
 					<PencilIcon />
@@ -139,7 +139,7 @@ function TableActions({ rows, columns, filename, onEditFormat, onFullscreen }: T
 					<button type='button' onClick={handleCopy} title='Copy rows' aria-label='Copy rows'>
 						<CopyIcon />
 					</button>
-					<div className='nao-table__export' ref={menuRef}>
+					<div className='quarry-table__export' ref={menuRef}>
 						<button
 							type='button'
 							onClick={() => setExportMenuOpen((current) => !current)}
@@ -149,7 +149,7 @@ function TableActions({ rows, columns, filename, onEditFormat, onFullscreen }: T
 							<DownloadIcon />
 						</button>
 						{exportMenuOpen && (
-							<div className='nao-table__export-menu'>
+							<div className='quarry-table__export-menu'>
 								<button type='button' onClick={() => handleExport('csv')}>
 									CSV
 								</button>
@@ -201,14 +201,14 @@ function FullscreenOverlay({ title, onClose, actions, children }: FullscreenOver
 	}, [onClose]);
 
 	return (
-		<div className='nao-table__overlay' role='dialog' aria-modal='true' aria-label={title}>
-			<div className='nao-table__overlay-card'>
-				<div className='nao-table__toolbar'>
+		<div className='quarry-table__overlay' role='dialog' aria-modal='true' aria-label={title}>
+			<div className='quarry-table__overlay-card'>
+				<div className='quarry-table__toolbar'>
 					{actions}
 					<button
 						ref={closeButtonRef}
 						type='button'
-						className='nao-table__overlay-close'
+						className='quarry-table__overlay-close'
 						onClick={onClose}
 						aria-label='Close fullscreen'
 					>
@@ -233,7 +233,7 @@ function TableView({ rows, columns, formats, maxHeight, fitBlock = false }: Tabl
 	const tableRef = useRef<HTMLDivElement>(null);
 	const pageSize = useFittingPageSize(tableRef, PAGE_SIZE, rows.length, fitBlock);
 	const capsHeight = maxHeight !== undefined && pageSize <= PAGE_SIZE;
-	const style = capsHeight ? ({ '--nao-table-max-height': `${maxHeight}px` } as CSSProperties) : undefined;
+	const style = capsHeight ? ({ '--quarry-table-max-height': `${maxHeight}px` } as CSSProperties) : undefined;
 	const tableRows = useMemo(
 		() =>
 			withNumericValues(
@@ -244,7 +244,7 @@ function TableView({ rows, columns, formats, maxHeight, fitBlock = false }: Tabl
 	);
 	const cellBackground = useMemo(() => createCellBackgroundResolver(tableRows, formats), [formats, tableRows]);
 	return (
-		<div className='nao-table' style={style} ref={tableRef}>
+		<div className='quarry-table' style={style} ref={tableRef}>
 			<TableDisplay
 				data={tableRows}
 				cellBackground={cellBackground}
@@ -284,10 +284,10 @@ function TableFooter({
 		: [...PAGE_SIZE_OPTIONS, pageSize].sort((a, b) => a - b);
 
 	return (
-		<div className='nao-table__footer'>
+		<div className='quarry-table__footer'>
 			<span>{totalRows} rows</span>
-			<div className='nao-table__pager'>
-				<div className='nao-table__page-size'>
+			<div className='quarry-table__pager'>
+				<div className='quarry-table__page-size'>
 					<span>Rows per page</span>
 					<select
 						aria-label='Rows per page'
@@ -304,7 +304,7 @@ function TableFooter({
 				<span>
 					Page {pageIndex + 1} of {pageCount}
 				</span>
-				<div className='nao-table__pager-buttons'>
+				<div className='quarry-table__pager-buttons'>
 					<button
 						type='button'
 						onClick={() => onPageChange(0)}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { areChatArtifactsEqual, collectChatArtifacts, countChatArtifacts } from './chat-artifacts';
-import type { UIMessage, UIMessagePart } from '@nao/shared/backend/chat';
+import type { UIMessage, UIMessagePart } from '@quarry/shared/backend/chat';
 
 function queryPart(id: string, name: string | undefined, columns: string[], rowCount: number): UIMessagePart {
 	return {

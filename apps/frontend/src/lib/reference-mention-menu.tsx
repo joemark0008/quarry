@@ -6,11 +6,11 @@ import {
 	toSchemaMentionId,
 	toStoryFolderMentionId,
 	toStoryReferenceMentionId,
-} from '@nao/shared';
-import { FOLDER_SYSTEM_TYPE } from '@nao/shared/types';
+} from '@quarry/shared';
+import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
 import type { MentionOption } from 'prompt-mentions';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { MentionOrigin, MentionOriginNode } from '@/components/mention-origin-preview';
 import { DatabaseIcon } from '@/components/ui/database-icon';
 import StoryIcon from '@/components/ui/story-icon';

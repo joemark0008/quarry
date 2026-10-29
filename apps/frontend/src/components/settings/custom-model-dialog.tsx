@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { ModelParametersFields } from './model-parameters-fields';
 import { useModelParameters } from './use-model-parameters';
-import type { CustomModelMetadata, ModelInferenceSettings } from '@nao/shared/backend/llm';
-import type { LlmProvider } from '@nao/shared/types';
+import type { CustomModelMetadata, ModelInferenceSettings } from '@quarry/shared/backend/llm';
+import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';

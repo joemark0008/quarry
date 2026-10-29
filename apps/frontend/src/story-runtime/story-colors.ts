@@ -1,5 +1,5 @@
-import { SERIES_COLORS } from '@nao/shared/chart-series';
-import type { StoryBlockChartConfig, StoryBlockColors } from '@nao/shared/story-app';
+import { SERIES_COLORS } from '@quarry/shared/chart-series';
+import type { StoryBlockChartConfig, StoryBlockColors } from '@quarry/shared/story-app';
 
 export function resolveBlockColors(config: StoryBlockChartConfig): StoryBlockColors {
 	const probe = document.createElement('span');

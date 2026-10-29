@@ -58,7 +58,7 @@ export function EmailVerified() {
 					</div>
 					{isOAuthAuthorization ? (
 						<Button asChild variant='outline' className='mt-6 h-11 w-full rounded-full'>
-							<a href={safeRedirect ?? '/'}>Continue to nao</a>
+							<a href={safeRedirect ?? '/'}>Continue to quarry</a>
 						</Button>
 					) : (
 						<Button
@@ -67,7 +67,7 @@ export function EmailVerified() {
 							className='mt-6 h-11 w-full rounded-full'
 							onClick={() => router.history.push(safeRedirect ?? '/')}
 						>
-							Continue to nao
+							Continue to quarry
 						</Button>
 					)}
 				</div>

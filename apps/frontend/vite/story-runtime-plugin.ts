@@ -28,7 +28,7 @@ export function storyRuntime(): Plugin {
 	let standaloneSource: Promise<string> | null = null;
 
 	return {
-		name: 'nao:story-runtime',
+		name: 'quarry:story-runtime',
 		config() {
 			return { server: { cors: { preflightContinue: true } } };
 		},
@@ -128,7 +128,7 @@ function standaloneBuildConfig(root: string, outDir: string, write: boolean): In
 			lib: {
 				entry: resolve(root, ENTRY_DIR, STANDALONE_ENTRY),
 				formats: ['iife'],
-				name: 'naoStoryStandaloneRuntime',
+				name: 'quarryStoryStandaloneRuntime',
 				fileName: () => STORY_STANDALONE_RUNTIME_FILE,
 			},
 		},

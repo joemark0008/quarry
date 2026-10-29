@@ -81,25 +81,25 @@ body {
 	@apply m-0 h-full overflow-hidden;
 }
 
-html.nao-embed {
+html.quarry-embed {
 	color-scheme: light;
 	background-color: var(--panel);
 }
 
-html.nao-embed.dark {
+html.quarry-embed.dark {
 	color-scheme: dark;
 }
 
-html.nao-embed,
-html.nao-embed body {
+html.quarry-embed,
+html.quarry-embed body {
 	overflow: hidden;
 }
 
-html.nao-embed body {
+html.quarry-embed body {
 	background-color: var(--panel);
 }
 
-html.nao-embed #app {
+html.quarry-embed #app {
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
@@ -110,9 +110,9 @@ html.nao-embed #app {
 	background-color: var(--panel);
 }
 
-html.nao-embed-app,
-html.nao-embed-app body,
-html.nao-embed-app #app {
+html.quarry-embed-app,
+html.quarry-embed-app body,
+html.quarry-embed-app #app {
 	background-color: var(--background);
 }
 
@@ -224,8 +224,9 @@ code.dollar:before {
 	--card-foreground: oklch(0 0 0 / 0.85);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.129 0.042 264.695);
-	--primary: oklch(0.5077 0.281 277.89);
-	--primary-muted: oklch(0.721 0.157 290.2);
+	/* quarry teal (brand/README.md) */
+	--primary: #0f6e56;
+	--primary-muted: #1d9e75;
 	--primary-foreground: oklch(0.984 0.003 247.858);
 	--secondary: oklch(0.94 0 0);
 	--secondary-foreground: oklch(0.208 0.042 265.755);
@@ -239,9 +240,9 @@ code.dollar:before {
 	--ring: oklch(0 0 0 / 0.2);
 	--violet: oklch(0.5077 0.281 277.89);
 
-	--gradient-brand: linear-gradient(180deg, #522bff 0%, #6441ff 100%);
-	--gradient-brand-hover: linear-gradient(180deg, #6441ff 0%, #7858ff 100%);
-	--gradient-brand-border: linear-gradient(180deg, #522bff 0%, #3c1bcd 50.48%, #a591ff 100%);
+	--gradient-brand: linear-gradient(180deg, #0f6e56 0%, #1d9e75 100%);
+	--gradient-brand-hover: linear-gradient(180deg, #1d9e75 0%, #25b587 100%);
+	--gradient-brand-border: linear-gradient(180deg, #0f6e56 0%, #085041 50.48%, #5cc9a3 100%);
 
 	--chart-1: oklch(0.398 0.07 227.392);
 	--chart-2: oklch(0.646 0.222 41.116);
@@ -274,8 +275,8 @@ code.dollar:before {
 	--card-foreground: oklch(0.984 0.003 247.858);
 	--popover: oklch(0.21 0.008 270);
 	--popover-foreground: oklch(0.984 0.003 247.858);
-	--primary: oklch(0.721 0.157 290.2);
-	--primary-muted: oklch(0.721 0.157 290.2);
+	--primary: #1d9e75;
+	--primary-muted: #1d9e75;
 	--primary-foreground: oklch(0.21 0.008 270);
 	--secondary: oklch(0.27 0.012 270);
 	--secondary-foreground: oklch(0.984 0.003 247.858);
@@ -462,11 +463,11 @@ code.dollar:before {
 	background-color: rgb(250 204 21 / 20%);
 }
 
-::highlight(nao-file-preview-search-match) {
+::highlight(quarry-file-preview-search-match) {
 	background-color: rgb(245 158 11 / 18%);
 }
 
-.dark ::highlight(nao-file-preview-search-match) {
+.dark ::highlight(quarry-file-preview-search-match) {
 	background-color: rgb(250 204 21 / 20%);
 }
 
@@ -541,11 +542,11 @@ code.dollar:before {
 	@apply my-3;
 }
 
-.story-editor .tiptap .nao-block-selected {
+.story-editor .tiptap .quarry-block-selected {
 	@apply bg-primary/10 rounded-md;
 }
 
-.dark .story-editor .tiptap .nao-block-selected {
+.dark .story-editor .tiptap .quarry-block-selected {
 	@apply bg-blue-500/25;
 }
 
@@ -590,13 +591,13 @@ code.dollar:before {
 	display: none;
 }
 
-.nao-input .prompt-input {
+.quarry-input .prompt-input {
 	max-height: 200px;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 }
 
-.nao-input-resizable .prompt-input {
+.quarry-input-resizable .prompt-input {
 	min-height: var(--prompt-min-height);
 	max-height: none;
 	resize: vertical;
@@ -1007,7 +1008,7 @@ code.dollar:before {
 }
 
 /* Chart editor source table: a flat header on the page background so highlighted columns read as one band. */
-.chart-editor-table .nao-table-display__scroll {
+.chart-editor-table .quarry-table-display__scroll {
 	border-top: 0;
 }
 
@@ -1030,23 +1031,23 @@ code.dollar:before {
 	color: var(--foreground);
 }
 
-.chart-editor-table .nao-table-display__index {
+.chart-editor-table .quarry-table-display__index {
 	background: var(--background);
 }
 
-.chart-editor-table td.nao-table-display__index span {
+.chart-editor-table td.quarry-table-display__index span {
 	color: var(--muted-foreground);
 	font-weight: 400;
 }
 
-.chart-editor-table .nao-table-display__sort {
+.chart-editor-table .quarry-table-display__sort {
 	opacity: 0;
 	transition: opacity 150ms;
 }
 
-.chart-editor-table th:hover .nao-table-display__sort,
-.chart-editor-table th:focus-within .nao-table-display__sort,
-.chart-editor-table th[aria-sort='ascending'] .nao-table-display__sort,
-.chart-editor-table th[aria-sort='descending'] .nao-table-display__sort {
+.chart-editor-table th:hover .quarry-table-display__sort,
+.chart-editor-table th:focus-within .quarry-table-display__sort,
+.chart-editor-table th[aria-sort='ascending'] .quarry-table-display__sort,
+.chart-editor-table th[aria-sort='descending'] .quarry-table-display__sort {
 	opacity: 1;
 }

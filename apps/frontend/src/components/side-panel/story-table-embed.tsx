@@ -1,8 +1,8 @@
-import { sanitizeConditionalFormats } from '@nao/shared/conditional-formatting';
+import { sanitizeConditionalFormats } from '@quarry/shared/conditional-formatting';
 import { Pencil } from 'lucide-react';
 import { memo, useState } from 'react';
 import { StoryEmbedFallback } from './story-embed-fallback';
-import type { ParsedTableBlock } from '@nao/shared/story-segments';
+import type { ParsedTableBlock } from '@quarry/shared/story-segments';
 
 import { DataTableCard } from '@/components/data-table-card';
 import { TableFormatEditDialog } from '@/components/tool-calls/display-table-edit-dialog';

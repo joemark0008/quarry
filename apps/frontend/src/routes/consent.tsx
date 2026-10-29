@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { Spinner } from '@/components/ui/spinner';
-import NaoLogo from '@/components/icons/nao-full-logo.svg';
+import QuarryLogo from '@/components/icons/quarry-full-logo.svg';
 import { authClient } from '@/lib/auth-client';
 
 interface PublicClient {
@@ -99,8 +99,8 @@ function Consent() {
 						<h2 className='text-lg font-semibold'>{accepted ? 'Access granted' : 'Access denied'}</h2>
 						<p className='text-sm text-muted-foreground'>
 							{accepted
-								? `You have authorized ${clientLabel} to access your nao account. You can close this window.`
-								: `You have denied ${clientLabel} access to your nao account. You can close this window.`}
+								? `You have authorized ${clientLabel} to access your quarry account. You can close this window.`
+								: `You have denied ${clientLabel} access to your quarry account. You can close this window.`}
 						</p>
 					</div>
 				</div>
@@ -113,7 +113,7 @@ function Consent() {
 			<Card className='bg-background'>
 				<CardHeader>
 					<CardTitle>Authorize {clientLabel}</CardTitle>
-					<CardDescription>{clientLabel} is requesting access to your nao account.</CardDescription>
+					<CardDescription>{clientLabel} is requesting access to your quarry account.</CardDescription>
 				</CardHeader>
 				<CardContent className='space-y-3'>
 					{requestedScopes.length > 0 && (
@@ -156,7 +156,7 @@ function CenteredCard({ children }: { children: React.ReactNode }) {
 	return (
 		<div className='mx-auto w-full max-w-md p-8 my-auto'>
 			<div className='flex flex-col items-center gap-8 mb-10 pb-2'>
-				<NaoLogo className='w-20 h-auto text-foreground' />
+				<QuarryLogo className='w-20 h-auto text-foreground' />
 				<h1 className='font-borna text-2xl font-medium text-center'>Authorize</h1>
 			</div>
 			{children}

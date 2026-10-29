@@ -5,7 +5,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png?inline';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png?inline';
 import leafletStyles from 'leaflet/dist/leaflet.css?inline';
 
-const STYLE_ID = 'nao-leaflet';
+const STYLE_ID = 'quarry-leaflet';
 
 installAssets();
 

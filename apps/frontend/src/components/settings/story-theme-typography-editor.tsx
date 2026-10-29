@@ -1,8 +1,8 @@
-import { ROLE_LIMITS, STORY_TEXT_ROLE_LABELS, STORY_TEXT_ROLES } from '@nao/shared/story-theme-typography';
+import { ROLE_LIMITS, STORY_TEXT_ROLE_LABELS, STORY_TEXT_ROLES } from '@quarry/shared/story-theme-typography';
 import { Italic } from 'lucide-react';
 import { useState } from 'react';
-import type { StoryTextRole, StoryTextRoleStyle, StoryTypography } from '@nao/shared/story-theme-typography';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { StoryTextRole, StoryTextRoleStyle, StoryTypography } from '@quarry/shared/story-theme-typography';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { CSSProperties } from 'react';
 
 import { Input } from '@/components/ui/input';

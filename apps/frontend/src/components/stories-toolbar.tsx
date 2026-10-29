@@ -1,6 +1,6 @@
 import { LayoutGrid, List, ListChecks, X } from 'lucide-react';
 import type { ReactNode } from 'react';
-import type { StoryPanelDisplayMode } from '@nao/shared/types';
+import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { SortState, StoriesFilters } from '@/lib/stories-page';
 import { SearchBar } from '@/components/search-bar';
 import { StoriesActiveFilters, StoriesFiltersMenu, TOOLBAR_BUTTON_CLASS } from '@/components/stories-filters-menu';

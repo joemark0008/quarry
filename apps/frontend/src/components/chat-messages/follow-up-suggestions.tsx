@@ -1,7 +1,7 @@
 import { CornerDownRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
-import type { UIToolPart } from '@nao/shared/backend/chat';
+import type { UIToolPart } from '@quarry/shared/backend/chat';
 import { useSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { cn } from '@/lib/utils';
 

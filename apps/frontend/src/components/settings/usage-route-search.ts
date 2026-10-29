@@ -1,7 +1,7 @@
-import { CHAT_REPLAY_FEEDBACK_STATES, CHAT_REPLAY_TOOL_STATES, providerLabels } from '@nao/shared/types';
-import { USAGE_PERIOD_PRESET_NAMES, USAGE_SOURCES } from '@nao/shared/backend/usage';
-import type { UsagePeriodPreset, UsagePeriodSelection, UsageSource } from '@nao/shared/backend/usage';
-import type { ChatReplayFeedbackState, ChatReplayToolState, LlmProvider } from '@nao/shared/types';
+import { CHAT_REPLAY_FEEDBACK_STATES, CHAT_REPLAY_TOOL_STATES, providerLabels } from '@quarry/shared/types';
+import { USAGE_PERIOD_PRESET_NAMES, USAGE_SOURCES } from '@quarry/shared/backend/usage';
+import type { UsagePeriodPreset, UsagePeriodSelection, UsageSource } from '@quarry/shared/backend/usage';
+import type { ChatReplayFeedbackState, ChatReplayToolState, LlmProvider } from '@quarry/shared/types';
 import type { RecommendationTab } from '@/components/settings/recommendations-route-search';
 import { RECOMMENDATION_TABS } from '@/components/settings/recommendations-route-search';
 import { getActiveProjectId } from '@/lib/active-project';
@@ -66,7 +66,7 @@ const periodSearchKeys = [
 	'period',
 	'granularity',
 ] as const;
-const usageFiltersStorageKey = 'nao.usage-filters';
+const usageFiltersStorageKey = 'quarry.usage-filters';
 
 export function validateUsageSearchWithStoredFilters(search: Record<string, unknown>): UsageRouteSearch {
 	const hasSearchFilters = [...filterSearchKeys, ...periodSearchKeys].some((key) => search[key] !== undefined);

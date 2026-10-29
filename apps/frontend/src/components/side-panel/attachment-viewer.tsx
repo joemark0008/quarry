@@ -94,7 +94,10 @@ function PreviewBody({ preview, fileName }: { preview: AttachmentPreview; fileNa
 			);
 		case 'unsupported':
 			return (
-				<Notice fileName={fileName} message='nao cannot preview this kind of file. Download it to open it.' />
+				<Notice
+					fileName={fileName}
+					message='quarry cannot preview this kind of file. Download it to open it.'
+				/>
 			);
 	}
 }

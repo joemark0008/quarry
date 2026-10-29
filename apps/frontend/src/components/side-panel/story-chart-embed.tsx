@@ -1,11 +1,11 @@
-import { resolveDataKey } from '@nao/shared';
+import { resolveDataKey } from '@quarry/shared';
 import { Code, Pencil } from 'lucide-react';
 import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryBlockDragContext } from './story-editor-drag-context';
 import { StoryEmbedFallback } from './story-embed-fallback';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { ParsedChartBlock } from '@nao/shared/story-segments';
-import type { displayChart } from '@nao/shared/tools';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { ParsedChartBlock } from '@quarry/shared/story-segments';
+import type { displayChart } from '@quarry/shared/tools';
 
 import type { ChartEditorView } from '@/components/tool-calls/display-chart-edit-dialog';
 import { StoryChartQueryView } from '@/components/side-panel/story-chart-query';

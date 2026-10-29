@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, ChevronLeft, ChevronRight, Copy, Plus, Trash2 } from 'lucide-react';
 import { Fragment, useEffect, useState } from 'react';
-import type { LlmSelectedModel } from '@nao/shared/types';
+import type { LlmSelectedModel } from '@quarry/shared/types';
 import { findModel, ModelSelectField } from '@/components/settings/model-select-field';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -87,7 +87,7 @@ export function McpEndpointSettings({ isAdmin }: Props) {
 					id='mcp-sub-agent-mode'
 					label='Sub-agent mode'
 					description={renderInline(
-						"Exposes `ask_nao` (plus `get_nao_answer` to poll long runs) — delegates analytics tasks to nao's agent, on the model selected below (or the project default chat model) unless the caller names a `model`. The full reasoning trace is saved as a chat visible in the nao UI.",
+						"Exposes `ask_nao` (plus `get_nao_answer` to poll long runs) — delegates analytics tasks to quarry's agent, on the model selected below (or the project default chat model) unless the caller names a `model`. The full reasoning trace is saved as a chat visible in the quarry UI.",
 					)}
 					checked={settings?.subAgentModeEnabled ?? true}
 					onCheckedChange={(v) => toggle('subAgentModeEnabled', v)}
@@ -193,20 +193,24 @@ function ConnectionCard() {
 }
 
 function ConnectionGuide({ projectName, endpointUrl }: { projectName: string; endpointUrl: string }) {
-	const cursorConfig = JSON.stringify({ mcpServers: { nao: { type: 'http', url: endpointUrl } } }, null, 2);
+	const cursorConfig = JSON.stringify({ mcpServers: { quarry: { type: 'http', url: endpointUrl } } }, null, 2);
 
 	const claudeDesktopConfig = JSON.stringify(
-		{ mcpServers: { nao: { command: 'npx', args: ['-y', 'mcp-remote', endpointUrl] } } },
+		{ mcpServers: { quarry: { command: 'npx', args: ['-y', 'mcp-remote', endpointUrl] } } },
 		null,
 		2,
 	);
 
-	const vscodeConfig = JSON.stringify({ servers: { nao: { type: 'http', url: endpointUrl } }, inputs: [] }, null, 2);
+	const vscodeConfig = JSON.stringify(
+		{ servers: { quarry: { type: 'http', url: endpointUrl } }, inputs: [] },
+		null,
+		2,
+	);
 
 	const manualTokenConfig = JSON.stringify(
 		{
 			mcpServers: {
-				nao: {
+				quarry: {
 					type: 'http',
 					url: endpointUrl,
 					headers: { Authorization: `Bearer ${TOKEN_PLACEHOLDER}` },
@@ -509,9 +513,9 @@ function OAuthClientsCard() {
 	const queryClient = useQueryClient();
 	// OAuth clients are deployment-wide (no per-workspace scoping), so this is self-hosted only —
 	// the backend enforces the same restriction. Wait for the config to resolve before deciding, so
-	// on cloud we neither fire the list request nor flash the card (naoMode is unknown until then).
+	// on cloud we neither fire the list request nor flash the card (quarryMode is unknown until then).
 	const configQuery = usePublicConfig();
-	const isCloud = configQuery.data?.naoMode === 'cloud';
+	const isCloud = configQuery.data?.quarryMode === 'cloud';
 	const clientsQuery = useQuery({
 		...trpc.mcpOAuthClients.list.queryOptions(),
 		enabled: configQuery.isSuccess && !isCloud,

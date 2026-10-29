@@ -6,8 +6,8 @@ import {
 	DEFAULT_DATE_FORMAT_SETTINGS,
 	formatDateValue,
 	SUPPORTED_DATE_FORMAT_TOKENS,
-} from '@nao/shared/date';
-import type { DateFormatPreset } from '@nao/shared/date';
+} from '@quarry/shared/date';
+import type { DateFormatPreset } from '@quarry/shared/date';
 
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';

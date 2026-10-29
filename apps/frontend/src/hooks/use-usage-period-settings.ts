@@ -4,8 +4,8 @@ import {
 	DEFAULT_USAGE_PERIOD_SELECTION,
 	resolveUsagePeriod,
 	resolveUsagePeriodGranularity,
-} from '@nao/shared/backend/usage';
-import type { SavedUsagePeriod, SavedUsagePeriodInput, UsagePeriodSelection } from '@nao/shared/backend/usage';
+} from '@quarry/shared/backend/usage';
+import type { SavedUsagePeriod, SavedUsagePeriodInput, UsagePeriodSelection } from '@quarry/shared/backend/usage';
 import type { UsageRouteSearch } from '@/components/settings/usage-route-search';
 import {
 	clearStoredUsagePeriodSelection,

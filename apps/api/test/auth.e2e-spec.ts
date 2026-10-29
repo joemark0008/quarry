@@ -32,10 +32,10 @@ describe('auth (e2e)', () => {
 	});
 
 	it('offers sign-up while there are no users', async () => {
-		const res = await graphql('{ hasUsers publicConfig { naoMode enableUserLogin enableUserSignup } }');
+		const res = await graphql('{ hasUsers publicConfig { quarryMode enableUserLogin enableUserSignup } }');
 		expect(res.body.data).toEqual({
 			hasUsers: false,
-			publicConfig: { naoMode: 'self-hosted', enableUserLogin: true, enableUserSignup: true },
+			publicConfig: { quarryMode: 'self-hosted', enableUserLogin: true, enableUserSignup: true },
 		});
 	});
 

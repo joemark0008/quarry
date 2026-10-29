@@ -69,7 +69,7 @@ function PromptText({ prompt }: { prompt: string }) {
 					);
 				}
 
-				if (/^(?:npx|uv|pip|unset|nao)\b/.test(text)) {
+				if (/^(?:npx|uv|pip|unset|quarry)\b/.test(text)) {
 					return (
 						<code key={index} className='block break-words font-mono text-xs leading-5'>
 							{text}

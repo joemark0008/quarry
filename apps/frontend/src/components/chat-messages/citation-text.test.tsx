@@ -5,12 +5,17 @@ import { TRPCClientError } from '@trpc/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { AssistantTextWithCitation } from './citation-text';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 const mocks = vi.hoisted(() => ({
 	copySupportRequest: vi.fn(),
 	submitSupportRequest: vi.fn(),
+}));
+
+vi.mock('@/lib/quarry-links', () => ({
+	QUARRY_SUPPORT_EMAIL: 'support@example.com',
+	docsUrl: () => undefined,
 }));
 
 vi.mock('@/main', () => ({
@@ -233,12 +238,12 @@ describe('AssistantTextWithCitation', () => {
 		fireEvent.click(screen.getByRole('button', { name: 'Copy request' }));
 		expect(mocks.copySupportRequest).toHaveBeenCalledWith('Please help me connect my warehouse.');
 		expect(screen.getByRole('link', { name: 'Open email app' }).getAttribute('href')).toBe(
-			'mailto:support@getnao.io?subject=nao%20support%20request',
+			'mailto:support@example.com?subject=quarry%20support%20request',
 		);
 	});
 
 	it.each([
-		['Read the docs', 'https://docs.getnao.io'],
+		['Read the docs', 'https://docs.example.com'],
 		['Set up your project', '/onboarding'],
 	])('keeps the %s message action as plain markdown', (label, href) => {
 		renderAnswer(`[${label}](${href})`);
@@ -248,12 +253,12 @@ describe('AssistantTextWithCitation', () => {
 
 	it.each([false, true])('keeps Streamdown link safety while streaming is %s', async (isStreaming) => {
 		const open = vi.spyOn(window, 'open').mockImplementation(() => null);
-		renderAnswer('[Read the docs](https://docs.getnao.io)', isStreaming);
+		renderAnswer('[Read the docs](https://docs.example.com)', isStreaming);
 
 		fireEvent.click(screen.getByRole('button', { name: 'Read the docs' }));
 		expect(await screen.findByRole('heading', { name: 'Open external link?' })).toBeDefined();
 		fireEvent.click(screen.getByRole('button', { name: 'Open link' }));
-		expect(open).toHaveBeenCalledWith('https://docs.getnao.io/', '_blank', 'noreferrer');
+		expect(open).toHaveBeenCalledWith('https://docs.example.com/', '_blank', 'noreferrer');
 	});
 
 	it('clarifies the legacy Jaffle Shop limit message and removes its onboarding action', () => {

@@ -5,7 +5,7 @@ import type { SettingsSearchEntry } from '@/components/settings-search-index';
 import { settingsSearchIndex } from '@/components/settings-search-index';
 import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings';
 import { useLicenseFeatures } from '@/hooks/use-license';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { usePublicConfig } from '@/hooks/use-public-config';
 

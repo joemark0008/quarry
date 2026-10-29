@@ -6,6 +6,7 @@ import { ErrorMessage } from '@/components/ui/error-message';
 import { Input } from '@/components/ui/input';
 import { getSubmitErrorMessage, PasswordField } from '@/components/ui/form-fields';
 import { cn } from '@/lib/utils';
+import { docsUrl } from '@/lib/quarry-links';
 
 export type SlackTransportMode = 'webhook' | 'socket';
 
@@ -23,13 +24,13 @@ export interface SlackFormProps {
 }
 
 function buildSlackManifest(webhookUrl: string, mentionName: string, transportMode: SlackTransportMode) {
-	const name = mentionName.trim() || 'nao';
+	const name = mentionName.trim() || 'quarry';
 	const isSocket = transportMode === 'socket';
 	return {
 		display_information: {
 			name,
 			description: 'Analytics agent for data queries',
-			background_color: '#522bff',
+			background_color: '#0F6E56',
 		},
 		features: {
 			app_home: {
@@ -43,7 +44,7 @@ function buildSlackManifest(webhookUrl: string, mentionName: string, transportMo
 			slash_commands: [
 				{
 					command: '/new',
-					description: 'Start a fresh conversation with nao',
+					description: 'Start a fresh conversation with quarry',
 					should_escape: false,
 					...(isSocket ? {} : { url: webhookUrl }),
 				},
@@ -96,7 +97,7 @@ function buildManifestUrl(webhookUrl: string, mentionName: string, transportMode
 }
 
 export function SlackForm({ webhookUrl, hasProjectConfig, onSubmit, onCancel, isPending }: SlackFormProps) {
-	const [mentionName, setMentionName] = useState('nao');
+	const [mentionName, setMentionName] = useState('quarry');
 	const [transportMode, setTransportMode] = useState<SlackTransportMode>('webhook');
 	const [submitError, setSubmitError] = useState<string>();
 
@@ -136,7 +137,7 @@ export function SlackForm({ webhookUrl, hasProjectConfig, onSubmit, onCancel, is
 				<span className='text-sm font-medium text-foreground'>Slack</span>
 				<p className='text-[11px] text-muted-foreground leading-relaxed'>
 					<a
-						href='https://docs.getnao.io/nao-agent/chat/slack'
+						href={docsUrl('chat/slack')}
 						target='_blank'
 						rel='noopener noreferrer'
 						className='inline-flex items-center gap-1 underline hover:text-foreground'
@@ -177,8 +178,8 @@ export function SlackForm({ webhookUrl, hasProjectConfig, onSubmit, onCancel, is
 					</div>
 					<p className='text-[11px] text-muted-foreground leading-relaxed'>
 						{isSocket
-							? 'Socket Mode opens an outbound WebSocket to Slack — use this when nao runs in a private VPC or air-gapped environment.'
-							: 'Webhook mode (default) requires nao to be reachable from the internet.'}
+							? 'Socket Mode opens an outbound WebSocket to Slack — use this when quarry runs in a private VPC or air-gapped environment.'
+							: 'Webhook mode (default) requires quarry to be reachable from the internet.'}
 					</p>
 				</div>
 
@@ -192,11 +193,11 @@ export function SlackForm({ webhookUrl, hasProjectConfig, onSubmit, onCancel, is
 						type='text'
 						value={mentionName}
 						onChange={(e) => setMentionName(e.target.value)}
-						placeholder='nao'
+						placeholder='quarry'
 						className='text-xs h-8'
 					/>
 					<p className='text-[11px] text-muted-foreground'>
-						The name users will use to mention the bot (e.g. @nao).
+						The name users will use to mention the bot (e.g. @quarry).
 					</p>
 				</div>
 

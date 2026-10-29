@@ -18,17 +18,17 @@ import {
 	X,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { selectBackgroundModel } from '@nao/shared';
+import { selectBackgroundModel } from '@quarry/shared';
 import {
 	CONTEXT_RECOMMENDATION_CATEGORIES,
 	CONTEXT_RECOMMENDATION_CATEGORY_LABELS,
 	MAX_TRIGGER_CHATS,
 	normalizeContextRecommendationCategory,
-} from '@nao/shared/context-recommendation';
+} from '@quarry/shared/context-recommendation';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { inferRouterOutputs } from '@trpc/server';
 
 import type { TabBarItem } from '@/components/ui/tab-bar';
@@ -492,7 +492,7 @@ function RecommendationsPage() {
 								<code className='rounded bg-muted px-1 py-0.5 font-mono text-xs'>
 									BETA_CONTEXT_RECOMMENDATIONS_ENABLED=true
 								</code>{' '}
-								on your nao instance and restart it.
+								on your quarry instance and restart it.
 							</Empty>
 						</SettingsCard>
 					</div>
@@ -1326,7 +1326,7 @@ function ConfigTab({ enabled }: { enabled: boolean }) {
 												{selectedModelUnavailable && (
 													<AlertTriangle
 														className='size-3.5 text-amber-500'
-														aria-label='Selected model is unavailable; nao will use an available fallback'
+														aria-label='Selected model is unavailable; quarry will use an available fallback'
 													/>
 												)}
 											</div>

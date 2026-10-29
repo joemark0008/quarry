@@ -1,5 +1,5 @@
 import { ArrowLeft } from 'lucide-react';
-import type { executeSql } from '@nao/shared/tools';
+import type { executeSql } from '@quarry/shared/tools';
 
 import { SqlQueryEditor } from '@/components/side-panel/sql-editor';
 import { Button } from '@/components/ui/button';

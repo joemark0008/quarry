@@ -2,7 +2,7 @@ import {
 	DEFAULT_PYTHON_EXECUTION_DURATION_SECS,
 	MAX_PYTHON_EXECUTION_DURATION_SECS,
 	MIN_PYTHON_EXECUTION_DURATION_SECS,
-} from '@nao/shared/types';
+} from '@quarry/shared/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
@@ -150,7 +150,7 @@ export function SettingsExperimental({ isAdmin }: SettingsExperimentalProps) {
 						</a>
 						.
 						{!sandboxAvailable &&
-							' The sandbox runtime is unavailable on this host. Install it with `nao chat --sandbox` on a supported host.'}
+							' The sandbox runtime is unavailable on this host. Install it with `quarry chat --sandbox` on a supported host.'}
 					</span>
 				}
 				control={

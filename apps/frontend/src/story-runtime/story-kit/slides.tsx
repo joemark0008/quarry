@@ -1,6 +1,6 @@
-import { joinClassNames } from '@nao/shared/class-names';
-import { STORY_PRINT_SLIDES_ATTRIBUTE, STORY_SLIDE_SIZE } from '@nao/shared/story-app';
-import { StoryBrandMark } from '@nao/shared/story-brand-mark';
+import { joinClassNames } from '@quarry/shared/class-names';
+import { STORY_PRINT_SLIDES_ATTRIBUTE, STORY_SLIDE_SIZE } from '@quarry/shared/story-app';
+import { StoryBrandMark } from '@quarry/shared/story-brand-mark';
 import { ChevronLeftIcon, ChevronRightIcon, MaximizeIcon, MinimizeIcon } from 'lucide-react';
 import { Children, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -61,11 +61,11 @@ export function Slides({ children, title, eyebrow, className }: SlidesProps) {
 
 export function Slide({ children, title, eyebrow, className, style }: SlideProps) {
 	return (
-		<div className={joinClassNames('nao-slide', className)} style={style}>
+		<div className={joinClassNames('quarry-slide', className)} style={style}>
 			{(title || eyebrow) && (
-				<header className='nao-slide__heading'>
-					{eyebrow && <div className='nao-slide__eyebrow'>{eyebrow}</div>}
-					{title && <h2 className='nao-slide__title'>{title}</h2>}
+				<header className='quarry-slide__heading'>
+					{eyebrow && <div className='quarry-slide__eyebrow'>{eyebrow}</div>}
+					{title && <h2 className='quarry-slide__title'>{title}</h2>}
 				</header>
 			)}
 			{children}
@@ -79,7 +79,7 @@ function DeckBrandMark() {
 		return null;
 	}
 	return (
-		<div className='nao-slides__brand'>
+		<div className='quarry-slides__brand'>
 			<StoryBrandMark brand={brand} />
 		</div>
 	);
@@ -98,26 +98,26 @@ function SlideDeck({ slides, title, eyebrow, className }: SlideDeckProps) {
 	return (
 		<div
 			ref={rootRef}
-			className={joinClassNames('nao-slides', fullscreen.active && 'nao-slides--fullscreen', className)}
+			className={joinClassNames('quarry-slides', fullscreen.active && 'quarry-slides--fullscreen', className)}
 		>
-			<div className='nao-slides__top'>
+			<div className='quarry-slides__top'>
 				<DeckBrandMark />
 				{(title || eyebrow) && (
-					<header className='nao-slides__header'>
-						{eyebrow && <div className='nao-slides__eyebrow'>{eyebrow}</div>}
-						{title && <h1 className='nao-slides__title'>{title}</h1>}
+					<header className='quarry-slides__header'>
+						{eyebrow && <div className='quarry-slides__eyebrow'>{eyebrow}</div>}
+						{title && <h1 className='quarry-slides__title'>{title}</h1>}
 					</header>
 				)}
 				<SlideToolbar current={current} count={slides.length} goTo={goTo} fullscreen={fullscreen} />
 			</div>
-			<div ref={stageRef} className='nao-slides__stage'>
+			<div ref={stageRef} className='quarry-slides__stage'>
 				<div
-					className='nao-slides__viewport'
+					className='quarry-slides__viewport'
 					style={
 						{
 							width: STORY_SLIDE_SIZE.width * scale,
 							height: STORY_SLIDE_SIZE.height * scale,
-							'--nao-slide-scale': scale,
+							'--quarry-slide-scale': scale,
 						} as CSSProperties
 					}
 				>
@@ -130,24 +130,24 @@ function SlideDeck({ slides, title, eyebrow, className }: SlideDeckProps) {
 
 function SlideToolbar({ current, count, goTo, fullscreen }: SlideToolbarProps) {
 	return (
-		<nav className='nao-slides__toolbar'>
+		<nav className='quarry-slides__toolbar'>
 			{count > 1 && (
-				<div className='nao-slides__pager'>
+				<div className='quarry-slides__pager'>
 					<button
 						type='button'
-						className='nao-slides__control'
+						className='quarry-slides__control'
 						onClick={() => goTo(current - 1)}
 						disabled={current === 0}
 						aria-label='Previous slide'
 					>
 						<ChevronLeftIcon />
 					</button>
-					<span className='nao-slides__counter'>
+					<span className='quarry-slides__counter'>
 						{current + 1} / {count}
 					</span>
 					<button
 						type='button'
-						className='nao-slides__control'
+						className='quarry-slides__control'
 						onClick={() => goTo(current + 1)}
 						disabled={current === count - 1}
 						aria-label='Next slide'
@@ -166,7 +166,7 @@ function FullscreenButton({ fullscreen }: { fullscreen: Fullscreen }) {
 	return (
 		<button
 			type='button'
-			className='nao-slides__control'
+			className='quarry-slides__control'
 			onClick={fullscreen.toggle}
 			title={label}
 			aria-label={label}
@@ -183,7 +183,7 @@ function PrintedSlides({ slides }: { slides: ReactNode[] }) {
 		document.documentElement.setAttribute(STORY_PRINT_SLIDES_ATTRIBUTE, '');
 		return () => document.documentElement.removeAttribute(STORY_PRINT_SLIDES_ATTRIBUTE);
 	}, []);
-	return createPortal(<div className='nao-slides nao-slides--print'>{slides}</div>, document.body);
+	return createPortal(<div className='quarry-slides quarry-slides--print'>{slides}</div>, document.body);
 }
 
 /**

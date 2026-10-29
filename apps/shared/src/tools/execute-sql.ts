@@ -3,7 +3,7 @@ import z from 'zod/v3';
 import { QueryIdSchema } from './query-id';
 
 /**
- * Addresses nao's own DuckDB engine rather than a configured warehouse. Always available, and
+ * Addresses quarry's own DuckDB engine rather than a configured warehouse. Always available, and
  * the only way to query a file or join one against an earlier query result. The name is
  * reserved: a warehouse configured under it would be unreachable.
  */
@@ -30,7 +30,7 @@ export const InputSchema = z.object({
 		.string()
 		.optional()
 		.describe(
-			`The database name/id to use. Required if multiple databases are configured. Pass "${LOCAL_DATABASE_ID}" to use nao's built-in DuckDB instead of a warehouse. It reads only files under /home (uploads land in /home/uploads) and the project folder, by their path: CSV, JSON, Parquet and Excel. Remote URLs (http, https, s3) are not readable. Every earlier query result in the chat is a table named after its query id, exactly as the "Query ID" line of that tool output spells it (e.g. query_ab12cd34), never after the query's display name. Join the two with: SELECT ... FROM query_ab12cd34 q JOIN read_xlsx('/home/uploads/<date>/<file>.xlsx') f ON q.key = f.key.`,
+			`The database name/id to use. Required if multiple databases are configured. Pass "${LOCAL_DATABASE_ID}" to use quarry's built-in DuckDB instead of a warehouse. It reads only files under /home (uploads land in /home/uploads) and the project folder, by their path: CSV, JSON, Parquet and Excel. Remote URLs (http, https, s3) are not readable. Every earlier query result in the chat is a table named after its query id, exactly as the "Query ID" line of that tool output spells it (e.g. query_ab12cd34), never after the query's display name. Join the two with: SELECT ... FROM query_ab12cd34 q JOIN read_xlsx('/home/uploads/<date>/<file>.xlsx') f ON q.key = f.key.`,
 		),
 	name: z.string().optional().describe('A descriptive name for the query that will be used to show in the UI.'),
 	query_id: QueryIdSchema.optional().describe(

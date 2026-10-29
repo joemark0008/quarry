@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import type { executeSql } from '@nao/shared/tools';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { executeSql } from '@quarry/shared/tools';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { SourceQuery } from '@/lib/execute-sql-messages';
 import { useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { areSourceQueriesEqual, findLatestExecuteSqlInMessages } from '@/lib/execute-sql-messages';

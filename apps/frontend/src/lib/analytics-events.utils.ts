@@ -1,4 +1,4 @@
-import type { AnalyticsEventMetadata } from '@nao/shared/types';
+import type { AnalyticsEventMetadata } from '@quarry/shared/types';
 
 export interface AnalyticsEventEntry {
 	event: {

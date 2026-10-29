@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { GroupedMessagePart } from '@/types/ai';
 import {
 	areGroupedMessagePartArraysEqual,

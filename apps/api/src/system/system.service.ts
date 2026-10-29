@@ -19,7 +19,7 @@ export class SystemService {
 		const { env } = this.config;
 		const google = await this.organizations.getGoogleConfig();
 		return {
-			naoMode: 'self-hosted',
+			quarryMode: 'self-hosted',
 			enableUserLogin: env.ENABLE_USER_LOGIN,
 			enableUserSignup: await this.isUserSignupAvailable(),
 			emailVerificationEnabled: false,

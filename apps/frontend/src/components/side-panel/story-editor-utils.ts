@@ -1,4 +1,4 @@
-import { popGridColumn, TAG_ATTRS } from '@nao/shared/story-segments';
+import { popGridColumn, TAG_ATTRS } from '@quarry/shared/story-segments';
 import { Selection } from '@tiptap/pm/state';
 import type { Node as PMNode, Schema } from '@tiptap/pm/model';
 import type { EditorState, Transaction } from '@tiptap/pm/state';

@@ -2,7 +2,7 @@ import { CircleAlert, CircleHelp, Globe2, Lightbulb, Shield, ThumbsDown, ThumbsU
 import { differenceInDays, format, isToday, isYesterday } from 'date-fns';
 import type { ColumnDef } from '@tanstack/react-table';
 
-import type { ProjectChatListItem } from '@nao/shared/types';
+import type { ProjectChatListItem } from '@quarry/shared/types';
 import { Badge } from '@/components/ui/badge';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import DiscordIcon from '@/components/icons/discord.svg';

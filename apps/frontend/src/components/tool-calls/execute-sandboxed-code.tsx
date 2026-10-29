@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Streamdown } from 'streamdown';
-import { executeSandboxedCode } from '@nao/shared/tools';
+import { executeSandboxedCode } from '@quarry/shared/tools';
 import { Box, Code, Copy, Cpu, Database, Package, Save, Terminal } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';

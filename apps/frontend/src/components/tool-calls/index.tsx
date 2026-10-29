@@ -25,7 +25,7 @@ import { TaskToolCall } from './task';
 import { WebFetchToolCall } from './web-fetch';
 import { WebSearchToolCall } from './web-search';
 import { WriteToolCall } from './write';
-import type { StaticToolName, UIToolPart } from '@nao/shared/backend/chat';
+import type { StaticToolName, UIToolPart } from '@quarry/shared/backend/chat';
 import { getToolName, isToolSettled } from '@/lib/ai';
 import { ToolCallProvider } from '@/contexts/tool-call';
 import { useAssistantMessage } from '@/contexts/assistant-message';

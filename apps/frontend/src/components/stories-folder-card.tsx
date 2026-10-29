@@ -16,7 +16,7 @@ import {
 	Trash2,
 } from 'lucide-react';
 import type { DragEvent, MouseEvent } from 'react';
-import type { StoryPanelDisplayMode } from '@nao/shared/types';
+import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { FolderItem } from '@/lib/stories-page';
 import { isSystemFolder } from '@/lib/stories-page';
 import { GRID_CARD_CLASS, GridCardFooter, LINES_CARD_CLASS } from '@/components/item-card';

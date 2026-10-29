@@ -11,7 +11,7 @@ export class UserOnboardingService {
 
 	/**
 	 * Runs after better-auth creates a user. The first user gets the default organization (and the
-	 * default project when NAO_DEFAULT_PROJECT_PATH is set); later social sign-ups join the default
+	 * default project when QUARRY_DEFAULT_PROJECT_PATH is set); later social sign-ups join the default
 	 * project. Email and password users are added by an admin instead.
 	 *
 	 * Upstream also routes enterprise SSO users (OIDC, Microsoft) to the default organization only;

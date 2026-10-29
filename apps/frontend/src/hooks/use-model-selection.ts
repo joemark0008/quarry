@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import type { LlmSelectedModel } from '@nao/shared/types';
+import type { LlmSelectedModel } from '@quarry/shared/types';
 import { useAgentContext } from '@/contexts/agent.provider';
 import { trpc } from '@/main';
 
@@ -21,7 +21,7 @@ export function useModelSelection() {
 	const isPending = currentProjectQuery.isPending || (hasProject && availableModelsQuery.isPending);
 	const canCycleModels = (availableModels?.length ?? 0) > 1;
 
-	/** Cycles through "nao default" followed by every available model. */
+	/** Cycles through "quarry default" followed by every available model. */
 	const cycleModel = useCallback(() => {
 		if (!availableModels || availableModels.length < 2) {
 			return;

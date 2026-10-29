@@ -1,9 +1,9 @@
-import { STORY_HOST_MODULE, STORY_RUNTIME_MODULES } from '@nao/shared/story-app';
-import { composeStoryDocument, escapeScript, storyStylesheets } from '@nao/shared/story-document';
-import { storyMapTileCspSources } from '@nao/shared/story-map-tiles';
-import { FONT_STYLESHEET_HOSTS } from '@nao/shared/story-theme';
-import type { StoryApp, StoryStateSnapshot } from '@nao/shared/story-app';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import { STORY_HOST_MODULE, STORY_RUNTIME_MODULES } from '@quarry/shared/story-app';
+import { composeStoryDocument, escapeScript, storyStylesheets } from '@quarry/shared/story-document';
+import { storyMapTileCspSources } from '@quarry/shared/story-map-tiles';
+import { FONT_STYLESHEET_HOSTS } from '@quarry/shared/story-theme';
+import type { StoryApp, StoryStateSnapshot } from '@quarry/shared/story-app';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 
 export interface StoryRuntimeLocation {
 	baseUrl: string;

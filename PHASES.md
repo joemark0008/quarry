@@ -93,6 +93,18 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 - [x] Add Apollo Client (`ApolloProvider`, `InMemoryCache`, credentials: include) and GraphQL Code Generator (`npm run codegen`)
 - [x] Vite proxy: `/graphql`, `/api/auth/*`, `/health` → `apps/api`; everything else → upstream backend — _`apps/api` moves to port 5006; upstream keeps 5005_
 - [x] Switch login, sign-up, logout, current user and public config to generated Apollo hooks — _login/sign-up/logout keep the better-auth client (now served by `apps/api`); their public config, auth providers and `hasUsers`, the sidebar user (`me`) and every `system.getPublicConfig` call site use Apollo_
+- [x] Rebrand nao → quarry in `apps/frontend`, `apps/shared` and `apps/api`: `@quarry/*` package scope, `quarry-*` file names, identifiers, CSS class prefixes and UI text, `QUARRY_*` env vars in `apps/api`, the `brand/` logo, favicon, app icons and manifest, the teal palette. Links that pointed at getnao.io (docs, support, repository, community, newsletter, privacy) come from `VITE_QUARRY_*` build variables and their UI is hidden when unset; the update check reads `QUARRY_RELEASES_REPOSITORY`.
+    - **Rename at cut-over** — kept because the upstream backend or its agent still produces or expects them:
+        - `x-nao-project-id`, `x-nao-organization-id` request headers (read by the upstream backend, and by `apps/api` to match)
+        - `openInNaoPath` (tRPC `embed` response field) and `naoUrl` (MCP embed payload field)
+        - `nao-mcp-oauth` and `nao-embed-size` `postMessage` types sent by upstream's MCP OAuth and embed pages
+        - `nao_config`: the project config file name upstream reads
+        - agent tool names `ask_nao`, `get_nao_answer`, `read_nao_context`, `ls_nao_context`, `grep_nao_context`
+        - `NAO_DEFAULT_PROJECT_PATH` in two frontend messages: the env var of the upstream backend that serves projects during the split
+        - `support@getnao.io` in `citation-text.tsx`: upstream's agent replies link to it, and the frontend turns that link into the in-app support dialog
+        - the `nao` managed-AI LLM provider id (cloud credits, billing) in `apps/shared/src/types.ts` and the frontend code that compares against it; goes away with the billing UI
+        - custom-story build and runtime protocol in `apps/shared/src/story-app.ts` (`@nao/story-kit`, `@nao/story-host`, `nao.json`, the `nao` story API global, `<!--nao:head-->`/`<!--nao:body-->` slots, `__naoStory*` globals, `data-nao-*` attributes, `nao-frame`, `nao-story:*` messages) and the published-document markers in `story-document.ts` (`nao-story-export`, `nao-story-theme`, `$naoDate`, `__naoStoryBoot`, `nao-story-crash`), plus the frontend story runtime that speaks it: upstream builds and publishes custom stories (agent-written code imports `@nao/story-kit` and calls `nao.query()`), the frontend runs them
+        - the `@nao/shared` keys in `apps/frontend/tsconfig.json` paths and `vite.config.ts` aliases: upstream sources reached through `@quarry/shared/backend/*` import that name
 
 ### Done when
 

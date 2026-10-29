@@ -1,4 +1,4 @@
-import type { MemberStatus, UserRole } from '@nao/shared/types';
+import type { MemberStatus, UserRole } from '@quarry/shared/types';
 
 export interface TeamMember {
 	id: string;

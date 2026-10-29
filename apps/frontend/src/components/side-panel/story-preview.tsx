@@ -1,8 +1,8 @@
-import { NO_CACHE_SCHEDULE } from '@nao/shared';
-import { splitCodeIntoSegments } from '@nao/shared/story-segments';
+import { NO_CACHE_SCHEDULE } from '@quarry/shared';
+import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
 import { memo, useCallback, useMemo, useRef } from 'react';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 
 import type { LiveQueryConfig, QueryDataMap } from '@/components/story-embeds';
 import {

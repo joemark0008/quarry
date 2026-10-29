@@ -27,7 +27,7 @@ describe('onboarding progress', () => {
 
 describe('onboarding command', () => {
 	it('preserves multiline commands', () => {
-		const command = 'cd <your-project-folder>\nnao debug';
+		const command = 'cd <your-project-folder>\nquarry debug';
 		expect(onboardingCommand.InputSchema.parse({ command })).toEqual({ command });
 	});
 });

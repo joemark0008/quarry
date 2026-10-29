@@ -2,10 +2,10 @@ import { AlertTriangle, FilterX, Loader2, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { isFilterSelectionActive } from '@nao/shared/sql-template';
-import type { StoryFilterSelection } from '@nao/shared/sql-template';
+import { isFilterSelectionActive } from '@quarry/shared/sql-template';
+import type { StoryFilterSelection } from '@quarry/shared/sql-template';
 import type { DateRange } from 'react-day-picker';
-import type { ParsedFilterBlock } from '@nao/shared/story-segments';
+import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
 
 import type { StoryFilterApi } from '@/hooks/use-story-filters';
 import { DateRangePicker } from '@/components/date-range-picker';
@@ -21,8 +21,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { trpc } from '@/main';
 
-const CLEAR_SELECT_VALUE = '__nao_clear_filter__';
-const SELECT_VALUE_PREFIX = '__nao_filter_value__:';
+const CLEAR_SELECT_VALUE = '__quarry_clear_filter__';
+const SELECT_VALUE_PREFIX = '__quarry_filter_value__:';
 
 export function StoryFilterBar({
 	filters,
@@ -74,7 +74,7 @@ export function StoryFilterBar({
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<div className='nao-filter-bar flex flex-wrap items-end gap-3 rounded-lg border bg-muted/20 p-3'>
+			<div className='quarry-filter-bar flex flex-wrap items-end gap-3 rounded-lg border bg-muted/20 p-3'>
 				{filters.map((filter) => (
 					<StoryFilterControl
 						key={filter.id}
@@ -86,7 +86,7 @@ export function StoryFilterBar({
 					/>
 				))}
 				{hasActiveFilters && (
-					<Button variant='ghost' size='sm' className='nao-filter__clear h-8 gap-1.5' onClick={onClear}>
+					<Button variant='ghost' size='sm' className='quarry-filter__clear h-8 gap-1.5' onClick={onClear}>
 						<FilterX className='size-3.5' />
 						Clear
 					</Button>
@@ -119,9 +119,9 @@ function StoryFilterControl({
 	const isActive = isFilterSelectionActive(filter.filterType, selection);
 
 	return (
-		<div className='nao-filter flex min-w-36 flex-col gap-1' data-active={isActive || undefined}>
+		<div className='quarry-filter flex min-w-36 flex-col gap-1' data-active={isActive || undefined}>
 			<div className='flex items-center justify-between gap-1'>
-				<span className='nao-label text-xs font-medium text-muted-foreground'>{filter.label}</span>
+				<span className='quarry-label text-xs font-medium text-muted-foreground'>{filter.label}</span>
 				{isActive && (
 					<button
 						type='button'
@@ -147,7 +147,7 @@ function StoryFilterControl({
 							onChange(value === CLEAR_SELECT_VALUE ? '' : value.slice(SELECT_VALUE_PREFIX.length))
 						}
 					>
-						<SelectTrigger className='nao-filter__control h-8 min-w-36 bg-background'>
+						<SelectTrigger className='quarry-filter__control h-8 min-w-36 bg-background'>
 							<SelectValue placeholder='All' />
 						</SelectTrigger>
 						<SelectContent>
@@ -175,7 +175,7 @@ function StoryFilterControl({
 			) : (
 				<Input
 					type='search'
-					className='nao-filter__control h-8 min-w-44 bg-background'
+					className='quarry-filter__control h-8 min-w-44 bg-background'
 					placeholder='Search'
 					value={typeof selection === 'string' ? selection : ''}
 					onChange={(event) => onChange(event.target.value)}
@@ -191,7 +191,7 @@ function emptySelection(filterType: ParsedFilterBlock['filterType']): StoryFilte
 
 function FilterOptionsLoading() {
 	return (
-		<div className='nao-filter__control flex h-8 min-w-36 items-center gap-2 rounded-md border bg-background px-3 text-xs text-muted-foreground'>
+		<div className='quarry-filter__control flex h-8 min-w-36 items-center gap-2 rounded-md border bg-background px-3 text-xs text-muted-foreground'>
 			<Loader2 className='size-3.5 animate-spin' />
 			Loading…
 		</div>
@@ -213,7 +213,7 @@ function MultiSelectFilter({
 				<Button
 					variant='outline'
 					size='sm'
-					className='nao-filter__control h-8 min-w-36 justify-between bg-background font-normal'
+					className='quarry-filter__control h-8 min-w-36 justify-between bg-background font-normal'
 				>
 					{value.length > 0 ? `${value.length} selected` : 'All'}
 				</Button>
@@ -242,7 +242,7 @@ function RangeFilter({ value, onChange }: { value: string[]; onChange: (value: s
 			value={toDateRange(value)}
 			onChange={(range) => onChange(fromDateRange(range))}
 			placeholder='All dates'
-			className='nao-filter__control'
+			className='quarry-filter__control'
 		/>
 	);
 }

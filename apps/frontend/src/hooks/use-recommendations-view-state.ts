@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { getActiveProjectId } from '@/lib/active-project';
 
-const STORAGE_KEY_PREFIX = 'nao.recommendations-view';
+const STORAGE_KEY_PREFIX = 'quarry.recommendations-view';
 
 function storageKey(): string {
 	return `${STORAGE_KEY_PREFIX}.${getActiveProjectId() ?? 'default'}`;

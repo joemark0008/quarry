@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { parseStoryTabs } from '@nao/shared/story-tabs';
+import { parseStoryTabs } from '@quarry/shared/story-tabs';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useRef, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -436,7 +436,7 @@ describe('edit-mode chart actions', () => {
 			await waitFor(() => expect(editor.getMarkdown().trim()).toBe('After\n\n- Alpha\n- Beta'));
 			expect(editor.getMarkdown()).not.toMatch(/^-\s*$/m);
 			expect(document.querySelector('.drop-cursor')).toBeNull();
-			expect(document.querySelector('.nao-block-selected')).toBeNull();
+			expect(document.querySelector('.quarry-block-selected')).toBeNull();
 			expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull();
 			expect(floatingHandle.dataset.dragging).toBe('false');
 		} finally {
@@ -515,7 +515,7 @@ describe('edit-mode chart actions', () => {
 		fireEvent.click(destinationItem);
 
 		await waitFor(() => {
-			expect(screen.getByText('Chart q1').closest('.nao-block-selected')).not.toBeNull();
+			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
 		});
 		expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
 
@@ -545,14 +545,14 @@ describe('edit-mode chart actions', () => {
 
 		const destinationButton = screen.getByRole('button', { name: 'Destination' });
 		await waitFor(() => {
-			expect(screen.getByText('Chart q1').closest('.nao-block-selected')).not.toBeNull();
+			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
 			expect(destinationButton.parentElement?.classList.contains('bg-background')).toBe(true);
 		});
-		const selectedBlocks = document.querySelectorAll('.ProseMirror > .nao-block-selected');
+		const selectedBlocks = document.querySelectorAll('.ProseMirror > .quarry-block-selected');
 		const trailingParagraph = document.querySelector('.ProseMirror > p:last-child');
 		expect(selectedBlocks).toHaveLength(1);
 		expect(trailingParagraph?.textContent).toBe('');
-		expect(trailingParagraph?.classList.contains('nao-block-selected')).toBe(false);
+		expect(trailingParagraph?.classList.contains('quarry-block-selected')).toBe(false);
 		expect(document.activeElement?.classList.contains('ProseMirror')).toBe(true);
 		expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
 	});
@@ -584,14 +584,16 @@ describe('edit-mode chart actions', () => {
 		fireEvent.click(await screen.findByRole('menuitem', { name: 'Destination' }));
 
 		await waitFor(() => {
-			expect(screen.getByRole('heading', { name: 'Order Trends' }).closest('.nao-block-selected')).not.toBeNull();
-			expect(screen.getByText('Chart q1').closest('.nao-block-selected')).not.toBeNull();
+			expect(
+				screen.getByRole('heading', { name: 'Order Trends' }).closest('.quarry-block-selected'),
+			).not.toBeNull();
+			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
 		});
-		const selectedBlocks = document.querySelectorAll('.ProseMirror > .nao-block-selected');
+		const selectedBlocks = document.querySelectorAll('.ProseMirror > .quarry-block-selected');
 		const trailingParagraph = document.querySelector('.ProseMirror > p:last-child');
 		expect(selectedBlocks).toHaveLength(2);
 		expect(trailingParagraph?.textContent).toBe('');
-		expect(trailingParagraph?.classList.contains('nao-block-selected')).toBe(false);
+		expect(trailingParagraph?.classList.contains('quarry-block-selected')).toBe(false);
 	});
 
 	it('deactivates an editor drop target before moving a single block to a tab', async () => {
@@ -634,7 +636,7 @@ describe('edit-mode chart actions', () => {
 		fireEvent.drop(destinationTab, { dataTransfer });
 
 		await waitFor(() => {
-			expect(screen.getByText('Chart q1').closest('.nao-block-selected')).not.toBeNull();
+			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
 			expect(destinationButton.parentElement?.classList.contains('bg-background')).toBe(true);
 		});
 		expect(document.querySelector('[data-story-block-drop-target]')).toBeNull();
@@ -704,7 +706,7 @@ describe('edit-mode chart actions', () => {
 
 		await waitFor(() => {
 			for (const content of ['Before', 'Chart q1', 'After']) {
-				expect(screen.getByText(content).closest('.nao-block-selected')).not.toBeNull();
+				expect(screen.getByText(content).closest('.quarry-block-selected')).not.toBeNull();
 			}
 		});
 		expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
@@ -762,7 +764,7 @@ describe('edit-mode chart actions', () => {
 			fireEvent.drop(destinationTab, { dataTransfer });
 
 			await waitFor(() => {
-				expect(document.querySelector('.ProseMirror .nao-block-selected')?.textContent).toContain(
+				expect(document.querySelector('.ProseMirror .quarry-block-selected')?.textContent).toContain(
 					'First paragraph',
 				);
 			});
@@ -810,7 +812,7 @@ describe('edit-mode chart actions', () => {
 			expect(screen.getAllByText('Repeated text')).toHaveLength(2);
 			expect(screen.getAllByText('Chart q1')).toHaveLength(2);
 			for (const content of screen.getAllByText(/^(Repeated text|Chart q1)$/)) {
-				expect(content.closest('.nao-block-selected')).not.toBeNull();
+				expect(content.closest('.quarry-block-selected')).not.toBeNull();
 			}
 		});
 		expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });

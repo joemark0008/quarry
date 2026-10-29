@@ -1,4 +1,4 @@
-import { toFiniteNumber } from '@nao/shared/chart-values';
+import { toFiniteNumber } from '@quarry/shared/chart-values';
 
 export type Row = Record<string, unknown>;
 

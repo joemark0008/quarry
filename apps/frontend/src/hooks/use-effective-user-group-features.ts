@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { UserGroupFeature } from '@nao/shared';
+import type { UserGroupFeature } from '@quarry/shared';
 
 import type { EffectiveUserGroupAccess } from '@/lib/effective-user-group-features';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { getActiveProjectId } from '@/lib/active-project';
 import { getRenderableUserGroupAccess } from '@/lib/effective-user-group-features';
 import { trpc } from '@/main';

@@ -1,11 +1,11 @@
-import { parseChartBlock } from '@nao/shared/story-segments';
+import { parseChartBlock } from '@quarry/shared/story-segments';
 import { Streamdown } from 'streamdown';
 import { ChartDisplay } from './display-chart';
 import { TableDisplay } from './display-table';
 import { McpTitle } from './mcp-title';
 import { ToolCallWrapper } from './tool-call-wrapper';
-import type { UIMessage, UIToolPart } from '@nao/shared/backend/chat';
-import type { ChartType } from '@nao/shared/chart-types';
+import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { ChartType } from '@quarry/shared/chart-types';
 import type { ReactNode } from 'react';
 
 import type { ToolCallComponentProps } from '.';

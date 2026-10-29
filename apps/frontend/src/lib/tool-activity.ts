@@ -1,4 +1,4 @@
-import type { UIToolPart } from '@nao/shared/backend/chat';
+import type { UIToolPart } from '@quarry/shared/backend/chat';
 import type { GroupablePart } from '@/types/ai';
 import { getToolName, isReasoningPart, isToolSettled } from '@/lib/ai';
 import { getFileName, getReadContextLabel } from '@/lib/file-path';

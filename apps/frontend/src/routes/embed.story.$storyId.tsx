@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useRouterState } from '@tanstack/react-router';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
-import type { DownloadFormat } from '@nao/shared/types';
+import type { DownloadFormat } from '@quarry/shared/types';
 import type { QueryDataMap } from '@/components/story-embeds';
 
 import { StoryAppView } from '@/components/mcp-app/story-app-view';
 import { Spinner } from '@/components/ui/spinner';
-import { NAO_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
+import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { trpc, trpcClient } from '@/main';
 
@@ -56,7 +56,10 @@ function StoryEmbedPage() {
 	}
 
 	return (
-		<div {...{ [NAO_MCP_EMBED_MEASURE_ATTR]: '' }} className='flex min-h-0 min-w-0 flex-1 flex-col bg-background'>
+		<div
+			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
+			className='flex min-h-0 min-w-0 flex-1 flex-col bg-background'
+		>
 			{inner}
 		</div>
 	);

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { buildStoryMapBlock } from '@nao/shared';
+import { buildStoryMapBlock } from '@quarry/shared';
 import { useStoryBlockEdit } from './use-story-block-edit';
-import type { displayMap } from '@nao/shared/tools';
+import type { displayMap } from '@quarry/shared/tools';
 
 export interface StoryMapEditHandlers {
 	/**

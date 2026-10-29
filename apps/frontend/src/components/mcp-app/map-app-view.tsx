@@ -1,8 +1,8 @@
-import { buildMapPoints, MAX_MAP_POINTS, resolveMapConfig } from '@nao/shared';
+import { buildMapPoints, MAX_MAP_POINTS, resolveMapConfig } from '@quarry/shared';
 import { lazy, memo, Suspense, useMemo } from 'react';
 import { McpAppHeader } from './mcp-app-header';
-import { OpenInNaoButton } from './open-in-nao-button';
-import type { CustomBoundarySet, MapPoint, McpMapEmbedStoredConfig } from '@nao/shared';
+import { OpenInQuarryButton } from './open-in-quarry-button';
+import type { CustomBoundarySet, MapPoint, McpMapEmbedStoredConfig } from '@quarry/shared';
 
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -34,7 +34,7 @@ export const MapAppView = memo(function MapAppView({
 
 	return (
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
-			<McpAppHeader title={config.title}>{naoUrl ? <OpenInNaoButton url={naoUrl} /> : null}</McpAppHeader>
+			<McpAppHeader title={config.title}>{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}</McpAppHeader>
 			<div className='min-h-0 flex-1 overflow-auto'>
 				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>
 					{errorMessage ? (

@@ -2,7 +2,7 @@ import { TRPCClientError } from '@trpc/client';
 import { ArrowRight, Check, Copy, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +16,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { trpcClient } from '@/main';
+import { QUARRY_SUPPORT_EMAIL } from '@/lib/quarry-links';
 
 export function ContactSupportButton({ children }: { children: ReactNode }) {
 	const { isCopied, copy } = useCopyToClipboard();
@@ -153,17 +154,19 @@ export function ContactSupportButton({ children }: { children: ReactNode }) {
 											{isCopied ? <Check className='size-4' /> : <Copy className='size-4' />}
 											{isCopied ? 'Copied' : 'Copy request'}
 										</Button>
-										<Button
-											asChild
-											variant='primary-gradient'
-											size='lg'
-											className='rounded-full px-7'
-										>
-											<a href={buildSupportMailto()}>
-												Open email app
-												<ArrowRight className='size-4' />
-											</a>
-										</Button>
+										{buildSupportMailto() && (
+											<Button
+												asChild
+												variant='primary-gradient'
+												size='lg'
+												className='rounded-full px-7'
+											>
+												<a href={buildSupportMailto()}>
+													Open email app
+													<ArrowRight className='size-4' />
+												</a>
+											</Button>
+										)}
 									</div>
 								</div>
 							) : (
@@ -191,7 +194,10 @@ function isTrpcClientError(error: unknown): error is TRPCClientError<TrpcRouter>
 	return error instanceof TRPCClientError;
 }
 
-function buildSupportMailto(): string {
-	const subject = encodeURIComponent('nao support request');
-	return `mailto:support@getnao.io?subject=${subject}`;
+function buildSupportMailto(): string | undefined {
+	if (!QUARRY_SUPPORT_EMAIL) {
+		return undefined;
+	}
+	const subject = encodeURIComponent('quarry support request');
+	return `mailto:${QUARRY_SUPPORT_EMAIL}?subject=${subject}`;
 }

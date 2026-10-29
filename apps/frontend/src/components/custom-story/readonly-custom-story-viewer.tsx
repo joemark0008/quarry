@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CustomStoryViewerAccess } from '@nao/shared/story-app';
-import type { DownloadFormat } from '@nao/shared/types';
+import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
+import type { DownloadFormat } from '@quarry/shared/types';
 
 import type { CustomStoryViewMode } from '@/components/custom-story/custom-story-view-mode';
 import type { CustomStoryFileSource } from '@/components/custom-story/story-data-options';

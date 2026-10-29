@@ -1,8 +1,8 @@
-import { isMcpServerFullyGranted, isMcpServerGranted, isMcpToolGranted } from '@nao/shared';
+import { isMcpServerFullyGranted, isMcpServerGranted, isMcpToolGranted } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { useId, useState } from 'react';
-import type { McpAccess, McpServerStatus } from '@nao/shared';
+import type { McpAccess, McpServerStatus } from '@quarry/shared';
 
 import { EffectiveAccessStatusRow } from '@/components/settings/user-group-effective-access-status-row';
 import { Badge } from '@/components/ui/badge';

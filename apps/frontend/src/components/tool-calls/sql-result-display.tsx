@@ -1,6 +1,6 @@
 import { TableDisplay } from './display-table';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
-import type { executeSql } from '@nao/shared/tools';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
+import type { executeSql } from '@quarry/shared/tools';
 import type { QueryRowsSource } from '@/hooks/use-query-rows';
 import { useFullQueryOutput, useServerPaginatedRows } from '@/hooks/use-query-rows';
 

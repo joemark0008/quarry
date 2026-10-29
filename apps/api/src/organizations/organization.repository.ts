@@ -81,7 +81,7 @@ export class OrganizationRepository {
 
 	/**
 	 * First sign-up of a self-hosted instance: creates the default organization with the user as
-	 * admin and, when NAO_DEFAULT_PROJECT_PATH is set, the default project with the user as admin.
+	 * admin and, when QUARRY_DEFAULT_PROJECT_PATH is set, the default project with the user as admin.
 	 */
 	async initializeDefaultOrganizationForFirstUser(userId: string): Promise<void> {
 		if ((await this.prisma.user.count()) !== 1) {
@@ -95,7 +95,7 @@ export class OrganizationRepository {
 			const org = await tx.organization.create({ data: { name: 'Default Organization', slug: 'default' } });
 			await tx.orgMember.create({ data: { orgId: org.id, userId, role: 'admin' } });
 
-			const projectPath = this.config.env.NAO_DEFAULT_PROJECT_PATH;
+			const projectPath = this.config.env.QUARRY_DEFAULT_PROJECT_PATH;
 			if (projectPath && !(await this.projects.getProjectByPath(projectPath, tx))) {
 				const projectName = projectPath.split('/').pop() || 'Default Project';
 				const project = await this.projects.createProject(

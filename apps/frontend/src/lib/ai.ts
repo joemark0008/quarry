@@ -4,12 +4,12 @@ import {
 	getStaticToolName as getStaticToolNameAi,
 	getToolName as getToolNameAi,
 } from 'ai';
-import { isImageMediaType } from '@nao/shared/attachments';
+import { isImageMediaType } from '@quarry/shared/attachments';
 import type { ReasoningUIPart, ToolUIPart } from 'ai';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import type { UITools, UIToolPart, UIMessage, UIMessagePart, StaticToolName } from '@nao/shared/backend/chat';
-import type { ImageUploadData } from '@nao/shared/attachments';
-import type { ToolCallDensity } from '@nao/shared/types';
+import type { UITools, UIToolPart, UIMessage, UIMessagePart, StaticToolName } from '@quarry/shared/backend/chat';
+import type { ImageUploadData } from '@quarry/shared/attachments';
+import type { ToolCallDensity } from '@quarry/shared/types';
 import type {
 	GroupablePart,
 	ToolGroupPart,

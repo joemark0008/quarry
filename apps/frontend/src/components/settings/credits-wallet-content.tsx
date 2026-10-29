@@ -7,10 +7,10 @@ import {
 	CREDIT_TOP_UP_MAX_CENTS,
 	CREDIT_TOP_UP_MIN_CENTS,
 	formatMicroUsd,
-} from '@nao/shared/billing';
+} from '@quarry/shared/billing';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 import { DEFAULT_USAGE_SEARCH } from '@/components/settings/usage-route-search';
 import { Button } from '@/components/ui/button';
@@ -39,7 +39,7 @@ type PageSize = (typeof pageSizes)[number];
 
 const organizationCreditsTabs = [
 	{ id: 'history', label: 'Credit history' },
-	{ id: 'usage', label: 'nao AI usage' },
+	{ id: 'usage', label: 'quarry AI usage' },
 ] satisfies { id: OrganizationCreditsTab; label: string }[];
 
 export function OrganizationCreditsContent({
@@ -74,7 +74,7 @@ export function OrganizationCreditsContent({
 					<SettingsCard title='Balance'>
 						<div className='mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
 							<p className='text-sm text-muted-foreground'>
-								Shared nao credits available across every project in this organization.
+								Shared quarry credits available across every project in this organization.
 							</p>
 							{canTopUp && (
 								<CreditTopUpDialog
@@ -228,11 +228,11 @@ export function ManagedAiChargesContent({
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<SettingsCard title={showTitle ? 'nao AI usage' : undefined}>
+			<SettingsCard title={showTitle ? 'quarry AI usage' : undefined}>
 				<p className='mb-3 text-sm text-muted-foreground'>
 					{organizationWide
-						? 'Organization-wide model calls paid with nao credits.'
-						: 'Your model calls paid with nao credits.'}
+						? 'Organization-wide model calls paid with quarry credits.'
+						: 'Your model calls paid with quarry credits.'}
 				</p>
 				<div className='flex flex-col gap-2'>
 					{usage.data?.runs.map((run) => (
@@ -277,7 +277,7 @@ function CreditTopUpDialog({
 			</DialogTrigger>
 			<DialogContent className='sm:max-w-2xl'>
 				<DialogHeader>
-					<DialogTitle>Add nao credits</DialogTitle>
+					<DialogTitle>Add quarry credits</DialogTitle>
 					<DialogDescription>
 						Credits are sold in US dollars and shared across every project in the organization.
 					</DialogDescription>
@@ -310,7 +310,7 @@ function CreditTopUpDialog({
 									<span>{formatUsdCents(topUpBreakdown.creditAmountCents)}</span>
 								</div>
 								<div className='flex justify-between gap-4'>
-									<span className='text-muted-foreground'>nao platform fee (5%)</span>
+									<span className='text-muted-foreground'>quarry platform fee (5%)</span>
 									<span>{formatUsdCents(topUpBreakdown.platformFeeCents)}</span>
 								</div>
 								<div className='flex justify-between gap-4 border-t border-border pt-2 font-medium'>
@@ -596,11 +596,11 @@ function ledgerLabel(
 					: grantType === 'user_join'
 						? 'member join grant'
 						: isBackofficeTopUp(group)
-							? 'credits added by nao'
-							: 'nao gift'
+							? 'credits added by quarry'
+							: 'quarry gift'
 			}`
 		: entryType === 'usage'
-			? `nao AI - ${group.usageUserName ?? 'Former user'}`
+			? `quarry AI - ${group.usageUserName ?? 'Former user'}`
 			: entryType === 'purchase'
 				? 'Credit purchase'
 				: entryType === 'refund'

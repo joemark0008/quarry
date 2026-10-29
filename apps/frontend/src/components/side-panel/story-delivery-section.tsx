@@ -1,8 +1,8 @@
-import { NO_CACHE_SCHEDULE } from '@nao/shared';
+import { NO_CACHE_SCHEDULE } from '@quarry/shared';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2, Mail, Send, Slack, Wand2 } from 'lucide-react';
-import type { NotificationChannel, RecipientMode } from '@nao/shared/types';
+import type { NotificationChannel, RecipientMode } from '@quarry/shared/types';
 
 import { MemberPicker } from '@/components/share-dialog';
 import { Button } from '@/components/ui/button';

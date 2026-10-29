@@ -8,7 +8,7 @@ import { SqlQueryDisplay } from './sql-query-display';
 import { SqlResultDisplay } from './sql-result-display';
 import type { ActionButton } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type { DataExportFormat } from '@/components/export-data-menu';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useSidePanel } from '@/contexts/side-panel';

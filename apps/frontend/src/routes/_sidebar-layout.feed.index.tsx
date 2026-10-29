@@ -254,7 +254,7 @@ function mergeFeedItems(activity: AutomationFeedItem[], notifications: Notificat
 	);
 }
 
-const FEED_LAST_SEEN_KEY_PREFIX = 'nao.automation-feed-last-seen:';
+const FEED_LAST_SEEN_KEY_PREFIX = 'quarry.automation-feed-last-seen:';
 
 /**
  * Captures the persisted last-seen timestamp once on mount so the "new since

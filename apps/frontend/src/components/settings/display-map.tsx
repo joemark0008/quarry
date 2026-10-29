@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
 
-import type { CustomBoundarySet } from '@nao/shared';
+import type { CustomBoundarySet } from '@quarry/shared';
 import type { FeatureCollection } from 'geojson';
 
 import {
@@ -473,13 +473,13 @@ function BoundaryPreviewMap({ geojson }: { geojson: FeatureCollection }) {
 				id: 'preview-fill',
 				type: 'fill',
 				source: 'preview',
-				paint: { 'fill-color': '#522bff', 'fill-opacity': 0.25 },
+				paint: { 'fill-color': '#0F6E56', 'fill-opacity': 0.25 },
 			});
 			map.addLayer({
 				id: 'preview-line',
 				type: 'line',
 				source: 'preview',
-				paint: { 'line-color': '#522bff', 'line-width': 1, 'line-opacity': 0.7 },
+				paint: { 'line-color': '#0F6E56', 'line-width': 1, 'line-opacity': 0.7 },
 			});
 
 			const bounds = new maplibregl.LngLatBounds();

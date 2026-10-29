@@ -26,7 +26,7 @@ export async function requireAdmin() {
 
 export async function requireNonCloud() {
 	const config = await fetchPublicConfig();
-	if (config.naoMode === 'cloud') {
+	if (config.quarryMode === 'cloud') {
 		throw redirect({ to: '/settings/account' });
 	}
 }
@@ -41,7 +41,7 @@ export async function requireOrganizationAdminCloudBilling() {
 
 export async function requireCloud() {
 	const config = await fetchPublicConfig();
-	if (config.naoMode !== 'cloud') {
+	if (config.quarryMode !== 'cloud') {
 		throw redirect({ to: '/settings/account' });
 	}
 	return config;

@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { documentExtension } from '@nao/shared/attachments';
+import { documentExtension } from '@quarry/shared/attachments';
 
 import { useSidePanel } from '@/contexts/side-panel';
 import { downloadAttachment, fileNameOf } from '@/lib/attachments';

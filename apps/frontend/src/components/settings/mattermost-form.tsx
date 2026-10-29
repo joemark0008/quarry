@@ -122,7 +122,7 @@ export function MattermostForm({
 							<SettingsControlRow
 								id='interactiveButtonsEnabled'
 								label='Enable interactive buttons'
-								description='Adds a Stop button while nao is answering. This requires your Mattermost server to reach nao.'
+								description='Adds a Stop button while quarry is answering. This requires your Mattermost server to reach quarry.'
 								control={
 									<Switch
 										id='interactiveButtonsEnabled'
@@ -155,15 +155,15 @@ export function MattermostForm({
 												id='callbackUrl'
 												name='callbackUrl'
 												type='url'
-												placeholder='https://nao.example.com'
+												placeholder='https://quarry.example.com'
 												value={field.state.value}
 												onChange={(event) => field.handleChange(event.target.value)}
 												onBlur={field.handleBlur}
 											/>
 											<p className='text-xs text-muted-foreground'>
-												The address your Mattermost server uses to reach nao can differ from the
-												address people use in their browser. Leave this blank unless buttons are
-												not working.
+												The address your Mattermost server uses to reach quarry can differ from
+												the address people use in their browser. Leave this blank unless buttons
+												are not working.
 											</p>
 											{field.state.meta.errors.length > 0 && (
 												<p className='text-xs text-destructive'>{field.state.meta.errors[0]}</p>

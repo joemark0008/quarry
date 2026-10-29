@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { GitBranch, Github } from 'lucide-react';
 
-import type { RepoProvider } from '@nao/shared/types';
+import type { RepoProvider } from '@quarry/shared/types';
 
 import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import { Button } from '@/components/ui/button';

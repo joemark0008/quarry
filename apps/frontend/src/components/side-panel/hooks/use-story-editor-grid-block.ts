@@ -8,7 +8,7 @@ import {
 	resolveGridWidths,
 	setGridColumnsMarkup,
 	splitGridColumnsRaw,
-} from '@nao/shared/story-segments';
+} from '@quarry/shared/story-segments';
 import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { removeCardFromOrigin } from '../story-editor-utils';
 import {
@@ -18,7 +18,7 @@ import {
 	StoryBlockDragContext,
 } from '../story-editor-drag-context';
 import { resolveDragSelection } from '../story-block-selection';
-import type { Segment } from '@nao/shared/story-segments';
+import type { Segment } from '@quarry/shared/story-segments';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import type {
 	DragEvent as ReactDragEvent,

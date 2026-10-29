@@ -1,4 +1,4 @@
-import { fileExtension } from '@nao/shared/attachments';
+import { fileExtension } from '@quarry/shared/attachments';
 
 import { fetchAttachment, fetchAttachmentSize } from '@/lib/attachments';
 import { parseDelimitedText } from '@/lib/delimited-text';

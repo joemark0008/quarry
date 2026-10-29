@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { pluralize } from '@nao/shared';
+import { pluralize } from '@quarry/shared';
 import { McpTitle } from './mcp-title';
 import { ToolCall } from './index';
 import type { GroupablePart, McpSubGroupPart } from '@/types/ai';

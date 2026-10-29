@@ -1,4 +1,4 @@
-import { getGridClass, getGridTemplateColumns } from '@nao/shared/story-segments';
+import { getGridClass, getGridTemplateColumns } from '@quarry/shared/story-segments';
 import { mergeAttributes, Node } from '@tiptap/core';
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 import { Streamdown } from 'streamdown';
@@ -11,7 +11,7 @@ import { BlockSelectionContext } from './story-block-selection-context';
 import { StoryBlockDragContext } from './story-editor-drag-context';
 import { decodeFromAttr } from './story-editor-utils';
 import { useStoryEditorGridBlock } from './hooks/use-story-editor-grid-block';
-import type { Segment } from '@nao/shared/story-segments';
+import type { Segment } from '@quarry/shared/story-segments';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import type { ReactNode } from 'react';
 import { MarkdownTable } from '@/components/chat-messages/markdown-table';
@@ -135,11 +135,11 @@ function GridBlockView(props: ReactNodeViewProps) {
 					ref={gridRef}
 					className={
 						visualWidths !== null
-							? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--nao-grid-cols)]'
+							? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--quarry-grid-cols)]'
 							: `grid ${getGridClass(cols)} gap-4`
 					}
 					{...(visualWidths !== null
-						? { style: { ['--nao-grid-cols' as string]: getGridTemplateColumns(visualWidths) } }
+						? { style: { ['--quarry-grid-cols' as string]: getGridTemplateColumns(visualWidths) } }
 						: {})}
 				>
 					{segments.map((segment, i) => {
@@ -177,7 +177,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 										selectedGridColumns.some(
 											(column) => column.gridPos === gridPos && column.index === i,
 										) &&
-										'nao-block-selected',
+										'quarry-block-selected',
 								)}
 								draggable={canDragColumn || undefined}
 								onDragStart={canDragColumn ? (event) => handleColumnDragStart(i, event) : undefined}

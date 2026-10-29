@@ -113,7 +113,7 @@ export function GitHubRepoPicker({ open, onOpenChange, onImported, dialogStyle }
 							<Github className='size-5' />
 							Import from GitHub
 						</DialogTitle>
-						<DialogDescription>Select a repository to import as a nao project.</DialogDescription>
+						<DialogDescription>Select a repository to import as a quarry project.</DialogDescription>
 					</DialogHeader>
 
 					<GithubRepoList

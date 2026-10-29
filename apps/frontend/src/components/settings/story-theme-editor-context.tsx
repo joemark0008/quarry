@@ -1,9 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Moon, Sun } from 'lucide-react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { sameThemePair } from '@nao/shared/story-theme';
-import type { StoryThemeMode, StoryThemePair } from '@nao/shared/story-theme';
-import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
+import { sameThemePair } from '@quarry/shared/story-theme';
+import type { StoryThemeMode, StoryThemePair } from '@quarry/shared/story-theme';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';

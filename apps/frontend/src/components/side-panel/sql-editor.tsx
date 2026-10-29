@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Editor, useMonaco } from '@monaco-editor/react';
-import { validateSqlFilterTemplate } from '@nao/shared/sql-template';
+import { validateSqlFilterTemplate } from '@quarry/shared/sql-template';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, Loader2, Play, Save } from 'lucide-react';
 import { usePanelRef } from 'react-resizable-panels';
 import { ResizableSeparator, ResizablePanel, ResizablePanelGroup } from '../ui/resizable';
 import type { Monaco } from '@monaco-editor/react';
-import type { UIMessage } from '@nao/shared/backend/chat';
-import type { executeSql } from '@nao/shared/tools';
+import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { executeSql } from '@quarry/shared/tools';
 import type { editor } from 'monaco-editor';
 
 import { useOptionalAgentContext } from '@/contexts/agent.provider';

@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 import { CheckCircle2, CircleAlert, Loader2, Terminal } from 'lucide-react';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import { useAgentMessages } from '@/contexts/agent.provider';
 import { cn } from '@/lib/utils';
@@ -142,7 +142,7 @@ export function WarehouseCommandProgress({
 				<details className='group mt-2'>
 					<summary className='flex cursor-pointer list-none items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground'>
 						<Terminal className='size-3' />
-						View nao {isSyncing ? 'sync' : 'debug'} logs
+						View quarry {isSyncing ? 'sync' : 'debug'} logs
 					</summary>
 					<pre className='mt-2 max-h-40 overflow-auto whitespace-pre-wrap rounded-md bg-muted/50 p-2 font-mono text-[10px] leading-relaxed text-muted-foreground'>
 						{logs}
@@ -169,7 +169,7 @@ const WAREHOUSE_PROGRESS: Record<WarehouseProvisioningStatus, number> = {
 
 const WAREHOUSE_PROGRESS_LABELS: Record<WarehouseProvisioningStatus, string> = {
 	queued: 'Preparing warehouse setup',
-	initializing: 'Initializing your nao project',
+	initializing: 'Initializing your quarry project',
 	debugging: 'Checking your warehouse connection',
 	syncing: 'Syncing schema and previews',
 	registering: 'Registering your project',

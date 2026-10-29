@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import type { SavedPrompt } from '@nao/shared/backend/saved-prompts';
+import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
 import { trpc } from '@/main';
 
 /** Saved prompts of `projectId`, or of the current project when it is omitted. */

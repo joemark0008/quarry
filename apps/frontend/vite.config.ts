@@ -11,7 +11,7 @@ import { STORY_RUNTIME_SOURCES, storyRuntime } from './vite/story-runtime-plugin
 
 /** apps/api (NestJS + GraphQL). */
 const QUARRY_API_URL = process.env.QUARRY_API_URL ?? 'http://localhost:5006';
-/** Upstream nao backend (../fork-reference), serving every screen not migrated yet. */
+/** Upstream quarry backend (../fork-reference), serving every screen not migrated yet. */
 const UPSTREAM_API_URL = process.env.UPSTREAM_API_URL ?? 'http://localhost:5005';
 
 // https://vitejs.dev/config/
@@ -39,14 +39,15 @@ export default defineConfig({
 	resolve: {
 		alias: [
 			{ find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
-			// Upstream sources reached through @nao/shared/backend/* must load quarry's @nao/shared, not fork-reference's.
+			// Upstream sources reached through @quarry/shared/backend/* import upstream's package name for shared:
+			// load quarry's copy, not fork-reference's. Rename at cut-over (PHASES.md 1c).
 			{ find: /^@nao\/shared$/, replacement: fileURLToPath(new URL('../shared/src/index.ts', import.meta.url)) },
 			{ find: /^@nao\/shared\/(.*)$/, replacement: fileURLToPath(new URL('../shared/src/$1', import.meta.url)) },
 		],
 	},
 	server: {
 		fs: {
-			// The @nao/shared/backend/* bridges import upstream sources from ../fork-reference until Phase 8.
+			// The @quarry/shared/backend/* bridges import upstream sources from ../fork-reference until Phase 8.
 			allow: ['../..', '../../../fork-reference'],
 		},
 		// Proxy split (PLAN.md §8): migrated paths go to apps/api, everything else to the upstream backend.

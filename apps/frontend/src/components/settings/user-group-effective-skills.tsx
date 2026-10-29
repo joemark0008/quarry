@@ -1,7 +1,7 @@
-import { isSkillGranted } from '@nao/shared';
-import { MAX_PRELOADED_SKILLS } from '@nao/shared/types';
+import { isSkillGranted } from '@quarry/shared';
+import { MAX_PRELOADED_SKILLS } from '@quarry/shared/types';
 import { useQuery } from '@tanstack/react-query';
-import type { SkillsAccess } from '@nao/shared';
+import type { SkillsAccess } from '@quarry/shared';
 
 import { EffectiveAccessStatusRow } from '@/components/settings/user-group-effective-access-status-row';
 import { Badge } from '@/components/ui/badge';

@@ -3,8 +3,8 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, PlusIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { SYSTEM_EXAMPLE_PROJECT_ID } from '@nao/shared';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { StoryItem } from '@/lib/stories-page';
 
 import { ChatInput } from '@/components/chat-input';
@@ -17,7 +17,7 @@ import { ViewerHome } from '@/components/viewer-home';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { useMultiProject } from '@/hooks/use-multi-project';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { useResizeObserver } from '@/hooks/use-resize-observer';
@@ -47,16 +47,16 @@ function HomePage() {
 	const username = session?.user?.name;
 	const { setAdminMode } = useAgentContext();
 	const isEmptyState = useAgentMessagesSelector(checkHasNoMessages);
-	const { canChatWithNaoData } = usePermissions();
+	const { canChatWithQuarryData } = usePermissions();
 	const { admin: adminSearch, example: exampleSearch } = Route.useSearch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!canChatWithNaoData) {
+		if (!canChatWithQuarryData) {
 			return;
 		}
 		setAdminMode(adminSearch === true);
-	}, [canChatWithNaoData, adminSearch, setAdminMode]);
+	}, [canChatWithQuarryData, adminSearch, setAdminMode]);
 
 	const project = useQuery(trpc.project.getCurrent.queryOptions());
 	const projects = useQuery(trpc.project.listForCurrentUser.queryOptions());
@@ -232,7 +232,7 @@ function HomePage() {
 								<HomeLinkCard
 									to='/settings/project'
 									label='Project required'
-									title='Configure your nao project'
+									title='Configure your quarry project'
 									subtitle='Set NAO_DEFAULT_PROJECT_PATH to start chatting'
 									logoSrc={cardLogoSrc}
 								/>

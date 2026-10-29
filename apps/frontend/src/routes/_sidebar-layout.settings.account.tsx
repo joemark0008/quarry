@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { UserRole } from '@nao/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 import type { TeamMember } from '@/components/settings/team';
 import { EditMemberDialog } from '@/components/settings/team';
@@ -22,6 +22,7 @@ import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card
 import { SettingsControlRow, SettingsToggleRow } from '@/components/ui/settings-toggle-row';
 import { trpc } from '@/main';
 import { clearApolloCache } from '@/lib/apollo-client';
+import { QUARRY_NEWSLETTER_SUBSCRIBE_URL } from '@/lib/quarry-links';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/account')({
 	component: GeneralPage,
@@ -114,14 +115,16 @@ function GeneralPage() {
 						/>
 						<SettingsControlRow
 							label='Theme'
-							description='Choose how nao looks.'
+							description='Choose how quarry looks.'
 							control={<ThemeSelector />}
 						/>
-						<SettingsControlRow
-							label='Newsletter'
-							description='Get product updates, release notes, and analytics agent tips.'
-							control={<NewsletterSubscribeInlineForm initialEmail={user?.email} />}
-						/>
+						{QUARRY_NEWSLETTER_SUBSCRIBE_URL && (
+							<SettingsControlRow
+								label='Newsletter'
+								description='Get product updates, release notes, and analytics agent tips.'
+								control={<NewsletterSubscribeInlineForm initialEmail={user?.email} />}
+							/>
+						)}
 					</SettingsCard>
 
 					<SettingsMemories isAdmin={isAdmin} />

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { Spinner } from '@/components/ui/spinner';
-import NaoLogo from '@/components/icons/nao-full-logo.svg';
+import QuarryLogo from '@/components/icons/quarry-full-logo.svg';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
 
@@ -114,7 +114,7 @@ function CenteredCard({ children }: { children: React.ReactNode }) {
 	return (
 		<div className='mx-auto w-full max-w-md p-8 my-auto'>
 			<div className='flex flex-col items-center gap-8 mb-10 pb-2'>
-				<NaoLogo className='w-20 h-auto text-foreground' />
+				<QuarryLogo className='w-20 h-auto text-foreground' />
 				<h1 className='font-borna text-2xl font-medium text-center'>Connect Discord</h1>
 			</div>
 			{children}

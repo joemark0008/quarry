@@ -1,11 +1,11 @@
-import { isBuiltinChartType } from '@nao/shared/chart-types';
+import { isBuiltinChartType } from '@quarry/shared/chart-types';
 import { memo, useMemo } from 'react';
 
 import { McpAppHeader } from './mcp-app-header';
-import { OpenInNaoButton } from './open-in-nao-button';
-import type { displayChart } from '@nao/shared/tools';
+import { OpenInQuarryButton } from './open-in-quarry-button';
+import type { displayChart } from '@quarry/shared/tools';
 import type { ReactNode } from 'react';
-import type { McpChartEmbedStoredConfig } from '@nao/shared';
+import type { McpChartEmbedStoredConfig } from '@quarry/shared';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { ChartDisplay } from '@/components/tool-calls/display-chart';
 
@@ -79,7 +79,7 @@ export const ChartAppView = memo(function ChartAppView({ config, data, naoUrl }:
 
 	return (
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
-			<McpAppHeader title={config.title}>{naoUrl ? <OpenInNaoButton url={naoUrl} /> : null}</McpAppHeader>
+			<McpAppHeader title={config.title}>{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}</McpAppHeader>
 			<div className='min-h-0 flex-1 overflow-auto'>
 				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>{body}</div>
 			</div>

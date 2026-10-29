@@ -1,4 +1,4 @@
-import type { MessageBubble, StoryFormat, Visibility } from '@nao/shared/types';
+import type { MessageBubble, StoryFormat, Visibility } from '@quarry/shared/types';
 
 export type GroupBy = 'type' | 'date' | 'author';
 

@@ -9,7 +9,7 @@ import {
 	ChartScatter,
 	SquareSigma,
 } from 'lucide-react';
-import type { ChartType } from '@nao/shared/chart-types';
+import type { ChartType } from '@quarry/shared/chart-types';
 import type { ComponentType } from 'react';
 import ChartDonutIcon from '@/components/icons/chart-donut.svg';
 import ChartRadarIcon from '@/components/icons/chart-radar.svg';

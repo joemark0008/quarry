@@ -1,6 +1,6 @@
 import { Sun } from 'lucide-react';
-import { providerKind } from '@nao/shared/types';
-import type { LlmProvider } from '@nao/shared/types';
+import { providerKind } from '@quarry/shared/types';
+import type { LlmProvider } from '@quarry/shared/types';
 import AzureIcon from '@/components/icons/azure.svg';
 import ClaudeIcon from '@/components/icons/claude.svg';
 import GoogleIcon from '@/components/icons/google.svg';
@@ -14,7 +14,7 @@ import GoogleVertexIcon from '@/components/icons/google-vertex.svg';
 import QwenIcon from '@/components/icons/qwen.svg';
 import MinimaxIcon from '@/components/icons/minimax.svg';
 import MoonshotIcon from '@/components/icons/moonshot.svg';
-import NaoIcon from '@/components/icons/nao-logo-greyscale.svg';
+import QuarryIcon from '@/components/icons/quarry-logo-greyscale.svg';
 import MetaIcon from '@/components/icons/meta.svg';
 
 import { Favicon } from '@/components/ui/favicon';
@@ -31,7 +31,7 @@ export function LlmProviderIcon({ provider, baseUrl, className: customClassName 
 	const className = cn('text-foreground opacity-50', customClassName);
 	switch (providerKind(provider as LlmProvider)) {
 		case 'nao':
-			return <NaoIcon className={className} />;
+			return <QuarryIcon className={className} />;
 		case 'anthropic':
 			return <ClaudeIcon className={className} />;
 		case 'openai':

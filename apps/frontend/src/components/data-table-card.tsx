@@ -2,7 +2,7 @@ import { memo, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Copy, Download, Maximize2 } from 'lucide-react';
 import type { ReactNode } from 'react';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type { DataExportFormat } from '@/components/export-data-menu';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { TableDisplay } from '@/components/tool-calls/display-table';

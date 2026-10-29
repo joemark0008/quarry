@@ -74,7 +74,7 @@ export async function downloadAttachment(path: string): Promise<void> {
 
 export const fileNameOf = (path: string): string => path.split('/').pop() ?? path;
 
-/** Permanent storage is mounted at `/home`; nao can open nothing outside it. */
+/** Permanent storage is mounted at `/home`; quarry can open nothing outside it. */
 export const isStoredFilePath = (path: string): boolean => /^\/home\/[^/].*$/.test(path);
 
 async function readErrorMessage(response: Response, fallback: string): Promise<string> {

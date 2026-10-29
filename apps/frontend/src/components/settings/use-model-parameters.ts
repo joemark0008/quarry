@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getModelParameterSpec } from '@nao/shared/backend/provider-meta';
+import { getModelParameterSpec } from '@quarry/shared/backend/provider-meta';
 import { buildInferenceSettings, getParamErrors, seedParamValues } from './model-parameters-fields';
 import type { ParamValues } from './model-parameters-fields';
-import type { ModelInferenceSettings, ParamKey } from '@nao/shared/backend/llm';
-import type { LlmProvider } from '@nao/shared/types';
+import type { ModelInferenceSettings, ParamKey } from '@quarry/shared/backend/llm';
+import type { LlmProvider } from '@quarry/shared/types';
 
 interface UseModelParametersArgs {
 	provider: LlmProvider;

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { getMissingSkillGrants, toggleSkillGrant } from './user-group-skills';
-import type { SkillsAccess } from '@nao/shared';
+import type { SkillsAccess } from '@quarry/shared';
 
 vi.mock('@/main', () => ({ trpc: {} }));
 

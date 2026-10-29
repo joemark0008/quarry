@@ -1,7 +1,7 @@
 import { blockRef } from './block-config';
 import { ChartBlock } from './chart-shared';
 import type { ChartProps } from './chart-shared';
-import type { ChartType } from '@nao/shared/chart-types';
+import type { ChartType } from '@quarry/shared/chart-types';
 
 export interface GenericChartProps extends ChartProps {
 	type: Exclude<ChartType, 'kpi_card'>;

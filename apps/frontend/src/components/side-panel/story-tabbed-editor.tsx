@@ -6,7 +6,7 @@ import {
 	renameStoryTab,
 	replaceStoryTabInner,
 	stripStoryTabsMarkup,
-} from '@nao/shared/story-tabs';
+} from '@quarry/shared/story-tabs';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getEditorMarkdown, preprocessForEditor, StoryEditor } from './story-editor';
 import { serializeStoryEditorNodes } from './story-editor-utils';

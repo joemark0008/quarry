@@ -1,5 +1,5 @@
-import { stripAssistantTags } from '@nao/shared';
-import { isBuiltinChartType } from '@nao/shared/chart-types';
+import { stripAssistantTags } from '@quarry/shared';
+import { isBuiltinChartType } from '@quarry/shared/chart-types';
 import { Link } from '@tanstack/react-router';
 import {
 	Bell,
@@ -21,10 +21,10 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Streamdown } from 'streamdown';
-import { splitCodeIntoSegments } from '@nao/shared/story-segments';
-import { NOTIFICATION_CATEGORY_LABELS } from '@nao/shared/types';
-import type { displayChart } from '@nao/shared/tools';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
+import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
+import { NOTIFICATION_CATEGORY_LABELS } from '@quarry/shared/types';
+import type { displayChart } from '@quarry/shared/tools';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 import type {
 	FeedbackNotificationPayload,
 	NotificationCategory,
@@ -32,7 +32,7 @@ import type {
 	SharedNotificationPayload,
 	StoryRefreshNotificationPayload,
 	StorySubscriptionNotificationPayload,
-} from '@nao/shared/types';
+} from '@quarry/shared/types';
 import type { ComponentType, ReactNode } from 'react';
 
 import type { QueryDataMap } from '@/components/story-embeds';

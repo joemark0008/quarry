@@ -4,7 +4,7 @@ import type {
 	ParsedMapBlock,
 	ParsedTableBlock,
 	Segment,
-} from '@nao/shared/story-segments';
+} from '@quarry/shared/story-segments';
 
 type StoryBlock = ParsedChartBlock | ParsedTableBlock | ParsedMapBlock | ParsedFilterBlock;
 type StoryBlockType = 'chart' | 'table' | 'map' | 'filter';

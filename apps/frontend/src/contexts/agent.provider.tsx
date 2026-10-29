@@ -1,6 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import type { AgentHelpers, AgentMode } from '@/hooks/use-agent';
 import { useAgent, useSyncMessages } from '@/hooks/use-agent';

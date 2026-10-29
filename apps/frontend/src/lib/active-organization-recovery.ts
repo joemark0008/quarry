@@ -1,6 +1,6 @@
 import { observable } from '@trpc/server/observable';
 import { clearStaleActiveOrganization } from './active-organization';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { TRPCLink } from '@trpc/client';
 
 export function createActiveOrganizationRecovery({

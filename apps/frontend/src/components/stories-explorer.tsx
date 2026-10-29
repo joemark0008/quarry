@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { FolderPlus } from 'lucide-react';
-import type { StoryPanelDisplayMode } from '@nao/shared/types';
+import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { ExplorerEntry, FolderItem, StoriesFilters, StoryItem } from '@/lib/stories-page';
 import { countActiveFilters, DEFAULT_FILTERS, isSystemFolder } from '@/lib/stories-page';
 import { FolderCard } from '@/components/stories-folder-card';

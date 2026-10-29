@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { sendVerificationEmail, signIn } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/components/auth-form';
 import { EmailVerificationPending } from '@/components/email-verification-pending';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import {
 	buildEmailVerificationCallbackUrl,
 	getSignInErrorMessage,

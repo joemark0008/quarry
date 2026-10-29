@@ -1,7 +1,7 @@
-import { STORY_FRAME_CONTAINER, STORY_STYLE_ATTRIBUTE } from '@nao/shared/story-app';
+import { STORY_FRAME_CONTAINER, STORY_STYLE_ATTRIBUTE } from '@quarry/shared/story-app';
 import { useLayoutEffect } from 'react';
 
-const REBASED_ATTRIBUTE = 'data-nao-frame-rebased';
+const REBASED_ATTRIBUTE = 'data-quarry-frame-rebased';
 const MEDIA_RULE = /@media\s*([^{]+)\{/g;
 const MEDIA_TYPE_PREFIX = /^\s*(only\s+)?(screen|all)\s+and\s+/i;
 const FRAME_FEATURE =

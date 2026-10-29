@@ -1,5 +1,5 @@
-import type { UserRole } from '@nao/shared/types';
 import { SetMetadata } from '@nestjs/common';
+import type { UserRole } from '@quarry/shared/types';
 
 export const ACCESS_KEY = 'quarry:access';
 

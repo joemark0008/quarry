@@ -1,9 +1,9 @@
-import { ChartStyleContext, DEFAULT_CHART_STYLE } from '@nao/shared';
-import { storyThemeToCssVars } from '@nao/shared/story-theme';
-import { storyBrandStyles } from '@nao/shared/story-theme-brand-styles';
+import { ChartStyleContext, DEFAULT_CHART_STYLE } from '@quarry/shared';
+import { storyThemeToCssVars } from '@quarry/shared/story-theme';
+import { storyBrandStyles } from '@quarry/shared/story-theme-brand-styles';
 import { useEffect, useMemo, useState } from 'react';
-import type { ChartStyle } from '@nao/shared';
-import type { StoryTheme, StoryThemePair } from '@nao/shared/story-theme';
+import type { ChartStyle } from '@quarry/shared';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
 import type { CSSProperties, ReactNode } from 'react';
 
 import { PortalContainerContext } from '@/contexts/portal-container';

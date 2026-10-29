@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { CustomStoryViewerAccess } from '@nao/shared/story-app';
+import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
 import type { QueryDataMap } from '@/components/story-embeds';
 import type { StoryDraft } from '@/lib/story.utils';
 import { useThrottledValue } from '@/hooks/use-throttled-value';

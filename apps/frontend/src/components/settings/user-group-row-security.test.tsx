@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { areUserGroupRowPolicyDraftsValid, UserGroupRowSecurity } from './user-group-row-security';
-import type { DatabaseContextAccess, ProjectRowSecurity, UserGroupRowPolicies } from '@nao/shared';
+import type { DatabaseContextAccess, ProjectRowSecurity, UserGroupRowPolicies } from '@quarry/shared';
 import type { ReactElement, ReactNode } from 'react';
 
 vi.mock('@/components/ui/select', () => ({

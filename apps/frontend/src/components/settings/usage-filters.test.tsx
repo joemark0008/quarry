@@ -2,11 +2,11 @@
 
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_USAGE_PERIOD_SELECTION, MAX_SAVED_USAGE_PERIODS } from '@nao/shared/backend/usage';
+import { DEFAULT_USAGE_PERIOD_SELECTION, MAX_SAVED_USAGE_PERIODS } from '@quarry/shared/backend/usage';
 
 import { UsageFilters } from './usage-filters';
 import { UsagePeriodFilter } from './usage-period-filter';
-import type { SavedUsagePeriod } from '@nao/shared/backend/usage';
+import type { SavedUsagePeriod } from '@quarry/shared/backend/usage';
 
 const savedPeriods: SavedUsagePeriod[] = [{ id: 'year', days: 365, granularity: 'month' }];
 

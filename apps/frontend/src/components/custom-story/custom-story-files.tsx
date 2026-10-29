@@ -1,4 +1,4 @@
-import { isHtmlStoryEntry, STORY_APP_ENTRY_CANDIDATES } from '@nao/shared/story-app';
+import { isHtmlStoryEntry, STORY_APP_ENTRY_CANDIDATES } from '@quarry/shared/story-app';
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, File, Lock, Save } from 'lucide-react';
 import { useMemo, useState } from 'react';

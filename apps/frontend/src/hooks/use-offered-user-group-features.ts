@@ -1,5 +1,5 @@
-import { USER_GROUP_FEATURE_DEFINITIONS } from '@nao/shared';
-import type { UserGroupFeatureDefinition } from '@nao/shared';
+import { USER_GROUP_FEATURE_DEFINITIONS } from '@quarry/shared';
+import type { UserGroupFeatureDefinition } from '@quarry/shared';
 
 import { useCustomStoriesEnabled } from '@/hooks/use-custom-stories-enabled';
 

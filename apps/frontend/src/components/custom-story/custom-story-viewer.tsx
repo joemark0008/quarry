@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@nao/shared/story-app';
-import type { StoryBlockReference } from '@nao/shared/types';
+import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
+import type { StoryBlockReference } from '@quarry/shared/types';
 
 import type { CustomStoryViewMode } from '@/components/custom-story/custom-story-view-mode';
 import { ActionErrorBanner, CustomStoryBody } from '@/components/custom-story/custom-story-body';

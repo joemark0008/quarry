@@ -1,9 +1,9 @@
-import { resolveDataKey } from '@nao/shared';
+import { resolveDataKey } from '@quarry/shared';
 import { ChartNoAxesColumn, Rows2, TableIcon, TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { displayChart } from '@nao/shared/tools';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { displayChart } from '@quarry/shared/tools';
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';
 import type { ChartSelectionSummary } from '@/lib/chart-selection-summary';
 

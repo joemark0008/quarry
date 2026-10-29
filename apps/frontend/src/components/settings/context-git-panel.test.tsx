@@ -65,7 +65,7 @@ describe('ContextGitPanel update action', () => {
 		localStorage.clear();
 		mocks.getChangedFiles.mockResolvedValue([]);
 		mocks.getRepositoryStatus.mockResolvedValue(createRepositoryStatus(true));
-		mocks.suggestBranchName.mockResolvedValue('nao/context-edits');
+		mocks.suggestBranchName.mockResolvedValue('quarry/context-edits');
 		mocks.updateWorktree.mockResolvedValue({ branch: 'main', commit: 'a'.repeat(40) });
 	});
 
@@ -250,10 +250,10 @@ function createRepositoryStatus(updateNeeded: boolean) {
 			platform: 'github',
 		},
 		branches: {
-			branches: ['main', 'nao/context-edits'],
-			currentBranch: 'nao/context-edits',
+			branches: ['main', 'quarry/context-edits'],
+			currentBranch: 'quarry/context-edits',
 			defaultBranch: 'main',
-			suggestedBranch: 'nao/context-edits',
+			suggestedBranch: 'quarry/context-edits',
 			aheadCommitCount: 0,
 			unpushedCommitCount: 0,
 		},

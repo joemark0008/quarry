@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import type { UserMemoryRecord } from '@nao/shared/backend/memory';
+import type { UserMemoryRecord } from '@quarry/shared/backend/memory';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -97,14 +97,14 @@ export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
 	return (
 		<SettingsCard
 			title='Your memory'
-			description='What nao remembers about you. Only you can see and manage these.'
+			description='What quarry remembers about you. Only you can see and manage these.'
 			divide
 		>
 			<SettingsControlRow
 				id='user-memory'
 				label='Enable memory for me'
 				description={
-					isProjectDisabled ? memoryStatusMessage?.toggle : 'Allow nao to save and use memories about you.'
+					isProjectDisabled ? memoryStatusMessage?.toggle : 'Allow quarry to save and use memories about you.'
 				}
 				control={
 					<Switch

@@ -112,7 +112,7 @@ export function GitLabRepoPicker({ open, onOpenChange }: GitLabRepoPickerProps) 
 							<GitlabIcon className='size-5' />
 							Import from GitLab
 						</DialogTitle>
-						<DialogDescription>Select a project to import as a nao project.</DialogDescription>
+						<DialogDescription>Select a project to import as a quarry project.</DialogDescription>
 					</DialogHeader>
 
 					<GitlabRepoList

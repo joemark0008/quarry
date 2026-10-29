@@ -157,20 +157,20 @@ describe('credit settings content', () => {
 		expect(
 			await screen.findByText(
 				(_, element) =>
-					element?.tagName === 'TD' && element.textContent?.trim() === 'nao AI - Managed User 2 calls',
+					element?.tagName === 'TD' && element.textContent?.trim() === 'quarry AI - Managed User 2 calls',
 			),
 		).toBeTruthy();
 		expect(
 			screen.getByText((_, element) => element?.tagName === 'TD' && element.textContent?.trim() === '$23.00'),
 		).toBeTruthy();
 		expect(screen.getByRole('tab', { name: 'Credit history' }).getAttribute('aria-selected')).toBe('true');
-		expect(screen.getByRole('tab', { name: 'nao AI usage' })).toBeTruthy();
-		expect(screen.queryByText('Organization-wide model calls paid with nao credits.')).toBeNull();
+		expect(screen.getByRole('tab', { name: 'quarry AI usage' })).toBeTruthy();
+		expect(screen.queryByText('Organization-wide model calls paid with quarry credits.')).toBeNull();
 		expect(screen.queryByRole('link', { name: 'More details' })).toBeNull();
 		expect(screen.queryByText(/You gave your \$5 welcome credit/)).toBeNull();
 	});
 
-	it('switches from credit history to organization-wide nao AI usage details', async () => {
+	it('switches from credit history to organization-wide quarry AI usage details', async () => {
 		mocks.getSummary.mockResolvedValue({
 			balanceMicroUsd: 23_000_000,
 			lifetimeCreditedMicroUsd: 25_000_000,
@@ -205,10 +205,10 @@ describe('credit settings content', () => {
 		});
 
 		renderOrganizationCreditsContent(undefined, true, true);
-		fireEvent.click(await screen.findByRole('tab', { name: 'nao AI usage' }));
+		fireEvent.click(await screen.findByRole('tab', { name: 'quarry AI usage' }));
 
-		expect(await screen.findByText('Organization-wide model calls paid with nao credits.')).toBeTruthy();
-		expect(screen.getByRole('tab', { name: 'nao AI usage' }).getAttribute('aria-selected')).toBe('true');
+		expect(await screen.findByText('Organization-wide model calls paid with quarry credits.')).toBeTruthy();
+		expect(screen.getByRole('tab', { name: 'quarry AI usage' }).getAttribute('aria-selected')).toBe('true');
 		expect(screen.queryByRole('columnheader', { name: 'Balance' })).toBeNull();
 		expect(await screen.findByText(/Managed User · .* · gpt-5\.6/)).toBeTruthy();
 		expect(screen.getByRole('link', { name: 'Open chat replay' })).toBeTruthy();
@@ -345,7 +345,7 @@ describe('credit settings content', () => {
 
 		expect(screen.queryByText('Purchase summary')).toBeNull();
 		fireEvent.click(await screen.findByRole('button', { name: 'Add credits' }));
-		expect(await screen.findByText('nao platform fee (5%)')).toBeTruthy();
+		expect(await screen.findByText('quarry platform fee (5%)')).toBeTruthy();
 		const amountInput = screen.getByLabelText('Credit amount') as HTMLInputElement;
 		expect(amountInput.type).toBe('text');
 		expect(amountInput.inputMode).toBe('decimal');

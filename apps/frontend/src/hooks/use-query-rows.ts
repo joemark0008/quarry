@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { keepPreviousData, skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { TableServerPagination, TableSort } from '@nao/shared/table-display';
-import type { executeSql } from '@nao/shared/tools';
+import type { TableServerPagination, TableSort } from '@quarry/shared/table-display';
+import type { executeSql } from '@quarry/shared/tools';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { trpc } from '@/main';
 

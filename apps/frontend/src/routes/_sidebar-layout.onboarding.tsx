@@ -265,10 +265,10 @@ function OnboardingPage() {
 								style={deployDialogStyle}
 							>
 								<DialogHeader>
-									<DialogTitle>Deploy your nao project</DialogTitle>
+									<DialogTitle>Deploy your quarry project</DialogTitle>
 									<DialogDescription>
 										{isOrgAdmin
-											? 'Generate a key, then run the command from your nao project folder.'
+											? 'Generate a key, then run the command from your quarry project folder.'
 											: 'An organization admin must generate the deploy key for you.'}
 									</DialogDescription>
 								</DialogHeader>
@@ -310,7 +310,7 @@ function OnboardingPage() {
 								/>
 							) : (
 								<p className='text-sm text-muted-foreground'>
-									GitHub OAuth is not configured for this nao instance.
+									GitHub OAuth is not configured for this quarry instance.
 								</p>
 							)}
 						</div>
@@ -359,7 +359,7 @@ function OnboardingPage() {
 			) : (
 				<div className='flex flex-1 flex-col items-center justify-center gap-6 p-4'>
 					<div className='max-w-2xl space-y-2 text-center'>
-						<h1 className='font-borna text-2xl tracking-tight md:text-3xl'>Set up your nao project</h1>
+						<h1 className='font-borna text-2xl tracking-tight md:text-3xl'>Set up your quarry project</h1>
 						<p className='text-sm text-muted-foreground'>
 							Tell the onboarding agent what you already have, and it will guide you from there.
 						</p>

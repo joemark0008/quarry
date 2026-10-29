@@ -1,4 +1,4 @@
-import { requestWarehouseCredentials } from '@nao/shared/tools';
+import { requestWarehouseCredentials } from '@quarry/shared/tools';
 
 export type SqlProvider = requestWarehouseCredentials.Provider;
 

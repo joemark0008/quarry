@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { isManagedProvider, PROVIDER_META } from '@nao/shared/backend/provider-meta';
+import { isManagedProvider, PROVIDER_META } from '@quarry/shared/backend/provider-meta';
 import {
 	LLM_PROVIDERS,
 	NAMED_PROVIDER_KIND,
@@ -8,9 +8,9 @@ import {
 	providerName,
 	toNamedProvider,
 	toProviderName,
-} from '@nao/shared/types';
-import type { CustomModelMetadata, ModelSettingsMap } from '@nao/shared/backend/llm';
-import type { LlmProvider, LlmProviderKind } from '@nao/shared/types';
+} from '@quarry/shared/types';
+import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/shared/backend/llm';
+import type { LlmProvider, LlmProviderKind } from '@quarry/shared/types';
 import type { InheritedKeySource } from '@/components/settings/llm-provider-form';
 import { trpc } from '@/main';
 
@@ -178,7 +178,7 @@ export function useLlmProviders() {
 	};
 
 	const handleConfigureEnvProvider = (provider: LlmProvider) => {
-		// Endpoints nao cannot guess start from the environment value rather than an empty field.
+		// Endpoints quarry cannot guess start from the environment value rather than an empty field.
 		const baseUrl = PROVIDER_META[providerKind(provider)].requiresBaseUrl ? (envBaseUrls[provider] ?? '') : '';
 		setEditingState({
 			provider,

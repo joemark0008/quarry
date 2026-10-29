@@ -1,4 +1,4 @@
-import type { StoryBlockReference } from '@nao/shared/types';
+import type { StoryBlockReference } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
 
 interface SelectionCitationExcerptProps {

@@ -10,7 +10,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import type { ChatFilterType, ChatGroupBy } from '@nao/shared/types';
+import type { ChatFilterType, ChatGroupBy } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
 
 interface ChatFilterMenuProps {

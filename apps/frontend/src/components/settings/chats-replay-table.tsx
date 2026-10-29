@@ -3,7 +3,7 @@ import { flexRender } from '@tanstack/react-table';
 import type { Table } from '@tanstack/react-table';
 import type { KeyboardEvent } from 'react';
 
-import type { ProjectChatListItem } from '@nao/shared/types';
+import type { ProjectChatListItem } from '@quarry/shared/types';
 import { TablePagination } from '@/components/ui/table-pagination';
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';

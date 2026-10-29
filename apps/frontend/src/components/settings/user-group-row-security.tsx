@@ -6,7 +6,7 @@ import {
 	ROW_SECURITY_OPERATORS,
 	rowSecurityTableKey,
 	stripRowSecurityWhereClause,
-} from '@nao/shared';
+} from '@quarry/shared';
 import { Plus, X } from 'lucide-react';
 import type {
 	DatabaseContextAccess,
@@ -17,7 +17,7 @@ import type {
 	SensitiveTableDefinition,
 	UserGroupRowPolicies,
 	UserGroupTablePolicy,
-} from '@nao/shared';
+} from '@quarry/shared';
 
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
 import { Button } from '@/components/ui/button';

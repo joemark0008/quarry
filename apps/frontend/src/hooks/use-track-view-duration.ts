@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import type { AnalyticsAssetType } from '@nao/shared/types';
+import type { AnalyticsAssetType } from '@quarry/shared/types';
 
 interface TrackViewDurationOptions {
 	assetType: AnalyticsAssetType;

@@ -1,5 +1,5 @@
-import { DEFAULT_MARKER_COLOR, DEFAULT_MARKER_RADIUS } from '@nao/shared';
-import { displayMap } from '@nao/shared/tools';
+import { DEFAULT_MARKER_COLOR, DEFAULT_MARKER_RADIUS } from '@quarry/shared';
+import { displayMap } from '@quarry/shared/tools';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
-import type { BoundarySource } from '@nao/shared';
+import type { BoundarySource } from '@quarry/shared';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
 
 interface MapConfigEditDialogProps {

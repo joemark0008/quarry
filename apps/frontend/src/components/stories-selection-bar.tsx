@@ -1,4 +1,4 @@
-import { BULK_ITEMS_LIMIT } from '@nao/shared';
+import { BULK_ITEMS_LIMIT } from '@quarry/shared';
 import { ArchiveIcon, ArchiveRestoreIcon, FolderInput, MessageSquarePlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useContentCenteredStyle } from '@/hooks/use-sidebar-content-offset';

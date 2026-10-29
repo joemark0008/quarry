@@ -5,8 +5,8 @@ import {
 	areSourceQueriesEqual,
 	findLatestExecuteSqlInMessages,
 } from './execute-sql-messages';
-import type { executeSql } from '@nao/shared/tools';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { executeSql } from '@quarry/shared/tools';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { SourceQuery } from './execute-sql-messages';
 
 const createSourceQuery = (

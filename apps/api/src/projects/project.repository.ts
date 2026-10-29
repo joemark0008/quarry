@@ -1,5 +1,5 @@
-import type { UserRole } from '@nao/shared/types';
 import { Injectable } from '@nestjs/common';
+import type { UserRole } from '@quarry/shared/types';
 
 import { ConfigService } from '../config/config.service.js';
 import type { Prisma, Project, ProjectMember } from '../generated/prisma/client.js';
@@ -52,7 +52,7 @@ export class ProjectRepository {
 	}
 
 	async getDefaultProject(): Promise<Project | null> {
-		const projectPath = this.config.env.NAO_DEFAULT_PROJECT_PATH;
+		const projectPath = this.config.env.QUARRY_DEFAULT_PROJECT_PATH;
 		if (projectPath) {
 			return this.getProjectByPath(projectPath);
 		}

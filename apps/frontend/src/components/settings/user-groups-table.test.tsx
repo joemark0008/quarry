@@ -12,7 +12,7 @@ import {
 	EMPTY_PROJECT_ROW_SECURITY,
 	EMPTY_SKILLS_ACCESS,
 	EMPTY_USER_GROUP_SSO_MAPPINGS,
-} from '@nao/shared';
+} from '@quarry/shared';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -28,7 +28,7 @@ import { UserGroupUserDetail } from './user-group-user-detail';
 import { resolveUserGroupsPageTab, UserGroupsTable } from './user-groups-table';
 import type { UserGroupEditorGroup, UserGroupEditorTab } from './user-group-editor';
 import type { UserGroupUserDetailTab } from './user-group-user-detail';
-import type { McpServerStatus, ProjectRowSecurity } from '@nao/shared';
+import type { McpServerStatus, ProjectRowSecurity } from '@quarry/shared';
 import type { ComponentProps, MouseEventHandler, ReactNode } from 'react';
 
 const mocks = vi.hoisted(() => ({

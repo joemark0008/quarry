@@ -1,4 +1,4 @@
-import { NO_CACHE_SCHEDULE } from '@nao/shared';
+import { NO_CACHE_SCHEDULE } from '@quarry/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Activity, Loader2, Wand2 } from 'lucide-react';

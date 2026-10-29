@@ -12,7 +12,7 @@ import {
 	toggleDatabaseTableGrant,
 	UserGroupContextAccess,
 } from './user-group-context-access';
-import type { DatabaseContextAccess, DatabaseSchemaGrant, DatabaseTableGrant, DocsContextAccess } from '@nao/shared';
+import type { DatabaseContextAccess, DatabaseSchemaGrant, DatabaseTableGrant, DocsContextAccess } from '@quarry/shared';
 
 const mocks = vi.hoisted(() => ({
 	useQuery: vi.fn(),

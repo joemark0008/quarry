@@ -3,7 +3,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoryAskBar } from './story-ask-bar';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import { requestAsk } from '@/stores/ask-bar';
 

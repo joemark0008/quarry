@@ -125,7 +125,7 @@ export function FileSourceEditor({ filePath, value, searchQuery, readOnly, onCha
 		<Editor
 			value={value}
 			language={getLanguageFromPath(filePath)}
-			theme={editorTheme === 'vs-dark' ? 'nao-dark' : 'nao-light'}
+			theme={editorTheme === 'vs-dark' ? 'quarry-dark' : 'quarry-light'}
 			beforeMount={handleBeforeMount}
 			onMount={handleMount}
 			onChange={readOnly ? undefined : handleChange}
@@ -154,7 +154,7 @@ function getLanguageFromPath(filePath: string): string {
 }
 
 function defineCustomThemes(monaco: Monaco) {
-	monaco.editor.defineTheme('nao-light', {
+	monaco.editor.defineTheme('quarry-light', {
 		base: 'vs',
 		inherit: true,
 		rules: [],
@@ -163,7 +163,7 @@ function defineCustomThemes(monaco: Monaco) {
 			'editor.lineHighlightBorder': '#00000000',
 		},
 	});
-	monaco.editor.defineTheme('nao-dark', {
+	monaco.editor.defineTheme('quarry-dark', {
 		base: 'vs-dark',
 		inherit: true,
 		rules: [],

@@ -1,7 +1,7 @@
 import { ChatListItem } from './sidebar-chat-list-item';
 import type { ComponentProps } from 'react';
 
-import type { GroupedChatItem } from '@nao/shared/types';
+import type { GroupedChatItem } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {

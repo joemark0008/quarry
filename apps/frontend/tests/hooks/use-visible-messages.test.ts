@@ -2,7 +2,7 @@
 
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import { useVisibleMessages } from '@/hooks/use-visible-messages';
 

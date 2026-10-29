@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronRight, Lock, Search, TextSearch } from 'lucide-react';
-import type { FileTreeEntry } from '@nao/shared/types';
+import type { FileTreeEntry } from '@quarry/shared/types';
 import { FileExplorerIcon } from '@/components/settings/file-explorer-icon';
 import { Spinner } from '@/components/ui/spinner';
 import { SimpleTooltip } from '@/components/ui/tooltip';

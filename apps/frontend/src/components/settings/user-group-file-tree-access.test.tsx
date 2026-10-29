@@ -15,7 +15,7 @@ import {
 	UnavailableFileTreeGrants,
 } from './user-group-file-tree-access';
 import type { FileTreeCatalogEntry, FileTreeLabels } from './user-group-file-tree-access';
-import type { FileTreeAccess } from '@nao/shared';
+import type { FileTreeAccess } from '@quarry/shared';
 
 const entries = [
 	{ kind: 'folder' as const, path: 'confluence' },

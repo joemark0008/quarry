@@ -1,5 +1,5 @@
 import { Store } from './abstract-store';
-import type { CitationData, StoryBlockReference } from '@nao/shared/types';
+import type { CitationData, StoryBlockReference } from '@quarry/shared/types';
 
 export interface ChatPendingCitationData extends CitationData {
 	chatId: string;

@@ -32,7 +32,7 @@ kept working through upstream tRPC on the same session.
 ## Types from upstream
 
 The frontend still imports upstream backend types (tRPC router, chat message types, usage, providers…).
-`apps/shared/src/backend/*.ts` re-exports them from `../fork-reference` as `@nao/shared/backend/*`; each
+`apps/shared/src/backend/*.ts` re-exports them from `../fork-reference` as `@quarry/shared/backend/*`; each
 bridge is replaced by the ported definitions when its module moves to `apps/api`, and the folder goes away in
-Phase 8. The frontend's `tsconfig.json` paths and Vite aliases point upstream's own `@nao/shared`, `zod` and `ai`
+Phase 8. The frontend's `tsconfig.json` paths and Vite aliases point upstream's own `@nao/shared` (its package name), `zod` and `ai`
 imports at quarry's copies, so there is one copy of each.

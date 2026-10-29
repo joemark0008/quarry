@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { getLatestRelevantStoryAgentState } from './use-story-viewer-agent-state';
 
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 vi.mock('@/contexts/agent.provider', () => ({
 	useAgentMessages: vi.fn(),

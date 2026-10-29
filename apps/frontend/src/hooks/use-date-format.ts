@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { DEFAULT_DATE_FORMAT_SETTINGS } from '@nao/shared/date';
-import type { DateFormatSettings } from '@nao/shared/date';
+import { DEFAULT_DATE_FORMAT_SETTINGS } from '@quarry/shared/date';
+import type { DateFormatSettings } from '@quarry/shared/date';
 
 import { trpc } from '@/main';
 

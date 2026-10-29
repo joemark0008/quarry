@@ -134,7 +134,7 @@ export function DiscordForm({
 						form={form}
 						name='fallbackUserEmail'
 						label='Fallback user email (community servers)'
-						placeholder='nao-bot@example.com'
+						placeholder='quarry-bot@example.com'
 						hint='optional'
 					/>
 					<p className='text-[11px] text-muted-foreground leading-relaxed -mt-2'>
@@ -156,10 +156,10 @@ export function DiscordForm({
 										onChange={(event) => field.handleChange(event.target.checked)}
 										className='size-4 accent-primary'
 									/>
-									Do not add the "Open in nao" link to answers
+									Do not add the "Open in quarry" link to answers
 								</label>
 								<p className='text-[11px] text-muted-foreground leading-relaxed'>
-									Useful on community servers where members do not have access to nao.
+									Useful on community servers where members do not have access to quarry.
 								</p>
 							</div>
 						)}

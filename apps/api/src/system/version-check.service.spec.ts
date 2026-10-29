@@ -35,7 +35,9 @@ describe('VersionCheckService', () => {
 			]),
 		);
 		vi.stubGlobal('fetch', fetchMock);
-		const service = new VersionCheckService({ env: { APP_VERSION: '1.4.0' } } as ConfigService);
+		const service = new VersionCheckService({
+			env: { APP_VERSION: '1.4.0', QUARRY_RELEASES_REPOSITORY: 'acme/quarry' },
+		} as ConfigService);
 
 		await expect(service.checkForUpdate()).resolves.toEqual({
 			currentVersion: '1.4.0',
@@ -43,7 +45,17 @@ describe('VersionCheckService', () => {
 			updateAvailable: true,
 		});
 		await service.checkForUpdate();
+		expect(fetchMock).toHaveBeenCalledWith('https://api.github.com/repos/acme/quarry/releases', expect.anything());
 		expect(fetchMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('skips the check when no releases repository is configured', async () => {
+		const fetchMock = vi.fn();
+		vi.stubGlobal('fetch', fetchMock);
+		const service = new VersionCheckService({ env: { APP_VERSION: '1.4.0' } } as ConfigService);
+
+		await expect(service.checkForUpdate()).resolves.toMatchObject({ latestVersion: null, updateAvailable: false });
+		expect(fetchMock).not.toHaveBeenCalled();
 	});
 
 	it('reports no update when GitHub is unreachable', async () => {
@@ -51,7 +63,9 @@ describe('VersionCheckService', () => {
 			'fetch',
 			vi.fn(async () => new Response('', { status: 503 })),
 		);
-		const service = new VersionCheckService({ env: { APP_VERSION: '1.4.0' } } as ConfigService);
+		const service = new VersionCheckService({
+			env: { APP_VERSION: '1.4.0', QUARRY_RELEASES_REPOSITORY: 'acme/quarry' },
+		} as ConfigService);
 
 		await expect(service.checkForUpdate()).resolves.toMatchObject({ latestVersion: null, updateAvailable: false });
 	});

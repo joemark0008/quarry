@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { CheckIcon, Radio, Split, ThumbsUp, Users, Wrench } from 'lucide-react';
-import { CHAT_REPLAY_FEEDBACK_STATES, CHAT_REPLAY_TOOL_STATES, providerLabel } from '@nao/shared/types';
-import { USAGE_SOURCES } from '@nao/shared/backend/usage';
+import { CHAT_REPLAY_FEEDBACK_STATES, CHAT_REPLAY_TOOL_STATES, providerLabel } from '@quarry/shared/types';
+import { USAGE_SOURCES } from '@quarry/shared/backend/usage';
 import type {
 	SavedUsagePeriod,
 	SavedUsagePeriodInput,
 	UsagePeriodSelection,
 	UsageSource,
-} from '@nao/shared/backend/usage';
+} from '@quarry/shared/backend/usage';
 import type {
 	ChatReplayFeedbackState,
 	ChatReplayToolState,
 	LlmProvider,
 	ProjectChatReplayFacets,
-} from '@nao/shared/types';
+} from '@quarry/shared/types';
 import type { LucideIcon } from 'lucide-react';
 import { UsagePeriodFilter } from '@/components/settings/usage-period-filter';
 import { Badge } from '@/components/ui/badge';

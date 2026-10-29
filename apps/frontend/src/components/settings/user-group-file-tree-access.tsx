@@ -1,7 +1,7 @@
-import { isFileTreeFileGranted, normalizeFileTreeAccess } from '@nao/shared';
+import { isFileTreeFileGranted, normalizeFileTreeAccess } from '@quarry/shared';
 import { ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import type { FileTreeAccess, FileTreeGrant } from '@nao/shared';
+import type { FileTreeAccess, FileTreeGrant } from '@quarry/shared';
 
 import { FileExplorerIcon } from '@/components/settings/file-explorer-icon';
 import { Button } from '@/components/ui/button';

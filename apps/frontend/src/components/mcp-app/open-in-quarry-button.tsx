@@ -3,16 +3,16 @@ import type { MouseEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 
-interface OpenInNaoButtonProps {
+interface OpenInQuarryButtonProps {
 	url: string;
 }
 
-export function OpenInNaoButton({ url }: OpenInNaoButtonProps) {
+export function OpenInQuarryButton({ url }: OpenInQuarryButtonProps) {
 	return (
-		<Button variant='outline' size='sm' className='gap-1.5' asChild title='Open in nao'>
+		<Button variant='outline' size='sm' className='gap-1.5' asChild title='Open in quarry'>
 			<a href={url} target='_blank' rel='noopener noreferrer' onClick={(e) => openLinkViaHost(e, url)}>
 				<ExternalLink className='size-3.5' />
-				<span className='hidden sm:inline'>Open in nao</span>
+				<span className='hidden sm:inline'>Open in quarry</span>
 			</a>
 		</Button>
 	);
@@ -23,5 +23,5 @@ function openLinkViaHost(event: MouseEvent<HTMLAnchorElement>, url: string) {
 		return;
 	}
 	event.preventDefault();
-	window.parent.postMessage({ type: 'nao-open-link', url }, '*');
+	window.parent.postMessage({ type: 'quarry-open-link', url }, '*');
 }

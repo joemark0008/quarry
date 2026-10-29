@@ -1,4 +1,4 @@
-import { popGridColumns, splitGridColumnsRaw } from '@nao/shared/story-segments';
+import { popGridColumns, splitGridColumnsRaw } from '@quarry/shared/story-segments';
 import { Extension } from '@tiptap/core';
 import { Fragment, Slice } from '@tiptap/pm/model';
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
@@ -210,7 +210,7 @@ function buildBlockSelectionPlugin(): Plugin<BlockSelectionState> {
 					if (node) {
 						decorations.push(
 							Decoration.node(position, position + node.nodeSize, {
-								class: 'nao-block-selected',
+								class: 'quarry-block-selected',
 							}),
 						);
 					}

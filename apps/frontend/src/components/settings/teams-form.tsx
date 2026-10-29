@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { getSubmitErrorMessage, PasswordField } from '@/components/ui/form-fields';
+import { docsUrl, QUARRY_PRIVACY_URL } from '@/lib/quarry-links';
 
 export interface TeamsFormProps {
 	hasProjectConfig: boolean;
@@ -24,12 +25,13 @@ export function buildTeamsManifest(appId: string, redirectUrl: string) {
 		version: '1.0.0',
 		id: appId,
 		developer: {
-			name: 'Nao',
-			websiteUrl: 'https://getnao.io/',
-			privacyUrl: 'https://getnao.io/privacy',
-			termsOfUseUrl: 'https://getnao.io/terms',
+			name: 'Quarry',
+			// Teams requires these URLs: the app's own origin unless the deployment sets its own pages.
+			websiteUrl: `${window.location.origin}/`,
+			privacyUrl: QUARRY_PRIVACY_URL ?? `${window.location.origin}/`,
+			termsOfUseUrl: QUARRY_PRIVACY_URL ?? `${window.location.origin}/`,
 		},
-		name: { short: 'nao', full: 'nao' },
+		name: { short: 'quarry', full: 'quarry' },
 		description: {
 			short: 'Analytics agent for data queries',
 			full: 'Analytics agent for data queries, providing insights and visualizations based on your data.',
@@ -122,7 +124,7 @@ export function TeamsForm({ hasProjectConfig, onSubmit, onCancel, isPending, tea
 				<div className='grid gap-3'>
 					<p className='text-[11px] text-muted-foreground leading-relaxed'>
 						<a
-							href='https://docs.getnao.io/nao-agent/chat/microsoft_teams'
+							href={docsUrl('chat/microsoft_teams')}
 							target='_blank'
 							rel='noopener noreferrer'
 							className='inline-flex items-center gap-1 underline hover:text-foreground'

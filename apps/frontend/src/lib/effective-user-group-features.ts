@@ -1,5 +1,5 @@
-import type { ToolCallDensityPolicy, UserGroupFeature } from '@nao/shared';
-import type { ToolCallDensity } from '@nao/shared/types';
+import type { ToolCallDensityPolicy, UserGroupFeature } from '@quarry/shared';
+import type { ToolCallDensity } from '@quarry/shared/types';
 
 export type EffectiveUserGroupFeatures = Record<UserGroupFeature, boolean>;
 

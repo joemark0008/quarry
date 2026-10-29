@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import { RepoList } from '@/components/settings/repo-list';
 import { trpc } from '@/main';
 

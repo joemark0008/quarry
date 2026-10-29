@@ -37,7 +37,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Billing & Credits',
 		section: 'Organization credits',
 		title: 'Balance',
-		description: "View your organization's nao credit balance, refill the wallet, and review credit history.",
+		description: "View your organization's quarry credit balance, refill the wallet, and review credit history.",
 		keywords: ['wallet', 'gift', 'ledger', 'billing', 'refill', 'top up', 'organization credits'],
 		orgAdminOnly: true,
 		cloudBillingOnly: true,
@@ -47,9 +47,9 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Billing & Credits',
 		section: 'Organization credits',
 		search: { creditsTab: 'usage' },
-		title: 'nao AI usage',
-		description: 'Review your model calls, tokens, and nao credit charges.',
-		keywords: ['managed ai', 'model usage', 'tokens', 'cost', 'charges', 'nao credits'],
+		title: 'quarry AI usage',
+		description: 'Review your model calls, tokens, and quarry credit charges.',
+		keywords: ['managed ai', 'model usage', 'tokens', 'cost', 'charges', 'quarry credits'],
 		orgAdminOnly: true,
 		cloudBillingOnly: true,
 	},
@@ -74,7 +74,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Account',
 		section: 'General Settings',
 		title: 'Theme',
-		description: 'Choose how nao looks.',
+		description: 'Choose how quarry looks.',
 		keywords: ['dark mode', 'light mode', 'appearance', 'color scheme'],
 	},
 	{
@@ -82,7 +82,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Account',
 		section: 'General Settings',
 		title: 'Newsletter',
-		description: 'Subscribe to nao product updates, release notes, and analytics agent tips.',
+		description: 'Subscribe to quarry product updates, release notes, and analytics agent tips.',
 		keywords: ['email', 'mail', 'subscribe', 'updates', 'release notes'],
 	},
 	{
@@ -90,7 +90,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Account',
 		section: 'Your memory',
 		title: 'Your memory',
-		description: 'What nao remembers about you. Only you can see and manage these.',
+		description: 'What quarry remembers about you. Only you can see and manage these.',
 		keywords: ['remember', 'learn', 'personalization', 'preferences', 'remembered facts', 'memory list'],
 	},
 	{
@@ -120,7 +120,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/organization/billing',
 		pageLabel: 'Billing & Credits',
 		title: 'Billing & Credits',
-		description: 'Review the nao Cloud plan, pricing, trial, and billing availability.',
+		description: 'Review the quarry Cloud plan, pricing, trial, and billing availability.',
 		keywords: ['subscription', 'price', 'plan', 'payment', 'invoice', 'trial', 'stripe'],
 		orgAdminOnly: true,
 		cloudBillingOnly: true,
@@ -149,8 +149,8 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/organization/billing',
 		pageLabel: 'Billing & Credits',
 		section: 'Billing setup',
-		title: 'Subscribe to nao Cloud',
-		description: 'Subscribe during or after the organization’s 14-day nao Cloud trial.',
+		title: 'Subscribe to quarry Cloud',
+		description: 'Subscribe during or after the organization’s 14-day quarry Cloud trial.',
 		keywords: ['subscribe', 'stripe checkout', 'payment method', 'free trial'],
 		orgAdminOnly: true,
 		cloudBillingOnly: true,
@@ -173,7 +173,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/organization',
 		pageLabel: 'Organization Settings',
 		title: 'Import from GitLab',
-		description: 'Connect your GitLab account and import a project as a nao project.',
+		description: 'Connect your GitLab account and import a project as a quarry project.',
 		keywords: ['gitlab', 'repository', 'repo', 'import', 'git', 'integration', 'clone', 'merge request'],
 	},
 	{
@@ -189,7 +189,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/organization',
 		pageLabel: 'Organization Settings',
 		title: 'Organization API Keys',
-		description: 'Generate organization-scoped API keys for actions like deploying a project from the nao CLI.',
+		description: 'Generate organization-scoped API keys for actions like deploying a project from the quarry CLI.',
 		keywords: ['api key', 'deploy key', 'token', 'credentials'],
 		orgAdminOnly: true,
 	},
@@ -253,7 +253,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/organization',
 		pageLabel: 'Organization Settings',
 		title: 'Google sign-in',
-		description: 'Configure Google sign-in credentials and allowed domains for this nao instance.',
+		description: 'Configure Google sign-in credentials and allowed domains for this quarry instance.',
 		keywords: ['google', 'bigquery', 'service account', 'gcp', 'sso', 'client id', 'auth domain'],
 		orgAdminOnly: true,
 		cloudHidden: true,
@@ -353,7 +353,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Appearance',
 		search: { tab: 'general' },
 		title: 'Appearance',
-		description: 'Control how nao formats dates and displays map boundaries.',
+		description: 'Control how quarry formats dates and displays map boundaries.',
 		keywords: ['look', 'format', 'display', 'date', 'map', 'geojson'],
 	},
 	{
@@ -637,7 +637,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		search: { tab: 'mcp-servers' },
 		title: 'MCP Servers',
 		description:
-			'Configure MCP servers in agent/mcps/mcp.json. nao discovers their tools into OpenAPI specs the agent explores on demand.',
+			'Configure MCP servers in agent/mcps/mcp.json. quarry discovers their tools into OpenAPI specs the agent explores on demand.',
 		keywords: [
 			'model context protocol',
 			'tool',
@@ -703,12 +703,12 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/git',
 		pageLabel: 'Git',
 		title: 'Update context files',
-		description: 'Pull the configured deployment branch into this nao instance.',
+		description: 'Pull the configured deployment branch into this quarry instance.',
 		keywords: ['git pull', 'pull latest', 'refresh context', 'deployment branch', 'update context'],
 		adminOrContextAdmin: true,
 	},
 
-	// ── Project > Integrations & MCP > nao MCP ──────────────
+	// ── Project > Integrations & MCP > quarry MCP ──────────────
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
@@ -716,7 +716,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		section: 'MCP servers',
 		title: 'MCP Servers',
 		description:
-			'Configure MCP servers in agent/mcps/mcp.json. nao discovers their tools into OpenAPI specs the agent explores on demand.',
+			'Configure MCP servers in agent/mcps/mcp.json. quarry discovers their tools into OpenAPI specs the agent explores on demand.',
 		keywords: [
 			'model context protocol',
 			'tool',
@@ -732,8 +732,8 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
-		search: { tab: 'nao-mcp' },
-		section: 'nao MCP',
+		search: { tab: 'quarry-mcp' },
+		section: 'quarry MCP',
 		title: 'MCP Server Endpoint',
 		description: 'Allow external AI clients to connect to this workspace via MCP.',
 		keywords: [
@@ -743,17 +743,17 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 			'external',
 			'api',
 			'bearer',
-			'nao mcp',
-			'naomcp',
-			'nao-mcp',
+			'quarry mcp',
+			'quarrymcp',
+			'quarry-mcp',
 			'mcp endpoint',
 		],
 	},
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
-		search: { tab: 'nao-mcp' },
-		section: 'nao MCP',
+		search: { tab: 'quarry-mcp' },
+		section: 'quarry MCP',
 		title: 'Connected apps',
 		description: 'Create and manage the OAuth clients external MCP tools use to connect (client id + secret).',
 		keywords: ['oauth', 'client', 'client id', 'client secret', 'connected apps', 'dust', 'static oauth', 'mcp'],
@@ -764,18 +764,18 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
-		search: { tab: 'nao-mcp' },
-		section: 'nao MCP',
+		search: { tab: 'quarry-mcp' },
+		section: 'quarry MCP',
 		title: 'Sub-agent mode',
 		description:
-			"Exposes ask_nao and get_nao_answer — delegates the full analytics task to nao's agent. The reasoning trace is saved as a chat in the nao UI.",
+			"Exposes ask_nao and get_nao_answer — delegates the full analytics task to quarry's agent. The reasoning trace is saved as a chat in the quarry UI.",
 		keywords: ['ask_nao', 'get_nao_answer', 'agent', 'analytics', 'delegate', 'sub-agent'],
 	},
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
-		search: { tab: 'nao-mcp' },
-		section: 'nao MCP',
+		search: { tab: 'quarry-mcp' },
+		section: 'quarry MCP',
 		title: 'Sub-agent model',
 		description: 'Choose the model ask_nao answers with, or let it follow the default chat model.',
 		keywords: ['ask_nao', 'mcp model', 'sub-agent model', 'default chat model', 'llm'],
@@ -784,8 +784,8 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	{
 		page: '/settings/project/integrations',
 		pageLabel: 'Integrations & MCP',
-		search: { tab: 'nao-mcp' },
-		section: 'nao MCP',
+		search: { tab: 'quarry-mcp' },
+		section: 'quarry MCP',
 		title: 'Context-layer mode',
 		description:
 			'Exposes ls_nao_context, grep_nao_context, read_nao_context, execute_sql, create_story, update_story — the client MCP drives the workflow step by step.',
@@ -840,7 +840,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		page: '/settings/storage',
 		pageLabel: 'Storage',
 		title: 'Storage Health',
-		description: 'Check that nao can reach and write to the configured storage location.',
+		description: 'Check that quarry can reach and write to the configured storage location.',
 		keywords: ['health', 'status', 'reachable', 'connection', 'credentials', 'bucket access', 'writable'],
 		adminOnly: true,
 		cloudHidden: true,
@@ -882,7 +882,8 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Integrations & MCP',
 		section: 'Slack',
 		title: 'Auto-create users from Slack',
-		description: 'Automatically provision nao accounts for Slack senders whose email domain is in the allowlist.',
+		description:
+			'Automatically provision quarry accounts for Slack senders whose email domain is in the allowlist.',
 		keywords: ['sign up', 'provision', 'onboarding', 'domain', 'allowlist', 'whitelist', 'auto create'],
 		adminOnly: true,
 	},
@@ -892,7 +893,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		section: 'Slack',
 		title: 'Reply only when mentioned',
 		description:
-			'Control whether nao answers every message in active Slack threads or only messages that tag the bot.',
+			'Control whether quarry answers every message in active Slack threads or only messages that tag the bot.',
 		keywords: ['reply mode', 'mentions', 'tagged', 'thread replies', 'bot behavior'],
 	},
 	{
@@ -965,7 +966,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Integrations & MCP',
 		section: 'Discord',
 		title: 'Discord Integration',
-		description: 'Connect a Discord application so nao answers in your server.',
+		description: 'Connect a Discord application so quarry answers in your server.',
 		keywords: ['discord bot', 'bot token', 'application id', 'public key', 'messaging'],
 	},
 	{
@@ -1260,7 +1261,8 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		search: { tab: 'general' },
 		section: 'Branding',
 		title: 'White-label branding',
-		description: 'Replace the nao name, logo, favicon and brand color with your own branding. Enterprise feature.',
+		description:
+			'Replace the quarry name, logo, favicon and brand color with your own branding. Enterprise feature.',
 		keywords: [
 			'white label',
 			'whitelabel',
@@ -1344,7 +1346,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		section: 'Stories',
 		title: 'Story theme',
 		description:
-			'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow nao’s colour scheme.',
+			'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow quarry’s colour scheme.',
 		keywords: [
 			'theme',
 			'story theme',
@@ -1390,7 +1392,7 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		section: 'Stories',
 		title: 'Apply to stories',
 		description: 'Turn the saved story theme on or off without losing it.',
-		keywords: ['theme', 'enable', 'disable', 'toggle', 'story', 'stories', 'fallback', 'nao look'],
+		keywords: ['theme', 'enable', 'disable', 'toggle', 'story', 'stories', 'fallback', 'quarry look'],
 		adminOnly: true,
 	},
 	{

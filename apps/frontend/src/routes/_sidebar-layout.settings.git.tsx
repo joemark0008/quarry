@@ -1,4 +1,4 @@
-import { joinWithAnd } from '@nao/shared';
+import { joinWithAnd } from '@quarry/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Github } from 'lucide-react';
@@ -318,7 +318,7 @@ function GitSettingsPage() {
 										<NumberedSetupSection
 											number={1}
 											title={`${provider.label} server keys`}
-											ownership='Done by the admin who deploys nao, once for everyone.'
+											ownership='Done by the admin who deploys quarry, once for everyone.'
 											isDone={instanceReady}
 											persistentContent={
 												<ProviderSelector
@@ -346,8 +346,8 @@ function GitSettingsPage() {
 														Otherwise ask your admin.
 													</p>
 													<p>
-														After setting the server keys, redeploy or restart nao for them
-														to take effect.
+														After setting the server keys, redeploy or restart quarry for
+														them to take effect.
 													</p>
 													<p>Documentation link coming soon.</p>
 												</div>
@@ -383,7 +383,7 @@ function GitSettingsPage() {
 												<div className='flex flex-col items-start gap-2'>
 													<p className='text-sm text-muted-foreground'>
 														Connect the {provider.label} account that has access to the
-														context files repository. nao uses this account to find and
+														context files repository. quarry uses this account to find and
 														connect that repository.
 													</p>
 													{instanceReady ? (
@@ -396,7 +396,7 @@ function GitSettingsPage() {
 													) : (
 														<DisabledAction
 															label={`Connect ${provider.label} account`}
-															reason={`The nao admin must set the ${provider.label} server keys and redeploy or restart nao first.`}
+															reason={`The quarry admin must set the ${provider.label} server keys and redeploy or restart quarry first.`}
 															icon={provider.icon}
 														/>
 													)}
@@ -509,7 +509,7 @@ function GitSettingsPage() {
 														connectDisabledReason={
 															instanceReady
 																? undefined
-																: `The nao admin must set the ${provider.label} server keys and redeploy or restart nao first.`
+																: `The quarry admin must set the ${provider.label} server keys and redeploy or restart quarry first.`
 														}
 													/>
 												</>
@@ -793,7 +793,7 @@ function getRepositoryConnectBlockedReason(
 	providerLabel: string,
 ): string {
 	if (!instanceReady) {
-		return `Set the ${providerLabel} server keys and redeploy or restart nao first.`;
+		return `Set the ${providerLabel} server keys and redeploy or restart quarry first.`;
 	}
 	if (!accountReady) {
 		return `Connect the ${providerLabel} account that can access the repository first.`;

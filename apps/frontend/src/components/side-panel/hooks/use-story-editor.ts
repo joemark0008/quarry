@@ -1,4 +1,4 @@
-import { popGridColumn } from '@nao/shared/story-segments';
+import { popGridColumn } from '@quarry/shared/story-segments';
 import { Extension } from '@tiptap/core';
 import { Fragment, Slice } from '@tiptap/pm/model';
 import { dropPoint } from '@tiptap/pm/transform';

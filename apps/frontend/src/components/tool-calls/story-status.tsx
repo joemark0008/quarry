@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { UIToolPart } from '@nao/shared/backend/chat';
+import type { UIToolPart } from '@quarry/shared/backend/chat';
 import StoryIcon from '@/components/ui/story-icon';
 import { Expandable } from '@/components/ui/expandable';
 import { getStoryStatusDisplay } from '@/lib/story-status';

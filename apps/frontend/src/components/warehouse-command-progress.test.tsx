@@ -16,7 +16,7 @@ describe('WarehouseCommandProgress', () => {
 		const progress = screen.getByRole('progressbar', { name: 'Syncing schema and previews' });
 		expect(progress.getAttribute('aria-valuenow')).toBe('42');
 		expect(screen.getByText('42%')).toBeTruthy();
-		expect(screen.getByText('View nao sync logs')).toBeTruthy();
+		expect(screen.getByText('View quarry sync logs')).toBeTruthy();
 		expect(screen.getByText(/orders complete/)).toBeTruthy();
 	});
 
@@ -26,7 +26,7 @@ describe('WarehouseCommandProgress', () => {
 		const progress = screen.getByRole('progressbar', { name: 'Checking your warehouse connection' });
 		expect(progress.getAttribute('aria-valuenow')).toBeNull();
 		expect(screen.getByText('In progress')).toBeTruthy();
-		expect(screen.getByText('View nao debug logs')).toBeTruthy();
+		expect(screen.getByText('View quarry debug logs')).toBeTruthy();
 	});
 
 	it('keeps the completed connection visible', () => {

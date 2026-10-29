@@ -2,7 +2,7 @@ import { MessageSquare } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import type { SharedGroup, SharedItem } from '@/lib/viewer-home';
-import type { MessageBubble, StoryPanelDisplayMode } from '@nao/shared/types';
+import type { MessageBubble, StoryPanelDisplayMode } from '@quarry/shared/types';
 import {
 	AuthorDateLabel,
 	CardsGrid,

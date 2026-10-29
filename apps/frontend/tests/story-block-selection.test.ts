@@ -3,7 +3,7 @@
 import { Editor, Node } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { splitGridColumnsRaw } from '@nao/shared/story-segments';
+import { splitGridColumnsRaw } from '@quarry/shared/story-segments';
 
 import {
 	BlockSelection,

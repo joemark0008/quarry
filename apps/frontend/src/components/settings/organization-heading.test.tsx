@@ -66,7 +66,7 @@ describe('OrganizationHeading', () => {
 		const [currentOrganization] = await screen.findAllByRole('option');
 		fireEvent.click(currentOrganization);
 
-		expect(localStorage.getItem('nao.active-organization-id')).toBe('"current"');
+		expect(localStorage.getItem('quarry.active-organization-id')).toBe('"current"');
 		expect(mocks.invalidateQueries).not.toHaveBeenCalled();
 		expect(mocks.invalidateRouter).not.toHaveBeenCalled();
 	});
@@ -87,7 +87,7 @@ describe('OrganizationHeading', () => {
 		fireEvent.click(await screen.findByRole('option', { name: /Other/ }));
 
 		await waitFor(() => {
-			expect(localStorage.getItem('nao.active-organization-id')).toBe('"other"');
+			expect(localStorage.getItem('quarry.active-organization-id')).toBe('"other"');
 			expect(mocks.invalidateQueries).toHaveBeenCalledTimes(1);
 			expect(mocks.invalidateRouter).toHaveBeenCalledTimes(1);
 		});

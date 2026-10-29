@@ -1,4 +1,4 @@
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useHasUsers, usePublicConfig } from '@/hooks/use-public-config';
 
 export function useAuthRoute(): string {

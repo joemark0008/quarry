@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { task } from '@nao/shared/tools';
+import type { task } from '@quarry/shared/tools';
 
 /** How long the subagent has worked, ticking every second while it is still running. */
 export function useSubagentDuration(output: task.Output | undefined, isSettled: boolean): string | null {

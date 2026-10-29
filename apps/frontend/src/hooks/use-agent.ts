@@ -8,9 +8,9 @@ import { useLocalStorage } from './use-local-storage';
 import { usePrevRef } from './use-prev';
 import { useMemoObject } from './useMemoObject';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import type { UIMessage } from '@nao/shared/backend/chat';
-import type { ImageUploadData } from '@nao/shared/attachments';
-import type { CitationData, LlmSelectedModel } from '@nao/shared/types';
+import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { ImageUploadData } from '@quarry/shared/attachments';
+import type { CitationData, LlmSelectedModel } from '@quarry/shared/types';
 import type { DocumentAttachment } from '@/lib/attachments';
 import type { FileUIPart, InferUIMessageChunk } from 'ai';
 import type { MentionOption } from 'prompt-mentions';
@@ -84,10 +84,10 @@ export interface SendMessageArgs {
 	citation?: CitationData;
 }
 
-export const selectedModelStorage = createLocalStorage<LlmSelectedModel>('nao-selected-model');
+export const selectedModelStorage = createLocalStorage<LlmSelectedModel>('quarry-selected-model');
 
 export const getOnboardingChatIdStorage = (userId: string) =>
-	createLocalStorage<string>(`nao-onboarding-chat-id:${userId}`);
+	createLocalStorage<string>(`quarry-onboarding-chat-id:${userId}`);
 
 const agentCitationStore = new WeakMap<Agent<UIMessage>, CitationData | undefined>();
 /** Admin mode captured at send time, so an ack-time toggle cannot mislabel the message. */
@@ -114,7 +114,7 @@ export const useAgent = ({
 	const chat = useChatQuery({ chatId });
 	const { data: session } = useSession();
 
-	// A null pick means "nao default": no model is sent and the server resolves the admin default.
+	// A null pick means "quarry default": no model is sent and the server resolves the admin default.
 	const [pinnedModel, setSelectedModel] = useLocalStorage(selectedModelStorage);
 	const currentProject = useQuery(trpc.project.getCurrent.queryOptions());
 	const hasProject = currentProject.data != null;

@@ -16,7 +16,7 @@ export function useFittingPageSize(
 
 	useLayoutEffect(() => {
 		const table = tableRef.current;
-		const block = table?.closest<HTMLElement>('.nao-block');
+		const block = table?.closest<HTMLElement>('.quarry-block');
 		if (!enabled || !table || !block) {
 			return;
 		}

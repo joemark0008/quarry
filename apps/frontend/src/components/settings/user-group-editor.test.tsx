@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ConditionalRulesHelp, DefaultProjectRole } from './user-group-editor';
-import type { UserRole } from '@nao/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 const writeText = vi.fn();
 

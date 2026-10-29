@@ -1,7 +1,7 @@
-import { isQueryResultPart } from '@nao/shared/execute-sql-parts';
-import { extractQueryIds } from '@nao/shared/story-segments';
+import { isQueryResultPart } from '@quarry/shared/execute-sql-parts';
+import { extractQueryIds } from '@quarry/shared/story-segments';
 
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 /**
  * Scans story code for <chart|table query_id="..."> references and collects

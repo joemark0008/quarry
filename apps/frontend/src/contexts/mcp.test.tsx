@@ -4,7 +4,7 @@ import { act, cleanup, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 
 import { McpProvider, useMcpContext } from './mcp';
-import type { McpServerStatus } from '@nao/shared';
+import type { McpServerStatus } from '@quarry/shared';
 
 const mocks = vi.hoisted(() => ({
 	project: { data: { id: 'project-a' } as { id: string } | null },

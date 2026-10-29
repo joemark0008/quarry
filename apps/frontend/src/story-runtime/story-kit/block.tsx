@@ -1,10 +1,10 @@
-import { joinClassNames } from '@nao/shared/class-names';
+import { joinClassNames } from '@quarry/shared/class-names';
 import { CodeIcon, PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import { isPrintMode, isStoryExport, requestBlockAsk, requestBlockEdit } from '../story-host';
 import { QuerySql } from './query-sql';
 import { useStoryEditing } from './hooks';
-import type { StoryBlockEditRequest } from '@nao/shared/story-app';
+import type { StoryBlockEditRequest } from '@quarry/shared/story-app';
 import type { CSSProperties, ReactNode } from 'react';
 import type { BlockData } from './use-block-data';
 
@@ -30,15 +30,15 @@ export function Block({ kind, queryId, title, description, className, style, edi
 	const canViewQuery = queryId !== undefined && !isStoryExport() && !isPrintMode();
 	const [showQuery, setShowQuery] = useState(false);
 	return (
-		<section className={joinClassNames('nao-block', `nao-${kind}`, className)} style={style}>
+		<section className={joinClassNames('quarry-block', `quarry-${kind}`, className)} style={style}>
 			{(title || description || editingEnabled || canViewQuery) && (
-				<header className='nao-block__header'>
-					<div className='nao-block__heading'>
-						{title && <h3 className='nao-block__title'>{title}</h3>}
-						{description && <p className='nao-block__description'>{description}</p>}
+				<header className='quarry-block__header'>
+					<div className='quarry-block__heading'>
+						{title && <h3 className='quarry-block__title'>{title}</h3>}
+						{description && <p className='quarry-block__description'>{description}</p>}
 					</div>
 					{(canViewQuery || editingEnabled) && (
-						<div className='nao-block__actions'>
+						<div className='quarry-block__actions'>
 							{canViewQuery && kind !== 'data-table' && (
 								<BlockAction
 									label={showQuery ? 'Hide SQL query' : 'View SQL query'}
@@ -66,7 +66,7 @@ export function Block({ kind, queryId, title, description, className, style, edi
 					)}
 				</header>
 			)}
-			<div className='nao-block__body'>
+			<div className='quarry-block__body'>
 				{showQuery && canViewQuery ? <QuerySql queryId={queryId} /> : children}
 			</div>
 		</section>
@@ -85,7 +85,7 @@ function BlockAction({ label, onClick, pressed, children }: BlockActionProps) {
 	return (
 		<button
 			type='button'
-			className='nao-block__action'
+			className='quarry-block__action'
 			onClick={onClick}
 			aria-label={label}
 			aria-pressed={pressed}
@@ -104,11 +104,11 @@ interface BlockStateProps {
 
 export function BlockState({ data, emptyMessage = 'No rows.', children }: BlockStateProps) {
 	if (data.status === 'loading') {
-		return <div className='nao-skeleton' aria-busy='true' />;
+		return <div className='quarry-skeleton' aria-busy='true' />;
 	}
 	if (data.status === 'error') {
 		return (
-			<div className='nao-block__state nao-block__state--error' role='alert'>
+			<div className='quarry-block__state quarry-block__state--error' role='alert'>
 				{data.error}
 				<button type='button' onClick={data.refetch}>
 					Retry
@@ -117,7 +117,7 @@ export function BlockState({ data, emptyMessage = 'No rows.', children }: BlockS
 		);
 	}
 	if (data.rows.length === 0) {
-		return <div className='nao-block__state'>{emptyMessage}</div>;
+		return <div className='quarry-block__state'>{emptyMessage}</div>;
 	}
 	return <>{children(data.rows, data.columns)}</>;
 }

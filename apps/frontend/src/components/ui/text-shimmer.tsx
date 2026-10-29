@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import NaoLogoAnimated from '@/components/icons/nao-logo-animated';
+import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { cn } from '@/lib/utils';
 
 const DEFAULT_WORDS = ['Crunching', 'Analyzing', 'Thinking'];
@@ -19,7 +19,7 @@ export const TextShimmer = ({
 
 	return (
 		<div className={cn('flex items-center gap-2', className)}>
-			{showLogo && <NaoLogoAnimated height={12} width={21} durationSeconds={2.2} title='' />}
+			{showLogo && <QuarryLogoAnimated height={12} width={12} durationSeconds={2.2} title='' />}
 			<span className='text-sm text-foreground font-medium'>{label}</span>
 		</div>
 	);

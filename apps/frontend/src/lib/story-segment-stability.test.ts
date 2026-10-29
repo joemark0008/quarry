@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitCodeIntoSegments } from '@nao/shared/story-segments';
+import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
 
 import { stabilizeStorySegments } from './story-segment-stability';
 

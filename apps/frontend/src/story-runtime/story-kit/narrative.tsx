@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { requestNarratives } from '../story-host';
-import type { StoryNarratives } from '@nao/shared/story-app';
+import type { StoryNarratives } from '@quarry/shared/story-app';
 import type { ReactNode } from 'react';
 
 export interface NarrativeProps {
@@ -15,7 +15,7 @@ export function Narrative({ id, children }: NarrativeProps) {
 	const narratives = useNarratives();
 	if (narratives === null) {
 		return (
-			<span className='nao-narrative nao-narrative--loading' aria-busy='true'>
+			<span className='quarry-narrative quarry-narrative--loading' aria-busy='true'>
 				{children}
 			</span>
 		);

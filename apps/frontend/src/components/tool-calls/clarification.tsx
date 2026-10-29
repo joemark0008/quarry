@@ -1,10 +1,10 @@
-import { requestWarehouseSelection } from '@nao/shared/tools';
+import { requestWarehouseSelection } from '@quarry/shared/tools';
 import { Check, HelpCircle } from 'lucide-react';
 import { memo } from 'react';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
 import type { ToolCallComponentProps } from '.';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { getMessageText, isOnboardingContextRequestMessage, isToolUIPart } from '@/lib/ai';

@@ -1,4 +1,4 @@
-import { debounce } from '@nao/shared';
+import { debounce } from '@quarry/shared';
 import { useMemo } from 'react';
 
 export const useDebounce = <T extends (...args: any[]) => any>(

@@ -1,6 +1,6 @@
 import { Check, Globe, Link as LinkIcon, Loader2, SearchIcon, Unlink, Users } from 'lucide-react';
 
-import type { Visibility } from '@nao/shared/types';
+import type { Visibility } from '@quarry/shared/types';
 
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

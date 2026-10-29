@@ -1,7 +1,7 @@
-import { isMicrosoftEntraGroupId, normalizeSsoGroupIdentifiers } from '@nao/shared';
+import { isMicrosoftEntraGroupId, normalizeSsoGroupIdentifiers } from '@quarry/shared';
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import type { SsoGroupProvider } from '@nao/shared';
+import type { SsoGroupProvider } from '@quarry/shared';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -67,7 +67,7 @@ export function UserGroupSsoMapping({
 			<div>
 				<h3 className='text-sm font-medium'>SSO group mapping: {providerName}</h3>
 				<p className='text-xs text-muted-foreground'>
-					Members of any listed {providerName} group are assigned to this nao group when they log in.
+					Members of any listed {providerName} group are assigned to this quarry group when they log in.
 				</p>
 			</div>
 			{configurationState === 'ready' ? (

@@ -15,7 +15,7 @@ const mocks = vi.hoisted(() => ({
 		emailVerificationEnabled: true,
 		enableUserLogin: true,
 		enableUserSignup: true,
-		naoMode: 'cloud',
+		quarryMode: 'cloud',
 	},
 	push: vi.fn(),
 	searchByPath: {} as Record<string, { error?: string; redirect?: string }>,
@@ -82,8 +82,8 @@ vi.mock('@/components/auth-form', () => ({
 	FormTextField: () => null,
 }));
 
-vi.mock('@/hooks/use-nao-mode', () => ({
-	useIsCloud: () => mocks.publicConfig.naoMode === 'cloud',
+vi.mock('@/hooks/use-quarry-mode', () => ({
+	useIsCloud: () => mocks.publicConfig.quarryMode === 'cloud',
 }));
 
 vi.mock('@/lib/auth-client', () => ({
@@ -103,7 +103,7 @@ describe('email verification auth routes', () => {
 			emailVerificationEnabled: true,
 			enableUserLogin: true,
 			enableUserSignup: true,
-			naoMode: 'cloud',
+			quarryMode: 'cloud',
 		};
 		mocks.searchByPath = {};
 		mocks.navigate.mockReset();
@@ -202,7 +202,7 @@ describe('email verification auth routes', () => {
 		mocks.searchByPath['/email-verified'] = { redirect: '/settings' };
 
 		render(<EmailVerified />);
-		fireEvent.click(screen.getByRole('button', { name: 'Continue to nao' }));
+		fireEvent.click(screen.getByRole('button', { name: 'Continue to quarry' }));
 
 		expect(mocks.push).toHaveBeenCalledWith('/settings');
 	});
@@ -213,6 +213,6 @@ describe('email verification auth routes', () => {
 
 		render(<EmailVerified />);
 
-		expect(screen.getByRole('link', { name: 'Continue to nao' }).getAttribute('href')).toBe(oauthAuthorizeUrl);
+		expect(screen.getByRole('link', { name: 'Continue to quarry' }).getAttribute('href')).toBe(oauthAuthorizeUrl);
 	});
 });

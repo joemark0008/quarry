@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import type { displayChart } from '@nao/shared/tools';
-import type { TotalUsageRecord, UsageRecord } from '@nao/shared/backend/usage';
+import type { displayChart } from '@quarry/shared/tools';
+import type { TotalUsageRecord, UsageRecord } from '@quarry/shared/backend/usage';
 import { ChartDisplay } from '@/components/tool-calls/display-chart';
 
 export type UsageChartData = UsageRecord[] | TotalUsageRecord[] | Record<string, string | number>[];

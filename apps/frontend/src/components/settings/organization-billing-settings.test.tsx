@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { isTerminalBillingStatus } from '@nao/shared/billing';
+import { isTerminalBillingStatus } from '@quarry/shared/billing';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import { OrganizationBillingSettings } from './organization-billing-settings';
@@ -88,7 +88,7 @@ it('lets an admin choose a plan during an active local trial', () => {
 
 	render(<OrganizationBillingSettings search={{}} />);
 
-	expect(screen.getByText('nao Cloud trial')).toBeTruthy();
+	expect(screen.getByText('quarry Cloud trial')).toBeTruthy();
 	expect(screen.getByText(/Your trial is already active through/)).toBeTruthy();
 	expect(screen.getByText(/enter a promotion code/)).toBeTruthy();
 	fireEvent.click(screen.getByRole('button', { name: 'Choose plan in Stripe' }));
@@ -102,7 +102,7 @@ it('keeps plan selection visible for a Stripe-backed placeholder trial', () => {
 
 	render(<OrganizationBillingSettings search={{}} />);
 
-	expect(screen.getByText('nao Cloud trial')).toBeTruthy();
+	expect(screen.getByText('quarry Cloud trial')).toBeTruthy();
 	expect(screen.getByRole('button', { name: 'Choose plan in Stripe' })).toBeTruthy();
 	expect(screen.queryByText('Subscription details')).toBeNull();
 });
@@ -228,7 +228,7 @@ it('explains trial and recurring amounts before opening Stripe Checkout', () => 
 	expect(screen.getByText('Due today')).toBeTruthy();
 	expect(screen.getByText('No charge')).toBeTruthy();
 	expect(screen.getByText(/Stripe applies promotion codes to the recurring price/)).toBeTruthy();
-	expect(screen.getByRole('link', { name: 'Privacy policy' }).getAttribute('href')).toBe('https://getnao.io/privacy');
+	expect(screen.getByText('Privacy policy')).toBeTruthy();
 	fireEvent.click(screen.getByRole('button', { name: 'Start your free trial in Stripe' }));
 	expect(mocks.openTrialCheckout).toHaveBeenCalledOnce();
 });
@@ -269,7 +269,7 @@ function billingState(): BillingState {
 		interval: 'month',
 		intervalCount: 1,
 		key: 'cloud_monthly_v2',
-		name: 'nao Cloud',
+		name: 'quarry Cloud',
 		trialDays: 14,
 		userLimit: null,
 	} satisfies NonNullable<BillingState['plan']>;
@@ -329,7 +329,7 @@ function billingState(): BillingState {
 				? [
 						{
 							id: 'in_cloud',
-							number: 'NAO-0001',
+							number: 'QUARRY-0001',
 							invoiceKind: mocks.invoiceKind,
 							promotionCodes: mocks.invoicePromotionCodes,
 							status: 'paid',

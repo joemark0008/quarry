@@ -3,7 +3,7 @@ import {
 	matchesDatabaseContextPattern,
 	normalizeDatabaseContextAccess,
 	normalizeDatabaseContextPatterns,
-} from '@nao/shared';
+} from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -14,7 +14,7 @@ import type {
 	DatabaseTableGrant,
 	DocsContextAccess,
 	FilesContextAccess,
-} from '@nao/shared';
+} from '@quarry/shared';
 
 import { FileExplorerIcon } from '@/components/settings/file-explorer-icon';
 import { UserGroupContextModeSelector } from '@/components/settings/user-group-context-mode-selector';

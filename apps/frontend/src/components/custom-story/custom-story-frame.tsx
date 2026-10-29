@@ -1,4 +1,4 @@
-import { hasModifier, replayKeydown, snapshotKeydown } from '@nao/shared/keyboard-shortcut';
+import { hasModifier, replayKeydown, snapshotKeydown } from '@quarry/shared/keyboard-shortcut';
 import {
 	EMPTY_STORY_STATE_SNAPSHOT,
 	isFromStoryChannel,
@@ -6,7 +6,7 @@ import {
 	STORY_CONNECT_MESSAGE,
 	STORY_FORWARDED_KEYS,
 	STORY_RUNTIME_PATH,
-} from '@nao/shared/story-app';
+} from '@quarry/shared/story-app';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
 import { narrativesOptions, queryDataOptions, querySqlOptions, stateOptions } from './story-data-options';
@@ -20,9 +20,9 @@ import type {
 	StoryHostMessage,
 	StoryStateSnapshot,
 	StoryTableFormatEditRequest,
-} from '@nao/shared/story-app';
-import type { StoryTheme } from '@nao/shared/story-theme';
-import type { StoryBlockReference } from '@nao/shared/types';
+} from '@quarry/shared/story-app';
+import type { StoryTheme } from '@quarry/shared/story-theme';
+import type { StoryBlockReference } from '@quarry/shared/types';
 
 import type { CustomStoryDataSource } from './story-data-options';
 import type { StoryRuntimeLocation } from './story-frame-document';

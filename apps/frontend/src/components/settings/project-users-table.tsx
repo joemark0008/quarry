@@ -1,10 +1,10 @@
-import { USER_ROLE_LABELS, USER_ROLES } from '@nao/shared/types';
+import { USER_ROLE_LABELS, USER_ROLES } from '@quarry/shared/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronDown, EllipsisVertical, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { MemberStatus, UserRole } from '@nao/shared/types';
+import type { MemberStatus, UserRole } from '@quarry/shared/types';
 
 import type { TeamMember } from '@/components/settings/team';
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
 

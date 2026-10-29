@@ -1,10 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { buildStoryExportDocument } from '@nao/shared/story-document';
-import { STORY_RUNTIME_PATH, STORY_STANDALONE_RUNTIME_FILE } from '@nao/shared/story-app';
+import { buildStoryExportDocument } from '@quarry/shared/story-document';
+import { STORY_RUNTIME_PATH, STORY_STANDALONE_RUNTIME_FILE } from '@quarry/shared/story-app';
 import type { QueryClient } from '@tanstack/react-query';
-import type { DownloadFormat } from '@nao/shared/types';
-import type { StoryExportData, StoryQueryResult } from '@nao/shared/story-app';
+import type { DownloadFormat } from '@quarry/shared/types';
+import type { StoryExportData, StoryQueryResult } from '@quarry/shared/story-app';
 
 import type { CustomStoryContent } from '@/components/custom-story/custom-story-body';
 import type { CustomStoryDataSource } from '@/components/custom-story/story-data-options';

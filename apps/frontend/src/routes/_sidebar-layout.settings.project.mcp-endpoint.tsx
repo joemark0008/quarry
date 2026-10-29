@@ -4,7 +4,7 @@ export const Route = createFileRoute('/_sidebar-layout/settings/project/mcp-endp
 	beforeLoad: () => {
 		throw redirect({
 			to: '/settings/project/integrations',
-			search: { tab: 'nao-mcp' },
+			search: { tab: 'quarry-mcp' },
 		});
 	},
 });

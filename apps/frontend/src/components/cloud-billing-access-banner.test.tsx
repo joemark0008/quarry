@@ -84,7 +84,7 @@ it('stays hidden when cloud billing is disabled', () => {
 
 	render(<CloudBillingAccessBanner />);
 
-	expect(screen.queryByText('A subscription is needed to keep using nao Cloud.')).toBeNull();
+	expect(screen.queryByText('A subscription is needed to keep using quarry Cloud.')).toBeNull();
 });
 
 it('stays hidden on the plan and billing page', () => {
@@ -115,7 +115,7 @@ it('hides the active trial banner throughout settings without hiding access noti
 it('explains the subscription requirement without presenting it as an alert', () => {
 	render(<CloudBillingAccessBanner />);
 
-	expect(screen.getByRole('status').textContent).toContain('A subscription is needed to keep using nao Cloud.');
+	expect(screen.getByRole('status').textContent).toContain('A subscription is needed to keep using quarry Cloud.');
 	expect(screen.queryByRole('alert')).toBeNull();
 });
 
@@ -124,7 +124,7 @@ it('keeps the subscription notice for admins of an organization that bypasses bi
 
 	render(<CloudBillingAccessBanner />);
 
-	expect(screen.getByRole('status').textContent).toContain('A subscription is needed to keep using nao Cloud.');
+	expect(screen.getByRole('status').textContent).toContain('A subscription is needed to keep using quarry Cloud.');
 });
 
 it('hides the notice from members of an organization that bypasses billing', () => {
@@ -176,7 +176,7 @@ it('lets admins dismiss the trial-start banner', () => {
 	fireEvent.click(screen.getByRole('button', { name: 'Dismiss trial banner' }));
 
 	expect(screen.queryByRole('status')).toBeNull();
-	expect(localStorage.getItem('nao-dismissed-trial-banner')).toBe(
+	expect(localStorage.getItem('quarry-dismissed-trial-banner')).toBe(
 		JSON.stringify([`project-organization:${trialEndsAt.toISOString()}`]),
 	);
 });
@@ -203,7 +203,7 @@ it('keeps trial-start dismissals for multiple organizations', () => {
 	view.rerender(<CloudBillingAccessBanner />);
 
 	expect(screen.queryByRole('status')).toBeNull();
-	expect(localStorage.getItem('nao-dismissed-trial-banner')).toBe(
+	expect(localStorage.getItem('quarry-dismissed-trial-banner')).toBe(
 		JSON.stringify([
 			`project-organization:${trialEndsAt.toISOString()}`,
 			`other-organization:${trialEndsAt.toISOString()}`,
@@ -217,7 +217,7 @@ it('shows the final three-day warning even when the trial-start banner was dismi
 	vi.useFakeTimers();
 	vi.setSystemTime(now);
 	localStorage.setItem(
-		'nao-dismissed-trial-banner',
+		'quarry-dismissed-trial-banner',
 		JSON.stringify(`project-organization:${trialEndsAt.toISOString()}`),
 	);
 	mocks.access = {
@@ -267,7 +267,9 @@ it('offers an available trial to non-managers and lets them dismiss it', () => {
 	fireEvent.click(screen.getByRole('button', { name: 'Dismiss trial banner' }));
 
 	expect(screen.queryByRole('status')).toBeNull();
-	expect(localStorage.getItem('nao-dismissed-trial-banner')).toBe(JSON.stringify(['project-organization:available']));
+	expect(localStorage.getItem('quarry-dismissed-trial-banner')).toBe(
+		JSON.stringify(['project-organization:available']),
+	);
 });
 
 it('stops polling after active billing access is confirmed', () => {
@@ -285,7 +287,7 @@ it('selects the project organization before opening billing management', async (
 	fireEvent.click(screen.getByRole('button', { name: 'Manage billing' }));
 
 	await waitFor(() => {
-		expect(localStorage.getItem('nao.active-organization-id')).toBe('"project-organization"');
+		expect(localStorage.getItem('quarry.active-organization-id')).toBe('"project-organization"');
 		expect(mocks.invalidateQueries).toHaveBeenCalledOnce();
 		expect(mocks.navigate).toHaveBeenCalledWith({
 			to: '/settings/organization/billing',

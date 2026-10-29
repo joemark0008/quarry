@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Streamdown } from 'streamdown';
-import { normalizeCitationMarkers, STORY_REFERENCE_TAG, stripAssistantTags } from '@nao/shared';
+import { normalizeCitationMarkers, STORY_REFERENCE_TAG, stripAssistantTags } from '@quarry/shared';
 
 import { CitationPopover } from '@/components/citation-popover';
 import { MarkdownTable } from '@/components/chat-messages/markdown-table';
@@ -263,7 +263,7 @@ function getFenceMarker(line: string): { marker: string; length: number; isClosi
 	};
 }
 
-/** A file the answer hands over. One nao cannot reach stays as the text the model wrote. */
+/** A file the answer hands over. One quarry cannot reach stays as the text the model wrote. */
 function SavedFileRenderer({ path, children }: any) {
 	const label = asText(children);
 	const filePath = asText(path);

@@ -7,7 +7,7 @@ import { LastUsedPill } from '@/components/ui/last-used-pill';
 import GithubIcon from '@/components/icons/github-icon.svg';
 import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import GoogleIcon from '@/components/icons/google-icon.svg';
-import NaoLogo from '@/components/icons/nao-full-logo.svg';
+import QuarryLogo from '@/components/icons/quarry-full-logo.svg';
 import { BrandGradientBackdrop } from '@/components/brand-gradient-backdrop';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { handleGithubSignIn, handleGitlabSignIn, handleGoogleSignIn } from '@/lib/auth-client';
@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
  */
 const CompactFieldsContext = createContext({ compact: false, emailLastUsed: false });
 
-const DEFAULT_BRAND_COLOR = '#522bff';
+const DEFAULT_BRAND_COLOR = '#0F6E56';
 
 interface AuthFormProps {
 	form?: any;
@@ -109,7 +109,7 @@ export function AuthForm({
 					<div
 						className={cn('flex flex-col items-center start pb-2', content ? 'mb-7 gap-6' : 'mb-10 gap-8')}
 					>
-						<NaoLogo className='w-20 h-auto text-foreground' />
+						<QuarryLogo className='w-20 h-auto text-foreground' />
 						<h1 className={cn('font-borna text-2xl font-medium text-center', titleClassName)}>{title}</h1>
 					</div>
 

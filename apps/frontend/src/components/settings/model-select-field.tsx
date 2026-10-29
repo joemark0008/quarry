@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { useId } from 'react';
 import type { ReactNode } from 'react';
-import type { LlmProvider, LlmSelectedModel } from '@nao/shared/types';
+import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,17 +11,17 @@ import { cn } from '@/lib/utils';
 export type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 export type ResolvedModel = { provider: LlmProvider; modelId: string; name: string };
 
-/** The entry offered on top of the model list, standing for "let nao decide". */
+/** The entry offered on top of the model list, standing for "let quarry decide". */
 export interface DefaultModelOption {
 	label: string;
 	model?: ResolvedModel | null;
 	hint?: string;
 }
 
-const DEFAULT_VALUE = '__nao_default__';
+const DEFAULT_VALUE = '__quarry_default__';
 
 const FALLBACK_UNAVAILABLE_WARNING =
-	'The selected model is no longer available. nao automatically falls back to another available model until you pick a new one.';
+	'The selected model is no longer available. quarry automatically falls back to another available model until you pick a new one.';
 
 export function ModelSelectField({
 	icon,

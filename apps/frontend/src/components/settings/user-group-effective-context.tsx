@@ -1,7 +1,7 @@
-import { isDatabaseContextTableGranted, isFileTreeFileGranted, matchesDatabaseContextPattern } from '@nao/shared';
+import { isDatabaseContextTableGranted, isFileTreeFileGranted, matchesDatabaseContextPattern } from '@quarry/shared';
 import { ChevronRight } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import type { DatabaseContextAccess, DocsContextAccess, FilesContextAccess } from '@nao/shared';
+import type { DatabaseContextAccess, DocsContextAccess, FilesContextAccess } from '@quarry/shared';
 
 import type { DatabaseContextObject } from '@/components/settings/user-group-context-access';
 import type { FileTreeCatalogEntry } from '@/components/settings/user-group-file-tree-access';

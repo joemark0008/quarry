@@ -6,13 +6,13 @@ import {
 	setBackgroundModelMode,
 	setDefaultChatModel,
 	setSingleBackgroundModel,
-} from '@nao/shared';
+} from '@quarry/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ArrowUpRight } from 'lucide-react';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
-import type { BackgroundModelCategory, BackgroundModelMode, DefaultModelSettings } from '@nao/shared';
-import type { LlmSelectedModel } from '@nao/shared/types';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { BackgroundModelCategory, BackgroundModelMode, DefaultModelSettings } from '@quarry/shared';
+import type { LlmSelectedModel } from '@quarry/shared/types';
 import type { inferRouterOutputs } from '@trpc/server';
 import type { ReactNode } from 'react';
 import type { AvailableModel, ResolvedModel } from '@/components/settings/model-select-field';
@@ -74,7 +74,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 	return (
 		<SettingsCard
 			title='Default models'
-			description='Pick which models nao uses when nothing selects one explicitly. Every "nao default" shows the model it currently resolves to, so you can see what changes when you pick another one.'
+			description='Pick which models quarry uses when nothing selects one explicitly. Every "quarry default" shows the model it currently resolves to, so you can see what changes when you pick another one.'
 		>
 			{!hasModels ? (
 				<p className='text-sm text-muted-foreground'>
@@ -91,7 +91,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 							label='New chats'
 							description='The model the chat picker starts on. Users can still switch models while chatting.'
 							value={settings?.chat}
-							defaultOption={{ label: 'nao default', model: builtInDefaults?.chat }}
+							defaultOption={{ label: 'quarry default', model: builtInDefaults?.chat }}
 							availableModels={availableModels}
 							disabled={disabled}
 							onChange={(selection) => save(setDefaultChatModel(settings, selection))}
@@ -114,14 +114,14 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 								label={
 									<Link
 										to='/settings/project/integrations'
-										search={{ tab: 'nao-mcp' }}
+										search={{ tab: 'quarry-mcp' }}
 										className={SETTINGS_LINK_CLASS}
 									>
-										nao MCP · ask_nao
+										quarry MCP · ask_nao
 										<SettingsLinkArrow />
 									</Link>
 								}
-								description='The model nao answers with when external AI clients ask through the nao MCP endpoint.'
+								description='The model quarry answers with when external AI clients ask through the quarry MCP endpoint.'
 								value={data.mcpSubAgentModel}
 								unavailableWarning='The selected model is no longer offered to users. ask_nao falls back to another available model until you pick a new one.'
 								defaultOption={{ label: 'Default chat model', model: chatDefault }}
@@ -144,7 +144,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 									label='Default for background tasks'
 									description='Used for every background task listed below.'
 									value={settings?.single}
-									defaultOption={{ label: 'nao default', hint: 'a model per task' }}
+									defaultOption={{ label: 'quarry default', hint: 'a model per task' }}
 									availableModels={availableModels}
 									disabled={disabled}
 									onChange={(selection) => save(setSingleBackgroundModel(settings, selection))}
@@ -165,7 +165,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 										description={BACKGROUND_MODEL_CATEGORY_DESCRIPTIONS[category]}
 										value={settings?.categories?.[category]}
 										defaultOption={{
-											label: 'nao default',
+											label: 'quarry default',
 											model: builtInDefaults?.categories[category],
 										}}
 										availableModels={availableModels}

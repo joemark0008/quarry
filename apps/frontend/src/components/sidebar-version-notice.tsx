@@ -4,6 +4,7 @@ import { CircleArrowUp } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, hideIf } from '@/lib/utils';
 import { trpc } from '@/main';
+import { QUARRY_REPOSITORY_URL } from '@/lib/quarry-links';
 
 interface SidebarVersionNoticeProps {
 	isCollapsed: boolean;
@@ -37,7 +38,7 @@ export function SidebarVersionNotice({ isCollapsed }: SidebarVersionNoticeProps)
 
 	return (
 		<a
-			href={`https://github.com/getnao/nao/releases/tag/v${data.latestVersion}`}
+			href={QUARRY_REPOSITORY_URL ? `${QUARRY_REPOSITORY_URL}/releases/tag/v${data.latestVersion}` : undefined}
 			target='_blank'
 			rel='noopener noreferrer'
 			className='flex items-center gap-2 px-3 py-2 mb-1 rounded-md text-xs text-green-500 hover:bg-sidebar-accent transition-colors'

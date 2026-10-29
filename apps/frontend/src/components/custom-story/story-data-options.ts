@@ -1,4 +1,4 @@
-import type { CustomStoryViewerAccess, StoryStateChange } from '@nao/shared/story-app';
+import type { CustomStoryViewerAccess, StoryStateChange } from '@quarry/shared/story-app';
 import { trpc, trpcClient } from '@/main';
 import { chatActivityStore } from '@/stores/chat-activity';
 

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
-import type { StoryPanelDisplayMode } from '@nao/shared/types';
+import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { GroupBy, SharedItem } from '@/lib/viewer-home';
 import { MobileHeader } from '@/components/mobile-header';
 import { ProjectSwitcher } from '@/components/project-selector';

@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { pluralize } from '@nao/shared';
+import { pluralize } from '@quarry/shared';
 import type { StoryQueryGroupItem, StoryStatusPart } from '@/types/ai';
 import type { StoryStatusDisplay } from '@/lib/story-status';
 import { Expandable } from '@/components/ui/expandable';

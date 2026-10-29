@@ -1,4 +1,4 @@
-import { FREE_CUSTOM_USER_GROUP_LIMIT } from '@nao/shared';
+import { FREE_CUSTOM_USER_GROUP_LIMIT } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { Lock, Plus } from 'lucide-react';

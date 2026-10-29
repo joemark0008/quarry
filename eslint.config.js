@@ -22,5 +22,12 @@ export default tseslint.config(
 			curly: 'warn',
 		},
 	},
+	{
+		// Node scripts (brand/build.mjs, …).
+		files: ['**/*.mjs'],
+		languageOptions: {
+			globals: { process: 'readonly', Buffer: 'readonly', console: 'readonly', URL: 'readonly' },
+		},
+	},
 	{ ignores: ['**/dist/', '**/node_modules/', '**/src/generated/', 'apps/frontend/'] },
 );

@@ -3,7 +3,7 @@ import { Streamdown } from 'streamdown';
 import { Conversation, ConversationContent } from '../ui/conversation';
 import { ErrorMessage } from '../ui/error-message';
 import { TextShimmer } from '../ui/text-shimmer';
-import type { CompactionPart } from '@nao/shared/backend/chat';
+import type { CompactionPart } from '@quarry/shared/backend/chat';
 import { Expandable } from '@/components/ui/expandable';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
 

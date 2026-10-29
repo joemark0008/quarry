@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Ban, Cloud, HardDrive, Info, TriangleAlert } from 'lucide-react';
 
-import type { displayChart } from '@nao/shared/tools';
+import type { displayChart } from '@quarry/shared/tools';
 
 import { ChartDisplay } from '@/components/tool-calls/display-chart';
 import { ErrorMessage } from '@/components/ui/error-message';
@@ -72,7 +72,7 @@ function AdminStoragePage() {
 			{backend === 'none' ? (
 				<DisabledNotice>
 					The agent cannot save files, and files saved earlier are not reachable. Set{' '}
-					<Mono>NAO_STORAGE_BACKEND</Mono> to <Mono>local</Mono> or <Mono>s3</Mono> to turn it on.
+					<Mono>QUARRY_STORAGE_BACKEND</Mono> to <Mono>local</Mono> or <Mono>s3</Mono> to turn it on.
 				</DisabledNotice>
 			) : (
 				<>
@@ -180,7 +180,7 @@ function MyStoragePage() {
 				<div className='text-sm text-muted-foreground'>Loading storage configuration…</div>
 			) : !isEnabled ? (
 				<DisabledNotice>
-					You have no space on this nao instance, and the agent cannot save files for you. Ask an admin to
+					You have no space on this quarry instance, and the agent cannot save files for you. Ask an admin to
 					turn permanent storage on.
 				</DisabledNotice>
 			) : (

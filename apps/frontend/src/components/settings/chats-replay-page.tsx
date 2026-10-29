@@ -4,8 +4,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import type { PaginationState, SortingState } from '@tanstack/react-table';
 
-import type { UsageSource } from '@nao/shared/backend/usage';
-import type { ChatReplayFeedbackState, ChatReplayToolState } from '@nao/shared/types';
+import type { UsageSource } from '@quarry/shared/backend/usage';
+import type { ChatReplayFeedbackState, ChatReplayToolState } from '@quarry/shared/types';
 import { getChatsReplayColumns } from '@/components/settings/chats-replay-columns';
 import { ChatsReplayTable } from '@/components/settings/chats-replay-table';
 import { trpc } from '@/main';

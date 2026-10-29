@@ -1,13 +1,13 @@
-import { buildChart, labelize } from '@nao/shared/chart-builder';
+import { buildChart, labelize } from '@quarry/shared/chart-builder';
 import {
 	buildSeriesChartConfig,
 	buildSeriesLegendPayload,
 	seriesColorAt as seriesColor,
 	useSeriesVisibility,
-} from '@nao/shared/chart-series';
-import { ChartConfigProvider, ChartLegendContent, ChartTooltipContent } from '@nao/shared/chart-tooltip';
-import { isComboChart, isPercentStackedChartType, isPieChart } from '@nao/shared/chart-types';
-import { toFiniteNumber } from '@nao/shared/chart-values';
+} from '@quarry/shared/chart-series';
+import { ChartConfigProvider, ChartLegendContent, ChartTooltipContent } from '@quarry/shared/chart-tooltip';
+import { isComboChart, isPercentStackedChartType, isPieChart } from '@quarry/shared/chart-types';
+import { toFiniteNumber } from '@quarry/shared/chart-values';
 import { useId } from 'react';
 import { Legend, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -20,9 +20,9 @@ import { useBlockData } from './use-block-data';
 import type { BlockDataSource, Row } from './use-block-data';
 import type { ChartOptions } from './block-config';
 import type { BlockProps } from './block';
-import type { displayChart } from '@nao/shared/tools';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { StoryBlockEditRequest } from '@nao/shared/story-app';
+import type { displayChart } from '@quarry/shared/tools';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { StoryBlockEditRequest } from '@quarry/shared/story-app';
 
 export { seriesColor };
 
@@ -118,7 +118,7 @@ function ChartBody({ rows, chartType, xAxisKey, series, height, showLegend, show
 	const pie = isPieChart(chartType) && series[0] ? piePresentation(rows, xAxisKey, series[0]) : null;
 
 	if (isPieChart(chartType) && !pie) {
-		return <div className='nao-block__state'>No numeric column to chart.</div>;
+		return <div className='quarry-block__state'>No numeric column to chart.</div>;
 	}
 
 	const chart = buildChart({
@@ -173,7 +173,7 @@ function ChartBody({ rows, chartType, xAxisKey, series, height, showLegend, show
 
 	return (
 		<ChartConfigProvider config={pie?.config ?? buildSeriesChartConfig(series, labelize)}>
-			<div className='nao-chart' style={{ height }}>
+			<div className='quarry-chart' style={{ height }}>
 				<ResponsiveContainer width='100%' height='100%'>
 					{chart}
 				</ResponsiveContainer>

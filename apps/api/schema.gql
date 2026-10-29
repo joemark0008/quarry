@@ -45,7 +45,7 @@ type PublicConfig {
   enableUserSignup: Boolean!
 
   """Always "self-hosted": quarry has no cloud mode."""
-  naoMode: String!
+  quarryMode: String!
   version: String!
 }
 

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { ChevronDown, ChevronRight, Copy, Loader2, RefreshCw, Terminal } from 'lucide-react';
 import type { KeyboardEvent } from 'react';
-import type { LogLevel, LogSource } from '@nao/shared/backend/log';
+import type { LogLevel, LogSource } from '@quarry/shared/backend/log';
 
 import type { LogsDateRange } from '@/components/settings/logs-date-range-filter';
 import { Badge } from '@/components/ui/badge';

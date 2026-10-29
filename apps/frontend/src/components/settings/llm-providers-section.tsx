@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { PROVIDER_META } from '@nao/shared/backend/provider-meta';
-import { formatMicroUsd } from '@nao/shared/billing';
-import { providerLabel, providerLabels } from '@nao/shared/types';
+import { PROVIDER_META } from '@quarry/shared/backend/provider-meta';
+import { formatMicroUsd } from '@quarry/shared/billing';
+import { providerLabel, providerLabels } from '@quarry/shared/types';
 import { useQuery } from '@tanstack/react-query';
 import { ProviderCard } from './llm-provider-card';
 import { LlmProviderForm } from './llm-provider-form';
-import type { LlmProvider } from '@nao/shared/types';
+import type { LlmProvider } from '@quarry/shared/types';
 import { useLlmProviders } from '@/hooks/use-llm-providers';
 import { usePermissions } from '@/hooks/use-permissions';
 import { trpc } from '@/main';

@@ -1,4 +1,4 @@
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import { useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { findStoryIds } from '@/lib/story.utils';
 

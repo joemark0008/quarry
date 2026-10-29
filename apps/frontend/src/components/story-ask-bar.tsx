@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CSSProperties } from 'react';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import type { AskSelection } from '@/stores/ask-bar';
 import { AskBar } from '@/components/ask-bar';

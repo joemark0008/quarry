@@ -194,12 +194,14 @@ describe('ChatInputSuggestions', () => {
 
 			expect(screen.queryByText('How did this conversation go?')).toBeNull();
 			expect(mocks.inactivityDelays.at(-1)).toBe(15_000);
-			expect(JSON.parse(localStorage.getItem('nao-feedback-prompt-dismiss-count') ?? '0')).toBe(1);
-			expect(JSON.parse(localStorage.getItem('nao-feedback-prompt-dismissed-chats') ?? '[]')).toEqual(['chat-1']);
+			expect(JSON.parse(localStorage.getItem('quarry-feedback-prompt-dismiss-count') ?? '0')).toBe(1);
+			expect(JSON.parse(localStorage.getItem('quarry-feedback-prompt-dismissed-chats') ?? '[]')).toEqual([
+				'chat-1',
+			]);
 		});
 
 		it('never shows the prompt again for a chat dismissed in a previous session', () => {
-			localStorage.setItem('nao-feedback-prompt-dismissed-chats', JSON.stringify(['chat-1']));
+			localStorage.setItem('quarry-feedback-prompt-dismissed-chats', JSON.stringify(['chat-1']));
 
 			render(<ChatInputSuggestions storyCreationEnabled={false} />);
 
@@ -207,12 +209,12 @@ describe('ChatInputSuggestions', () => {
 		});
 
 		it('keeps escalating the delay across sessions and caps it', () => {
-			localStorage.setItem('nao-feedback-prompt-dismiss-count', JSON.stringify(2));
+			localStorage.setItem('quarry-feedback-prompt-dismiss-count', JSON.stringify(2));
 			const { unmount } = render(<ChatInputSuggestions storyCreationEnabled={false} />);
 			expect(mocks.inactivityDelays.at(-1)).toBe(25_000);
 			unmount();
 
-			localStorage.setItem('nao-feedback-prompt-dismiss-count', JSON.stringify(50));
+			localStorage.setItem('quarry-feedback-prompt-dismiss-count', JSON.stringify(50));
 			render(<ChatInputSuggestions storyCreationEnabled={false} />);
 			expect(mocks.inactivityDelays.at(-1)).toBe(60_000);
 		});

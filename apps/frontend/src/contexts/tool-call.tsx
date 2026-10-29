@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { UIToolPart } from '@nao/shared/backend/chat';
+import type { UIToolPart } from '@quarry/shared/backend/chat';
 import { useMemoObject } from '@/hooks/useMemoObject';
 
 type ToolCallContextValue = {

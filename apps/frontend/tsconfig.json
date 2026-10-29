@@ -21,7 +21,10 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
-			// Upstream sources reached through @nao/shared/backend/* must see quarry's copies, not fork-reference's.
+			"@quarry/shared": ["../shared/src/index.ts"],
+			"@quarry/shared/*": ["../shared/src/*"],
+			// Upstream sources reached through @quarry/shared/backend/* import upstream's package name for shared:
+			// resolve it to quarry's copy, not fork-reference's. Rename at cut-over (PHASES.md 1c).
 			"@nao/shared": ["../shared/src/index.ts"],
 			"@nao/shared/*": ["../shared/src/*"],
 			"zod": ["../../node_modules/zod"],

@@ -1,5 +1,5 @@
-import { joinClassNames } from '@nao/shared/class-names';
-import { STORY_PRINT_CANVAS_ATTRIBUTE } from '@nao/shared/story-app';
+import { joinClassNames } from '@quarry/shared/class-names';
+import { STORY_PRINT_CANVAS_ATTRIBUTE } from '@quarry/shared/story-app';
 import { useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { isPrintMode } from '../story-host';
@@ -43,18 +43,18 @@ function ScreenCanvas({ canvas, className, children }: { canvas: Size; className
 	const scale = fitScale(stage, canvas);
 
 	return (
-		<div ref={stageRef} className='nao-canvas'>
+		<div ref={stageRef} className='quarry-canvas'>
 			<div
-				className='nao-canvas__viewport'
+				className='quarry-canvas__viewport'
 				style={
 					{
 						width: canvas.width * scale,
 						height: canvas.height * scale,
-						'--nao-canvas-scale': scale,
+						'--quarry-canvas-scale': scale,
 					} as CSSProperties
 				}
 			>
-				<div className={joinClassNames('nao-canvas__surface', className)} style={canvas}>
+				<div className={joinClassNames('quarry-canvas__surface', className)} style={canvas}>
 					{children}
 				</div>
 			</div>
@@ -69,8 +69,8 @@ function PrintedCanvas({ canvas, className, children }: { canvas: Size; classNam
 	}, [canvas.width, canvas.height]);
 
 	return createPortal(
-		<div className='nao-canvas nao-canvas--print'>
-			<div className={joinClassNames('nao-canvas__surface', className)} style={canvas}>
+		<div className='quarry-canvas quarry-canvas--print'>
+			<div className={joinClassNames('quarry-canvas__surface', className)} style={canvas}>
 				{children}
 			</div>
 		</div>,

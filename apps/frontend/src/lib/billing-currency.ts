@@ -1,4 +1,4 @@
-import type { CloudBillingCurrency } from '@nao/shared/billing';
+import type { CloudBillingCurrency } from '@quarry/shared/billing';
 
 const EURO_AREA_REGIONS = new Set([
 	'AT',

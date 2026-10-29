@@ -1,4 +1,4 @@
-import { fileExtension } from '@nao/shared/attachments';
+import { fileExtension } from '@quarry/shared/attachments';
 import { FileCode, FileJson, FileSpreadsheet, FileText, FileType } from 'lucide-react';
 
 import { cn } from '@/lib/utils';

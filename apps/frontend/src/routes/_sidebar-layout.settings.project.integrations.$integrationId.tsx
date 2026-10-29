@@ -16,10 +16,10 @@ import { usePermissions } from '@/hooks/use-permissions';
 
 export const Route = createFileRoute('/_sidebar-layout/settings/project/integrations/$integrationId')({
 	beforeLoad: ({ params }) => {
-		if (params.integrationId === 'nao-mcp') {
+		if (params.integrationId === 'quarry-mcp') {
 			throw redirect({
 				to: '/settings/project/integrations',
-				search: { tab: 'nao-mcp' },
+				search: { tab: 'quarry-mcp' },
 			});
 		}
 

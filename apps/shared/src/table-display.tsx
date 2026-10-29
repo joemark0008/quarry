@@ -67,7 +67,7 @@ interface TablePaging {
 	toggleSort: (column: string) => void;
 }
 
-/** `nao-table-display__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-table-display__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
 export const TableDisplay = memo(function TableDisplay({
 	data,
 	serverPagination,
@@ -109,19 +109,19 @@ export const TableDisplay = memo(function TableDisplay({
 	}
 
 	return (
-		<div className={cn('nao-table-display flex min-h-0 flex-col', className)}>
-			{title ? <span className='nao-table-display__title text-sm font-medium'>{title}</span> : null}
+		<div className={cn('quarry-table-display flex min-h-0 flex-col', className)}>
+			{title ? <span className='quarry-table-display__title text-sm font-medium'>{title}</span> : null}
 
 			<div
 				className={cn(
-					'nao-table-display__scroll overflow-auto border-t bg-background min-h-0',
+					'quarry-table-display__scroll overflow-auto border-t bg-background min-h-0',
 					tableContainerClassName,
 				)}
 			>
 				<table className='w-full min-w-max border-collapse text-xs'>
 					<thead className='sticky top-0 z-10 border-b bg-panel'>
 						<tr>
-							<th className='nao-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-2 text-center font-medium whitespace-nowrap text-foreground w-4' />
+							<th className='quarry-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-2 text-center font-medium whitespace-nowrap text-foreground w-4' />
 							{resolvedColumns.map((column) => {
 								const alignRight = numericColumns.has(column);
 								const sortDirection = activeSort?.column === column ? activeSort.direction : null;
@@ -139,7 +139,7 @@ export const TableDisplay = memo(function TableDisplay({
 										}
 										className={cn(
 											'shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-2 font-medium whitespace-nowrap text-foreground',
-											alignRight && 'nao-table-display__numeric text-right tabular-nums',
+											alignRight && 'quarry-table-display__numeric text-right tabular-nums',
 										)}
 									>
 										<button
@@ -163,7 +163,7 @@ export const TableDisplay = memo(function TableDisplay({
 									key={rowIndex}
 									className='border-b last:border-b-0 border-border/50 bg-background  hover:bg-accent/30'
 								>
-									<td className='nao-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap text-center w-4 bg-panel'>
+									<td className='quarry-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap text-center w-4 bg-panel'>
 										<span className='px-1 py-2 font-[Geist] font-medium text-foreground'>
 											{pageIndex * pageSize + rowIndex + 1}
 										</span>
@@ -180,13 +180,13 @@ export const TableDisplay = memo(function TableDisplay({
 													...(background ? { backgroundColor: background } : {}),
 												}}
 												className={cn(
-													'nao-table-display__cell shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap',
+													'quarry-table-display__cell shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap',
 													numericColumns.has(column) &&
-														'nao-table-display__numeric text-right tabular-nums',
+														'quarry-table-display__numeric text-right tabular-nums',
 												)}
 											>
 												{isNull ? (
-													<span className='nao-table-display__null italic text-muted-foreground/60'>
+													<span className='quarry-table-display__null italic text-muted-foreground/60'>
 														NULL
 													</span>
 												) : (
@@ -201,7 +201,7 @@ export const TableDisplay = memo(function TableDisplay({
 							<tr>
 								<td
 									colSpan={resolvedColumns.length + 1}
-									className='nao-table-display__empty px-3 py-6 text-center text-sm text-muted-foreground'
+									className='quarry-table-display__empty px-3 py-6 text-center text-sm text-muted-foreground'
 								>
 									{emptyLabel}
 								</td>
@@ -224,7 +224,7 @@ export const TableDisplay = memo(function TableDisplay({
 			) : showRowCount ? (
 				<div
 					className={cn(
-						'nao-table-display__row-count flex px-4 py-2 border-t',
+						'quarry-table-display__row-count flex px-4 py-2 border-t',
 						compactFooter ? 'justify-start' : 'justify-end',
 					)}
 				>
@@ -310,13 +310,13 @@ function useLocalTablePaging(data: TableRow[], columns: string[], maxRowsBeforeP
 
 function SortIndicator({ direction, cn }: { direction: SortDirection | null; cn: ClassNameMerger }) {
 	return (
-		<span className='nao-table-display__sort inline-flex shrink-0 flex-col -space-y-1'>
+		<span className='quarry-table-display__sort inline-flex shrink-0 flex-col -space-y-1'>
 			<ChevronIcon
 				path='m18 15-6-6-6 6'
 				className={cn(
 					'size-3',
 					direction === 'asc'
-						? 'nao-table-display__sort--active text-foreground'
+						? 'quarry-table-display__sort--active text-foreground'
 						: 'text-muted-foreground/50',
 				)}
 			/>
@@ -325,7 +325,7 @@ function SortIndicator({ direction, cn }: { direction: SortDirection | null; cn:
 				className={cn(
 					'size-3',
 					direction === 'desc'
-						? 'nao-table-display__sort--active text-foreground'
+						? 'quarry-table-display__sort--active text-foreground'
 						: 'text-muted-foreground/50',
 				)}
 			/>

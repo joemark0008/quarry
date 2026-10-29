@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import type { executeSql } from '@nao/shared/tools';
+import type { executeSql } from '@quarry/shared/tools';
 import type { SourceQuery } from '@/lib/execute-sql-messages';
 
 import { useSourceQuery } from '@/hooks/use-source-query';

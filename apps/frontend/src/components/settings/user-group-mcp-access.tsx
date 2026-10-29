@@ -1,8 +1,8 @@
-import { isMcpServerFullyGranted, isMcpServerGranted, isMcpToolGranted, normalizeMcpAccess } from '@nao/shared';
+import { isMcpServerFullyGranted, isMcpServerGranted, isMcpToolGranted, normalizeMcpAccess } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronRight } from 'lucide-react';
 import { useId, useState } from 'react';
-import type { McpAccess, McpServerStatus } from '@nao/shared';
+import type { McpAccess, McpServerStatus } from '@quarry/shared';
 
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
 import { UserGroupContextModeSelector } from '@/components/settings/user-group-context-mode-selector';

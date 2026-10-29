@@ -6,7 +6,7 @@ import {
 	moveStoryTab,
 	renameStoryTab,
 	replaceStoryTabInner,
-} from '@nao/shared/story-tabs';
+} from '@quarry/shared/story-tabs';
 import { act, renderHook } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';

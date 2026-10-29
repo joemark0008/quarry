@@ -1,6 +1,6 @@
-import { getDefaultModelId } from '@nao/shared/backend/provider-meta';
-import type { ModelInferenceSettings, ModelSettingsMap } from '@nao/shared/backend/llm';
-import type { LlmProvider } from '@nao/shared/types';
+import { getDefaultModelId } from '@quarry/shared/backend/provider-meta';
+import type { ModelInferenceSettings, ModelSettingsMap } from '@quarry/shared/backend/llm';
+import type { LlmProvider } from '@quarry/shared/types';
 
 interface ApplySavedModelSettingsArgs {
 	provider: LlmProvider;

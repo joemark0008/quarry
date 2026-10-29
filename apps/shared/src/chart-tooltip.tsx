@@ -53,7 +53,7 @@ type TooltipContentProps = React.ComponentProps<typeof Tooltip> &
 		cn?: ClassNameMerger;
 	};
 
-/** `nao-chart-tooltip__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-chart-tooltip__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
 export function ChartTooltipContent({
 	active,
 	payload,
@@ -86,7 +86,7 @@ export function ChartTooltipContent({
 		const itemConfig = getPayloadConfigFromPayload(config, item, key);
 		const isAxisValue = !labelKey && (typeof label === 'string' || typeof label === 'number');
 		const value = isAxisValue ? config[String(label)]?.label || label : itemConfig?.label;
-		const labelClasses = cn('nao-chart-tooltip__label font-medium', labelClassName);
+		const labelClasses = cn('quarry-chart-tooltip__label font-medium', labelClassName);
 
 		if (labelFormatter) {
 			return <div className={labelClasses}>{labelFormatter(value, payload)}</div>;
@@ -128,12 +128,12 @@ export function ChartTooltipContent({
 	return (
 		<div
 			className={cn(
-				'nao-chart-tooltip border-border/50 bg-background grid min-w-32 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl',
+				'quarry-chart-tooltip border-border/50 bg-background grid min-w-32 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl',
 				className,
 			)}
 		>
 			{!nestLabel ? tooltipLabel : null}
-			<div className='nao-chart-tooltip__items grid gap-1.5'>
+			<div className='quarry-chart-tooltip__items grid gap-1.5'>
 				{visiblePayload.map((item, index) => {
 					const key = `${nameKey || item.name || item.dataKey || 'value'}`;
 					const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -143,7 +143,7 @@ export function ChartTooltipContent({
 						<div
 							key={item.dataKey}
 							className={cn(
-								'nao-chart-tooltip__item [&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5',
+								'quarry-chart-tooltip__item [&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5',
 								indicator === 'dot' && 'items-center',
 							)}
 						>
@@ -157,7 +157,7 @@ export function ChartTooltipContent({
 										!hideIndicator && (
 											<div
 												className={cn(
-													`nao-chart-tooltip__indicator nao-chart-tooltip__indicator--${indicator} shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)`,
+													`quarry-chart-tooltip__indicator quarry-chart-tooltip__indicator--${indicator} shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)`,
 													{
 														'h-2.5 w-2.5': indicator === 'dot',
 														'w-1': indicator === 'line',
@@ -177,18 +177,18 @@ export function ChartTooltipContent({
 									)}
 									<div
 										className={cn(
-											'nao-chart-tooltip__row flex flex-1 justify-between leading-none gap-2',
+											'quarry-chart-tooltip__row flex flex-1 justify-between leading-none gap-2',
 											nestLabel ? 'items-end' : 'items-center',
 										)}
 									>
 										<div className='grid gap-1.5'>
 											{nestLabel ? tooltipLabel : null}
-											<span className='nao-chart-tooltip__name text-muted-foreground'>
+											<span className='quarry-chart-tooltip__name text-muted-foreground'>
 												{itemConfig?.label || item.name}
 											</span>
 										</div>
 										{item.value !== undefined && item.value !== null && (
-											<span className='nao-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
+											<span className='quarry-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
 												{formatTooltipValue(item.value, {
 													percent,
 													shareBase,
@@ -204,10 +204,10 @@ export function ChartTooltipContent({
 					);
 				})}
 				{showTotal && (
-					<div className='nao-chart-tooltip__total flex w-full items-center gap-2 border-t border-border/50 pt-1.5 mt-0.5'>
-						<div className='nao-chart-tooltip__row flex flex-1 justify-between leading-none gap-2 items-center'>
-							<span className='nao-chart-tooltip__name text-muted-foreground font-medium'>Total</span>
-							<span className='nao-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
+					<div className='quarry-chart-tooltip__total flex w-full items-center gap-2 border-t border-border/50 pt-1.5 mt-0.5'>
+						<div className='quarry-chart-tooltip__row flex flex-1 justify-between leading-none gap-2 items-center'>
+							<span className='quarry-chart-tooltip__name text-muted-foreground font-medium'>Total</span>
+							<span className='quarry-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
 								{percent
 									? '100%'
 									: valueFormatter
@@ -231,7 +231,7 @@ type LegendContentProps = React.ComponentProps<'div'> &
 		cn?: ClassNameMerger;
 	};
 
-/** `nao-chart-legend__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-chart-legend__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
 export function ChartLegendContent({
 	className,
 	hideIcon = false,
@@ -254,7 +254,7 @@ export function ChartLegendContent({
 	return (
 		<div
 			className={cn(
-				'nao-chart-legend flex gap-4',
+				'quarry-chart-legend flex gap-4',
 				isVertical
 					? 'flex-col items-start justify-center gap-2 pl-4'
 					: cn(
@@ -276,9 +276,10 @@ export function ChartLegendContent({
 						<div
 							key={item.value}
 							className={cn(
-								'nao-chart-legend__item [&>svg]:text-muted-foreground flex shrink-0 items-center gap-1.5 whitespace-nowrap [&>svg]:h-3 [&>svg]:w-3 text-muted-foreground select-none',
-								onItemClick && 'nao-chart-legend__item--clickable cursor-pointer hover:text-foreground',
-								item.isHidden && 'nao-chart-legend__item--hidden opacity-40',
+								'quarry-chart-legend__item [&>svg]:text-muted-foreground flex shrink-0 items-center gap-1.5 whitespace-nowrap [&>svg]:h-3 [&>svg]:w-3 text-muted-foreground select-none',
+								onItemClick &&
+									'quarry-chart-legend__item--clickable cursor-pointer hover:text-foreground',
+								item.isHidden && 'quarry-chart-legend__item--hidden opacity-40',
 							)}
 							onClick={() => onItemClick?.(dataKey)}
 						>
@@ -286,7 +287,7 @@ export function ChartLegendContent({
 								<itemConfig.icon />
 							) : (
 								<div
-									className='nao-chart-legend__swatch h-2 w-2 shrink-0 rounded-[2px]'
+									className='quarry-chart-legend__swatch h-2 w-2 shrink-0 rounded-[2px]'
 									style={{ backgroundColor: item.color }}
 								/>
 							)}

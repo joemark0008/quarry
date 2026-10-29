@@ -1,7 +1,7 @@
-import { isTerminalBillingStatus } from '@nao/shared/billing';
+import { isTerminalBillingStatus } from '@quarry/shared/billing';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import type { CloudBillingCurrency } from '@nao/shared/billing';
+import type { CloudBillingCurrency } from '@quarry/shared/billing';
 
 import { trpc } from '@/main';
 

@@ -1,8 +1,8 @@
 import { Editor } from '@monaco-editor/react';
-import { validateStoryCode } from '@nao/shared/story-validation';
+import { validateStoryCode } from '@quarry/shared/story-validation';
 import { AlertTriangle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { StoryValidationError } from '@nao/shared/story-validation';
+import type { StoryValidationError } from '@quarry/shared/story-validation';
 import type { Monaco } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { FixInChatButton } from '@/components/fix-in-chat-button';
@@ -34,7 +34,7 @@ interface StoryCodeViewProps {
 	onSave?: () => void;
 }
 
-const MARKER_OWNER = 'nao-story-validation';
+const MARKER_OWNER = 'quarry-story-validation';
 
 export const StoryCodeView = memo(function StoryCodeView({
 	code,

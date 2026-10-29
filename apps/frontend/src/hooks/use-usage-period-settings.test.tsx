@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DEFAULT_USAGE_PERIOD_SELECTION } from '@nao/shared/backend/usage';
+import { DEFAULT_USAGE_PERIOD_SELECTION } from '@quarry/shared/backend/usage';
 import { useUsagePeriodSettings } from './use-usage-period-settings';
 import type { UsageRouteSearch } from '@/components/settings/usage-route-search';
 import {
@@ -46,7 +46,7 @@ vi.mock('@/main', () => ({
 describe('useUsagePeriodSettings', () => {
 	beforeEach(() => {
 		localStorage.clear();
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-a'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-a'));
 		mocks.getSettings.mockResolvedValue({
 			selection: DEFAULT_USAGE_PERIOD_SELECTION,
 			savedPeriods: [{ id: 'year', days: 365, granularity: 'month' }],
@@ -87,7 +87,7 @@ describe('useUsagePeriodSettings', () => {
 		});
 		await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('ready'));
 
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-b'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-b'));
 		rerenderHarness(1);
 		await waitFor(() => expect(mocks.settingsQueryOptions).toHaveBeenLastCalledWith({ projectId: 'project-b' }));
 	});
@@ -107,8 +107,8 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('migrates legacy selections once per project', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
-		localStorage.setItem('nao.usage-filters.project-b', JSON.stringify({ periodMode: '24h' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-b', JSON.stringify({ periodMode: '24h' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		const onUpdateSearch = vi.fn();
 		const { rerenderHarness } = renderHarness(onUpdateSearch);
@@ -120,7 +120,7 @@ describe('useUsagePeriodSettings', () => {
 			}),
 		);
 
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-b'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-b'));
 		rerenderHarness(1);
 
 		await waitFor(() =>
@@ -132,7 +132,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('clears a legacy period when the server already has a selection', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: { mode: '24h' }, savedPeriods: [] });
 
 		renderHarness(vi.fn());
@@ -142,7 +142,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('does not automatically retry a failed legacy migration', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		mocks.updateSelection.mockRejectedValue(new Error('Migration failed'));
 		renderHarness(vi.fn());
@@ -156,7 +156,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('uses the legacy selection while migration is failed', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		mocks.updateSelection.mockRejectedValue(new Error('Migration failed'));
 
@@ -169,7 +169,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('does not overwrite a newer server selection when retrying migration', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		mocks.updateSelection.mockRejectedValue(new Error('Migration failed'));
 		renderHarness(vi.fn());
@@ -184,7 +184,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('reconciles failed migration state with a newer user selection', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		mocks.updateSelection
 			.mockRejectedValueOnce(new Error('Migration failed'))
@@ -203,7 +203,7 @@ describe('useUsagePeriodSettings', () => {
 	});
 
 	it('retries a failed legacy migration after a page reload', async () => {
-		localStorage.setItem('nao.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
+		localStorage.setItem('quarry.usage-filters.project-a', JSON.stringify({ periodMode: '6m' }));
 		mocks.getSettings.mockResolvedValue({ selection: null, savedPeriods: [] });
 		mocks.updateSelection.mockRejectedValue(new Error('Migration failed'));
 		const firstPage = renderHarness(vi.fn());
@@ -243,7 +243,7 @@ describe('useUsagePeriodSettings', () => {
 		await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('ready'));
 
 		fireEvent.click(screen.getByRole('button', { name: 'Create period' }));
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-b'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-b'));
 		rerenderHarness(1);
 		await waitFor(() => expect(mocks.settingsQueryOptions).toHaveBeenLastCalledWith({ projectId: 'project-b' }));
 		await act(async () => resolveCreate({ id: 'created', days: 30, granularity: 'day' }));
@@ -302,7 +302,7 @@ describe('useUsagePeriodSettings', () => {
 		await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('ready'));
 
 		fireEvent.click(screen.getByRole('button', { name: 'Select saved period' }));
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-b'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-b'));
 		rerenderHarness(1);
 		await act(async () => rejectUpdate(new Error('Save failed')));
 
@@ -325,7 +325,7 @@ describe('useUsagePeriodSettings', () => {
 		await waitFor(() => expect(screen.getByTestId('status').textContent).toBe('ready'));
 
 		fireEvent.click(screen.getByRole('button', { name: 'Delete period' }));
-		localStorage.setItem('nao.active-project-id', JSON.stringify('project-b'));
+		localStorage.setItem('quarry.active-project-id', JSON.stringify('project-b'));
 		rerenderHarness(1);
 		await act(async () =>
 			resolveDelete({

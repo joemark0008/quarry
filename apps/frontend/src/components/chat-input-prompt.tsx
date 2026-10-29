@@ -4,8 +4,8 @@ import { useId, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AppWindow } from 'lucide-react';
-import { DATABASE_MENTION_TRIGGER, SKILL_MENTION_TRIGGER, STORY_REFERENCE_MENTION_TRIGGER } from '@nao/shared';
-import { story } from '@nao/shared/tools';
+import { DATABASE_MENTION_TRIGGER, SKILL_MENTION_TRIGGER, STORY_REFERENCE_MENTION_TRIGGER } from '@quarry/shared';
+import { story } from '@quarry/shared/tools';
 import { Prompt } from 'prompt-mentions';
 import { MentionOriginPreview, withOriginMarker } from './mention-origin-preview';
 import StoryIcon from './ui/story-icon';
@@ -165,7 +165,7 @@ export function ChatPrompt({
 				onChange={handleChange}
 				onEnter={onEnter}
 				submitOnEnter={submitOnEnter}
-				className={cn('w-full nao-input', resizable && 'nao-input-resizable')}
+				className={cn('w-full quarry-input', resizable && 'quarry-input-resizable')}
 				style={
 					{
 						'--prompt-min-height': minHeight || '70px',

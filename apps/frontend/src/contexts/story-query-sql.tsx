@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import type { StoryFilterSelections } from '@nao/shared/sql-template';
+import type { StoryFilterSelections } from '@quarry/shared/sql-template';
 
 import type { StoryFilterApi } from '@/hooks/use-story-filters';
 

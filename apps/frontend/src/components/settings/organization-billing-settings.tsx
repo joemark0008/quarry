@@ -16,6 +16,7 @@ import {
 	getBillingManagementDescription,
 	getBillingPortalButtonLabel,
 } from '@/lib/billing-display';
+import { QUARRY_PRIVACY_URL } from '@/lib/quarry-links';
 
 type BillingState = ReturnType<typeof useOrganizationBilling>;
 
@@ -48,7 +49,7 @@ export function OrganizationBillingSettings({
 						<div>
 							<h2 className='text-base font-semibold text-foreground'>Organization credits</h2>
 							<p className='text-sm text-muted-foreground'>
-								Fund and review the shared nao AI wallet for this organization.
+								Fund and review the shared quarry AI wallet for this organization.
 							</p>
 						</div>
 						<OrganizationCreditsContent
@@ -120,7 +121,7 @@ function CurrentPlanCard({ billingState }: { billingState: BillingState }) {
 				(needsPaidPlanSelection ? (
 					<div className='flex flex-col gap-2'>
 						<div className='flex flex-wrap items-center gap-2'>
-							<p className='font-medium text-foreground'>nao Cloud trial</p>
+							<p className='font-medium text-foreground'>quarry Cloud trial</p>
 							<Badge variant={statusView.variant}>{statusView.label}</Badge>
 						</div>
 						<p className='text-sm text-muted-foreground'>{statusView.description}</p>
@@ -165,8 +166,8 @@ function CurrentPlanCard({ billingState }: { billingState: BillingState }) {
 								: hasStripeSubscription
 									? statusView.description
 									: billing.data.trialAvailable
-										? 'Start your free trial to unlock nao Cloud for this organization.'
-										: 'Subscribe to nao Cloud to restore access.'}
+										? 'Start your free trial to unlock quarry Cloud for this organization.'
+										: 'Subscribe to quarry Cloud to restore access.'}
 						</p>
 					</div>
 				))}
@@ -268,10 +269,10 @@ function BillingSetupCard({ billingState }: { billingState: BillingState }) {
 								: 'Continue to Stripe to restore billing for this organization. Billing starts immediately.'}
 					</p>
 					<p className='text-xs text-muted-foreground'>
-						To create your organization&apos;s Stripe billing profile, nao shares an organization
+						To create your organization&apos;s Stripe billing profile, quarry shares an organization
 						admin&apos;s email address with Stripe.{' '}
 						<a
-							href='https://getnao.io/privacy'
+							href={QUARRY_PRIVACY_URL}
 							target='_blank'
 							rel='noreferrer'
 							className='underline underline-offset-2'
@@ -462,7 +463,7 @@ function InvoicesCard({ billingState }: { billingState: BillingState }) {
 											: invoice.invoiceKind === 'no_charge'
 												? 'No charge'
 												: invoice.invoiceKind === 'credit_top_up'
-													? 'Nao credits'
+													? 'Quarry credits'
 													: 'Subscription'}
 									</Badge>
 									{invoice.invoiceKind === 'subscription' &&

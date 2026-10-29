@@ -1,4 +1,4 @@
-import type { FileTreeEntry } from '@nao/shared/types';
+import type { FileTreeEntry } from '@quarry/shared/types';
 import type { ContentMatch } from '@/components/settings/file-tree';
 
 /** Folders first, then files, each alphabetically — the order the Settings file explorer uses. */

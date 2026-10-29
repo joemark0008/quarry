@@ -78,7 +78,7 @@ export function ImportProviderCard({
 							</p>
 							<p className='text-xs text-muted-foreground'>
 								{connected
-									? 'Import it as your nao project.'
+									? 'Import it as your quarry project.'
 									: `Connect ${providerLabel} and choose a ${resourceNounSingular}.`}
 							</p>
 						</div>
@@ -106,7 +106,7 @@ export function ImportProviderCard({
 				title={`Import from ${providerLabel}`}
 				description={
 					connected
-						? `Select a ${resourceNounSingular} to import as a nao project.`
+						? `Select a ${resourceNounSingular} to import as a quarry project.`
 						: `Connect your ${providerLabel} account to browse and import ${resourceNounPlural}.`
 				}
 				icon={<Icon className='size-4' />}

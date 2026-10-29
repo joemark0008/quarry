@@ -98,31 +98,33 @@ const baseEnvSchema = z.object({
 	APP_VERSION: z.string().default('dev'),
 	APP_COMMIT: z.string().default('unknown'),
 	APP_BUILD_DATE: z.string().default(''),
+	/** GitHub `owner/name` whose releases the update check compares against. Unset: no update check. */
+	QUARRY_RELEASES_REPOSITORY: optionalNonEmptyString,
 
-	NAO_DEFAULT_PROJECT_PATH: z.string().optional(),
-	NAO_PROJECTS_DIR: z.string().default('./projects'),
-	NAO_CONTEXT_SOURCE: z.enum(['local', 'git', 'api']).optional(),
-	NAO_CONTEXT_GIT_URL: z.string().optional(),
-	NAO_CONTEXT_GIT_BRANCH: z.string().optional(),
-	NAO_CONTEXT_GIT_SUBPATH: z.string().optional(),
-	NAO_CONTEXT_GIT_TOKEN: z.string().optional(),
-	NAO_CONTEXT_GIT_SSH_KEY: z.string().optional(),
-	NAO_CONTEXT_GIT_PLATFORM: z.enum(['github', 'gitlab', 'bitbucket']).optional(),
+	QUARRY_DEFAULT_PROJECT_PATH: z.string().optional(),
+	QUARRY_PROJECTS_DIR: z.string().default('./projects'),
+	QUARRY_CONTEXT_SOURCE: z.enum(['local', 'git', 'api']).optional(),
+	QUARRY_CONTEXT_GIT_URL: z.string().optional(),
+	QUARRY_CONTEXT_GIT_BRANCH: z.string().optional(),
+	QUARRY_CONTEXT_GIT_SUBPATH: z.string().optional(),
+	QUARRY_CONTEXT_GIT_TOKEN: z.string().optional(),
+	QUARRY_CONTEXT_GIT_SSH_KEY: z.string().optional(),
+	QUARRY_CONTEXT_GIT_PLATFORM: z.enum(['github', 'gitlab', 'bitbucket']).optional(),
 
-	NAO_STORAGE_BACKEND: z.enum(['none', 'local', 's3']).default('local'),
-	NAO_STORAGE_LOCAL_PATH: z.string().default('./storage'),
-	NAO_STORAGE_S3_BUCKET: optionalNonEmptyString,
-	NAO_STORAGE_S3_REGION: optionalNonEmptyString,
-	NAO_STORAGE_S3_ENDPOINT: optionalNonEmptyString.pipe(
-		z.url({ message: 'NAO_STORAGE_S3_ENDPOINT must be a valid URL' }).optional(),
+	QUARRY_STORAGE_BACKEND: z.enum(['none', 'local', 's3']).default('local'),
+	QUARRY_STORAGE_LOCAL_PATH: z.string().default('./storage'),
+	QUARRY_STORAGE_S3_BUCKET: optionalNonEmptyString,
+	QUARRY_STORAGE_S3_REGION: optionalNonEmptyString,
+	QUARRY_STORAGE_S3_ENDPOINT: optionalNonEmptyString.pipe(
+		z.url({ message: 'QUARRY_STORAGE_S3_ENDPOINT must be a valid URL' }).optional(),
 	),
-	NAO_STORAGE_S3_PREFIX: optionalNonEmptyString,
-	NAO_STORAGE_S3_ACCESS_KEY_ID: optionalNonEmptyString,
-	NAO_STORAGE_S3_SECRET_ACCESS_KEY: optionalNonEmptyString,
-	NAO_STORAGE_S3_FORCE_PATH_STYLE: booleanString('false'),
-	NAO_STORAGE_MAX_FILE_SIZE_MB: z.coerce
-		.number({ message: 'NAO_STORAGE_MAX_FILE_SIZE_MB must be a number of megabytes' })
-		.positive({ message: 'NAO_STORAGE_MAX_FILE_SIZE_MB must be greater than 0' })
+	QUARRY_STORAGE_S3_PREFIX: optionalNonEmptyString,
+	QUARRY_STORAGE_S3_ACCESS_KEY_ID: optionalNonEmptyString,
+	QUARRY_STORAGE_S3_SECRET_ACCESS_KEY: optionalNonEmptyString,
+	QUARRY_STORAGE_S3_FORCE_PATH_STYLE: booleanString('false'),
+	QUARRY_STORAGE_MAX_FILE_SIZE_MB: z.coerce
+		.number({ message: 'QUARRY_STORAGE_MAX_FILE_SIZE_MB must be a number of megabytes' })
+		.positive({ message: 'QUARRY_STORAGE_MAX_FILE_SIZE_MB must be greater than 0' })
 		.default(10),
 
 	/**
@@ -205,11 +207,11 @@ export const envSchema = baseEnvSchema
 		}
 	})
 	.superRefine((data, ctx) => {
-		if (data.NAO_STORAGE_BACKEND === 's3' && !data.NAO_STORAGE_S3_BUCKET) {
+		if (data.QUARRY_STORAGE_BACKEND === 's3' && !data.QUARRY_STORAGE_S3_BUCKET) {
 			ctx.addIssue({
 				code: 'custom',
-				path: ['NAO_STORAGE_S3_BUCKET'],
-				message: 'NAO_STORAGE_S3_BUCKET is required when NAO_STORAGE_BACKEND=s3.',
+				path: ['QUARRY_STORAGE_S3_BUCKET'],
+				message: 'QUARRY_STORAGE_S3_BUCKET is required when QUARRY_STORAGE_BACKEND=s3.',
 			});
 		}
 	})

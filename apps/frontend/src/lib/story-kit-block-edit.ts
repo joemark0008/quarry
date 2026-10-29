@@ -1,12 +1,12 @@
-import { DEFAULT_COLORS } from '@nao/shared/chart-builder';
+import { DEFAULT_COLORS } from '@quarry/shared/chart-builder';
 import { formatHex, parse } from 'culori';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type {
 	StoryBlockChartConfig,
 	StoryBlockColors,
 	StoryKitBlockChange,
 	StoryKitBlockRef,
-} from '@nao/shared/story-app';
+} from '@quarry/shared/story-app';
 import { kitBlockFromConfig } from '@/story-runtime/story-kit/block-config';
 
 /** Props that pick the chart variant of a component; they are meaningless once the component changes. */

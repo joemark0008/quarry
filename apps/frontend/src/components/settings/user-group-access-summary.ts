@@ -1,5 +1,5 @@
-import { isDatabaseContextTableGranted, isFileTreeFileGranted, USER_GROUP_FEATURE_DEFINITIONS } from '@nao/shared';
-import type { DatabaseContextAccess, DocsContextAccess, FilesContextAccess, UserGroupFeature } from '@nao/shared';
+import { isDatabaseContextTableGranted, isFileTreeFileGranted, USER_GROUP_FEATURE_DEFINITIONS } from '@quarry/shared';
+import type { DatabaseContextAccess, DocsContextAccess, FilesContextAccess, UserGroupFeature } from '@quarry/shared';
 
 import type { DatabaseContextObject } from '@/components/settings/user-group-context-access';
 import type { UserGroupEditorGroup } from '@/components/settings/user-group-editor';

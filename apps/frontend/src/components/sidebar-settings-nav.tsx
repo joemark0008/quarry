@@ -120,7 +120,7 @@ const settingsNavGroups: NavGroup[] = [
 		isAdvanced: true,
 		items: [
 			{
-				label: 'Chat with nao data',
+				label: 'Chat with quarry data',
 				to: '/',
 				search: { admin: true },
 				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,

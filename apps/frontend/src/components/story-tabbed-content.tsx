@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { parseStoryTabs, stripStoryTabsMarkup } from '@nao/shared/story-tabs';
-import { splitCodeIntoSegments } from '@nao/shared/story-segments';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import { parseStoryTabs, stripStoryTabsMarkup } from '@quarry/shared/story-tabs';
+import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import type { StoryFilterApi } from '@/hooks/use-story-filters';

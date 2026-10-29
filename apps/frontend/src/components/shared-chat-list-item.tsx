@@ -1,6 +1,6 @@
 import { Link } from './ui/link';
 import type { ComponentProps } from 'react';
-import type { SharedChatWithDetails } from '@nao/shared/backend/shared-chat';
+import type { SharedChatWithDetails } from '@quarry/shared/backend/shared-chat';
 import { cn } from '@/lib/utils';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {

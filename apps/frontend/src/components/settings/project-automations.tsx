@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

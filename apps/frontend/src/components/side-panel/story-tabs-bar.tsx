@@ -220,7 +220,7 @@ export function StoryTabsBar({
 									onClick={() => onSelect(index)}
 									onDoubleClick={() => editable && startRenaming(index)}
 									className={cn(
-										'nao-story-tab h-full max-w-48 cursor-pointer truncate pl-3 text-sm font-medium outline-none',
+										'quarry-story-tab h-full max-w-48 cursor-pointer truncate pl-3 text-sm font-medium outline-none',
 										editable ? 'pr-1' : 'pr-3',
 									)}
 								>

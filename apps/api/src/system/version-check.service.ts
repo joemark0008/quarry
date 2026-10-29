@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '../config/config.service.js';
 
-/** Port of upstream `services/version-check.service.ts`. Releases are still checked against upstream nao. */
-const GITHUB_RELEASES_URL = 'https://api.github.com/repos/getnao/nao/releases';
+/** Port of upstream `services/version-check.service.ts`, against the GitHub repository in QUARRY_RELEASES_REPOSITORY. */
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const APP_RELEASE_TAG_REGEX = /^v\d+\.\d+\.\d+$/;
 
@@ -27,7 +26,8 @@ export class VersionCheckService {
 		}
 
 		const currentVersion = this.config.env.APP_VERSION;
-		const latestVersion = await fetchLatestVersion();
+		const repository = this.config.env.QUARRY_RELEASES_REPOSITORY;
+		const latestVersion = repository ? await fetchLatestVersion(repository) : null;
 		const updateAvailable = latestVersion !== null && isNewerVersion(currentVersion, latestVersion);
 
 		this.cachedResult = { currentVersion, latestVersion, updateAvailable };
@@ -36,9 +36,9 @@ export class VersionCheckService {
 	}
 }
 
-async function fetchLatestVersion(): Promise<string | null> {
+async function fetchLatestVersion(repository: string): Promise<string | null> {
 	try {
-		const response = await fetch(GITHUB_RELEASES_URL, {
+		const response = await fetch(`https://api.github.com/repos/${repository}/releases`, {
 			headers: { Accept: 'application/vnd.github.v3+json' },
 			signal: AbortSignal.timeout(5000),
 		});

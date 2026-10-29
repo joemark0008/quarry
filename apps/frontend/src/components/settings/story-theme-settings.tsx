@@ -10,13 +10,13 @@ import {
 	sameThemePair,
 	STORY_LOGO_MEDIA_TYPES,
 	storyThemePairSchema,
-} from '@nao/shared/story-theme';
-import { deriveStoryThemeVariant, mapPairBrand } from '@nao/shared/story-theme-pair';
+} from '@quarry/shared/story-theme';
+import { deriveStoryThemeVariant, mapPairBrand } from '@quarry/shared/story-theme-pair';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Eye, Plus, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
-import type { StoryTheme, StoryThemePair } from '@nao/shared/story-theme';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
 
 import type { InspirationOutcome } from '@/components/settings/story-theme-inspiration';
 import type { ViewedThemeVersion } from '@/components/settings/story-theme-recorded-sources';
@@ -84,7 +84,7 @@ export function StoryThemeSettings({ isAdmin }: StoryThemeSettingsProps) {
 					<code className='rounded bg-muted px-1 py-0.5 font-mono text-xs'>
 						BETA_CUSTOM_STORIES_ENABLED=true
 					</code>{' '}
-					on your nao instance and restart it.
+					on your quarry instance and restart it.
 				</Empty>
 			</SettingsCard>
 		);
@@ -196,8 +196,8 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 				title='Story theme'
 				description={
 					isReadOnly
-						? 'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow nao’s colour scheme. Only admins can change this.'
-						: 'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow nao’s colour scheme.'
+						? 'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow quarry’s colour scheme. Only admins can change this.'
+						: 'Colours, fonts, blocks, tables and charts applied to every story in this project, in a light and a dark variant that follow quarry’s colour scheme.'
 				}
 			>
 				<SettingsControlRow
@@ -205,8 +205,8 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 					label='Apply to stories'
 					description={
 						saved
-							? 'Turn off to fall back to the classic nao look without losing the saved theme.'
-							: 'Turn on to apply nao defaults to custom stories.'
+							? 'Turn off to fall back to the classic quarry look without losing the saved theme.'
+							: 'Turn on to apply quarry defaults to custom stories.'
 					}
 					control={
 						<Switch
@@ -553,7 +553,7 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 							}}
 							disabled={isPending || isDefault}
 						>
-							Reset to nao defaults
+							Reset to quarry defaults
 						</Button>
 						{isDirty && (
 							<Button variant='outline' className='rounded-full' onClick={revertPending}>

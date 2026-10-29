@@ -1,4 +1,4 @@
-import { EMPTY_PROJECT_ROW_SECURITY, normalizeProjectRowSecurity } from '@nao/shared';
+import { EMPTY_PROJECT_ROW_SECURITY, normalizeProjectRowSecurity } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronLeft } from 'lucide-react';

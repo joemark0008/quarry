@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import type { StoryBlockReference } from '@nao/shared/types';
+import type { StoryBlockReference } from '@quarry/shared/types';
 import { useOptionalSelection } from '@/contexts/text-selection';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useChatId } from '@/hooks/use-chat-id';

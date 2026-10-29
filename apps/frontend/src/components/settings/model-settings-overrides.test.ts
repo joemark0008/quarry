@@ -1,8 +1,8 @@
-import { getDefaultModelId } from '@nao/shared/backend/provider-meta';
+import { getDefaultModelId } from '@quarry/shared/backend/provider-meta';
 import { describe, expect, it } from 'vitest';
 
 import { applySavedModelSettings } from './model-settings-overrides';
-import type { ModelSettingsMap } from '@nao/shared/backend/llm';
+import type { ModelSettingsMap } from '@quarry/shared/backend/llm';
 
 describe('applySavedModelSettings', () => {
 	const provider = 'anthropic';

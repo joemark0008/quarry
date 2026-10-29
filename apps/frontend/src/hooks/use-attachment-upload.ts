@@ -3,9 +3,9 @@ import {
 	isImageMediaType,
 	MAX_ATTACHMENTS_PER_MESSAGE,
 	MAX_IMAGE_SIZE_MB,
-} from '@nao/shared/attachments';
+} from '@quarry/shared/attachments';
 import { useCallback, useRef, useState } from 'react';
-import type { ImageMediaType, ImageUploadData } from '@nao/shared/attachments';
+import type { ImageMediaType, ImageUploadData } from '@quarry/shared/attachments';
 
 import type { DocumentAttachment } from '@/lib/attachments';
 import { uploadAttachment } from '@/lib/attachments';
@@ -247,7 +247,7 @@ const describeRejection = (
 	}
 
 	if (!documentMediaType(file.name)) {
-		return `${file.name} is not a file type nao can read.`;
+		return `${file.name} is not a file type quarry can read.`;
 	}
 	if (documentsEnabled === undefined) {
 		return 'Storage configuration is still loading. Try attaching the document again in a moment.';

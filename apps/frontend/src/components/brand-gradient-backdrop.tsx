@@ -1,14 +1,12 @@
 import type { CSSProperties } from 'react';
 
-const TEXTURE_URL = '/fontNaoTexture.webp';
-
 type BrandGradientBackdropProps = {
 	color: string;
 	className?: string;
 	style?: CSSProperties;
 };
 
-/** Recolorable version of the original login artwork. */
+/** Brand-coloured backdrop for the auth side panel: the colour with a soft light sweep. */
 export function BrandGradientBackdrop({ color, className, style }: BrandGradientBackdropProps) {
 	return (
 		<div
@@ -19,9 +17,8 @@ export function BrandGradientBackdrop({ color, className, style }: BrandGradient
 			<div
 				className='absolute inset-0'
 				style={{
-					backgroundImage: `url('${TEXTURE_URL}')`,
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
+					backgroundImage:
+						'radial-gradient(120% 90% at 85% 100%, rgba(255,255,255,0.45), transparent 60%), radial-gradient(80% 70% at 30% 10%, rgba(255,255,255,0.18), transparent 70%)',
 					mixBlendMode: 'screen',
 				}}
 			/>

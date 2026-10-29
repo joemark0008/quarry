@@ -1,5 +1,5 @@
-import { CHART_NUMBER_LOCALE, formatChartValue, toFiniteNumber } from '@nao/shared/chart-values';
-import type { displayChart } from '@nao/shared/tools';
+import { CHART_NUMBER_LOCALE, formatChartValue, toFiniteNumber } from '@quarry/shared/chart-values';
+import type { displayChart } from '@quarry/shared/tools';
 
 export type ValueFormat = 'number' | 'compact' | 'percent' | 'currency';
 

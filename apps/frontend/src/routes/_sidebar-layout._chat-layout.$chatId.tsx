@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ArrowRight, Folder, GitFork, Globe, Info, TimerIcon, Upload } from 'lucide-react';
-import { SYSTEM_EXAMPLE_PROJECT_ID } from '@nao/shared';
-import type { ForkMetadata, UIMessage } from '@nao/shared/backend/chat';
+import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
+import type { ForkMetadata, UIMessage } from '@quarry/shared/backend/chat';
 import type { SelectionData } from '@/components/highlight-bubble';
 import type { Chat } from '@/queries/use-chat-query';
 import { NEW_CHAT_ID } from '@/lib/ai';
@@ -107,7 +107,7 @@ function ChatPage() {
 	const onboardingWarehouseJobId = useAgentMessagesSelector(findWarehouseJobId);
 	const onboardingWarehouseJob = useWarehouseProvisioningJob(onboardingWarehouseJobId);
 	const showTrialOnboardingBanner =
-		config.data?.naoMode === 'cloud' &&
+		config.data?.quarryMode === 'cloud' &&
 		currentProject.isSuccess &&
 		currentProject.data === null &&
 		!chat.data?.isOnboarding;

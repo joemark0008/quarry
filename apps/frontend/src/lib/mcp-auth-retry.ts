@@ -1,6 +1,6 @@
-import { isImageMediaType } from '@nao/shared/attachments';
-import type { UIMessage } from '@nao/shared/backend/chat';
-import type { ImageUploadData } from '@nao/shared/attachments';
+import { isImageMediaType } from '@quarry/shared/attachments';
+import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { ImageUploadData } from '@quarry/shared/attachments';
 import type { SendMessageArgs } from '@/hooks/use-agent';
 
 export function lastUserMessagePayload(messages: UIMessage[]): SendMessageArgs | null {

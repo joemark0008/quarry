@@ -20,7 +20,7 @@ export function RecommendationManualFixPanel({ title, guidance, prompt }: Recomm
 			<div className='min-h-0 flex-1 overflow-auto p-4'>
 				<div className='flex flex-col gap-4'>
 					<p className='text-sm text-muted-foreground'>
-						This change targets an auto-generated file, so nao can&apos;t open a pull request directly.
+						This change targets an auto-generated file, so quarry can&apos;t open a pull request directly.
 						Apply it at the source, or paste the prompt below into your own coding assistant.
 					</p>
 

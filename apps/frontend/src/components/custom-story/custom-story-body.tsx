@@ -1,16 +1,16 @@
 import { AlertTriangle } from 'lucide-react';
-import { DEFAULT_STORY_THEME_PAIR } from '@nao/shared/story-theme';
+import { DEFAULT_STORY_THEME_PAIR } from '@quarry/shared/story-theme';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
-import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@nao/shared/story-app';
-import type { StoryTheme, StoryThemePair } from '@nao/shared/story-theme';
-import type { StoryBlockReference } from '@nao/shared/types';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
+import type { StoryBlockReference } from '@quarry/shared/types';
 
 import type { CustomStoryRuntimeError } from '@/components/custom-story/custom-story-frame';
 import type { CustomStoryDataSource } from '@/components/custom-story/story-data-options';
 import { CustomStoryFrame } from '@/components/custom-story/custom-story-frame';
-import NaoLogoAnimated from '@/components/icons/nao-logo-animated';
+import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 
@@ -196,7 +196,7 @@ function StoryBuilding() {
 	return (
 		<Centered>
 			<div className='flex items-baseline justify-center gap-6'>
-				<NaoLogoAnimated height={16} width={28} durationSeconds={2.2} title='' />
+				<QuarryLogoAnimated height={16} width={16} durationSeconds={2.2} title='' />
 				<span className='font-medium text-foreground'>{message}</span>
 			</div>
 		</Centered>

@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronDown, ChevronUp, TriangleAlert } from 'lucide-react';
-import { getNextPeriodStart } from '@nao/shared/date';
-import { BUDGET_PERIODS, MAX_BUDGET_LIMIT_USD, providerLabel, WARNING_BUDGET_THRESHOLD } from '@nao/shared/types';
-import type { BudgetPeriod } from '@nao/shared/types';
+import { getNextPeriodStart } from '@quarry/shared/date';
+import { BUDGET_PERIODS, MAX_BUDGET_LIMIT_USD, providerLabel, WARNING_BUDGET_THRESHOLD } from '@quarry/shared/types';
+import type { BudgetPeriod } from '@quarry/shared/types';
 
 import { UnsavedChangesFooter } from '@/components/settings/unsaved-changes-footer';
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';

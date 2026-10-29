@@ -1,5 +1,5 @@
 {
-	"name": "@nao/shared",
+	"name": "@quarry/shared",
 	"private": true,
 	"type": "module",
 	"exports": {

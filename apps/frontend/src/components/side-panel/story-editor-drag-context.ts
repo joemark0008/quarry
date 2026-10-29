@@ -2,9 +2,9 @@ import { createContext } from 'react';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import type { DragOrigin, DragUnit } from './story-block-selection';
 
-export const STORY_BLOCK_DRAG_TYPE = 'application/x-nao-story-block';
-export const GRID_COLUMN_DRAG_TYPE = 'application/x-nao-grid-column';
-export const STORY_TAB_DRAG_TYPE = 'application/x-nao-story-tab';
+export const STORY_BLOCK_DRAG_TYPE = 'application/x-quarry-story-block';
+export const GRID_COLUMN_DRAG_TYPE = 'application/x-quarry-grid-column';
+export const STORY_TAB_DRAG_TYPE = 'application/x-quarry-story-tab';
 
 export function setStoryBlockDragOrigin(dataTransfer: DataTransfer, origin: DragOrigin): void {
 	dataTransfer.setData(STORY_BLOCK_DRAG_TYPE, JSON.stringify(origin));

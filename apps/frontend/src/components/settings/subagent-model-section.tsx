@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
 import { useId } from 'react';
-import type { LlmProvider, LlmSelectedModel } from '@nao/shared/types';
+import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';

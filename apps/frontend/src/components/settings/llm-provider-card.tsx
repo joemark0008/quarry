@@ -1,9 +1,9 @@
 import { Pencil, Trash2 } from 'lucide-react';
-import { getDefaultModelId, getProviderAuth } from '@nao/shared/backend/provider-meta';
-import { providerKind, providerLabel, providerLabels, providerName } from '@nao/shared/types';
+import { getDefaultModelId, getProviderAuth } from '@quarry/shared/backend/provider-meta';
+import { providerKind, providerLabel, providerLabels, providerName } from '@quarry/shared/types';
 import { Link } from '@tanstack/react-router';
 import { LlmProviderIcon } from '../ui/llm-provider-icon';
-import type { LlmProvider } from '@nao/shared/types';
+import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 
 interface ProviderCardProps {

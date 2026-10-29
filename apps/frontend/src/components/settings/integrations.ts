@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { inferRouterOutputs } from '@trpc/server';
 import type { ComponentType } from 'react';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import DiscordIcon from '@/components/icons/discord.svg';
 import MattermostIcon from '@/components/icons/mattermost.svg';
 import TeamsIcon from '@/components/icons/microsoft-teams.svg';
@@ -82,21 +82,23 @@ export function useIntegrationStatuses(): Record<IntegrationId, IntegrationStatu
 			connected: Boolean(slackProjectConfig),
 			summary: slackProjectConfig
 				? getSlackSummary(slackProjectConfig.transportMode, slackProjectConfig.replyMode)
-				: 'Chat with nao from Slack',
+				: 'Chat with quarry from Slack',
 		},
 		teams: {
 			connected: Boolean(teamsProjectConfig),
-			summary: 'Chat with nao from Microsoft Teams',
+			summary: 'Chat with quarry from Microsoft Teams',
 		},
 		telegram: {
 			connected: Boolean(telegramProjectConfig),
-			summary: telegramProjectConfig ? 'Bot connected · link with a sign-in code' : 'Chat with nao from Telegram',
+			summary: telegramProjectConfig
+				? 'Bot connected · link with a sign-in code'
+				: 'Chat with quarry from Telegram',
 		},
 		whatsapp: {
 			connected: Boolean(whatsappProjectConfig),
 			summary: whatsappProjectConfig
 				? getWhatsappSummary(whatsappLinks.data?.length ?? 0)
-				: 'Chat with nao from WhatsApp',
+				: 'Chat with quarry from WhatsApp',
 		},
 		mattermost: {
 			connected: mattermostConfig.data?.connected === true,
@@ -105,7 +107,7 @@ export function useIntegrationStatuses(): Record<IntegrationId, IntegrationStatu
 					? 'Bot connected'
 					: mattermostProjectConfig
 						? 'Saved configuration is not connected'
-						: 'Chat with nao from Mattermost',
+						: 'Chat with quarry from Mattermost',
 		},
 		discord: {
 			connected: discordConfig.data?.connected === true,
@@ -114,7 +116,7 @@ export function useIntegrationStatuses(): Record<IntegrationId, IntegrationStatu
 					? 'Bot connected'
 					: discordProjectConfig
 						? 'Saved configuration is not connected'
-						: 'Chat with nao from Discord',
+						: 'Chat with quarry from Discord',
 		},
 	};
 }

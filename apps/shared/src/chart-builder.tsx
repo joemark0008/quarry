@@ -123,7 +123,7 @@ const HORIZONTAL_BAR_CATEGORY_GAP = '20%';
 const HORIZONTAL_BAR_RADIUS = 999;
 const HORIZONTAL_BAR_TRACK_COLOR = 'var(--muted, #e5e7eb)';
 const HORIZONTAL_BAR_BASELINE_COLOR = 'var(--muted-foreground, #6b7280)';
-const HORIZONTAL_BAR_ORIGINAL_VALUE_KEY = '__naoHorizontalBarValue';
+const HORIZONTAL_BAR_ORIGINAL_VALUE_KEY = '__quarryHorizontalBarValue';
 const HORIZONTAL_BAR_VALUE_LABEL_RIGHT_PADDING = 4;
 const HORIZONTAL_BAR_LABEL_VERTICAL_ROOM = Math.ceil(CHART_LABEL_FONT_SIZE / 2) + 2;
 /** Reserves horizontal room for a rotated axis title so it does not overlap tick values. */
@@ -356,7 +356,7 @@ export interface BuildChartProps {
 	idPrefix?: string;
 	/** Optional node rendered inline to the left of the first KPI card's title (used for a per-column drag handle in the story editor). */
 	kpiLeadingSlot?: React.ReactNode;
-	/** Recharts-prop styling (bar radius); defaults to nao's look. Themed custom stories pass their own. */
+	/** Recharts-prop styling (bar radius); defaults to quarry's look. Themed custom stories pass their own. */
 	chartStyle?: ChartStyle;
 	hideAxes?: boolean;
 }
@@ -515,7 +515,7 @@ export interface KpiCardProps {
 	leadingSlot?: React.ReactNode;
 }
 
-/** `nao-kpi-card__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-kpi-card__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
 export function KpiCard({ value, displayName, comparison, valueFormat, leadingSlot }: KpiCardProps) {
 	let formattedValue = '';
 
@@ -534,20 +534,20 @@ export function KpiCard({ value, displayName, comparison, valueFormat, leadingSl
 		: 'text-muted-foreground';
 
 	return (
-		<div className='nao-kpi-card min-w-[160px]'>
+		<div className='quarry-kpi-card min-w-[160px]'>
 			{(displayName || leadingSlot) && (
-				<div className='nao-kpi-card__header flex items-center gap-1'>
+				<div className='quarry-kpi-card__header flex items-center gap-1'>
 					{leadingSlot}
-					{displayName && <div className='nao-kpi-card__name text-lg tracking-wide'>{displayName}</div>}
+					{displayName && <div className='quarry-kpi-card__name text-lg tracking-wide'>{displayName}</div>}
 				</div>
 			)}
-			<div className='nao-kpi-card__value text-3xl font-medium tabular-nums'>{formattedValue}</div>
+			<div className='quarry-kpi-card__value text-3xl font-medium tabular-nums'>{formattedValue}</div>
 			{comparison && (
 				<div
-					className={`nao-kpi-card__comparison nao-kpi-card__comparison--${trend} mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-sm ${pillColorClass}`}
+					className={`quarry-kpi-card__comparison quarry-kpi-card__comparison--${trend} mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-sm ${pillColorClass}`}
 				>
 					{showArrowAndColor && <KpiTrendArrow direction={comparison.direction} />}
-					<span className='nao-kpi-card__comparison-value font-medium tabular-nums'>
+					<span className='quarry-kpi-card__comparison-value font-medium tabular-nums'>
 						{comparison.valueText}
 					</span>
 					<span className='font-normal'>vs. {comparison.periodLabel}</span>
@@ -1760,7 +1760,7 @@ function renderChartTitle(title: string) {
 			key='chart-title'
 			component={({ width = 0 }: { width?: number }) => (
 				<text
-					className='nao-chart-title'
+					className='quarry-chart-title'
 					x={width / 2}
 					y={16}
 					textAnchor='middle'

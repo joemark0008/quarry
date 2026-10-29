@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { CloudBillingInterval } from '@nao/shared/billing';
+import type { CloudBillingInterval } from '@quarry/shared/billing';
 
 import type { OrganizationBillingSearch } from '@/hooks/use-organization-billing-sync';
 import { useOrganizationBillingSync } from '@/hooks/use-organization-billing-sync';

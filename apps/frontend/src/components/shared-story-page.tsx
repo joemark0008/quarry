@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef } from 'react';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 
 import type { LiveQueryConfig, QueryDataMap } from '@/components/story-embeds';
 import type { StoryPageHeaderProps } from '@/components/story-page-header';

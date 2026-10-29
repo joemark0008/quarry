@@ -1,8 +1,8 @@
-import { buildMapPoints, MAX_MAP_POINTS, resolveMapConfig } from '@nao/shared';
+import { buildMapPoints, MAX_MAP_POINTS, resolveMapConfig } from '@quarry/shared';
 import { lazy, Suspense, useMemo } from 'react';
-import { mapBlockToInput } from '@nao/shared/story-segments';
-import type { MapPoint } from '@nao/shared';
-import type { ParsedMapBlock } from '@nao/shared/story-segments';
+import { mapBlockToInput } from '@quarry/shared/story-segments';
+import type { MapPoint } from '@quarry/shared';
+import type { ParsedMapBlock } from '@quarry/shared/story-segments';
 
 import { Skeleton } from '@/components/ui/skeleton';
 

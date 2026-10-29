@@ -8,9 +8,9 @@ export const Route = createFileRoute('/embed')({
 function EmbedLayout() {
 	useLayoutEffect(() => {
 		const root = document.documentElement;
-		root.classList.add('nao-embed');
+		root.classList.add('quarry-embed');
 		return () => {
-			root.classList.remove('nao-embed');
+			root.classList.remove('quarry-embed');
 		};
 	}, []);
 

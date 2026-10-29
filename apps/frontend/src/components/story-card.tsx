@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import type { ReactNode } from 'react';
-import type { StorySummary } from '@nao/shared/types';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { StorySummary } from '@quarry/shared/types';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { QueryDataMap } from '@/components/story-embeds';
 
 import { CustomStoryThumbnail } from '@/components/custom-story-thumbnail';

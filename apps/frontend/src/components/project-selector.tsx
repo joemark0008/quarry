@@ -1,8 +1,8 @@
-import { USER_ROLE_LABELS } from '@nao/shared/types';
+import { USER_ROLE_LABELS } from '@quarry/shared/types';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 
-import type { UserRole } from '@nao/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';

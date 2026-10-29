@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
-import type { ChartType } from '@nao/shared/chart-types';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+import type { ChartType } from '@quarry/shared/chart-types';
 
 import { DataTableCard } from '@/components/data-table-card';
 import { StoryChartEmbedShell } from '@/components/side-panel/story-chart-embed';

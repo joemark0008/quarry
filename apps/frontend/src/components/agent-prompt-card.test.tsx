@@ -20,11 +20,11 @@ afterEach(cleanup);
 
 describe('AgentPromptCard', () => {
 	it('formats the prompt and copies its complete source', () => {
-		const prompt = 'ABOUT NAO\n\nFirst paragraph.\n\n1. Install the skill.\n\nnpx skills add getnao/nao';
+		const prompt = 'ABOUT QUARRY\n\nFirst paragraph.\n\n1. Install the skill.\n\nnpx skills add acme/skills';
 		render(<AgentPromptCard prompt={prompt} />);
 
-		expect(screen.getByText('ABOUT NAO').tagName).toBe('P');
-		expect(screen.getByText('npx skills add getnao/nao').tagName).toBe('CODE');
+		expect(screen.getByText('ABOUT QUARRY').tagName).toBe('P');
+		expect(screen.getByText('npx skills add acme/skills').tagName).toBe('CODE');
 
 		fireEvent.click(screen.getByRole('button', { name: 'Copy prompt' }));
 		expect(writeText).toHaveBeenCalledWith(prompt);

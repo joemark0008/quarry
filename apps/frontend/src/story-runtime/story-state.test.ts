@@ -1,4 +1,4 @@
-import { MAX_STORY_STATE_VALUE_BYTES } from '@nao/shared/story-app';
+import { MAX_STORY_STATE_VALUE_BYTES } from '@quarry/shared/story-app';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { initStoryState, readStoryState, writeStoryState } from './story-state';

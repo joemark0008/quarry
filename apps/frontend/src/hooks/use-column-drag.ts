@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import type { DragEvent } from 'react';
 import type { ColumnValueKind } from '@/lib/chart-selection-summary';
 
-const COLUMN_DATA_TYPE = 'application/x-nao-column';
+const COLUMN_DATA_TYPE = 'application/x-quarry-column';
 /** The payload is unreadable until drop, so the kind travels in the type list to let targets accept or refuse. */
-const KIND_DATA_TYPE_PREFIX = 'application/x-nao-column-kind-';
+const KIND_DATA_TYPE_PREFIX = 'application/x-quarry-column-kind-';
 
 type AcceptsKind = (kind: ColumnValueKind) => boolean;
 

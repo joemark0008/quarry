@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
-import type { DownloadFormat, StoryBlockReference } from '@nao/shared/types';
-import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@nao/shared/story-app';
+import type { DownloadFormat, StoryBlockReference } from '@quarry/shared/types';
+import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
 import type { StoryBlockEditTarget, StoryTableFormatEditTarget } from '@/stores/story-block-edit';
 
 import type { CustomStoryDataSource } from '@/components/custom-story/story-data-options';

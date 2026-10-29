@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { findStoryDraft } from './story.utils';
 
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 describe('findStoryDraft', () => {
 	it('falls back to the last successful version when the latest story call failed', () => {

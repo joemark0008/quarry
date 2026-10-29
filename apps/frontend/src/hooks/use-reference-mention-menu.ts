@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { extractStoryReferenceIds, toStoryReferenceMentionId } from '@nao/shared';
+import { extractStoryReferenceIds, toStoryReferenceMentionId } from '@quarry/shared';
 import type { MentionOption } from 'prompt-mentions';
 import type {
 	DatabaseObject,

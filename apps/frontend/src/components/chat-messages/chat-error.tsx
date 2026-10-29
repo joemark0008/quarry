@@ -1,7 +1,7 @@
 import { AlertCircleIcon, CheckIcon, CopyIcon, CreditCardIcon, RotateCcwIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Callout } from '../ui/callout';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useCloudBillingAccess } from '@/hooks/use-cloud-billing-access';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';

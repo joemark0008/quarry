@@ -12,7 +12,7 @@ import { usePublicConfig } from '@/hooks/use-public-config';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TRIAL_WARNING_MS = 3 * DAY_MS;
-const dismissedTrialBannerStorage = createLocalStorage<string | string[]>('nao-dismissed-trial-banner', []);
+const dismissedTrialBannerStorage = createLocalStorage<string | string[]>('quarry-dismissed-trial-banner', []);
 
 export function CloudBillingAccessBanner() {
 	const openOrganizationBilling = useOpenOrganizationBilling();
@@ -105,7 +105,7 @@ function getAccessNotice(access: CloudBillingAccess | undefined, now = Date.now(
 	if (!access.hasAccess) {
 		return {
 			restricted: true,
-			title: 'A subscription is needed to keep using nao Cloud.',
+			title: 'A subscription is needed to keep using quarry Cloud.',
 			description: 'Your data is safe and remains available. Subscribe to run agents and make changes.',
 		};
 	}

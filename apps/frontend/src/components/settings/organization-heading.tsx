@@ -1,10 +1,10 @@
-import { USER_ROLE_LABELS } from '@nao/shared/types';
+import { USER_ROLE_LABELS } from '@quarry/shared/types';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 
-import type { UserRole } from '@nao/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 import { EditableOrganizationName } from '@/components/settings/editable-organization-name';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';

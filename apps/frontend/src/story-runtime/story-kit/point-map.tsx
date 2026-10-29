@@ -9,7 +9,7 @@ import {
 	parseNumericValue,
 	resolveColumnName,
 	scaleBubbleRadius,
-} from '@nao/shared/map';
+} from '@quarry/shared/map';
 import { useEffect } from 'react';
 import { CircleMarker, MapContainer, Tooltip, useMap } from 'react-leaflet';
 import { Block, BlockState } from './block';
@@ -17,7 +17,7 @@ import { isNumericColumn } from './columns';
 import { formatNumber } from './format';
 import { MapTiles } from './map-tiles';
 import { useBlockData } from './use-block-data';
-import type { MapBounds, MapPoint } from '@nao/shared/map';
+import type { MapBounds, MapPoint } from '@quarry/shared/map';
 import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
 import type { BlockProps } from './block';
@@ -65,7 +65,7 @@ export function PointMap(props: PointMapProps) {
 					const keys = resolveKeys(rows, columns, { latitudeKey, longitudeKey, sizeKey, labelKey });
 					if (!keys) {
 						return (
-							<div className='nao-block__state nao-block__state--error' role='alert'>
+							<div className='quarry-block__state quarry-block__state--error' role='alert'>
 								No latitude/longitude columns among {columns.join(', ')}: pass latitudeKey and
 								longitudeKey.
 							</div>
@@ -77,7 +77,7 @@ export function PointMap(props: PointMapProps) {
 					}).slice(0, MAX_MAP_POINTS);
 					const bounds = computeMapBounds(points);
 					if (!bounds) {
-						return <div className='nao-block__state'>No rows with valid coordinates.</div>;
+						return <div className='quarry-block__state'>No rows with valid coordinates.</div>;
 					}
 					const sizes = keys.sizeKey
 						? points.map((point) => parseNumericValue(point.row[keys.sizeKey!]))
@@ -85,7 +85,7 @@ export function PointMap(props: PointMapProps) {
 					const sizeDomain = sizes ? numericDomain(sizes) : null;
 					const detailKeys = tooltipKeys ?? defaultTooltipKeys(keys);
 					return (
-						<div className='nao-map' style={height === undefined ? undefined : { height }}>
+						<div className='quarry-map' style={height === undefined ? undefined : { height }}>
 							<MapContainer bounds={toLeafletBounds(bounds)} scrollWheelZoom={false}>
 								<MapTiles />
 								<FitPoints bounds={bounds} />
@@ -141,7 +141,7 @@ function FitPoints({ bounds }: { bounds: MapBounds }) {
 
 function PointDetails({ point, labelKey, detailKeys }: { point: MapPoint; labelKey?: string; detailKeys: string[] }) {
 	return (
-		<div className='nao-map__tooltip'>
+		<div className='quarry-map__tooltip'>
 			{labelKey && <strong>{String(point.row[labelKey] ?? '')}</strong>}
 			{detailKeys.map((key) => (
 				<div key={key}>

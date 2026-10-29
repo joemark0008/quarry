@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ChatsReplayTable } from './chats-replay-table';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import type { ProjectChatListItem } from '@nao/shared/types';
+import type { ProjectChatListItem } from '@quarry/shared/types';
 
 const chat: ProjectChatListItem = {
 	id: 'chat-1',

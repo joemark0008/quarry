@@ -1,10 +1,10 @@
 import { Download, Loader2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { McpAppHeader } from './mcp-app-header';
-import { OpenInNaoButton } from './open-in-nao-button';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@nao/shared/story-segments';
-import type { StoryThemePair } from '@nao/shared/story-theme';
-import type { DownloadFormat } from '@nao/shared/types';
+import { OpenInQuarryButton } from './open-in-quarry-button';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+import type { StoryThemePair } from '@quarry/shared/story-theme';
+import type { DownloadFormat } from '@quarry/shared/types';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from '@/components/story-embeds';
@@ -34,7 +34,7 @@ export function StoryAppView({ title, code, queryData, theme, naoUrl, onDownload
 		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
 			<McpAppHeader title={title}>
 				{onDownload ? <StoryDownloadButton onDownload={onDownload} /> : null}
-				{naoUrl ? <OpenInNaoButton url={naoUrl} /> : null}
+				{naoUrl ? <OpenInQuarryButton url={naoUrl} /> : null}
 			</McpAppHeader>
 			<StoryBody code={code} queryData={queryData} theme={storyTheme} />
 		</div>

@@ -13,10 +13,10 @@ import { SidebarUserMenu } from './sidebar-user-menu';
 import { SidebarVersionNotice } from './sidebar-version-notice';
 import { Spinner } from './ui/spinner';
 import StoryIcon from './ui/story-icon';
-import type { ChatFilterType, ChatGroup, ChatGroupBy, GroupedChatItem } from '@nao/shared/types';
+import type { ChatFilterType, ChatGroup, ChatGroupBy, GroupedChatItem } from '@quarry/shared/types';
 import type { LucideIcon } from 'lucide-react';
 
-import NaoLogo from '@/components/icons/nao-logo.svg';
+import QuarryLogo from '@/components/icons/quarry-logo.svg';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { TrialOnboardingBanner } from '@/components/trial-onboarding-banner';
@@ -24,7 +24,7 @@ import { useCommandMenuCallback } from '@/contexts/command-menu-callback';
 import { useSidebar } from '@/contexts/sidebar';
 import { useChatViewPreferences } from '@/hooks/use-chat-view-preferences';
 import { resetLastAppLocation, useTrackLastAppLocation } from '@/hooks/use-last-app-location';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { useSidebarSectionOpen } from '@/hooks/use-sidebar-section-open';
 import { useTimeAgo } from '@/hooks/use-time-ago';
@@ -175,7 +175,7 @@ export function Sidebar() {
 							hideIf(effectiveIsCollapsed),
 						)}
 					>
-						<NaoLogo className='size-5' />
+						<QuarryLogo className='size-5' />
 					</button>
 
 					<div className={cn('ml-auto z-10 flex items-center gap-1', effectiveIsCollapsed && 'flex-col')}>
@@ -488,7 +488,7 @@ function SidebarNav({
 						'No chats shared with you.'
 					) : isTrial ? (
 						<>
-							{username && <span className='mb-3 block'>Welcome to nao, {capitalize(username)}!</span>}
+							{username && <span className='mb-3 block'>Welcome to quarry, {capitalize(username)}!</span>}
 							<span className='block'>
 								Your chat history will appear here.
 								<br />

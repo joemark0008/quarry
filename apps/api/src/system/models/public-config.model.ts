@@ -18,7 +18,7 @@ export class AuthProviders {
 @ObjectType()
 export class PublicConfig {
 	@Field({ description: 'Always "self-hosted": quarry has no cloud mode.' })
-	naoMode: string;
+	quarryMode: string;
 
 	@Field()
 	enableUserLogin: boolean;

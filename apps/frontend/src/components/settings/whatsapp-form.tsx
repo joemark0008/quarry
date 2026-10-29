@@ -4,6 +4,7 @@ import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { getSubmitErrorMessage, PasswordField, TextField } from '@/components/ui/form-fields';
+import { docsUrl } from '@/lib/quarry-links';
 
 export interface WhatsappFormProps {
 	hasProjectConfig: boolean;
@@ -51,7 +52,7 @@ export function WhatsappForm({ hasProjectConfig, onSubmit, onCancel, isPending }
 				<div className='grid gap-3'>
 					<p className='text-[11px] text-muted-foreground leading-relaxed'>
 						<a
-							href='https://docs.getnao.io/nao-agent/chat/whatsapp'
+							href={docsUrl('chat/whatsapp')}
 							target='_blank'
 							rel='noopener noreferrer'
 							className='inline-flex items-center gap-1 underline hover:text-foreground'

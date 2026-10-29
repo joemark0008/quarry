@@ -14,9 +14,9 @@ import {
 	KeyRound,
 	MessageCircleOff,
 } from 'lucide-react';
-import { ALLOWED_IMAGE_MEDIA_TYPES, ATTACHMENT_ACCEPT } from '@nao/shared/attachments';
-import { toStoryReferenceMentionId } from '@nao/shared';
-import { story } from '@nao/shared/tools';
+import { ALLOWED_IMAGE_MEDIA_TYPES, ATTACHMENT_ACCEPT } from '@quarry/shared/attachments';
+import { toStoryReferenceMentionId } from '@quarry/shared';
+import { story } from '@quarry/shared/tools';
 import { Button, ChatButton, MicButton } from './ui/button';
 import { SlidingWaveform } from './chat-input-sliding-waveform';
 import {
@@ -80,7 +80,7 @@ import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-
 import { SelectionCitationBanner } from '@/components/selection-citation-banner';
 import { ChatInputSuggestions, SuggestionCard } from '@/components/chat-input-suggestions';
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -175,7 +175,7 @@ function ChatInputBase({
 		mode,
 	} = useAgentContext();
 	const navigate = useNavigate();
-	const { canChatWithNaoData } = usePermissions();
+	const { canChatWithQuarryData } = usePermissions();
 	const { storyCreationEnabled } = useEffectiveUserGroupFeatures();
 	const storyMentionOptions = useStoryMentionOptions(storyCreationEnabled);
 	const { options: storyReferenceOptions, isLoaded: areReferenceableStoriesLoaded } = useStoryReferenceOptions({
@@ -184,7 +184,7 @@ function ChatInputBase({
 	const chatId = useChatId();
 	const storyBeforeAgentSend = useStoryBeforeAgentSend();
 
-	const isAdminMode = canChatWithNaoData && adminMode;
+	const isAdminMode = canChatWithQuarryData && adminMode;
 	const adminModeLocked = useAgentMessagesSelector((messages) => messages.some((message) => message.role === 'user'));
 	const handleSelectAdminMode = useCallback(() => {
 		if (!adminModeLocked) {
@@ -636,7 +636,7 @@ function ChatInputBase({
 									hasStoryReferences={storyReferenceOptions.length > 0}
 									hasSkills={hasSkills}
 									storyMentions={storyMentionOptions}
-									canChatWithNaoData={canChatWithNaoData}
+									canChatWithQuarryData={canChatWithQuarryData}
 									isAdminMode={isAdminMode}
 									adminModeLocked={adminModeLocked}
 									isTrial={isTrial}
@@ -729,7 +729,7 @@ function ChatInputAdminBadge() {
 			<SimpleTooltip
 				side='top'
 				align='end'
-				content='Chat with your internal nao data to understand what users are doing.'
+				content='Chat with your internal quarry data to understand what users are doing.'
 			>
 				<span
 					className={cn(
@@ -820,13 +820,13 @@ function ManagedCreditsBanner({
 			<div className='min-w-0'>
 				<p className='font-semibold text-foreground'>
 					{canManageAccess
-						? 'Your nao credits have been used'
-						: 'Your organization’s nao credits have been used'}
+						? 'Your quarry credits have been used'
+						: 'Your organization’s quarry credits have been used'}
 				</p>
 				<p className='mt-1 text-sm leading-relaxed text-muted-foreground'>
 					{canManageAccess
-						? 'Keep chatting by adding nao credits or connecting your own AI provider. Your projects, chats, and data are safe.'
-						: 'Your work is safe. Reach out to your organization admin to add nao credits or connect an AI provider, then pick up where you left off.'}
+						? 'Keep chatting by adding quarry credits or connecting your own AI provider. Your projects, chats, and data are safe.'
+						: 'Your work is safe. Reach out to your organization admin to add quarry credits or connect an AI provider, then pick up where you left off.'}
 				</p>
 				{canManageAccess && (
 					<div className='mt-3 flex flex-wrap gap-2'>
@@ -838,7 +838,7 @@ function ManagedCreditsBanner({
 								onClick={() => void openOrganizationBilling(creditOrganizationId)}
 							>
 								<WalletCards />
-								Add nao credits
+								Add quarry credits
 							</Button>
 						)}
 						{canAddProviderKey && (
@@ -866,7 +866,7 @@ function ChatInputPlusMenu({
 	hasStoryReferences,
 	hasSkills,
 	storyMentions,
-	canChatWithNaoData,
+	canChatWithQuarryData,
 	isAdminMode,
 	adminModeLocked,
 	onSelectAdminMode,
@@ -880,7 +880,7 @@ function ChatInputPlusMenu({
 	hasStoryReferences: boolean;
 	hasSkills: boolean;
 	storyMentions: MentionOption[];
-	canChatWithNaoData: boolean;
+	canChatWithQuarryData: boolean;
 	isAdminMode: boolean;
 	adminModeLocked: boolean;
 	isTrial: boolean;
@@ -957,7 +957,7 @@ function ChatInputPlusMenu({
 						<span>Skills</span>
 					</DropdownMenuItem>
 				)}
-				{canChatWithNaoData && (
+				{canChatWithQuarryData && (
 					<>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem

@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Info, Plus } from 'lucide-react';
 import { useCallback, useState } from 'react';
-import { ORG_MEMBER_ROLES } from '@nao/shared/types';
-import type { UserRole } from '@nao/shared/types';
+import { ORG_MEMBER_ROLES } from '@quarry/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 import type { TeamMember } from '@/components/settings/team';
 import {
@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SimpleTooltip } from '@/components/ui/tooltip';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';

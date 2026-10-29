@@ -1,5 +1,5 @@
-import { colorToHex, DEFAULT_THRESHOLD_COLOR } from '@nao/shared/conditional-formatting';
-import { getFormattableColumnType } from '@nao/shared/story-table-utils';
+import { colorToHex, DEFAULT_THRESHOLD_COLOR } from '@quarry/shared/conditional-formatting';
+import { getFormattableColumnType } from '@quarry/shared/story-table-utils';
 import { useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -11,8 +11,8 @@ import type {
 	StringOperator,
 	StringRule,
 	ThresholdOperator,
-} from '@nao/shared/conditional-formatting';
-import type { FormattableColumnType } from '@nao/shared/story-table-utils';
+} from '@quarry/shared/conditional-formatting';
+import type { FormattableColumnType } from '@quarry/shared/story-table-utils';
 
 type RuleKind = 'none' | 'color-scale' | 'threshold' | 'boolean' | 'string';
 

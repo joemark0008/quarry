@@ -1,5 +1,5 @@
-import { capitalizeWords } from '@nao/shared';
-import { isTerminalBillingStatus } from '@nao/shared/billing';
+import { capitalizeWords } from '@quarry/shared';
+import { isTerminalBillingStatus } from '@quarry/shared/billing';
 
 type BillingStatusView = {
 	label: string;

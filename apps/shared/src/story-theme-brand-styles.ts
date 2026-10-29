@@ -6,7 +6,7 @@ export function storyBrandStyles(scope = ''): string {
 	);
 }
 
-const KPI_TILE = ':is(.nao-kpi,.story-block:has(.nao-kpi-card))';
+const KPI_TILE = ':is(.quarry-kpi,.story-block:has(.quarry-kpi-card))';
 const WASHED_CARD = 'color-mix(in srgb,var(--story-kpi-wash,var(--card)) var(--story-kpi-tint,0%),var(--card))';
 const HEADING_SCALE = 'var(--story-heading-scale,1)';
 /** The chart hover band (7% of the ink over the block), reused so every hover takes the theme's own tint. */
@@ -14,34 +14,34 @@ const INK_VEIL = 'color-mix(in srgb,var(--foreground) 7%,var(--card))';
 
 /** Which elements speak in each text role, with the size the role's multiplier scales; null keeps the element's own. */
 const ROLE_TARGETS: Record<StoryTextRole, [string, string | null][]> = {
-	wordmark: [['.nao-brand-header__name', '24px']],
+	wordmark: [['.quarry-brand-header__name', '24px']],
 	display: [
 		['h1', `calc(1.875rem * ${HEADING_SCALE})`],
-		['.nao-slide__title', '52px'],
-		['.nao-slides__title', null],
+		['.quarry-slide__title', '52px'],
+		['.quarry-slides__title', null],
 	],
 	heading: [['h2', `calc(1.5rem * ${HEADING_SCALE})`]],
 	subheading: [
 		['h3', `calc(1.25rem * ${HEADING_SCALE})`],
 		['h4', `calc(1.125rem * ${HEADING_SCALE})`],
-		['.nao-block__title', '14px'],
-		['.nao-chart-title', '14px'],
+		['.quarry-block__title', '14px'],
+		['.quarry-chart-title', '14px'],
 	],
 	body: [
 		[':is(p,li)', 'var(--story-body-size,1rem)'],
-		['.nao-table-display td', null],
+		['.quarry-table-display td', null],
 	],
 	label: [
-		['.nao-kpi-card__name', '16px'],
-		['.nao-table-display th', '12px'],
+		['.quarry-kpi-card__name', '16px'],
+		['.quarry-table-display th', '12px'],
 		['.recharts-cartesian-axis-tick text', '12px'],
-		[':is(.nao-label,.nao-slides__eyebrow,.nao-slide__eyebrow)', null],
+		[':is(.quarry-label,.quarry-slides__eyebrow,.quarry-slide__eyebrow)', null],
 	],
 	button: [
-		[':is(.nao-button,.nao-chip,.nao-filter__control,.nao-filter__clear)', '13px'],
-		[':is([role=tab],.nao-story-tab)', null],
+		[':is(.quarry-button,.quarry-chip,.quarry-filter__control,.quarry-filter__clear)', '13px'],
+		[':is([role=tab],.quarry-story-tab)', null],
 	],
-	figure: [['.nao-kpi-card__value', null]],
+	figure: [['.quarry-kpi-card__value', null]],
 };
 
 const BRAND_RULES: [string[], string][] = [
@@ -55,10 +55,10 @@ const BRAND_RULES: [string[], string][] = [
 	...STORY_TEXT_ROLES.flatMap((role) =>
 		ROLE_TARGETS[role].map(([selector, size]): [string[], string] => [[selector], roleDeclarations(role, size)]),
 	),
-	[['.nao-kpi-card'], 'container-type:inline-size'],
+	[['.quarry-kpi-card'], 'container-type:inline-size'],
 	/** Shrinks a long figure to its tile instead of clipping it. */
 	[
-		['.nao-kpi-card__value'],
+		['.quarry-kpi-card__value'],
 		'color:var(--story-kpi-value,var(--foreground));white-space:nowrap;font-size:min(calc(calc(var(--story-body-size,16px) * 2) * var(--story-type-figure-size,1)),16cqi)',
 	],
 	[[`${KPI_TILE}:nth-child(4n+1)`], '--story-kpi-wash:var(--chart-1)'],
@@ -78,29 +78,32 @@ const BRAND_RULES: [string[], string][] = [
 		].join(';'),
 	],
 	[
-		['.nao-button', '.nao-chip'],
+		['.quarry-button', '.quarry-chip'],
 		'display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:0 14px;line-height:1;white-space:nowrap;border-radius:var(--story-control-radius,8px);cursor:pointer;transition:background-color .15s,border-color .15s,color .15s',
 	],
-	[['.nao-button'], 'color:var(--primary-foreground);background:var(--primary);border:1px solid var(--primary)'],
+	[['.quarry-button'], 'color:var(--primary-foreground);background:var(--primary);border:1px solid var(--primary)'],
 	[
-		['.nao-button--outline', '.nao-chip'],
+		['.quarry-button--outline', '.quarry-chip'],
 		'color:var(--foreground);background:var(--card);border:1px solid var(--border)',
 	],
-	[['.nao-chip:hover', '.nao-button--outline:hover'], `background:${INK_VEIL}`],
+	[['.quarry-chip:hover', '.quarry-button--outline:hover'], `background:${INK_VEIL}`],
 	[
-		['.nao-chip[aria-pressed=true]', '.nao-chip[aria-selected=true]', '.nao-chip--active'],
+		['.quarry-chip[aria-pressed=true]', '.quarry-chip[aria-selected=true]', '.quarry-chip--active'],
 		'color:var(--primary-foreground);background:var(--primary);border-color:var(--primary)',
 	],
-	[['.nao-chips'], 'display:flex;flex-wrap:wrap;align-items:center;gap:8px'],
+	[['.quarry-chips'], 'display:flex;flex-wrap:wrap;align-items:center;gap:8px'],
 	/** The markdown story filter bar: a block-shaped panel whose controls take the brand's button shape. */
-	[['.nao-filter-bar'], 'background:var(--card);border-color:var(--border);border-radius:var(--radius)'],
+	[['.quarry-filter-bar'], 'background:var(--card);border-color:var(--border);border-radius:var(--radius)'],
 	[
-		['.nao-filter__control', '.nao-filter__clear'],
+		['.quarry-filter__control', '.quarry-filter__clear'],
 		'border-radius:var(--story-control-radius,8px);transition:border-color .15s,background-color .15s',
 	],
-	[['.nao-filter__control'], 'background:var(--card);border-color:var(--border)'],
-	[['.nao-filter__control:hover', '.nao-filter__clear:hover'], `background:${INK_VEIL};color:var(--foreground)`],
-	[['.nao-filter[data-active=true] .nao-filter__control'], 'border-color:var(--primary)'],
+	[['.quarry-filter__control'], 'background:var(--card);border-color:var(--border)'],
+	[
+		['.quarry-filter__control:hover', '.quarry-filter__clear:hover'],
+		`background:${INK_VEIL};color:var(--foreground)`,
+	],
+	[['.quarry-filter[data-active=true] .quarry-filter__control'], 'border-color:var(--primary)'],
 	/** Pickers mount inside the themed surface, so their menus speak the story's type and lines too. */
 	[
 		['[data-slot=select-content]', '[data-slot=dropdown-menu-content]', '[data-slot=popover-content]'],
@@ -121,20 +124,20 @@ const BRAND_RULES: [string[], string][] = [
 		'color:var(--foreground);background:var(--background);border-color:var(--border)',
 	],
 	[
-		['.nao-brand-header'],
+		['.quarry-brand-header'],
 		'padding:var(--story-header-padding,4px 0 20px);color:var(--story-header-fg,var(--foreground));background:var(--story-header-bg,transparent);border-bottom:var(--story-header-rule,0);border-radius:var(--story-header-radius,0)',
 	],
 	[
-		['.nao-brand-header__bar'],
+		['.quarry-brand-header__bar'],
 		'display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:32px',
 	],
-	[['.nao-brand-header__mark'], 'display:flex;align-items:center;gap:12px;min-width:0'],
+	[['.quarry-brand-header__mark'], 'display:flex;align-items:center;gap:12px;min-width:0'],
 	[
-		['.nao-brand-header__logo'],
+		['.quarry-brand-header__logo'],
 		'display:block;height:32px;max-width:220px;object-fit:contain;object-position:left center',
 	],
-	[['.nao-brand-header__name'], 'line-height:1'],
-	[['.nao-brand-header__meta'], 'display:flex;flex-wrap:wrap;align-items:center;gap:8px'],
+	[['.quarry-brand-header__name'], 'line-height:1'],
+	[['.quarry-brand-header__meta'], 'display:flex;flex-wrap:wrap;align-items:center;gap:8px'],
 ];
 
 function roleDeclarations(role: StoryTextRole, size: string | null): string {

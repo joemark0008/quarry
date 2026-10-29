@@ -15,7 +15,7 @@ import type {
 	StoryThemeGeneration,
 	StoryThemeSourceKind,
 	StoryThemeSourceRecord,
-} from '@nao/shared/story-theme-generation';
+} from '@quarry/shared/story-theme-generation';
 import type { LucideIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';

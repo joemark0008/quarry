@@ -1,4 +1,4 @@
-import { groupBlocksIntoGrid } from '@nao/shared/story-segments';
+import { groupBlocksIntoGrid } from '@quarry/shared/story-segments';
 import { CornerUpRight, GripVertical, Trash2 } from 'lucide-react';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {

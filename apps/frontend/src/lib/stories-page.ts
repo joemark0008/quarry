@@ -1,8 +1,8 @@
-import { FOLDER_SYSTEM_TYPE } from '@nao/shared/types';
+import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
-import type { StoryFormat, StorySharingInfo, StorySummary, SummarySegment } from '@nao/shared/types';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { StoryFormat, StorySharingInfo, StorySummary, SummarySegment } from '@quarry/shared/types';
 import type { QueryDataMap } from '@/components/story-embeds';
 
 type RouterOutputs = inferRouterOutputs<TrpcRouter>;

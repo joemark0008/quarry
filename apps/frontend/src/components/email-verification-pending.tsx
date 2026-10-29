@@ -60,7 +60,7 @@ export function EmailVerificationPending({ email, callbackURL, onChangeEmail }: 
 				<p className='text-sm text-muted-foreground'>We sent an email to</p>
 				<p className='mt-1 break-all text-sm font-semibold text-foreground'>{email}</p>
 				<p className='mt-3 text-sm leading-6 text-muted-foreground'>
-					Click the link in it to continue to nao. Verification links expire in one hour.
+					Click the link in it to continue to quarry. Verification links expire in one hour.
 				</p>
 			</div>
 

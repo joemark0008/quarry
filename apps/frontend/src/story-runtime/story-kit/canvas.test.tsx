@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { STORY_PRINT_CANVAS_ATTRIBUTE } from '@nao/shared/story-app';
+import { STORY_PRINT_CANVAS_ATTRIBUTE } from '@quarry/shared/story-app';
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -35,7 +35,7 @@ describe('Canvas', () => {
 		const surface = screen.getByText('Poster').parentElement!;
 		expect(surface.style.width).toBe('800px');
 		expect(surface.style.height).toBe('1200px');
-		expect(surface.closest('.nao-canvas--print')?.parentElement).toBe(document.body);
+		expect(surface.closest('.quarry-canvas--print')?.parentElement).toBe(document.body);
 		expect(document.documentElement.getAttribute(STORY_PRINT_CANVAS_ATTRIBUTE)).toBe('800x1200');
 	});
 });

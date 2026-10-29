@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { ShareSource } from '@nao/shared/types';
+import type { ShareSource } from '@quarry/shared/types';
 import type { StorySummary } from '@/lib/story.utils';
 import type { StoryViewMode } from './story-viewer.types';
 import type { StoryRefreshFailure } from '@/components/story-page-header';

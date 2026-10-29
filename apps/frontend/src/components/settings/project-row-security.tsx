@@ -1,8 +1,8 @@
-import { EMPTY_PROJECT_ROW_SECURITY, normalizeProjectRowSecurity, rowSecurityTableKey } from '@nao/shared';
+import { EMPTY_PROJECT_ROW_SECURITY, normalizeProjectRowSecurity, rowSecurityTableKey } from '@quarry/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import type { ProjectRowSecurity, SensitiveTableDefinition } from '@nao/shared';
+import type { ProjectRowSecurity, SensitiveTableDefinition } from '@quarry/shared';
 import type { Dispatch, SetStateAction } from 'react';
 
 import type {

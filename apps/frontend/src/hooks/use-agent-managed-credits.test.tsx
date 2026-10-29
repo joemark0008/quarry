@@ -4,7 +4,7 @@ import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { useAgent } from './use-agent';
-import type { LlmSelectedModel } from '@nao/shared/types';
+import type { LlmSelectedModel } from '@quarry/shared/types';
 
 interface TestAgentConfig {
 	onFinish: (event: { isAbort: boolean; isError: boolean; isDisconnect: boolean }) => void;

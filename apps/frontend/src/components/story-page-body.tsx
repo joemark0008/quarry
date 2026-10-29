@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { parseStoryTabs } from '@nao/shared/story-tabs';
+import { parseStoryTabs } from '@quarry/shared/story-tabs';
 import type { ReactNode } from 'react';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import type { useStoryPageEditor } from '@/hooks/use-story-page-editor';

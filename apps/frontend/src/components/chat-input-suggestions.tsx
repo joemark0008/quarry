@@ -4,7 +4,7 @@ import { Activity, MessageSquare, X, ThumbsDown, ThumbsUp, Check, Plug } from 'l
 import { FeedbackDialog } from './chat-messages/assistant-message-actions';
 import { Button } from './ui/button';
 import StoryIcon from './ui/story-icon';
-import type { UIMessage, UIToolPart } from '@nao/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
 import type { FeedbackVote } from './chat-messages/assistant-message-actions';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
 import { LiveStorySettingsDialog } from '@/components/side-panel/live-story-settings-dialog';
@@ -30,10 +30,10 @@ const STORY_CHART_THRESHOLD = 2;
 /** Message sent on behalf of the user when they accept the story suggestion. */
 const STORY_SUGGESTION_MESSAGE = 'Create a story from the charts in this conversation.';
 
-const storyProposalDisabledStorage = createLocalStorage<boolean>('nao-story-proposal-disabled', false);
-const liveStoryProposalDismissedStorage = createLocalStorage<string[]>('nao-live-story-proposal-dismissed', []);
-const feedbackDismissCountStorage = createLocalStorage<number>('nao-feedback-prompt-dismiss-count', 0);
-const feedbackDismissedChatsStorage = createLocalStorage<string[]>('nao-feedback-prompt-dismissed-chats', []);
+const storyProposalDisabledStorage = createLocalStorage<boolean>('quarry-story-proposal-disabled', false);
+const liveStoryProposalDismissedStorage = createLocalStorage<string[]>('quarry-live-story-proposal-dismissed', []);
+const feedbackDismissCountStorage = createLocalStorage<number>('quarry-feedback-prompt-dismiss-count', 0);
+const feedbackDismissedChatsStorage = createLocalStorage<string[]>('quarry-feedback-prompt-dismissed-chats', []);
 
 /**
  * A floating panel that sits above the chat input and surfaces a single

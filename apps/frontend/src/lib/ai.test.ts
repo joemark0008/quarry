@@ -8,7 +8,7 @@ import {
 	ONBOARDING_CONTEXT_REQUEST_PREFIX,
 	parseChatAllowanceExhaustedError,
 } from './ai';
-import type { UIMessage, UIMessagePart } from '@nao/shared/backend/chat';
+import type { UIMessage, UIMessagePart } from '@quarry/shared/backend/chat';
 import type { GroupedMessagePart } from '@/types/ai';
 
 const PROGRESS_UPDATE = {

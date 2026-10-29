@@ -129,7 +129,7 @@ beforeEach(() => {
 	mocks.resetPassword.mockResolvedValue({ password: 'generated-password' });
 	mocks.invalidateQueries.mockResolvedValue(undefined);
 	mocks.invalidateUserGroupQueries.mockResolvedValue(undefined);
-	mocks.useQuery.mockReturnValue({ data: { naoMode: 'self-hosted' } });
+	mocks.useQuery.mockReturnValue({ data: { quarryMode: 'self-hosted' } });
 	vi.stubGlobal(
 		'ResizeObserver',
 		vi.fn(() => ({
@@ -245,7 +245,7 @@ describe('ProjectUsersTable member management', () => {
 	});
 
 	it('hides the reset password action in cloud mode', () => {
-		mocks.useQuery.mockReturnValue({ data: { naoMode: 'cloud' } });
+		mocks.useQuery.mockReturnValue({ data: { quarryMode: 'cloud' } });
 		renderTable();
 
 		fireEvent.pointerDown(screen.getByRole('button', { name: 'Actions for Project User' }), {

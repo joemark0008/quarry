@@ -1,14 +1,14 @@
-import { StoryBrandMark } from '@nao/shared/story-brand-mark';
-import { splitCodeIntoSegments } from '@nao/shared/story-segments';
-import { DEFAULT_STORY_THEME_PAIR, sameThemePair, showsBrandIdentity } from '@nao/shared/story-theme';
+import { StoryBrandMark } from '@quarry/shared/story-brand-mark';
+import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
+import { DEFAULT_STORY_THEME_PAIR, sameThemePair, showsBrandIdentity } from '@quarry/shared/story-theme';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { RotateCcw, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { describeStoryThemeSources } from '@nao/shared/story-theme-generation';
-import type { StoryFilterSelection } from '@nao/shared/sql-template';
-import type { ParsedFilterBlock } from '@nao/shared/story-segments';
-import type { StoryTheme, StoryThemePair } from '@nao/shared/story-theme';
-import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
+import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
+import type { StoryFilterSelection } from '@quarry/shared/sql-template';
+import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import {
@@ -175,7 +175,7 @@ function PreviewBrandHeader({ brand }: { brand: StoryTheme['brand'] }) {
 				className={isBand ? undefined : 'bg-card'}
 				style={{ background: isBand ? 'var(--story-header-bg)' : undefined, color: 'var(--story-header-fg)' }}
 			>
-				<div className='nao-brand-header__bar mx-auto w-full max-w-5xl px-4 py-3 md:px-8'>
+				<div className='quarry-brand-header__bar mx-auto w-full max-w-5xl px-4 py-3 md:px-8'>
 					{showsBrandIdentity(brand) ? <StoryBrandMark brand={brand} /> : <span />}
 				</div>
 			</div>

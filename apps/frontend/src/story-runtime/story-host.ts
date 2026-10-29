@@ -1,20 +1,20 @@
-import { matchesShortcut, replayKeydown, snapshotKeydown } from '@nao/shared/keyboard-shortcut';
+import { matchesShortcut, replayKeydown, snapshotKeydown } from '@quarry/shared/keyboard-shortcut';
 import {
 	isStoryConnectMessage,
 	isStoryHostMessage,
 	STORY_HTML_API_GLOBAL,
 	STORY_PRINT_FLAG,
-} from '@nao/shared/story-app';
-import { STORY_THEME_STYLE_ID, storyThemeStyles } from '@nao/shared/story-document';
+} from '@quarry/shared/story-app';
+import { STORY_THEME_STYLE_ID, storyThemeStyles } from '@quarry/shared/story-document';
 import { Component, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { resolveBlockColors } from './story-colors';
 import { initStoryState, readStoryState, writeStoryState } from './story-state';
 import type { ErrorInfo, ReactNode } from 'react';
-import type { Shortcut } from '@nao/shared/keyboard-shortcut';
-import type { StoryTheme } from '@nao/shared/story-theme';
-import type { StoryBlockReference } from '@nao/shared/types';
+import type { Shortcut } from '@quarry/shared/keyboard-shortcut';
+import type { StoryTheme } from '@quarry/shared/story-theme';
+import type { StoryBlockReference } from '@quarry/shared/types';
 import type {
 	StoryAppKind,
 	StoryBlockEditRequest,
@@ -28,7 +28,7 @@ import type {
 	StoryQueryResult,
 	StoryStateSnapshot,
 	StoryTableExportFormat,
-} from '@nao/shared/story-app';
+} from '@quarry/shared/story-app';
 
 interface BootOptions {
 	kind?: StoryAppKind;
@@ -79,7 +79,7 @@ export async function bootStory({
 			await mountReactStory(source);
 		}
 		send({ type: 'nao-story:ready' });
-		document.documentElement.dataset.naoStoryReady = 'true';
+		document.documentElement.dataset.quarryStoryReady = 'true';
 	} catch (error) {
 		reportError(error);
 		showCrash(error);
@@ -95,7 +95,7 @@ async function mountReactStory(source: string): Promise<void> {
 	createRoot(container).render(createElement(StoryErrorBoundary, null, createElement(App)));
 }
 
-/** An HTML story's scripts were bundled into `source` at build time; they reach the host through the `nao` global. */
+/** An HTML story's scripts were bundled into `source` at build time; they reach the host through the `quarry` global. */
 async function runHtmlStory(source: string): Promise<void> {
 	exposeHtmlApi();
 	if (source.trim() !== '') {

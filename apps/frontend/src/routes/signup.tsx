@@ -26,7 +26,7 @@ export function SignUp() {
 	const [pendingEmail, setPendingEmail] = useState<string>();
 	const config = usePublicConfig();
 	const isUserSignupEnabled = config.data?.enableUserSignup === true;
-	const isCloud = config.data?.naoMode === 'cloud';
+	const isCloud = config.data?.quarryMode === 'cloud';
 	const emailVerificationEnabled = config.data?.emailVerificationEnabled === true;
 	const safeRedirect = getSafeRedirectPath(redirect);
 	const verificationCallbackURL = buildEmailVerificationCallbackUrl(safeRedirect);

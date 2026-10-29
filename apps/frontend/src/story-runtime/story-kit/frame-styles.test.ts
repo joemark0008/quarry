@@ -1,4 +1,4 @@
-import { STORY_FRAME_CONTAINER } from '@nao/shared/story-app';
+import { STORY_FRAME_CONTAINER } from '@quarry/shared/story-app';
 import { describe, expect, it } from 'vitest';
 
 import { rebaseCssOnFrame } from './frame-styles';

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clearStaleActiveOrganization, getActiveOrganizationId, setActiveOrganizationId } from './active-organization';
 import { getActiveProjectId, setActiveProjectId } from './active-project';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 describe('active organization storage', () => {
 	beforeEach(() => {
@@ -23,7 +23,7 @@ describe('active organization storage', () => {
 		setActiveOrganizationId('organization-id');
 
 		expect(getActiveOrganizationId()).toBe('organization-id');
-		expect(localStorage.getItem('nao.active-organization-id')).toBe('"organization-id"');
+		expect(localStorage.getItem('quarry.active-organization-id')).toBe('"organization-id"');
 	});
 
 	it('returns null when no organization is selected', () => {
@@ -31,7 +31,7 @@ describe('active organization storage', () => {
 	});
 
 	it('ignores invalid saved values', () => {
-		localStorage.setItem('nao.active-organization-id', 'not-json');
+		localStorage.setItem('quarry.active-organization-id', 'not-json');
 
 		expect(getActiveOrganizationId()).toBeNull();
 	});

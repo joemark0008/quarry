@@ -5,7 +5,7 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useStoryStateRecorder } from './use-story-state-recorder';
-import type { StoryStateSnapshot } from '@nao/shared/story-app';
+import type { StoryStateSnapshot } from '@quarry/shared/story-app';
 import type { ReactNode } from 'react';
 
 const STATE_KEY = ['story-state'];

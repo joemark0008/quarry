@@ -1,7 +1,7 @@
-import { resolveDataKey } from '@nao/shared';
-import { chartTypeRequiresXAxisKey, isPieChart } from '@nao/shared/chart-types';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { displayChart } from '@nao/shared/tools';
+import { resolveDataKey } from '@quarry/shared';
+import { chartTypeRequiresXAxisKey, isPieChart } from '@quarry/shared/chart-types';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { displayChart } from '@quarry/shared/tools';
 
 export type ColumnValueKind = 'number' | 'date' | 'boolean' | 'text' | 'empty' | 'mixed';
 

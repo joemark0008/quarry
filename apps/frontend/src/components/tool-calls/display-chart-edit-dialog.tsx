@@ -1,4 +1,4 @@
-import { computeKpiComparison, DEFAULT_COLORS } from '@nao/shared';
+import { computeKpiComparison, DEFAULT_COLORS } from '@quarry/shared';
 import {
 	chartTypeSupportsAxisLabels,
 	chartTypeSupportsComboSeries,
@@ -6,8 +6,8 @@ import {
 	isPercentStackedChartType,
 	isStackedChartType,
 	resolveShowDataLabels,
-} from '@nao/shared/chart-types';
-import { displayChart } from '@nao/shared/tools';
+} from '@quarry/shared/chart-types';
+import { displayChart } from '@quarry/shared/tools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ChartArea, ChartBar, ChartColumn, ChartColumnIncreasing, ChartLine, Plus, Trash2, X } from 'lucide-react';
 import { useEffect, useId, useMemo, useState } from 'react';
@@ -27,9 +27,9 @@ import { ChartTypePicker, chartTypeLabel } from './chart-type-picker';
 import type { ColumnValueKind } from '@/lib/chart-selection-summary';
 import type { SourceQuery } from '@/lib/execute-sql-messages';
 import type { LucideIcon } from 'lucide-react';
-import type { executeSql } from '@nao/shared/tools';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { UIMessage, UIToolPart } from '@nao/shared/backend/chat';
+import type { executeSql } from '@quarry/shared/tools';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
 import { acceptNumericKind, useColumnDropTarget, useDraggedColumnKind } from '@/hooks/use-column-drag';
 import { trpc } from '@/main';
 import { cn } from '@/lib/utils';
@@ -1179,7 +1179,7 @@ function SeriesValueFormatFields({
 				<div className='flex items-center gap-2'>
 					<span className='text-xs text-muted-foreground'>Number format</span>
 					<a
-						href='https://docs.getnao.io/nao-agent/chat/capabilities/visualizations#d3-format-number-cheat-sheet'
+						href='https://d3js.org/d3-format'
 						target='_blank'
 						rel='noreferrer'
 						className='text-xs text-blue-500 hover:text-blue-400 hover:underline'

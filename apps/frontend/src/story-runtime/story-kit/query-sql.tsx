@@ -80,13 +80,13 @@ export function QuerySql({ queryId }: { queryId: string }) {
 	const state = useQuerySql(queryId);
 
 	if (state.status === 'loading') {
-		return <div className='nao-skeleton' aria-busy='true' />;
+		return <div className='quarry-skeleton' aria-busy='true' />;
 	}
 	if (state.status === 'error') {
-		return <div className='nao-block__state nao-block__state--error'>{state.error}</div>;
+		return <div className='quarry-block__state quarry-block__state--error'>{state.error}</div>;
 	}
 	return (
-		<pre className='nao-sql'>
+		<pre className='quarry-sql'>
 			<code>{highlightSql(state.sql.trim())}</code>
 		</pre>
 	);
@@ -133,7 +133,7 @@ function highlightSql(sql: string): ReactNode[] {
 		}
 		nodes.push(sql.slice(cursor, match.index));
 		nodes.push(
-			<span key={match.index} className={`nao-sql__${kind}`}>
+			<span key={match.index} className={`quarry-sql__${kind}`}>
 				{match[0]}
 			</span>,
 		);

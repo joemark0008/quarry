@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { parseStoryTabs, stripStoryTabsMarkup } from '@nao/shared/story-tabs';
+import { parseStoryTabs, stripStoryTabsMarkup } from '@quarry/shared/story-tabs';
 import { ShareStoryDialog } from '../share-dialog.story';
 import { StoryUnsavedChangesDialog } from '../story-unsaved-changes-dialog';
 import { StoryEditor } from './story-editor';
@@ -22,8 +22,8 @@ import { useStoryViewerSwitchStory } from './hooks/use-story-viewer-switch-story
 import { useStoryViewerVersionActions } from './hooks/use-story-viewer-version-actions';
 import { useStoryViewerVersions } from './hooks/use-story-viewer-versions';
 import { useStoryViewerViewMode } from './hooks/use-story-viewer-view-mode';
-import type { ShareSource, StoryFormat } from '@nao/shared/types';
-import type { CustomStoryViewerAccess } from '@nao/shared/story-app';
+import type { ShareSource, StoryFormat } from '@quarry/shared/types';
+import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
 import type { Editor as TiptapEditor } from '@tiptap/react';
 import type { StoryCodeViewHandle } from './story-code-view';
 import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';

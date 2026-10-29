@@ -1,5 +1,5 @@
-import type { displayChart } from '@nao/shared/tools';
-import type { UsageByUserRecord, UserUsageBreakdown } from '@nao/shared/backend/usage';
+import type { displayChart } from '@quarry/shared/tools';
+import type { UsageByUserRecord, UserUsageBreakdown } from '@quarry/shared/backend/usage';
 
 export type UserUsageMetric = keyof Omit<UserUsageBreakdown, 'userName'>;
 

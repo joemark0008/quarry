@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { buildStoryTableBlock } from '@nao/shared';
+import { buildStoryTableBlock } from '@quarry/shared';
 import { useStoryBlockEdit } from './use-story-block-edit';
-import type { StoryTableBlockInput } from '@nao/shared';
+import type { StoryTableBlockInput } from '@quarry/shared';
 
 export interface StoryTableEditHandlers {
 	/**

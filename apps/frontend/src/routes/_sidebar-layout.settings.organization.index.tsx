@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Github } from 'lucide-react';
 import { useState } from 'react';
-import { USER_ROLE_LABELS } from '@nao/shared/types';
+import { USER_ROLE_LABELS } from '@quarry/shared/types';
 
 import { GitHubRepoPicker } from '@/components/settings/github-repo-picker';
 import { GitLabRepoPicker } from '@/components/settings/gitlab-repo-picker';
@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { trpc } from '@/main';
 

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import type { McpServerStatus } from '@nao/shared';
+import type { McpServerStatus } from '@quarry/shared';
 import { trpc, trpcClient } from '@/main';
 import { useMemoObject } from '@/hooks/useMemoObject';
 

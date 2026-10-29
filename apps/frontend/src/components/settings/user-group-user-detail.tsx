@@ -2,10 +2,10 @@ import {
 	EMPTY_PROJECT_ROW_SECURITY,
 	filterProjectRowSecurityByDatabaseContext,
 	resolveWarehouseRowSecurity,
-} from '@nao/shared';
+} from '@quarry/shared';
 import { Lock } from 'lucide-react';
-import { USER_ROLE_LABELS } from '@nao/shared/types';
-import type { MemberStatus, UserRole } from '@nao/shared/types';
+import { USER_ROLE_LABELS } from '@quarry/shared/types';
+import type { MemberStatus, UserRole } from '@quarry/shared/types';
 import type {
 	DatabaseContextAccess,
 	DocsContextAccess,
@@ -17,7 +17,7 @@ import type {
 	UserGroupFeature,
 	UserGroupRowPolicies,
 	WarehouseRowSecurity,
-} from '@nao/shared';
+} from '@quarry/shared';
 
 import type { DatabaseContextObject } from '@/components/settings/user-group-context-access';
 import type { FileTreeCatalogEntry } from '@/components/settings/user-group-file-tree-access';

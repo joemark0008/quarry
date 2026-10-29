@@ -9,11 +9,11 @@ import { McpEndpointSettings } from '@/components/settings/mcp-endpoint';
 import { TabBar, TabPanel } from '@/components/ui/tab-bar';
 import { usePermissions } from '@/hooks/use-permissions';
 
-type IntegrationsTab = 'integrations' | 'nao-mcp' | 'mcp-servers';
+type IntegrationsTab = 'integrations' | 'quarry-mcp' | 'mcp-servers';
 
 const tabs: TabBarItem<IntegrationsTab>[] = [
 	{ id: 'integrations', label: 'Integrations' },
-	{ id: 'nao-mcp', label: 'nao MCP' },
+	{ id: 'quarry-mcp', label: 'quarry MCP' },
 	{ id: 'mcp-servers', label: 'MCP servers' },
 ];
 
@@ -22,7 +22,7 @@ const tabIdBase = 'project-integrations';
 export const Route = createFileRoute('/_sidebar-layout/settings/project/integrations/')({
 	staticData: {
 		title: 'Integrations & MCP',
-		description: 'Connect nao to chat tools and AI clients',
+		description: 'Connect quarry to chat tools and AI clients',
 	},
 	validateSearch: (search: Record<string, unknown>): { tab: IntegrationsTab; integration?: IntegrationId } => ({
 		tab: isIntegrationsTab(search.tab) ? search.tab : 'integrations',
@@ -60,7 +60,7 @@ function ProjectIntegrationsPage() {
 			/>
 			<TabPanel idBase={tabIdBase} tabId={tab} className='flex flex-col gap-12'>
 				{tab === 'integrations' && <IntegrationsPage />}
-				{tab === 'nao-mcp' && <McpEndpointSettings isAdmin={isAdmin} />}
+				{tab === 'quarry-mcp' && <McpEndpointSettings isAdmin={isAdmin} />}
 				{tab === 'mcp-servers' && <McpSettings isAdmin={isAdmin} />}
 			</TabPanel>
 		</>
@@ -68,5 +68,5 @@ function ProjectIntegrationsPage() {
 }
 
 function isIntegrationsTab(value: unknown): value is IntegrationsTab {
-	return value === 'integrations' || value === 'nao-mcp' || value === 'mcp-servers';
+	return value === 'integrations' || value === 'quarry-mcp' || value === 'mcp-servers';
 }

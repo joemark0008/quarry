@@ -1,4 +1,4 @@
-import { STORY_STANDALONE_RUNTIME_GLOBAL } from '@nao/shared/story-app';
+import { STORY_STANDALONE_RUNTIME_GLOBAL } from '@quarry/shared/story-app';
 
 import * as leaflet from './leaflet';
 import * as lucideReact from './lucide-react';
@@ -10,7 +10,7 @@ import * as reactLeaflet from './react-leaflet';
 import * as recharts from './recharts';
 import * as storyHost from './story-host';
 import * as storyKit from './story-kit';
-import type { STORY_RUNTIME_MODULES } from '@nao/shared/story-app';
+import type { STORY_RUNTIME_MODULES } from '@quarry/shared/story-app';
 
 /** Every runtime module in one classic script: a downloaded story maps each bare specifier onto these namespaces. */
 const modules: Record<keyof typeof STORY_RUNTIME_MODULES, object> = {

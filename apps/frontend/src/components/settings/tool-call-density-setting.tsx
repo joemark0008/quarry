@@ -1,4 +1,4 @@
-import type { ToolCallDensity } from '@nao/shared/types';
+import type { ToolCallDensity } from '@quarry/shared/types';
 
 import { ToolCallDensitySlider } from '@/components/settings/tool-call-density-slider';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';

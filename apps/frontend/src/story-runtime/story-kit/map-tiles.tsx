@@ -1,11 +1,11 @@
-import { MERCATOR_MAX_LATITUDE } from '@nao/shared/map';
-import { STORY_MAP_TILE_LAYERS } from '@nao/shared/story-map-tiles';
-import { storyThemeMode } from '@nao/shared/story-theme';
+import { MERCATOR_MAX_LATITUDE } from '@quarry/shared/map';
+import { STORY_MAP_TILE_LAYERS } from '@quarry/shared/story-map-tiles';
+import { storyThemeMode } from '@quarry/shared/story-theme';
 import { useEffect } from 'react';
 import { TileLayer, useMap } from 'react-leaflet';
 import { latLngBounds } from '../leaflet';
 import { useStoryTheme } from './hooks';
-import type { StoryMapTileLayer } from '@nao/shared/story-map-tiles';
+import type { StoryMapTileLayer } from '@quarry/shared/story-map-tiles';
 
 export type { StoryMapTileLayer as MapTileLayer };
 

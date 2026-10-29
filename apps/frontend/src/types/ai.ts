@@ -1,5 +1,5 @@
 import type { ReasoningUIPart } from 'ai';
-import type { UIToolPart, UIMessagePart, UIMessage } from '@nao/shared/backend/chat';
+import type { UIToolPart, UIMessagePart, UIMessage } from '@quarry/shared/backend/chat';
 
 /** A collapsible part can be either a tool or reasoning */
 export type GroupablePart = UIToolPart | ReasoningUIPart;

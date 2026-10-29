@@ -1,5 +1,5 @@
-import { providerLabel } from '@nao/shared/types';
-import type { MessageModel } from '@nao/shared/backend/chat';
+import { providerLabel } from '@quarry/shared/types';
+import type { MessageModel } from '@quarry/shared/backend/chat';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 

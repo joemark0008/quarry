@@ -1,6 +1,6 @@
 import { EllipsisVertical } from 'lucide-react';
 
-import { USER_ROLE_LABELS } from '@nao/shared/types';
+import { USER_ROLE_LABELS } from '@quarry/shared/types';
 
 import type { TeamMember } from './types';
 import { Badge } from '@/components/ui/badge';

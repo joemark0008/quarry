@@ -239,7 +239,7 @@ export function RequestWarehouseCredentialsToolCall({
 									? credentialDetailsUnavailable
 										? 'Submitted connection details are not retained in the browser after a reload.'
 										: 'These credentials are securely stored and cannot be changed during setup.'
-									: 'Add a secure connection for your nao project.'}
+									: 'Add a secure connection for your quarry project.'}
 							</DialogDescription>
 						</div>
 					</div>
@@ -329,7 +329,7 @@ function WarehouseProvisioningProgress({
 
 	const statusLabel = {
 		queued: 'Preparing warehouse setup…',
-		initializing: 'Initializing your nao project…',
+		initializing: 'Initializing your quarry project…',
 		debugging: 'Checking your warehouse connection…',
 		syncing: 'Syncing warehouse metadata…',
 		awaiting_context: 'Collecting business context…',

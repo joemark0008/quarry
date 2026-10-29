@@ -4,6 +4,7 @@ import { ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { getSubmitErrorMessage, PasswordField } from '@/components/ui/form-fields';
+import { docsUrl } from '@/lib/quarry-links';
 
 export interface TelegramFormProps {
 	hasProjectConfig: boolean;
@@ -46,7 +47,7 @@ export function TelegramForm({ hasProjectConfig, onSubmit, onCancel, isPending }
 				<div className='grid gap-3'>
 					<p className='text-[11px] text-muted-foreground leading-relaxed'>
 						<a
-							href='https://docs.getnao.io/nao-agent/chat/telegram'
+							href={docsUrl('chat/telegram')}
 							target='_blank'
 							rel='noopener noreferrer'
 							className='inline-flex items-center gap-1 underline hover:text-foreground'

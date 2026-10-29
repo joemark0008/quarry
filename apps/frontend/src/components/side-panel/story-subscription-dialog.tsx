@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BellOff, Loader2, Mail, Slack } from 'lucide-react';
-import type { NotificationChannel } from '@nao/shared/types';
+import type { NotificationChannel } from '@quarry/shared/types';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';

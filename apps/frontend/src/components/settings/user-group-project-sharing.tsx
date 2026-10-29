@@ -1,4 +1,4 @@
-import type { ProjectSharingPermission } from '@nao/shared';
+import type { ProjectSharingPermission } from '@quarry/shared';
 import { UserGroupSwitchRow } from '@/components/settings/user-group-switch-row';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 

@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
-import { filterSupersededExecuteSqlParts } from '@nao/shared/execute-sql-parts';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import { filterSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import { areArraysShallowEqual } from '@/lib/utils';
 
 /**

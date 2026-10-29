@@ -1,4 +1,4 @@
-import { task } from '@nao/shared/tools';
+import { task } from '@quarry/shared/tools';
 import { ArrowUpRight } from 'lucide-react';
 
 import type { ToolCallComponentProps } from '.';

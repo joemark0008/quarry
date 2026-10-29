@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { isSkillGranted, normalizeSkillsAccess } from '@nao/shared';
-import { MAX_PRELOADED_SKILLS } from '@nao/shared/types';
+import { isSkillGranted, normalizeSkillsAccess } from '@quarry/shared';
+import { MAX_PRELOADED_SKILLS } from '@quarry/shared/types';
 import { TriangleAlert } from 'lucide-react';
-import type { SkillsAccess } from '@nao/shared';
+import type { SkillsAccess } from '@quarry/shared';
 import type { ReactNode } from 'react';
 import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
 import { UserGroupContextModeSelector } from '@/components/settings/user-group-context-mode-selector';

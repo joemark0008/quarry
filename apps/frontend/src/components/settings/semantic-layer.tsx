@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { DEFAULT_SEMANTIC_LAYER_MODE, SEMANTIC_LAYER_MODES } from '@nao/shared/types';
-import type { SemanticLayerMode } from '@nao/shared/types';
+import { DEFAULT_SEMANTIC_LAYER_MODE, SEMANTIC_LAYER_MODES } from '@quarry/shared/types';
+import type { SemanticLayerMode } from '@quarry/shared/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
@@ -21,7 +21,7 @@ const MODE_LABELS: Record<SemanticLayerMode, { label: string; description: strin
 	exclusive: {
 		label: 'Semantics only',
 		description:
-			"Every warehouse question goes through the semantic layer; SQL is limited to nao's local DuckDB to reshape results and read files.",
+			"Every warehouse question goes through the semantic layer; SQL is limited to quarry's local DuckDB to reshape results and read files.",
 	},
 	disabled: {
 		label: "Don't use semantics",
@@ -64,7 +64,7 @@ export function SettingsSemanticLayer({ isAdmin }: SettingsSemanticLayerProps) {
 					) : (
 						<>
 							No semantic layer is declared in this project. Add a <code>semantic_layer</code> section to{' '}
-							<code>nao_config.yaml</code> and run <code>nao sync</code> to enable it.
+							<code>nao_config.yaml</code> and run <code>quarry sync</code> to enable it.
 						</>
 					)
 				}

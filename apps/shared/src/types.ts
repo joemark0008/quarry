@@ -149,6 +149,7 @@ export type ChatReplayFeedbackState = (typeof CHAT_REPLAY_FEEDBACK_STATES)[numbe
 export const NO_CACHE_SCHEDULE = 'no-cache';
 
 export const LLM_PROVIDERS = [
+	// Upstream's managed-AI provider id (cloud credits). quarry has no managed AI; rename or drop at cut-over.
 	'nao',
 	'openai',
 	'anthropic',
@@ -168,7 +169,7 @@ export const LLM_PROVIDERS = [
 ] as const;
 
 export const providerLabels: Record<LlmProviderKind, string> = {
-	nao: 'nao',
+	nao: 'Managed AI',
 	openai: 'OpenAI',
 	anthropic: 'Anthropic',
 	google: 'Google',
@@ -186,7 +187,7 @@ export const providerLabels: Record<LlmProviderKind, string> = {
 	openaiCompatible: 'OpenAI Compatible',
 };
 
-/** One of nao's built-in provider integrations. */
+/** One of quarry's built-in provider integrations. */
 export type LlmProviderKind = (typeof LLM_PROVIDERS)[number];
 
 /** The only kind a project can declare several times, each instance under a name of its own. */

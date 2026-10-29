@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-
-const NEWSLETTER_SUBSCRIBE_URL = 'https://licenses.getnao.io/newsletter/subscribe';
+import { QUARRY_NEWSLETTER_SUBSCRIBE_URL } from '@/lib/quarry-links';
 
 interface NewsletterSubscribeDialogProps {
 	open: boolean;
@@ -28,7 +27,7 @@ export function NewsletterSubscribeDialog({ open, onOpenChange }: NewsletterSubs
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Subscribe to the nao newsletter</DialogTitle>
+					<DialogTitle>Subscribe to the quarry newsletter</DialogTitle>
 					<DialogDescription>
 						Get product updates, release notes, and practical analytics agent tips in your inbox.
 					</DialogDescription>
@@ -63,7 +62,7 @@ function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: News
 
 		try {
 			await subscribeToNewsletter(email);
-			setMessage("You're subscribed. Thanks for following nao.");
+			setMessage("You're subscribed. Thanks for following quarry.");
 		} catch (error) {
 			setHasError(true);
 			setMessage(error instanceof Error ? error.message : 'Could not subscribe right now.');
@@ -114,7 +113,10 @@ function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: News
 }
 
 async function subscribeToNewsletter(email: string) {
-	const response = await fetch(NEWSLETTER_SUBSCRIBE_URL, {
+	if (!QUARRY_NEWSLETTER_SUBSCRIBE_URL) {
+		throw new Error('No newsletter is configured for this deployment.');
+	}
+	const response = await fetch(QUARRY_NEWSLETTER_SUBSCRIBE_URL, {
 		method: 'POST',
 		headers: { 'content-type': 'application/json' },
 		body: JSON.stringify({ email: email.trim() }),

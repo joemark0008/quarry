@@ -15,7 +15,7 @@ import { Link } from './ui/link';
 import { Spinner } from './ui/spinner';
 import type { ComponentProps } from 'react';
 
-import type { GroupedChatItem } from '@nao/shared/types';
+import type { GroupedChatItem } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { getOnboardingChatIdStorage } from '@/hooks/use-agent';
 import { useChatActivity } from '@/hooks/use-chat-activity';

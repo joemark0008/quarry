@@ -2,7 +2,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { MentionedStoryArtifact } from '@/lib/chat-artifacts';
 import { useSidePanel } from '@/contexts/side-panel';
 import { trpc } from '@/main';

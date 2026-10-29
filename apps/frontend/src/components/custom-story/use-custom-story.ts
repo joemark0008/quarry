@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { DownloadFormat } from '@nao/shared/types';
+import type { DownloadFormat } from '@quarry/shared/types';
 
 import type { CustomStoryFileSource } from '@/components/custom-story/story-data-options';
 import { useCustomStoryDownload } from '@/components/custom-story/use-custom-story-download';

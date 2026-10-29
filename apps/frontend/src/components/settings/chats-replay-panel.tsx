@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Info } from 'lucide-react';
 import { formatDate } from 'date-fns';
 import type { StickToBottomContext } from 'use-stick-to-bottom';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
 import type { ReplayCrumb } from '@/components/settings/replay-breadcrumb';
 import type { ReplayHighlight } from '@/components/settings/usage-route-search';

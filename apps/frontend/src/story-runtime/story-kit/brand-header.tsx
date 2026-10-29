@@ -1,4 +1,4 @@
-import { StoryBrandMark } from '@nao/shared/story-brand-mark';
+import { StoryBrandMark } from '@quarry/shared/story-brand-mark';
 import { useStoryBrand } from './hooks';
 import type { ReactNode } from 'react';
 
@@ -13,10 +13,10 @@ export function BrandHeader({ children }: BrandHeaderProps) {
 	}
 
 	return (
-		<header className='nao-brand-header'>
-			<div className='nao-brand-header__bar'>
+		<header className='quarry-brand-header'>
+			<div className='quarry-brand-header__bar'>
 				{brand ? <StoryBrandMark brand={brand} /> : <span />}
-				{children && <div className='nao-brand-header__meta'>{children}</div>}
+				{children && <div className='quarry-brand-header__meta'>{children}</div>}
 			</div>
 		</header>
 	);

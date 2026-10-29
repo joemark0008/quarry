@@ -1,8 +1,8 @@
 import { getToolName, isToolUIPart } from './ai';
 import { hashValue } from './hash';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 
-export { labelize, sortByDateKey } from '@nao/shared';
+export { labelize, sortByDateKey } from '@quarry/shared';
 
 export type RangeOptions = Record<string, { label: string }>;
 

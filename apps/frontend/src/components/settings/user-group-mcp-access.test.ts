@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { getUnconfiguredMcpGrantServers, toggleMcpServerGrant, toggleMcpToolGrant } from './user-group-mcp-access';
-import type { McpAccess } from '@nao/shared';
+import type { McpAccess } from '@quarry/shared';
 
 vi.mock('@/main', () => ({ trpc: {} }));
 

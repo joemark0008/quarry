@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import type { ColumnConditionalFormats } from '@nao/shared/conditional-formatting';
-import type { StoryBlockChartConfig } from '@nao/shared/story-app';
+import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
+import type { StoryBlockChartConfig } from '@quarry/shared/story-app';
 import type { StoryBlockEditTarget, StoryTableFormatEditTarget } from '@/stores/story-block-edit';
 
 import { ChartConfigEditDialog, ChartConfigEditForm } from '@/components/tool-calls/display-chart-edit-dialog';

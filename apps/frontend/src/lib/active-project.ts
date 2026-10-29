@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 
 import { createLocalStorage } from './local-storage';
 
-const ACTIVE_PROJECT_STORAGE_KEY = 'nao.active-project-id';
+const ACTIVE_PROJECT_STORAGE_KEY = 'quarry.active-project-id';
 const activeProjectStorage = createLocalStorage<string>(ACTIVE_PROJECT_STORAGE_KEY);
 const listeners = new Set<() => void>();
 const externalChangeListeners = new Set<() => void>();

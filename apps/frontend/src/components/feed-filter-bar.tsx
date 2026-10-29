@@ -1,13 +1,13 @@
 import { ListFilter, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { NOTIFICATION_CATEGORIES, NOTIFICATION_CATEGORY_LABELS } from '@nao/shared/types';
+import { NOTIFICATION_CATEGORIES, NOTIFICATION_CATEGORY_LABELS } from '@quarry/shared/types';
 import type {
 	FeedbackNotificationPayload,
 	NotificationCategory,
 	SharedNotificationPayload,
 	StoryRefreshNotificationPayload,
 	StorySubscriptionNotificationPayload,
-} from '@nao/shared/types';
+} from '@quarry/shared/types';
 import type { ReactNode } from 'react';
 
 import type { AutomationFeedItem } from '@/components/automations-feed';
@@ -45,7 +45,7 @@ const SORT_LABELS: Record<FeedSort, string> = {
 	oldest: 'Oldest first',
 };
 
-const FEED_FILTERS_KEY_PREFIX = 'nao.feed-filters:';
+const FEED_FILTERS_KEY_PREFIX = 'quarry.feed-filters:';
 
 export function FeedFilterBar({
 	filters,

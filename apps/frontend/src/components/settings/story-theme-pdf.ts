@@ -1,4 +1,4 @@
-import { MAX_PDF_BYTES, MAX_SOURCE_IMAGES } from '@nao/shared/story-theme-source';
+import { MAX_PDF_BYTES, MAX_SOURCE_IMAGES } from '@quarry/shared/story-theme-source';
 import { unzipSync } from 'fflate';
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import type { PDFPageProxy } from 'pdfjs-dist';

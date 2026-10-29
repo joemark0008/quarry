@@ -3,7 +3,7 @@ import { TRPCClientError } from '@trpc/client';
 import { getActiveProjectId, setActiveProjectId } from './active-project';
 import { createLocalStorage } from './local-storage';
 
-const activeOrganizationStorage = createLocalStorage<string>('nao.active-organization-id');
+const activeOrganizationStorage = createLocalStorage<string>('quarry.active-organization-id');
 
 export function getActiveOrganizationId(): string | null {
 	if (typeof window === 'undefined') {

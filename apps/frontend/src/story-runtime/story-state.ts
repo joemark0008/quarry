@@ -2,8 +2,8 @@ import {
 	EMPTY_STORY_STATE_SNAPSHOT,
 	MAX_STORY_STATE_VALUE_BYTES,
 	STORY_STATE_KEY_PATTERN,
-} from '@nao/shared/story-app';
-import type { StoryStateChange, StoryStateSnapshot } from '@nao/shared/story-app';
+} from '@quarry/shared/story-app';
+import type { StoryStateChange, StoryStateSnapshot } from '@quarry/shared/story-app';
 
 type PersistChange = (change: StoryStateChange) => void;
 

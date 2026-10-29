@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ArrowRight, TriangleAlert } from 'lucide-react';
-import { providerLabel } from '@nao/shared/types';
-import type { LlmProvider } from '@nao/shared/types';
+import { providerLabel } from '@quarry/shared/types';
+import type { LlmProvider } from '@quarry/shared/types';
 
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { trpc } from '@/main';

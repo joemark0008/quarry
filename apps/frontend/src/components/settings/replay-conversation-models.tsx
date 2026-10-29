@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { MessageModel } from '@nao/shared/backend/chat';
+import type { MessageModel } from '@quarry/shared/backend/chat';
 import type { MessageModelMap } from '@/components/chat-messages/chat-messages-readonly';
 import { MessageModelDetails } from '@/components/chat-messages/message-model-label';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';

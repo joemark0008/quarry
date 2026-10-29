@@ -22,7 +22,7 @@ import {
 import { apolloClient } from './lib/apollo-client';
 import { routeTree } from './routeTree.gen';
 import reportWebVitals from './reportWebVitals';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

@@ -36,7 +36,7 @@ vi.mock('@/hooks/use-can-see-advanced-settings', () => ({
 	useCanSeeAdvancedSettings: () => true,
 }));
 
-vi.mock('@/hooks/use-nao-mode', () => ({
+vi.mock('@/hooks/use-quarry-mode', () => ({
 	useIsCloud: () => mocks.isCloud,
 }));
 
@@ -90,7 +90,7 @@ describe('useSettingsSearch', () => {
 		expect(result.current.some((entry) => entry.title === title)).toBe(true);
 	});
 
-	it.each(['Balance', 'nao AI usage'])('only returns %s when cloud billing is enabled', (searchTitle) => {
+	it.each(['Balance', 'quarry AI usage'])('only returns %s when cloud billing is enabled', (searchTitle) => {
 		mocks.isCloud = true;
 		Object.assign(mocks.permissions, { isOrgAdmin: true, isViewer: false });
 		const { result, rerender } = renderHook(() => useSettingsSearch(searchTitle));
@@ -102,7 +102,7 @@ describe('useSettingsSearch', () => {
 
 		const billingEntry = result.current.find((entry) => entry.title === searchTitle);
 		expect(billingEntry?.page).toBe('/settings/organization/billing');
-		if (searchTitle === 'nao AI usage') {
+		if (searchTitle === 'quarry AI usage') {
 			expect(billingEntry?.search).toEqual({ creditsTab: 'usage' });
 		}
 	});

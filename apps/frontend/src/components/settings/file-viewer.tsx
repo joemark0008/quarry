@@ -1,11 +1,11 @@
-import { isRootRulesPath, renderConditionalGroupBlocks } from '@nao/shared/rules-template';
+import { isRootRulesPath, renderConditionalGroupBlocks } from '@quarry/shared/rules-template';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Code, File, Loader2, Save } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDefaultLayout } from 'react-resizable-panels';
 import { Streamdown } from 'streamdown';
-import type { UserRulesGroupAccess } from '@nao/shared/rules-template';
-import type { FileEditabilityGuidance } from '@nao/shared/types';
+import type { UserRulesGroupAccess } from '@quarry/shared/rules-template';
+import type { FileEditabilityGuidance } from '@quarry/shared/types';
 
 import type { UserGroupPickerOption } from '@/components/settings/user-group-picker';
 import { FileExplorerIcon } from '@/components/settings/file-explorer-icon';
@@ -37,7 +37,7 @@ import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
 
-export { isRootRulesPath } from '@nao/shared/rules-template';
+export { isRootRulesPath } from '@quarry/shared/rules-template';
 
 interface FileContents {
 	content: string;
@@ -74,7 +74,7 @@ interface FileSaveError {
 	isConflict: boolean;
 }
 
-const markdownSourceStorage = createLocalStorage<boolean>('nao-file-viewer-markdown-source-open', false);
+const markdownSourceStorage = createLocalStorage<boolean>('quarry-file-viewer-markdown-source-open', false);
 
 export function FileViewer({
 	filePath,

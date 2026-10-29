@@ -33,7 +33,7 @@ import { createLocalStorage } from '@/lib/local-storage';
 import { requireContextAdminOrAdmin } from '@/lib/route-guards';
 import { trpc } from '@/main';
 
-const contentSearchStorage = createLocalStorage<boolean>('nao-file-explorer-content-search', true);
+const contentSearchStorage = createLocalStorage<boolean>('quarry-file-explorer-content-search', true);
 
 type ViewerTarget = { type: 'file'; path: string; openSource: boolean } | { type: 'diff'; path: string };
 type SourceAutoOpenRequest = { path: string; id: number };

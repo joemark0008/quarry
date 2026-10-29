@@ -16,15 +16,15 @@ function loadEnvWithOverrides(overrides: NodeJS.ProcessEnv) {
 	}
 }
 
-describe('NAO_CONTEXT_SOURCE', () => {
+describe('QUARRY_CONTEXT_SOURCE', () => {
 	it.each(['local', 'git', 'api'])('accepts %s', (contextSource) => {
-		expect(loadEnvWithOverrides({ NAO_CONTEXT_SOURCE: contextSource, NAO_DEFAULT_PROJECT_PATH: '' }).status).toBe(
-			0,
-		);
+		expect(
+			loadEnvWithOverrides({ QUARRY_CONTEXT_SOURCE: contextSource, QUARRY_DEFAULT_PROJECT_PATH: '' }).status,
+		).toBe(0);
 	});
 
 	it('rejects unknown sources', () => {
-		expect(loadEnvWithOverrides({ NAO_CONTEXT_SOURCE: 'ftp' }).status).toBe(1);
+		expect(loadEnvWithOverrides({ QUARRY_CONTEXT_SOURCE: 'ftp' }).status).toBe(1);
 	});
 });
 
@@ -59,8 +59,10 @@ describe('required and cross-field variables', () => {
 	});
 
 	it('requires a bucket for the S3 storage backend', () => {
-		expect(loadEnvWithOverrides({ NAO_STORAGE_BACKEND: 's3' }).status).toBe(1);
-		expect(loadEnvWithOverrides({ NAO_STORAGE_BACKEND: 's3', NAO_STORAGE_S3_BUCKET: 'bucket' }).status).toBe(0);
+		expect(loadEnvWithOverrides({ QUARRY_STORAGE_BACKEND: 's3' }).status).toBe(1);
+		expect(loadEnvWithOverrides({ QUARRY_STORAGE_BACKEND: 's3', QUARRY_STORAGE_S3_BUCKET: 'bucket' }).status).toBe(
+			0,
+		);
 	});
 
 	it('requires refresh tokens to outlive access tokens', () => {

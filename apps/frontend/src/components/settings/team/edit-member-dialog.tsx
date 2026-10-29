@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { ChevronDown } from 'lucide-react';
-import { USER_ROLE_LABELS, USER_ROLES } from '@nao/shared/types';
-import type { UserRole } from '@nao/shared/types';
+import { USER_ROLE_LABELS, USER_ROLES } from '@quarry/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 
 import type { TeamMember } from './types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';

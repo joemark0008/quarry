@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { formatMicroUsd } from '@nao/shared/billing';
+import { formatMicroUsd } from '@quarry/shared/billing';
 
 import { ConfettiBurst } from '@/components/confetti-burst';
 import { NyanCat } from '@/components/icons/nyan-cat';
@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 
 const COUNT_UP_DURATION_MS = 900;
-const seenSetupCreditGrantsStorage = createLocalStorage<string[]>('nao-seen-setup-credit-grants', []);
+const seenSetupCreditGrantsStorage = createLocalStorage<string[]>('quarry-seen-setup-credit-grants', []);
 
 interface TrialStartedDialogProps {
 	open: boolean;
@@ -80,13 +80,13 @@ export function TrialStartedDialog({ open, onOpenChange, creditAmountMicroUsd, u
 								'[animation-delay:80ms] font-borna text-3xl font-medium tracking-tight sm:text-4xl',
 							)}
 						>
-							Welcome to nao Cloud
+							Welcome to quarry Cloud
 						</DialogTitle>
 						<DialogDescription
 							className={cn(enterClass, '[animation-delay:160ms] max-w-md text-center leading-relaxed')}
 						>
-							We’ve added {formattedCreditAmount} of nao credits so your team can start asking questions
-							right away.
+							We’ve added {formattedCreditAmount} of quarry credits so your team can start asking
+							questions right away.
 						</DialogDescription>
 					</DialogHeader>
 					<div className={cn(enterClass, '[animation-delay:260ms] relative my-8 flex flex-col items-center')}>
@@ -95,7 +95,7 @@ export function TrialStartedDialog({ open, onOpenChange, creditAmountMicroUsd, u
 							<CountUp toMicroUsd={creditAmountMicroUsd} durationMs={COUNT_UP_DURATION_MS} />
 						</span>
 						<span className='relative mt-1 text-sm font-medium text-foreground'>
-							Free nao credits, ready to use
+							Free quarry credits, ready to use
 						</span>
 					</div>
 					<Button

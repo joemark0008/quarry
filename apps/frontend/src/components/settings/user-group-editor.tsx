@@ -18,8 +18,8 @@ import {
 	normalizeUserGroupRowPolicies,
 	normalizeUserGroupSsoMappings,
 	USER_GROUP_FEATURE_DEFINITIONS,
-} from '@nao/shared';
-import { USER_ROLE_LABELS, USER_ROLES } from '@nao/shared/types';
+} from '@quarry/shared';
+import { USER_ROLE_LABELS, USER_ROLES } from '@quarry/shared/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, Copy, Lock } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -34,8 +34,8 @@ import type {
 	UserGroupFeatureDefinition,
 	UserGroupRowPolicies,
 	UserGroupSsoMappings,
-} from '@nao/shared';
-import type { ToolCallDensity, UserRole } from '@nao/shared/types';
+} from '@quarry/shared';
+import type { ToolCallDensity, UserRole } from '@quarry/shared/types';
 import type { QueryClient } from '@tanstack/react-query';
 
 import type { TabBarItem } from '@/components/ui/tab-bar';

@@ -1,9 +1,9 @@
-import { buildChart, formatChartValue } from '@nao/shared';
-import { getGridTemplateColumns } from '@nao/shared/story-segments';
+import { buildChart, formatChartValue } from '@quarry/shared';
+import { getGridTemplateColumns } from '@quarry/shared/story-segments';
 import type { ReactNode } from 'react';
-import type { StorySummary, SummarySegment } from '@nao/shared/types';
-import type { ChartType } from '@nao/shared/chart-types';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { StorySummary, SummarySegment } from '@quarry/shared/types';
+import type { ChartType } from '@quarry/shared/chart-types';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { QueryDataMap } from '@/components/story-embeds';
 import { ChartContainer } from '@/components/ui/chart';
 import { StoryThemeProvider } from '@/components/story-theme-provider';

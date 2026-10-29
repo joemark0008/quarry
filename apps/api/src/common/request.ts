@@ -1,6 +1,6 @@
-import type { UserRole } from '@nao/shared/types';
 import type { ExecutionContext } from '@nestjs/common';
 import { type GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
+import type { UserRole } from '@quarry/shared/types';
 import type { Request } from 'express';
 
 import type { AuthSession, AuthUser } from '../auth/auth.service.js';

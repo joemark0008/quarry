@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { pluralize } from '@nao/shared';
+import { pluralize } from '@quarry/shared';
 import { ToolCall } from './index';
-import type { UIToolPart } from '@nao/shared/backend/chat';
+import type { UIToolPart } from '@quarry/shared/backend/chat';
 import type { GroupablePart } from '@/types/ai';
 import { Expandable } from '@/components/ui/expandable';
 import { AssistantReasoning } from '@/components/chat-messages/assistant-reasoning';

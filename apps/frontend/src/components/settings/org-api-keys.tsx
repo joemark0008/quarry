@@ -19,7 +19,7 @@ export function OrgApiKeys({
 	isAdmin = false,
 	deployUrl,
 	title = 'Organization API keys',
-	description = 'Generate organization-scoped API keys for actions like deploying a project from the nao CLI.',
+	description = 'Generate organization-scoped API keys for actions like deploying a project from the quarry CLI.',
 }: OrgApiKeysProps) {
 	const queryClient = useQueryClient();
 	const [latestPlaintextKey, setLatestPlaintextKey] = useState<string | null>(null);
@@ -119,7 +119,7 @@ export function DeployKeyGenerator({ deployUrl, latestPlaintextKey, onPlaintextK
 			return null;
 		}
 
-		return `nao deploy ${deployUrl} --api-key ${latestPlaintextKey}`;
+		return `quarry deploy ${deployUrl} --api-key ${latestPlaintextKey}`;
 	}, [deployUrl, latestPlaintextKey]);
 
 	const handleCreate = async () => {
@@ -142,7 +142,7 @@ export function DeployKeyGenerator({ deployUrl, latestPlaintextKey, onPlaintextK
 						<div className='text-sm font-medium text-foreground'>Generate a deploy key</div>
 						<p className='text-sm text-muted-foreground'>
 							Create an API key for your organization, then use it with{' '}
-							<code className='dollar'>nao deploy</code> to upload a project context.
+							<code className='dollar'>quarry deploy</code> to upload a project context.
 						</p>
 					</div>
 				</div>

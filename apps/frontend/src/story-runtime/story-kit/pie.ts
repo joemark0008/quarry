@@ -1,7 +1,7 @@
-import { bucketPieData, labelize } from '@nao/shared/chart-builder';
-import { seriesColorAt } from '@nao/shared/chart-series';
-import type { ChartConfig } from '@nao/shared/chart-tooltip';
-import type { displayChart } from '@nao/shared/tools';
+import { bucketPieData, labelize } from '@quarry/shared/chart-builder';
+import { seriesColorAt } from '@quarry/shared/chart-series';
+import type { ChartConfig } from '@quarry/shared/chart-tooltip';
+import type { displayChart } from '@quarry/shared/tools';
 import type { Row } from './columns';
 
 export interface PiePresentation {

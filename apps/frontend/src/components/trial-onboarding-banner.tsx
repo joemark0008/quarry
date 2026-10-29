@@ -22,7 +22,7 @@ export function TrialOnboardingBanner({ variant = 'banner' }: { variant?: 'banne
 					style={
 						isCard
 							? {
-									backgroundImage: "url('/trial-onboarding-background.jpg')",
+									backgroundImage: 'linear-gradient(135deg, #085041 0%, #0F6E56 45%, #1D9E75 100%)',
 									backgroundSize: 'auto 130%',
 								}
 							: undefined

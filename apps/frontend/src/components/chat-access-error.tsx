@@ -75,7 +75,7 @@ export function ChatAccessError({
 	return (
 		<ChatErrorLayout
 			icon={<WifiOff className='size-4' aria-hidden />}
-			title="Can't reach nao"
+			title="Can't reach quarry"
 			description='Check your connection and try again.'
 		>
 			{onRetry ? <Button onClick={onRetry}>Retry</Button> : null}

@@ -1,7 +1,7 @@
 import type { DragEvent as ReactDragEvent } from 'react';
 
-export const STORY_DRAG_TYPE = 'application/x-nao-story';
-export const STORY_FOLDER_DRAG_TYPE = 'application/x-nao-story-folder';
+export const STORY_DRAG_TYPE = 'application/x-quarry-story';
+export const STORY_FOLDER_DRAG_TYPE = 'application/x-quarry-story-folder';
 export const NEW_CHAT_DROP_TARGET_ATTRIBUTE = 'data-new-chat-drop-target';
 
 const LINK_TRANSFER_TYPES = ['text/uri-list', 'text/plain'];

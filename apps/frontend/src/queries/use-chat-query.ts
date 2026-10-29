@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { createQuerySetter } from './create-query-setter';
 import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import { isRetryableTrpcError } from '@/lib/trpc-error';
 import { trpc } from '@/main';
 

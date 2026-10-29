@@ -3,8 +3,8 @@ import {
 	getUsageChartBucketCount,
 	MAX_USAGE_CHART_BUCKETS_PER_REQUEST,
 	USAGE_CHART_BUCKET_LIMIT_MESSAGE,
-} from '@nao/shared/backend/usage';
-import type { Granularity, SavedUsagePeriod, SavedUsagePeriodInput } from '@nao/shared/backend/usage';
+} from '@quarry/shared/backend/usage';
+import type { Granularity, SavedUsagePeriod, SavedUsagePeriodInput } from '@quarry/shared/backend/usage';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';

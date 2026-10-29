@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { saveStoryState } from './story-data-options';
-import type { StoryStateChange } from '@nao/shared/story-app';
+import type { StoryStateChange } from '@quarry/shared/story-app';
 
 import type { CustomStoryDataSource } from './story-data-options';
 

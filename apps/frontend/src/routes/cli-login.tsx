@@ -5,7 +5,7 @@ import { CheckCircle2, TerminalSquare, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ErrorMessage } from '@/components/ui/error-message';
-import NaoLogo from '@/components/icons/nao-full-logo.svg';
+import QuarryLogo from '@/components/icons/quarry-full-logo.svg';
 
 export const Route = createFileRoute('/cli-login')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -78,7 +78,7 @@ function CliLogin() {
 						<p className='text-sm text-muted-foreground'>
 							{accepted
 								? 'You can close this window and return to your terminal.'
-								: 'You have denied the nao CLI access to your account. You can close this window.'}
+								: 'You have denied the quarry CLI access to your account. You can close this window.'}
 						</p>
 					</div>
 				</div>
@@ -92,16 +92,17 @@ function CliLogin() {
 				<CardHeader>
 					<CardTitle className='flex items-center gap-2'>
 						<TerminalSquare className='size-5' />
-						Authorize nao CLI
+						Authorize quarry CLI
 					</CardTitle>
 					<CardDescription>
-						The nao CLI on this computer is requesting access to your nao account.
+						The quarry CLI on this computer is requesting access to your quarry account.
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<p className='text-xs text-muted-foreground'>
 						Only continue if you started this login from your own terminal, for example by running{' '}
-						<code className='font-mono'>nao login</code> or <code className='font-mono'>nao test</code>.
+						<code className='font-mono'>quarry login</code> or{' '}
+						<code className='font-mono'>quarry test</code>.
 					</p>
 					{decision.isError && (
 						<div className='mt-3'>
@@ -130,7 +131,7 @@ function CenteredCard({ children }: { children: React.ReactNode }) {
 	return (
 		<div className='mx-auto w-full max-w-md p-8 my-auto'>
 			<div className='flex flex-col items-center gap-8 mb-10 pb-2'>
-				<NaoLogo className='w-20 h-auto text-foreground' />
+				<QuarryLogo className='w-20 h-auto text-foreground' />
 				<h1 className='font-borna text-2xl font-medium text-center'>Connect the CLI</h1>
 			</div>
 			{children}

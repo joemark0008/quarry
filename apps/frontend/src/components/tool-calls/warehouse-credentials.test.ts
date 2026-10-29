@@ -13,7 +13,7 @@ const values: WarehouseCredentialsFormValues = {
 	host: 'warehouse.example.com',
 	port: '9999',
 	database: 'analytics',
-	user: 'nao',
+	user: 'quarry',
 	password: 'secret',
 	schemaName: 'reporting',
 	protocol: 'native',
@@ -72,7 +72,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			protocol: 'native',
@@ -113,7 +113,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			schemaName: 'reporting',
@@ -125,7 +125,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			schemaName: 'reporting',
@@ -136,7 +136,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			schemaName: 'reporting',
@@ -147,7 +147,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			schemaName: 'reporting',
@@ -163,7 +163,7 @@ const providerCases: Array<{
 			schemaName: 'reporting',
 			warehouse: 'compute',
 			accountId: 'account',
-			username: 'nao',
+			username: 'quarry',
 		},
 	},
 	{
@@ -171,7 +171,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			database: 'analytics',
 			password: 'secret',
 			schemaName: 'reporting',
@@ -183,7 +183,7 @@ const providerCases: Array<{
 		expected: {
 			host: 'warehouse.example.com',
 			port: 9999,
-			user: 'nao',
+			user: 'quarry',
 			catalog: 'main',
 			httpScheme: 'https',
 			password: 'secret',

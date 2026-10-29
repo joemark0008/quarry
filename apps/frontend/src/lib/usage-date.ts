@@ -1,4 +1,4 @@
-import type { Granularity } from '@nao/shared/backend/usage';
+import type { Granularity } from '@quarry/shared/backend/usage';
 
 const bucketFormatters: Record<Granularity, Intl.DateTimeFormat> = {
 	hour: new Intl.DateTimeFormat('en-US', {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import type { UserRole } from '@nao/shared/types';
+import type { UserRole } from '@quarry/shared/types';
 import { trpc } from '@/main';
 
 export function usePermissions() {
@@ -25,7 +25,7 @@ export function usePermissions() {
 			canViewAllUsage: role === 'admin',
 			canViewChatReplay: role === 'admin' || role === 'context_admin',
 			canViewRecommendations: role === 'admin' || role === 'context_admin',
-			canChatWithNaoData: role === 'admin' || role === 'context_admin',
+			canChatWithQuarryData: role === 'admin' || role === 'context_admin',
 			canStartNewChat: role !== 'viewer' && !!role,
 			canViewSharedObjects: !!role,
 		}),

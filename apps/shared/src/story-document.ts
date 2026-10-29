@@ -75,7 +75,7 @@ ${parts.body}
 function fillSlot(pageShell: string, slot: string, content: string): string {
 	const pieces = pageShell.split(slot);
 	if (pieces.length !== 2) {
-		throw new Error('This HTML story was not built by the current version of nao. Publish it again.');
+		throw new Error('This HTML story was not built by the current version of quarry. Publish it again.');
 	}
 	return pieces.join(content);
 }

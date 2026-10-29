@@ -1,7 +1,7 @@
 import { Download, FileCode, FileText, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
-import type { DownloadFormat, ShareSource } from '@nao/shared/types';
+import type { DownloadFormat, ShareSource } from '@quarry/shared/types';
 import {
 	DropdownMenuItem,
 	DropdownMenuSub,

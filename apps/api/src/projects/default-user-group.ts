@@ -3,15 +3,15 @@ import {
 	ALL_DOCS_CONTEXT_ACCESS,
 	ALL_FILES_CONTEXT_ACCESS,
 	serializeUserGroupContextAccess,
-} from '@nao/shared/user-group-context';
+} from '@quarry/shared/user-group-context';
 import {
 	DEFAULT_TOOL_CALL_DENSITY_POLICY,
 	DEFAULT_USER_GROUP_NAME,
 	serializeUserGroupConfig,
 	USER_GROUP_FEATURES,
-} from '@nao/shared/user-group-features';
-import { ALL_MCP_ACCESS } from '@nao/shared/user-group-mcp';
-import { ALL_SKILLS_ACCESS } from '@nao/shared/user-group-skills';
+} from '@quarry/shared/user-group-features';
+import { ALL_MCP_ACCESS } from '@quarry/shared/user-group-mcp';
+import { ALL_SKILLS_ACCESS } from '@quarry/shared/user-group-skills';
 
 import type { Prisma } from '../generated/prisma/client.js';
 

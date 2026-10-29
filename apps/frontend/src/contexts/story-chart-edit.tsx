@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { buildStoryChartBlock } from '@nao/shared';
+import { buildStoryChartBlock } from '@quarry/shared';
 import { useStoryBlockEdit } from './use-story-block-edit';
-import type { displayChart } from '@nao/shared/tools';
+import type { displayChart } from '@quarry/shared/tools';
 
 type EditableChartInput = displayChart.ChartInput | displayChart.KpiCardInput;
 

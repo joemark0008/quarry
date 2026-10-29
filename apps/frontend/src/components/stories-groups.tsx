@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import type { DragEvent, MouseEvent, ReactNode } from 'react';
-import type { StoryPanelDisplayMode } from '@nao/shared/types';
+import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 
 import type { StoryItem } from '@/lib/stories-page';
 import { invalidateStoryArchiveCaches } from '@/lib/stories-cache';

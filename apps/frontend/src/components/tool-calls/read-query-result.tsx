@@ -1,6 +1,6 @@
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { TableDisplay } from './display-table';
-import type { readQueryResult } from '@nao/shared/tools';
+import type { readQueryResult } from '@quarry/shared/tools';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
 

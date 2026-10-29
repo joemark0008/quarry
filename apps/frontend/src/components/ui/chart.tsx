@@ -3,10 +3,10 @@ import {
 	ChartConfigProvider,
 	ChartLegendContent as SharedChartLegendContent,
 	ChartTooltipContent as SharedChartTooltipContent,
-} from '@nao/shared/chart-tooltip';
+} from '@quarry/shared/chart-tooltip';
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
-import type { ChartConfig } from '@nao/shared/chart-tooltip';
+import type { ChartConfig } from '@quarry/shared/chart-tooltip';
 
 import { cn } from '@/lib/utils';
 

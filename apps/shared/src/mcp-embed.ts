@@ -99,7 +99,7 @@ export function buildMcpEmbedMarkdownLinks(options: {
 	}
 	if (embedUrl) {
 		if (naoUrl) {
-			return `**${title}**\n\n[Open in nao](${naoUrl}) · [Interactive app](${embedUrl})`;
+			return `**${title}**\n\n[Open in quarry](${naoUrl}) · [Interactive app](${embedUrl})`;
 		}
 		return `**${title}**\n\n[Interactive app](${embedUrl})`;
 	}

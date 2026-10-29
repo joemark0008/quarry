@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, Copy, Check, Ellipsis, ClipboardCopy, FileText, FileDown, Loader2 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
-import type { UIMessage } from '@nao/shared/backend/chat';
+import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { FormEvent, KeyboardEvent } from 'react';
 import type { Chat } from '@/queries/use-chat-query';
 import { useChatQuery } from '@/queries/use-chat-query';
@@ -45,7 +45,7 @@ export function AssistantMessageActions({
 	const getAgentMessages = useAgentMessagesGetter();
 	const { data: chat } = useChatQuery({ chatId, select: selectChatExportMetadata });
 
-	const chatTitle = chat?.title ?? 'nao chat';
+	const chatTitle = chat?.title ?? 'quarry chat';
 	const chatMetadata = { title: chatTitle, createdAt: chat?.createdAt, updatedAt: chat?.updatedAt };
 	const exportOptions = { includeErrors, includeSql, includePython };
 

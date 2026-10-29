@@ -6,7 +6,7 @@ import { GitLabRepoPicker } from '@/components/settings/gitlab-repo-picker';
 import { ImportProviderCard } from '@/components/settings/import-provider-card';
 import GitlabIcon from '@/components/icons/gitlab-icon.svg';
 import { OrgApiKeys } from '@/components/settings/org-api-keys';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { queryClient, trpc } from '@/main';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
@@ -117,7 +117,7 @@ function NoProjectCloudState({ isAdmin }: { isAdmin: boolean }) {
 					<SettingsCard title='Deploy your first project'>
 						<div className='space-y-3 text-sm text-muted-foreground'>
 							<p>
-								Use <code>nao deploy</code> to send a local project context to this nao instance.
+								Use <code>quarry deploy</code> to send a local project context to this quarry instance.
 							</p>
 							<p>
 								Run it from the directory that contains <code>nao_config.yaml</code>, or add{' '}

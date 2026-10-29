@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
-import { normalizeBrandHeader, showsBrandIdentity } from '@nao/shared/story-theme';
+import { normalizeBrandHeader, showsBrandIdentity } from '@quarry/shared/story-theme';
 import { getStoryTheme, isEditingEnabled, requestQueryData, subscribeToEditing, subscribeToTheme } from '../story-host';
-import type { StoryQueryResult } from '@nao/shared/story-app';
-import type { StoryTheme } from '@nao/shared/story-theme';
+import type { StoryQueryResult } from '@quarry/shared/story-app';
+import type { StoryTheme } from '@quarry/shared/story-theme';
 
 export type QueryDataState =
 	| { status: 'loading'; data: null; columns: null; error: null }

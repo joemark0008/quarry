@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { isLlmProvider } from '@nao/shared/types';
-import type { LlmProvider } from '@nao/shared/types';
+import { isLlmProvider } from '@quarry/shared/types';
+import type { LlmProvider } from '@quarry/shared/types';
 import type { ProviderToEdit } from '@/components/settings/llm-providers-section';
 import type { TabBarItem } from '@/components/ui/tab-bar';
 

@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, RefreshCw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { SettingsCard } from '../ui/settings-card';
-import type { McpServerStatus, McpToolSummary } from '@nao/shared';
+import type { McpServerStatus, McpToolSummary } from '@quarry/shared';
 import { trpc } from '@/main';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -252,7 +252,7 @@ export function McpSettings({ isAdmin }: Props) {
 	return (
 		<SettingsCard
 			title='MCP Servers'
-			description='Configure MCP servers in agent/mcps/mcp.json. Test the connection here and choose which tools the agent may use. nao discovers enabled tools into OpenAPI specs the agent explores on demand — tools are never loaded into the context window.'
+			description='Configure MCP servers in agent/mcps/mcp.json. Test the connection here and choose which tools the agent may use. quarry discovers enabled tools into OpenAPI specs the agent explores on demand — tools are never loaded into the context window.'
 			action={
 				isAdmin && (
 					<Button

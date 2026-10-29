@@ -1,5 +1,5 @@
-import { describeStoryThemeSources } from '@nao/shared/story-theme-generation';
-import type { StoryThemeGeneration } from '@nao/shared/story-theme-generation';
+import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 
 import { RotateCwFadingClock } from '@/components/icons/rotate-cw-fading-clock';
 import { Button } from '@/components/ui/button';

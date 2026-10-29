@@ -1,10 +1,10 @@
-import { computeKpiComparison, KpiCard as ChartKpiCard, sortByDateKey } from '@nao/shared/chart-builder';
+import { computeKpiComparison, KpiCard as ChartKpiCard, sortByDateKey } from '@quarry/shared/chart-builder';
 import { Block, BlockState } from './block';
 import { blockRef, kpiBlockConfig, resolveXKey } from './block-config';
 import { isNumericColumn, withNumericValues } from './columns';
 import { toChartValueFormat } from './format';
 import { useBlockData } from './use-block-data';
-import type { displayChart } from '@nao/shared/tools';
+import type { displayChart } from '@quarry/shared/tools';
 import type { BlockProps } from './block';
 import type { FormatOptions } from './format';
 import type { BlockDataSource, Row } from './use-block-data';

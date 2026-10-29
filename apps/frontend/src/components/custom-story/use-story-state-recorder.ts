@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { stateOptions } from './story-data-options';
 import { useStoryStateWriter } from './use-story-state-writer';
-import type { StoryStateChange, StoryStateSnapshot } from '@nao/shared/story-app';
+import type { StoryStateChange, StoryStateSnapshot } from '@quarry/shared/story-app';
 
 import type { CustomStoryDataSource } from './story-data-options';
 

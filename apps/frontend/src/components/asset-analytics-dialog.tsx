@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import type { KeyboardEvent, ReactNode } from 'react';
 
-import type { AnalyticsEventType, AnalyticsAssetType } from '@nao/shared/types';
+import type { AnalyticsEventType, AnalyticsAssetType } from '@quarry/shared/types';
 import type { ActorGroup, AnalyticsEventEntry, EventRow } from '@/lib/analytics-events.utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

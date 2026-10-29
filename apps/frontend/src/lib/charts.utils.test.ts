@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveDataKey } from '@nao/shared';
+import { resolveDataKey } from '@quarry/shared';
 import { resolvePieTooltipLabel } from './charts.utils';
 
 describe('resolveDataKey', () => {

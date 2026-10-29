@@ -1,6 +1,6 @@
 import { Check, Minus, X } from 'lucide-react';
 import { useState } from 'react';
-import type { task } from '@nao/shared/tools';
+import type { task } from '@quarry/shared/tools';
 import { Expandable } from '@/components/ui/expandable';
 import { Spinner } from '@/components/ui/spinner';
 import { useSubagentDuration } from '@/components/subagent/use-subagent-duration';

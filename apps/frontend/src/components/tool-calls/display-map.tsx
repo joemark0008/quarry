@@ -17,8 +17,8 @@ import {
 	describeBoundarySource,
 	MAX_MAP_POINTS,
 	resolveMapConfig,
-} from '@nao/shared';
-import { appendBlockToStoryCode } from '@nao/shared/story-tabs';
+} from '@quarry/shared';
+import { appendBlockToStoryCode } from '@quarry/shared/story-tabs';
 import { Skeleton } from '../ui/skeleton';
 import { Button } from '../ui/button';
 import {
@@ -35,9 +35,9 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import { VisualizationSkeleton } from './visualization-skeleton';
 import type { ToolCallComponentProps } from '.';
 import type { ReactNode } from 'react';
-import type { UIMessage, UIToolPart } from '@nao/shared/backend/chat';
-import type { displayMap } from '@nao/shared/tools';
-import type { MapPoint } from '@nao/shared';
+import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { displayMap } from '@quarry/shared/tools';
+import type { MapPoint } from '@quarry/shared';
 import type { MapViewHandle } from './display-map-view';
 import type { DataExportFormat } from '@/components/export-data-menu';
 import type { MapStyleId } from '@/hooks/use-map-style';

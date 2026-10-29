@@ -39,7 +39,7 @@ export function ExampleProjectInfoCard({ compact = false }: { compact?: boolean 
 				</div>
 				<div className='p-4'>
 					<p className='text-sm leading-relaxed text-muted-foreground'>
-						A fictional retail dataset with customers, orders, and payments. Use it to explore nao before
+						A fictional retail dataset with customers, orders, and payments. Use it to explore quarry before
 						connecting your own data.
 					</p>
 					<div className='mt-4 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground'>

@@ -1,13 +1,20 @@
-import { bucketPieData, buildChart, buildStoryChartBlock, labelize, resolveDataKey, useChartStyle } from '@nao/shared';
+import {
+	bucketPieData,
+	buildChart,
+	buildStoryChartBlock,
+	labelize,
+	resolveDataKey,
+	useChartStyle,
+} from '@quarry/shared';
 import {
 	buildSeriesChartConfig,
 	buildSeriesLegendPayload,
 	seriesColorAt,
 	useSeriesVisibility,
-} from '@nao/shared/chart-series';
-import { isBuiltinChartType, isComboChart, isPercentStackedChartType, isPieChart } from '@nao/shared/chart-types';
-import { appendBlockToStoryCode } from '@nao/shared/story-tabs';
-import { displayChart } from '@nao/shared/tools';
+} from '@quarry/shared/chart-series';
+import { isBuiltinChartType, isComboChart, isPercentStackedChartType, isPieChart } from '@quarry/shared/chart-types';
+import { appendBlockToStoryCode } from '@quarry/shared/story-tabs';
+import { displayChart } from '@quarry/shared/tools';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
 	ChartNoAxesColumn,
@@ -32,8 +39,8 @@ import { SqlQueryDisplay } from './sql-query-display';
 import { SqlResultDisplay } from './sql-result-display';
 import { VisualizationSkeleton } from './visualization-skeleton';
 import { ToolCallWrapper } from './tool-call-wrapper';
-import type { ChartConfig } from '@nao/shared/chart-tooltip';
-import type { ChartType } from '@nao/shared/chart-types';
+import type { ChartConfig } from '@quarry/shared/chart-tooltip';
+import type { ChartType } from '@quarry/shared/chart-types';
 import type { ToolCallComponentProps } from '.';
 import type { DateRange } from '@/lib/charts.utils';
 import type { DataExportFormat } from '@/components/export-data-menu';
@@ -279,7 +286,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 			>
 				{chartConfig.chart_type != 'kpi_card' ? (
 					<div className='flex items-center gap-1'>
-						<span className='nao-chart-title text-sm font-medium text-foreground flex-1'>
+						<span className='quarry-chart-title text-sm font-medium text-foreground flex-1'>
 							{chartConfig.title}
 						</span>
 						{viewMode === 'chart' &&
@@ -744,7 +751,7 @@ export const ChartDisplay = memo(function ChartDisplay({
 	const inlineHeader = useInlineHeader ? (
 		<div className='mb-6 flex w-full min-w-0 items-center gap-3'>
 			<div className={showInlineLegend ? 'min-h-11 shrink-0' : 'shrink-0'}>
-				<span className='nao-chart-title block text-[15px] font-semibold'>{title}</span>
+				<span className='quarry-chart-title block text-[15px] font-semibold'>{title}</span>
 				{titleAccessory}
 			</div>
 			{showInlineLegend && canScrollLeft && (

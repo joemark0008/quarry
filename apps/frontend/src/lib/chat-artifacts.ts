@@ -1,8 +1,8 @@
-import { extractStoryReferenceIds, extractStoryReferenceTags } from '@nao/shared';
-import { isQueryResultPart } from '@nao/shared/execute-sql-parts';
+import { extractStoryReferenceIds, extractStoryReferenceTags } from '@quarry/shared';
+import { isQueryResultPart } from '@quarry/shared/execute-sql-parts';
 import { getMessageDocuments } from './ai';
 import { findStories } from './story.utils';
-import type { UIMessage, UIMessagePart } from '@nao/shared/backend/chat';
+import type { UIMessage, UIMessagePart } from '@quarry/shared/backend/chat';
 import type { StorySummary } from './story.utils';
 
 export interface FileArtifact {

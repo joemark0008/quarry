@@ -75,7 +75,7 @@ describe('useOrganizationBilling', () => {
 	it('uses the selected available plan when no Stripe subscription exists', async () => {
 		const yearlyPlan = {
 			key: 'cloud_yearly',
-			name: 'nao Cloud',
+			name: 'quarry Cloud',
 			amount: 2_000_000,
 			currency: 'usd',
 			interval: 'year',
@@ -85,7 +85,7 @@ describe('useOrganizationBilling', () => {
 			hasStripeSubscription: false,
 			plan: {
 				key: 'cloud_monthly',
-				name: 'nao Cloud',
+				name: 'quarry Cloud',
 				amount: 150_000,
 				currency: 'usd',
 				interval: 'month',
@@ -94,7 +94,7 @@ describe('useOrganizationBilling', () => {
 			availablePlans: {
 				monthly: {
 					key: 'cloud_monthly',
-					name: 'nao Cloud',
+					name: 'quarry Cloud',
 					amount: 200_000,
 					currency: 'usd',
 					interval: 'month',

@@ -10,7 +10,7 @@ import {
 	STORY_FOLDER_DRAG_TYPE,
 } from './story-reference';
 
-const ORIGIN = 'https://nao.example.com';
+const ORIGIN = 'https://quarry.example.com';
 
 describe('parseStoryIdFromUrl', () => {
 	it.each([

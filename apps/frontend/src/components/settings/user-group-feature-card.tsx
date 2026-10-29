@@ -1,6 +1,6 @@
 import { AppWindow, ArrowRight, Check, Clock3, FileText, Zap } from 'lucide-react';
 import type { ReactNode } from 'react';
-import type { UserGroupFeature } from '@nao/shared';
+import type { UserGroupFeature } from '@quarry/shared';
 
 import { GRID_CARD_CLASS } from '@/components/item-card';
 import { cn } from '@/lib/utils';

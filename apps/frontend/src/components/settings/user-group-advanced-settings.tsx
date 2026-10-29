@@ -3,7 +3,7 @@ import { Check, EyeOff } from 'lucide-react';
 
 import { getVisibleSettingsNavGroups } from '@/components/sidebar-settings-nav';
 import { UserGroupSwitchRow } from '@/components/settings/user-group-switch-row';
-import { useIsCloud } from '@/hooks/use-nao-mode';
+import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { cn } from '@/lib/utils';
 
 interface UserGroupAdvancedSettingsProps {

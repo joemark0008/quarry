@@ -1,6 +1,6 @@
-import { normalizeCitationMarkers } from '@nao/shared';
+import { normalizeCitationMarkers } from '@quarry/shared';
 
-import type { UIMessage, UIMessagePart, UIToolPart } from '@nao/shared/backend/chat';
+import type { UIMessage, UIMessagePart, UIToolPart } from '@quarry/shared/backend/chat';
 
 const BLOCK_SEPARATOR = '\n\n';
 const MESSAGE_SEPARATOR = '\n\n---\n\n';
@@ -47,7 +47,7 @@ export const getChatMarkdown = (
 };
 
 function serializeMetadata(metadata: ChatMetadata): string {
-	const lines = [`# ${metadata.title?.trim() || 'nao chat'}`];
+	const lines = [`# ${metadata.title?.trim() || 'quarry chat'}`];
 	const details: string[] = [];
 	if (metadata.createdAt) {
 		details.push(`**Created:** ${formatTimestamp(metadata.createdAt)}`);

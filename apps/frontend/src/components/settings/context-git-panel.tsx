@@ -15,7 +15,7 @@ import {
 	X,
 } from 'lucide-react';
 import type { QueryClient } from '@tanstack/react-query';
-import type { ContextChangedFile } from '@nao/shared/types';
+import type { ContextChangedFile } from '@quarry/shared/types';
 
 import {
 	ContextWorktreeUpdateDialog,
@@ -944,7 +944,7 @@ function CreateBranchDialog({
 							type='text'
 							value={branchName}
 							onChange={(event) => onBranchNameChange(event.target.value)}
-							placeholder='nao/context-edits'
+							placeholder='quarry/context-edits'
 							autoFocus
 						/>
 					</div>

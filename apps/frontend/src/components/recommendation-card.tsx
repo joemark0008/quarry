@@ -22,12 +22,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import {
 	CONTEXT_RECOMMENDATION_CATEGORY_LABELS,
 	normalizeContextRecommendationCategory,
-} from '@nao/shared/context-recommendation';
+} from '@quarry/shared/context-recommendation';
 import type { MouseEvent } from 'react';
 import type { inferRouterOutputs } from '@trpc/server';
 
-import type { ContextRecommendationSignalType } from '@nao/shared/backend/context-recommendation';
-import type { TrpcRouter } from '@nao/shared/backend/trpc';
+import type { ContextRecommendationSignalType } from '@quarry/shared/backend/context-recommendation';
+import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { RecommendationTab } from '@/components/settings/recommendations-route-search';
 import type { ReplayHighlight } from '@/components/settings/usage-route-search';
 import { RecommendationDiffPanel } from '@/components/side-panel/recommendation-diff-panel';

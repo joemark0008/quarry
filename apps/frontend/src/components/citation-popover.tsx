@@ -1,7 +1,7 @@
 import { memo, useCallback, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowUpRight } from 'lucide-react';
-import type { CitationPayload, ColumnLineageNode } from '@nao/shared';
+import type { CitationPayload, ColumnLineageNode } from '@quarry/shared';
 import { cn } from '@/lib/utils';
 import { formatSQL } from '@/lib/sql-formatter';
 import { trpc } from '@/main';

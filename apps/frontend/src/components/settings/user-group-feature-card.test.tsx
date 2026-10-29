@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { USER_GROUP_FEATURE_DEFINITIONS } from '@nao/shared';
+import { USER_GROUP_FEATURE_DEFINITIONS } from '@quarry/shared';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
