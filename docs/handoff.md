@@ -56,6 +56,7 @@ The Phase 2 session hit its usage limit at 10:56 (Manila) on 2026-10-29 mid-2c. 
     4. ~~Remaining core tools, compaction and subagents~~ — done; which tools are stand-in-backed is in PHASES.md 2c.
     5. ~~Moved from 2b: `warehouse` run-SQL from the UI, query results/rows services~~ — done in the `chats` module.
     6. ~~Frontend: chat list/view, sharing, feedback on Apollo; Vite proxy sends `/api/agent` to `apps/api`~~ — done through `apps/frontend/src/lib/chat-api.ts`. **Still open:** saved prompts UI and LLM/model settings (project LLM config, default models, agent settings) remain on upstream tRPC; the agent reads the same tables, so split mode works.
+    - Browser check (2026-10-29, split mode on :3000): asked "Show revenue by month for 2018 as a chart" in the jaffle project — streamed answer with chart and cited values; reload from GraphQL, chat list, star, thumbs-up feedback with text, share to project, shared-chat page, SQL view, data table (`queryRows`) and the context ring all worked.
     7. `npm run lint`, `npm test`, `npm run format:check`, tick PHASES.md, commit 2c.
 
 ## Running locally (split mode)
