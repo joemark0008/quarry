@@ -6,12 +6,12 @@ import { HandlerError } from '../../common/errors/handler-error.js';
 import { storyDeliveryQueries, storyQueries } from '../story-queries.js';
 
 /**
- * The scheduling bits the story routes call (upstream `scheduler.service` `nextCronTick`, the refresh and delivery
- * job sync in `story.routes.ts` / `story-delivery.service.ts`). Upstream kept recurring jobs in its `scheduled_job`
- * table and linked them from `story.scheduled_job_id` / `story_delivery.scheduled_job_id`; quarry runs jobs on
- * pg-boss, whose schedules are keyed by name (keys cannot contain ':'), so those columns are gone. The `story.refresh`
- * and `story.deliver` handlers and the pg-boss schedules come with Phase 4 stage 3, which binds a real scheduler with
- * `bindStoryScheduler`; until then the settings are saved and nothing is scheduled.
+ * The scheduling bits the story routes and story jobs call (upstream `scheduler.service` `nextCronTick` /
+ * `enqueueOnce`, the refresh and delivery job sync in `story.routes.ts` / `story-delivery.service.ts`). Upstream kept
+ * recurring jobs in its `scheduled_job` table and linked them from `story.scheduled_job_id` /
+ * `story_delivery.scheduled_job_id`; quarry runs jobs on pg-boss, whose schedules are keyed by name (keys cannot
+ * contain ':'), so those columns are gone. `StoryJobsModule` binds the pg-boss scheduler (`PgBossStoryScheduler`)
+ * with `bindStoryScheduler`; unbound (unit specs), settings are saved and nothing is scheduled.
  */
 export const STORY_REFRESH_JOB_NAME = 'story.refresh';
 export const STORY_DELIVERY_JOB_NAME = 'story.deliver';
@@ -25,17 +25,33 @@ export interface StoryScheduler {
 	syncStoryRefreshJob(storyId: string, cron: string | null): Promise<void>;
 	/** Delivery runs on its own schedule unless it coincides with the refresh (which then delivers). */
 	syncStoryDeliveryJob(storyId: string, cron: string | null): Promise<void>;
+	/** Upstream `enqueueOnce`: sends a one-off job unless one with the same unique key is already queued. */
+	enqueueOnce(job: EnqueueOnceInput): Promise<void>;
+}
+
+export interface EnqueueOnceInput {
+	name: string;
+	payload: object;
+	uniqueKey: string;
+	/** Delay before the job may run. */
+	startAfterSeconds?: number;
 }
 
 const noScheduler: StoryScheduler = {
 	syncStoryRefreshJob: async () => undefined,
 	syncStoryDeliveryJob: async () => undefined,
+	enqueueOnce: async () => undefined,
 };
 
 let scheduler: StoryScheduler = noScheduler;
 
 export function bindStoryScheduler(bound: StoryScheduler | null): void {
 	scheduler = bound ?? noScheduler;
+}
+
+/** Upstream `scheduler.service` `enqueueOnce`. */
+export function enqueueOnce(job: EnqueueOnceInput): Promise<void> {
+	return scheduler.enqueueOnce(job);
 }
 
 /** Upstream `scheduler.service` `nextCronTick`. */
@@ -114,4 +130,14 @@ export async function disableStoryDelivery(storyId: string): Promise<void> {
 export async function unscheduleStoryRefreshJob(storyId: string): Promise<void> {
 	await scheduler.syncStoryRefreshJob(storyId, null);
 	await disableStoryDelivery(storyId);
+}
+
+/**
+ * Upstream `story-delivery.service` `teardownStoryDelivery` (called when a story's share is removed): no schedule,
+ * delivery disabled and its recipients reset. Removing the story's notification unsubscribes comes with the
+ * notifications module (Phase 5).
+ */
+export async function teardownStoryDelivery(storyId: string): Promise<void> {
+	await scheduler.syncStoryDeliveryJob(storyId, null);
+	await storyDeliveryQueries.disableAndResetRecipients(storyId);
 }

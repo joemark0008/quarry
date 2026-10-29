@@ -30,6 +30,10 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
 import { SandboxModule } from './sandbox/sandbox.module.js';
 import { SkillsModule } from './skills/skills.module.js';
+import { StoryFavoritesModule } from './stories/favorites/story-favorites.module.js';
+import { StoryFeedbackModule } from './stories/feedback/story-feedback.module.js';
+import { StoryJobsModule } from './stories/jobs/story-jobs.module.js';
+import { StorySharingModule } from './stories/sharing/story-sharing.module.js';
 import { StoriesModule } from './stories/stories.module.js';
 import { SystemModule } from './system/system.module.js';
 import { TranscribeModule } from './transcribe/transcribe.module.js';
@@ -83,6 +87,10 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		MemoryModule,
 		OnboardingModule,
 		StoriesModule,
+		StoryJobsModule,
+		StoryFavoritesModule,
+		StoryFeedbackModule,
+		StorySharingModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

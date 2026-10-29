@@ -1,7 +1,7 @@
 import { BULK_ITEMS_LIMIT } from '@quarry/shared';
 import { STORY_KIT_EDITABLE_BLOCKS } from '@quarry/shared/story-app';
 import type { BulkStoryItem, NotificationChannel, RecipientMode, StoryFormat, UserRole } from '@quarry/shared/types';
-import { NOTIFICATION_CHANNELS, RECIPIENT_MODES } from '@quarry/shared/types';
+import { DOWNLOAD_FORMATS, NOTIFICATION_CHANNELS, RECIPIENT_MODES } from '@quarry/shared/types';
 import { z } from 'zod/v4';
 
 import { withKeyedLock } from '../../agent/utils/keyed-lock.js';
@@ -20,6 +20,7 @@ import {
 import type { ReferenceableStoryListing } from '../repositories/story-reference.repository.js';
 import { naturalLanguageToCron } from '../services/cron-nlp.js';
 import {
+	getActiveThemeForProject,
 	getActiveThemeForStory,
 	getCustomStoryFile,
 	getCustomStoryNarratives,
@@ -70,15 +71,23 @@ import {
 	storyRuntime,
 } from '../story-queries.js';
 import { logAnalyticsEvent } from '../utils/analytics-event.js';
-import { storyStateChange, toCustomStoryQueryTrpcError, toCustomStoryTrpcError } from '../utils/custom-story-trpc.js';
+import {
+	storySnapshotHtml,
+	storyStateChange,
+	toCustomStoryQueryTrpcError,
+	toCustomStoryTrpcError,
+} from '../utils/custom-story-trpc.js';
+import { buildDownloadResponse } from '../utils/story-download.js';
+import { themeFontStylesheets } from '../utils/story-headless-page.js';
 import { StoryKitJsxEditError } from '../utils/story-kit-jsx.js';
 import { backfillMissingQueryData, withKpiPreviewData } from '../utils/story-query-data.js';
+import { buildStorySnapshotDownload } from '../utils/story-snapshot.js';
 import { extractStorySummary } from '../utils/story-summary.js';
 
 /**
  * Port of upstream `trpc/story.routes.ts` (`trpc.story.*`), run by `StoriesService` for the GraphQL resolvers.
- * Left for Phase 4 stage 3: `download`, `downloadStandalone`, `downloadCustom` (PDF/PNG/HTML exports). Scheduling
- * goes through `story-schedule.ts` (pg-boss jobs come with stage 3); notifications (Phase 5) are not sent.
+ * Exports (`download`, `downloadStandalone`, `downloadCustom`) render in headless Chrome (`utils/story-download`,
+ * `utils/story-snapshot`). Scheduling goes through `story-schedule.ts` (pg-boss jobs come with stage 3); notifications (Phase 5) are not sent.
  */
 const chatOwnerProcedure = ownedResourceProcedure(chatQueries.getChatOwnerId, 'chat');
 const storyOwnerProcedure = ownedResourceProcedure(storyQueries.getStoryOwnerId, 'story');
@@ -481,6 +490,46 @@ export const storyRoutes = {
 			} catch (error) {
 				throw toCustomStoryTrpcError(error);
 			}
+		}),
+
+	downloadCustom: chatOwnerProcedure
+		.input(
+			z.object({
+				chatId: z.string(),
+				storySlug: z.string(),
+				format: z.enum(DOWNLOAD_FORMATS),
+				html: storySnapshotHtml,
+				versionNumber: z.number().int().positive().optional(),
+			}),
+		)
+		.mutation(async ({ input, ctx }) => {
+			const version = input.versionNumber
+				? await storyQueries.getVersionByNumber(input.chatId, input.storySlug, input.versionNumber)
+				: await storyQueries.getLatestVersionByChatAndSlug(input.chatId, input.storySlug);
+			if (!version || version.format !== 'custom') {
+				throw new HandlerError('NOT_FOUND', 'Story not found.');
+			}
+
+			const projectId = await chatQueries.getChatProjectId(input.chatId);
+			if (projectId) {
+				logAnalyticsEvent({
+					projectId,
+					type: 'download',
+					assetType: 'story',
+					actorUserId: ctx.user.id,
+					storyId: version.storyId,
+					chatId: input.chatId,
+					metadata: {
+						type: 'download',
+						format: input.format,
+						versionNumber: version.version,
+						title: version.title,
+					},
+				});
+			}
+
+			const fontStylesheets = themeFontStylesheets(await getActiveThemeForStory(version.storyId));
+			return buildStorySnapshotDownload(input.format, version.title, input.html, fontStylesheets);
 		}),
 
 	editCustomStoryBlock: chatOwnerProcedure
@@ -1061,6 +1110,120 @@ export const storyRoutes = {
 			}),
 		);
 	}),
+
+	downloadStandalone: storyOwnerProjectProcedure
+		.input(z.object({ storyId: z.string(), format: z.enum(DOWNLOAD_FORMATS) }))
+		.query(async ({ input, ctx }) => {
+			const story = await storyQueries.getStoryByIdForUser(input.storyId, ctx.user.id);
+			if (!story) {
+				throw new HandlerError('NOT_FOUND', 'Story not found.');
+			}
+			const cache = await storyQueries.getStoryDataCacheByStoryId(input.storyId);
+
+			if (story.projectId) {
+				logAnalyticsEvent({
+					projectId: story.projectId,
+					type: 'download',
+					assetType: 'story',
+					actorUserId: ctx.user.id,
+					storyId: input.storyId,
+					metadata: {
+						type: 'download',
+						format: input.format,
+						versionNumber: story.version,
+						title: story.title,
+					},
+				});
+			}
+
+			const storyData = story.chatId
+				? await getStoryQueryData(story.chatId, story.slug, story.code, story.isLive, story.cacheSchedule)
+				: null;
+			const [displaySettings, theme] = story.projectId
+				? await Promise.all([
+						projectQueries.getDisplaySettings(story.projectId),
+						getActiveThemeForProject(story.projectId),
+					])
+				: [null, null];
+			const queryData =
+				storyData?.allowsPersistedFallback && story.chatId
+					? await backfillMissingQueryData(story.code, cache?.queryData ?? null, { chatId: story.chatId })
+					: storyData
+						? storyData.queryData
+						: (cache?.queryData ?? null);
+			return buildDownloadResponse(
+				input.format,
+				story.title,
+				storyData?.code ?? story.code,
+				queryData,
+				displaySettings?.dateFormat,
+				theme,
+			);
+		}),
+
+	download: chatStoryProcedure
+		.input(
+			z.object({
+				chatId: z.string(),
+				storySlug: z.string(),
+				format: z.enum(DOWNLOAD_FORMATS),
+				versionNumber: z.number().int().positive().optional(),
+			}),
+		)
+		.query(async ({ input, ctx }) => {
+			const latestVersion = await storyQueries.getLatestVersionByChatAndSlug(input.chatId, input.storySlug);
+			const version = input.versionNumber
+				? await storyQueries.getVersionByNumber(input.chatId, input.storySlug, input.versionNumber)
+				: latestVersion;
+			if (!version) {
+				throw new HandlerError('NOT_FOUND', 'Story not found.');
+			}
+
+			const isHistoricalVersion = input.versionNumber !== undefined && version.version !== latestVersion?.version;
+			const { queryData, code } = isHistoricalVersion
+				? {
+						queryData: await sharedStoryQueries.getQueryDataFromCode(input.chatId, version.code),
+						code: version.code,
+					}
+				: await getStoryQueryData(
+						input.chatId,
+						input.storySlug,
+						version.code,
+						version.isLive,
+						version.cacheSchedule,
+					);
+
+			const projectId = await chatQueries.getChatProjectId(input.chatId);
+			if (projectId) {
+				logAnalyticsEvent({
+					projectId,
+					type: 'download',
+					assetType: 'story',
+					actorUserId: ctx.user.id,
+					storyId: version.storyId,
+					chatId: input.chatId,
+					metadata: {
+						type: 'download',
+						format: input.format,
+						versionNumber: version.version,
+						title: version.title,
+					},
+				});
+			}
+
+			const [displaySettings, theme] = projectId
+				? await Promise.all([projectQueries.getDisplaySettings(projectId), getActiveThemeForProject(projectId)])
+				: [null, null];
+
+			return buildDownloadResponse(
+				input.format,
+				version.title,
+				code,
+				queryData,
+				displaySettings?.dateFormat,
+				theme,
+			);
+		}),
 };
 
 function toReferenceableStoryItem(story: ReferenceableStoryListing) {

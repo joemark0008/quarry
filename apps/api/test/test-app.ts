@@ -26,6 +26,10 @@ export async function resetDatabase(url: string): Promise<void> {
 			"SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename <> '_prisma_migrations'",
 		);
 		await client.query(`TRUNCATE ${rows.map((row) => `"${row.tablename}"`).join(', ')} CASCADE`);
+		// Per-story schedules point at rows that no longer exist; app-wide crons are re-registered on boot.
+		await client.query(
+			"DO $$ BEGIN IF to_regclass('pgboss.schedule') IS NOT NULL THEN DELETE FROM pgboss.schedule WHERE key LIKE 'story-%'; END IF; END $$",
+		);
 	} finally {
 		await client.end();
 	}

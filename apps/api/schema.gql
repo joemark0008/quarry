@@ -294,6 +294,9 @@ type Mutation {
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
 
+  """Upstream `trpc.customStoryViewer.download`."""
+  customStoryViewerDownload(input: JSON): JSON
+
   """Upstream `trpc.customStoryViewer.setState`."""
   customStoryViewerSetState(input: JSON): JSON
 
@@ -320,6 +323,15 @@ type Mutation {
   disconnectContextRepository: JSON!
   disconnectWarehouse(name: String!): Boolean!
   editMemory(input: EditMemoryInput!): Memory!
+
+  """Upstream `trpc.embed.downloadStory`."""
+  embedDownloadStory(input: JSON): JSON
+
+  """Upstream `trpc.favorite.toggle`."""
+  favoriteToggle(input: JSON): JSON
+
+  """Upstream `trpc.feedback.submitStoryFeedback`."""
+  feedbackSubmitStoryFeedback(input: JSON): JSON
 
   """Forks a shared chat, or a selection of it (upstream `chatFork.fork`)."""
   forkSharedChat(input: ForkSharedChatInput!): ChatIdResult!
@@ -354,6 +366,27 @@ type Mutation {
   """Creates a secret, or replaces the value of the one with that name."""
   setSandboxSecret(input: SetSandboxSecretInput!): SandboxSecret!
 
+  """Upstream `trpc.sharedStory.create`."""
+  sharedStoryCreate(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.delete`."""
+  sharedStoryDelete(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.downloadCustom`."""
+  sharedStoryDownloadCustom(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.refreshData`."""
+  sharedStoryRefreshData(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.setCustomStoryState`."""
+  sharedStorySetCustomStoryState(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.togglePin`."""
+  sharedStoryTogglePin(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.updateAccess`."""
+  sharedStoryUpdateAccess(input: JSON): JSON
+
   """Stops the running agent of a chat (the Stop button)."""
   stopChat(chatId: ID!): Boolean!
 
@@ -374,6 +407,9 @@ type Mutation {
 
   """Upstream `trpc.story.createVersion`."""
   storyCreateVersion(input: JSON): JSON
+
+  """Upstream `trpc.story.downloadCustom`."""
+  storyDownloadCustom(input: JSON): JSON
 
   """Upstream `trpc.story.editCustomStoryBlock`."""
   storyEditCustomStoryBlock(input: JSON): JSON
@@ -425,6 +461,9 @@ type Mutation {
 
   """Upstream `trpc.story.setCustomStoryState`."""
   storySetCustomStoryState(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.generate`."""
+  storyThemeGenerate(input: JSON): JSON
 
   """Upstream `trpc.storyTheme.restoreVersion`."""
   storyThemeRestoreVersion(input: JSON): JSON
@@ -656,6 +695,21 @@ type Query {
   """Upstream `project.getDefaultModels`."""
   defaultModels: JSON!
 
+  """Upstream `trpc.embed.getChart`."""
+  embedGetChart(input: JSON): JSON
+
+  """Upstream `trpc.embed.getMap`."""
+  embedGetMap(input: JSON): JSON
+
+  """Upstream `trpc.embed.getStory`."""
+  embedGetStory(input: JSON): JSON
+
+  """Upstream `trpc.favorite.list`."""
+  favoriteList(input: JSON): JSON
+
+  """Upstream `trpc.feedback.getStoryFeedback`."""
+  feedbackGetStoryFeedback(input: JSON): JSON
+
   """
   Whether anyone has signed up yet (the login page offers sign-up when not).
   """
@@ -707,10 +761,61 @@ type Query {
   savedPrompts: [SavedPrompt!]!
   searchChats(limit: Int, query: String!): [ChatSearchResult!]!
   sharedChat(shareId: ID!): SharedChatView!
+
+  """Upstream `trpc.sharedChat.downloadStory`."""
+  sharedChatDownloadStory(input: JSON): JSON
   sharedChatQuickQuestions(shareId: ID!): [QuickQuestionChat!]!
 
   """Chats shared in the projects the user can access."""
   sharedChats: [SharedChat!]!
+
+  """Upstream `trpc.sharedStory.download`."""
+  sharedStoryDownload(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.get`."""
+  sharedStoryGet(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getCustomStoryNarratives`."""
+  sharedStoryGetCustomStoryNarratives(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getCustomStoryQueryData`."""
+  sharedStoryGetCustomStoryQueryData(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getCustomStoryQuerySql`."""
+  sharedStoryGetCustomStoryQuerySql(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getCustomStoryState`."""
+  sharedStoryGetCustomStoryState(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getCustomVersion`."""
+  sharedStoryGetCustomVersion(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getFilterOptions`."""
+  sharedStoryGetFilterOptions(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getFilteredQueryData`."""
+  sharedStoryGetFilteredQueryData(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getLiveQueryData`."""
+  sharedStoryGetLiveQueryData(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getQuerySql`."""
+  sharedStoryGetQuerySql(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getSharedStoryInfo`."""
+  sharedStoryGetSharedStoryInfo(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getStoryIdByShareId`."""
+  sharedStoryGetStoryIdByShareId(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.getVersionQueryData`."""
+  sharedStoryGetVersionQueryData(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.list`."""
+  sharedStoryList(input: JSON): JSON
+
+  """Upstream `trpc.sharedStory.listShareableGroups`."""
+  sharedStoryListShareableGroups(input: JSON): JSON
 
   """Every project skill, for the admin settings."""
   skillCatalog: [Skill!]!
@@ -730,6 +835,12 @@ type Query {
 
   """Upstream `storage.getUsage`."""
   storageUsage: JSON!
+
+  """Upstream `trpc.story.download`."""
+  storyDownload(input: JSON): JSON
+
+  """Upstream `trpc.story.downloadStandalone`."""
+  storyDownloadStandalone(input: JSON): JSON
 
   """Upstream `trpc.storyFolder.listItems`."""
   storyFolderListItems(input: JSON): JSON

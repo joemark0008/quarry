@@ -23,12 +23,9 @@ procedures of `trpc.chatFork`) as GraphQL, for the frontend migration.
 
 ## Not available yet
 
-| tRPC procedure                                                                                     | Why                                                                                                                       |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `story.download`, `story.downloadStandalone`, `story.downloadCustom`, `customStoryViewer.download` | PDF/PNG/HTML exports (headless Chrome): Phase 4 stage 3                                                                   |
-| `storyTheme.generate`                                                                              | Theme generation from a website, images, PDFs or a ZIP: needs headless Chrome, `cheerio` and `colorthief` (not installed) |
-| `chatFork.fork` with a `story` source                                                              | Forks of shared stories come with story sharing (stage 3); the chat source is `forkSharedChat` in the chats module        |
-| `sharedStory.*`, `embed.*`, favorites, story feedback                                              | Stage 3 / later (not in these routers)                                                                                    |
+| tRPC procedure                        | Why                                                                                              |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `chatFork.fork` with a `story` source | Forks of shared stories: not ported yet; the chat source is `forkSharedChat` in the chats module |
 
 Behaviour differences: `storyTheme.getState` always returns `whiteLabelIdentity: null` (no branding service); refresh and
 delivery schedules are saved but nothing is scheduled until stage 3 binds the pg-boss scheduler (`story-schedule.ts`); user
@@ -140,3 +137,64 @@ are not sent.
 | `chatFork.askStory`       | mutation `chatForkAskStory`       |                  |
 | `chatFork.forkStory`      | mutation `chatForkForkStory`      |                  |
 | `chatFork.openStandalone` | mutation `chatForkOpenStandalone` | yes              |
+
+### `trpc.favorite` and story `trpc.feedback` (stage 3b)
+
+| tRPC procedure                 | GraphQL                                | Selected project |
+| ------------------------------ | -------------------------------------- | ---------------- |
+| `favorite.toggle`              | mutation `favoriteToggle`              | yes              |
+| `favorite.list`                | query `favoriteList`                   | yes              |
+| `feedback.getStoryFeedback`    | query `feedbackGetStoryFeedback`       | yes              |
+| `feedback.submitStoryFeedback` | mutation `feedbackSubmitStoryFeedback` | yes              |
+
+Story jobs: `story.refresh` and `story.deliver` run on pg-boss schedules keyed `story-refresh-<id>` /
+`story-delivery-<id>` (UTC), created and removed by `storyUpdateLiveSettings` / `storyUpdateDelivery`;
+`story.blob-cleanup` runs daily at 04:30 UTC. Until Phase 5, deliveries and feedback notifications only record in-app
+`notification` rows (email/Slack are logged).
+
+### `trpc.sharedStory`, `trpc.embed`, story exports and `storyTheme.generate` (stage 3a)
+
+| tRPC procedure                         | GraphQL                                     | Selected project |
+| -------------------------------------- | ------------------------------------------- | ---------------- |
+| `sharedStory.list`                     | query `sharedStoryList`                     |                  |
+| `sharedStory.create`                   | mutation `sharedStoryCreate`                | yes              |
+| `sharedStory.getStoryIdByShareId`      | query `sharedStoryGetStoryIdByShareId`      |                  |
+| `sharedStory.get`                      | query `sharedStoryGet`                      |                  |
+| `sharedStory.getCustomVersion`         | query `sharedStoryGetCustomVersion`         |                  |
+| `sharedStory.getCustomStoryQuerySql`   | query `sharedStoryGetCustomStoryQuerySql`   |                  |
+| `sharedStory.getCustomStoryQueryData`  | query `sharedStoryGetCustomStoryQueryData`  |                  |
+| `sharedStory.getCustomStoryNarratives` | query `sharedStoryGetCustomStoryNarratives` |                  |
+| `sharedStory.getCustomStoryState`      | query `sharedStoryGetCustomStoryState`      |                  |
+| `sharedStory.setCustomStoryState`      | mutation `sharedStorySetCustomStoryState`   |                  |
+| `sharedStory.downloadCustom`           | mutation `sharedStoryDownloadCustom`        |                  |
+| `sharedStory.getVersionQueryData`      | query `sharedStoryGetVersionQueryData`      |                  |
+| `sharedStory.getLiveQueryData`         | query `sharedStoryGetLiveQueryData`         |                  |
+| `sharedStory.getFilterOptions`         | query `sharedStoryGetFilterOptions`         |                  |
+| `sharedStory.getFilteredQueryData`     | query `sharedStoryGetFilteredQueryData`     |                  |
+| `sharedStory.getQuerySql`              | query `sharedStoryGetQuerySql`              |                  |
+| `sharedStory.refreshData`              | mutation `sharedStoryRefreshData`           |                  |
+| `sharedStory.getSharedStoryInfo`       | query `sharedStoryGetSharedStoryInfo`       | yes              |
+| `sharedStory.listShareableGroups`      | query `sharedStoryListShareableGroups`      | yes              |
+| `sharedStory.updateAccess`             | mutation `sharedStoryUpdateAccess`          |                  |
+| `sharedStory.togglePin`                | mutation `sharedStoryTogglePin`             | yes              |
+| `sharedStory.delete`                   | mutation `sharedStoryDelete`                |                  |
+| `sharedStory.download`                 | query `sharedStoryDownload`                 |                  |
+| `embed.getStory` (public)              | query `embedGetStory`                       |                  |
+| `embed.getChart` (public)              | query `embedGetChart`                       |                  |
+| `embed.getMap` (public)                | query `embedGetMap`                         |                  |
+| `embed.downloadStory` (public)         | mutation `embedDownloadStory`               |                  |
+| `story.download`                       | query `storyDownload`                       |                  |
+| `story.downloadStandalone`             | query `storyDownloadStandalone`             |                  |
+| `story.downloadCustom`                 | mutation `storyDownloadCustom`              |                  |
+| `customStoryViewer.download`           | mutation `customStoryViewerDownload`        |                  |
+| `sharedChat.downloadStory`             | query `sharedChatDownloadStory`             |                  |
+| `storyTheme.generate`                  | mutation `storyThemeGenerate`               | yes              |
+
+Downloads return upstream's `{ data (base64), filename, mimeType }`. REST: `GET /api/stories/:storyId/thumbnail?mode=light|dark`
+(session; WebP, `ETag`/304, 404 until rendered) and `GET /api/embed/story/:storyId/download?token&format=pdf|html`
+(public, embed token). PDFs, thumbnails and `storyTheme.generate` use a headless Chrome (`PUPPETEER_EXECUTABLE_PATH`,
+`CHROME_PATH`, or the usual install paths); embeds need the project's MCP endpoint enabled (`project.mcp_endpoint_settings`,
+default `MCP_ENDPOINT_ENABLED`). Differences: share audiences keep the stage-2 stand-in (no user groups until Phase 6:
+group ids are refused, `listShareableGroups` is empty, everyone has `storyCreation`); no activity log or share
+notifications (Phase 5); no white-label brand in `storyTheme.generate`; oversized `generate` payloads are `BAD_REQUEST`
+(upstream `PAYLOAD_TOO_LARGE`).

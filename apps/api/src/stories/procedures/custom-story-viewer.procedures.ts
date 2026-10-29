@@ -1,10 +1,12 @@
 import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
+import { DOWNLOAD_FORMATS } from '@quarry/shared/types';
 import { z } from 'zod/v4';
 
 import { HandlerError } from '../../common/errors/handler-error.js';
 import { protectedProcedure } from '../procedure.js';
 import {
 	getActiveThemeForProject,
+	getActiveThemeForStory,
 	getCustomStoryFile,
 	getCustomStoryNarratives,
 	getCustomStoryVersion,
@@ -13,7 +15,15 @@ import {
 } from '../services/custom-story.js';
 import { getCustomStoryState, setCustomStoryState } from '../services/custom-story-state.js';
 import { chatQueries, projectQueries, sharedChatQueries, storyQueries } from '../story-queries.js';
-import { storyStateChange, toCustomStoryQueryTrpcError, toCustomStoryTrpcError } from '../utils/custom-story-trpc.js';
+import { logAnalyticsEvent } from '../utils/analytics-event.js';
+import {
+	storySnapshotHtml,
+	storyStateChange,
+	toCustomStoryQueryTrpcError,
+	toCustomStoryTrpcError,
+} from '../utils/custom-story-trpc.js';
+import { themeFontStylesheets } from '../utils/story-headless-page.js';
+import { buildStorySnapshotDownload } from '../utils/story-snapshot.js';
 
 const viewerAccess = z.discriminatedUnion('kind', [
 	z.object({ kind: z.literal('sharedChat'), shareId: z.string() }),
@@ -37,7 +47,7 @@ const viewerProcedure = protectedProcedure
 
 /**
  * Port of upstream `trpc/custom-story-viewer.routes.ts` (`trpc.customStoryViewer.*`): custom stories inside a shared
- * chat or a chat replay, run by `StoriesService`. `download` (snapshot exports) is left for Phase 4 stage 3.
+ * chat or a chat replay, run by `StoriesService`.
  */
 export const customStoryViewerRoutes = {
 	getFormat: viewerProcedure.query(async ({ ctx, input }) => {
@@ -117,6 +127,36 @@ export const customStoryViewerRoutes = {
 			throw toCustomStoryTrpcError(error);
 		}
 	}),
+
+	download: viewerProcedure
+		.input(z.object({ format: z.enum(DOWNLOAD_FORMATS), html: storySnapshotHtml, versionNumber }))
+		.mutation(async ({ ctx, input }) => {
+			const version = input.versionNumber
+				? await storyQueries.getVersionByNumber(ctx.viewer.chatId, input.storySlug, input.versionNumber)
+				: await storyQueries.getLatestVersionByChatAndSlug(ctx.viewer.chatId, input.storySlug);
+			if (!version || version.format !== 'custom') {
+				throw new HandlerError('NOT_FOUND', 'Story not found.');
+			}
+
+			logAnalyticsEvent({
+				projectId: ctx.viewer.projectId,
+				type: 'download',
+				assetType: 'story',
+				actorUserId: ctx.user.id,
+				storyId: version.storyId,
+				chatId: ctx.viewer.chatId,
+				...(ctx.viewer.sharedChatId && { sharedChatId: ctx.viewer.sharedChatId }),
+				metadata: {
+					type: 'download',
+					format: input.format,
+					versionNumber: version.version,
+					title: version.title,
+				},
+			});
+
+			const fontStylesheets = themeFontStylesheets(await getActiveThemeForStory(version.storyId));
+			return buildStorySnapshotDownload(input.format, version.title, input.html, fontStylesheets);
+		}),
 };
 
 async function resolveViewerAccess(access: CustomStoryViewerAccess, userId: string): Promise<ResolvedViewerAccess> {

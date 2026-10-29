@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { MessageFeedback } from '../generated/prisma/client.js';
+import type { MessageFeedback, StoryFeedback } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 export interface FeedbackWithDetails {
@@ -12,7 +12,7 @@ export interface FeedbackWithDetails {
 	messageText: string | null;
 }
 
-/** Port of upstream `queries/feedback.queries.ts` (message feedback; story feedback comes with stories). */
+/** Port of upstream `queries/feedback.queries.ts` (message feedback, and story feedback for the stories module). */
 @Injectable()
 export class FeedbackRepository {
 	constructor(private readonly prisma: PrismaService) {}
@@ -44,5 +44,22 @@ export class FeedbackRepository {
 			WHERE c.project_id = ${projectId}
 			ORDER BY f.created_at DESC
 			LIMIT ${limit}`;
+	}
+
+	upsertStoryFeedback(feedback: {
+		storyId: string;
+		userId: string;
+		vote: string;
+		explanation?: string | null;
+	}): Promise<StoryFeedback> {
+		return this.prisma.storyFeedback.upsert({
+			where: { storyId_userId: { storyId: feedback.storyId, userId: feedback.userId } },
+			create: { ...feedback, explanation: feedback.explanation ?? null },
+			update: { vote: feedback.vote, explanation: feedback.explanation ?? null, updatedAt: new Date() },
+		});
+	}
+
+	getUserStoryFeedback(storyId: string, userId: string): Promise<StoryFeedback | null> {
+		return this.prisma.storyFeedback.findUnique({ where: { storyId_userId: { storyId, userId } } });
 	}
 }

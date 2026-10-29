@@ -1,5 +1,6 @@
+import { createRequire } from 'node:module';
+
 import { CHART_EMBEDDED_FONT_FAMILY, CHART_FONT_STACK } from '@quarry/shared';
-import { Resvg } from '@resvg/resvg-js';
 
 import { chartFontFiles } from './chart-fonts.js';
 
@@ -209,7 +210,18 @@ export function truncateLabel(label: string, maxChars: number): string {
 	return `${codePoints.slice(0, maxChars - 1).join('')}…`;
 }
 
+/**
+ * resvg is loaded on first use: it picks its native binary by `process.platform` when imported, and the agent's tool
+ * graph reaches this file through the story renderer (specs fake the platform).
+ */
+let resvgModule: typeof import('@resvg/resvg-js') | undefined;
+function loadResvg(): typeof import('@resvg/resvg-js') {
+	resvgModule ??= createRequire(import.meta.url)('@resvg/resvg-js') as typeof import('@resvg/resvg-js');
+	return resvgModule;
+}
+
 export function svgToPng(svg: string, zoom = 2, cssVariables: Record<string, string> = {}): Buffer {
+	const { Resvg } = loadResvg();
 	const resvg = new Resvg(resolveCssVariables(svg, cssVariables), {
 		fitTo: { mode: 'zoom' as const, value: zoom },
 		font: {
