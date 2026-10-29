@@ -9,6 +9,7 @@ import type { QueryDataMap } from '@/components/story-embeds';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { storyApi } from '@/lib/story-api';
 
 export type StoryFilterApi = { kind: 'owned'; chatId: string; storySlug: string } | { kind: 'shared'; storyId: string };
 
@@ -85,7 +86,7 @@ export function useStoryFilters({
 	const debouncedHasActive = Object.keys(debouncedSelections).length > 0;
 
 	const ownedQuery = useQuery({
-		...trpc.story.getFilteredQueryData.queryOptions({
+		...storyApi.story.getFilteredQueryData.queryOptions({
 			chatId: api?.kind === 'owned' ? api.chatId : '',
 			storySlug: api?.kind === 'owned' ? api.storySlug : '',
 			selections: debouncedSelections,

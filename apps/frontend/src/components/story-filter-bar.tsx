@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const CLEAR_SELECT_VALUE = '__quarry_clear_filter__';
 const SELECT_VALUE_PREFIX = '__quarry_filter_value__:';
@@ -327,7 +328,7 @@ function useFilterOptions(
 		!usesHardcodedOptions && (filter.filterType === 'select' || filter.filterType === 'multi_select');
 
 	const ownedQuery = useQuery({
-		...trpc.story.getFilterOptions.queryOptions({
+		...storyApi.story.getFilterOptions.queryOptions({
 			chatId: api?.kind === 'owned' ? api.chatId : '',
 			storySlug: api?.kind === 'owned' ? api.storySlug : '',
 			filterId: filter.id,

@@ -6,8 +6,9 @@ import type { UIMessage } from '@quarry/shared/backend/chat';
 import type { AskSelection } from '@/stores/ask-bar';
 import { AskBar } from '@/components/ask-bar';
 import { useAgentContext, useAgentMessages } from '@/contexts/agent.provider';
-import { trpc } from '@/main';
 import { forgetHandedOverQuestion, getHandedOverQuestion, handOverQuestion } from '@/stores/ask-bar';
+import { storyApi } from '@/lib/story-api';
+import { chatApi } from '@/lib/chat-api';
 
 const STORY_QUERY_KEYS = [[['story']], [['storyShare']], [['customStoryViewer']]];
 const MAX_SELECTION_TEXT_LENGTH = 4_000;
@@ -27,9 +28,9 @@ export function StoryAskBar({
 	const [handedOverQuestion] = useState(() => getHandedOverQuestion(storyId));
 	const queryClient = useQueryClient();
 	const askMutation = useMutation(
-		trpc.chatFork.askStory.mutationOptions({
+		chatApi.chatFork.askStory.mutationOptions({
 			onSuccess: () =>
-				queryClient.invalidateQueries({ queryKey: trpc.story.listQuickQuestions.queryKey({ storyId }) }),
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listQuickQuestions.queryKey({ storyId }) }),
 		}),
 	);
 

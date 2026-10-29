@@ -47,8 +47,8 @@ import { StoryEmbedDataProvider } from '@/contexts/story-embed-data';
 import { Spinner } from '@/components/ui/spinner';
 import { useRegisterStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { StoryThemeProvider, useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
-import { trpc } from '@/main';
 import { chatApi } from '@/lib/chat-api';
+import { storyApi } from '@/lib/story-api';
 
 interface StoryViewerProps {
 	chatId: string;
@@ -105,11 +105,11 @@ function useStoryFormat(
 	viewerAccess: CustomStoryViewerAccess | null,
 ): StoryFormat | null {
 	const ownerQuery = useQuery({
-		...trpc.story.listVersions.queryOptions({ chatId, storySlug }),
+		...storyApi.story.listVersions.queryOptions({ chatId, storySlug }),
 		enabled: !isReadonlyMode,
 	});
 	const viewerQuery = useQuery({
-		...trpc.customStoryViewer.getFormat.queryOptions({
+		...storyApi.customStoryViewer.getFormat.queryOptions({
 			access: viewerAccess ?? { kind: 'replay', chatId },
 			storySlug,
 		}),

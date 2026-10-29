@@ -891,6 +891,559 @@ export type StorageUsageQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type StorageUsageQuery = { storageUsage: unknown };
 
+export type ChatForkAskStoryMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type ChatForkAskStoryMutation = { chatForkAskStory: unknown };
+
+export type ChatForkForkStoryMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type ChatForkForkStoryMutation = { chatForkForkStory: unknown };
+
+export type ChatForkOpenStandaloneMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type ChatForkOpenStandaloneMutation = { chatForkOpenStandalone: unknown };
+
+export type CustomStoryViewerGetFileQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetFileQuery = { customStoryViewerGetFile: unknown };
+
+export type CustomStoryViewerGetFormatQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetFormatQuery = { customStoryViewerGetFormat: unknown };
+
+export type CustomStoryViewerGetNarrativesQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetNarrativesQuery = { customStoryViewerGetNarratives: unknown };
+
+export type CustomStoryViewerGetQueryDataQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetQueryDataQuery = { customStoryViewerGetQueryData: unknown };
+
+export type CustomStoryViewerGetQuerySqlQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetQuerySqlQuery = { customStoryViewerGetQuerySql: unknown };
+
+export type CustomStoryViewerGetStateQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetStateQuery = { customStoryViewerGetState: unknown };
+
+export type CustomStoryViewerGetThemeQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetThemeQuery = { customStoryViewerGetTheme: unknown };
+
+export type CustomStoryViewerGetVersionQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerGetVersionQuery = { customStoryViewerGetVersion: unknown };
+
+export type CustomStoryViewerSetStateMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type CustomStoryViewerSetStateMutation = { customStoryViewerSetState: unknown };
+
+export type StoryArchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryArchiveMutation = { storyArchive: unknown };
+
+export type StoryArchiveSharedMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryArchiveSharedMutation = { storyArchiveShared: unknown };
+
+export type StoryArchiveStandaloneMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryArchiveStandaloneMutation = { storyArchiveStandalone: unknown };
+
+export type StoryBulkArchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryBulkArchiveMutation = { storyBulkArchive: unknown };
+
+export type StoryBulkUnarchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryBulkUnarchiveMutation = { storyBulkUnarchive: unknown };
+
+export type StoryCreateVersionMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryCreateVersionMutation = { storyCreateVersion: unknown };
+
+export type StoryEditCustomStoryBlockMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryEditCustomStoryBlockMutation = { storyEditCustomStoryBlock: unknown };
+
+export type StoryFolderArchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderArchiveMutation = { storyFolderArchive: unknown };
+
+export type StoryFolderBulkArchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderBulkArchiveMutation = { storyFolderBulkArchive: unknown };
+
+export type StoryFolderBulkMoveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderBulkMoveMutation = { storyFolderBulkMove: unknown };
+
+export type StoryFolderBulkUnarchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderBulkUnarchiveMutation = { storyFolderBulkUnarchive: unknown };
+
+export type StoryFolderCreateMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderCreateMutation = { storyFolderCreate: unknown };
+
+export type StoryFolderDeleteMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderDeleteMutation = { storyFolderDelete: unknown };
+
+export type StoryFolderListItemsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderListItemsQuery = { storyFolderListItems: unknown };
+
+export type StoryFolderListTreeQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderListTreeQuery = { storyFolderListTree: unknown };
+
+export type StoryFolderMoveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderMoveMutation = { storyFolderMove: unknown };
+
+export type StoryFolderMoveStoryMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderMoveStoryMutation = { storyFolderMoveStory: unknown };
+
+export type StoryFolderRenameMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderRenameMutation = { storyFolderRename: unknown };
+
+export type StoryFolderUnarchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryFolderUnarchiveMutation = { storyFolderUnarchive: unknown };
+
+export type StoryGetCertificationQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCertificationQuery = { storyGetCertification: unknown };
+
+export type StoryGetCustomStoryNarrativesQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomStoryNarrativesQuery = { storyGetCustomStoryNarratives: unknown };
+
+export type StoryGetCustomStoryQueryDataQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomStoryQueryDataQuery = { storyGetCustomStoryQueryData: unknown };
+
+export type StoryGetCustomStoryQuerySqlQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomStoryQuerySqlQuery = { storyGetCustomStoryQuerySql: unknown };
+
+export type StoryGetCustomStoryStateQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomStoryStateQuery = { storyGetCustomStoryState: unknown };
+
+export type StoryGetCustomVersionQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomVersionQuery = { storyGetCustomVersion: unknown };
+
+export type StoryGetCustomVersionFileQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetCustomVersionFileQuery = { storyGetCustomVersionFile: unknown };
+
+export type StoryGetDeliveryQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetDeliveryQuery = { storyGetDelivery: unknown };
+
+export type StoryGetFilterOptionsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetFilterOptionsQuery = { storyGetFilterOptions: unknown };
+
+export type StoryGetFilteredQueryDataQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetFilteredQueryDataQuery = { storyGetFilteredQueryData: unknown };
+
+export type StoryGetIdByChatAndSlugQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetIdByChatAndSlugQuery = { storyGetIdByChatAndSlug: unknown };
+
+export type StoryGetLatestQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetLatestQuery = { storyGetLatest: unknown };
+
+export type StoryGetLiveQueryDataQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetLiveQueryDataQuery = { storyGetLiveQueryData: unknown };
+
+export type StoryGetQuerySqlQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetQuerySqlQuery = { storyGetQuerySql: unknown };
+
+export type StoryGetStandaloneQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetStandaloneQuery = { storyGetStandalone: unknown };
+
+export type StoryGetVersionQueryDataQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryGetVersionQueryDataQuery = { storyGetVersionQueryData: unknown };
+
+export type StoryListAllQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListAllQuery = { storyListAll: unknown };
+
+export type StoryListArchivedQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListArchivedQuery = { storyListArchived: unknown };
+
+export type StoryListDeliveryRecipientGroupsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListDeliveryRecipientGroupsQuery = { storyListDeliveryRecipientGroups: unknown };
+
+export type StoryListDeliveryRecipientsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListDeliveryRecipientsQuery = { storyListDeliveryRecipients: unknown };
+
+export type StoryListMentioningChatsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListMentioningChatsQuery = { storyListMentioningChats: unknown };
+
+export type StoryListMostViewedQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListMostViewedQuery = { storyListMostViewed: unknown };
+
+export type StoryListQuickQuestionsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListQuickQuestionsQuery = { storyListQuickQuestions: unknown };
+
+export type StoryListReferenceableQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListReferenceableQuery = { storyListReferenceable: unknown };
+
+export type StoryListSharedArchivedQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListSharedArchivedQuery = { storyListSharedArchived: unknown };
+
+export type StoryListStandaloneQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListStandaloneQuery = { storyListStandalone: unknown };
+
+export type StoryListStandaloneArchivedQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListStandaloneArchivedQuery = { storyListStandaloneArchived: unknown };
+
+export type StoryListStoriesQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListStoriesQuery = { storyListStories: unknown };
+
+export type StoryListVersionsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryListVersionsQuery = { storyListVersions: unknown };
+
+export type StoryParseCronFromTextMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryParseCronFromTextMutation = { storyParseCronFromText: unknown };
+
+export type StoryRefreshDataMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryRefreshDataMutation = { storyRefreshData: unknown };
+
+export type StoryRenameMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryRenameMutation = { storyRename: unknown };
+
+export type StoryResolveQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryResolveQuery = { storyResolve: unknown };
+
+export type StoryRestoreCustomVersionMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryRestoreCustomVersionMutation = { storyRestoreCustomVersion: unknown };
+
+export type StorySaveCustomStoryFilesMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StorySaveCustomStoryFilesMutation = { storySaveCustomStoryFiles: unknown };
+
+export type StorySetCustomStoryStateMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StorySetCustomStoryStateMutation = { storySetCustomStoryState: unknown };
+
+export type StoryThemeGetActiveQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeGetActiveQuery = { storyThemeGetActive: unknown };
+
+export type StoryThemeGetStateQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeGetStateQuery = { storyThemeGetState: unknown };
+
+export type StoryThemeListVersionsQueryVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeListVersionsQuery = { storyThemeListVersions: unknown };
+
+export type StoryThemeRestoreVersionMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeRestoreVersionMutation = { storyThemeRestoreVersion: unknown };
+
+export type StoryThemeSaveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeSaveMutation = { storyThemeSave: unknown };
+
+export type StoryThemeSetEnabledMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryThemeSetEnabledMutation = { storyThemeSetEnabled: unknown };
+
+export type StoryToggleCertificationMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryToggleCertificationMutation = { storyToggleCertification: unknown };
+
+export type StoryUnarchiveMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryUnarchiveMutation = { storyUnarchive: unknown };
+
+export type StoryUnarchiveSharedMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryUnarchiveSharedMutation = { storyUnarchiveShared: unknown };
+
+export type StoryUnarchiveStandaloneMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryUnarchiveStandaloneMutation = { storyUnarchiveStandalone: unknown };
+
+export type StoryUpdateDeliveryMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryUpdateDeliveryMutation = { storyUpdateDelivery: unknown };
+
+export type StoryUpdateLiveSettingsMutationVariables = Exact<{
+  input?: unknown;
+}>;
+
+
+export type StoryUpdateLiveSettingsMutation = { storyUpdateLiveSettings: unknown };
+
 export type PublicConfigQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1090,6 +1643,85 @@ export const StorageConfigDocument = {"kind":"Document","definitions":[{"kind":"
 export const StorageHealthDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StorageHealth"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storageHealth"}}]}}]} as unknown as DocumentNode<StorageHealthQuery, StorageHealthQueryVariables>;
 export const StorageUploadLimitsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StorageUploadLimits"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storageUploadLimits"}}]}}]} as unknown as DocumentNode<StorageUploadLimitsQuery, StorageUploadLimitsQueryVariables>;
 export const StorageUsageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StorageUsage"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storageUsage"}}]}}]} as unknown as DocumentNode<StorageUsageQuery, StorageUsageQueryVariables>;
+export const ChatForkAskStoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ChatForkAskStory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chatForkAskStory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<ChatForkAskStoryMutation, ChatForkAskStoryMutationVariables>;
+export const ChatForkForkStoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ChatForkForkStory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chatForkForkStory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<ChatForkForkStoryMutation, ChatForkForkStoryMutationVariables>;
+export const ChatForkOpenStandaloneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"ChatForkOpenStandalone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chatForkOpenStandalone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<ChatForkOpenStandaloneMutation, ChatForkOpenStandaloneMutationVariables>;
+export const CustomStoryViewerGetFileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetFile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetFile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetFileQuery, CustomStoryViewerGetFileQueryVariables>;
+export const CustomStoryViewerGetFormatDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetFormat"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetFormat"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetFormatQuery, CustomStoryViewerGetFormatQueryVariables>;
+export const CustomStoryViewerGetNarrativesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetNarratives"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetNarratives"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetNarrativesQuery, CustomStoryViewerGetNarrativesQueryVariables>;
+export const CustomStoryViewerGetQueryDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetQueryData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetQueryData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetQueryDataQuery, CustomStoryViewerGetQueryDataQueryVariables>;
+export const CustomStoryViewerGetQuerySqlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetQuerySql"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetQuerySql"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetQuerySqlQuery, CustomStoryViewerGetQuerySqlQueryVariables>;
+export const CustomStoryViewerGetStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetStateQuery, CustomStoryViewerGetStateQueryVariables>;
+export const CustomStoryViewerGetThemeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetTheme"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetTheme"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetThemeQuery, CustomStoryViewerGetThemeQueryVariables>;
+export const CustomStoryViewerGetVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CustomStoryViewerGetVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerGetVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerGetVersionQuery, CustomStoryViewerGetVersionQueryVariables>;
+export const CustomStoryViewerSetStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CustomStoryViewerSetState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"customStoryViewerSetState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<CustomStoryViewerSetStateMutation, CustomStoryViewerSetStateMutationVariables>;
+export const StoryArchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryArchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyArchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryArchiveMutation, StoryArchiveMutationVariables>;
+export const StoryArchiveSharedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryArchiveShared"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyArchiveShared"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryArchiveSharedMutation, StoryArchiveSharedMutationVariables>;
+export const StoryArchiveStandaloneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryArchiveStandalone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyArchiveStandalone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryArchiveStandaloneMutation, StoryArchiveStandaloneMutationVariables>;
+export const StoryBulkArchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryBulkArchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyBulkArchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryBulkArchiveMutation, StoryBulkArchiveMutationVariables>;
+export const StoryBulkUnarchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryBulkUnarchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyBulkUnarchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryBulkUnarchiveMutation, StoryBulkUnarchiveMutationVariables>;
+export const StoryCreateVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryCreateVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyCreateVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryCreateVersionMutation, StoryCreateVersionMutationVariables>;
+export const StoryEditCustomStoryBlockDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryEditCustomStoryBlock"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyEditCustomStoryBlock"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryEditCustomStoryBlockMutation, StoryEditCustomStoryBlockMutationVariables>;
+export const StoryFolderArchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderArchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderArchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderArchiveMutation, StoryFolderArchiveMutationVariables>;
+export const StoryFolderBulkArchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderBulkArchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderBulkArchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderBulkArchiveMutation, StoryFolderBulkArchiveMutationVariables>;
+export const StoryFolderBulkMoveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderBulkMove"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderBulkMove"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderBulkMoveMutation, StoryFolderBulkMoveMutationVariables>;
+export const StoryFolderBulkUnarchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderBulkUnarchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderBulkUnarchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderBulkUnarchiveMutation, StoryFolderBulkUnarchiveMutationVariables>;
+export const StoryFolderCreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderCreate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderCreateMutation, StoryFolderCreateMutationVariables>;
+export const StoryFolderDeleteDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderDelete"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderDelete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderDeleteMutation, StoryFolderDeleteMutationVariables>;
+export const StoryFolderListItemsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryFolderListItems"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderListItems"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderListItemsQuery, StoryFolderListItemsQueryVariables>;
+export const StoryFolderListTreeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryFolderListTree"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderListTree"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderListTreeQuery, StoryFolderListTreeQueryVariables>;
+export const StoryFolderMoveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderMove"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderMove"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderMoveMutation, StoryFolderMoveMutationVariables>;
+export const StoryFolderMoveStoryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderMoveStory"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderMoveStory"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderMoveStoryMutation, StoryFolderMoveStoryMutationVariables>;
+export const StoryFolderRenameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderRename"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderRename"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderRenameMutation, StoryFolderRenameMutationVariables>;
+export const StoryFolderUnarchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryFolderUnarchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyFolderUnarchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryFolderUnarchiveMutation, StoryFolderUnarchiveMutationVariables>;
+export const StoryGetCertificationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCertification"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCertification"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCertificationQuery, StoryGetCertificationQueryVariables>;
+export const StoryGetCustomStoryNarrativesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomStoryNarratives"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomStoryNarratives"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomStoryNarrativesQuery, StoryGetCustomStoryNarrativesQueryVariables>;
+export const StoryGetCustomStoryQueryDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomStoryQueryData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomStoryQueryData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomStoryQueryDataQuery, StoryGetCustomStoryQueryDataQueryVariables>;
+export const StoryGetCustomStoryQuerySqlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomStoryQuerySql"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomStoryQuerySql"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomStoryQuerySqlQuery, StoryGetCustomStoryQuerySqlQueryVariables>;
+export const StoryGetCustomStoryStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomStoryState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomStoryState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomStoryStateQuery, StoryGetCustomStoryStateQueryVariables>;
+export const StoryGetCustomVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomVersionQuery, StoryGetCustomVersionQueryVariables>;
+export const StoryGetCustomVersionFileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetCustomVersionFile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetCustomVersionFile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetCustomVersionFileQuery, StoryGetCustomVersionFileQueryVariables>;
+export const StoryGetDeliveryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetDelivery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetDelivery"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetDeliveryQuery, StoryGetDeliveryQueryVariables>;
+export const StoryGetFilterOptionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetFilterOptions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetFilterOptions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetFilterOptionsQuery, StoryGetFilterOptionsQueryVariables>;
+export const StoryGetFilteredQueryDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetFilteredQueryData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetFilteredQueryData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetFilteredQueryDataQuery, StoryGetFilteredQueryDataQueryVariables>;
+export const StoryGetIdByChatAndSlugDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetIdByChatAndSlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetIdByChatAndSlug"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetIdByChatAndSlugQuery, StoryGetIdByChatAndSlugQueryVariables>;
+export const StoryGetLatestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetLatest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetLatest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetLatestQuery, StoryGetLatestQueryVariables>;
+export const StoryGetLiveQueryDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetLiveQueryData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetLiveQueryData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetLiveQueryDataQuery, StoryGetLiveQueryDataQueryVariables>;
+export const StoryGetQuerySqlDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetQuerySql"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetQuerySql"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetQuerySqlQuery, StoryGetQuerySqlQueryVariables>;
+export const StoryGetStandaloneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetStandalone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetStandalone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetStandaloneQuery, StoryGetStandaloneQueryVariables>;
+export const StoryGetVersionQueryDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryGetVersionQueryData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyGetVersionQueryData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryGetVersionQueryDataQuery, StoryGetVersionQueryDataQueryVariables>;
+export const StoryListAllDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListAll"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListAll"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListAllQuery, StoryListAllQueryVariables>;
+export const StoryListArchivedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListArchived"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListArchived"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListArchivedQuery, StoryListArchivedQueryVariables>;
+export const StoryListDeliveryRecipientGroupsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListDeliveryRecipientGroups"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListDeliveryRecipientGroups"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListDeliveryRecipientGroupsQuery, StoryListDeliveryRecipientGroupsQueryVariables>;
+export const StoryListDeliveryRecipientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListDeliveryRecipients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListDeliveryRecipients"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListDeliveryRecipientsQuery, StoryListDeliveryRecipientsQueryVariables>;
+export const StoryListMentioningChatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListMentioningChats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListMentioningChats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListMentioningChatsQuery, StoryListMentioningChatsQueryVariables>;
+export const StoryListMostViewedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListMostViewed"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListMostViewed"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListMostViewedQuery, StoryListMostViewedQueryVariables>;
+export const StoryListQuickQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListQuickQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListQuickQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListQuickQuestionsQuery, StoryListQuickQuestionsQueryVariables>;
+export const StoryListReferenceableDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListReferenceable"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListReferenceable"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListReferenceableQuery, StoryListReferenceableQueryVariables>;
+export const StoryListSharedArchivedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListSharedArchived"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListSharedArchived"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListSharedArchivedQuery, StoryListSharedArchivedQueryVariables>;
+export const StoryListStandaloneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListStandalone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListStandalone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListStandaloneQuery, StoryListStandaloneQueryVariables>;
+export const StoryListStandaloneArchivedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListStandaloneArchived"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListStandaloneArchived"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListStandaloneArchivedQuery, StoryListStandaloneArchivedQueryVariables>;
+export const StoryListStoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListStories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListStories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListStoriesQuery, StoryListStoriesQueryVariables>;
+export const StoryListVersionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryListVersions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyListVersions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryListVersionsQuery, StoryListVersionsQueryVariables>;
+export const StoryParseCronFromTextDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryParseCronFromText"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyParseCronFromText"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryParseCronFromTextMutation, StoryParseCronFromTextMutationVariables>;
+export const StoryRefreshDataDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryRefreshData"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyRefreshData"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryRefreshDataMutation, StoryRefreshDataMutationVariables>;
+export const StoryRenameDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryRename"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyRename"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryRenameMutation, StoryRenameMutationVariables>;
+export const StoryResolveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryResolve"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyResolve"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryResolveQuery, StoryResolveQueryVariables>;
+export const StoryRestoreCustomVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryRestoreCustomVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyRestoreCustomVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryRestoreCustomVersionMutation, StoryRestoreCustomVersionMutationVariables>;
+export const StorySaveCustomStoryFilesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StorySaveCustomStoryFiles"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storySaveCustomStoryFiles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StorySaveCustomStoryFilesMutation, StorySaveCustomStoryFilesMutationVariables>;
+export const StorySetCustomStoryStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StorySetCustomStoryState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storySetCustomStoryState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StorySetCustomStoryStateMutation, StorySetCustomStoryStateMutationVariables>;
+export const StoryThemeGetActiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryThemeGetActive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeGetActive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeGetActiveQuery, StoryThemeGetActiveQueryVariables>;
+export const StoryThemeGetStateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryThemeGetState"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeGetState"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeGetStateQuery, StoryThemeGetStateQueryVariables>;
+export const StoryThemeListVersionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoryThemeListVersions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeListVersions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeListVersionsQuery, StoryThemeListVersionsQueryVariables>;
+export const StoryThemeRestoreVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryThemeRestoreVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeRestoreVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeRestoreVersionMutation, StoryThemeRestoreVersionMutationVariables>;
+export const StoryThemeSaveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryThemeSave"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeSave"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeSaveMutation, StoryThemeSaveMutationVariables>;
+export const StoryThemeSetEnabledDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryThemeSetEnabled"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyThemeSetEnabled"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryThemeSetEnabledMutation, StoryThemeSetEnabledMutationVariables>;
+export const StoryToggleCertificationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryToggleCertification"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyToggleCertification"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryToggleCertificationMutation, StoryToggleCertificationMutationVariables>;
+export const StoryUnarchiveDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryUnarchive"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyUnarchive"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryUnarchiveMutation, StoryUnarchiveMutationVariables>;
+export const StoryUnarchiveSharedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryUnarchiveShared"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyUnarchiveShared"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryUnarchiveSharedMutation, StoryUnarchiveSharedMutationVariables>;
+export const StoryUnarchiveStandaloneDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryUnarchiveStandalone"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyUnarchiveStandalone"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryUnarchiveStandaloneMutation, StoryUnarchiveStandaloneMutationVariables>;
+export const StoryUpdateDeliveryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryUpdateDelivery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyUpdateDelivery"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryUpdateDeliveryMutation, StoryUpdateDeliveryMutationVariables>;
+export const StoryUpdateLiveSettingsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StoryUpdateLiveSettings"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storyUpdateLiveSettings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<StoryUpdateLiveSettingsMutation, StoryUpdateLiveSettingsMutationVariables>;
 export const PublicConfigDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"PublicConfig"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"publicConfig"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"quarryMode"}},{"kind":"Field","name":{"kind":"Name","value":"enableUserLogin"}},{"kind":"Field","name":{"kind":"Name","value":"enableUserSignup"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerificationEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"betaAutomationsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"betaContextRecommendationsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"betaStoryFiltersEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"betaSubagentsEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"betaCustomStoriesEnabled"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"authProviders"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"google"}},{"kind":"Field","name":{"kind":"Name","value":"github"}},{"kind":"Field","name":{"kind":"Name","value":"gitlab"}},{"kind":"Field","name":{"kind":"Name","value":"smtp"}}]}}]}}]}}]} as unknown as DocumentNode<PublicConfigQuery, PublicConfigQueryVariables>;
 export const AppVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AppVersion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"commit"}},{"kind":"Field","name":{"kind":"Name","value":"buildDate"}}]}}]}}]} as unknown as DocumentNode<AppVersionQuery, AppVersionQueryVariables>;
 export const CheckUpdateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CheckUpdate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkUpdate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentVersion"}},{"kind":"Field","name":{"kind":"Name","value":"latestVersion"}},{"kind":"Field","name":{"kind":"Name","value":"updateAvailable"}}]}}]}}]} as unknown as DocumentNode<CheckUpdateQuery, CheckUpdateQueryVariables>;

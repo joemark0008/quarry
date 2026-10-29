@@ -85,6 +85,7 @@ import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { projectApi } from '@/lib/project-api';
 import { storageApi } from '@/lib/storage-api';
+import { storyApi } from '@/lib/story-api';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -265,7 +266,7 @@ function ChatInputBase({
 				return option;
 			}
 			const resolved = await queryClient
-				.fetchQuery(trpc.story.resolve.queryOptions({ storyId }))
+				.fetchQuery(storyApi.story.resolve.queryOptions({ storyId }))
 				.catch(() => null);
 			return resolved &&
 				!resolved.isArchived &&
@@ -277,7 +278,7 @@ function ChatInputBase({
 		[storyReferenceOptions, queryClient, chatId, currentProjectId],
 	);
 
-	const storyFolders = useQuery(trpc.storyFolder.listTree.queryOptions({ archived: false }));
+	const storyFolders = useQuery(storyApi.storyFolder.listTree.queryOptions({ archived: false }));
 
 	const findFolderReferenceOption = useCallback(
 		(folderId: string): MentionOption | null => {

@@ -19,6 +19,12 @@ vi.mock('@tanstack/react-query', () => ({
 	useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useParams: () => undefined }));
+/** The story procedures of `trpc.chatFork` moved to apps/api read the same mocked procedures. */
+vi.mock('@/lib/chat-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: { chatFork: unknown } };
+	return { chatApi: { chatFork: trpc.chatFork } };
+});
+
 vi.mock('@/main', () => ({ trpc: { chatFork: { askStory: { mutationOptions: () => ({}) } } } }));
 vi.mock('@/contexts/agent.provider', () => ({
 	AgentProvider: ({ children }: { children: React.ReactNode }) => children,

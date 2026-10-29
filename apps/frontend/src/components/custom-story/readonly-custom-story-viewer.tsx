@@ -17,7 +17,8 @@ import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { isNotFoundError } from '@/lib/trpc-error';
-import { trpc, trpcClient } from '@/main';
+import { trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface ReadonlyCustomStoryViewerProps {
 	chatId: string;
@@ -29,7 +30,7 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 	const { close, setCurrentStorySlug, isReplay, shareSource } = useSidePanel();
 	const [viewMode, setViewMode] = useState<CustomStoryViewMode>('app');
 	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
-	const contentQuery = useQuery(trpc.customStoryViewer.getVersion.queryOptions({ access, storySlug }));
+	const contentQuery = useQuery(storyApi.customStoryViewer.getVersion.queryOptions({ access, storySlug }));
 	const content = contentQuery.data;
 	const versionNumber = content?.version.number;
 	const dataSource = useMemo<CustomStoryFileSource>(

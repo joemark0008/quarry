@@ -4,7 +4,7 @@ import type { executeSql } from '@quarry/shared/tools';
 import type { SourceQuery } from '@/lib/execute-sql-messages';
 
 import { useSourceQuery } from '@/hooks/use-source-query';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface UseStoryChartSourceQueryOptions {
 	queryId: string;
@@ -27,7 +27,7 @@ export function useStoryChartSourceQuery({
 }: UseStoryChartSourceQueryOptions): SourceQuery | null {
 	const { sourceQuery: chatSourceQuery } = useSourceQuery(queryId);
 	const storyQuery = useQuery({
-		...trpc.story.getQuerySql.queryOptions({
+		...storyApi.story.getQuerySql.queryOptions({
 			chatId: story?.chatId ?? '',
 			storySlug: story?.storySlug ?? '',
 			queryId,

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const STORY_REFRESH_DEBOUNCE_MS = 400;
 
@@ -28,7 +28,7 @@ export const useStoryViewerVersions = ({
 }: UseStoryViewerVersionsParams) => {
 	const queryClient = useQueryClient();
 	const { data, refetch } = useQuery({
-		...trpc.story.listVersions.queryOptions({ chatId, storySlug }),
+		...storyApi.story.listVersions.queryOptions({ chatId, storySlug }),
 		enabled: !isReadonlyMode,
 	});
 	const versions = useMemo(() => data?.versions ?? [], [data?.versions]);
@@ -42,9 +42,9 @@ export const useStoryViewerVersions = ({
 	const latestStoryOutputRef = useRef({ storySlug, version: latestStoryOutputVersion });
 	const refreshStoryData = useCallback(() => {
 		void refetch();
-		void queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+		void queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 		void queryClient.invalidateQueries({
-			queryKey: trpc.story.getLatest.queryKey({ chatId, storySlug }),
+			queryKey: storyApi.story.getLatest.queryKey({ chatId, storySlug }),
 		});
 	}, [chatId, queryClient, refetch, storySlug]);
 	const debouncedRefreshStoryData = useDebouncedCallback(refreshStoryData, STORY_REFRESH_DEBOUNCE_MS);

@@ -56,6 +56,20 @@ vi.mock('@/hooks/use-toggle-favorite', () => ({
 	useToggleFavorite: () => ({ toggle: vi.fn(), isPending: false }),
 }));
 
+/** The story procedures moved to apps/api read the same mocked procedures as `trpc.story*`. */
+vi.mock('@/lib/story-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: Record<string, unknown> };
+	return {
+		storyApi: {
+			story: trpc.story,
+			storyFolder: trpc.storyFolder,
+			storyTheme: trpc.storyTheme,
+			customStoryViewer: trpc.customStoryViewer,
+		},
+		storyChatFork: {},
+	};
+});
+
 vi.mock('@/main', () => ({
 	trpc: {
 		favorite: {

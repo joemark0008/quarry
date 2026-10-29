@@ -9,7 +9,7 @@ import { SHEET_TRANSFORM, SHEET_VISUAL, StoryThumbnail } from '@/components/stor
 import { StoryThemeProvider } from '@/components/story-theme-provider';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const ANIMATED = 'app-preview-animated';
 
@@ -54,7 +54,7 @@ export function CustomStoryThumbnail({
 }) {
 	const mode = useIsDarkMode() ? 'dark' : 'light';
 	const { data: activeTheme } = useQuery({
-		...trpc.storyTheme.getActive.queryOptions(),
+		...storyApi.storyTheme.getActive.queryOptions(),
 		enabled: storyId !== undefined,
 	});
 	const theme = activeTheme?.theme?.[mode] ?? fallbackTheme ?? null;

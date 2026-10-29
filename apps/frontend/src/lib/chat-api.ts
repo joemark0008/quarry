@@ -31,6 +31,7 @@ import {
 	UpdateSqlQueryDocument,
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
+import { storyChatFork } from '@/lib/story-api';
 
 type Inputs = inferRouterInputs<TrpcRouter>;
 type Outputs = inferRouterOutputs<TrpcRouter>;
@@ -156,7 +157,8 @@ export const chatApi = {
 		}),
 	},
 	chatFork: {
-		/** Forks of a shared chat; story forks come with stories (Phase 4). */
+		...storyChatFork,
+		/** Forks of a shared chat; story forks come with story sharing (Phase 4 stage 3). */
 		fork: mutation<Inputs['chatFork']['fork'], Outputs['chatFork']['fork']>(
 			['chatFork', 'fork'],
 			async ({ source, selection }) => {

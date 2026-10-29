@@ -22,21 +22,43 @@ import { apolloClient } from '@/lib/apollo-client';
  */
 type Path = readonly [string, string];
 
+/** tRPC's `queryKey(input)` takes a partial input, for prefix invalidations (`{ chatId, storySlug }` of every version). */
+type DeepPartial<T> = T extends object ? { [K in keyof T]?: DeepPartial<T[K]> } : T;
+
 export function query<TInput, TOutput>(path: Path, fetch: (input: TInput) => Promise<TOutput>) {
 	type Key = DataTag<QueryKey, TOutput, Error>;
-	const keyOf = (input: TInput | undefined) =>
+	type Options<TData> = Omit<UseQueryOptions<TOutput, Error, TData, Key>, 'queryKey' | 'queryFn'>;
+	const keyOf = (input: DeepPartial<TInput> | undefined) =>
 		(input === undefined ? [path, { type: 'query' }] : [path, { input, type: 'query' }]) as unknown as Key;
+
+	/** Without `skipToken` the `queryFn` is a function, so the options also suit `useSuspenseQuery`/`fetchQuery`. */
+	function queryOptions<TData = TOutput>(
+		input: TInput,
+		opts?: Options<TData>,
+	): UseQueryOptions<TOutput, Error, TData, Key> & { queryKey: Key; queryFn: QueryFunction<TOutput, Key> };
+	function queryOptions<TData = TOutput>(
+		input: TInput | SkipToken,
+		opts?: Options<TData>,
+	): UseQueryOptions<TOutput, Error, TData, Key> & { queryKey: Key };
+	function queryOptions<TData = TOutput>(
+		input: TInput | SkipToken,
+		opts?: Options<TData>,
+	): UseQueryOptions<TOutput, Error, TData, Key> & { queryKey: Key } {
+		const queryFn: QueryFunction<TOutput, Key> | SkipToken =
+			input === skipToken ? skipToken : () => fetch(input as TInput);
+		return {
+			...opts,
+			queryKey: keyOf(input === skipToken ? undefined : (input as DeepPartial<TInput>)),
+			queryFn,
+		};
+	}
+
 	return {
-		queryKey: (input?: TInput) => keyOf(input),
-		queryOptions: <TData = TOutput>(
-			input: TInput | SkipToken,
-			opts?: Omit<UseQueryOptions<TOutput, Error, TData, Key>, 'queryKey' | 'queryFn'>,
-		): UseQueryOptions<TOutput, Error, TData, Key> & { queryKey: Key } => {
-			const queryFn: QueryFunction<TOutput, Key> | SkipToken =
-				input === skipToken ? skipToken : () => fetch(input as TInput);
-			return { ...opts, queryKey: keyOf(input === skipToken ? undefined : input), queryFn };
-		},
+		queryKey: (input?: DeepPartial<TInput>) => keyOf(input),
+		queryOptions,
 		pathFilter: () => ({ queryKey: [path] as QueryKey }),
+		/** Imperative call, like `trpcClient.x.y.query`. */
+		query: fetch,
 	};
 }
 
@@ -49,6 +71,9 @@ export function mutation<TInput, TOutput>(path: Path, run: (input: TInput) => Pr
 			mutationKey: [path],
 			mutationFn: run,
 		}),
+		mutationKey: () => [path] as QueryKey,
+		/** Imperative call, like `trpcClient.x.y.mutate`. */
+		mutate: run,
 	};
 }
 
@@ -97,11 +122,12 @@ const ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/;
 
 /**
  * Upstream's tRPC used superjson, so dates arrived as `Date`; results passed through a `JSON` scalar carry ISO
- * strings. Turns the ISO strings under date-like keys (`createdAt`, `windowStart`…) back into `Date`s.
+ * strings. Turns the ISO strings under date-like keys (`createdAt`, `windowStart`…) back into `Date`s, leaving
+ * the subtrees under `skipKeys` (e.g. warehouse rows, which upstream also sent as strings) untouched.
  */
-export function reviveDates<T>(value: unknown): T {
+export function reviveDates<T>(value: unknown, skipKeys: readonly string[] = []): T {
 	if (Array.isArray(value)) {
-		return value.map((item) => reviveDates(item)) as T;
+		return value.map((item) => reviveDates(item, skipKeys)) as T;
 	}
 	if (value === null || typeof value !== 'object') {
 		return value as T;
@@ -109,9 +135,11 @@ export function reviveDates<T>(value: unknown): T {
 	return Object.fromEntries(
 		Object.entries(value).map(([key, item]) => [
 			key,
-			typeof item === 'string' && DATE_KEY_PATTERN.test(key) && ISO_DATE_PATTERN.test(item)
-				? new Date(item)
-				: reviveDates(item),
+			skipKeys.includes(key)
+				? item
+				: typeof item === 'string' && DATE_KEY_PATTERN.test(key) && ISO_DATE_PATTERN.test(item)
+					? new Date(item)
+					: reviveDates(item, skipKeys),
 		]),
 	) as T;
 }

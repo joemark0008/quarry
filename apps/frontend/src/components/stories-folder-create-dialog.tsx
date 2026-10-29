@@ -6,7 +6,7 @@ import type { FolderItem } from '@/lib/stories-page';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FolderTreeSelect, getTargetVisibility } from '@/components/stories-folder-tree-select';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 type Mode = 'create' | 'modify';
 
@@ -30,7 +30,7 @@ export function FolderCreateDialog({
 	const inputRef = useRef<HTMLInputElement>(null);
 	const queryClient = useQueryClient();
 
-	const { data: tree = [] } = useQuery(trpc.storyFolder.listTree.queryOptions());
+	const { data: tree = [] } = useQuery(storyApi.storyFolder.listTree.queryOptions());
 
 	const effectiveParentVisibility = getTargetVisibility(selectedParentId, tree);
 	const willBePrivate = effectiveParentVisibility === 'private';
@@ -44,18 +44,18 @@ export function FolderCreateDialog({
 	}, [open, initialName, parentId]);
 
 	const createMutation = useMutation(
-		trpc.storyFolder.create.mutationOptions({
+		storyApi.storyFolder.create.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.storyFolder.listTree.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyFolder.listTree.queryKey() });
 				onOpenChange(false);
 			},
 		}),
 	);
 
 	const renameMutation = useMutation(
-		trpc.storyFolder.rename.mutationOptions({
+		storyApi.storyFolder.rename.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.storyFolder.listTree.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyFolder.listTree.queryKey() });
 				onOpenChange(false);
 			},
 		}),

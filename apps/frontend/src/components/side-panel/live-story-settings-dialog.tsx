@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface LiveStorySettingsDialogProps {
 	open: boolean;
@@ -165,7 +165,7 @@ export function LiveStorySettingsDialog({
 	]);
 
 	const cronNlpMutation = useMutation(
-		trpc.story.parseCronFromText.mutationOptions({
+		storyApi.story.parseCronFromText.mutationOptions({
 			onSuccess: (data, variables) => {
 				if (data.cron) {
 					setLocalCustomCron(data.cron);

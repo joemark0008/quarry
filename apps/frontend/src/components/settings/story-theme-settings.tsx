@@ -40,8 +40,8 @@ import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import { useSidePanel } from '@/contexts/side-panel';
-import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
+import { storyApi } from '@/lib/story-api';
 
 const BORDER_WIDTHS = [0, 1, 2, 3, 4];
 const HEADER_LAYOUTS = {
@@ -93,7 +93,7 @@ export function StoryThemeSettings({ isAdmin }: StoryThemeSettingsProps) {
 }
 
 function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
-	const state = useQuery(trpc.storyTheme.getState.queryOptions());
+	const state = useQuery(storyApi.storyTheme.getState.queryOptions());
 	const {
 		theme,
 		setTheme,
@@ -104,7 +104,7 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 		viewingVersionIndex,
 		setViewingVersionIndex,
 	} = useStoryThemeEditor();
-	const versionsQuery = useQuery(trpc.storyTheme.listVersions.queryOptions());
+	const versionsQuery = useQuery(storyApi.storyTheme.listVersions.queryOptions());
 	const versions = versionsQuery.data?.versions ?? [];
 	const viewedVersion = viewedVersionAt(versions, viewingVersionIndex);
 	const viewedTheme = viewedThemeAt(versions, viewingVersionIndex);
@@ -133,7 +133,7 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 	};
 
 	const save = useMutation({
-		...trpc.storyTheme.save.mutationOptions(),
+		...storyApi.storyTheme.save.mutationOptions(),
 		onSuccess: async () => {
 			setInspiration(null);
 			setPendingGeneration(null);
@@ -141,7 +141,11 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 		},
 		onError,
 	});
-	const setEnabled = useMutation({ ...trpc.storyTheme.setEnabled.mutationOptions(), onSuccess: invalidate, onError });
+	const setEnabled = useMutation({
+		...storyApi.storyTheme.setEnabled.mutationOptions(),
+		onSuccess: invalidate,
+		onError,
+	});
 
 	if (!theme) {
 		return (

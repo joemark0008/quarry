@@ -4,7 +4,7 @@ import type { KeyboardEvent, MouseEvent } from 'react';
 
 import { invalidateStoryTitleCaches } from '@/lib/stories-cache';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface EditableStoryTitleProps {
 	storyId?: string | null;
@@ -31,7 +31,7 @@ export function EditableStoryTitle({
 	const [draft, setDraft] = useState(currentTitle);
 
 	const renameStory = useMutation(
-		trpc.story.rename.mutationOptions({
+		storyApi.story.rename.mutationOptions({
 			onSuccess: (_data, _variables, _result, context) => {
 				invalidateStoryTitleCaches(context.client);
 			},

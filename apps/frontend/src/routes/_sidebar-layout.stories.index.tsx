@@ -59,6 +59,7 @@ import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { selectedStoryReferencesStore, storyDragOverNewChatStore } from '@/stores/story-references';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/_sidebar-layout/stories/')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -150,11 +151,11 @@ function StoriesPage() {
 	const switchProject = useProjectSwitch(activeProjectId);
 
 	const userStories = useQuery({
-		...trpc.story.listAll.queryOptions({ projectId: storiesProjectId }),
+		...storyApi.story.listAll.queryOptions({ projectId: storiesProjectId }),
 		enabled: !!storiesProjectId,
 	});
 	const standaloneStories = useQuery({
-		...trpc.story.listStandalone.queryOptions(),
+		...storyApi.story.listStandalone.queryOptions(),
 		enabled: !!activeProjectId,
 	});
 	const sharedStories = useQuery({
@@ -167,28 +168,28 @@ function StoriesPage() {
 		enabled: !!activeProjectId && (sort.field === 'views' || displayMode === 'lines'),
 	});
 	const archivedStories = useQuery({
-		...trpc.story.listArchived.queryOptions({ projectId: activeProjectId }),
+		...storyApi.story.listArchived.queryOptions({ projectId: activeProjectId }),
 		enabled: showArchived && !!activeProjectId,
 	});
 	const archivedStandaloneStories = useQuery({
-		...trpc.story.listStandaloneArchived.queryOptions(),
+		...storyApi.story.listStandaloneArchived.queryOptions(),
 		enabled: showArchived && !!activeProjectId,
 	});
 	const archivedSharedStories = useQuery({
-		...trpc.story.listSharedArchived.queryOptions(),
+		...storyApi.story.listSharedArchived.queryOptions(),
 		enabled: showArchived && !!activeProjectId,
 	});
 
 	const folderTree = useQuery({
-		...trpc.storyFolder.listTree.queryOptions({ archived: false }),
+		...storyApi.storyFolder.listTree.queryOptions({ archived: false }),
 		enabled: !!activeProjectId,
 	});
 	const archivedFolderTree = useQuery({
-		...trpc.storyFolder.listTree.queryOptions({ archived: true }),
+		...storyApi.storyFolder.listTree.queryOptions({ archived: true }),
 		enabled: showArchived && !!activeProjectId,
 	});
 	const folderItems = useQuery({
-		...trpc.storyFolder.listItems.queryOptions(),
+		...storyApi.storyFolder.listItems.queryOptions(),
 		enabled: !!activeProjectId,
 	});
 
@@ -423,9 +424,9 @@ function StoriesPage() {
 	}
 
 	const moveStoryMutation = useMutation(
-		trpc.storyFolder.moveStory.mutationOptions({
+		storyApi.storyFolder.moveStory.mutationOptions({
 			onMutate: async ({ storyId, folderId }) => {
-				const queryKey = trpc.storyFolder.listItems.queryKey();
+				const queryKey = storyApi.storyFolder.listItems.queryKey();
 				await queryClient.cancelQueries({ queryKey });
 				const previous = queryClient.getQueryData<{ storyId: string; folderId: string }[]>(queryKey);
 				queryClient.setQueryData<{ storyId: string; folderId: string }[]>(queryKey, (old) => {
@@ -436,7 +437,7 @@ function StoriesPage() {
 			},
 			onError: (_err, _vars, ctx) => {
 				if (ctx?.previous !== undefined) {
-					queryClient.setQueryData(trpc.storyFolder.listItems.queryKey(), ctx.previous);
+					queryClient.setQueryData(storyApi.storyFolder.listItems.queryKey(), ctx.previous);
 				}
 			},
 			onSettled: () => invalidateStoryPlacementCaches(queryClient),
@@ -444,19 +445,19 @@ function StoriesPage() {
 	);
 
 	const moveFolderMutation = useMutation(
-		trpc.storyFolder.move.mutationOptions({
+		storyApi.storyFolder.move.mutationOptions({
 			onSuccess: () => invalidateStoryPlacementCaches(queryClient),
 		}),
 	);
 
 	const archiveFolderMutation = useMutation(
-		trpc.storyFolder.archive.mutationOptions({
+		storyApi.storyFolder.archive.mutationOptions({
 			onSuccess: () => invalidateStoryArchiveCaches(queryClient),
 		}),
 	);
 
 	const unarchiveFolderMutation = useMutation(
-		trpc.storyFolder.unarchive.mutationOptions({
+		storyApi.storyFolder.unarchive.mutationOptions({
 			onSuccess: () => invalidateStoryArchiveCaches(queryClient),
 		}),
 	);
@@ -470,7 +471,7 @@ function StoriesPage() {
 	}
 
 	const bulkArchiveStoryMutation = useMutation(
-		trpc.story.bulkArchive.mutationOptions({
+		storyApi.story.bulkArchive.mutationOptions({
 			onSuccess: (_data, variables) => {
 				invalidateStoryArchiveCaches(queryClient);
 				deselectStoryIds(variables.items.map((item) => item.storyId));
@@ -479,7 +480,7 @@ function StoriesPage() {
 	);
 
 	const bulkUnarchiveStoryMutation = useMutation(
-		trpc.story.bulkUnarchive.mutationOptions({
+		storyApi.story.bulkUnarchive.mutationOptions({
 			onSuccess: (_data, variables) => {
 				invalidateStoryArchiveCaches(queryClient);
 				deselectStoryIds(variables.items.map((item) => item.storyId));
@@ -488,7 +489,7 @@ function StoriesPage() {
 	);
 
 	const bulkArchiveFolderMutation = useMutation(
-		trpc.storyFolder.bulkArchive.mutationOptions({
+		storyApi.storyFolder.bulkArchive.mutationOptions({
 			onSuccess: (_data, variables) => {
 				invalidateStoryArchiveCaches(queryClient);
 				deselectFolderIds(variables.ids);
@@ -497,7 +498,7 @@ function StoriesPage() {
 	);
 
 	const bulkUnarchiveFolderMutation = useMutation(
-		trpc.storyFolder.bulkUnarchive.mutationOptions({
+		storyApi.storyFolder.bulkUnarchive.mutationOptions({
 			onSuccess: (_data, variables) => {
 				invalidateStoryArchiveCaches(queryClient);
 				deselectFolderIds(variables.ids);
@@ -549,9 +550,9 @@ function StoriesPage() {
 	}
 
 	const bulkMoveMutation = useMutation(
-		trpc.storyFolder.bulkMove.mutationOptions({
+		storyApi.storyFolder.bulkMove.mutationOptions({
 			onMutate: async ({ storyIds, targetFolderId }) => {
-				const queryKey = trpc.storyFolder.listItems.queryKey();
+				const queryKey = storyApi.storyFolder.listItems.queryKey();
 				await queryClient.cancelQueries({ queryKey });
 				const previous = queryClient.getQueryData<{ storyId: string; folderId: string }[]>(queryKey);
 				queryClient.setQueryData<{ storyId: string; folderId: string }[]>(queryKey, (old) => {
@@ -566,7 +567,7 @@ function StoriesPage() {
 			onSuccess: clearSelection,
 			onError: (_err, _vars, ctx) => {
 				if (ctx?.previous !== undefined) {
-					queryClient.setQueryData(trpc.storyFolder.listItems.queryKey(), ctx.previous);
+					queryClient.setQueryData(storyApi.storyFolder.listItems.queryKey(), ctx.previous);
 				}
 			},
 			onSettled: () => invalidateStoryPlacementCaches(queryClient),

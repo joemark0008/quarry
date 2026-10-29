@@ -22,6 +22,7 @@ import { formatSQL } from '@/lib/sql-formatter';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
 import { trpc } from '@/main';
 import { chatApi } from '@/lib/chat-api';
+import { storyApi } from '@/lib/story-api';
 
 const RESULTS_MIN_HEIGHT = 240;
 const SQL_MIN_HEIGHT = 100;
@@ -180,8 +181,8 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 				}
 
 				queryClient.removeQueries(chatApi.chat.getQueryRows.pathFilter());
-				void queryClient.invalidateQueries(trpc.story.getQuerySql.pathFilter());
-				void queryClient.invalidateQueries(trpc.story.getFilteredQueryData.pathFilter());
+				void queryClient.invalidateQueries(storyApi.story.getQuerySql.pathFilter());
+				void queryClient.invalidateQueries(storyApi.story.getFilteredQueryData.pathFilter());
 				void queryClient.invalidateQueries(trpc.storyShare.getQuerySql.pathFilter());
 				void queryClient.invalidateQueries(trpc.storyShare.getFilteredQueryData.pathFilter());
 			},

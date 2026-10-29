@@ -5,14 +5,15 @@ import type { DownloadFormat } from '@quarry/shared/types';
 import type { CustomStoryFileSource } from '@/components/custom-story/story-data-options';
 import { useCustomStoryDownload } from '@/components/custom-story/use-custom-story-download';
 import { useChatActivity } from '@/hooks/use-chat-activity';
-import { trpc, trpcClient } from '@/main';
+import { trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export function useCustomStory(chatId: string, storySlug: string) {
 	const queryClient = useQueryClient();
 	const { selectedVersion, setSelectedVersion } = useSelectedVersion(chatId, storySlug);
 	const isAgentRunning = useChatActivity(chatId).running;
 
-	const versionsQuery = useQuery(trpc.story.listVersions.queryOptions({ chatId, storySlug }));
+	const versionsQuery = useQuery(storyApi.story.listVersions.queryOptions({ chatId, storySlug }));
 	const versionNumbers = useMemo(
 		() => (versionsQuery.data?.versions ?? []).map((version) => version.version).sort((a, b) => a - b),
 		[versionsQuery.data?.versions],
@@ -32,7 +33,11 @@ export function useCustomStory(chatId: string, storySlug: string) {
 	const isViewingLatest = viewedVersion === latestVersion;
 
 	const contentQuery = useQuery({
-		...trpc.story.getCustomVersion.queryOptions({ chatId, storySlug, versionNumber: viewedVersion ?? undefined }),
+		...storyApi.story.getCustomVersion.queryOptions({
+			chatId,
+			storySlug,
+			versionNumber: viewedVersion ?? undefined,
+		}),
 		enabled: viewedVersion !== null,
 	});
 	const dataSource = useMemo<CustomStoryFileSource>(
@@ -47,10 +52,10 @@ export function useCustomStory(chatId: string, storySlug: string) {
 	const goToLatest = useCallback(() => setSelectedVersion(null), [setSelectedVersion]);
 
 	const restoreMutation = useMutation(
-		trpc.story.restoreCustomVersion.mutationOptions({
+		storyApi.story.restoreCustomVersion.mutationOptions({
 			onSuccess: async () => {
 				await queryClient.invalidateQueries({
-					queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+					queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 				});
 				setSelectedVersion(null);
 			},
@@ -125,7 +130,9 @@ function useRefreshWhenAgentStops(chatId: string, storySlug: string, isRunning: 
 	const wasRunning = useRef(isRunning);
 	useEffect(() => {
 		if (wasRunning.current && !isRunning) {
-			void queryClient.invalidateQueries({ queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }) });
+			void queryClient.invalidateQueries({
+				queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
+			});
 		}
 		wasRunning.current = isRunning;
 	}, [chatId, isRunning, queryClient, storySlug]);

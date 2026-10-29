@@ -14,9 +14,9 @@ import {
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
-import { trpc } from '@/main';
 import { requestAsk } from '@/stores/ask-bar';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
 
 export type StoryChatMode = 'edit' | 'ask' | 'mention';
 
@@ -141,11 +141,11 @@ function StoryChatLists({
 function useStoryChatLists(storyId: string | null, canChat: boolean) {
 	const enabled = canChat && Boolean(storyId);
 	const quickQuestions = useQuery({
-		...trpc.story.listQuickQuestions.queryOptions({ storyId: storyId ?? '' }),
+		...storyApi.story.listQuickQuestions.queryOptions({ storyId: storyId ?? '' }),
 		enabled,
 	});
 	const mentioningChats = useQuery({
-		...trpc.story.listMentioningChats.queryOptions({ storyId: storyId ?? '' }),
+		...storyApi.story.listMentioningChats.queryOptions({ storyId: storyId ?? '' }),
 		enabled,
 	});
 	return { quickQuestions, mentioningChats };
@@ -158,7 +158,7 @@ function useStoryChatActions(storyId: string | null, onOpenInChat: (() => void) 
 	const { data: currentProject } = useCurrentProject();
 	const switchProject = useProjectSwitch(currentProject?.id);
 	const { data: resolvedStory } = useQuery({
-		...trpc.story.resolve.queryOptions({ storyId: storyId ?? '' }),
+		...storyApi.story.resolve.queryOptions({ storyId: storyId ?? '' }),
 		enabled: Boolean(storyId),
 	});
 

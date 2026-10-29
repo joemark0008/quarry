@@ -14,6 +14,7 @@ import { useActiveProjectId } from '@/lib/active-project';
 import { buildReferenceMentionMenu, QUICK_PICK_COUNT, toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { trpc } from '@/main';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
 
 const NO_STORIES: ReferenceableStory[] = [];
 const NO_FOLDERS: StoryFolder[] = [];
@@ -26,8 +27,8 @@ type ReferenceFilter = { excludeCurrentChat?: boolean };
 export function useReferenceMentionMenu(filter: ReferenceFilter = {}): ReferenceMentionMenu {
 	const { stories } = useReferenceableStories(filter);
 	const mostViewedStories = useMostViewedStories(filter);
-	const { data: folders = NO_FOLDERS } = useQuery(trpc.storyFolder.listTree.queryOptions({ archived: false }));
-	const { data: folderItems = NO_FOLDER_ITEMS } = useQuery(trpc.storyFolder.listItems.queryOptions());
+	const { data: folders = NO_FOLDERS } = useQuery(storyApi.storyFolder.listTree.queryOptions({ archived: false }));
+	const { data: folderItems = NO_FOLDER_ITEMS } = useQuery(storyApi.storyFolder.listItems.queryOptions());
 	const databaseObjects = useProjectDatabaseObjects();
 	return useMemo(
 		() => buildReferenceMentionMenu({ stories, mostViewedStories, folders, folderItems, databaseObjects }),
@@ -40,7 +41,7 @@ export function useReferenceableStories(filter: ReferenceFilter = {}): {
 	stories: ReferenceableStory[];
 	isLoaded: boolean;
 } {
-	const { data: allStories = NO_STORIES, isSuccess } = useQuery(trpc.story.listReferenceable.queryOptions());
+	const { data: allStories = NO_STORIES, isSuccess } = useQuery(storyApi.story.listReferenceable.queryOptions());
 	return { stories: useFilteredStories(allStories, filter), isLoaded: isSuccess };
 }
 
@@ -51,7 +52,10 @@ export function useMentionedStoryOptions(text: string, knownOptions: MentionOpti
 		return extractStoryReferenceIds(text).filter((storyId) => !knownIds.has(toStoryReferenceMentionId(storyId)));
 	}, [text, knownOptions]);
 	return useQueries({
-		queries: missingStoryIds.map((storyId) => ({ ...trpc.story.resolve.queryOptions({ storyId }), retry: false })),
+		queries: missingStoryIds.map((storyId) => ({
+			...storyApi.story.resolve.queryOptions({ storyId }),
+			retry: false,
+		})),
 		combine: toResolvedStoryOptions,
 	});
 }
@@ -72,7 +76,7 @@ function useProjectDatabaseObjects(): DatabaseObject[] {
 
 function useMostViewedStories(filter: ReferenceFilter): ReferenceableStory[] {
 	const { data: mostViewedStories = NO_STORIES } = useQuery(
-		trpc.story.listMostViewed.queryOptions({ limit: QUICK_PICK_COUNT }),
+		storyApi.story.listMostViewed.queryOptions({ limit: QUICK_PICK_COUNT }),
 	);
 	return useFilteredStories(mostViewedStories, filter);
 }

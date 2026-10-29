@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useSidePanel } from '@/contexts/side-panel';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useTimeAgo } from '@/hooks/use-time-ago';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const STORY_ACTION_LABELS = {
 	create: { pending: 'Creating...', done: 'Created' },
@@ -44,7 +44,7 @@ export const StoryToolCall = ({ toolPart }: ToolCallComponentProps<'story'>) => 
 	const isInInteractiveContext = Boolean(contextOrUrlChatId);
 
 	const { data: latestStory } = useQuery({
-		...trpc.story.getLatest.queryOptions({
+		...storyApi.story.getLatest.queryOptions({
 			chatId: chatId ?? '',
 			storySlug: finalStorySlug ?? '',
 		}),

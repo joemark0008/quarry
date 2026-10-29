@@ -1,7 +1,7 @@
 import { ArchiveRestoreIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface ArchivedBannerProps {
 	chatId: string;
@@ -12,16 +12,16 @@ export function ArchivedBanner({ chatId, storySlug }: ArchivedBannerProps) {
 	const queryClient = useQueryClient();
 
 	const unarchiveMutation = useMutation(
-		trpc.story.unarchive.mutationOptions({
+		storyApi.story.unarchive.mutationOptions({
 			onSuccess: () => {
 				void queryClient.invalidateQueries({
-					queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+					queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 				});
 				void queryClient.invalidateQueries({
-					queryKey: trpc.story.getCustomVersion.queryKey({ chatId, storySlug }),
+					queryKey: storyApi.story.getCustomVersion.queryKey({ chatId, storySlug }),
 				});
-				void queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
-				void queryClient.invalidateQueries({ queryKey: trpc.story.listArchived.queryKey() });
+				void queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
+				void queryClient.invalidateQueries({ queryKey: storyApi.story.listArchived.queryKey() });
 			},
 		}),
 	);

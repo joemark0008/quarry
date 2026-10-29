@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FolderTreeSelect, getTargetVisibility } from '@/components/stories-folder-tree-select';
 import { invalidateStoryPlacementCaches } from '@/lib/stories-cache';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 type PickerTarget =
 	| { type: 'story'; storyId: string }
@@ -33,8 +33,8 @@ export function FolderPickerDialog({
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const queryClient = useQueryClient();
 
-	const { data: tree = [] } = useQuery(trpc.storyFolder.listTree.queryOptions());
-	const { data: folderItems = [] } = useQuery(trpc.storyFolder.listItems.queryOptions());
+	const { data: tree = [] } = useQuery(storyApi.storyFolder.listTree.queryOptions());
+	const { data: folderItems = [] } = useQuery(storyApi.storyFolder.listItems.queryOptions());
 
 	function handleMoved() {
 		invalidateStoryPlacementCaches(queryClient);
@@ -42,9 +42,9 @@ export function FolderPickerDialog({
 		onOpenChange(false);
 	}
 
-	const moveStoryMutation = useMutation(trpc.storyFolder.moveStory.mutationOptions({ onSuccess: handleMoved }));
-	const moveFolderMutation = useMutation(trpc.storyFolder.move.mutationOptions({ onSuccess: handleMoved }));
-	const bulkMoveMutation = useMutation(trpc.storyFolder.bulkMove.mutationOptions({ onSuccess: handleMoved }));
+	const moveStoryMutation = useMutation(storyApi.storyFolder.moveStory.mutationOptions({ onSuccess: handleMoved }));
+	const moveFolderMutation = useMutation(storyApi.storyFolder.move.mutationOptions({ onSuccess: handleMoved }));
+	const bulkMoveMutation = useMutation(storyApi.storyFolder.bulkMove.mutationOptions({ onSuccess: handleMoved }));
 
 	const isPending = moveStoryMutation.isPending || moveFolderMutation.isPending || bulkMoveMutation.isPending;
 	const moveError = moveStoryMutation.error ?? moveFolderMutation.error ?? bulkMoveMutation.error;

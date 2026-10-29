@@ -5,7 +5,7 @@ import type { StoryViewMode } from '../story-viewer.types';
 import type { StoryCodeViewHandle } from '../story-code-view';
 import type { StorySaveResult } from '@/lib/story-save';
 import { saveStoryCodeIfChanged } from '@/lib/story-save';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface UseStoryViewerVersionActionsParams {
 	chatId: string;
@@ -40,8 +40,8 @@ export const useStoryViewerVersionActions = ({
 	onVersionSaved,
 }: UseStoryViewerVersionActionsParams) => {
 	const queryClient = useQueryClient();
-	const latestStoryQueryKey = trpc.story.getLatest.queryKey({ chatId, storySlug });
-	const listVersionsQueryKey = trpc.story.listVersions.queryKey({ chatId, storySlug });
+	const latestStoryQueryKey = storyApi.story.getLatest.queryKey({ chatId, storySlug });
+	const listVersionsQueryKey = storyApi.story.listVersions.queryKey({ chatId, storySlug });
 	const identity = { chatId, storySlug };
 	const currentIdentityRef = useRef(identity);
 	const baselineRef = useRef({ identity, code: currentVersionCode });
@@ -73,13 +73,13 @@ export const useStoryViewerVersionActions = ({
 		onVersionSaved,
 	};
 
-	const createVersionMutation = useMutation(trpc.story.createVersion.mutationOptions());
+	const createVersionMutation = useMutation(storyApi.story.createVersion.mutationOptions());
 	const mutationRef = useRef(createVersionMutation);
 	mutationRef.current = createVersionMutation;
 	const refreshQueries = useCallback(async () => {
 		await Promise.all([
 			queryClient.invalidateQueries({ queryKey: listVersionsQueryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() }),
+			queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: latestStoryQueryKey }),
 		]);
 	}, [latestStoryQueryKey, listVersionsQueryKey, queryClient]);

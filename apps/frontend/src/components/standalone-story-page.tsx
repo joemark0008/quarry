@@ -16,25 +16,26 @@ import { Spinner } from '@/components/ui/spinner';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
+import { chatApi } from '@/lib/chat-api';
 
 export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	const navigate = useNavigate();
 	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const queryClient = useQueryClient();
 
-	const storyQuery = useQuery(trpc.story.getStandalone.queryOptions({ storyId }));
+	const storyQuery = useQuery(storyApi.story.getStandalone.queryOptions({ storyId }));
 	const story = storyQuery.data;
 	const storyTheme = useStoryThemeForCurrentMode(story?.theme);
 
 	useTrackViewDuration({ assetType: 'story', storyId, versionNumber: story?.version });
 
 	const openStandaloneMutation = useMutation(
-		trpc.chatFork.openStandalone.mutationOptions({
+		chatApi.chatFork.openStandalone.mutationOptions({
 			onSuccess: ({ chatId }) => {
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.story.listStandalone.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.story.resolve.queryKey({ storyId }) });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listStandalone.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.resolve.queryKey({ storyId }) });
 				navigate({ to: '/$chatId', params: { chatId }, state: { openStorySlug: story?.slug } });
 			},
 		}),

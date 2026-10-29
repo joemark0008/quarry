@@ -29,7 +29,7 @@ import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
 import { Spinner } from '@/components/ui/spinner';
 import { useSidePanel } from '@/contexts/side-panel';
 import { usePermissions } from '@/hooks/use-permissions';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const REGIONS = [
@@ -219,7 +219,7 @@ export function StoryThemePreviewPanel() {
 	const { close } = useSidePanel();
 	const { isAdmin } = usePermissions();
 	const invalidateStoryTheme = useInvalidateStoryTheme();
-	const versionsQuery = useQuery(trpc.storyTheme.listVersions.queryOptions());
+	const versionsQuery = useQuery(storyApi.storyTheme.listVersions.queryOptions());
 	const versions = useMemo(() => versionsQuery.data?.versions ?? [], [versionsQuery.data?.versions]);
 	const slots = useMemo(() => buildPreviewSlots(versions, theme), [versions, theme]);
 	const totalVersions = slots.length;
@@ -240,7 +240,7 @@ export function StoryThemePreviewPanel() {
 	}, [latestIndex, setViewingVersionIndex, viewingVersionIndex]);
 
 	const restore = useMutation({
-		...trpc.storyTheme.restoreVersion.mutationOptions(),
+		...storyApi.storyTheme.restoreVersion.mutationOptions(),
 		onSuccess: async (result) => {
 			setTheme(result.theme);
 			setPendingGeneration(null);

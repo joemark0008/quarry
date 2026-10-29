@@ -33,7 +33,6 @@ import {
 import { describeViewedVersion, StoryVersionNav } from '@/components/story-version-nav';
 import { EditableStoryTitle } from '@/components/editable-story-title';
 import { Button } from '@/components/ui/button';
-import { trpc } from '@/main';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
 	DropdownMenu,
@@ -46,6 +45,7 @@ import {
 import { SwitchIndicator } from '@/components/ui/switch';
 import { LiveStoryTimestamp, StoryRefreshButton, StoryRefreshFailureBanner } from '@/components/story-page-header';
 import { cn } from '@/lib/utils';
+import { storyApi } from '@/lib/story-api';
 
 interface StoryViewModeControls {
 	viewMode: StoryViewMode;
@@ -486,7 +486,7 @@ function useSwitchableStories({
 	const conversationChatId = mentioned.conversationChatId ?? chatId;
 	const isConversationStory = conversationChatId === chatId;
 	const { data: persistedStories = [] } = useQuery({
-		...trpc.story.listStories.queryOptions({ chatId: conversationChatId }),
+		...storyApi.story.listStories.queryOptions({ chatId: conversationChatId }),
 		enabled: !isReadonlyMode,
 	});
 	const messageStories = isConversationStory ? allStories : mentioned.conversationStories;

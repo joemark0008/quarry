@@ -14,6 +14,7 @@ import { useShareAudience } from '@/hooks/use-share-dialog';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export interface StoryDeliveryHandle {
 	save: () => Promise<void>;
@@ -54,9 +55,9 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		const queryClient = useQueryClient();
 		const { data: session } = useSession();
 		const currentUserId = session?.user?.id ?? null;
-		const delivery = useQuery({ ...trpc.story.getDelivery.queryOptions({ chatId, storySlug }), enabled: open });
+		const delivery = useQuery({ ...storyApi.story.getDelivery.queryOptions({ chatId, storySlug }), enabled: open });
 		const recipientsQuery = useQuery({
-			...trpc.story.listDeliveryRecipients.queryOptions({ chatId, storySlug }),
+			...storyApi.story.listDeliveryRecipients.queryOptions({ chatId, storySlug }),
 			enabled: open,
 		});
 		const slackConfigQuery = useQuery({
@@ -87,7 +88,7 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		const [search, setSearch] = useState('');
 
 		const recipientGroupsQuery = useQuery({
-			...trpc.story.listDeliveryRecipientGroups.queryOptions({ chatId, storySlug }),
+			...storyApi.story.listDeliveryRecipientGroups.queryOptions({ chatId, storySlug }),
 			enabled: open && recipientMode === 'specific',
 		});
 
@@ -121,10 +122,10 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		}, [open, delivery.data]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		const updateDelivery = useMutation(
-			trpc.story.updateDelivery.mutationOptions({
+			storyApi.story.updateDelivery.mutationOptions({
 				onSuccess: () => {
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.getDelivery.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.getDelivery.queryKey({ chatId, storySlug }),
 					});
 					// Enabling delivery can auto-share the story, so keep sharing state in sync.
 					queryClient.invalidateQueries({
@@ -136,7 +137,7 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		);
 
 		const cronNlpMutation = useMutation(
-			trpc.story.parseCronFromText.mutationOptions({
+			storyApi.story.parseCronFromText.mutationOptions({
 				onSuccess: (data, variables) => {
 					if (data.cron) {
 						setCustomCron(data.cron);

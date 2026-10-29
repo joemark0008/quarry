@@ -7,7 +7,7 @@ import { SharedStoryPage } from '@/components/shared-story-page';
 import { StandaloneStoryPage } from '@/components/standalone-story-page';
 import { StoryContentLoading } from '@/components/side-panel/story-content-loading';
 import { StoryRouteError } from '@/components/story-access-error';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/_sidebar-layout/stories/$storyId')({
 	component: StoryPage,
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_sidebar-layout/stories/$storyId')({
 
 function StoryPage() {
 	const { storyId } = Route.useParams();
-	const { data: story } = useSuspenseQuery(trpc.story.resolve.queryOptions({ storyId }));
+	const { data: story } = useSuspenseQuery(storyApi.story.resolve.queryOptions({ storyId }));
 
 	if (!story.isOwner) {
 		return <SharedStoryPage key={storyId} storyId={storyId} />;

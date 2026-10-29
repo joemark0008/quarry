@@ -5,7 +5,7 @@ import type { inferRouterOutputs } from '@trpc/server';
 import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { MentionedStoryArtifact } from '@/lib/chat-artifacts';
 import { useSidePanel } from '@/contexts/side-panel';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export type ResolvedStory = inferRouterOutputs<TrpcRouter>['story']['resolve'];
 
@@ -20,13 +20,16 @@ export function useMentionedStories(chatId: string | undefined, references: Ment
 		[chatId],
 	);
 	return useQueries({
-		queries: references.map(({ storyId }) => ({ ...trpc.story.resolve.queryOptions({ storyId }), retry: false })),
+		queries: references.map(({ storyId }) => ({
+			...storyApi.story.resolve.queryOptions({ storyId }),
+			retry: false,
+		})),
 		combine: keepOpenable,
 	});
 }
 
 export function useResolvedStory(storyId: string) {
-	return useQuery({ ...trpc.story.resolve.queryOptions({ storyId }), retry: false });
+	return useQuery({ ...storyApi.story.resolve.queryOptions({ storyId }), retry: false });
 }
 
 /** The owner opens the story beside the conversation; anyone else opens its page. */

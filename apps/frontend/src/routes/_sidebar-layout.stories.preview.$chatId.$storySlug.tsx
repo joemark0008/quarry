@@ -1,11 +1,11 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { StoryRouteError } from '@/components/story-access-error';
-import { trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/_sidebar-layout/stories/preview/$chatId/$storySlug')({
 	beforeLoad: async ({ params }) => {
-		const { storyId } = await trpcClient.story.getIdByChatAndSlug.query({
+		const { storyId } = await storyApi.story.getIdByChatAndSlug.query({
 			chatId: params.chatId,
 			storySlug: params.storySlug,
 		});

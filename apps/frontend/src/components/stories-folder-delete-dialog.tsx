@@ -11,7 +11,7 @@ import {
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { ErrorMessage } from '@/components/ui/error-message';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export function FolderDeleteDialog({
 	open,
@@ -31,10 +31,10 @@ export function FolderDeleteDialog({
 	const queryClient = useQueryClient();
 
 	const deleteMutation = useMutation(
-		trpc.storyFolder.delete.mutationOptions({
+		storyApi.storyFolder.delete.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.storyFolder.listTree.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.storyFolder.listItems.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyFolder.listTree.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyFolder.listItems.queryKey() });
 				onOpenChange(false);
 			},
 		}),

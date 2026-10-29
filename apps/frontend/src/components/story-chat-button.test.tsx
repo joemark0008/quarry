@@ -18,6 +18,20 @@ vi.mock('@tanstack/react-query', () => ({
 	useQuery: (options: { queryKey?: string }) => QUERY_RESULTS[options.queryKey ?? ''],
 }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => mocks.navigate }));
+/** The story procedures moved to apps/api read the same mocked procedures as `trpc.story*`. */
+vi.mock('@/lib/story-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: Record<string, unknown> };
+	return {
+		storyApi: {
+			story: trpc.story,
+			storyFolder: trpc.storyFolder,
+			storyTheme: trpc.storyTheme,
+			customStoryViewer: trpc.customStoryViewer,
+		},
+		storyChatFork: {},
+	};
+});
+
 vi.mock('@/main', () => ({
 	trpc: {
 		project: { getCurrent: { queryOptions: () => ({ queryKey: 'project' }) } },

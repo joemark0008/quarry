@@ -8,7 +8,7 @@ import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';
 import { useIsDarkMode } from '@/contexts/theme.provider';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const STORY_THEME_MODE_OPTIONS: readonly IconSegmentedToggleOption<StoryThemeMode>[] = [
 	{ value: 'light', label: 'Light theme', icon: Sun },
@@ -82,10 +82,10 @@ export function useInvalidateStoryTheme(): () => Promise<void> {
 	return useCallback(
 		() =>
 			Promise.all([
-				queryClient.invalidateQueries({ queryKey: trpc.storyTheme.getState.queryKey() }),
-				queryClient.invalidateQueries({ queryKey: trpc.storyTheme.getActive.queryKey() }),
-				queryClient.invalidateQueries({ queryKey: trpc.storyTheme.listVersions.queryKey() }),
-				queryClient.invalidateQueries({ queryKey: trpc.story.getCustomVersion.queryKey() }),
+				queryClient.invalidateQueries({ queryKey: storyApi.storyTheme.getState.queryKey() }),
+				queryClient.invalidateQueries({ queryKey: storyApi.storyTheme.getActive.queryKey() }),
+				queryClient.invalidateQueries({ queryKey: storyApi.storyTheme.listVersions.queryKey() }),
+				queryClient.invalidateQueries({ queryKey: storyApi.story.getCustomVersion.queryKey() }),
 			]).then(() => undefined),
 		[queryClient],
 	);

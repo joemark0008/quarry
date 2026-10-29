@@ -4,7 +4,7 @@ import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
 import type { QueryDataMap } from '@/components/story-embeds';
 import type { StoryDraft } from '@/lib/story.utils';
 import { useThrottledValue } from '@/hooks/use-throttled-value';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const STORY_STREAM_THROTTLE_INTERVAL_MS = 120;
 
@@ -102,7 +102,7 @@ export const useStoryViewerContent = ({
 	);
 
 	const latestStoryQuery = useQuery({
-		...trpc.story.getLatest.queryOptions({ chatId, storySlug: resolvedStorySlug }),
+		...storyApi.story.getLatest.queryOptions({ chatId, storySlug: resolvedStorySlug }),
 		enabled: !isReadonlyMode,
 	});
 	const queryData = latestStoryQuery.data?.queryData as QueryDataMap | null | undefined;
@@ -110,7 +110,7 @@ export const useStoryViewerContent = ({
 	const lastRefreshFailure = latestStoryQuery.data?.lastRefreshFailure;
 	const needsRefresh = !isReadonlyMode && (latestStoryQuery.data?.needsRefresh ?? false);
 	const readonlyThemeQuery = useQuery({
-		...trpc.customStoryViewer.getTheme.queryOptions({
+		...storyApi.customStoryViewer.getTheme.queryOptions({
 			access: readonlyAccess ?? { kind: 'replay', chatId },
 			storySlug: resolvedStorySlug,
 		}),

@@ -1,0 +1,315 @@
+mutation ChatForkAskStory($input: JSON) {
+	chatForkAskStory(input: $input)
+}
+
+mutation ChatForkForkStory($input: JSON) {
+	chatForkForkStory(input: $input)
+}
+
+mutation ChatForkOpenStandalone($input: JSON) {
+	chatForkOpenStandalone(input: $input)
+}
+
+query CustomStoryViewerGetFile($input: JSON) {
+	customStoryViewerGetFile(input: $input)
+}
+
+query CustomStoryViewerGetFormat($input: JSON) {
+	customStoryViewerGetFormat(input: $input)
+}
+
+query CustomStoryViewerGetNarratives($input: JSON) {
+	customStoryViewerGetNarratives(input: $input)
+}
+
+query CustomStoryViewerGetQueryData($input: JSON) {
+	customStoryViewerGetQueryData(input: $input)
+}
+
+query CustomStoryViewerGetQuerySql($input: JSON) {
+	customStoryViewerGetQuerySql(input: $input)
+}
+
+query CustomStoryViewerGetState($input: JSON) {
+	customStoryViewerGetState(input: $input)
+}
+
+query CustomStoryViewerGetTheme($input: JSON) {
+	customStoryViewerGetTheme(input: $input)
+}
+
+query CustomStoryViewerGetVersion($input: JSON) {
+	customStoryViewerGetVersion(input: $input)
+}
+
+mutation CustomStoryViewerSetState($input: JSON) {
+	customStoryViewerSetState(input: $input)
+}
+
+mutation StoryArchive($input: JSON) {
+	storyArchive(input: $input)
+}
+
+mutation StoryArchiveShared($input: JSON) {
+	storyArchiveShared(input: $input)
+}
+
+mutation StoryArchiveStandalone($input: JSON) {
+	storyArchiveStandalone(input: $input)
+}
+
+mutation StoryBulkArchive($input: JSON) {
+	storyBulkArchive(input: $input)
+}
+
+mutation StoryBulkUnarchive($input: JSON) {
+	storyBulkUnarchive(input: $input)
+}
+
+mutation StoryCreateVersion($input: JSON) {
+	storyCreateVersion(input: $input)
+}
+
+mutation StoryEditCustomStoryBlock($input: JSON) {
+	storyEditCustomStoryBlock(input: $input)
+}
+
+mutation StoryFolderArchive($input: JSON) {
+	storyFolderArchive(input: $input)
+}
+
+mutation StoryFolderBulkArchive($input: JSON) {
+	storyFolderBulkArchive(input: $input)
+}
+
+mutation StoryFolderBulkMove($input: JSON) {
+	storyFolderBulkMove(input: $input)
+}
+
+mutation StoryFolderBulkUnarchive($input: JSON) {
+	storyFolderBulkUnarchive(input: $input)
+}
+
+mutation StoryFolderCreate($input: JSON) {
+	storyFolderCreate(input: $input)
+}
+
+mutation StoryFolderDelete($input: JSON) {
+	storyFolderDelete(input: $input)
+}
+
+query StoryFolderListItems($input: JSON) {
+	storyFolderListItems(input: $input)
+}
+
+query StoryFolderListTree($input: JSON) {
+	storyFolderListTree(input: $input)
+}
+
+mutation StoryFolderMove($input: JSON) {
+	storyFolderMove(input: $input)
+}
+
+mutation StoryFolderMoveStory($input: JSON) {
+	storyFolderMoveStory(input: $input)
+}
+
+mutation StoryFolderRename($input: JSON) {
+	storyFolderRename(input: $input)
+}
+
+mutation StoryFolderUnarchive($input: JSON) {
+	storyFolderUnarchive(input: $input)
+}
+
+query StoryGetCertification($input: JSON) {
+	storyGetCertification(input: $input)
+}
+
+query StoryGetCustomStoryNarratives($input: JSON) {
+	storyGetCustomStoryNarratives(input: $input)
+}
+
+query StoryGetCustomStoryQueryData($input: JSON) {
+	storyGetCustomStoryQueryData(input: $input)
+}
+
+query StoryGetCustomStoryQuerySql($input: JSON) {
+	storyGetCustomStoryQuerySql(input: $input)
+}
+
+query StoryGetCustomStoryState($input: JSON) {
+	storyGetCustomStoryState(input: $input)
+}
+
+query StoryGetCustomVersion($input: JSON) {
+	storyGetCustomVersion(input: $input)
+}
+
+query StoryGetCustomVersionFile($input: JSON) {
+	storyGetCustomVersionFile(input: $input)
+}
+
+query StoryGetDelivery($input: JSON) {
+	storyGetDelivery(input: $input)
+}
+
+query StoryGetFilterOptions($input: JSON) {
+	storyGetFilterOptions(input: $input)
+}
+
+query StoryGetFilteredQueryData($input: JSON) {
+	storyGetFilteredQueryData(input: $input)
+}
+
+query StoryGetIdByChatAndSlug($input: JSON) {
+	storyGetIdByChatAndSlug(input: $input)
+}
+
+query StoryGetLatest($input: JSON) {
+	storyGetLatest(input: $input)
+}
+
+query StoryGetLiveQueryData($input: JSON) {
+	storyGetLiveQueryData(input: $input)
+}
+
+query StoryGetQuerySql($input: JSON) {
+	storyGetQuerySql(input: $input)
+}
+
+query StoryGetStandalone($input: JSON) {
+	storyGetStandalone(input: $input)
+}
+
+query StoryGetVersionQueryData($input: JSON) {
+	storyGetVersionQueryData(input: $input)
+}
+
+query StoryListAll($input: JSON) {
+	storyListAll(input: $input)
+}
+
+query StoryListArchived($input: JSON) {
+	storyListArchived(input: $input)
+}
+
+query StoryListDeliveryRecipientGroups($input: JSON) {
+	storyListDeliveryRecipientGroups(input: $input)
+}
+
+query StoryListDeliveryRecipients($input: JSON) {
+	storyListDeliveryRecipients(input: $input)
+}
+
+query StoryListMentioningChats($input: JSON) {
+	storyListMentioningChats(input: $input)
+}
+
+query StoryListMostViewed($input: JSON) {
+	storyListMostViewed(input: $input)
+}
+
+query StoryListQuickQuestions($input: JSON) {
+	storyListQuickQuestions(input: $input)
+}
+
+query StoryListReferenceable($input: JSON) {
+	storyListReferenceable(input: $input)
+}
+
+query StoryListSharedArchived($input: JSON) {
+	storyListSharedArchived(input: $input)
+}
+
+query StoryListStandalone($input: JSON) {
+	storyListStandalone(input: $input)
+}
+
+query StoryListStandaloneArchived($input: JSON) {
+	storyListStandaloneArchived(input: $input)
+}
+
+query StoryListStories($input: JSON) {
+	storyListStories(input: $input)
+}
+
+query StoryListVersions($input: JSON) {
+	storyListVersions(input: $input)
+}
+
+mutation StoryParseCronFromText($input: JSON) {
+	storyParseCronFromText(input: $input)
+}
+
+mutation StoryRefreshData($input: JSON) {
+	storyRefreshData(input: $input)
+}
+
+mutation StoryRename($input: JSON) {
+	storyRename(input: $input)
+}
+
+query StoryResolve($input: JSON) {
+	storyResolve(input: $input)
+}
+
+mutation StoryRestoreCustomVersion($input: JSON) {
+	storyRestoreCustomVersion(input: $input)
+}
+
+mutation StorySaveCustomStoryFiles($input: JSON) {
+	storySaveCustomStoryFiles(input: $input)
+}
+
+mutation StorySetCustomStoryState($input: JSON) {
+	storySetCustomStoryState(input: $input)
+}
+
+query StoryThemeGetActive($input: JSON) {
+	storyThemeGetActive(input: $input)
+}
+
+query StoryThemeGetState($input: JSON) {
+	storyThemeGetState(input: $input)
+}
+
+query StoryThemeListVersions($input: JSON) {
+	storyThemeListVersions(input: $input)
+}
+
+mutation StoryThemeRestoreVersion($input: JSON) {
+	storyThemeRestoreVersion(input: $input)
+}
+
+mutation StoryThemeSave($input: JSON) {
+	storyThemeSave(input: $input)
+}
+
+mutation StoryThemeSetEnabled($input: JSON) {
+	storyThemeSetEnabled(input: $input)
+}
+
+mutation StoryToggleCertification($input: JSON) {
+	storyToggleCertification(input: $input)
+}
+
+mutation StoryUnarchive($input: JSON) {
+	storyUnarchive(input: $input)
+}
+
+mutation StoryUnarchiveShared($input: JSON) {
+	storyUnarchiveShared(input: $input)
+}
+
+mutation StoryUnarchiveStandalone($input: JSON) {
+	storyUnarchiveStandalone(input: $input)
+}
+
+mutation StoryUpdateDelivery($input: JSON) {
+	storyUpdateDelivery(input: $input)
+}
+
+mutation StoryUpdateLiveSettings($input: JSON) {
+	storyUpdateLiveSettings(input: $input)
+}

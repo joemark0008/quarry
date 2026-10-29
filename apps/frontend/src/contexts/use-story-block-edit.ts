@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { replaceUniqueStoryBlockTag } from './story-chart-edit-utils';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface StoryBlockEditParams {
 	chatId: string;
@@ -23,10 +23,10 @@ export interface StoryBlockEdit {
  */
 export function useStoryBlockEdit({ chatId, storySlug, storyTitle, storyCode }: StoryBlockEditParams): StoryBlockEdit {
 	const queryClient = useQueryClient();
-	const latestStoryQueryKey = trpc.story.getLatest.queryKey({ chatId, storySlug });
+	const latestStoryQueryKey = storyApi.story.getLatest.queryKey({ chatId, storySlug });
 
 	const createVersionMutation = useMutation(
-		trpc.story.createVersion.mutationOptions({
+		storyApi.story.createVersion.mutationOptions({
 			onMutate: async (variables) => {
 				await queryClient.cancelQueries({ queryKey: latestStoryQueryKey });
 				const previousLatestStory = queryClient.getQueryData(latestStoryQueryKey);
@@ -44,9 +44,9 @@ export function useStoryBlockEdit({ chatId, storySlug, storyTitle, storyCode }: 
 			},
 			onSuccess: () => {
 				void queryClient.invalidateQueries({
-					queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+					queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 				});
-				void queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+				void queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 				void queryClient.invalidateQueries({ queryKey: latestStoryQueryKey });
 			},
 		}),

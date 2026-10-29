@@ -27,9 +27,10 @@ import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh
 import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
+import { storyApi } from '@/lib/story-api';
 
 export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlug: string }) {
-	const { data: story } = useSuspenseQuery(trpc.story.getLatest.queryOptions({ chatId, storySlug }));
+	const { data: story } = useSuspenseQuery(storyApi.story.getLatest.queryOptions({ chatId, storySlug }));
 	const queryClient = useQueryClient();
 	const { running: isChatRunning } = useChatActivity(chatId);
 	const [isLiveSettingsOpen, setIsLiveSettingsOpen] = useState(false);
@@ -74,11 +75,11 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 		latestQueryData: story.queryData as QueryDataMap | null,
 	});
 	const unarchiveMutation = useMutation(
-		trpc.story.unarchive.mutationOptions({
+		storyApi.story.unarchive.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.story.getLatest.queryKey({ chatId, storySlug }) });
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.story.listArchived.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.getLatest.queryKey({ chatId, storySlug }) });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listArchived.queryKey() });
 			},
 		}),
 	);
@@ -277,7 +278,7 @@ function PreviewContent({
 	const noCacheQuery = useMemo<LiveQueryConfig | undefined>(
 		() =>
 			useLiveUnfiltered
-				? { queryOptions: (queryId) => trpc.story.getLiveQueryData.queryOptions({ chatId, queryId }) }
+				? { queryOptions: (queryId) => storyApi.story.getLiveQueryData.queryOptions({ chatId, queryId }) }
 				: undefined,
 		[useLiveUnfiltered, chatId],
 	);

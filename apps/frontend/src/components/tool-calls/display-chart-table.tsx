@@ -18,7 +18,7 @@ import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useStoryIds } from '@/hooks/use-story-ids';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { chartsApi } from '@/lib/charts-api';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const EMPTY_COLUMNS: string[] = [];
 const EMPTY_ROWS: Record<string, unknown>[] = [];
@@ -49,17 +49,17 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 	);
 
 	const { mutateAsync: addToStory, isPending: isAddingToStory } = useMutation(
-		trpc.story.createVersion.mutationOptions({
+		storyApi.story.createVersion.mutationOptions({
 			onSuccess: (_data, variables) => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.story.listVersions.queryKey({
+					queryKey: storyApi.story.listVersions.queryKey({
 						chatId: variables.chatId,
 						storySlug: variables.storySlug,
 					}),
 				});
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 				queryClient.invalidateQueries({
-					queryKey: trpc.story.getLatest.queryKey({
+					queryKey: storyApi.story.getLatest.queryKey({
 						chatId: variables.chatId,
 						storySlug: variables.storySlug,
 					}),
@@ -83,7 +83,7 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 		}
 
 		const data = await queryClient.fetchQuery({
-			...trpc.story.listVersions.queryOptions({ chatId, storySlug: targetId }),
+			...storyApi.story.listVersions.queryOptions({ chatId, storySlug: targetId }),
 			staleTime: 0,
 		});
 		const latest = data.versions.at(-1);

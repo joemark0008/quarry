@@ -16,6 +16,8 @@ import { useToggleStoryCertification } from '@/hooks/use-toggle-story-certificat
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
+import { chatApi } from '@/lib/chat-api';
 
 interface ShareButtonProps {
 	isShared: boolean;
@@ -52,15 +54,15 @@ export function StoryDuplicateMenuItem({ storyId }: { storyId: string }) {
 	const queryClient = useQueryClient();
 	const { data: currentProject } = useCurrentProject();
 	const switchProject = useProjectSwitch(currentProject?.id);
-	const { data: resolvedStory } = useQuery(trpc.story.resolve.queryOptions({ storyId }));
+	const { data: resolvedStory } = useQuery(storyApi.story.resolve.queryOptions({ storyId }));
 	const duplicateMutation = useMutation(
-		trpc.chatFork.forkStory.mutationOptions({
+		chatApi.chatFork.forkStory.mutationOptions({
 			onSuccess: async ({ chatId }) => {
 				if (resolvedStory?.projectId) {
 					await switchProject(resolvedStory.projectId);
 				}
 				queryClient.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 				navigate({ to: '/$chatId', params: { chatId }, state: { openStorySlug: resolvedStory?.slug } });
 			},
 		}),
@@ -91,7 +93,7 @@ export function StoryFavoriteMenuItem({ storyId }: { storyId: string }) {
 export function StoryCertifyMenuItem({ storyId }: { storyId: string }) {
 	const { isAdmin } = usePermissions();
 	const certification = useQuery({
-		...trpc.story.getCertification.queryOptions({ storyId }),
+		...storyApi.story.getCertification.queryOptions({ storyId }),
 		enabled: isAdmin,
 		retry: false,
 	});

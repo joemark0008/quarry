@@ -26,6 +26,7 @@ import { buildStoryItems } from '@/lib/stories-page';
 import { capitalize, cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/_sidebar-layout/_chat-layout/')({
 	validateSearch: (search: Record<string, unknown>): { admin?: boolean; example?: boolean } => ({
@@ -71,7 +72,7 @@ function HomePage() {
 	const isDark = useIsDarkMode();
 	const hasProject = !!project.data?.id;
 	const stories = useQuery({
-		...trpc.story.listAll.queryOptions({ projectId: storiesProjectId }),
+		...storyApi.story.listAll.queryOptions({ projectId: storiesProjectId }),
 		enabled: isEmptyState && !!storiesProjectId,
 	});
 	const sharedStories = useQuery({
@@ -83,11 +84,11 @@ function HomePage() {
 		enabled: isEmptyState && hasProject,
 	});
 	const folderItems = useQuery({
-		...trpc.storyFolder.listItems.queryOptions(),
+		...storyApi.storyFolder.listItems.queryOptions(),
 		enabled: isEmptyState && hasProject,
 	});
 	const folderTree = useQuery({
-		...trpc.storyFolder.listTree.queryOptions({ archived: false }),
+		...storyApi.storyFolder.listTree.queryOptions({ archived: false }),
 		enabled: isEmptyState && hasProject,
 	});
 	const storiesGridRef = useRef<HTMLDivElement>(null);

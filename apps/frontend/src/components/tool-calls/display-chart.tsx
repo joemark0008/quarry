@@ -63,6 +63,7 @@ import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { cn } from '@/lib/utils';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { useSourceQuery } from '@/hooks/use-source-query';
+import { storyApi } from '@/lib/story-api';
 
 const LEGEND_SCROLL_OFFSET = 120;
 const HORIZONTAL_LABEL_GAP = 12;
@@ -95,17 +96,17 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 	const { mutate: logDownload } = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
 
 	const { mutate: addToStory } = useMutation(
-		trpc.story.createVersion.mutationOptions({
+		storyApi.story.createVersion.mutationOptions({
 			onSuccess: (_data, variables) => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.story.listVersions.queryKey({
+					queryKey: storyApi.story.listVersions.queryKey({
 						chatId: variables.chatId,
 						storySlug: variables.storySlug,
 					}),
 				});
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 				queryClient.invalidateQueries({
-					queryKey: trpc.story.getLatest.queryKey({
+					queryKey: storyApi.story.getLatest.queryKey({
 						chatId: variables.chatId,
 						storySlug: variables.storySlug,
 					}),
@@ -228,7 +229,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 		}
 
 		const data = await queryClient.fetchQuery({
-			...trpc.story.listVersions.queryOptions({ chatId, storySlug: targetId }),
+			...storyApi.story.listVersions.queryOptions({ chatId, storySlug: targetId }),
 			staleTime: 0,
 		});
 		const latest = data.versions.at(-1);

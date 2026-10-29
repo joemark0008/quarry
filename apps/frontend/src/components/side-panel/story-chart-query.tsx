@@ -4,10 +4,11 @@ import type { StoryQuerySqlSource } from '@/contexts/story-query-sql';
 
 import { SqlQueryDisplay } from '@/components/tool-calls/sql-query-display';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export function StoryChartQueryView({ queryId, source }: { queryId: string; source: StoryQuerySqlSource }) {
 	const ownedQuery = useQuery({
-		...trpc.story.getQuerySql.queryOptions({
+		...storyApi.story.getQuerySql.queryOptions({
 			chatId: source.api.kind === 'owned' ? source.api.chatId : '',
 			storySlug: source.api.kind === 'owned' ? source.api.storySlug : '',
 			queryId,

@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
 import { Spinner } from '@/components/ui/spinner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface CustomStoryFilesProps {
 	source: CustomStoryFileSource;
@@ -235,7 +235,7 @@ function useStoryFileEdits(source: CustomStoryFileSource, versionNumber: number)
 	const queryClient = useQueryClient();
 	const [drafts, setDrafts] = useState<Record<string, string>>({});
 	const [buildErrors, setBuildErrors] = useState<string[]>([]);
-	const saveMutation = useMutation(trpc.story.saveCustomStoryFiles.mutationOptions());
+	const saveMutation = useMutation(storyApi.story.saveCustomStoryFiles.mutationOptions());
 	const chatId = ownerChatId(source);
 
 	const setDraft = (path: string, content: string, original: string) => {
@@ -264,8 +264,10 @@ function useStoryFileEdits(source: CustomStoryFileSource, versionNumber: number)
 		setDrafts({});
 		setBuildErrors([]);
 		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }) }),
-			queryClient.invalidateQueries({ queryKey: trpc.story.getCustomVersion.queryKey({ chatId, storySlug }) }),
+			queryClient.invalidateQueries({ queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }) }),
+			queryClient.invalidateQueries({
+				queryKey: storyApi.story.getCustomVersion.queryKey({ chatId, storySlug }),
+			}),
 		]);
 	};
 

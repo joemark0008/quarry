@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIsStoryRefreshing } from '@/hooks/use-is-story-refreshing';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface UseStoryViewerLiveSettingsParams {
 	chatId: string;
@@ -11,7 +12,7 @@ interface UseStoryViewerLiveSettingsParams {
 
 export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }: UseStoryViewerLiveSettingsParams) => {
 	const queryClient = useQueryClient();
-	const { data } = useQuery({ ...trpc.story.listVersions.queryOptions({ chatId, storySlug }), enabled });
+	const { data } = useQuery({ ...storyApi.story.listVersions.queryOptions({ chatId, storySlug }), enabled });
 
 	const storyId = data?.id ?? null;
 	const isLive = data?.isLive ?? false;
@@ -21,24 +22,26 @@ export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }
 
 	const invalidateCustomStory = () =>
 		Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.story.getCustomVersion.queryKey({ chatId, storySlug }) }),
 			queryClient.invalidateQueries({
-				queryKey: trpc.story.getCustomStoryQueryData.queryKey({ chatId, storySlug }),
+				queryKey: storyApi.story.getCustomVersion.queryKey({ chatId, storySlug }),
 			}),
 			queryClient.invalidateQueries({
-				queryKey: trpc.story.getCustomStoryNarratives.queryKey({ chatId, storySlug }),
+				queryKey: storyApi.story.getCustomStoryQueryData.queryKey({ chatId, storySlug }),
+			}),
+			queryClient.invalidateQueries({
+				queryKey: storyApi.story.getCustomStoryNarratives.queryKey({ chatId, storySlug }),
 			}),
 		]);
 
 	const updateLiveSettingsMutation = useMutation(
-		trpc.story.updateLiveSettings.mutationOptions({
+		storyApi.story.updateLiveSettings.mutationOptions({
 			onSuccess: async () => {
 				await Promise.all([
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 					}),
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.getLatest.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.getLatest.queryKey({ chatId, storySlug }),
 					}),
 					invalidateCustomStory(),
 				]);
@@ -47,14 +50,14 @@ export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }
 	);
 
 	const refreshDataMutation = useMutation(
-		trpc.story.refreshData.mutationOptions({
+		storyApi.story.refreshData.mutationOptions({
 			onSettled: async () => {
 				const invalidations = [
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 					}),
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.getLatest.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.getLatest.queryKey({ chatId, storySlug }),
 					}),
 					queryClient.invalidateQueries({
 						queryKey: trpc.automation.feed.queryKey(),
@@ -64,7 +67,7 @@ export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }
 				if (storyId) {
 					invalidations.push(
 						queryClient.invalidateQueries({
-							queryKey: trpc.story.getStandalone.queryKey({ storyId }),
+							queryKey: storyApi.story.getStandalone.queryKey({ storyId }),
 						}),
 					);
 				}
@@ -88,7 +91,7 @@ export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }
 	const handleRefreshData = useCallback(() => {
 		refreshDataMutation.mutate({ chatId, storySlug });
 	}, [chatId, storySlug, refreshDataMutation]);
-	const isRefreshing = useIsStoryRefreshing(trpc.story.refreshData.mutationKey(), { chatId, storySlug });
+	const isRefreshing = useIsStoryRefreshing(storyApi.story.refreshData.mutationKey(), { chatId, storySlug });
 
 	return {
 		storyId,

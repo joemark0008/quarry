@@ -17,7 +17,7 @@ import { SegmentList } from '@/components/story-rendering';
 import { StoryQuerySqlProvider } from '@/contexts/story-query-sql';
 import { useStoryFilters } from '@/hooks/use-story-filters';
 import { stabilizeStorySegments } from '@/lib/story-segment-stability';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 interface StoryPreviewProps {
 	code: string;
@@ -66,7 +66,7 @@ export const StoryPreview = memo(function StoryPreview({
 	const noCacheQuery = useMemo<LiveQueryConfig | undefined>(
 		() =>
 			isNoCacheMode
-				? { queryOptions: (queryId) => trpc.story.getLiveQueryData.queryOptions({ chatId, queryId }) }
+				? { queryOptions: (queryId) => storyApi.story.getLiveQueryData.queryOptions({ chatId, queryId }) }
 				: undefined,
 		[isNoCacheMode, chatId],
 	);

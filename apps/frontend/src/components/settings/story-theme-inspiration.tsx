@@ -35,6 +35,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, formatBytes } from '@/lib/utils';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export type GenerateResult = inferRouterOutputs<TrpcRouter>['storyTheme']['generate'];
 type FileSourceKind = 'image' | 'pdf' | 'zip';
@@ -648,7 +649,7 @@ interface WhiteLabelSourceInfo {
 
 /** The white-label identity, when this instance has one worth reading. */
 function useWhiteLabelSource(): WhiteLabelSourceInfo | null {
-	const state = useQuery(trpc.storyTheme.getState.queryOptions());
+	const state = useQuery(storyApi.storyTheme.getState.queryOptions());
 	const identity = state.data?.whiteLabelIdentity;
 	if (!identity) {
 		return null;

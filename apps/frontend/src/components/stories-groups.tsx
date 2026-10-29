@@ -45,6 +45,7 @@ import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 const VIEW_COUNT_FORMAT = new Intl.NumberFormat(undefined, { notation: 'compact', maximumFractionDigits: 1 });
 
@@ -433,7 +434,7 @@ function StoryQuickActions({ item, onRequestPinShare }: { item: StoryItem; onReq
 		trpc.storyShare.togglePin.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: trpc.storyShare.list.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 			},
 		}),
 	);
@@ -569,22 +570,26 @@ function StoryArchiveButton({ item, showArchived }: { item: StoryItem; showArchi
 		invalidateStoryArchiveCaches(queryClient);
 	}
 
-	const archiveChatStory = useMutation(trpc.story.archive.mutationOptions({ onSuccess: invalidateAfterArchive }));
+	const archiveChatStory = useMutation(storyApi.story.archive.mutationOptions({ onSuccess: invalidateAfterArchive }));
 
-	const unarchiveChatStory = useMutation(trpc.story.unarchive.mutationOptions({ onSuccess: invalidateAfterArchive }));
+	const unarchiveChatStory = useMutation(
+		storyApi.story.unarchive.mutationOptions({ onSuccess: invalidateAfterArchive }),
+	);
 
 	const archiveStandalone = useMutation(
-		trpc.story.archiveStandalone.mutationOptions({ onSuccess: invalidateAfterArchive }),
+		storyApi.story.archiveStandalone.mutationOptions({ onSuccess: invalidateAfterArchive }),
 	);
 
 	const unarchiveStandalone = useMutation(
-		trpc.story.unarchiveStandalone.mutationOptions({ onSuccess: invalidateAfterArchive }),
+		storyApi.story.unarchiveStandalone.mutationOptions({ onSuccess: invalidateAfterArchive }),
 	);
 
-	const archiveShared = useMutation(trpc.story.archiveShared.mutationOptions({ onSuccess: invalidateAfterArchive }));
+	const archiveShared = useMutation(
+		storyApi.story.archiveShared.mutationOptions({ onSuccess: invalidateAfterArchive }),
+	);
 
 	const unarchiveShared = useMutation(
-		trpc.story.unarchiveShared.mutationOptions({ onSuccess: invalidateAfterArchive }),
+		storyApi.story.unarchiveShared.mutationOptions({ onSuccess: invalidateAfterArchive }),
 	);
 
 	const canArchive =

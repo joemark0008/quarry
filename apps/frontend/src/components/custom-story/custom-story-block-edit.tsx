@@ -13,7 +13,7 @@ import {
 	toDialogConfig,
 	toHexColors,
 } from '@/lib/story-kit-block-edit';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const BLOCK_EDIT_DESCRIPTION = 'Changes are saved to the story as a new version.';
 export const TABLE_FORMAT_EDIT_DESCRIPTION = `Apply conditional formatting to columns. ${BLOCK_EDIT_DESCRIPTION}`;
@@ -146,16 +146,16 @@ function useTableFormatEdit(target: StoryTableFormatEditTarget | null) {
 function useSaveBlockEditMutation() {
 	const queryClient = useQueryClient();
 	return useMutation(
-		trpc.story.editCustomStoryBlock.mutationOptions({
+		storyApi.story.editCustomStoryBlock.mutationOptions({
 			onSuccess: async (_result, { chatId, storySlug }) => {
 				await Promise.all([
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.listVersions.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.listVersions.queryKey({ chatId, storySlug }),
 					}),
 					queryClient.invalidateQueries({
-						queryKey: trpc.story.getCustomVersion.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.story.getCustomVersion.queryKey({ chatId, storySlug }),
 					}),
-					queryClient.invalidateQueries({ queryKey: trpc.story.listAll.queryKey() }),
+					queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() }),
 				]);
 			},
 		}),
