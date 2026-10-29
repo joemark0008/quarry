@@ -17,6 +17,7 @@ import { ConfigService } from './config/config.service.js';
 import { HealthModule } from './health/health.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { SqlEngineModule } from './sql-engine/sql-engine.module.js';
 import { SystemModule } from './system/system.module.js';
 import { UsersModule } from './users/users.module.js';
 
@@ -51,6 +52,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		HealthModule,
 		UsersModule,
 		SystemModule,
+		SqlEngineModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

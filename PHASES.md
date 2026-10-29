@@ -128,15 +128,15 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
-- [ ] `WarehouseDriver` interface: `testConnection`, `listSchemas`, `listTables`, `describeTable`, `previewRows`, `execute(sql, limits)`
-- [ ] Postgres driver on `pg`: connection pooling, statement timeout, row limit, type mapping to JSON-safe values (dates, decimals, bigints — upstream `main.py` serialisation rules)
-- [ ] SQL checks on `node-sql-parser` (Postgres dialect):
-    - read-only (rejects DML/DDL, multiple statements)
+- [x] `WarehouseDriver` interface: `testConnection`, `listSchemas`, `listTables`, `describeTable`, `previewRows`, `execute(sql, limits)` — _`apps/api/src/sql-engine/warehouse-driver.ts`, plus `countRows` for sync; the driver doubles as the guards' live-schema connection_
+- [x] Postgres driver on `pg`: connection pooling, statement timeout, row limit, type mapping to JSON-safe values (dates, decimals, bigints — upstream `main.py` serialisation rules) — _one pool per connection config; every query runs in a `READ ONLY` transaction with `SET LOCAL statement_timeout`; column types printed Ibis-style (`int32`, `string`, `decimal(p, s)`) as upstream sync wrote them_
+- [x] SQL checks on `node-sql-parser` (Postgres dialect): — _on `pgsql-parser` (libpg_query, Postgres' own parser in WASM) instead: node-sql-parser misread `CROSS JOIN LATERAL` (took `CROSS` as an alias), accepted `SELECT … INTO` and dropped identifier quoting, which the guards depend on. Scope analysis (the `traverse_scope` part of sqlglot) is in `guards/pg-ast.ts`; other warehouses will need their own parser behind the same guard functions_
+    - read-only (rejects DML/DDL, multiple statements) — _quarry addition (`read-only.guard.ts`): also `SELECT INTO`, `FOR UPDATE`, data-modifying CTEs and a deny-list of functions that reach files, other databases or server state (`dblink`, `pg_read_file`, `query_to_xml`, `pg_sleep`…)_
     - allow-listed tables only (`allow_listed_only_guard.py`)
-    - column access / excluded columns (`column_access.py`, `exclude_columns_guard.py`)
+    - column access / excluded columns (`column_access.py`, `exclude_columns_guard.py`) — _`column_access.py` + `column_access_analysis.py` (what FastAPI calls); `exclude_columns_guard.py` is unused upstream and not ported. Upstream only enforced it under an enterprise license; quarry enforces `exclude_columns` whenever it is configured_
     - row security predicates (`row_security_guard.py`, `/validate_row_predicate`)
-- [ ] Port upstream Python test cases for these guards to Jest (`fork-reference/cli/tests`) and make them pass on the Postgres dialect
-- [ ] `warehouse/validate` and `warehouse/prepare` equivalents as service methods
+- [x] Port upstream Python test cases for these guards to Jest (`fork-reference/cli/tests`) and make them pass on the Postgres dialect — _on Vitest: `guards/*.spec.ts` (allow-list 27, row security 32 incl. the outer-join cases executed on Postgres temp tables, column access 26, read-only 24). Dialect-only cases (DuckDB/BigQuery/Snowflake/StarRocks syntax: `* EXCLUDE`, `UNNEST`, backtick paths, MySQL literals) are not ported; each spec header lists them_
+- [x] `warehouse/validate` and `warehouse/prepare` equivalents as service methods — _`SqlEngineService` (`executeSql`, `validateSql`, `validateRowPredicate`, `validateWarehouse`, `prepareWarehouse`), checked against the jaffle_shop `warehouse` database in `sql-engine.service.spec.ts`. `nao_config.yaml` is read with `{{ env('…') }}` substitution (`aws()`/`k8s()` secrets not supported); non-Postgres entries load but fail with a clear error when selected_
 
 ### Milestone 2b — projects, warehouse connection, context sync
 
