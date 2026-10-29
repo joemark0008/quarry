@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AgentService } from '../agent/agent.service.js';
-import type { ProjectRepository } from '../projects/project.repository.js';
 import type { ChatRepository } from './chat.repository.js';
+import type { ChatAccessService } from './chat-access.service.js';
 import { QueryRowsService } from './query-rows.service.js';
 
 const getQueryToolOutputInChat = vi.fn();
 const agentService = { get: vi.fn() };
 const service = new QueryRowsService(
 	{ getQueryToolOutputInChat } as unknown as ChatRepository,
-	{} as ProjectRepository,
+	{} as ChatAccessService,
 	agentService as unknown as AgentService,
 );
 const getQueryRowsPage = (request: Parameters<QueryRowsService['getQueryRowsPage']>[0]) =>

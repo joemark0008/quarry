@@ -1,13 +1,5 @@
 /**
- * Stand-in for upstream `queries/image.queries` (chat image attachments arrive with Phase 2d): no chat has
- * images yet, so the sandbox gets none.
+ * Upstream `queries/image.queries` is `attachments/image.repository.ts` (Phase 2d). Tools reach it through
+ * `ToolContext.services.getImagesByChatId`; this path keeps the type the sandbox tool imports.
  */
-export interface ChatImage {
-	id: string;
-	data: string;
-	mediaType: string;
-}
-
-export async function getImagesByChatId(_chatId: string): Promise<ChatImage[]> {
-	return [];
-}
+export type { ChatImage } from '../../attachments/image.repository.js';

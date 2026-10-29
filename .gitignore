@@ -11,3 +11,6 @@ apps/api/src/generated/
 
 # Project folders created by apps/api (QUARRY_PROJECTS_DIR)
 apps/api/projects/
+
+# Permanent storage of apps/api (QUARRY_STORAGE_LOCAL_PATH)
+apps/api/storage/

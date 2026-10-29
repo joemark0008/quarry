@@ -7,7 +7,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import type { Response } from 'express';
 
 import { AgentModule } from './agent/agent.module.js';
+import { AttachmentsModule } from './attachments/attachments.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { ChartsModule } from './charts/charts.module.js';
 import { ChatsModule } from './chats/chats.module.js';
 import { RequestLoaders } from './common/dataloader/request-loaders.js';
 import { AllExceptionsFilter } from './common/errors/all-exceptions.filter.js';
@@ -22,7 +24,9 @@ import { JobsModule } from './jobs/jobs.module.js';
 import { ModelSettingsModule } from './model-settings/model-settings.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
+import { SandboxModule } from './sandbox/sandbox.module.js';
 import { SystemModule } from './system/system.module.js';
+import { TranscribeModule } from './transcribe/transcribe.module.js';
 import { UsersModule } from './users/users.module.js';
 import { WarehouseModule } from './warehouse/warehouse.module.js';
 
@@ -61,8 +65,12 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		WarehouseModule,
 		ContextSyncModule,
 		AgentModule,
+		AttachmentsModule,
 		ChatsModule,
+		ChartsModule,
 		ModelSettingsModule,
+		SandboxModule,
+		TranscribeModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

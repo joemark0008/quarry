@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 
+import { AttachmentsModule } from '../attachments/attachments.module.js';
 import { ChatsCoreModule } from '../chats/chats-core.module.js';
 import { ProjectsCoreModule } from '../projects/projects-core.module.js';
+import { SandboxModule } from '../sandbox/sandbox.module.js';
 import { WarehouseModule } from '../warehouse/warehouse.module.js';
 import { AgentController } from './agent.controller.js';
 import { AgentService } from './agent.service.js';
@@ -12,7 +14,7 @@ import { CompactionService } from './services/compaction.js';
 
 /** The chat agent: `POST /api/agent`, model resolution and the tool registry (PLAN.md §6 `agent`). */
 @Module({
-	imports: [ProjectsCoreModule, WarehouseModule, ChatsCoreModule],
+	imports: [ProjectsCoreModule, WarehouseModule, ChatsCoreModule, SandboxModule, AttachmentsModule],
 	controllers: [AgentController],
 	providers: [AgentService, LlmService, ProjectLlmConfigRepository, CompactionService, AppDbRepository],
 	exports: [AgentService, LlmService, ProjectLlmConfigRepository, CompactionService],

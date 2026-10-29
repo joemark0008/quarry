@@ -6,19 +6,24 @@ import type { list } from '@quarry/shared/tools';
 import type { Tool } from 'ai';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { __reloadEnvForTesting, __resetStorageForTesting } from '../services/storage.js';
 import type { ToolContext } from '../types/tools.js';
 import grepTool from './grep.js';
 import listTool from './list.js';
 import readTool from './read.js';
 
-// Upstream reloaded env with `NAO_STORAGE_BACKEND=none` and custom stories off; in quarry storage and
-// custom stories are stand-ins that are always off, so there is nothing to reset.
+// Upstream also forces BETA_CUSTOM_STORIES_ENABLED=false; quarry's custom stories are a stand-in that is always off.
 
 const SECRET = 'sk-live-do-not-leak';
 
 let projectFolder: string;
+let originalEnv: typeof process.env;
 
 beforeEach(() => {
+	originalEnv = { ...process.env };
+	process.env.QUARRY_STORAGE_BACKEND = 'none';
+	__reloadEnvForTesting();
+	__resetStorageForTesting();
 	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-tools-'));
 	fs.writeFileSync(path.join(projectFolder, 'nao_config.yaml'), `llm:\n  api_key: ${SECRET}\n`);
 	fs.writeFileSync(path.join(projectFolder, 'RULES.md'), 'Rules\n');
@@ -28,6 +33,9 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+	process.env = originalEnv;
+	__reloadEnvForTesting();
+	__resetStorageForTesting();
 	fs.rmSync(projectFolder, { recursive: true, force: true });
 });
 

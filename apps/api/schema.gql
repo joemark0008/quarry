@@ -25,6 +25,12 @@ type CancelChatResult {
   outcome: String!
 }
 
+"""Source of a project chart plugin (upstream `chartPlugin.source`)."""
+type ChartPluginSource {
+  source: String!
+  version: String!
+}
+
 """
 A chat (upstream `chat.get`'s `UIChat`). Dates are epoch milliseconds, as upstream.
 """
@@ -201,6 +207,9 @@ input ModifyPasswordInput {
 }
 
 type Mutation {
+  """Upstream `project.addMapBoundary`: the updated boundary sets."""
+  addMapBoundary(input: JSON!): JSON!
+
   """A quick question about a shared chat, kept out of the chat history."""
   askSharedChat(input: ForkSharedChatInput!): ChatIdResult!
   cancelChat(chatId: ID!): CancelChatResult!
@@ -217,7 +226,11 @@ type Mutation {
   deleteAllNonStarredChats: Int!
   deleteChat(chatId: ID!): Boolean!
   deleteLlmConfig(provider: String!): Boolean!
+
+  """Upstream `project.deleteMapBoundary`: the updated boundary sets."""
+  deleteMapBoundary(key: String!): JSON!
   deleteProject(projectId: ID!): Boolean!
+  deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
   disconnectWarehouse(name: String!): Boolean!
@@ -231,6 +244,9 @@ type Mutation {
   renameChat(input: RenameChatInput!): Boolean!
   renameProject(input: RenameProjectInput!): ProjectSummary!
   setChatStarred(chatId: ID!, isStarred: Boolean!): Boolean!
+
+  """Creates a secret, or replaces the value of the one with that name."""
+  setSandboxSecret(input: SetSandboxSecretInput!): SandboxSecret!
 
   """Stops the running agent of a chat (the Stop button)."""
   stopChat(chatId: ID!): Boolean!
@@ -248,9 +264,19 @@ type Mutation {
   """Upstream `project.updateAgentSettings`: merges each section."""
   updateAgentSettings(input: JSON!): JSON!
 
+  """Upstream `chart.updateConfig`: the chat owner edits a `display_chart`."""
+  updateChartConfig(config: JSON!, toolCallId: String!): Boolean!
+
   """Upstream `project.updateDefaultModels`."""
   updateDefaultModels(settings: JSON!): JSON!
+
+  """Upstream `project.updateMapBoundary`: the updated boundary sets."""
+  updateMapBoundary(input: JSON!): JSON!
+
+  """Upstream `map.updateConfig`: the chat owner edits a `display_map`."""
+  updateMapConfig(config: JSON!, mapId: String!): Boolean!
   updateProfile(input: UpdateProfileInput!): User!
+  updateSandboxSecretDescription(input: UpdateSandboxSecretDescriptionInput!): SandboxSecret!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
 
@@ -259,6 +285,9 @@ type Mutation {
 
   """Upstream `project.upsertLlmConfig`."""
   upsertLlmConfig(input: JSON!): JSON!
+
+  """Upstream `project.validateMapBoundaryUrl`: keys, count, GeoJSON."""
+  validateMapBoundaryUrl(url: String!): JSON!
 }
 
 """A project the user can access, with their role in it."""
@@ -297,6 +326,20 @@ type Query {
   """Upstream `project.getAgentSettings`, with the instance capabilities."""
   agentSettings: JSON!
 
+  """
+  Models the project can use (upstream `project.listAvailableTranscribeModels`, despite its name).
+  """
+  availableModels: JSON!
+
+  """Upstream `chart.download`: the chart rendered as a base64 PNG."""
+  chartDownload(toolCallId: String!): String!
+
+  """Upstream `chartPlugin.source`."""
+  chartPluginSource(type: String!, version: String!): ChartPluginSource!
+
+  """Upstream `chartPlugin.list`: the project `charts/` plugins."""
+  chartPlugins: JSON!
+
   """The user's own chat (upstream `chat.get`)."""
   chat(chatId: ID!): Chat!
 
@@ -332,8 +375,16 @@ type Query {
   """Models known per provider (upstream `project.getKnownModels`)."""
   knownModels: JSON!
 
+  """
+  Transcription models per provider and whether a key is set (upstream `getKnownTranscribeModels`).
+  """
+  knownTranscribeModels: JSON!
+
   """Upstream `project.getLlmConfigs`: provider configs, keys previewed."""
   llmConfigs: JSON!
+
+  """Upstream `project.getMapBoundaries`."""
+  mapBoundaries: JSON!
 
   """The signed-in user."""
   me: User!
@@ -350,6 +401,9 @@ type Query {
 
   """Upstream `feedback.getRecent`."""
   recentFeedbacks(limit: Int): [RecentFeedback!]!
+
+  """The signed-in user's sandbox secrets in the project."""
+  sandboxSecrets: [SandboxSecret!]!
   savedPrompts: [SavedPrompt!]!
   searchChats(limit: Int, query: String!): [ChatSearchResult!]!
   sharedChat(shareId: ID!): SharedChatView!
@@ -357,6 +411,18 @@ type Query {
 
   """Chats shared in the projects the user can access."""
   sharedChats: [SharedChat!]!
+
+  """Upstream `storage.getConfig`: the storage backend, secrets masked."""
+  storageConfig: JSON!
+
+  """Upstream `storage.getHealth`."""
+  storageHealth: JSON!
+
+  """Upstream `storage.getUploadLimits`."""
+  storageUploadLimits: JSON!
+
+  """Upstream `storage.getUsage`."""
+  storageUsage: JSON!
   version: AppVersion!
 
   """Databases configured in the selected project."""
@@ -413,6 +479,19 @@ input RenameProjectInput {
   projectId: ID!
 }
 
+"""
+A sandbox secret of the signed-in user in the project, without its value.
+"""
+type SandboxSecret {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+
+  """Environment variable name inside `execute_sandboxed_code`."""
+  name: String!
+  updatedAt: DateTime!
+}
+
 type SavedPrompt {
   createdAt: DateTime!
   id: ID!
@@ -430,6 +509,12 @@ input SelectionInput {
   end: Int!
   start: Int!
   text: String!
+}
+
+input SetSandboxSecretInput {
+  description: String
+  name: String!
+  value: String!
 }
 
 """A shared chat (upstream `SharedChatWithDetails`)."""
@@ -481,6 +566,11 @@ type UpdateCheck {
 
 input UpdateProfileInput {
   name: String!
+}
+
+input UpdateSandboxSecretDescriptionInput {
+  description: String
+  secretId: ID!
 }
 
 input UpdateSavedPromptInput {

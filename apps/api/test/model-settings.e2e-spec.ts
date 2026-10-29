@@ -6,6 +6,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { isSandboxAvailable } from '../src/agent/services/sandbox-runtime.js';
 import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
 
 const ORIGIN = 'http://localhost:3000';
@@ -120,7 +121,8 @@ describe('model settings (e2e)', () => {
 			mapEnabled: false,
 			webSearch: { enabled: true, mode: 'provider' },
 			sql: { enforceExcludedColumns: true },
-			capabilities: { sandbox: false, semanticLayer: false },
+			// The sandbox capability is the host's: boxlite loads on macOS and on Linux with a usable /dev/kvm.
+			capabilities: { sandbox: isSandboxAvailable, semanticLayer: false },
 		});
 	});
 

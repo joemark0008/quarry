@@ -4,8 +4,8 @@ import { type SortDirection, sortTableRows } from '@quarry/shared/story-table-ut
 import { AgentService } from '../agent/agent.service.js';
 import type { QueryResult } from '../agent/types/tools.js';
 import { HandlerError } from '../common/errors/handler-error.js';
-import { ProjectRepository } from '../projects/project.repository.js';
 import { ChatRepository } from './chat.repository.js';
+import { ChatAccessService } from './chat-access.service.js';
 
 export interface QueryRowsRequest {
 	chatId: string;
@@ -28,13 +28,13 @@ export interface QueryRowsPage {
 export class QueryRowsService {
 	constructor(
 		private readonly chats: ChatRepository,
-		private readonly projects: ProjectRepository,
+		private readonly chatAccess: ChatAccessService,
 		private readonly agents: AgentService,
 	) {}
 
 	async getQueryRowsForUser(request: QueryRowsRequest, userId: string): Promise<QueryRowsPage> {
 		const projectId = await this.chats.getActiveChatProjectId(request.chatId);
-		if (!projectId || !(await this.canUserViewChatContent(request.chatId, projectId, userId))) {
+		if (!projectId || !(await this.chatAccess.canUserViewChatContent(request.chatId, projectId, userId))) {
 			throw new HandlerError('NOT_FOUND', `Chat with id ${request.chatId} not found.`);
 		}
 		const page = await this.getQueryRowsPage(request);
@@ -55,15 +55,6 @@ export class QueryRowsService {
 			: result.data;
 		const end = request.limit === undefined ? undefined : request.offset + request.limit;
 		return { columns: result.columns, rows: rows.slice(request.offset, end), totalRows: rows.length };
-	}
-
-	/** Whoever can open the chat (owner or share recipient) can view its content, and so can the project admins who replay it. */
-	private async canUserViewChatContent(chatId: string, chatProjectId: string, userId: string): Promise<boolean> {
-		if (await this.chats.canUserAccessChat(chatId, userId)) {
-			return true;
-		}
-		const role = await this.projects.getUserRoleInProject(chatProjectId, userId);
-		return role === 'admin' || role === 'context_admin';
 	}
 
 	/** A query from the turn still running is only in the agent's memory: its part is saved when the turn ends. */

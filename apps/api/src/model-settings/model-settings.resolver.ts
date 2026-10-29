@@ -56,6 +56,14 @@ export class ModelSettingsResolver {
 	}
 
 	@ProjectAccess()
+	@Query(() => GraphQLJSON, {
+		description: 'Models the project can use (upstream `project.listAvailableTranscribeModels`, despite its name).',
+	})
+	availableModels(@CurrentProject() project: Project) {
+		return this.modelSettings.getAvailableModels(project.id);
+	}
+
+	@ProjectAccess()
 	@Query(() => GraphQLJSON, { nullable: true, description: 'Upstream `project.getDefaultChatModel`.' })
 	defaultChatModel(@CurrentProject() project: Project) {
 		return this.modelSettings.getDefaultChatModel(project.id);

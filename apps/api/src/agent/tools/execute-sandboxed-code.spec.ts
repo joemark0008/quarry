@@ -52,17 +52,11 @@ vi.mock('../services/sandbox-runtime.js', () => ({
 		TimeoutError: mocks.TimeoutError,
 	},
 }));
-vi.mock('../services/image.js', () => ({
-	getImagesByChatId: mocks.getImagesByChatId,
-}));
 vi.mock('../services/project-context-path-access.service.js', () => ({
 	isProjectContextPathAllowed: vi.fn(() => true),
 }));
 vi.mock('../services/query-result.service.js', () => ({
 	getQueryResult: vi.fn(),
-}));
-vi.mock('../services/sandbox-secret.service.js', () => ({
-	sandboxSecretService: { resolve: vi.fn(async () => []) },
 }));
 vi.mock('../services/storage/user-files.js', () => ({
 	readUserFileBytes: vi.fn(),
@@ -197,6 +191,8 @@ async function runSandbox(
 
 function context(): ToolContext {
 	return {
+		// quarry: upstream mocked `image.queries`; the tool reaches the images through `context.services`.
+		services: { resolveSandboxSecrets: vi.fn(async () => []), getImagesByChatId: mocks.getImagesByChatId },
 		projectFolder,
 		chatId: 'chat-id',
 		userId: 'user-id',

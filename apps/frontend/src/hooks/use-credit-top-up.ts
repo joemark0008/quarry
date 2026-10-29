@@ -61,7 +61,7 @@ export function useCreditTopUp(creditCheckout: string | undefined) {
 			queryClient.invalidateQueries({ queryKey: trpc.account.getCreditSummary.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.account.listCreditLedger.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.account.listManagedAiUsage.queryKey() }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.listAvailableTranscribeModels.queryKey() }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.listAvailableTranscribeModels.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.billing.getInvoices.queryKey() }),
 		]);

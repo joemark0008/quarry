@@ -278,7 +278,7 @@ export const useAgent = ({
 					queryClient.invalidateQueries({ queryKey: trpc.account.listCreditLedger.queryKey() });
 					queryClient.invalidateQueries({ queryKey: trpc.account.listManagedAiUsage.queryKey() });
 					queryClient.invalidateQueries({
-						queryKey: trpc.project.listAvailableTranscribeModels.queryKey(),
+						queryKey: projectApi.project.listAvailableTranscribeModels.queryKey(),
 					});
 				}
 				const canSendNextMessage = !isAbort && !isError && !isDisconnect;

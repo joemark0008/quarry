@@ -14,6 +14,8 @@ const services = {
 	runScopedAppDbQuery: vi.fn(),
 	getProjectAvailableModels: vi.fn(),
 	resolveProviderModel: vi.fn(),
+	resolveSandboxSecrets: vi.fn(),
+	getImagesByChatId: vi.fn(),
 } satisfies Record<keyof AgentToolServices, ReturnType<typeof vi.fn>>;
 
 describe('execute_sql in-place edit of a query created in the current turn', () => {

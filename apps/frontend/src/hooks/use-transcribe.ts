@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-import { trpcClient } from '@/main';
+import { transcribeAudio } from '@/lib/transcribe';
 
 type TranscribeState = 'idle' | 'recording' | 'transcribing';
 
@@ -79,7 +79,7 @@ export function useTranscribe({ onTranscribed }: { onTranscribed: (text: string)
 
 			try {
 				const base64 = await blobToBase64(blob);
-				const { text } = await trpcClient.transcribe.transcribe.mutate({ audio: base64 });
+				const { text } = await transcribeAudio({ audio: base64 });
 				if (text?.trim()) {
 					onTranscribedRef.current(text.trim());
 				}

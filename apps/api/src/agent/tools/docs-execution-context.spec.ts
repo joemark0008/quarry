@@ -3,7 +3,6 @@ import os from 'os';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../services/image.js', () => ({ getImagesByChatId: vi.fn() }));
 vi.mock('../services/query-result.service.js', () => ({ getQueryResult: vi.fn() }));
 vi.mock('../services/storage/user-files.js', () => ({
 	readUserFileBytes: vi.fn(),

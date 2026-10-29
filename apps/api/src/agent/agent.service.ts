@@ -1,13 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { documentMediaType, type ImageUploadData } from '@quarry/shared/attachments';
 import { markSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
 import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 import { convertToModelMessages, type InferUIMessageChunk, type Tool } from 'ai';
 
+import { ImageRepository } from '../attachments/image.repository.js';
+import { isStorageEnabled, type StorageScope } from '../attachments/storage/index.js';
+import { canGrepUserFiles, statUserFile } from '../attachments/storage/user-files.js';
 import { ChatRepository } from '../chats/chat.repository.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
 import type { Project } from '../generated/prisma/client.js';
 import { ProjectRepository } from '../projects/project.repository.js';
+import { SandboxSecretService } from '../sandbox/sandbox-secret.service.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
 import { WarehouseSqlService } from '../warehouse/warehouse-sql.service.js';
 import { type AgentChat, AgentManager, type AgentProfile } from './agent-manager.js';
@@ -18,17 +23,25 @@ import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
 import { CompactionService } from './services/compaction.js';
-import { getCustomBoundaries } from './services/map-boundaries.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
 import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
 import { createWebSearchTools, getTools } from './tools/index.js';
 import type { AgentSettings } from './types/agent-settings.js';
-import type { AgentRequest, AgentTools, ContextUsage, UIMessage, UIMessagePart } from './types/chat.js';
+import type {
+	AgentRequest,
+	AgentRequestUserMessage,
+	AgentTools,
+	ContextUsage,
+	UIMessage,
+	UIMessagePart,
+} from './types/chat.js';
 import type { ToolContext } from './types/tools.js';
 import { getConnections, getUserRules } from './user-rules.js';
 import { createChatTitle } from './utils/ai.js';
+import { buildImageUrl } from './utils/image.js';
 import { extractConfiguredDatabases, readProjectContext } from './utils/nao-config.js';
+import { isStoragePath, toStorageRelativePath, toStorageVirtualPath } from './utils/tools.js';
 
 /** The web chat's analytics agent (upstream `agents/profiles/analytics.ts`). */
 export const analyticsAgent: AgentProfile = { source: 'web' };
@@ -61,6 +74,8 @@ export class AgentService {
 		private readonly compaction: CompactionService,
 		private readonly appDb: AppDbRepository,
 		private readonly config: ConfigService,
+		private readonly sandboxSecrets: SandboxSecretService,
+		private readonly images: ImageRepository,
 	) {}
 
 	/** `POST /api/agent`: `authorizeAgentRun` + `handleAgentRoute`. */
@@ -118,7 +133,7 @@ export class AgentService {
 		}
 		const [agentSettings, customBoundaries] = await Promise.all([
 			this.llmConfigs.getAgentSettings(chat.projectId) as Promise<AgentSettings | null>,
-			getCustomBoundaries(chat.projectId),
+			this.projects.getCustomBoundaries(chat.projectId),
 		]);
 		const toolContext = await this.buildToolContext({
 			projectId: chat.projectId,
@@ -147,6 +162,7 @@ export class AgentService {
 				chats: this.chats,
 				llm: this.llm,
 				compaction: this.compaction,
+				getImageById: (id) => this.images.getImageById(id),
 				buildSystemPrompt: ({ toolNames, timezone }) =>
 					this.buildProjectSystemPrompt(toolContext, toolNames, timezone),
 			},
@@ -260,6 +276,8 @@ export class AgentService {
 				getProjectAvailableModels: (projectId) => this.llm.getProjectAvailableModels(projectId),
 				resolveProviderModel: (projectId, provider, modelId, applyUserSettings) =>
 					this.llm.resolveProviderModel(projectId, provider, modelId, applyUserSettings),
+				resolveSandboxSecrets: (userId, projectId) => this.sandboxSecrets.resolve(userId, projectId),
+				getImagesByChatId: (chatId) => this.images.getImagesByChatId(chatId),
 			},
 			projectFolder: project.path,
 			chatId: opts.chatId,
@@ -297,18 +315,26 @@ export class AgentService {
 			return override;
 		}
 		const { repos, templates, presence } = readProjectContext(toolContext.projectFolder);
+		const sandboxSecrets = toolNames.includes('execute_sandboxed_code')
+			? await this.sandboxSecrets.safeListDefinitions(toolContext.userId, toolContext.projectId)
+			: [];
 		const defaultPrompt = renderSystemPrompt({
 			userRules: getUserRules(toolContext.projectFolder, toolContext.userRulesGroupAccess),
 			connections: getConnections(toolContext.projectFolder),
 			configuredDatabases: extractConfiguredDatabases(toolContext.projectFolder),
 			customCharts: toolContext.supportsCustomCharts ? listChartPlugins(toolContext.projectFolder) : [],
+			sandboxSecrets,
 			semanticLayerMode: toolContext.semanticLayerMode,
 			templates,
 			repoNames: repos.map((repo) => repo.name),
 			contextPresence: presence,
 			timezone,
 			toolNames,
-			options: { savedFilesEnabled: false, canGrepSavedFiles: false, customStoriesEnabled: false },
+			options: {
+				savedFilesEnabled: isStorageEnabled(),
+				canGrepSavedFiles: canGrepUserFiles(),
+				customStoriesEnabled: false,
+			},
 		});
 		return override ? injectNaoPrompt(override, defaultPrompt) : defaultPrompt;
 	}
@@ -330,15 +356,13 @@ export class AgentService {
 	/** `persistUserMessage`: a new chat, or a message appended to (or replacing one of) an existing chat. */
 	private async persistUserMessage(userId: string, projectId: string, body: AgentRequest) {
 		const { message, messageToEditId } = body;
-		if (message.images?.length || message.documents?.length) {
-			throw new HandlerError('BAD_REQUEST', 'Attachments are not supported yet.');
-		}
+		const scope: StorageScope = { projectId, userId };
 		const source = analyticsAgent.source;
-		const attachmentParts: UIMessagePart[] = [];
 		let chatId = body.chatId;
 		let newMessageId: string;
 		const isNewChat = !chatId;
 		if (!chatId) {
+			const attachmentParts = await this.buildAttachmentParts(message, scope);
 			const [chat, firstMessage] = await this.chats.createChat(
 				{ title: createChatTitle(message), userId, projectId },
 				{ text: message.text, citation: message.citation, source },
@@ -354,6 +378,7 @@ export class AgentService {
 			if (ownerId !== userId) {
 				throw new HandlerError('FORBIDDEN', 'You are not authorized to access this chat.');
 			}
+			const attachmentParts = await this.buildAttachmentParts(message, scope);
 			let versionGroupId: string | undefined;
 			if (messageToEditId) {
 				versionGroupId = await this.chats.resolveVersionGroupIdForEdit(chatId, messageToEditId);
@@ -376,6 +401,61 @@ export class AgentService {
 			throw new HandlerError('NOT_FOUND', `Chat with id ${chatId} not found.`);
 		}
 		return { chat, chatId, isNewChat, newMessageId };
+	}
+
+	/**
+	 * Both kinds of attachment become a `file` part, but they get there differently: an image is stored in the
+	 * database so it can be inlined for the model, while a document was already uploaded to permanent storage
+	 * (`POST /api/attachments`) and is only referenced by its path.
+	 */
+	private async buildAttachmentParts(
+		message: AgentRequestUserMessage,
+		scope: StorageScope,
+	): Promise<UIMessagePart[]> {
+		const [imageParts, documentParts] = await Promise.all([
+			this.buildImageParts(message.images),
+			this.buildDocumentParts(message.documents, scope),
+		]);
+		return [...imageParts, ...documentParts];
+	}
+
+	private async buildImageParts(images: ImageUploadData[] | undefined): Promise<UIMessagePart[]> {
+		if (!images?.length) {
+			return [];
+		}
+		const savedImages = await this.images.saveImages(images);
+		return savedImages.map(({ id, mediaType }) => ({ type: 'file' as const, mediaType, url: buildImageUrl(id) }));
+	}
+
+	private async buildDocumentParts(
+		virtualPaths: string[] | undefined,
+		scope: StorageScope,
+	): Promise<UIMessagePart[]> {
+		if (!virtualPaths?.length) {
+			return [];
+		}
+		return Promise.all(virtualPaths.map((virtualPath) => this.buildDocumentPart(virtualPath, scope)));
+	}
+
+	private async buildDocumentPart(virtualPath: string, scope: StorageScope): Promise<UIMessagePart> {
+		let relativePath = '';
+		try {
+			relativePath = isStoragePath(virtualPath) ? toStorageRelativePath(virtualPath) : '';
+		} catch {
+			throw new HandlerError('BAD_REQUEST', `Invalid attached file path: ${virtualPath}`);
+		}
+		const stored = relativePath ? await statUserFile(scope, relativePath) : null;
+		if (!stored) {
+			throw new HandlerError('BAD_REQUEST', `Attached file not found: ${virtualPath}`);
+		}
+
+		const filename = relativePath.split('/').pop()!;
+		return {
+			type: 'file' as const,
+			mediaType: documentMediaType(filename) ?? 'application/octet-stream',
+			filename,
+			url: toStorageVirtualPath(relativePath),
+		};
 	}
 
 	private disposeAgent(chatId: string): void {

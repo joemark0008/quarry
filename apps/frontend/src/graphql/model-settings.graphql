@@ -33,3 +33,11 @@ query AgentSettings {
 mutation UpdateAgentSettings($input: JSON!) {
 	updateAgentSettings(input: $input)
 }
+
+query AvailableModels {
+	availableModels
+}
+
+query KnownTranscribeModels {
+	knownTranscribeModels
+}

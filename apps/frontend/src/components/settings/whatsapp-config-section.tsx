@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface WhatsappConfigSectionProps {
 	isAdmin: boolean;
@@ -17,7 +18,7 @@ interface WhatsappConfigSectionProps {
 export function WhatsappConfigSection({ isAdmin, onCancelSetup }: WhatsappConfigSectionProps) {
 	const queryClient = useQueryClient();
 	const whatsappConfig = useQuery(trpc.project.getWhatsappConfig.queryOptions());
-	const { data: availableModels } = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const { data: availableModels } = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 
 	const [isEditing, setIsEditing] = useState(false);
 	type AvailableModel = NonNullable<typeof availableModels>[number];

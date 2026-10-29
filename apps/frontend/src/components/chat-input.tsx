@@ -83,6 +83,7 @@ import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { projectApi } from '@/lib/project-api';
+import { storageApi } from '@/lib/storage-api';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -203,7 +204,7 @@ function ChatInputBase({
 	const hasProject = project.data != null;
 	const isTrial = useIsCloud() && project.data === null;
 	const uploadLimits = useQuery({
-		...trpc.storage.getUploadLimits.queryOptions(),
+		...storageApi.storage.getUploadLimits.queryOptions(),
 		enabled: hasProject,
 	});
 	const attachmentUpload = useAttachmentUpload({
@@ -218,7 +219,7 @@ function ChatInputBase({
 		enabled: hasProject,
 	});
 	const transcribeModels = useQuery({
-		...trpc.project.getKnownTranscribeModels.queryOptions(),
+		...projectApi.project.getKnownTranscribeModels.queryOptions(),
 		enabled: hasProject,
 	});
 	const isTranscribeEnabled = hasProject && (agentSettings.data?.transcribe?.enabled ?? false);

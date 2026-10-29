@@ -140,7 +140,7 @@ function SubAgentModelField({
 	disabled: boolean;
 	onChange: (selection: LlmSelectedModel | null) => void;
 }) {
-	const availableModels = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const availableModels = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 	const defaultChatModel = useQuery(projectApi.project.getDefaultChatModel.queryOptions());
 	const models = availableModels.data ?? [];
 	const chatDefault = defaultChatModel.data

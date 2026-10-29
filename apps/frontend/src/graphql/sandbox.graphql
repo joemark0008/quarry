@@ -1,0 +1,29 @@
+fragment SandboxSecretFields on SandboxSecret {
+	id
+	name
+	description
+	createdAt
+	updatedAt
+}
+
+query SandboxSecrets {
+	sandboxSecrets {
+		...SandboxSecretFields
+	}
+}
+
+mutation SetSandboxSecret($input: SetSandboxSecretInput!) {
+	setSandboxSecret(input: $input) {
+		...SandboxSecretFields
+	}
+}
+
+mutation UpdateSandboxSecretDescription($input: UpdateSandboxSecretDescriptionInput!) {
+	updateSandboxSecretDescription(input: $input) {
+		...SandboxSecretFields
+	}
+}
+
+mutation DeleteSandboxSecret($secretId: ID!) {
+	deleteSandboxSecret(secretId: $secretId)
+}

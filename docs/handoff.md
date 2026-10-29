@@ -35,7 +35,8 @@ Context carried over from Claude Code sessions run under another account (transc
 | 2a SQL engine                                        | Committed on `phase-2-core` (`7791b57`) — `pgsql-parser` instead of `node-sql-parser`, 122 tests |
 | 2b Projects, warehouse, context sync                 | Committed on `phase-2-core` (`5c35aa6`)                                                          |
 | **2c Chats + agent**                                 | **In progress** — agent + tests committed on `phase-2-core`, see below                           |
-| 2d, 3–8                                              | Not started                                                                                      |
+| 2d Attachments, charts, transcribe, sandbox          | Committed on `phase-2-core` — Phase 2 complete, see PHASES.md 2d                                 |
+| 3–8                                                  | Not started — next: the Phase 3–7 decision point                                                 |
 
 ### Where 2c stopped
 

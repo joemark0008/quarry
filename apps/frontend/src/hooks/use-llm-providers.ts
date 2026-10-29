@@ -86,9 +86,11 @@ export function useLlmProviders() {
 		await Promise.all([
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getLlmConfigs.queryOptions().queryKey }),
 			queryClient.invalidateQueries({
-				queryKey: trpc.project.listAvailableTranscribeModels.queryOptions().queryKey,
+				queryKey: projectApi.project.listAvailableTranscribeModels.queryOptions().queryKey,
 			}),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getKnownTranscribeModels.queryOptions().queryKey }),
+			queryClient.invalidateQueries({
+				queryKey: projectApi.project.getKnownTranscribeModels.queryOptions().queryKey,
+			}),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: trpc.budget.getUnpricedModels.queryOptions().queryKey }),

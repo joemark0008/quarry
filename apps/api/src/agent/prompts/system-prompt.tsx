@@ -2,8 +2,8 @@ import { type ChartPluginManifestEntry, STORY_REFERENCE_TAG } from '@quarry/shar
 import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import type { SemanticLayerMode } from '@quarry/shared/types';
 
+import type { SandboxSecretDefinition } from '../../sandbox/sandbox-secret.service.js';
 import { Block, Bold, Br, CodeBlock, Link, List, ListItem, Location, Span, Title } from '../markdown/index.js';
-import type { SandboxSecretDefinition } from '../services/sandbox-secret.service.js';
 import type { PreloadedSkill, Skill } from '../services/skill.js';
 import { tokenCounter } from '../services/token-counter.js';
 import type { InternalSkill } from '../skills.js';

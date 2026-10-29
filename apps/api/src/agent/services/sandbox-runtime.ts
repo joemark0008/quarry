@@ -1,26 +1,38 @@
+import fs from 'fs';
+
 /**
- * Stand-in for upstream `services/sandbox-runtime.ts`: the boxlite micro-VM runtime (`@boxlite-ai/boxlite`) comes
- * with the sandbox runtime in Phase 2d. Until then no host can run sandboxed code, so `execute_sandboxed_code`
- * stays out of the tool set exactly like upstream on a host without the runtime.
+ * Port of upstream `services/sandbox-runtime.ts`.
+ *
+ * The sandbox runtime is an optional native dependency, so whether a deployment can run code at
+ * all is decided here, once, at startup. It lives apart from the tool that uses it because other
+ * parts of a run need the answer without pulling the tool in: guidance that offers a sandbox to
+ * an instance without one is worse than no guidance.
  */
+let boxlite: typeof import('@boxlite-ai/boxlite') | null = null;
 
-/** The part of boxlite's `CodeBox` the sandbox tool uses. */
-export interface SandboxCodeBox {
-	exec(
-		command: string,
-		...args: (string | string[] | Record<string, string> | undefined)[]
-	): Promise<{ stdout: string; stderr: string; exitCode: number }>;
-	installPackages(...packages: string[]): Promise<unknown>;
-	copyIn(source: string, destination: string): Promise<void>;
-	copyOut(source: string, destination: string): Promise<void>;
+if (isSandboxHostSupported()) {
+	try {
+		boxlite = await import('@boxlite-ai/boxlite');
+	} catch {
+		console.warn('⚠ sandbox runtime not installed — execute_sandboxed_code tool disabled');
+	}
+} else {
+	console.warn('⚠ sandbox runtime unavailable on this host; execute_sandboxed_code tool disabled');
 }
 
-export interface SandboxRuntime {
-	CodeBox: new (options: Record<string, unknown>) => SandboxCodeBox;
-	ExecError: new (...args: never[]) => Error;
-	TimeoutError: new (...args: never[]) => Error;
+export const sandboxRuntime = boxlite;
+
+export const isSandboxAvailable = boxlite !== null;
+
+function isSandboxHostSupported(): boolean {
+	if (process.platform !== 'linux') {
+		return true;
+	}
+
+	try {
+		fs.accessSync('/dev/kvm', fs.constants.R_OK | fs.constants.W_OK);
+		return true;
+	} catch {
+		return false;
+	}
 }
-
-export const sandboxRuntime: SandboxRuntime | null = null as SandboxRuntime | null;
-
-export const isSandboxAvailable = sandboxRuntime !== null;

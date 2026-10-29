@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { trpc } from '@/main';
+import { sandboxApi } from '@/lib/sandbox-api';
 
 export function useSandboxSecretsQuery() {
-	return useQuery(trpc.sandboxSecret.list.queryOptions());
+	return useQuery(sandboxApi.sandboxSecret.list.queryOptions());
 }
 
 /**
@@ -12,13 +12,13 @@ export function useSandboxSecretsQuery() {
  */
 export function useSandboxSecretMutations() {
 	const queryClient = useQueryClient();
-	const invalidateList = () => queryClient.invalidateQueries({ queryKey: trpc.sandboxSecret.list.queryKey() });
+	const invalidateList = () => queryClient.invalidateQueries({ queryKey: sandboxApi.sandboxSecret.list.queryKey() });
 
-	const setMutation = useMutation(trpc.sandboxSecret.set.mutationOptions({ onSuccess: invalidateList }));
+	const setMutation = useMutation(sandboxApi.sandboxSecret.set.mutationOptions({ onSuccess: invalidateList }));
 	const updateDescriptionMutation = useMutation(
-		trpc.sandboxSecret.updateDescription.mutationOptions({ onSuccess: invalidateList }),
+		sandboxApi.sandboxSecret.updateDescription.mutationOptions({ onSuccess: invalidateList }),
 	);
-	const deleteMutation = useMutation(trpc.sandboxSecret.delete.mutationOptions({ onSuccess: invalidateList }));
+	const deleteMutation = useMutation(sandboxApi.sandboxSecret.delete.mutationOptions({ onSuccess: invalidateList }));
 
 	return { setMutation, updateDescriptionMutation, deleteMutation };
 }

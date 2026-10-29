@@ -4,15 +4,15 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
+import type { ResolvedSandboxSecret } from '../../sandbox/sandbox-secret.service.js';
 import {
 	getAgentVisibleRulesView,
 	isAgentVisibleRootRulesPath,
 } from '../services/agent-visible-project-file.service.js';
-import { ChatImage, getImagesByChatId } from '../services/image.js';
+import type { ChatImage } from '../services/image.js';
 import { isProjectContextPathAllowed } from '../services/project-context-path-access.service.js';
 import { getQueryResult } from '../services/query-result.service.js';
 import { sandboxRuntime } from '../services/sandbox-runtime.js';
-import { ResolvedSandboxSecret, sandboxSecretService } from '../services/sandbox-secret.service.js';
 import { readUserFileBytes, writeUserFileBytes } from '../services/storage/user-files.js';
 import { QueryResult, ToolContext } from '../types/tools.js';
 import { redactSecretValues, toSandboxEnv } from '../utils/sandbox-secrets.js';
@@ -439,7 +439,8 @@ async function executeSandboxedCodeLocked(
 		stderrParts.push(`Sandbox "${sandbox_id}" expired — created a new one.`);
 	}
 
-	const secrets = await sandboxSecretService.resolve(userId, projectId);
+	// quarry: upstream called `sandboxSecretService.resolve`; the agent hands it over through `ToolContext.services`.
+	const secrets = await context.services.resolveSandboxSecrets(userId, projectId);
 
 	try {
 		if (packages?.length) {
@@ -463,7 +464,7 @@ async function executeSandboxedCodeLocked(
 		}
 		await refreshProjectContextInSandbox(box, context, tmpDir);
 
-		const chatImages = await getImagesByChatId(chatId);
+		const chatImages = await context.services.getImagesByChatId(chatId);
 		if (chatImages.length > 0) {
 			await copyChatImagesToSandbox(box, chatImages, tmpDir);
 		}

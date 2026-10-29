@@ -41,7 +41,7 @@ import { getMapStyle, isMapStyleDark, MAP_STYLE_LIGHT, resolveStyleUrl, useMapSt
 import { getActiveProjectId } from '@/lib/active-project';
 import { resolveCssVariableColor } from '@/lib/css-color';
 import { maplibregl } from '@/lib/maplibre';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 const POINTS_SOURCE_ID = 'query-points';
 const POINTS_LAYER_ID = 'query-points-circles';
@@ -90,7 +90,7 @@ export default memo(function MapView({
 	const isBubble = config.map_type === 'scatter_bubble';
 
 	const { data: fetchedBoundaries = [] } = useQuery({
-		...trpc.project.getMapBoundaries.queryOptions(),
+		...projectApi.project.getMapBoundaries.queryOptions(),
 		enabled: injectedBoundaries === undefined,
 	});
 	const customBoundaries = injectedBoundaries ?? fetchedBoundaries;

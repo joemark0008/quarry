@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface MattermostConfigSectionProps {
 	isAdmin: boolean;
@@ -17,7 +18,7 @@ interface MattermostConfigSectionProps {
 export function MattermostConfigSection({ isAdmin, onCancelSetup }: MattermostConfigSectionProps) {
 	const queryClient = useQueryClient();
 	const mattermostConfig = useQuery(trpc.project.getMattermostConfig.queryOptions());
-	const { data: availableModels } = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const { data: availableModels } = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 
 	const [isEditing, setIsEditing] = useState(false);
 	type AvailableModel = NonNullable<typeof availableModels>[number];

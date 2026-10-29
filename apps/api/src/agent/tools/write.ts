@@ -1,6 +1,6 @@
 import { writeFile } from '@quarry/shared/tools';
 
-import { isStorageEnabled, relativePathFromKey, STORAGE_MAX_FILE_SIZE_MB } from '../services/storage.js';
+import { getStorageMaxFileSizeMb, isStorageEnabled, relativePathFromKey } from '../services/storage.js';
 import { writeUserFile } from '../services/storage/user-files.js';
 import { customStoryAuthoringError, isCustomStoriesEnabled, writeStoryMountFile } from '../services/story-mount.js';
 import { renderToModelOutput, WriteOutput } from '../tool-outputs/index.js';
@@ -24,7 +24,7 @@ export function buildWriteToolDescription({
 	const targets = [
 		...(storage
 			? [
-					`/${STORAGE_MOUNT}, where files are kept for later (a file may not exceed ${STORAGE_MAX_FILE_SIZE_MB} MB)`,
+					`/${STORAGE_MOUNT}, where files are kept for later (a file may not exceed ${getStorageMaxFileSizeMb()} MB)`,
 				]
 			: []),
 		...(customStories

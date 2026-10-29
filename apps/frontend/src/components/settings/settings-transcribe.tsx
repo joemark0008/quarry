@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Switch } from '@/components/ui/switch';
 import { capitalize } from '@/lib/utils';
-import { trpc, trpcClient } from '@/main';
+import { trpcClient } from '@/main';
 import { projectApi } from '@/lib/project-api';
 
 const TEST_DURATION_MS = 5000;
@@ -19,7 +19,7 @@ interface SettingsTranscribeProps {
 export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 	const queryClient = useQueryClient();
 	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
-	const knownModels = useQuery(trpc.project.getKnownTranscribeModels.queryOptions());
+	const knownModels = useQuery(projectApi.project.getKnownTranscribeModels.queryOptions());
 
 	const updateAgentSettings = useMutation(
 		projectApi.project.updateAgentSettings.mutationOptions({

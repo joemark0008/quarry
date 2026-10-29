@@ -44,6 +44,7 @@ import type { ChartType } from '@quarry/shared/chart-types';
 import type { ToolCallComponentProps } from '.';
 import type { DateRange } from '@/lib/charts.utils';
 import type { DataExportFormat } from '@/components/export-data-menu';
+import { chartsApi } from '@/lib/charts-api';
 import { trpc } from '@/main';
 import {
 	DATE_RANGE_OPTIONS,
@@ -127,7 +128,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 
 		setIsDownloading(true);
 		try {
-			const image = await queryClient.fetchQuery(trpc.chart.download.queryOptions({ toolCallId }));
+			const image = await queryClient.fetchQuery(chartsApi.chart.download.queryOptions({ toolCallId }));
 			const link = document.createElement('a');
 			link.download = `${chartConfig.title || 'chart'}.png`;
 			link.href = `data:image/png;base64,${image}`;

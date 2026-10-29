@@ -13,6 +13,7 @@ import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface SlackConfigSectionProps {
 	isAdmin: boolean;
@@ -22,7 +23,7 @@ interface SlackConfigSectionProps {
 export function SlackConfigSection({ isAdmin, onCancelSetup }: SlackConfigSectionProps) {
 	const queryClient = useQueryClient();
 	const slackConfig = useQuery(trpc.project.getSlackConfig.queryOptions());
-	const { data: availableModels } = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
+	const { data: availableModels } = useQuery(projectApi.project.listAvailableTranscribeModels.queryOptions());
 
 	const [isEditing, setIsEditing] = useState(false);
 	type AvailableModel = NonNullable<typeof availableModels>[number];

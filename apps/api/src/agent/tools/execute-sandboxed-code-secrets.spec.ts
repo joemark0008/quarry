@@ -30,10 +30,6 @@ vi.mock('../services/sandbox-runtime.js', () => ({
 	sandboxRuntime: { CodeBox: FakeCodeBox, ExecError, TimeoutError },
 	isSandboxAvailable: true,
 }));
-vi.mock('../services/sandbox-secret.service.js', () => ({
-	sandboxSecretService: { resolve },
-}));
-vi.mock('../services/image.js', () => ({ getImagesByChatId: vi.fn(async () => []) }));
 vi.mock('../services/query-result.service.js', () => ({ getQueryResult: vi.fn() }));
 vi.mock('../services/storage/user-files.js', () => ({ readUserFileBytes: vi.fn(), writeUserFileBytes: vi.fn() }));
 
@@ -54,6 +50,8 @@ afterAll(() => {
 
 function contextFor(userId: string, projectId = 'project-1'): ToolContext {
 	return {
+		// quarry: upstream mocked `sandboxSecretService.resolve`; the tool reaches it through `context.services`.
+		services: { resolveSandboxSecrets: resolve, getImagesByChatId: vi.fn(async () => []) },
 		projectFolder,
 		chatId: 'chat-1',
 		userId,

@@ -195,6 +195,10 @@ export class ModelSettingsService {
 		return settings;
 	}
 
+	getAvailableModels(projectId: string) {
+		return this.llm.getProjectAvailableModels(projectId);
+	}
+
 	getDefaultChatModel(projectId: string): Promise<LlmSelectedModel | null> {
 		return this.llm.resolveDefaultChatModel(projectId);
 	}

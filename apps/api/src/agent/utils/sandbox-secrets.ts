@@ -1,4 +1,4 @@
-import type { ResolvedSandboxSecret } from '../services/sandbox-secret.service.js';
+import type { ResolvedSandboxSecret } from '../../sandbox/sandbox-secret.service.js';
 
 export function redactedPlaceholder(name: string): string {
 	return `[REDACTED:${name}]`;

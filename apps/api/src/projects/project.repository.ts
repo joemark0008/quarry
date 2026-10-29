@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import type { CustomBoundarySet, MapSettings } from '@quarry/shared';
+import type { DisplaySettings } from '@quarry/shared/date';
+import { DEFAULT_DATE_FORMAT_SETTINGS } from '@quarry/shared/date';
 import type { UserRole } from '@quarry/shared/types';
 
+import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
 import type { Prisma, Project, ProjectMember } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
@@ -158,5 +162,67 @@ export class ProjectRepository {
 			LEFT JOIN org_member om ON om.user_id = u.id
 				AND om.org_id = (SELECT org_id FROM project WHERE id = ${projectId})
 			WHERE pm.user_id IS NOT NULL OR om.user_id IS NOT NULL`;
+	}
+
+	/** Upstream `getDisplaySettings`: the project's date format, defaulted. */
+	async getDisplaySettings(projectId: string): Promise<DisplaySettings> {
+		const project = await this.getProjectById(projectId);
+		const stored = (project?.displaySettings ?? {}) as DisplaySettings;
+		return { dateFormat: stored.dateFormat ?? { ...DEFAULT_DATE_FORMAT_SETTINGS } };
+	}
+
+	async getMapSettings(projectId: string): Promise<MapSettings> {
+		const project = await this.getProjectById(projectId);
+		return (project?.mapSettings ?? {}) as MapSettings;
+	}
+
+	/** The project's custom GeoJSON boundary sets (`project.map_settings.customBoundaries`). */
+	async getCustomBoundaries(projectId: string): Promise<CustomBoundarySet[]> {
+		const settings = await this.getMapSettings(projectId);
+		return settings.customBoundaries ?? [];
+	}
+
+	addCustomBoundary(projectId: string, boundary: CustomBoundarySet): Promise<CustomBoundarySet[]> {
+		return this.mutateCustomBoundaries(projectId, (current) => {
+			if (current.some((b) => b.key === boundary.key)) {
+				throw new HandlerError('BAD_REQUEST', `A boundary set with key "${boundary.key}" already exists.`);
+			}
+			return [...current, boundary];
+		});
+	}
+
+	updateCustomBoundary(
+		projectId: string,
+		key: string,
+		patch: Partial<CustomBoundarySet>,
+	): Promise<CustomBoundarySet[]> {
+		return this.mutateCustomBoundaries(projectId, (current) => {
+			if (patch.key && patch.key !== key && current.some((b) => b.key === patch.key)) {
+				throw new HandlerError('BAD_REQUEST', `A boundary set with key "${patch.key}" already exists.`);
+			}
+			return current.map((b) => (b.key === key ? { ...b, ...patch } : b));
+		});
+	}
+
+	deleteCustomBoundary(projectId: string, key: string): Promise<CustomBoundarySet[]> {
+		return this.mutateCustomBoundaries(projectId, (current) => current.filter((b) => b.key !== key));
+	}
+
+	/** Read-modify-write of `map_settings` under a row lock, so concurrent edits don't drop each other's sets. */
+	private mutateCustomBoundaries(
+		projectId: string,
+		transform: (current: CustomBoundarySet[]) => CustomBoundarySet[],
+	): Promise<CustomBoundarySet[]> {
+		return this.prisma.$transaction(async (tx) => {
+			const [row] = await tx.$queryRaw<{ mapSettings: MapSettings | null }[]>`
+				SELECT map_settings AS "mapSettings" FROM project WHERE id = ${projectId} FOR UPDATE`;
+			const settings = row?.mapSettings ?? {};
+			const next = transform(settings.customBoundaries ?? []);
+			await tx.project.update({
+				where: { id: projectId },
+				data: { mapSettings: { ...settings, customBoundaries: next } as unknown as Prisma.InputJsonValue },
+			});
+			return next;
+		});
 	}
 }

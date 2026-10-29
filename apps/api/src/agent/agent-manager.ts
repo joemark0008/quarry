@@ -7,6 +7,7 @@ import {
 	isStoryReferenceMentionId,
 	normalizeCitationMarkers,
 } from '@quarry/shared';
+import { fileExtension } from '@quarry/shared/attachments';
 import { markSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
 import type { CitationData, LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 import {
@@ -34,7 +35,15 @@ import {
 import { type CompactionService, RunCompaction } from './services/compaction.js';
 import { interactiveStopConditions } from './stop-conditions.js';
 import { llmTelemetry } from './telemetry.js';
-import type { AgentTools, ForkMetadata, Mention, MessageCustomDataParts, TokenUsage, UIMessage } from './types/chat.js';
+import type {
+	AgentTools,
+	ForkMetadata,
+	Mention,
+	MessageCustomDataParts,
+	TokenUsage,
+	UIMessage,
+	UIMessagePart,
+} from './types/chat.js';
 import type { QueryResult, ToolContext } from './types/tools.js';
 import { getTableColumnsContent, listSchemaTableFqdns } from './user-rules.js';
 import { convertToTokenUsage, findLastUserMessage, getLastUserMessageText, settleToolParts } from './utils/ai.js';
@@ -43,6 +52,7 @@ import { logger } from './utils/logger.js';
 import { sanitizeToolCalls } from './utils/model-message.js';
 import { addPromptCache, cachedSystemInstructions } from './utils/prompt-cache.js';
 import { sanitizeTitle, TITLE_MAX_OUTPUT_TOKENS, titleFromPrompt, titleGenerationUserMessage } from './utils/title.js';
+import { isStoragePath } from './utils/tools.js';
 import { formatErrorMessageForUI } from './utils/utils.js';
 
 export const MAX_OUTPUT_TOKENS = 16_000;
@@ -66,6 +76,8 @@ export interface AgentManagerDependencies {
 	chats: ChatRepository;
 	llm: LlmService;
 	compaction: CompactionService;
+	/** `imageQueries.getImageById`: an attached image's data, inlined for the model. */
+	getImageById: (id: string) => Promise<{ data: string; mediaType: string } | undefined>;
 	/** Renders the project system prompt for the run (`_buildDefaultSystemPrompt`). */
 	buildSystemPrompt: (args: { toolNames: string[]; timezone?: string }) => Promise<string>;
 }
@@ -74,8 +86,8 @@ export interface AgentManagerDependencies {
  * Port of upstream `services/agent.ts` `AgentManager`: one agent run on a chat. It streams the answer as an AI SDK
  * UI message stream, persists the assistant message when the run ends (stopped or not), and generates the chat
  * title for a new chat. Long conversations are compacted (`RunCompaction` in the step preparation, summary rebuilt
- * from the last `data-compaction` part). Not ported yet: memory extraction, skills and story mentions, attachments
- * resolution, PostHog tracking.
+ * from the last `data-compaction` part). Not ported yet: memory extraction, skills and story mentions, PostHog
+ * tracking.
  */
 export class AgentManager {
 	private readonly _agent: ToolLoopAgent<never, AgentTools, never>;
@@ -287,10 +299,11 @@ export class AgentManager {
 		const withCitation = this._addCitationContext(withoutStaleQueries);
 		const withDbContext = this._addDatabaseContext(withCitation, mentions);
 		const withCompaction = this._deps.compaction.useLastCompaction(withDbContext);
+		const withResolvedAttachments = await resolveAttachments(withCompaction, this._deps.getImageById);
 
 		this._systemPrompt = await this._deps.buildSystemPrompt({ toolNames: Object.keys(this._agentTools), timezone });
 		this._runCompaction = new RunCompaction(this._deps.compaction);
-		const conversation = withCompaction.filter((message) => message.role !== 'system');
+		const conversation = withResolvedAttachments.filter((message) => message.role !== 'system');
 		const modelMessages = await convertToModelMessages<UIMessage>(conversation, { tools: this._agentTools });
 		return sanitizeToolCalls(modelMessages, this._modelSelection.provider);
 	}
@@ -462,6 +475,84 @@ export class AgentManager {
 			emptyMessages: 'remove',
 		});
 	}
+}
+
+const IMAGE_URL_PATTERN = /^\/i\/([a-f0-9-]+)$/;
+
+type MessageLike = Omit<UIMessage, 'id'>;
+type ImageLoader = AgentManagerDependencies['getImageById'];
+
+/**
+ * Turns the attachments of a conversation into something a provider can consume.
+ *
+ * An image is inlined: its `/i/{id}` URL becomes the raw base64 payload. The AI SDK's
+ * `convertToModelMessages` maps `FileUIPart.url` → `FilePart.data`, and a data-URL string
+ * (data:…) would be misread as a link to download — the mediaType already travels in its
+ * own field, so the bare base64 string is what the provider needs.
+ *
+ * A document in permanent storage is replaced by a line naming where it lives. Its bytes
+ * stay out of the context window; the model reads the path when the question needs it.
+ */
+export async function resolveAttachments<T extends MessageLike>(
+	messages: T[],
+	getImageById: ImageLoader,
+): Promise<T[]> {
+	const imageData = await loadImageData(messages, getImageById);
+
+	return messages.map((message) => ({
+		...message,
+		parts: message.parts.flatMap((part): UIMessagePart[] => {
+			if (part.type !== 'file') {
+				return [part];
+			}
+
+			const imageId = part.url.match(IMAGE_URL_PATTERN)?.[1];
+			if (imageId) {
+				const base64Data = imageData.get(imageId);
+				return [base64Data ? { ...part, url: base64Data } : part];
+			}
+
+			if (isStoragePath(part.url)) {
+				return [{ type: 'text' as const, text: describeStoredAttachment(part) }];
+			}
+
+			return [part];
+		}),
+	}));
+}
+
+async function loadImageData(messages: MessageLike[], getImageById: ImageLoader): Promise<Map<string, string>> {
+	const imageIds = new Set<string>();
+	for (const message of messages) {
+		for (const part of message.parts) {
+			const imageId = part.type === 'file' ? part.url.match(IMAGE_URL_PATTERN)?.[1] : undefined;
+			if (imageId) {
+				imageIds.add(imageId);
+			}
+		}
+	}
+
+	const imageData = new Map<string, string>();
+	await Promise.all(
+		[...imageIds].map(async (id) => {
+			const image = await getImageById(id);
+			if (image) {
+				imageData.set(id, image.data);
+			}
+		}),
+	);
+
+	return imageData;
+}
+
+function describeStoredAttachment(part: { url: string; mediaType: string; filename?: string }): string {
+	const name = part.filename ?? part.url.split('/').pop();
+	const workbookHint =
+		fileExtension(name ?? '') === 'xlsx'
+			? ' Reading a workbook gives you its sheet names and the shape of each, which is what you need before querying one.'
+			: '';
+
+	return `[The user attached ${name} (${part.mediaType}) to this message. It is saved at ${part.url}. Its contents are not included here: read that path when you need them.${workbookHint}]`;
 }
 
 function describeCitation({ start, end, text, storySlug, block }: CitationData): string {

@@ -5,21 +5,29 @@ import path from 'node:path';
 import type { Tool } from 'ai';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { __reloadEnvForTesting, __resetStorageForTesting } from '../services/storage.js';
 import type { ToolContext } from '../types/tools.js';
 import grepTool from './grep.js';
 import readTool from './read.js';
 
 let projectFolder: string;
+let originalEnv: typeof process.env;
 
-// Upstream also forces NAO_STORAGE_BACKEND=none and BETA_CUSTOM_STORIES_ENABLED=false here; quarry's storage
-// stand-in is always off and custom stories aren't ported, so there is no env to reset.
+// Upstream also forces BETA_CUSTOM_STORIES_ENABLED=false; quarry's custom stories are a stand-in that is always off.
 beforeEach(() => {
+	originalEnv = { ...process.env };
+	process.env.QUARRY_STORAGE_BACKEND = 'none';
+	__reloadEnvForTesting();
+	__resetStorageForTesting();
 	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-rules-tools-'));
 	fs.mkdirSync(path.join(projectFolder, 'docs'), { recursive: true });
 	fs.writeFileSync(path.join(projectFolder, 'docs', 'RULES.md'), 'Nested secret marker\n');
 });
 
 afterEach(() => {
+	process.env = originalEnv;
+	__reloadEnvForTesting();
+	__resetStorageForTesting();
 	fs.rmSync(projectFolder, { recursive: true, force: true });
 });
 

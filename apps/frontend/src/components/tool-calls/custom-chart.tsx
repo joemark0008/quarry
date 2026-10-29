@@ -7,7 +7,7 @@ import type { ChartPluginCleanup, ChartPluginModule, ChartPluginRenderContext } 
 import type { displayChart } from '@quarry/shared/tools';
 
 import { useTheme } from '@/contexts/theme.provider';
-import { trpc } from '@/main';
+import { chartsApi } from '@/lib/charts-api';
 
 const PLUGIN_REFRESH_INTERVAL_MS = 2_000;
 
@@ -25,13 +25,13 @@ export const CustomChart = React.memo(function CustomChart({
 	const [renderError, setRenderError] = React.useState<string | null>(null);
 
 	const manifest = useQuery({
-		...trpc.chartPlugin.list.queryOptions(),
+		...chartsApi.chartPlugin.list.queryOptions(),
 		refetchInterval: PLUGIN_REFRESH_INTERVAL_MS,
 		staleTime: 0,
 	});
 	const plugin = manifest.data?.find((entry) => entry.type === config.chart_type);
 	const source = useQuery({
-		...trpc.chartPlugin.source.queryOptions({
+		...chartsApi.chartPlugin.source.queryOptions({
 			type: config.chart_type,
 			version: plugin?.version ?? '',
 		}),

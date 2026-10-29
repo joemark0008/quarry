@@ -2,20 +2,27 @@ import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 
 import {
+	AddMapBoundaryDocument,
 	AgentSettingsDocument,
+	AvailableModelsDocument,
 	CreateSavedPromptDocument,
 	DefaultChatModelDocument,
 	DefaultModelsDocument,
 	DeleteLlmConfigDocument,
+	DeleteMapBoundaryDocument,
 	DeleteSavedPromptDocument,
 	KnownModelsDocument,
+	KnownTranscribeModelsDocument,
 	LlmConfigsDocument,
+	MapBoundariesDocument,
 	ProjectSavedPromptsDocument,
 	SavedPromptsDocument,
 	UpdateAgentSettingsDocument,
 	UpdateDefaultModelsDocument,
+	UpdateMapBoundaryDocument,
 	UpdateSavedPromptDocument,
 	UpsertLlmConfigDocument,
+	ValidateMapBoundaryUrlDocument,
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
@@ -23,7 +30,7 @@ type Inputs = inferRouterInputs<TrpcRouter>['project'];
 type Outputs = inferRouterOutputs<TrpcRouter>['project'];
 
 /**
- * Saved prompts and model/agent settings moved to apps/api (`lib/apollo-procedures.ts`): call sites swap
+ * Saved prompts, model/agent settings and custom map boundary sets moved to apps/api (`lib/apollo-procedures.ts`): call sites swap
  * `trpc.project.*` for `projectApi.project.*`. The other `project.*` procedures stay on upstream tRPC.
  */
 export const projectApi = {
@@ -91,6 +98,18 @@ export const projectApi = {
 				(await runMutation(UpdateDefaultModelsDocument, { settings }))
 					.updateDefaultModels as Outputs['updateDefaultModels'],
 		),
+		listAvailableTranscribeModels: query<void, Outputs['listAvailableTranscribeModels']>(
+			['project', 'listAvailableTranscribeModels'],
+			async () =>
+				(await runQuery(AvailableModelsDocument, {}))
+					.availableModels as Outputs['listAvailableTranscribeModels'],
+		),
+		getKnownTranscribeModels: query<void, Outputs['getKnownTranscribeModels']>(
+			['project', 'getKnownTranscribeModels'],
+			async () =>
+				(await runQuery(KnownTranscribeModelsDocument, {}))
+					.knownTranscribeModels as Outputs['getKnownTranscribeModels'],
+		),
 		getDefaultChatModel: query<void, Outputs['getDefaultChatModel']>(
 			['project', 'getDefaultChatModel'],
 			async () =>
@@ -105,6 +124,33 @@ export const projectApi = {
 			async (input) =>
 				(await runMutation(UpdateAgentSettingsDocument, { input }))
 					.updateAgentSettings as Outputs['updateAgentSettings'],
+		),
+		getMapBoundaries: query<void, Outputs['getMapBoundaries']>(
+			['project', 'getMapBoundaries'],
+			async () => (await runQuery(MapBoundariesDocument, {})).mapBoundaries as Outputs['getMapBoundaries'],
+		),
+		validateMapBoundaryUrl: mutation<Inputs['validateMapBoundaryUrl'], Outputs['validateMapBoundaryUrl']>(
+			['project', 'validateMapBoundaryUrl'],
+			async ({ url }) =>
+				(await runMutation(ValidateMapBoundaryUrlDocument, { url }))
+					.validateMapBoundaryUrl as Outputs['validateMapBoundaryUrl'],
+		),
+		addMapBoundary: mutation<Inputs['addMapBoundary'], Outputs['addMapBoundary']>(
+			['project', 'addMapBoundary'],
+			async (input) =>
+				(await runMutation(AddMapBoundaryDocument, { input })).addMapBoundary as Outputs['addMapBoundary'],
+		),
+		updateMapBoundary: mutation<Inputs['updateMapBoundary'], Outputs['updateMapBoundary']>(
+			['project', 'updateMapBoundary'],
+			async (input) =>
+				(await runMutation(UpdateMapBoundaryDocument, { input }))
+					.updateMapBoundary as Outputs['updateMapBoundary'],
+		),
+		deleteMapBoundary: mutation<Inputs['deleteMapBoundary'], Outputs['deleteMapBoundary']>(
+			['project', 'deleteMapBoundary'],
+			async ({ key }) =>
+				(await runMutation(DeleteMapBoundaryDocument, { key }))
+					.deleteMapBoundary as Outputs['deleteMapBoundary'],
 		),
 	},
 };
