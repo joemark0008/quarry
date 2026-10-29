@@ -24,7 +24,6 @@
 		"./user-group-mcp": "./src/user-group-mcp.ts",
 		"./user-group-skills": "./src/user-group-skills.ts",
 		"./member-budget": "./src/member-budget.ts",
-		"./posthog": "./src/posthog.ts",
 		"./tools": "./src/tools/index.ts",
 		"./conditional-formatting": "./src/conditional-formatting.ts",
 		"./story-segments": "./src/story-segments.ts",
@@ -46,8 +45,7 @@
 		"./story-validation": "./src/story-validation.ts",
 		"./rules-template": "./src/rules-template.ts",
 		"./sql-template": "./src/sql-template.ts",
-		"./execute-sql-parts": "./src/execute-sql-parts.ts",
-		"./backend/*": "./src/backend/*.ts"
+		"./execute-sql-parts": "./src/execute-sql-parts.ts"
 	},
 	"scripts": {
 		"test": "vitest run",

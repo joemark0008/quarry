@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import {
 	CommitContextChangesDocument,
@@ -27,13 +26,13 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, reviveDates, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>['contextExplorer'];
-type Outputs = inferRouterOutputs<TrpcRouter>['contextExplorer'];
+type Inputs = ApiInputs['contextExplorer'];
+type Outputs = ApiOutputs['contextExplorer'];
 
 const path = (name: string) => ['contextExplorer', name] as const;
 
 /**
- * The context explorer moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.contextExplorer.*` for
+ * The context explorer moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `contextExplorer.*` for
  * `contextExplorerApi.contextExplorer.*`. The API returns upstream's shapes through the `JSON` scalar.
  */
 export const contextExplorerApi = {

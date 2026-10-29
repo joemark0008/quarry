@@ -54,8 +54,8 @@ vi.mock('@/hooks/use-public-config', () => ({
 
 vi.mock('@/lib/apollo-client', () => ({ clearApolloCache: async () => undefined }));
 
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		authConfig: { smtp: { isSetup: { queryOptions: () => ({ queryKey: 'smtp' }) } } },
 		system: { getPublicConfig: { queryOptions: () => ({ queryKey: 'public-config' }) } },
 	},

@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import {
 	ChartDownloadDocument,
@@ -10,12 +9,12 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>;
-type Outputs = inferRouterOutputs<TrpcRouter>;
+type Inputs = ApiInputs;
+type Outputs = ApiOutputs;
 
 /**
  * Chart download, chart and map config edits, and chart plugins moved to apps/api (`lib/apollo-procedures.ts`):
- * call sites swap `trpc.chart.*`, `trpc.map.*` and `trpc.chartPlugin.*` for `chartsApi.*`.
+ * call sites swap upstream tRPC's `chart.*`, `map.*` and `chartPlugin.*` for `chartsApi.*`.
  */
 export const chartsApi = {
 	chart: {

@@ -1,16 +1,17 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import {
 	AddMapBoundaryDocument,
 	AgentSettingsDocument,
 	AvailableModelsDocument,
 	CreateSavedPromptDocument,
+	DatabaseObjectsDocument,
 	DefaultChatModelDocument,
 	DefaultModelsDocument,
 	DeleteLlmConfigDocument,
 	DeleteMapBoundaryDocument,
 	DeleteSavedPromptDocument,
+	DisplaySettingsDocument,
 	KnownModelsDocument,
 	KnownTranscribeModelsDocument,
 	LlmConfigsDocument,
@@ -19,6 +20,7 @@ import {
 	SavedPromptsDocument,
 	UpdateAgentSettingsDocument,
 	UpdateDefaultModelsDocument,
+	UpdateDisplaySettingsDocument,
 	UpdateMapBoundaryDocument,
 	UpdateSavedPromptDocument,
 	UpsertLlmConfigDocument,
@@ -26,15 +28,29 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>['project'];
-type Outputs = inferRouterOutputs<TrpcRouter>['project'];
+type Inputs = ApiInputs['project'];
+type Outputs = ApiOutputs['project'];
 
 /**
- * Saved prompts, model/agent settings and custom map boundary sets moved to apps/api (`lib/apollo-procedures.ts`): call sites swap
- * `trpc.project.*` for `projectApi.project.*`. The other `project.*` procedures stay on upstream tRPC.
+ * Saved prompts, model/agent settings, display settings, synced tables and custom map boundary sets moved to apps/api (`lib/apollo-procedures.ts`): call sites swap
+ * `project.*` for `projectApi.project.*`.
  */
 export const projectApi = {
 	project: {
+		getDatabaseObjects: query<void, Outputs['getDatabaseObjects']>(
+			['project', 'getDatabaseObjects'],
+			async () => (await runQuery(DatabaseObjectsDocument, {})).databaseObjects,
+		),
+		getDisplaySettings: query<void, Outputs['getDisplaySettings']>(
+			['project', 'getDisplaySettings'],
+			async () => (await runQuery(DisplaySettingsDocument, {})).displaySettings as Outputs['getDisplaySettings'],
+		),
+		updateDisplaySettings: mutation<Inputs['updateDisplaySettings'], Outputs['updateDisplaySettings']>(
+			['project', 'updateDisplaySettings'],
+			async (input) =>
+				(await runMutation(UpdateDisplaySettingsDocument, { input }))
+					.updateDisplaySettings as Outputs['updateDisplaySettings'],
+		),
 		getSavedPrompts: query<void, Outputs['getSavedPrompts']>(['project', 'getSavedPrompts'], async () =>
 			(await runQuery(SavedPromptsDocument, {})).savedPrompts.map(toSavedPrompt),
 		),

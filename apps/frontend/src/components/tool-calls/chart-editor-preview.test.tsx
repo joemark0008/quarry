@@ -15,8 +15,8 @@ vi.mock('@/hooks/use-resize-observer', () => ({
 	useResizeObserver: () => undefined,
 }));
 
-vi.mock('@/main', () => ({
-	trpc: {},
+vi.mock('@/test/procedures', () => ({
+	procedures: {},
 }));
 
 vi.stubGlobal(

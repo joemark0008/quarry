@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import type { SandboxSecretFieldsFragment } from '@/graphql/generated/graphql';
 import {
@@ -10,11 +9,11 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>['sandboxSecret'];
-type Outputs = inferRouterOutputs<TrpcRouter>['sandboxSecret'];
+type Inputs = ApiInputs['sandboxSecret'];
+type Outputs = ApiOutputs['sandboxSecret'];
 
 /**
- * Sandbox secrets moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.sandboxSecret.*` for
+ * Sandbox secrets moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `sandboxSecret.*` for
  * `sandboxApi.sandboxSecret.*`.
  */
 export const sandboxApi = {

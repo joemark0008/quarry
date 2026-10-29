@@ -8,11 +8,11 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/hooks/use-current-project', () => import('@/test/current-project-hooks.mock'));
 
-vi.mock('@/main', () => ({
+vi.mock('@/test/procedures', () => ({
 	queryClient: {
 		ensureQueryData: mocks.ensureQueryData,
 	},
-	trpc: {
+	procedures: {
 		organization: {
 			get: {
 				queryOptions: () => ({}),

@@ -28,7 +28,7 @@ vi.mock('@/queries/use-chat-query', () => ({
 	useSetChat: () => mocks.setChat,
 }));
 
-vi.mock('@/main', () => ({ trpc: {} }));
+vi.mock('@/test/procedures', () => ({ procedures: {} }));
 
 afterEach(() => {
 	cleanup();

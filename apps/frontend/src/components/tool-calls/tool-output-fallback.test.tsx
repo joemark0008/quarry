@@ -30,8 +30,8 @@ vi.mock('@/contexts/side-panel', () => ({
 vi.mock('@/hooks/use-date-format', () => ({
 	useDateFormat: () => ({ preset: 'european' }),
 }));
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		analyticsEvent: { logChatDownload: { mutationOptions: () => ({ mutationFn: async () => undefined }) } },
 	},
 }));

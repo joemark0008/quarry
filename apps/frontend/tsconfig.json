@@ -18,15 +18,15 @@
 		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true,
+		/* apps/api sources reached through @quarry/api/* use Nest decorators */
+		"experimentalDecorators": true,
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
 			"@quarry/shared": ["../shared/src/index.ts"],
 			"@quarry/shared/*": ["../shared/src/*"],
-			// Upstream sources reached through @quarry/shared/backend/* import upstream's package name for shared:
-			// resolve it to quarry's copy, not fork-reference's. Rename at cut-over (PHASES.md 1c).
-			"@nao/shared": ["../shared/src/index.ts"],
-			"@nao/shared/*": ["../shared/src/*"],
+			// apps/api's types, and its few pure modules the frontend shares (vite.config.ts aliases them too).
+			"@quarry/api/*": ["../api/src/*"],
 			"zod": ["../../node_modules/zod"],
 			"zod/*": ["../../node_modules/zod/*"],
 			"ai": ["../../node_modules/ai"]

@@ -1,8 +1,6 @@
-import { TRPCClientError } from '@trpc/client';
-
-import { getActiveProjectId, setActiveProjectId } from './active-project';
 import { createLocalStorage } from './local-storage';
 
+/** The organization picked in the switcher; switching organizations comes back with Phase 6. */
 const activeOrganizationStorage = createLocalStorage<string>('quarry.active-organization-id');
 
 export function getActiveOrganizationId(): string | null {
@@ -19,27 +17,4 @@ export function setActiveOrganizationId(organizationId: string | null): void {
 	}
 
 	activeOrganizationStorage.set(organizationId);
-}
-
-export function clearStaleActiveOrganization(
-	organizationId: string | null,
-	projectId: string | null,
-	error: unknown,
-): boolean {
-	if (!(error instanceof TRPCClientError) || error.data?.code !== 'NOT_FOUND') {
-		return false;
-	}
-
-	if (organizationId && getActiveOrganizationId() === organizationId) {
-		setActiveOrganizationId(null);
-		setActiveProjectId(null);
-		return true;
-	}
-
-	if (!organizationId && !getActiveOrganizationId() && projectId && getActiveProjectId() === projectId) {
-		setActiveProjectId(null);
-		return true;
-	}
-
-	return false;
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { lastUserMessagePayload } from './mcp-auth-retry';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 const userMessage = (parts: UIMessage['parts'], extra: Partial<UIMessage> = {}): UIMessage =>
 	({ id: 'user', role: 'user', parts, ...extra }) as UIMessage;

@@ -3,7 +3,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoryAskBar } from './story-ask-bar';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import { requestAsk } from '@/stores/ask-bar';
 
@@ -19,13 +19,13 @@ vi.mock('@tanstack/react-query', () => ({
 	useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useParams: () => undefined }));
-/** The story procedures of `trpc.chatFork` moved to apps/api read the same mocked procedures. */
+/** The story procedures of `procedures.chatFork` moved to apps/api read the same mocked procedures. */
 vi.mock('@/lib/chat-api', async () => {
-	const { trpc } = (await import('@/main')) as unknown as { trpc: { chatFork: unknown } };
-	return { chatApi: { chatFork: trpc.chatFork } };
+	const { procedures } = (await import('@/test/procedures')) as unknown as { procedures: { chatFork: unknown } };
+	return { chatApi: { chatFork: procedures.chatFork } };
 });
 
-vi.mock('@/main', () => ({ trpc: { chatFork: { askStory: { mutationOptions: () => ({}) } } } }));
+vi.mock('@/test/procedures', () => ({ procedures: { chatFork: { askStory: { mutationOptions: () => ({}) } } } }));
 vi.mock('@/contexts/agent.provider', () => ({
 	AgentProvider: ({ children }: { children: React.ReactNode }) => children,
 	useAgentContext: () => ({ queueOrSendMessage: mocks.queueOrSendMessage, isRunning: false }),

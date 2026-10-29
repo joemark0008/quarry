@@ -35,45 +35,50 @@ export interface MiddlewareResult<Extra = Context> {
 
 type Middleware = (opts: MiddlewareOptions<Context, unknown>) => Promise<MiddlewareResult>;
 
-export interface Procedure<Ctx, Input, Output> {
+export interface Procedure<Ctx, Input, Output, ClientInput = unknown> {
 	readonly kind: 'query' | 'mutation';
 	run(ctx: ProcedureBaseContext, rawInput: unknown): Promise<Output>;
-	/** Type-only marker so callers can read the handler's context and input types. */
-	readonly _types?: { ctx: Ctx; input: Input };
+	/**
+	 * Type-only marker so callers can read the handler's context and input types, and the input a client sends
+	 * (before zod defaults apply, like tRPC's `inferRouterInputs`): the frontend reads it in `lib/api-types.ts`.
+	 */
+	readonly _types?: { ctx: Ctx; input: Input; clientInput: ClientInput };
 }
 
-export class ProcedureBuilder<Ctx extends Context, Input> {
+export class ProcedureBuilder<Ctx extends Context, Input, ClientInput = unknown> {
 	constructor(
 		private readonly middlewares: Middleware[] = [],
 		private readonly schemas: z.ZodType[] = [],
 	) {}
 
-	input<Schema extends z.ZodType>(schema: Schema): ProcedureBuilder<Ctx, Input & z.output<Schema>> {
+	input<Schema extends z.ZodType>(
+		schema: Schema,
+	): ProcedureBuilder<Ctx, Input & z.output<Schema>, ClientInput & z.input<Schema>> {
 		return new ProcedureBuilder(this.middlewares, [...this.schemas, schema]);
 	}
 
 	use<Extra extends Context = Context>(
 		middleware: (opts: MiddlewareOptions<Ctx, Input>) => Promise<MiddlewareResult<Extra>>,
-	): ProcedureBuilder<Ctx & Extra, Input> {
+	): ProcedureBuilder<Ctx & Extra, Input, ClientInput> {
 		return new ProcedureBuilder([...this.middlewares, middleware as unknown as Middleware], this.schemas);
 	}
 
 	query<Output>(
 		handler: (opts: { ctx: Ctx; input: Input }) => Promise<Output> | Output,
-	): Procedure<Ctx, Input, Output> {
+	): Procedure<Ctx, Input, Output, ClientInput> {
 		return this.build('query', handler);
 	}
 
 	mutation<Output>(
 		handler: (opts: { ctx: Ctx; input: Input }) => Promise<Output> | Output,
-	): Procedure<Ctx, Input, Output> {
+	): Procedure<Ctx, Input, Output, ClientInput> {
 		return this.build('mutation', handler);
 	}
 
 	private build<Output>(
 		kind: 'query' | 'mutation',
 		handler: (opts: { ctx: Ctx; input: Input }) => Promise<Output> | Output,
-	): Procedure<Ctx, Input, Output> {
+	): Procedure<Ctx, Input, Output, ClientInput> {
 		const { middlewares, schemas } = this;
 		return {
 			kind,

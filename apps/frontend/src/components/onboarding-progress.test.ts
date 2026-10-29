@@ -7,7 +7,7 @@ import {
 	isOnboardingComplete,
 } from './onboarding-progress';
 
-vi.mock('@/main', () => ({ trpc: {} }));
+vi.mock('@/test/procedures', () => ({ procedures: {} }));
 
 describe('isDeployStepReached', () => {
 	it.each([

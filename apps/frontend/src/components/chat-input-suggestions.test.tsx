@@ -62,8 +62,8 @@ vi.mock('@/components/side-panel/hooks/use-story-viewer-live-settings', () => ({
 vi.mock('@tanstack/react-query', () => ({
 	useMutation: () => ({ isPending: false, mutate: mocks.submitFeedback }),
 }));
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		feedback: { submit: { mutationOptions: vi.fn() } },
 		chat: { get: { queryKey: vi.fn() } },
 	},

@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
 import {
 	StorageConfigDocument,
@@ -9,10 +8,10 @@ import {
 } from '@/graphql/generated/graphql';
 import { query, runQuery } from '@/lib/apollo-procedures';
 
-type Outputs = inferRouterOutputs<TrpcRouter>['storage'];
+type Outputs = ApiOutputs['storage'];
 
 /**
- * Permanent storage moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.storage.*` for
+ * Permanent storage moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `storage.*` for
  * `storageApi.storage.*`. The payloads are JSON in upstream's shapes.
  */
 export const storageApi = {

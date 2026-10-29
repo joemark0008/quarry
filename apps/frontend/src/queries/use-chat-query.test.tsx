@@ -7,8 +7,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { useChatQuery } from './use-chat-query';
 import type { Chat } from './use-chat-query';
 
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		chat: {
 			get: {
 				queryOptions: (input: { chatId: string }, options: object) => ({

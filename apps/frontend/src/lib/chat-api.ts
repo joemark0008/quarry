@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import type { ChatFieldsFragment, SharedChatFieldsFragment } from '@/graphql/generated/graphql';
 import {
@@ -7,8 +6,10 @@ import {
 	CancelChatDocument,
 	ChatContextUsageDocument,
 	ChatDocument,
+	ChatDownloadDocument,
 	ChatForkMetadataDocument,
 	ChatListDocument,
+	ChatShareMembersDocument,
 	ChatShareOptionsDocument,
 	CitationDocument,
 	CreateSharedChatDocument,
@@ -33,11 +34,11 @@ import {
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 import { storyChatFork } from '@/lib/story-api';
 
-type Inputs = inferRouterInputs<TrpcRouter>;
-type Outputs = inferRouterOutputs<TrpcRouter>;
+type Inputs = ApiInputs;
+type Outputs = ApiOutputs;
 
 /**
- * The chat procedures moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.chat.*` for
+ * The chat procedures moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `chat.*` for
  * `chatApi.chat.*`. Types are upstream's router types until the shared bridge goes away (Phase 8).
  */
 export const chatApi = {
@@ -92,6 +93,11 @@ export const chatApi = {
 		toggleStarred: mutation<Inputs['chat']['toggleStarred'], void>(['chat', 'toggleStarred'], async (input) => {
 			await runMutation(SetChatStarredDocument, input);
 		}),
+		download: query<Inputs['chat']['download'], Outputs['chat']['download']>(
+			['chat', 'download'],
+			async (input) =>
+				(await runQuery(ChatDownloadDocument, { input })).chatDownload as Outputs['chat']['download'],
+		),
 		switchMessageVersion: mutation<Inputs['chat']['switchMessageVersion'], void>(
 			['chat', 'switchMessageVersion'],
 			async (input) => {
@@ -118,6 +124,11 @@ export const chatApi = {
 		),
 	},
 	sharedChat: {
+		/** Upstream `project.getProjectMembersByChatId`. */
+		shareMembers: query<{ chatId: string }, { id: string; name: string; email: string; role: string }[]>(
+			['project', 'getProjectMembersByChatId'],
+			async ({ chatId }) => (await runQuery(ChatShareMembersDocument, { chatId })).chatShareMembers,
+		),
 		list: query<void, Outputs['sharedChat']['list']>(['sharedChat', 'list'], async () =>
 			(await runQuery(SharedChatsDocument, {})).sharedChats.map(toSharedChat),
 		),

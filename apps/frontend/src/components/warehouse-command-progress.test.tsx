@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { WarehouseCommandProgress } from './onboarding-progress';
 
-vi.mock('@/main', () => ({ trpc: {} }));
+vi.mock('@/test/procedures', () => ({ procedures: {} }));
 
 afterEach(cleanup);
 

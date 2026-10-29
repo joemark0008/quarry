@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import {
 	CancelContextRecommendationRunDocument,
@@ -21,14 +20,14 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, reviveDates, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>['contextRecommendation'];
-type Outputs = inferRouterOutputs<TrpcRouter>['contextRecommendation'];
+type Inputs = ApiInputs['contextRecommendation'];
+type Outputs = ApiOutputs['contextRecommendation'];
 
 const path = (name: string) => ['contextRecommendation', name] as const;
 
 /**
  * Context recommendations moved to apps/api (`lib/apollo-procedures.ts`): call sites swap
- * `trpc.contextRecommendation.*` for `contextRecommendationApi.contextRecommendation.*`. Pull requests are Phase 7
+ * `contextRecommendation.*` for `contextRecommendationApi.contextRecommendation.*`. Pull requests are Phase 7
  * (`git-providers`): their mutations answer with an error until then.
  */
 export const contextRecommendationApi = {

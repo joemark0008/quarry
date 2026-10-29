@@ -1,28 +1,17 @@
 import './styles.css';
 import 'katex/dist/katex.min.css';
 import { StrictMode } from 'react';
-import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client';
-import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import superjson from 'superjson';
-import { PostHogProvider } from './contexts/posthog.provider';
 import { ThemeProvider } from './contexts/theme.provider';
 import { McpProvider } from './contexts/mcp';
 import { TooltipProvider } from './components/ui/tooltip';
-import { getActiveOrganizationId } from './lib/active-organization';
-import { createActiveOrganizationRecovery } from './lib/active-organization-recovery';
-import {
-	getActiveProjectId,
-	getProjectRequestHeaders,
-	subscribeToExternalActiveProjectChanges,
-} from './lib/active-project';
+import { subscribeToExternalActiveProjectChanges } from './lib/active-project';
 import { apolloClient } from './lib/apollo-client';
 import { routeTree } from './routeTree.gen';
 import reportWebVitals from './reportWebVitals';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
@@ -61,42 +50,6 @@ subscribeToExternalActiveProjectChanges(() => {
 	void router.invalidate();
 });
 
-const activeOrganizationRecovery = createActiveOrganizationRecovery({
-	invalidateQueries: () => void queryClient.invalidateQueries(),
-	invalidateRouter: () => void router.invalidate(),
-});
-
-/** TRPC client for the upstream backend: screens not migrated to apps/api yet (PLAN.md §8). */
-export const trpcClient = createTRPCClient<TrpcRouter>({
-	links: [
-		loggerLink(),
-		activeOrganizationRecovery.link,
-		httpBatchLink({
-			url: '/api/trpc',
-			transformer: superjson,
-			maxURLLength: 4000,
-			headers({ opList }) {
-				const activeProjectId = getActiveProjectId();
-				const activeOrganizationId = getActiveOrganizationId();
-				activeOrganizationRecovery.trackRequests(
-					opList.map((operation) => operation.id),
-					{ organizationId: activeOrganizationId, projectId: activeProjectId },
-				);
-				return {
-					...getProjectRequestHeaders(),
-					...(activeOrganizationId ? { 'x-nao-organization-id': activeOrganizationId } : {}),
-				};
-			},
-		}),
-	],
-});
-
-/** TRPC proxy that uses the trpc and query client */
-export const trpc = createTRPCOptionsProxy<TrpcRouter>({
-	client: trpcClient,
-	queryClient,
-});
-
 // Render the app
 const rootElement = document.getElementById('app')!;
 if (!rootElement.innerHTML) {
@@ -107,11 +60,9 @@ if (!rootElement.innerHTML) {
 				<ApolloProvider client={apolloClient}>
 					<QueryClientProvider client={queryClient}>
 						<McpProvider>
-							<PostHogProvider>
-								<TooltipProvider>
-									<RouterProvider router={router} />
-								</TooltipProvider>
-							</PostHogProvider>
+							<TooltipProvider>
+								<RouterProvider router={router} />
+							</TooltipProvider>
 						</McpProvider>
 					</QueryClientProvider>
 				</ApolloProvider>

@@ -6,7 +6,7 @@ import {
 	findLatestExecuteSqlInMessages,
 } from './execute-sql-messages';
 import type { executeSql } from '@quarry/shared/tools';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { SourceQuery } from './execute-sql-messages';
 
 const createSourceQuery = (

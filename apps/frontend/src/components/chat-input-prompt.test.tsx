@@ -69,27 +69,33 @@ vi.mock('@/lib/skill-api', () => ({
 	skillApi: { skill: { list: { queryOptions: () => ({ queryKey: ['skills'] }) } } },
 }));
 
-/** The story procedures moved to apps/api read the same mocked procedures as `trpc.story*`. */
+/** The story procedures moved to apps/api read the same mocked procedures as the `story*` procedures. */
 vi.mock('@/lib/story-api', async () => {
-	const { trpc } = (await import('@/main')) as unknown as { trpc: Record<string, unknown> };
+	const { procedures } = (await import('@/test/procedures')) as unknown as { procedures: Record<string, unknown> };
 	return {
 		storyApi: {
-			story: trpc.story,
-			storyFolder: trpc.storyFolder,
-			storyTheme: trpc.storyTheme,
-			customStoryViewer: trpc.customStoryViewer,
-			storyShare: trpc.storyShare,
-			embed: trpc.embed,
-			favorite: trpc.favorite,
-			feedback: trpc.feedback,
-			sharedChat: trpc.sharedChat,
+			story: procedures.story,
+			storyFolder: procedures.storyFolder,
+			storyTheme: procedures.storyTheme,
+			customStoryViewer: procedures.customStoryViewer,
+			storyShare: procedures.storyShare,
+			embed: procedures.embed,
+			favorite: procedures.favorite,
+			feedback: procedures.feedback,
+			sharedChat: procedures.sharedChat,
 		},
 		storyChatFork: {},
 	};
 });
 
-vi.mock('@/main', () => ({
-	trpc: {
+/** The synced tables come from apps/api through `projectApi`, which reads the same mocked procedures. */
+vi.mock('@/lib/project-api', async () => {
+	const { procedures } = (await import('@/test/procedures')) as unknown as { procedures: Record<string, unknown> };
+	return { projectApi: { project: procedures.project } };
+});
+
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		project: {
 			getCurrent: { queryOptions: () => ({ queryKey: ['project'] }) },
 			getDatabaseObjects: { queryOptions: () => ({ queryKey: ['database-objects'] }) },

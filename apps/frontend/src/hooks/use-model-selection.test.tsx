@@ -29,14 +29,14 @@ vi.mock('@/contexts/agent.provider', () => ({
 	}),
 }));
 
-/** The project procedures moved to apps/api read the same mocked procedures as `trpc.project`. */
+/** The project procedures moved to apps/api read the same mocked procedures as `procedures.project`. */
 vi.mock('@/lib/project-api', async () => {
-	const { trpc } = (await import('@/main')) as unknown as { trpc: { project: unknown } };
-	return { projectApi: { project: trpc.project } };
+	const { procedures } = (await import('@/test/procedures')) as unknown as { procedures: { project: unknown } };
+	return { projectApi: { project: procedures.project } };
 });
 
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		project: {
 			getCurrent: { queryOptions: () => ({ queryKey: ['current-project'] }) },
 			getDefaultChatModel: { queryOptions: () => ({ queryKey: ['default-model'] }) },

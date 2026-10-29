@@ -6,34 +6,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSettingsSearch } from './use-settings-search';
 
 const mocks = vi.hoisted(() => ({
-	config: {
-		betaSubagentsEnabled: false,
-		cloudBillingEnabled: false,
-	},
+	config: { betaSubagentsEnabled: false },
+	canSeeAdvancedSettings: true,
 	isCloud: false,
-	permissions: {
-		canViewUsage: false,
-		isAdmin: false,
-		isContextAdmin: false,
-		isOrgAdmin: false,
-		isViewer: true,
-	},
-}));
-
-vi.mock('@tanstack/react-query', () => ({
-	useQuery: () => ({ data: mocks.config }),
+	permissions: { isAdmin: false, isContextAdmin: false, isViewer: true },
 }));
 
 vi.mock('@/hooks/use-public-config', () => ({
 	usePublicConfig: () => ({ data: mocks.config, isPending: false }),
 }));
 
-vi.mock('@/hooks/use-license', () => ({
-	useLicenseFeatures: () => ({ data: {} }),
-}));
-
 vi.mock('@/hooks/use-can-see-advanced-settings', () => ({
-	useCanSeeAdvancedSettings: () => true,
+	useCanSeeAdvancedSettings: () => mocks.canSeeAdvancedSettings,
 }));
 
 vi.mock('@/hooks/use-quarry-mode', () => ({
@@ -44,66 +28,31 @@ vi.mock('@/hooks/use-permissions', () => ({
 	usePermissions: () => mocks.permissions,
 }));
 
-vi.mock('@/main', () => ({
-	trpc: {
-		system: {
-			getPublicConfig: {
-				queryOptions: () => ({}),
-			},
-		},
-	},
-}));
-
 describe('useSettingsSearch', () => {
 	beforeEach(() => {
-		mocks.config.cloudBillingEnabled = false;
-		mocks.isCloud = false;
-		Object.assign(mocks.permissions, {
-			canViewUsage: false,
-			isAdmin: false,
-			isContextAdmin: false,
-			isOrgAdmin: false,
-			isViewer: true,
-		});
+		mocks.canSeeAdvancedSettings = true;
+		Object.assign(mocks.permissions, { isAdmin: false, isContextAdmin: false, isViewer: true });
 	});
 
 	afterEach(cleanup);
 
-	it.each(['Messages', 'Tokens', 'Cost'])('returns %s to every role with usage access', (title) => {
-		const { result, rerender } = renderHook(() => useSettingsSearch(title));
+	it('finds project settings for admins', () => {
+		Object.assign(mocks.permissions, { isAdmin: true, isViewer: false });
+		const { result } = renderHook(() => useSettingsSearch('warehouse'));
 
-		expect(result.current.some((entry) => entry.title === title)).toBe(false);
-
-		Object.assign(mocks.permissions, { canViewUsage: true, isViewer: false });
-		rerender();
-
-		expect(result.current.some((entry) => entry.title === title)).toBe(true);
-
-		mocks.permissions.isContextAdmin = true;
-		rerender();
-
-		expect(result.current.some((entry) => entry.title === title)).toBe(true);
-
-		mocks.permissions.isAdmin = true;
-		rerender();
-
-		expect(result.current.some((entry) => entry.title === title)).toBe(true);
+		expect(result.current.map((entry) => entry.page)).toContain('/settings/project/warehouse');
 	});
 
-	it.each(['Balance', 'quarry AI usage'])('only returns %s when cloud billing is enabled', (searchTitle) => {
-		mocks.isCloud = true;
-		Object.assign(mocks.permissions, { isOrgAdmin: true, isViewer: false });
-		const { result, rerender } = renderHook(() => useSettingsSearch(searchTitle));
+	it('keeps members without advanced settings on their account page', () => {
+		mocks.canSeeAdvancedSettings = false;
+		const { result } = renderHook(() => useSettingsSearch('warehouse'));
 
-		expect(result.current.some((entry) => entry.title === searchTitle)).toBe(false);
+		expect(result.current.every((entry) => entry.page === '/settings/account')).toBe(true);
+	});
 
-		mocks.config.cloudBillingEnabled = true;
-		rerender();
+	it('returns nothing for a one-letter query', () => {
+		const { result } = renderHook(() => useSettingsSearch('w'));
 
-		const billingEntry = result.current.find((entry) => entry.title === searchTitle);
-		expect(billingEntry?.page).toBe('/settings/organization/billing');
-		if (searchTitle === 'quarry AI usage') {
-			expect(billingEntry?.search).toEqual({ creditsTab: 'usage' });
-		}
+		expect(result.current).toEqual([]);
 	});
 });

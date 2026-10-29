@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 
 import {
 	DeleteMemoryDocument,
@@ -11,13 +10,13 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>;
-type Outputs = inferRouterOutputs<TrpcRouter>;
+type Inputs = ApiInputs;
+type Outputs = ApiOutputs;
 type Memory = Outputs['user']['getMemories'][number];
 
 /**
- * Memory settings moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.memory.*`,
- * `trpc.user.getMemories` / `getMemorySettings` and `trpc.project.getMemorySettings` for `memoryApi.*`.
+ * Memory settings moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `memory.*`,
+ * `user.getMemories` / `getMemorySettings` and `project.getMemorySettings` for `memoryApi.*`.
  */
 export const memoryApi = {
 	user: {

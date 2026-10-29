@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FeedbackDialog } from './assistant-message-actions';
 
-vi.mock('@/main', () => ({
-	trpc: {},
+vi.mock('@/test/procedures', () => ({
+	procedures: {},
 }));
 
 describe('FeedbackDialog', () => {

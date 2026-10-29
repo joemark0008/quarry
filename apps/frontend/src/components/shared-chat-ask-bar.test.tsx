@@ -16,8 +16,8 @@ vi.mock('@tanstack/react-query', () => ({
 	useQueryClient: () => ({ invalidateQueries: vi.fn() }),
 }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useParams: () => undefined }));
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		chatFork: {
 			askSharedChat: { mutationOptions: () => ({}) },
 			listSharedChatQuickQuestions: { queryKey: () => [] },

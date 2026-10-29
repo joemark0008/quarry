@@ -1,5 +1,4 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import type { ApiInputs, ApiOutputs } from '@/lib/api-types';
 import type { DocumentNode, TypedDocumentNode } from '@apollo/client';
 
 import {
@@ -122,8 +121,8 @@ import {
 } from '@/graphql/generated/graphql';
 import { mutation, query, reviveDates, runMutation, runQuery } from '@/lib/apollo-procedures';
 
-type Inputs = inferRouterInputs<TrpcRouter>;
-type Outputs = inferRouterOutputs<TrpcRouter>;
+type Inputs = ApiInputs;
+type Outputs = ApiOutputs;
 
 type StoryRouter =
 	| 'story'
@@ -189,7 +188,7 @@ function toVariables(input: unknown): { input?: unknown } {
 	return input === undefined ? {} : { input };
 }
 
-/** Upstream's `trpc.storyShare` router is `sharedStory*` in the GraphQL schema (its upstream file name). */
+/** Upstream's `storyShare` router is `sharedStory*` in the GraphQL schema (its upstream file name). */
 const FIELD_PREFIX: Partial<Record<StoryRouter, string>> = { storyShare: 'sharedStory' };
 
 function toOutput<T>(data: unknown, router: StoryRouter, procedure: string, dates: boolean): T {
@@ -199,9 +198,9 @@ function toOutput<T>(data: unknown, router: StoryRouter, procedure: string, date
 }
 
 /**
- * The story procedures moved to apps/api (`docs/stories-api.md`): call sites swap `trpc.story.*`,
- * `trpc.storyFolder.*`, `trpc.storyTheme.*` and `trpc.customStoryViewer.*` for `storyApi.*`; the story
- * procedures of `trpc.chatFork` are on `chatApi.chatFork`. Story sharing (`trpc.storyShare`, `sharedStory*` fields),
+ * The story procedures moved to apps/api (`docs/stories-api.md`): call sites swap upstream tRPC's `story.*`,
+ * `storyFolder.*`, `storyTheme.*` and `customStoryViewer.*` for `storyApi.*`; the story
+ * procedures of `chatFork` are on `chatApi.chatFork`. Story sharing (`storyShare`, `sharedStory*` fields),
  * embeds, favorites, story feedback and the story downloads (`{ data (base64), filename, mimeType }`) are here too.
  */
 export const storyApi = {
@@ -423,7 +422,7 @@ export const storyApi = {
 	},
 };
 
-/** The story procedures of `trpc.chatFork`, spread into `chatApi.chatFork`. */
+/** The story procedures of `chatFork`, spread into `chatApi.chatFork`. */
 export const storyChatFork = {
 	askStory: storyMutation('chatFork', 'askStory', ChatForkAskStoryDocument, false),
 	forkStory: storyMutation('chatFork', 'forkStory', ChatForkForkStoryDocument, false),

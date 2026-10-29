@@ -3,7 +3,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChatArtifactsMenu } from './chat-artifacts-menu';
-import type { UIMessage, UIMessagePart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIMessagePart } from '@quarry/api/agent/types/chat';
 
 const mocks = vi.hoisted(() => ({
 	density: 'detailed' as 'detailed' | 'compact',

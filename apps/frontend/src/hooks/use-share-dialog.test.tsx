@@ -20,8 +20,6 @@ vi.mock('@tanstack/react-query', () => ({
 		switch (options.queryKey[0]) {
 			case 'project':
 				return { data: mocks.project };
-			case 'sharing-access':
-				return { data: { canShareToProject: true }, isFetching: mocks.isFetching };
 			case 'members':
 				return {
 					data: [{ id: 'old-member', name: 'Old member', email: 'old@example.com' }],
@@ -37,15 +35,17 @@ vi.mock('@/lib/active-project', () => ({
 	useActiveProjectId: () => mocks.activeProjectId,
 }));
 
-vi.mock('@/main', () => ({
-	trpc: {
+vi.mock('@/test/procedures', () => ({
+	procedures: {
 		project: {
 			getCurrent: { queryOptions: () => ({ queryKey: ['project'] }) },
-			getProjectMembersByChatId: { queryOptions: () => ({ queryKey: ['members'] }) },
 		},
-		userGroup: {
-			projectSharingAccess: { queryOptions: () => ({ queryKey: ['sharing-access'] }) },
-		},
+	},
+}));
+
+vi.mock('@/lib/chat-api', () => ({
+	chatApi: {
+		sharedChat: { shareMembers: { queryOptions: () => ({ queryKey: ['members'] }) } },
 	},
 }));
 
@@ -56,7 +56,7 @@ beforeEach(() => {
 	mocks.queries = [];
 });
 
-it('hides cached sharing access and members when no project is active', () => {
+it('hides sharing and cached members when no project is active', () => {
 	const { result } = renderHook(() => ({
 		audience: useShareAudience(),
 		memberPicker: useMemberPicker('current-user', undefined, 'chat-id'),
@@ -65,11 +65,10 @@ it('hides cached sharing access and members when no project is active', () => {
 	expect(result.current.audience.canShareToProject).toBe(false);
 	expect(result.current.memberPicker.otherMembers).toEqual([]);
 	expect(result.current.memberPicker.filteredMembers).toEqual([]);
-	expect(mocks.queries.find((query) => query.queryKey[0] === 'sharing-access')?.enabled).toBe(false);
 	expect(mocks.queries.find((query) => query.queryKey[0] === 'members')?.enabled).toBe(false);
 });
 
-it('hides previous project sharing data while the selected project refetches', () => {
+it('hides previous project members while the selected project refetches', () => {
 	mocks.activeProjectId = 'new-project';
 	mocks.isFetching = true;
 	mocks.project = { id: 'new-project' };
@@ -79,7 +78,8 @@ it('hides previous project sharing data while the selected project refetches', (
 		memberPicker: useMemberPicker('current-user', undefined, 'chat-id'),
 	}));
 
-	expect(result.current.audience.canShareToProject).toBe(false);
+	// Every member may share with the project until user groups come back (Phase 6).
+	expect(result.current.audience.canShareToProject).toBe(true);
 	expect(result.current.memberPicker.otherMembers).toEqual([]);
 	expect(result.current.memberPicker.isLoading).toBe(true);
 });

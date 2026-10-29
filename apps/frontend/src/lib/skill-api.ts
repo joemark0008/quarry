@@ -1,12 +1,11 @@
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
 import { SkillCatalogDocument, SkillLoadErrorsDocument, SkillsDocument } from '@/graphql/generated/graphql';
 import { query, runQuery } from '@/lib/apollo-procedures';
 
-type Outputs = inferRouterOutputs<TrpcRouter>['skill'];
+type Outputs = ApiOutputs['skill'];
 
-/** Project skills moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.skill.*` for `skillApi.skill.*`. */
+/** Project skills moved to apps/api (`lib/apollo-procedures.ts`): call sites swap upstream tRPC's `skill.*` for `skillApi.skill.*`. */
 export const skillApi = {
 	skill: {
 		list: query<void, Outputs['list']>(['skill', 'list'], async () => (await runQuery(SkillsDocument, {})).skills),

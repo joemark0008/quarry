@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { extractQueryIds } from '@quarry/shared/story-segments';
-import type { StorySharingInfo } from '@quarry/shared/types';
+import type { StoryFormat, StorySharingInfo } from '@quarry/shared/types';
 
 import { ChatRepository, type StoredSqlQuery } from '../../chats/chat.repository.js';
 import { Prisma, type Story, type StoryDataCache, type StoryVersion } from '../../generated/prisma/client.js';
@@ -10,8 +10,11 @@ import type { StoryCachedQueryData, StoryDataCacheRow, StoryQuerySources } from 
 import { sharedStoryGrantsUser } from './shared-story.repository.js';
 import { andAll, anyOf, inList, insertNextStoryVersion, LATEST_VERSIONS } from './story-sql.js';
 
+/** `story` with `format` narrowed to upstream's enum (Prisma maps the checked text column to `string`). */
+type StoryRow = Omit<Story, 'format'> & { format: StoryFormat };
+
 export type UserStoryRow = Pick<
-	Story,
+	StoryRow,
 	| 'id'
 	| 'chatId'
 	| 'projectId'
@@ -34,7 +37,7 @@ export type UserStoryRow = Pick<
 	certifiedByName: string | null;
 };
 
-export type ChatStoryLatestVersion = Pick<Story, 'slug' | 'title' | 'format' | 'archivedAt'> & {
+export type ChatStoryLatestVersion = Pick<StoryRow, 'slug' | 'title' | 'format' | 'archivedAt'> & {
 	storyId: string;
 	version: number | null;
 	code: string | null;
@@ -43,7 +46,7 @@ export type ChatStoryLatestVersion = Pick<Story, 'slug' | 'title' | 'format' | '
 
 export type StoryVersionWithStory = StoryVersion &
 	Pick<
-		Story,
+		StoryRow,
 		| 'title'
 		| 'slug'
 		| 'chatId'
@@ -767,7 +770,7 @@ export class StoryRepository {
 			cacheSchedule: story.cacheSchedule,
 			cacheScheduleDescription: story.cacheScheduleDescription,
 			archivedAt: story.archivedAt,
-			format: story.format,
+			format: story.format as StoryFormat,
 		};
 	}
 }
