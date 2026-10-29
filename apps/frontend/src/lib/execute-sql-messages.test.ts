@@ -140,3 +140,39 @@ describe('findLatestExecuteSqlInMessages', () => {
 		expect(sourceQuery?.output.data).toEqual([{ revenue: 100 }]);
 	});
 });
+
+describe('saved query tool parts', () => {
+	it('are found by query id and read as the SQL they ran', () => {
+		const messages = [
+			{
+				id: 'm1',
+				role: 'assistant',
+				parts: [
+					{
+						type: 'tool-qt_orders_by_status',
+						toolCallId: 'call_saved',
+						state: 'output-available',
+						input: { status: 'completed' },
+						output: {
+							id: 'query_saved',
+							data: [{ order_count: 67 }],
+							row_count: 1,
+							columns: ['order_count'],
+							query_tool: {
+								tool_id: 'tool1',
+								name: 'orders_by_status',
+								sql_query: "SELECT count(*) FROM orders WHERE status = 'completed'",
+							},
+						},
+					},
+				],
+			},
+		] as unknown as UIMessage[];
+
+		expect(findLatestExecuteSqlInMessages(messages, 'query_saved')).toMatchObject({
+			toolCallId: 'call_saved',
+			input: { sql_query: "SELECT count(*) FROM orders WHERE status = 'completed'", name: 'orders_by_status' },
+			output: { data: [{ order_count: 67 }] },
+		});
+	});
+});

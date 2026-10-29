@@ -39,6 +39,7 @@ import { Route as EmbedStoryStoryIdRouteImport } from './routes/embed.story.$sto
 import { Route as SidebarLayoutSettingsProjectIndexRouteImport } from './routes/_sidebar-layout.settings.project.index'
 import { Route as SidebarLayoutSettingsProjectAgentRouteImport } from './routes/_sidebar-layout.settings.project.agent'
 import { Route as SidebarLayoutSettingsProjectModelsRouteImport } from './routes/_sidebar-layout.settings.project.models'
+import { Route as SidebarLayoutSettingsProjectQueryToolsRouteImport } from './routes/_sidebar-layout.settings.project.query-tools'
 import { Route as SidebarLayoutSettingsProjectWarehouseRouteImport } from './routes/_sidebar-layout.settings.project.warehouse'
 import { Route as SidebarLayoutStoriesSharedShareIdRouteImport } from './routes/_sidebar-layout.stories.shared.$shareId'
 import { Route as SidebarLayoutStoriesStandaloneStoryIdRouteImport } from './routes/_sidebar-layout.stories.standalone.$storyId'
@@ -211,6 +212,12 @@ const SidebarLayoutSettingsProjectModelsRoute =
     path: '/models',
     getParentRoute: () => SidebarLayoutSettingsProjectRoute,
   } as any)
+const SidebarLayoutSettingsProjectQueryToolsRoute =
+  SidebarLayoutSettingsProjectQueryToolsRouteImport.update({
+    id: '/query-tools',
+    path: '/query-tools',
+    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+  } as any)
 const SidebarLayoutSettingsProjectWarehouseRoute =
   SidebarLayoutSettingsProjectWarehouseRouteImport.update({
     id: '/warehouse',
@@ -270,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/stories/': typeof SidebarLayoutStoriesIndexRoute
   '/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
   '/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
+  '/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
   '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -303,6 +311,7 @@ export interface FileRoutesByTo {
   '/stories': typeof SidebarLayoutStoriesIndexRoute
   '/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
   '/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
+  '/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
   '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -341,6 +350,7 @@ export interface FileRoutesById {
   '/_sidebar-layout/stories/': typeof SidebarLayoutStoriesIndexRoute
   '/_sidebar-layout/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
   '/_sidebar-layout/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
+  '/_sidebar-layout/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
   '/_sidebar-layout/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
   '/_sidebar-layout/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
   '/_sidebar-layout/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
@@ -378,6 +388,7 @@ export interface FileRouteTypes {
     | '/stories/'
     | '/settings/project/agent'
     | '/settings/project/models'
+    | '/settings/project/query-tools'
     | '/settings/project/warehouse'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -411,6 +422,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/settings/project/agent'
     | '/settings/project/models'
+    | '/settings/project/query-tools'
     | '/settings/project/warehouse'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -448,6 +460,7 @@ export interface FileRouteTypes {
     | '/_sidebar-layout/stories/'
     | '/_sidebar-layout/settings/project/agent'
     | '/_sidebar-layout/settings/project/models'
+    | '/_sidebar-layout/settings/project/query-tools'
     | '/_sidebar-layout/settings/project/warehouse'
     | '/_sidebar-layout/stories/shared/$shareId'
     | '/_sidebar-layout/stories/standalone/$storyId'
@@ -678,6 +691,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SidebarLayoutSettingsProjectModelsRouteImport
       parentRoute: typeof SidebarLayoutSettingsProjectRoute
     }
+    '/_sidebar-layout/settings/project/query-tools': {
+      id: '/_sidebar-layout/settings/project/query-tools'
+      path: '/query-tools'
+      fullPath: '/settings/project/query-tools'
+      preLoaderRoute: typeof SidebarLayoutSettingsProjectQueryToolsRouteImport
+      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+    }
     '/_sidebar-layout/settings/project/warehouse': {
       id: '/_sidebar-layout/settings/project/warehouse'
       path: '/warehouse'
@@ -738,6 +758,7 @@ const SidebarLayoutChatLayoutRouteWithChildren =
 interface SidebarLayoutSettingsProjectRouteChildren {
   SidebarLayoutSettingsProjectAgentRoute: typeof SidebarLayoutSettingsProjectAgentRoute
   SidebarLayoutSettingsProjectModelsRoute: typeof SidebarLayoutSettingsProjectModelsRoute
+  SidebarLayoutSettingsProjectQueryToolsRoute: typeof SidebarLayoutSettingsProjectQueryToolsRoute
   SidebarLayoutSettingsProjectWarehouseRoute: typeof SidebarLayoutSettingsProjectWarehouseRoute
   SidebarLayoutSettingsProjectIndexRoute: typeof SidebarLayoutSettingsProjectIndexRoute
 }
@@ -748,6 +769,8 @@ const SidebarLayoutSettingsProjectRouteChildren: SidebarLayoutSettingsProjectRou
       SidebarLayoutSettingsProjectAgentRoute,
     SidebarLayoutSettingsProjectModelsRoute:
       SidebarLayoutSettingsProjectModelsRoute,
+    SidebarLayoutSettingsProjectQueryToolsRoute:
+      SidebarLayoutSettingsProjectQueryToolsRoute,
     SidebarLayoutSettingsProjectWarehouseRoute:
       SidebarLayoutSettingsProjectWarehouseRoute,
     SidebarLayoutSettingsProjectIndexRoute:

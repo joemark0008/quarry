@@ -10,6 +10,11 @@
  *   with apps/api by hand.
  */
 import type { AgentSettings } from '@quarry/api/agent/types/agent-settings';
+import type {
+	PreviewProjectQueryToolMutation,
+	ProjectQueryToolFieldsFragment,
+	QueryToolTableColumnsQuery,
+} from '@/graphql/generated/graphql';
 import type { ForkMetadata, UIChat } from '@quarry/api/agent/types/chat';
 import type {
 	LinkedContextRepo,
@@ -35,6 +40,7 @@ import type { ModelSettingsService } from '@quarry/api/model-settings/model-sett
 import type { SandboxSecretSummary } from '@quarry/api/sandbox/sandbox-secret.repository';
 import type { Skill, SkillLoadError } from '@quarry/api/skills/skill.service';
 import type { DefaultModelSettings } from '@quarry/shared/background-models';
+import type { QueryToolParameter } from '@quarry/shared/query-tools';
 import type { ChartPluginManifestEntry } from '@quarry/shared/chart-plugin';
 import type { ColumnLineageNode } from '@quarry/shared/citation';
 import type { DisplaySettings } from '@quarry/shared/date';
@@ -84,6 +90,27 @@ type InferRouter<R> = {
 };
 
 type CreatePullRequestResult = { url: string; branch: string };
+
+/** apps/api's GraphQL `ProjectQueryTool`, dates revived and parameters typed. */
+export type ProjectQueryTool = Omit<ProjectQueryToolFieldsFragment, 'createdAt' | 'updatedAt' | 'parameters'> & {
+	createdAt: Date;
+	updatedAt: Date;
+	parameters: QueryToolParameter[];
+};
+export type QueryToolPreview = PreviewProjectQueryToolMutation['previewProjectQueryTool'] & {
+	rows: Record<string, unknown>[];
+};
+export type QueryToolColumn = QueryToolTableColumnsQuery['queryToolTableColumns'][number];
+
+/** What the query tool editor saves (apps/api `CreateProjectQueryToolInput`). */
+export type QueryToolDraft = {
+	name: string;
+	description: string;
+	sqlTemplate: string;
+	parameters: QueryToolParameter[];
+	databaseId?: string | null;
+	enabled?: boolean;
+};
 
 /** Upstream `types/saved-prompt.ts` (apps/api's GraphQL `SavedPrompt` with dates revived). */
 export type SavedPrompt = { id: string; createdAt: Date; updatedAt: Date; prompt: string; title: string };
@@ -828,6 +855,23 @@ interface GraphQLProcedures {
 		validateMapBoundaryUrl: Procedure<
 			{ url: string },
 			{ propertyKeys: string[]; featureCount: number; geojson: FeatureCollection<Geometry, GeoJsonProperties> }
+		>;
+	};
+	/** quarry: saved query tools (no upstream router). */
+	queryTool: {
+		list: Procedure<void, ProjectQueryTool[]>;
+		tableColumns: Procedure<{ type: string; database: string; schema: string; table: string }, QueryToolColumn[]>;
+		create: Procedure<QueryToolDraft, ProjectQueryTool>;
+		update: Procedure<Partial<QueryToolDraft> & { id: string }, ProjectQueryTool>;
+		delete: Procedure<{ id: string }, void>;
+		preview: Procedure<
+			{
+				sqlTemplate: string;
+				parameters: QueryToolParameter[];
+				values?: Record<string, unknown>;
+				databaseId?: string | null;
+			},
+			QueryToolPreview
 		>;
 	};
 	sandboxSecret: {

@@ -1,3 +1,4 @@
+import { isQueryToolAgentName, QUERY_TOOL_NAME_PREFIX } from '@quarry/shared/query-tools';
 import type { UIToolPart } from '@quarry/api/agent/types/chat';
 import type { GroupablePart } from '@/types/ai';
 import { getToolName, isReasoningPart, isToolSettled } from '@/lib/ai';
@@ -30,6 +31,9 @@ const describeToolActivity = (part: UIToolPart): string | null => {
 	const input = (part.input ?? {}) as ToolInput;
 
 	const toolName = getToolName(part);
+	if (isQueryToolAgentName(toolName)) {
+		return `Running ${toolName.slice(QUERY_TOOL_NAME_PREFIX.length)}`;
+	}
 
 	switch (toolName) {
 		case 'read':

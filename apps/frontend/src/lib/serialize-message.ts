@@ -1,5 +1,7 @@
 import { normalizeCitationMarkers } from '@quarry/shared';
 
+import { isSavedQueryToolPartType, savedQueryToolAsSql } from './execute-sql-messages';
+import type { savedQueryTool } from '@quarry/shared/tools';
 import type { UIMessage, UIMessagePart, UIToolPart } from '@quarry/api/agent/types/chat';
 
 const BLOCK_SEPARATOR = '\n\n';
@@ -86,7 +88,7 @@ function serializePart(part: UIMessagePart, options: SerializeOptions): string |
 		case 'tool-execute_python':
 			return serializeExecutePython(part, options);
 		default:
-			return null;
+			return isSavedQueryToolPartType(part.type) ? serializeSavedQueryTool(part, options) : null;
 	}
 }
 
@@ -102,6 +104,16 @@ function serializeExecuteSql(part: UIToolPart<'execute_sql'>, options: Serialize
 	const sections = [name ? `**SQL — ${name}**` : '**SQL**', codeBlock('sql', sql)];
 	appendError(sections, part.errorText);
 	return sections.join(BLOCK_SEPARATOR);
+}
+
+/** A saved query tool's call, written like `execute_sql` with the SQL it ran. */
+function serializeSavedQueryTool(part: UIMessagePart, options: SerializeOptions): string | null {
+	const output = (part as { output?: savedQueryTool.Output }).output;
+	if (!output?.query_tool) {
+		return null;
+	}
+	const input = savedQueryToolAsSql(output).input;
+	return serializeExecuteSql({ ...part, input } as UIToolPart<'execute_sql'>, options);
 }
 
 function serializeDisplayChart(part: UIToolPart<'display_chart'>, options: SerializeOptions): string | null {

@@ -91,6 +91,7 @@ const settingsSuggestionPages = [
 	'/settings/context-explorer',
 	'/settings/project/agent',
 	'/settings/project/warehouse',
+	'/settings/project/query-tools',
 ];
 
 const viewerVisiblePages = ['/settings/account'];

@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { isQueryToolAgentName } from '@quarry/shared/query-tools';
 import { StoryToolCall } from './story';
 import { ClarificationToolCall, RequestWarehouseSelectionToolCall } from './clarification';
 import { DefaultToolCall } from './default';
@@ -16,6 +17,7 @@ import { OnboardingCommandToolCall } from './onboarding-command';
 import { QueryAppDbToolCall } from './query-app-db';
 import { ReadToolCall } from './read';
 import { ReadQueryResultToolCall } from './read-query-result';
+import { SavedQueryToolCall } from './saved-query-tool';
 import { RecordRecommendationToolCall } from './record-recommendation';
 import { SearchToolCall } from './search';
 import { StrReplaceToolCall } from './str-replace';
@@ -85,7 +87,8 @@ export const ToolCall = memo(({ toolPart }: { toolPart: UIToolPart }) => {
 
 	const Component =
 		(toolComponents[toolName as StaticToolName] as React.ComponentType<ToolCallComponentProps> | undefined) ??
-		dynamicToolComponents[toolName as DynamicToolName];
+		dynamicToolComponents[toolName as DynamicToolName] ??
+		(isQueryToolAgentName(toolName) ? SavedQueryToolCall : undefined);
 
 	const Rendered = Component ? <Component toolPart={toolPart} /> : <DefaultToolCall toolPart={toolPart} />;
 

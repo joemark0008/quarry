@@ -1,0 +1,59 @@
+fragment ProjectQueryToolFields on ProjectQueryTool {
+	id
+	name
+	agentToolName
+	description
+	sqlTemplate
+	parameters {
+		name
+		type
+		description
+		required
+		default
+	}
+	databaseId
+	enabled
+	createdBy
+	canEdit
+	createdAt
+	updatedAt
+}
+
+query ProjectQueryTools {
+	projectQueryTools {
+		...ProjectQueryToolFields
+	}
+}
+
+query QueryToolTableColumns($type: String!, $database: String!, $schema: String!, $table: String!) {
+	queryToolTableColumns(type: $type, database: $database, schema: $schema, table: $table) {
+		name
+		type
+	}
+}
+
+mutation CreateProjectQueryTool($input: CreateProjectQueryToolInput!) {
+	createProjectQueryTool(input: $input) {
+		...ProjectQueryToolFields
+	}
+}
+
+mutation UpdateProjectQueryTool($input: UpdateProjectQueryToolInput!) {
+	updateProjectQueryTool(input: $input) {
+		...ProjectQueryToolFields
+	}
+}
+
+mutation DeleteProjectQueryTool($id: ID!) {
+	deleteProjectQueryTool(id: $id)
+}
+
+mutation PreviewProjectQueryTool($input: PreviewProjectQueryToolInput!) {
+	previewProjectQueryTool(input: $input) {
+		columns
+		rows
+		rowCount
+		truncated
+		sql
+	}
+}

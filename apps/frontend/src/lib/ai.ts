@@ -5,6 +5,7 @@ import {
 	getToolName as getToolNameAi,
 } from 'ai';
 import { isImageMediaType } from '@quarry/shared/attachments';
+import { isQueryToolAgentName } from '@quarry/shared/query-tools';
 import type { ReasoningUIPart, ToolUIPart } from 'ai';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import type { UITools, UIToolPart, UIMessage, UIMessagePart, StaticToolName } from '@quarry/api/agent/types/chat';
@@ -132,7 +133,11 @@ export const isReasoningPart = (part: GroupedMessagePart): part is ReasoningUIPa
 const QUERY_TOOL_NAMES: string[] = ['execute_sql', 'execute_semantic_query'];
 
 export const isQueryToolPart = (part: GroupedMessagePart): part is UIToolPart => {
-	return isMessagePart(part) && isToolUIPart(part) && QUERY_TOOL_NAMES.includes(getToolName(part));
+	if (!isMessagePart(part) || !isToolUIPart(part)) {
+		return false;
+	}
+	const toolName = getToolName(part);
+	return QUERY_TOOL_NAMES.includes(toolName) || isQueryToolAgentName(toolName);
 };
 
 const isStoryToolPart = (part: GroupedMessagePart): part is UIToolPart<'story'> => {
@@ -421,7 +426,8 @@ export const isPartGroupable = (part: UIMessagePart, density: ToolCallDensity = 
 		return true;
 	}
 	if (isToolUIPart(part)) {
-		const toolName = getToolName(part);
+		// Saved query tools (`qt_<name>`) collapse like `execute_sql`, whose results they are.
+		const toolName = isQueryToolAgentName(getToolName(part)) ? 'execute_sql' : getToolName(part);
 		const nonCollapsibleTools =
 			NON_COLLAPSIBLE_TOOLS_BY_DENSITY[density] ?? NON_COLLAPSIBLE_TOOLS_BY_DENSITY.detailed;
 		return !nonCollapsibleTools.includes(toolName as StaticToolName);

@@ -123,6 +123,15 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		keywords: ['warehouse', 'database', 'postgres', 'postgresql', 'connection', 'credentials', 'sync', 'context'],
 		adminOnly: true,
 	},
+	// ── Project > Query tools ────────────────────────────────
+	{
+		page: '/settings/project/query-tools',
+		pageLabel: 'Query tools',
+		section: 'Query tools',
+		title: 'Saved query tools',
+		description: 'Save SQL queries on the warehouse, or build them, as tools the agent can call in chat.',
+		keywords: ['query', 'queries', 'sql', 'saved', 'tool', 'tools', 'builder', 'parameters', 'warehouse', 'agent'],
+	},
 	// ── Project > Agent > Models ─────────────────────────────
 	{
 		page: '/settings/project/agent',

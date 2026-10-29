@@ -67,6 +67,12 @@ const settingsNavGroups: NavGroup[] = [
 				requiresProject: true,
 			},
 			{
+				label: 'Query tools',
+				to: '/settings/project/query-tools',
+				visible: ({ isViewer }) => !isViewer,
+				requiresProject: true,
+			},
+			{
 				label: 'Appearance',
 				to: '/settings/appearance',
 				visible: ({ isViewer }) => !isViewer,

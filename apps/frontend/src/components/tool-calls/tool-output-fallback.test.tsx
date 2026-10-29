@@ -16,6 +16,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ToolOutputFallback } from './tool-output-fallback';
 import { ExecuteSqlToolCall } from './execute-sql';
+import { SavedQueryToolCall } from './saved-query-tool';
 import { QueryAppDbToolCall } from './query-app-db';
 import { ExecutePythonToolCall } from './execute-python';
 import type { ToolCallComponentProps } from '.';
@@ -29,6 +30,12 @@ vi.mock('@/contexts/side-panel', () => ({
 // real app bootstrap (it mounts on a `#app` element that does not exist under jsdom).
 vi.mock('@/hooks/use-date-format', () => ({
 	useDateFormat: () => ({ preset: 'european' }),
+}));
+// The SQL body offers "Save as query tool", which reads the project role and navigates to settings.
+vi.mock('@/hooks/use-permissions', () => ({ usePermissions: () => ({ canSendMessages: true }) }));
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+	...(await importOriginal<Record<string, unknown>>()),
+	useNavigate: () => vi.fn(),
 }));
 vi.mock('@/test/procedures', () => ({
 	procedures: {
@@ -92,6 +99,12 @@ const cases = [
 		runningLabel: 'Executing query...',
 		render: (toolPart: AnyToolPart) => <ExecuteSqlToolCall toolPart={toolPart as never} />,
 		toolPart: partWithoutOutput('tool-execute_sql', { name: 'Revenue by product' }),
+	},
+	{
+		name: 'SavedQueryToolCall',
+		runningLabel: 'Executing query...',
+		render: (toolPart: AnyToolPart) => <SavedQueryToolCall toolPart={toolPart} />,
+		toolPart: partWithoutOutput('tool-qt_orders_by_status', { status: 'completed' }),
 	},
 	{
 		name: 'QueryAppDbToolCall',

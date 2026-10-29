@@ -43,6 +43,13 @@ describe('useSettingsSearch', () => {
 		expect(result.current.map((entry) => entry.page)).toContain('/settings/project/warehouse');
 	});
 
+	it('finds the query tools page for members', () => {
+		Object.assign(mocks.permissions, { isViewer: false });
+		const { result } = renderHook(() => useSettingsSearch('query tools'));
+
+		expect(result.current.map((entry) => entry.page)).toContain('/settings/project/query-tools');
+	});
+
 	it('keeps members without advanced settings on their account page', () => {
 		mocks.canSeeAdvancedSettings = false;
 		const { result } = renderHook(() => useSettingsSearch('warehouse'));

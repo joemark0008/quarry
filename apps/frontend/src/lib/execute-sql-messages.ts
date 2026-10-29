@@ -1,5 +1,6 @@
+import { isQueryToolAgentName } from '@quarry/shared/query-tools';
 import { areStructurallyEqual } from './ai';
-import type { executeSemanticQuery, executeSql } from '@quarry/shared/tools';
+import type { executeSemanticQuery, executeSql, savedQueryTool } from '@quarry/shared/tools';
 import type { UIMessage, UIMessagePart, UIToolPart } from '@quarry/api/agent/types/chat';
 
 export type SourceQuery = { input?: executeSql.Input; output: executeSql.Output; toolCallId?: string };
@@ -41,7 +42,30 @@ function toSourceQuery(part: UIMessagePart): SourceQuery | null {
 			? { ...semanticQueryAsSql(toolPart.input, toolPart.output), toolCallId: toolPart.toolCallId }
 			: null;
 	}
+	if (isSavedQueryToolPartType(part.type)) {
+		const toolPart = part as unknown as { output?: savedQueryTool.Output; toolCallId: string };
+		return toolPart.output?.query_tool
+			? { ...savedQueryToolAsSql(toolPart.output), toolCallId: toolPart.toolCallId }
+			: null;
+	}
 	return null;
+}
+
+/** Parts of saved query tools (`tool-qt_<name>`). */
+export function isSavedQueryToolPartType(type: string): boolean {
+	return type.startsWith('tool-') && isQueryToolAgentName(type.slice('tool-'.length));
+}
+
+/** A saved query tool's result, read as the SQL it ran with the arguments written in. */
+export function savedQueryToolAsSql(output: savedQueryTool.Output): SourceQuery {
+	return {
+		input: {
+			sql_query: output.query_tool.sql_query,
+			database_id: output.query_tool.database_id,
+			name: output.query_tool.name,
+		},
+		output,
+	};
 }
 
 export function semanticQueryAsSql(
