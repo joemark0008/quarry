@@ -9,7 +9,7 @@ import { StoryAppView } from '@/components/mcp-app/story-app-view';
 import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { readEmbedTokenFromLocation } from '@/lib/embed-token';
-import { trpc, trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/embed/story/$storyId')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -25,7 +25,7 @@ function StoryEmbedPage() {
 
 	useMcpAppEmbedHeightReporting();
 
-	const storyQuery = useQuery(trpc.embed.getStory.queryOptions({ storyId, token }));
+	const storyQuery = useQuery(storyApi.embed.getStory.queryOptions({ storyId, token }));
 	const story = storyQuery.data;
 
 	let inner: ReactNode;
@@ -66,7 +66,7 @@ function StoryEmbedPage() {
 }
 
 async function downloadStory(storyId: string, token: string, format: DownloadFormat): Promise<void> {
-	const result = await trpcClient.embed.downloadStory.mutate({ storyId, token, format });
+	const result = await storyApi.embed.downloadStory.mutate({ storyId, token, format });
 	const bytes = Uint8Array.from(atob(result.data), (c) => c.charCodeAt(0));
 	const blob = new Blob([bytes], { type: result.mimeType });
 	const url = URL.createObjectURL(blob);

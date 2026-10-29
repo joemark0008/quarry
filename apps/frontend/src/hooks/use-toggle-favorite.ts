@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 type FavoriteType = 'story' | 'folder';
 
@@ -15,9 +15,9 @@ export function useToggleFavorite(type: FavoriteType) {
 	const field = ID_FIELD[type];
 
 	const mutation = useMutation(
-		trpc.favorite.toggle.mutationOptions({
+		storyApi.favorite.toggle.mutationOptions({
 			onMutate: async ({ id }) => {
-				const queryKey = trpc.favorite.list.queryKey();
+				const queryKey = storyApi.favorite.list.queryKey();
 				await queryClient.cancelQueries({ queryKey });
 				const previous = queryClient.getQueryData(queryKey);
 				queryClient.setQueryData(queryKey, (old: typeof previous) => {
@@ -35,17 +35,17 @@ export function useToggleFavorite(type: FavoriteType) {
 			},
 			onError: (_err, _vars, context) => {
 				if (context?.previous !== undefined) {
-					queryClient.setQueryData(trpc.favorite.list.queryKey(), context.previous);
+					queryClient.setQueryData(storyApi.favorite.list.queryKey(), context.previous);
 				}
 			},
 			onSettled: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.favorite.list.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.favorite.list.queryKey() });
 			},
 		}),
 	);
 
 	function isFavorited(id: string): boolean {
-		const data = queryClient.getQueryData(trpc.favorite.list.queryKey()) as FavoriteList | undefined;
+		const data = queryClient.getQueryData(storyApi.favorite.list.queryKey()) as FavoriteList | undefined;
 		return data?.[field]?.includes(id) ?? false;
 	}
 

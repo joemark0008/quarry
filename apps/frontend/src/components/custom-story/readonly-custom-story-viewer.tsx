@@ -17,7 +17,6 @@ import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { isNotFoundError } from '@/lib/trpc-error';
-import { trpcClient } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 interface ReadonlyCustomStoryViewerProps {
@@ -45,7 +44,7 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 	const { switchStory } = useStoryViewerSwitchStory({ renderStoryViewer });
 	const renderExport = useCallback(
 		(format: DownloadFormat, html: string) =>
-			trpcClient.customStoryViewer.download.mutate({ access, storySlug, format, html, versionNumber }),
+			storyApi.customStoryViewer.download.mutate({ access, storySlug, format, html, versionNumber }),
 		[access, storySlug, versionNumber],
 	);
 	const download = useCustomStoryDownload(content, dataSource, renderExport);

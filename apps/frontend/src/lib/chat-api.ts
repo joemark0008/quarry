@@ -158,7 +158,7 @@ export const chatApi = {
 	},
 	chatFork: {
 		...storyChatFork,
-		/** Forks of a shared chat; story forks come with story sharing (Phase 4 stage 3). */
+		/** Forks of a shared chat. Story-source forks are not ported to apps/api (no call site sends one). */
 		fork: mutation<Inputs['chatFork']['fork'], Outputs['chatFork']['fork']>(
 			['chatFork', 'fork'],
 			async ({ source, selection }) => {

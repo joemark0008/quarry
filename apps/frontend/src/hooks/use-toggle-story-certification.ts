@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 export function useToggleStoryCertification() {
@@ -14,7 +13,7 @@ export function useToggleStoryCertification() {
 				queryClient.invalidateQueries({ queryKey: storyApi.story.listArchived.queryKey() });
 				queryClient.invalidateQueries({ queryKey: storyApi.story.listStandaloneArchived.queryKey() });
 				queryClient.invalidateQueries({ queryKey: storyApi.story.listSharedArchived.queryKey() });
-				queryClient.invalidateQueries({ queryKey: trpc.storyShare.list.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyShare.list.queryKey() });
 			},
 		}),
 	);

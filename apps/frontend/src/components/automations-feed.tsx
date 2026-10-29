@@ -45,7 +45,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTimeAgo } from '@/hooks/use-time-ago';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
 
 export type AutomationFeedRunStatus = 'running' | 'completed' | 'failed' | 'cancelled';
@@ -508,7 +508,7 @@ function AutomationRunCard({
 function StoryPreview({ storyId, onOpen }: { storyId: string; onOpen?: () => void }) {
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const [cursor, setCursor] = useState({ x: 0, y: 0 });
-	const { data, isLoading } = useQuery(trpc.storyShare.get.queryOptions({ storyId }));
+	const { data, isLoading } = useQuery(storyApi.storyShare.get.queryOptions({ storyId }));
 
 	const segments = useMemo(() => (data ? splitCodeIntoSegments(data.code) : []), [data]);
 	const queryData = (data?.queryData ?? null) as QueryDataMap | null;

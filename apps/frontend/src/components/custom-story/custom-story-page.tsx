@@ -28,7 +28,7 @@ import { StoryPageHeader } from '@/components/story-page-header';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
-import { trpc, trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { requestAsk } from '@/stores/ask-bar';
 
 interface CustomStoryPreviewPageProps {
@@ -208,7 +208,7 @@ export function SharedCustomStoryPage({
 	storyChatHeader,
 }: SharedCustomStoryPageProps) {
 	const queryClient = useQueryClient();
-	const contentQuery = useQuery(trpc.storyShare.getCustomVersion.queryOptions({ storyId }));
+	const contentQuery = useQuery(storyApi.storyShare.getCustomVersion.queryOptions({ storyId }));
 	const content = contentQuery.data;
 	const versionNumber = content?.version.number;
 	const dataSource = useMemo<CustomStoryDataSource>(
@@ -217,23 +217,24 @@ export function SharedCustomStoryPage({
 	);
 
 	const refreshMutation = useMutation(
-		trpc.storyShare.refreshData.mutationOptions({
+		storyApi.storyShare.refreshData.mutationOptions({
 			onSettled: () =>
 				Promise.all([
-					queryClient.invalidateQueries({ queryKey: trpc.storyShare.get.queryKey({ storyId }) }),
-					queryClient.invalidateQueries({ queryKey: trpc.storyShare.getCustomVersion.queryKey({ storyId }) }),
+					queryClient.invalidateQueries({ queryKey: storyApi.storyShare.get.queryKey({ storyId }) }),
 					queryClient.invalidateQueries({
-						queryKey: trpc.storyShare.getCustomStoryQueryData.queryKey({ storyId }),
+						queryKey: storyApi.storyShare.getCustomVersion.queryKey({ storyId }),
 					}),
 					queryClient.invalidateQueries({
-						queryKey: trpc.storyShare.getCustomStoryNarratives.queryKey({ storyId }),
+						queryKey: storyApi.storyShare.getCustomStoryQueryData.queryKey({ storyId }),
+					}),
+					queryClient.invalidateQueries({
+						queryKey: storyApi.storyShare.getCustomStoryNarratives.queryKey({ storyId }),
 					}),
 				]),
 		}),
 	);
 	const renderExport = useCallback(
-		(format: DownloadFormat, html: string) =>
-			trpcClient.storyShare.downloadCustom.mutate({ storyId, format, html }),
+		(format: DownloadFormat, html: string) => storyApi.storyShare.downloadCustom.mutate({ storyId, format, html }),
 		[storyId],
 	);
 	const download = useCustomStoryDownload(content, dataSource, renderExport);

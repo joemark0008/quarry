@@ -6,6 +6,43 @@ import {
 	ChatForkAskStoryDocument,
 	ChatForkForkStoryDocument,
 	ChatForkOpenStandaloneDocument,
+	CustomStoryViewerDownloadDocument,
+	EmbedDownloadStoryDocument,
+	EmbedGetChartDocument,
+	EmbedGetMapDocument,
+	EmbedGetStoryDocument,
+	FavoriteListDocument,
+	FavoriteToggleDocument,
+	FeedbackGetStoryFeedbackDocument,
+	FeedbackSubmitStoryFeedbackDocument,
+	SharedChatDownloadStoryDocument,
+	SharedStoryCreateDocument,
+	SharedStoryDeleteDocument,
+	SharedStoryDownloadCustomDocument,
+	SharedStoryDownloadDocument,
+	SharedStoryGetCustomStoryNarrativesDocument,
+	SharedStoryGetCustomStoryQueryDataDocument,
+	SharedStoryGetCustomStoryQuerySqlDocument,
+	SharedStoryGetCustomStoryStateDocument,
+	SharedStoryGetCustomVersionDocument,
+	SharedStoryGetDocument,
+	SharedStoryGetFilteredQueryDataDocument,
+	SharedStoryGetFilterOptionsDocument,
+	SharedStoryGetLiveQueryDataDocument,
+	SharedStoryGetQuerySqlDocument,
+	SharedStoryGetSharedStoryInfoDocument,
+	SharedStoryGetStoryIdByShareIdDocument,
+	SharedStoryGetVersionQueryDataDocument,
+	SharedStoryListDocument,
+	SharedStoryListShareableGroupsDocument,
+	SharedStoryRefreshDataDocument,
+	SharedStorySetCustomStoryStateDocument,
+	SharedStoryTogglePinDocument,
+	SharedStoryUpdateAccessDocument,
+	StoryDownloadCustomDocument,
+	StoryDownloadDocument,
+	StoryDownloadStandaloneDocument,
+	StoryThemeGenerateDocument,
 	CustomStoryViewerGetFileDocument,
 	CustomStoryViewerGetFormatDocument,
 	CustomStoryViewerGetNarrativesDocument,
@@ -88,7 +125,17 @@ import { mutation, query, reviveDates, runMutation, runQuery } from '@/lib/apoll
 type Inputs = inferRouterInputs<TrpcRouter>;
 type Outputs = inferRouterOutputs<TrpcRouter>;
 
-type StoryRouter = 'story' | 'storyFolder' | 'storyTheme' | 'customStoryViewer' | 'chatFork';
+type StoryRouter =
+	| 'story'
+	| 'storyFolder'
+	| 'storyTheme'
+	| 'customStoryViewer'
+	| 'chatFork'
+	| 'storyShare'
+	| 'embed'
+	| 'favorite'
+	| 'feedback'
+	| 'sharedChat';
 type Procedure<R extends StoryRouter> = keyof Inputs[R] & keyof Outputs[R] & string;
 
 /** Whether an output carries `Date`s (superjson upstream), which the `JSON` scalar sends as ISO strings. */
@@ -142,8 +189,11 @@ function toVariables(input: unknown): { input?: unknown } {
 	return input === undefined ? {} : { input };
 }
 
-function toOutput<T>(data: unknown, router: string, procedure: string, dates: boolean): T {
-	const field = `${router}${procedure[0].toUpperCase()}${procedure.slice(1)}`;
+/** Upstream's `trpc.storyShare` router is `sharedStory*` in the GraphQL schema (its upstream file name). */
+const FIELD_PREFIX: Partial<Record<StoryRouter, string>> = { storyShare: 'sharedStory' };
+
+function toOutput<T>(data: unknown, router: StoryRouter, procedure: string, dates: boolean): T {
+	const field = `${FIELD_PREFIX[router] ?? router}${procedure[0].toUpperCase()}${procedure.slice(1)}`;
 	const value = (data as Record<string, unknown>)[field];
 	return (dates ? reviveDates<T>(value, ROW_KEYS) : value) as T;
 }
@@ -151,8 +201,8 @@ function toOutput<T>(data: unknown, router: string, procedure: string, dates: bo
 /**
  * The story procedures moved to apps/api (`docs/stories-api.md`): call sites swap `trpc.story.*`,
  * `trpc.storyFolder.*`, `trpc.storyTheme.*` and `trpc.customStoryViewer.*` for `storyApi.*`; the story
- * procedures of `trpc.chatFork` are on `chatApi.chatFork`. Downloads, `storyTheme.generate`, story sharing,
- * embeds and favorites stay on tRPC until Phase 4 stage 3.
+ * procedures of `trpc.chatFork` are on `chatApi.chatFork`. Story sharing (`trpc.storyShare`, `sharedStory*` fields),
+ * embeds, favorites, story feedback and the story downloads (`{ data (base64), filename, mimeType }`) are here too.
  */
 export const storyApi = {
 	story: {
@@ -162,6 +212,9 @@ export const storyApi = {
 		bulkArchive: storyMutation('story', 'bulkArchive', StoryBulkArchiveDocument, false),
 		bulkUnarchive: storyMutation('story', 'bulkUnarchive', StoryBulkUnarchiveDocument, false),
 		createVersion: storyMutation('story', 'createVersion', StoryCreateVersionDocument, true),
+		download: storyQuery('story', 'download', StoryDownloadDocument, false),
+		downloadCustom: storyMutation('story', 'downloadCustom', StoryDownloadCustomDocument, false),
+		downloadStandalone: storyQuery('story', 'downloadStandalone', StoryDownloadStandaloneDocument, false),
 		editCustomStoryBlock: storyMutation('story', 'editCustomStoryBlock', StoryEditCustomStoryBlockDocument, false),
 		getCertification: storyQuery('story', 'getCertification', StoryGetCertificationDocument, true),
 		getCustomStoryNarratives: storyQuery(
@@ -251,6 +304,7 @@ export const storyApi = {
 		unarchive: storyMutation('storyFolder', 'unarchive', StoryFolderUnarchiveDocument, false),
 	},
 	storyTheme: {
+		generate: storyMutation('storyTheme', 'generate', StoryThemeGenerateDocument, false),
 		getActive: storyQuery('storyTheme', 'getActive', StoryThemeGetActiveDocument, false),
 		getState: storyQuery('storyTheme', 'getState', StoryThemeGetStateDocument, true),
 		listVersions: storyQuery('storyTheme', 'listVersions', StoryThemeListVersionsDocument, true),
@@ -259,6 +313,7 @@ export const storyApi = {
 		setEnabled: storyMutation('storyTheme', 'setEnabled', StoryThemeSetEnabledDocument, false),
 	},
 	customStoryViewer: {
+		download: storyMutation('customStoryViewer', 'download', CustomStoryViewerDownloadDocument, false),
 		getFile: storyQuery('customStoryViewer', 'getFile', CustomStoryViewerGetFileDocument, false),
 		getFormat: storyQuery('customStoryViewer', 'getFormat', CustomStoryViewerGetFormatDocument, false),
 		getNarratives: storyQuery('customStoryViewer', 'getNarratives', CustomStoryViewerGetNarrativesDocument, false),
@@ -268,6 +323,103 @@ export const storyApi = {
 		getTheme: storyQuery('customStoryViewer', 'getTheme', CustomStoryViewerGetThemeDocument, false),
 		getVersion: storyQuery('customStoryViewer', 'getVersion', CustomStoryViewerGetVersionDocument, true),
 		setState: storyMutation('customStoryViewer', 'setState', CustomStoryViewerSetStateDocument, false),
+	},
+	storyShare: {
+		create: storyMutation('storyShare', 'create', SharedStoryCreateDocument, false),
+		delete: storyMutation('storyShare', 'delete', SharedStoryDeleteDocument, false),
+		download: storyQuery('storyShare', 'download', SharedStoryDownloadDocument, false),
+		downloadCustom: storyMutation('storyShare', 'downloadCustom', SharedStoryDownloadCustomDocument, false),
+		get: storyQuery('storyShare', 'get', SharedStoryGetDocument, true),
+		getCustomStoryNarratives: storyQuery(
+			'storyShare',
+			'getCustomStoryNarratives',
+			SharedStoryGetCustomStoryNarrativesDocument,
+			false,
+		),
+		getCustomStoryQueryData: storyQuery(
+			'storyShare',
+			'getCustomStoryQueryData',
+			SharedStoryGetCustomStoryQueryDataDocument,
+			false,
+		),
+		getCustomStoryQuerySql: storyQuery(
+			'storyShare',
+			'getCustomStoryQuerySql',
+			SharedStoryGetCustomStoryQuerySqlDocument,
+			false,
+		),
+		getCustomStoryState: storyQuery(
+			'storyShare',
+			'getCustomStoryState',
+			SharedStoryGetCustomStoryStateDocument,
+			false,
+		),
+		getCustomVersion: storyQuery('storyShare', 'getCustomVersion', SharedStoryGetCustomVersionDocument, true),
+		getFilteredQueryData: storyQuery(
+			'storyShare',
+			'getFilteredQueryData',
+			SharedStoryGetFilteredQueryDataDocument,
+			false,
+		),
+		getFilterOptions: storyQuery('storyShare', 'getFilterOptions', SharedStoryGetFilterOptionsDocument, false),
+		getLiveQueryData: storyQuery('storyShare', 'getLiveQueryData', SharedStoryGetLiveQueryDataDocument, false),
+		getQuerySql: storyQuery('storyShare', 'getQuerySql', SharedStoryGetQuerySqlDocument, false),
+		getSharedStoryInfo: storyQuery(
+			'storyShare',
+			'getSharedStoryInfo',
+			SharedStoryGetSharedStoryInfoDocument,
+			false,
+		),
+		getStoryIdByShareId: storyQuery(
+			'storyShare',
+			'getStoryIdByShareId',
+			SharedStoryGetStoryIdByShareIdDocument,
+			false,
+		),
+		getVersionQueryData: storyQuery(
+			'storyShare',
+			'getVersionQueryData',
+			SharedStoryGetVersionQueryDataDocument,
+			false,
+		),
+		list: storyQuery('storyShare', 'list', SharedStoryListDocument, true),
+		listShareableGroups: storyQuery(
+			'storyShare',
+			'listShareableGroups',
+			SharedStoryListShareableGroupsDocument,
+			false,
+		),
+		refreshData: storyMutation('storyShare', 'refreshData', SharedStoryRefreshDataDocument, true),
+		setCustomStoryState: storyMutation(
+			'storyShare',
+			'setCustomStoryState',
+			SharedStorySetCustomStoryStateDocument,
+			false,
+		),
+		togglePin: storyMutation('storyShare', 'togglePin', SharedStoryTogglePinDocument, false),
+		updateAccess: storyMutation('storyShare', 'updateAccess', SharedStoryUpdateAccessDocument, false),
+	},
+	embed: {
+		downloadStory: storyMutation('embed', 'downloadStory', EmbedDownloadStoryDocument, false),
+		getChart: storyQuery('embed', 'getChart', EmbedGetChartDocument, false),
+		getMap: storyQuery('embed', 'getMap', EmbedGetMapDocument, false),
+		getStory: storyQuery('embed', 'getStory', EmbedGetStoryDocument, false),
+	},
+	favorite: {
+		list: storyQuery('favorite', 'list', FavoriteListDocument, false),
+		toggle: storyMutation('favorite', 'toggle', FavoriteToggleDocument, false),
+	},
+	feedback: {
+		getStoryFeedback: storyQuery('feedback', 'getStoryFeedback', FeedbackGetStoryFeedbackDocument, false),
+		submitStoryFeedback: storyMutation(
+			'feedback',
+			'submitStoryFeedback',
+			FeedbackSubmitStoryFeedbackDocument,
+			true,
+		),
+	},
+	sharedChat: {
+		downloadStory: storyQuery('sharedChat', 'downloadStory', SharedChatDownloadStoryDocument, false),
 	},
 };
 

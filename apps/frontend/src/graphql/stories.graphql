@@ -10,6 +10,10 @@ mutation ChatForkOpenStandalone($input: JSON) {
 	chatForkOpenStandalone(input: $input)
 }
 
+mutation CustomStoryViewerDownload($input: JSON) {
+	customStoryViewerDownload(input: $input)
+}
+
 query CustomStoryViewerGetFile($input: JSON) {
 	customStoryViewerGetFile(input: $input)
 }
@@ -46,6 +50,134 @@ mutation CustomStoryViewerSetState($input: JSON) {
 	customStoryViewerSetState(input: $input)
 }
 
+mutation EmbedDownloadStory($input: JSON) {
+	embedDownloadStory(input: $input)
+}
+
+query EmbedGetChart($input: JSON) {
+	embedGetChart(input: $input)
+}
+
+query EmbedGetMap($input: JSON) {
+	embedGetMap(input: $input)
+}
+
+query EmbedGetStory($input: JSON) {
+	embedGetStory(input: $input)
+}
+
+query FavoriteList($input: JSON) {
+	favoriteList(input: $input)
+}
+
+mutation FavoriteToggle($input: JSON) {
+	favoriteToggle(input: $input)
+}
+
+query FeedbackGetStoryFeedback($input: JSON) {
+	feedbackGetStoryFeedback(input: $input)
+}
+
+mutation FeedbackSubmitStoryFeedback($input: JSON) {
+	feedbackSubmitStoryFeedback(input: $input)
+}
+
+query SharedChatDownloadStory($input: JSON) {
+	sharedChatDownloadStory(input: $input)
+}
+
+mutation SharedStoryCreate($input: JSON) {
+	sharedStoryCreate(input: $input)
+}
+
+mutation SharedStoryDelete($input: JSON) {
+	sharedStoryDelete(input: $input)
+}
+
+query SharedStoryDownload($input: JSON) {
+	sharedStoryDownload(input: $input)
+}
+
+mutation SharedStoryDownloadCustom($input: JSON) {
+	sharedStoryDownloadCustom(input: $input)
+}
+
+query SharedStoryGet($input: JSON) {
+	sharedStoryGet(input: $input)
+}
+
+query SharedStoryGetCustomStoryNarratives($input: JSON) {
+	sharedStoryGetCustomStoryNarratives(input: $input)
+}
+
+query SharedStoryGetCustomStoryQueryData($input: JSON) {
+	sharedStoryGetCustomStoryQueryData(input: $input)
+}
+
+query SharedStoryGetCustomStoryQuerySql($input: JSON) {
+	sharedStoryGetCustomStoryQuerySql(input: $input)
+}
+
+query SharedStoryGetCustomStoryState($input: JSON) {
+	sharedStoryGetCustomStoryState(input: $input)
+}
+
+query SharedStoryGetCustomVersion($input: JSON) {
+	sharedStoryGetCustomVersion(input: $input)
+}
+
+query SharedStoryGetFilterOptions($input: JSON) {
+	sharedStoryGetFilterOptions(input: $input)
+}
+
+query SharedStoryGetFilteredQueryData($input: JSON) {
+	sharedStoryGetFilteredQueryData(input: $input)
+}
+
+query SharedStoryGetLiveQueryData($input: JSON) {
+	sharedStoryGetLiveQueryData(input: $input)
+}
+
+query SharedStoryGetQuerySql($input: JSON) {
+	sharedStoryGetQuerySql(input: $input)
+}
+
+query SharedStoryGetSharedStoryInfo($input: JSON) {
+	sharedStoryGetSharedStoryInfo(input: $input)
+}
+
+query SharedStoryGetStoryIdByShareId($input: JSON) {
+	sharedStoryGetStoryIdByShareId(input: $input)
+}
+
+query SharedStoryGetVersionQueryData($input: JSON) {
+	sharedStoryGetVersionQueryData(input: $input)
+}
+
+query SharedStoryList($input: JSON) {
+	sharedStoryList(input: $input)
+}
+
+query SharedStoryListShareableGroups($input: JSON) {
+	sharedStoryListShareableGroups(input: $input)
+}
+
+mutation SharedStoryRefreshData($input: JSON) {
+	sharedStoryRefreshData(input: $input)
+}
+
+mutation SharedStorySetCustomStoryState($input: JSON) {
+	sharedStorySetCustomStoryState(input: $input)
+}
+
+mutation SharedStoryTogglePin($input: JSON) {
+	sharedStoryTogglePin(input: $input)
+}
+
+mutation SharedStoryUpdateAccess($input: JSON) {
+	sharedStoryUpdateAccess(input: $input)
+}
+
 mutation StoryArchive($input: JSON) {
 	storyArchive(input: $input)
 }
@@ -68,6 +200,18 @@ mutation StoryBulkUnarchive($input: JSON) {
 
 mutation StoryCreateVersion($input: JSON) {
 	storyCreateVersion(input: $input)
+}
+
+query StoryDownload($input: JSON) {
+	storyDownload(input: $input)
+}
+
+mutation StoryDownloadCustom($input: JSON) {
+	storyDownloadCustom(input: $input)
+}
+
+query StoryDownloadStandalone($input: JSON) {
+	storyDownloadStandalone(input: $input)
 }
 
 mutation StoryEditCustomStoryBlock($input: JSON) {
@@ -264,6 +408,10 @@ mutation StorySaveCustomStoryFiles($input: JSON) {
 
 mutation StorySetCustomStoryState($input: JSON) {
 	storySetCustomStoryState(input: $input)
+}
+
+mutation StoryThemeGenerate($input: JSON) {
+	storyThemeGenerate(input: $input)
 }
 
 query StoryThemeGetActive($input: JSON) {

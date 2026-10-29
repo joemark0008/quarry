@@ -65,6 +65,11 @@ vi.mock('@/lib/story-api', async () => {
 			storyFolder: trpc.storyFolder,
 			storyTheme: trpc.storyTheme,
 			customStoryViewer: trpc.customStoryViewer,
+			storyShare: trpc.storyShare,
+			embed: trpc.embed,
+			favorite: trpc.favorite,
+			feedback: trpc.feedback,
+			sharedChat: trpc.sharedChat,
 		},
 		storyChatFork: {},
 	};

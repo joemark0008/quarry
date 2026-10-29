@@ -10,7 +10,6 @@ import { StoryTabbedContent } from '@/components/story-tabbed-content';
 import { useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
 import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { Button } from '@/components/ui/button';
-import { trpc } from '@/main';
 import { LiveStorySettingsDialog } from '@/components/side-panel/live-story-settings-dialog';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
@@ -55,7 +54,7 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 		refresh: handleRefreshData,
 	});
 
-	const shareQuery = useQuery(trpc.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }));
+	const shareQuery = useQuery(storyApi.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }));
 	const isShared = shareQuery.data?.isShared === true;
 
 	useTrackViewDuration({ assetType: 'story', storyId, chatId, versionNumber: story.version });

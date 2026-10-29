@@ -65,7 +65,7 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 			enabled: open,
 		});
 		const shareQuery = useQuery({
-			...trpc.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }),
+			...storyApi.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }),
 			enabled: open,
 		});
 		const isShared = shareQuery.data?.isShared === true;
@@ -129,9 +129,9 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 					});
 					// Enabling delivery can auto-share the story, so keep sharing state in sync.
 					queryClient.invalidateQueries({
-						queryKey: trpc.storyShare.getSharedStoryInfo.queryKey({ chatId, storySlug }),
+						queryKey: storyApi.storyShare.getSharedStoryInfo.queryKey({ chatId, storySlug }),
 					});
-					queryClient.invalidateQueries({ queryKey: trpc.storyShare.list.queryKey() });
+					queryClient.invalidateQueries({ queryKey: storyApi.storyShare.list.queryKey() });
 				},
 			}),
 		);

@@ -20,7 +20,6 @@ import { Button } from '@/components/ui/button';
 import { applyExecuteSqlResultToMessages } from '@/lib/execute-sql-messages';
 import { formatSQL } from '@/lib/sql-formatter';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
-import { trpc } from '@/main';
 import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
 
@@ -183,8 +182,8 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 				queryClient.removeQueries(chatApi.chat.getQueryRows.pathFilter());
 				void queryClient.invalidateQueries(storyApi.story.getQuerySql.pathFilter());
 				void queryClient.invalidateQueries(storyApi.story.getFilteredQueryData.pathFilter());
-				void queryClient.invalidateQueries(trpc.storyShare.getQuerySql.pathFilter());
-				void queryClient.invalidateQueries(trpc.storyShare.getFilteredQueryData.pathFilter());
+				void queryClient.invalidateQueries(storyApi.storyShare.getQuerySql.pathFilter());
+				void queryClient.invalidateQueries(storyApi.storyShare.getFilteredQueryData.pathFilter());
 			},
 			onError: (err) => setError(getMutationErrorMessage(err)),
 		});

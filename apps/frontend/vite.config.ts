@@ -59,6 +59,8 @@ export default defineConfig({
 			'/api/attachments': { target: QUARRY_API_URL },
 			'/api/transcribe': { target: QUARRY_API_URL },
 			'/api/map-boundaries': { target: QUARRY_API_URL },
+			'/api/stories': { target: QUARRY_API_URL },
+			'/api/embed': { target: QUARRY_API_URL },
 			'/health': { target: QUARRY_API_URL },
 			'/api': { target: UPSTREAM_API_URL },
 			'/mcp': { target: UPSTREAM_API_URL },

@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { useGroupPicker, useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
 
@@ -31,7 +31,7 @@ interface ShareStoryDialogProps {
 }
 
 export function ShareStoryDialog({ open, onOpenChange, chatId, storySlug, intent = 'share' }: ShareStoryDialogProps) {
-	const shareQuery = useQuery(trpc.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }));
+	const shareQuery = useQuery(storyApi.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }));
 	const shareData = shareQuery.data;
 
 	if (shareQuery.isLoading && !shareData) {
@@ -74,8 +74,10 @@ export function ShareStoryDialog({ open, onOpenChange, chatId, storySlug, intent
 function useInvalidateShareQueries(chatId: string, storySlug: string) {
 	const queryClient = useQueryClient();
 	return useCallback(() => {
-		queryClient.invalidateQueries({ queryKey: trpc.storyShare.getSharedStoryInfo.queryKey({ chatId, storySlug }) });
-		queryClient.invalidateQueries({ queryKey: trpc.storyShare.list.queryKey() });
+		queryClient.invalidateQueries({
+			queryKey: storyApi.storyShare.getSharedStoryInfo.queryKey({ chatId, storySlug }),
+		});
+		queryClient.invalidateQueries({ queryKey: storyApi.storyShare.list.queryKey() });
 	}, [queryClient, chatId, storySlug]);
 }
 
@@ -113,7 +115,7 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 		}
 	}, [open, reset, resetGroups]);
 
-	const shareMutation = useMutation(trpc.storyShare.create.mutationOptions());
+	const shareMutation = useMutation(storyApi.storyShare.create.mutationOptions());
 
 	const handleConfirm = useCallback(() => {
 		const isSpecific = effectiveVisibility === 'specific';
@@ -290,7 +292,7 @@ function ManageShareDialog({
 	);
 
 	const deleteMutation = useMutation(
-		trpc.storyShare.delete.mutationOptions({
+		storyApi.storyShare.delete.mutationOptions({
 			onSuccess: () => {
 				invalidateShareQueries();
 				onOpenChange(false);
@@ -299,7 +301,7 @@ function ManageShareDialog({
 	);
 
 	const updateAccessMutation = useMutation(
-		trpc.storyShare.updateAccess.mutationOptions({
+		storyApi.storyShare.updateAccess.mutationOptions({
 			onSuccess: () => {
 				invalidateShareQueries();
 				onOpenChange(false);

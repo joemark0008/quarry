@@ -159,10 +159,10 @@ function StoriesPage() {
 		enabled: !!activeProjectId,
 	});
 	const sharedStories = useQuery({
-		...trpc.storyShare.list.queryOptions({ projectId: storiesProjectId ?? '' }),
+		...storyApi.storyShare.list.queryOptions({ projectId: storiesProjectId ?? '' }),
 		enabled: !!storiesProjectId,
 	});
-	const favorites = useQuery({ ...trpc.favorite.list.queryOptions(), enabled: !!activeProjectId });
+	const favorites = useQuery({ ...storyApi.favorite.list.queryOptions(), enabled: !!activeProjectId });
 	const storyViewCounts = useQuery({
 		...trpc.analyticsEvent.storyViewCounts.queryOptions(),
 		enabled: !!activeProjectId && (sort.field === 'views' || displayMode === 'lines'),

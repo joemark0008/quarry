@@ -1,5 +1,4 @@
 import type { CustomStoryViewerAccess, StoryStateChange } from '@quarry/shared/story-app';
-import { trpc, trpcClient } from '@/main';
 import { chatActivityStore } from '@/stores/chat-activity';
 import { storyApi } from '@/lib/story-api';
 
@@ -8,16 +7,6 @@ export type CustomStoryDataSource =
 	| { kind: 'owner'; chatId: string; storySlug: string }
 	| { kind: 'share'; storyId: string; versionNumber?: number }
 	| { kind: 'viewer'; access: CustomStoryViewerAccess; storySlug: string; versionNumber?: number };
-
-/**
- * `trpc.storyShare` stays on tRPC until story sharing moves (Phase 4 stage 3); its options are typed like the
- * GraphQL ones they sit beside so the callers' `fetchQuery` sees one shape.
- */
-function shareOptions<TProcedure extends { queryOptions: (...args: never[]) => unknown }>(
-	options: unknown,
-): ReturnType<TProcedure['queryOptions']> {
-	return options as ReturnType<TProcedure['queryOptions']>;
-}
 
 const QUERY_RETRY_DELAY_MS = 1500;
 const MAX_QUERY_RETRIES_WHILE_CHAT_RUNNING = 10;
@@ -48,13 +37,11 @@ export function queryDataOptions(dataSource: CustomStoryDataSource, queryId: str
 		return storyApi.customStoryViewer.getQueryData.queryOptions({ access, storySlug, queryId, versionNumber });
 	}
 	if (dataSource.kind === 'share') {
-		return shareOptions<typeof storyApi.customStoryViewer.getQueryData>(
-			trpc.storyShare.getCustomStoryQueryData.queryOptions({
-				storyId: dataSource.storyId,
-				queryId,
-				versionNumber: dataSource.versionNumber,
-			}),
-		);
+		return storyApi.storyShare.getCustomStoryQueryData.queryOptions({
+			storyId: dataSource.storyId,
+			queryId,
+			versionNumber: dataSource.versionNumber,
+		});
 	}
 	const { chatId, storySlug } = dataSource;
 	return {
@@ -71,13 +58,11 @@ export function querySqlOptions(dataSource: CustomStoryDataSource, queryId: stri
 		return storyApi.customStoryViewer.getQuerySql.queryOptions({ access, storySlug, queryId, versionNumber });
 	}
 	if (dataSource.kind === 'share') {
-		return shareOptions<typeof storyApi.customStoryViewer.getQuerySql>(
-			trpc.storyShare.getCustomStoryQuerySql.queryOptions({
-				storyId: dataSource.storyId,
-				queryId,
-				versionNumber: dataSource.versionNumber,
-			}),
-		);
+		return storyApi.storyShare.getCustomStoryQuerySql.queryOptions({
+			storyId: dataSource.storyId,
+			queryId,
+			versionNumber: dataSource.versionNumber,
+		});
 	}
 	const { chatId, storySlug } = dataSource;
 	return storyApi.story.getCustomStoryQuerySql.queryOptions({ chatId, storySlug, queryId });
@@ -89,9 +74,7 @@ export function narrativesOptions(dataSource: CustomStoryDataSource) {
 		return storyApi.customStoryViewer.getNarratives.queryOptions({ access, storySlug });
 	}
 	if (dataSource.kind === 'share') {
-		return shareOptions<typeof storyApi.customStoryViewer.getNarratives>(
-			trpc.storyShare.getCustomStoryNarratives.queryOptions({ storyId: dataSource.storyId }),
-		);
+		return storyApi.storyShare.getCustomStoryNarratives.queryOptions({ storyId: dataSource.storyId });
 	}
 	const { chatId, storySlug } = dataSource;
 	return storyApi.story.getCustomStoryNarratives.queryOptions({ chatId, storySlug });
@@ -103,9 +86,7 @@ export function stateOptions(dataSource: CustomStoryDataSource) {
 		return storyApi.customStoryViewer.getState.queryOptions({ access, storySlug });
 	}
 	if (dataSource.kind === 'share') {
-		return shareOptions<typeof storyApi.customStoryViewer.getState>(
-			trpc.storyShare.getCustomStoryState.queryOptions({ storyId: dataSource.storyId }),
-		);
+		return storyApi.storyShare.getCustomStoryState.queryOptions({ storyId: dataSource.storyId });
 	}
 	const { chatId, storySlug } = dataSource;
 	return storyApi.story.getCustomStoryState.queryOptions({ chatId, storySlug });
@@ -118,7 +99,7 @@ export async function saveStoryState(dataSource: CustomStoryDataSource, change: 
 		return;
 	}
 	if (dataSource.kind === 'share') {
-		await trpcClient.storyShare.setCustomStoryState.mutate({ storyId: dataSource.storyId, change });
+		await storyApi.storyShare.setCustomStoryState.mutate({ storyId: dataSource.storyId, change });
 		return;
 	}
 	const { chatId, storySlug } = dataSource;

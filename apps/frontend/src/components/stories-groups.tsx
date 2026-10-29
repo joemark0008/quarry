@@ -44,7 +44,6 @@ import { hasAnyStoryReference, setStoryDragData } from '@/lib/story-reference';
 import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 const VIEW_COUNT_FORMAT = new Intl.NumberFormat(undefined, { notation: 'compact', maximumFractionDigits: 1 });
@@ -431,9 +430,9 @@ function StoryQuickActions({ item, onRequestPinShare }: { item: StoryItem; onReq
 	const favorite = useToggleFavorite('story');
 
 	const pinMutation = useMutation(
-		trpc.storyShare.togglePin.mutationOptions({
+		storyApi.storyShare.togglePin.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.storyShare.list.queryKey() });
+				queryClient.invalidateQueries({ queryKey: storyApi.storyShare.list.queryKey() });
 				queryClient.invalidateQueries({ queryKey: storyApi.story.listAll.queryKey() });
 			},
 		}),

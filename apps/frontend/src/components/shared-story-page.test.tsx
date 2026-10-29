@@ -92,6 +92,11 @@ vi.mock('@/hooks/use-mentioned-stories', () => ({ useResolvedStory: () => ({ dat
 vi.mock('@/lib/auth-client', () => ({
 	useSession: () => ({ data: { user: { id: 'member-1' } } }),
 }));
+/** Story sharing moved to apps/api: `storyApi.storyShare` reads the same mocked procedures as `trpc.storyShare`. */
+vi.mock('@/lib/story-api', async () => {
+	const { trpc } = (await import('@/main')) as unknown as { trpc: Record<string, unknown> };
+	return { storyApi: { storyShare: trpc.storyShare }, storyChatFork: {} };
+});
 vi.mock('@/main', () => ({
 	trpc: {
 		storyShare: {

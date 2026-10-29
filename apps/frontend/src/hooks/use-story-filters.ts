@@ -7,7 +7,6 @@ import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
 
 import type { QueryDataMap } from '@/components/story-embeds';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
-import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { storyApi } from '@/lib/story-api';
 
@@ -96,7 +95,7 @@ export function useStoryFilters({
 	});
 
 	const sharedQuery = useQuery({
-		...trpc.storyShare.getFilteredQueryData.queryOptions({
+		...storyApi.storyShare.getFilteredQueryData.queryOptions({
 			storyId: api?.kind === 'shared' ? api.storyId : '',
 			selections: debouncedSelections,
 		}),

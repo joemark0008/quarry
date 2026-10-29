@@ -24,7 +24,6 @@ import { useResizeObserver } from '@/hooks/use-resize-observer';
 import { useSession } from '@/lib/auth-client';
 import { buildStoryItems } from '@/lib/stories-page';
 import { capitalize, cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
 
@@ -76,11 +75,11 @@ function HomePage() {
 		enabled: isEmptyState && !!storiesProjectId,
 	});
 	const sharedStories = useQuery({
-		...trpc.storyShare.list.queryOptions({ projectId: storiesProjectId ?? '' }),
+		...storyApi.storyShare.list.queryOptions({ projectId: storiesProjectId ?? '' }),
 		enabled: isEmptyState && !!storiesProjectId,
 	});
 	const favorites = useQuery({
-		...trpc.favorite.list.queryOptions(),
+		...storyApi.favorite.list.queryOptions(),
 		enabled: isEmptyState && hasProject,
 	});
 	const folderItems = useQuery({

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useActiveProjectId } from '@/lib/active-project';
 import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
 
 export function useShareAudience() {
@@ -82,7 +83,7 @@ export function useMemberPicker(currentUserId: string | undefined, initialIds: s
 export function useGroupPicker(search: string, initialIds: string[] | undefined) {
 	const [selectedGroupIds, setSelectedGroupIds] = useState<Set<string>>(() => new Set(initialIds));
 
-	const groupsQuery = useQuery(trpc.storyShare.listShareableGroups.queryOptions());
+	const groupsQuery = useQuery(storyApi.storyShare.listShareableGroups.queryOptions());
 
 	const filteredGroups = useMemo(() => {
 		const groups = groupsQuery.data ?? [];

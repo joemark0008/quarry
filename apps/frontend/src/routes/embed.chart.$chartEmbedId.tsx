@@ -7,7 +7,7 @@ import { ChartAppView } from '@/components/mcp-app/chart-app-view';
 import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { isLikelyMcpAppPayloadToken, readEmbedTokenFromLocation } from '@/lib/embed-token';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/embed/chart/$chartEmbedId')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -24,7 +24,7 @@ function ChartEmbedPage() {
 
 	useMcpAppEmbedHeightReporting();
 
-	const chartQuery = useQuery(trpc.embed.getChart.queryOptions({ chartEmbedId, token }));
+	const chartQuery = useQuery(storyApi.embed.getChart.queryOptions({ chartEmbedId, token }));
 	const chart = chartQuery.data;
 
 	let inner: ReactNode;

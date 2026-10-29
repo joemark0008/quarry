@@ -23,11 +23,11 @@ import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
 
 export function SharedStoryPage({ storyId }: { storyId: string }) {
-	const { data: story } = useSuspenseQuery(trpc.storyShare.get.queryOptions({ storyId }));
+	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));
 	if (story.format === 'custom') {
 		return <SharedCustomStory storyId={storyId} />;
 	}
@@ -36,7 +36,7 @@ export function SharedStoryPage({ storyId }: { storyId: string }) {
 
 function SharedCustomStory({ storyId }: { storyId: string }) {
 	const { data: session } = useSession();
-	const { data: story } = useSuspenseQuery(trpc.storyShare.get.queryOptions({ storyId }));
+	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));
 	const isOwner = useResolvedStory(storyId).data?.isOwner === true;
 
 	useTrackViewDuration({
@@ -63,7 +63,7 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 	const { data: session } = useSession();
 	const queryClient = useQueryClient();
 
-	const { data: story } = useSuspenseQuery(trpc.storyShare.get.queryOptions({ storyId }));
+	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const sidePanelRef = useRef<HTMLDivElement>(null);
@@ -71,9 +71,9 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 	const shareSource = useMemo(() => ({ type: 'story' as const, storyId }), [storyId]);
 
 	const refreshMutation = useMutation(
-		trpc.storyShare.refreshData.mutationOptions({
+		storyApi.storyShare.refreshData.mutationOptions({
 			onSettled: async () => {
-				await queryClient.invalidateQueries({ queryKey: trpc.storyShare.get.queryKey({ storyId }) });
+				await queryClient.invalidateQueries({ queryKey: storyApi.storyShare.get.queryKey({ storyId }) });
 			},
 		}),
 	);
@@ -81,7 +81,7 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 	const handleRefresh = useCallback(() => {
 		refreshStory({ storyId });
 	}, [refreshStory, storyId]);
-	const isRefreshing = useIsStoryRefreshing(trpc.storyShare.refreshData.mutationKey(), { storyId });
+	const isRefreshing = useIsStoryRefreshing(storyApi.storyShare.refreshData.mutationKey(), { storyId });
 	useRetryStaleStoryRefresh({
 		storyKey: storyId,
 		needsRefresh: story.needsRefresh,
@@ -212,7 +212,7 @@ function SharedStoryContent({
 	const noCacheQuery = useMemo<LiveQueryConfig | undefined>(
 		() =>
 			useLiveUnfiltered
-				? { queryOptions: (queryId) => trpc.storyShare.getLiveQueryData.queryOptions({ storyId, queryId }) }
+				? { queryOptions: (queryId) => storyApi.storyShare.getLiveQueryData.queryOptions({ storyId, queryId }) }
 				: undefined,
 		[useLiveUnfiltered, storyId],
 	);

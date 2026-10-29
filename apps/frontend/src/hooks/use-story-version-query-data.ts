@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
 import type { QueryDataMap } from '@/components/story-embeds';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 interface UseStoryVersionQueryDataParams {
@@ -28,7 +27,7 @@ export function useStoryVersionQueryData({
 		enabled: shouldFetchHistoricalData && !sharedStoryId,
 	});
 	const sharedVersionQuery = useQuery({
-		...trpc.storyShare.getVersionQueryData.queryOptions({ storyId: sharedStoryId ?? '', versionNumber }),
+		...storyApi.storyShare.getVersionQueryData.queryOptions({ storyId: sharedStoryId ?? '', versionNumber }),
 		enabled: shouldFetchHistoricalData && Boolean(sharedStoryId),
 	});
 

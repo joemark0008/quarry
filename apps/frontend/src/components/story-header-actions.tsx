@@ -14,7 +14,6 @@ import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { useToggleFavorite } from '@/hooks/use-toggle-favorite';
 import { useToggleStoryCertification } from '@/hooks/use-toggle-story-certification';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
@@ -147,11 +146,11 @@ export function StoryFavoritedButton({ storyId }: { storyId: string }) {
 export function StoryFeedbackButtons({ storyId }: { storyId: string }) {
 	const [dialogVote, setDialogVote] = useState<FeedbackVote>('down');
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
-	const { data: feedback } = useQuery(trpc.feedback.getStoryFeedback.queryOptions({ storyId }));
+	const { data: feedback } = useQuery(storyApi.feedback.getStoryFeedback.queryOptions({ storyId }));
 	const submitFeedback = useMutation(
-		trpc.feedback.submitStoryFeedback.mutationOptions({
+		storyApi.feedback.submitStoryFeedback.mutationOptions({
 			onSuccess: (data, _, __, ctx) => {
-				ctx.client.setQueryData(trpc.feedback.getStoryFeedback.queryKey({ storyId }), data);
+				ctx.client.setQueryData(storyApi.feedback.getStoryFeedback.queryKey({ storyId }), data);
 			},
 		}),
 	);
@@ -231,7 +230,7 @@ function StoryFeedbackButton({ Icon, label, isActive, activeClassName, disabled,
 
 function useStoryFavorite(storyId: string) {
 	const { toggle, isPending } = useToggleFavorite('story');
-	const { data: favorites } = useQuery(trpc.favorite.list.queryOptions());
+	const { data: favorites } = useQuery(storyApi.favorite.list.queryOptions());
 	const isFavorited = favorites?.storyIds.includes(storyId) ?? false;
 
 	return {

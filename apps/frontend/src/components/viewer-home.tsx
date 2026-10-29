@@ -11,7 +11,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useMultiProject } from '@/hooks/use-multi-project';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { VIEWER_DISPLAY_KEY, VIEWER_GROUP_KEY, filterItems, getStoredSetting, groupItems } from '@/lib/viewer-home';
-import { trpc } from '@/main';
+import { storyApi } from '@/lib/story-api';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
 
@@ -23,7 +23,7 @@ export function ViewerHome() {
 	const multiProjectMode = useMultiProject();
 	const sharedChats = useQuery(chatApi.sharedChat.list.queryOptions());
 	const sharedStories = useQuery({
-		...trpc.storyShare.list.queryOptions({ projectId: projectId ?? '' }),
+		...storyApi.storyShare.list.queryOptions({ projectId: projectId ?? '' }),
 		enabled: !!projectId,
 	});
 	const [searchQuery, setSearchQuery] = useState('');

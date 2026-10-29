@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 const CLEAR_SELECT_VALUE = '__quarry_clear_filter__';
@@ -337,7 +336,7 @@ function useFilterOptions(
 	});
 
 	const sharedQuery = useQuery({
-		...trpc.storyShare.getFilterOptions.queryOptions({
+		...storyApi.storyShare.getFilterOptions.queryOptions({
 			storyId: api?.kind === 'shared' ? api.storyId : '',
 			filterId: filter.id,
 		}),

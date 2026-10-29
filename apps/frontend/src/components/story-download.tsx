@@ -8,7 +8,7 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
-import { trpcClient } from '@/main';
+import { storyApi } from '@/lib/story-api';
 
 export interface StoryDownloadFile {
 	data: string;
@@ -53,23 +53,23 @@ function useStoryDownload({
 			if (onDownload) {
 				result = await onDownload(format);
 			} else if (storyId) {
-				result = await trpcClient.story.downloadStandalone.query({ storyId, format });
+				result = await storyApi.story.downloadStandalone.query({ storyId, format });
 			} else if (isOwner) {
-				result = await trpcClient.story.download.query({
+				result = await storyApi.story.download.query({
 					chatId: chatId!,
 					storySlug: storySlug!,
 					format,
 					versionNumber,
 				});
 			} else if (shareSource?.type === 'chat') {
-				result = await trpcClient.sharedChat.downloadStory.query({
+				result = await storyApi.sharedChat.downloadStory.query({
 					shareId: shareSource.shareId,
 					storySlug: storySlug!,
 					format,
 					versionNumber,
 				});
 			} else {
-				result = await trpcClient.storyShare.download.query({
+				result = await storyApi.storyShare.download.query({
 					storyId: shareSource!.storyId,
 					format,
 					versionNumber,

@@ -34,7 +34,6 @@ import { NakedInput } from '@/components/ui/input';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, formatBytes } from '@/lib/utils';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 export type GenerateResult = inferRouterOutputs<TrpcRouter>['storyTheme']['generate'];
@@ -93,7 +92,7 @@ export function StoryThemeInspiration({
 	const [running, setRunning] = useState(false);
 
 	const onError = (mutationError: { message: string }) => setError(mutationError.message);
-	const generateTheme = useMutation({ ...trpc.storyTheme.generate.mutationOptions(), onError });
+	const generateTheme = useMutation({ ...storyApi.storyTheme.generate.mutationOptions(), onError });
 	const sourceLocked = disabled || running;
 	const logoInput = logoSource(logo);
 	const hasSource = Boolean(url.trim() || image || zip || pdf || instructions.trim() || readsWhiteLabel || logoInput);
