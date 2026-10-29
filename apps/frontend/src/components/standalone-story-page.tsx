@@ -1,10 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 
 import type { QueryDataMap } from '@/components/story-embeds';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { HighlightBubble } from '@/components/highlight-bubble';
 import { StoryAccessError } from '@/components/story-access-error';
 import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from '@/components/story-embeds';
@@ -15,20 +14,16 @@ import { StoryPageHeader } from '@/components/story-page-header';
 import { Spinner } from '@/components/ui/spinner';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
 
 export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	const navigate = useNavigate();
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const queryClient = useQueryClient();
 
 	const storyQuery = useQuery(storyApi.story.getStandalone.queryOptions({ storyId }));
 	const story = storyQuery.data;
 	const storyTheme = useStoryThemeForCurrentMode(story?.theme);
-
-	useTrackViewDuration({ assetType: 'story', storyId, versionNumber: story?.version });
 
 	const openStandaloneMutation = useMutation(
 		chatApi.chatFork.openStandalone.mutationOptions({
@@ -81,7 +76,6 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 							}
 						: undefined
 				}
-				onOpenAnalytics={() => setIsAnalyticsOpen(true)}
 			/>
 			<div className='relative flex min-h-0 flex-1 flex-col'>
 				<SelectionProvider key={storyId}>
@@ -97,13 +91,6 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 
 				{!isArchived && <StoryAskBar storyId={storyId} isOwner />}
 			</div>
-
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				storyId={storyId}
-			/>
 		</div>
 	);
 }

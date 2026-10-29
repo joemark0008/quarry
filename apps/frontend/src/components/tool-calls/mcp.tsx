@@ -4,7 +4,7 @@ import { ChartDisplay } from './display-chart';
 import { TableDisplay } from './display-table';
 import { McpTitle } from './mcp-title';
 import { ToolCallWrapper } from './tool-call-wrapper';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ReactNode } from 'react';
 

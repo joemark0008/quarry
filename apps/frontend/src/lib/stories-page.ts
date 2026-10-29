@@ -1,11 +1,16 @@
 import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { StoryFormat, StorySharingInfo, StorySummary, SummarySegment } from '@quarry/shared/types';
+import type {
+	FolderSystemType,
+	StoryFormat,
+	StorySharingInfo,
+	StorySummary,
+	SummarySegment,
+} from '@quarry/shared/types';
 import type { QueryDataMap } from '@/components/story-embeds';
 
-type RouterOutputs = inferRouterOutputs<TrpcRouter>;
+type RouterOutputs = ApiOutputs;
 
 export type SortField = 'name' | 'owner' | 'updated' | 'created' | 'views';
 export type SortDirection = 'asc' | 'desc';
@@ -267,7 +272,7 @@ export function buildStoryItems({
 				certifiedByName: story.certifiedByName,
 				isPinned: story.isPinned,
 				isFavorited,
-				sharing: story.sharing,
+				sharing: story.sharing as StorySharingInfo,
 				isShared: true,
 				viewCount: lookupViewCount(viewCountByStoryId, story.storyId),
 				folderId,
@@ -468,7 +473,7 @@ function isAtCurrentLevel(item: StoryItem, currentFolderId: string | null): bool
 }
 
 function systemFolderRank(folder: FolderItem): number {
-	return folder.systemType == null ? 99 : FOLDER_SYSTEM_TYPE.indexOf(folder.systemType);
+	return folder.systemType == null ? 99 : FOLDER_SYSTEM_TYPE.indexOf(folder.systemType as FolderSystemType);
 }
 
 function compareCertifiedFirst(a: StoryItem, b: StoryItem): number {

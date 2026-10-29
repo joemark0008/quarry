@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
-import type { StoryPanelDisplayMode } from '@quarry/shared/types';
+import type { StoryPanelDisplayMode, Visibility } from '@quarry/shared/types';
 import type { GroupBy, SharedItem } from '@/lib/viewer-home';
 import { MobileHeader } from '@/components/mobile-header';
 import { ProjectSwitcher } from '@/components/project-selector';
@@ -51,7 +51,7 @@ export function ViewerHome() {
 			title: s.title,
 			authorName: s.authorName,
 			createdAt: new Date(s.createdAt),
-			visibility: s.sharing.visibility,
+			visibility: s.sharing.visibility as Visibility,
 			sharedWithCount: s.sharing.sharedWithCount,
 			sharedWithGroupCount: s.sharing.sharedWithGroupCount,
 			isLive: s.isLive,
@@ -67,7 +67,7 @@ export function ViewerHome() {
 				title: c.title,
 				authorName: c.authorName,
 				createdAt: new Date(c.createdAt),
-				visibility: c.visibility,
+				visibility: c.visibility as Visibility,
 				messageBubbles: c.messageBubbles,
 			}));
 		return [...storyItems, ...chatItems];

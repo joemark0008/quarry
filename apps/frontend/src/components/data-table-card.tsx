@@ -1,9 +1,7 @@
 import { memo, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { Copy, Download, Maximize2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
-import type { DataExportFormat } from '@/components/export-data-menu';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { TableDisplay } from '@/components/tool-calls/display-table';
 import { Button } from '@/components/ui/button';
@@ -11,7 +9,6 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useDateFormat } from '@/hooks/use-date-format';
 import { tableToTsv } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 
 interface DataTableCardProps {
 	columns: string[];
@@ -20,7 +17,6 @@ interface DataTableCardProps {
 	className?: string;
 	tableContainerClassName?: string;
 	maxRowsBeforePagination?: number;
-	chatId?: string;
 	conditionalFormats?: ColumnConditionalFormats;
 	leadingHeader?: ReactNode;
 	/** Extra toolbar controls rendered before the copy/download/fullscreen actions. */
@@ -35,13 +31,11 @@ export const DataTableCard = memo(
 		className,
 		tableContainerClassName,
 		maxRowsBeforePagination = 10,
-		chatId,
 		conditionalFormats,
 		leadingHeader,
 		headerActions,
 	}: DataTableCardProps) => {
 		const [isFullscreen, setIsFullscreen] = useState(false);
-		const logDownload = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
 		const dateFormat = useDateFormat();
 
 		const resolvedColumns = columns.length > 0 ? columns : inferColumns(data);
@@ -51,12 +45,6 @@ export const DataTableCard = memo(
 		}
 
 		const handleCopy = () => navigator.clipboard.writeText(tableToTsv(resolvedColumns, data, dateFormat));
-		const handleExport = (format: DataExportFormat) => {
-			if (chatId) {
-				logDownload.mutate({ chatId, format, title });
-			}
-		};
-
 		return (
 			<div data-slot='data-table-card' className={cn('flex flex-col gap-2 border rounded-lg pt-2', className)}>
 				<div
@@ -82,12 +70,7 @@ export const DataTableCard = memo(
 						>
 							<Copy className='size-3 text-muted-foreground/70' />
 						</Button>
-						<ExportDataMenu
-							columns={resolvedColumns}
-							data={data}
-							filename={title || 'table'}
-							onExport={handleExport}
-						>
+						<ExportDataMenu columns={resolvedColumns} data={data} filename={title || 'table'}>
 							<Button
 								variant='ghost-muted'
 								size='icon-xs'
@@ -132,12 +115,7 @@ export const DataTableCard = memo(
 							>
 								<Copy className='size-3.5' />
 							</Button>
-							<ExportDataMenu
-								columns={resolvedColumns}
-								data={data}
-								filename={title || 'table'}
-								onExport={handleExport}
-							>
+							<ExportDataMenu columns={resolvedColumns} data={data} filename={title || 'table'}>
 								<Button
 									variant='ghost-muted'
 									size='icon-xs'

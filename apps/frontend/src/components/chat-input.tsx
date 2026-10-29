@@ -1,19 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-	Plus,
-	PencilRuler,
-	Database,
-	Library,
-	Paperclip,
-	AlertTriangle,
-	Shield,
-	Check,
-	WalletCards,
-	KeyRound,
-	MessageCircleOff,
-} from 'lucide-react';
+import { Plus, PencilRuler, Database, Library, Paperclip, Shield, Check } from 'lucide-react';
 import { ALLOWED_IMAGE_MEDIA_TYPES, ATTACHMENT_ACCEPT } from '@quarry/shared/attachments';
 import { toStoryReferenceMentionId } from '@quarry/shared';
 import { story } from '@quarry/shared/tools';
@@ -33,7 +21,6 @@ import { ChatInputAnimatedBorder } from './chat-input-animated-border';
 import { ChatInputModelSelect } from './chat-input-model-select';
 import { ChatInputMessageQueue } from './chat-input-message-queue';
 import { ChatInputAttachmentPreview } from './chat-input-attachment-preview';
-import { ContactSupportButton } from './contact-support-dialog';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -44,24 +31,19 @@ import {
 import type { MentionOption, PromptHandle, SelectedMention } from 'prompt-mentions';
 import type { FormEvent } from 'react';
 import type { AgentHelpers } from '@/hooks/use-agent';
-import type { ChatAllowanceExhaustedScope } from '@/lib/ai';
 import type { StoryReferences } from '@/lib/story-reference';
 import { ContextWindowRing } from '@/components/ui/chat-input-context-window-ring';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group';
-import { Callout } from '@/components/ui/callout';
 import { skillApi } from '@/lib/skill-api';
-import { trpc } from '@/main';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useRegisterSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { useTranscribe } from '@/hooks/use-transcribe';
 import { useAttachmentUpload } from '@/hooks/use-attachment-upload';
-import { parseBudgetError, parseChatAllowanceExhaustedError, parseManagedCreditsError } from '@/lib/ai';
 import { cn } from '@/lib/utils';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useModelSelection } from '@/hooks/use-model-selection';
-import { useOpenOrganizationBilling } from '@/hooks/use-open-organization-billing';
 import { usePermissions } from '@/hooks/use-permissions';
 import { getShortcut } from '@/lib/keyboard-shortcuts';
 import { matchesShortcut } from '@/lib/platform';
@@ -79,7 +61,7 @@ import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { useChatPendingCitation } from '@/hooks/use-chat-pending-citation';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { SelectionCitationBanner } from '@/components/selection-citation-banner';
-import { ChatInputSuggestions, SuggestionCard } from '@/components/chat-input-suggestions';
+import { ChatInputSuggestions } from '@/components/chat-input-suggestions';
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useCurrentProject } from '@/hooks/use-current-project';
@@ -175,8 +157,6 @@ function ChatInputBase({
 		setAdminMode,
 		setMentions,
 		submitQueuedMessageNow,
-		error,
-		selectedModel,
 		mode,
 	} = useAgentContext();
 	const navigate = useNavigate();
@@ -227,24 +207,6 @@ function ChatInputBase({
 	const isTranscribeEnabled = hasProject && (agentSettings.data?.transcribe?.enabled ?? false);
 	const hasTranscribeProvider = Object.values(transcribeModels.data ?? {}).some((p) => p.hasKey);
 	const isTranscribeReady = isTranscribeEnabled && hasTranscribeProvider;
-
-	const budgetStatus = useQuery({
-		...trpc.budget.checkBudgetStatus.queryOptions({ provider: selectedModel?.provider ?? 'openai' }),
-		enabled: hasProject && !!selectedModel?.provider && selectedModel.provider !== 'nao',
-		refetchOnWindowFocus: false,
-	});
-	const managedCredit = useQuery({
-		...trpc.account.getManagedCreditStatus.queryOptions(),
-		enabled: hasProject && selectedModel?.provider === 'nao',
-		refetchOnWindowFocus: false,
-	});
-	const allowanceExhaustedScope = hasProject ? null : parseChatAllowanceExhaustedError(error);
-	const isSendBlocked =
-		!!parseBudgetError(error) ||
-		!!allowanceExhaustedScope ||
-		(hasProject && budgetStatus.data?.level === 'exceeded') ||
-		(selectedModel?.provider === 'nao' && !!parseManagedCreditsError(error)) ||
-		(selectedModel?.provider === 'nao' && managedCredit.data?.hasCredits === false);
 
 	const [micWarning, setMicWarning] = useState(false);
 	const micWarningTimer = useRef(0);
@@ -445,12 +407,7 @@ function ChatInputBase({
 				return;
 			}
 
-			if (
-				(isRunning && !allowQueueing) ||
-				isSendBlocked ||
-				attachmentUpload.isPreparing ||
-				attachmentUpload.hasErrors
-			) {
+			if ((isRunning && !allowQueueing) || attachmentUpload.isPreparing || attachmentUpload.hasErrors) {
 				return;
 			}
 
@@ -482,7 +439,6 @@ function ChatInputBase({
 			onSubmitMessage,
 			isRunning,
 			allowQueueing,
-			isSendBlocked,
 			setMentions,
 			promptRef,
 			attachmentUpload,
@@ -519,7 +475,7 @@ function ChatInputBase({
 	const isInputEmpty = !inputText.trim() && !attachmentUpload.hasAttachments && !pendingCitation;
 
 	const skills = useQuery({ ...skillApi.skill.list.queryOptions(), enabled: hasProject });
-	const databaseObjects = useQuery({ ...trpc.project.getDatabaseObjects.queryOptions(), enabled: hasProject });
+	const databaseObjects = useQuery({ ...projectApi.project.getDatabaseObjects.queryOptions(), enabled: hasProject });
 	const hasSkills = hasProject && Boolean(skills.data?.length);
 	const hasDatabases = hasProject && Boolean(databaseObjects.data?.length);
 	const shortcutPlaceholder = buildShortcutPlaceholder({
@@ -575,23 +531,13 @@ function ChatInputBase({
 
 	return (
 		<div ref={dropZoneRef} className={cn('px-3 pb-3 pt-0 md:px-3 md:pb-3 max-w-3xl w-full mx-auto', className)}>
-			{allowanceExhaustedScope ? (
-				<ChatAllowanceExhausted scope={allowanceExhaustedScope} />
-			) : (
-				<>
-					<ChatInputMessageQueue
-						onEditMessage={handleEditQueuedMessage}
-						onSubmitNow={submitQueuedMessageWithGuard}
-					/>
-					<SelectionCitationBanner />
-					<BudgetBanner />
-					{allowQueueing && !isAdminMode && (
-						<ChatInputSuggestions
-							storyCreationEnabled={storyCreationEnabled}
-							isHidden={inputText.trim().length > 0}
-						/>
-					)}
-				</>
+			<ChatInputMessageQueue onEditMessage={handleEditQueuedMessage} onSubmitNow={submitQueuedMessageWithGuard} />
+			<SelectionCitationBanner />
+			{allowQueueing && !isAdminMode && (
+				<ChatInputSuggestions
+					storyCreationEnabled={storyCreationEnabled}
+					isHidden={inputText.trim().length > 0}
+				/>
 			)}
 			{isAdminMode ? <ChatInputAdminBadge /> : null}
 
@@ -677,14 +623,13 @@ function ChatInputBase({
 							{allowQueueing && isRunning ? (
 								<ChatButton
 									showStop={isInputEmpty}
-									disabled={!isInputEmpty && isSendBlocked}
 									onClick={isInputEmpty ? cancelAgent : handleSubmitMessage}
 									type='button'
 								/>
 							) : (
 								<ChatButton
 									showStop={isRunning}
-									disabled={isLoadingMessages || isInputEmpty || (!isRunning && isSendBlocked)}
+									disabled={isLoadingMessages || isInputEmpty}
 									onClick={isRunning ? cancelAgent : handleSubmitMessage}
 									type='button'
 								/>
@@ -694,31 +639,6 @@ function ChatInputBase({
 				</InputGroup>
 			</form>
 		</div>
-	);
-}
-
-function ChatAllowanceExhausted({ scope }: { scope: ChatAllowanceExhaustedScope }) {
-	const isOnboarding = scope === 'onboarding';
-	if (!isOnboarding) {
-		return (
-			<div className='pb-2'>
-				<SuggestionCard
-					icon={<MessageCircleOff className='size-4 text-muted-foreground' />}
-					message='Example chat limit reached'
-					description='Set up your own project to keep chatting with your data.'
-				/>
-			</div>
-		);
-	}
-
-	return (
-		<Callout icon={MessageCircleOff} className='mb-3 rounded-2xl px-4 py-3 text-sm shadow-xs' role='status'>
-			<p className='font-medium text-foreground'>Guided setup chat limit reached</p>
-			<p className='mt-1 text-muted-foreground'>
-				Your progress is safe. Contact support if you need help completing setup.
-			</p>
-			<ContactSupportButton>Contact support</ContactSupportButton>
-		</Callout>
 	);
 }
 
@@ -748,120 +668,6 @@ function ChatInputAdminBadge() {
 					Admin Mode
 				</span>
 			</SimpleTooltip>
-		</div>
-	);
-}
-
-function BudgetBanner() {
-	const { error, clearError, selectedModel } = useAgentContext();
-	const { isAdmin, isOrgAdmin } = usePermissions();
-	const project = useCurrentProject();
-	const hasProject = project.data != null;
-	const selectedProvider = selectedModel?.provider;
-	const prevProviderRef = useRef(selectedProvider);
-
-	useEffect(() => {
-		const prev = prevProviderRef.current;
-		prevProviderRef.current = selectedProvider;
-		if (prev && prev !== selectedProvider && (parseBudgetError(error) || parseManagedCreditsError(error))) {
-			clearError();
-		}
-	}, [selectedProvider, error, clearError]);
-
-	const isManaged = selectedModel?.provider === 'nao';
-	const budgetStatus = useQuery({
-		...trpc.budget.checkBudgetStatus.queryOptions({ provider: selectedModel?.provider ?? 'openai' }),
-		enabled: hasProject && !!selectedModel?.provider && !isManaged,
-		refetchOnWindowFocus: 'always',
-	});
-	const managedCredit = useQuery({
-		...trpc.account.getManagedCreditStatus.queryOptions(),
-		enabled: hasProject && isManaged,
-		refetchOnWindowFocus: false,
-	});
-
-	const managedError = parseManagedCreditsError(error);
-	const managedExhausted = isManaged && (managedError !== null || managedCredit.data?.hasCredits === false);
-	const budgetError = parseBudgetError(error);
-	const budgetLevel = budgetError ? 'exceeded' : (budgetStatus.data?.level ?? 'ok');
-	const budgetMessage = budgetError ?? (budgetLevel !== 'ok' ? budgetStatus.data?.message : null);
-
-	if (managedExhausted) {
-		return (
-			<ManagedCreditsBanner
-				canAddProviderKey={isAdmin}
-				creditOrganizationId={isOrgAdmin ? managedCredit.data?.organization?.id : undefined}
-			/>
-		);
-	}
-
-	if (!budgetMessage) {
-		return null;
-	}
-
-	const isExceeded = budgetLevel === 'exceeded';
-
-	return (
-		<div className='mb-2 flex items-start gap-2.5 rounded-2xl border border-input/50 bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground animate-in fade-in slide-in-from-bottom-2 duration-200'>
-			<AlertTriangle className={cn('size-4 shrink-0 mt-0.5', isExceeded ? 'text-red-500' : 'text-amber-500')} />
-			<p className='flex-1 min-w-0'>{budgetMessage}</p>
-		</div>
-	);
-}
-
-function ManagedCreditsBanner({
-	canAddProviderKey,
-	creditOrganizationId,
-}: {
-	canAddProviderKey: boolean;
-	creditOrganizationId: string | undefined;
-}) {
-	const openOrganizationBilling = useOpenOrganizationBilling();
-	const canAddCredits = Boolean(creditOrganizationId);
-	const canManageAccess = canAddProviderKey || canAddCredits;
-
-	return (
-		<div className='mb-3 rounded-2xl border border-primary/20 bg-background p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-200'>
-			<div className='min-w-0'>
-				<p className='font-semibold text-foreground'>
-					{canManageAccess
-						? 'Your quarry credits have been used'
-						: 'Your organization’s quarry credits have been used'}
-				</p>
-				<p className='mt-1 text-sm leading-relaxed text-muted-foreground'>
-					{canManageAccess
-						? 'Keep chatting by adding quarry credits or connecting your own AI provider. Your projects, chats, and data are safe.'
-						: 'Your work is safe. Reach out to your organization admin to add quarry credits or connect an AI provider, then pick up where you left off.'}
-				</p>
-				{canManageAccess && (
-					<div className='mt-3 flex flex-wrap gap-2'>
-						{creditOrganizationId && (
-							<Button
-								size='sm'
-								variant='primary-gradient'
-								className='rounded-full'
-								onClick={() => void openOrganizationBilling(creditOrganizationId)}
-							>
-								<WalletCards />
-								Add quarry credits
-							</Button>
-						)}
-						{canAddProviderKey && (
-							<Button
-								asChild
-								size='sm'
-								variant='outline'
-								className='rounded-full border-primary/20 bg-background/80'
-							>
-								<Link to='/settings/project/agent' search={{ tab: 'models' }}>
-									<KeyRound />
-									Add your API key
-								</Link>
-							</Button>
-						)}
-					</div>
-				)}
-			</div>
 		</div>
 	);
 }

@@ -11,7 +11,7 @@ import type { CustomStoryDataSource } from '@/components/custom-story/story-data
 import type { StoryDownloadFile } from '@/components/story-download';
 import { useActiveStoryTheme } from '@/components/custom-story/custom-story-body';
 import { narrativesOptions, queryDataOptions, stateOptions } from '@/components/custom-story/story-data-options';
-import { isForbiddenError, isNotFoundError } from '@/lib/trpc-error';
+import { isForbiddenError, isNotFoundError } from '@/lib/api-error';
 
 type RenderExport = (format: DownloadFormat, html: string) => Promise<StoryDownloadFile>;
 

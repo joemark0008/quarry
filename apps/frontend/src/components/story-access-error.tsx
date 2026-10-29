@@ -3,7 +3,7 @@ import { Link, useRouter } from '@tanstack/react-router';
 import { Lock, SearchX, TriangleAlert } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { isForbiddenError, isNotFoundError } from '@/lib/trpc-error';
+import { isForbiddenError, isNotFoundError } from '@/lib/api-error';
 
 export function StoryRouteError({ error }: { error?: unknown }) {
 	const router = useRouter();

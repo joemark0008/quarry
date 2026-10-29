@@ -13,7 +13,6 @@ import { SimpleTooltip } from '@/components/ui/tooltip';
 import { useShareAudience } from '@/hooks/use-share-dialog';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 export interface StoryDeliveryHandle {
@@ -58,10 +57,6 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		const delivery = useQuery({ ...storyApi.story.getDelivery.queryOptions({ chatId, storySlug }), enabled: open });
 		const recipientsQuery = useQuery({
 			...storyApi.story.listDeliveryRecipients.queryOptions({ chatId, storySlug }),
-			enabled: open,
-		});
-		const slackConfigQuery = useQuery({
-			...trpc.project.getSlackConfig.queryOptions(),
 			enabled: open,
 		});
 		const shareQuery = useQuery({
@@ -231,7 +226,8 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 			return result;
 		}, [emailEnabled, slackEnabled]);
 
-		const isSlackConfigured = Boolean(slackConfigQuery.data?.projectConfig);
+		// Slack delivery needs the Slack integration (Phase 7, docs/deferred-features.md).
+		const isSlackConfigured = false;
 
 		const valid =
 			!enabled ||

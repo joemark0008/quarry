@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { createPortal } from 'react-dom';
 import { getStoryIdFromMentionId } from '@quarry/shared';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { MessageMentionConfig, MentionOption, PromptTheme } from 'prompt-mentions';
 import { cn } from '@/lib/utils';
 import { useAgentContext } from '@/contexts/agent.provider';

@@ -18,7 +18,7 @@ import { ErrorMessage } from '../ui/error-message';
 import { SettingsCard } from '../ui/settings-card';
 import { Empty } from '../ui/empty';
 import { SavedPromptItem, SavedPromptSkeleton } from './saved-prompt';
-import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
+import type { SavedPrompt } from '@/lib/api-types';
 import { useSavedPromptsQuery, useSavedPromptMutations } from '@/hooks/use-saved-prompts';
 import { Button } from '@/components/ui/button';
 

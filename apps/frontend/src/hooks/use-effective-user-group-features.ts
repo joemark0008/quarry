@@ -1,12 +1,9 @@
 import { useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import type { UserGroupFeature } from '@quarry/shared';
 
-import type { EffectiveUserGroupAccess } from '@/lib/effective-user-group-features';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { getActiveProjectId } from '@/lib/active-project';
-import { getRenderableUserGroupAccess } from '@/lib/effective-user-group-features';
-import { trpc } from '@/main';
+import { getRenderableUserGroupAccess, PROJECT_MEMBER_ACCESS } from '@/lib/effective-user-group-features';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useCurrentProject } from '@/hooks/use-current-project';
 
@@ -17,14 +14,10 @@ export function useEffectiveUserGroupFeatures() {
 	const hasCurrentProject = Boolean(project.data?.id) && (!activeProjectId || project.data?.id === activeProjectId);
 	const isOnboarding = useOptionalAgentContext()?.mode === 'onboarding';
 	const isExampleProject = isCloud && project.isSuccess && project.data === null && !isOnboarding;
-	const query = useQuery({
-		...trpc.userGroup.effectiveAccess.queryOptions(),
-		enabled: hasCurrentProject,
-	});
-	const isLoading = project.isPending || (hasCurrentProject && query.isPending);
-	const isError = project.isError || query.isError;
+	const isLoading = project.isPending;
+	const isError = project.isError;
 	const access = getRenderableUserGroupAccess(
-		query.data as EffectiveUserGroupAccess | undefined,
+		PROJECT_MEMBER_ACCESS,
 		hasCurrentProject && !isLoading && !isError,
 		isExampleProject,
 	);

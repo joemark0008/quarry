@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 import type { SettingsSearchEntry } from '@/components/settings-search-index';
 import { settingsSearchIndex } from '@/components/settings-search-index';
 import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings';
-import { useLicenseFeatures } from '@/hooks/use-license';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';
 import { usePublicConfig } from '@/hooks/use-public-config';
@@ -51,15 +50,11 @@ export function useSettingsSuggestions(): SettingsSearchEntry[] {
 }
 
 function useVisibleSettingsEntries(): SettingsSearchEntry[] {
-	const { canViewUsage, isAdmin, isContextAdmin, isOrgAdmin } = usePermissions();
+	const { isAdmin, isContextAdmin } = usePermissions();
 	const canSeeAdvancedSettings = useCanSeeAdvancedSettings();
 	const isCloud = useIsCloud();
 	const config = usePublicConfig();
 	const betaSubagentsEnabled = config.data?.betaSubagentsEnabled === true;
-	const betaAutomationsEnabled = config.data?.betaAutomationsEnabled === true;
-	const cloudBillingEnabled = config.data?.cloudBillingEnabled;
-	const licenseFeatures = useLicenseFeatures();
-	const enabledLicenseFeatures = licenseFeatures.data as Record<string, boolean> | undefined;
 
 	return useMemo(
 		() =>
@@ -68,29 +63,12 @@ function useVisibleSettingsEntries(): SettingsSearchEntry[] {
 					(entry) =>
 						(!entry.adminOnly || isAdmin) &&
 						(!entry.nonAdminOnly || !isAdmin) &&
-						(!entry.licenseFeature || enabledLicenseFeatures?.[entry.licenseFeature] === true) &&
-						(!entry.orgAdminOnly || isOrgAdmin) &&
 						(!entry.adminOrContextAdmin || isAdmin || isContextAdmin) &&
-						(!entry.requiresUsageAccess || canViewUsage) &&
 						(!entry.cloudHidden || !isCloud) &&
-						(!entry.cloudOnly || isCloud) &&
-						(!entry.cloudBillingOnly || cloudBillingEnabled === true) &&
-						(!entry.betaSubagentsOnly || betaSubagentsEnabled) &&
-						(!entry.betaAutomationsOnly || betaAutomationsEnabled),
+						(!entry.betaSubagentsOnly || betaSubagentsEnabled),
 				)
 				.filter((entry) => canSeeAdvancedSettings || viewerVisiblePages.includes(entry.page)),
-		[
-			betaAutomationsEnabled,
-			betaSubagentsEnabled,
-			canViewUsage,
-			canSeeAdvancedSettings,
-			cloudBillingEnabled,
-			enabledLicenseFeatures,
-			isAdmin,
-			isCloud,
-			isContextAdmin,
-			isOrgAdmin,
-		],
+		[betaSubagentsEnabled, canSeeAdvancedSettings, isAdmin, isCloud, isContextAdmin],
 	);
 }
 
@@ -109,11 +87,10 @@ function dedupeByDestination(entries: SettingsSearchEntry[]): SettingsSearchEntr
 
 const settingsSuggestionPages = [
 	'/settings/account',
-	'/settings/organization',
 	'/settings/project',
 	'/settings/context-explorer',
 	'/settings/project/agent',
-	'/settings/usage',
+	'/settings/project/warehouse',
 ];
 
-const viewerVisiblePages = ['/settings/account', '/settings/usage'];
+const viewerVisiblePages = ['/settings/account'];

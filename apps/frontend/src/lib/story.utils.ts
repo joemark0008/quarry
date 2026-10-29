@@ -1,4 +1,4 @@
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 
 export interface StorySummary {
 	id: string;

@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, Copy, Check, Ellipsis, ClipboardCopy, FileText, FileDown, Loader2 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { FormEvent, KeyboardEvent } from 'react';
 import type { Chat } from '@/queries/use-chat-query';
 import { useChatQuery } from '@/queries/use-chat-query';
 import { Button } from '@/components/ui/button';
 import { ConfettiBurst } from '@/components/confetti-burst';
-import { trpc, trpcClient } from '@/main';
 import { cn } from '@/lib/utils';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useAgentMessagesGetter } from '@/contexts/agent.provider';
@@ -66,7 +65,7 @@ export function AssistantMessageActions({
 		setIsExportingPdf(true);
 		setExportError(null);
 		try {
-			const result = await trpcClient.chat.download.query({ chatId, format: 'pdf', ...exportOptions });
+			const result = await chatApi.chat.download.query({ chatId, format: 'pdf', ...exportOptions });
 			downloadBase64File(result.filename, result.data, result.mimeType);
 		} catch (error) {
 			setExportError(error instanceof Error ? error.message : 'Export failed');
@@ -90,12 +89,6 @@ export function AssistantMessageActions({
 							}
 						: prev,
 				);
-				void ctx.client.invalidateQueries({
-					queryKey: trpc.project.getChatReplay.queryKey({ chatId }),
-				});
-				void ctx.client.invalidateQueries({
-					queryKey: trpc.project.getProjectChats.queryKey(),
-				});
 			},
 		}),
 	);

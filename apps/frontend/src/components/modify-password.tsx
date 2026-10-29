@@ -1,22 +1,15 @@
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation } from '@apollo/client/react';
 import { useSession } from '@/lib/auth-client';
-import { trpc } from '@/main';
+import { ModifyPasswordDocument } from '@/graphql/generated/graphql';
 import { AuthForm, FormTextField } from '@/components/auth-form';
 
 export function ModifyPassword() {
 	const { refetch } = useSession();
 	const [serverError, setServerError] = useState<string | undefined>();
 
-	const modifyUserPassword = useMutation(
-		trpc.account.modifyPassword.mutationOptions({
-			onSuccess: async () => {
-				await refetch();
-			},
-			onError: (err) => setServerError(err.message),
-		}),
-	);
+	const [modifyPassword, { loading: isUpdating }] = useMutation(ModifyPasswordDocument);
 
 	const form = useForm({
 		defaultValues: { newPassword: '', confirmPassword: '' },
@@ -26,10 +19,14 @@ export function ModifyPassword() {
 				return;
 			}
 			setServerError(undefined);
-			await modifyUserPassword.mutateAsync({
-				newPassword: value.newPassword,
-				confirmPassword: value.confirmPassword,
-			});
+			try {
+				await modifyPassword({
+					variables: { input: { newPassword: value.newPassword, confirmPassword: value.confirmPassword } },
+				});
+				await refetch();
+			} catch (err) {
+				setServerError(err instanceof Error ? err.message : String(err));
+			}
 		},
 	});
 
@@ -38,7 +35,7 @@ export function ModifyPassword() {
 			<AuthForm
 				form={form}
 				title='Change your password to secure your account'
-				submitText={modifyUserPassword.isPending ? 'Updating...' : 'Reset password'}
+				submitText={isUpdating ? 'Updating...' : 'Reset password'}
 				serverError={serverError}
 			>
 				<FormTextField form={form} name='newPassword' type='password' title='New password' className='mb-6' />

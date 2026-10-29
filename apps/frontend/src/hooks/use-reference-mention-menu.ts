@@ -12,7 +12,7 @@ import type {
 import { useChatId } from '@/hooks/use-chat-id';
 import { useActiveProjectId } from '@/lib/active-project';
 import { buildReferenceMentionMenu, QUICK_PICK_COUNT, toStoryReferenceOption } from '@/lib/reference-mention-menu';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
 
@@ -66,7 +66,7 @@ function useProjectDatabaseObjects(): DatabaseObject[] {
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const databaseObjectsQuery = useQuery({
-		...trpc.project.getDatabaseObjects.queryOptions(),
+		...projectApi.project.getDatabaseObjects.queryOptions(),
 		enabled: hasProject,
 	});
 	return hasProject && !databaseObjectsQuery.isFetching && databaseObjectsQuery.data

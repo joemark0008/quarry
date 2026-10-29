@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useMatchRoute, useNavigate, useRouterState } from '@tanstack/react-router';
-import { ChevronRight, NewspaperIcon, PanelLeft, PlusIcon, SearchIcon, X } from 'lucide-react';
+import { ChevronRight, PanelLeft, PlusIcon, SearchIcon, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { ProjectSwitcher } from './project-selector';
 import { ChatFilterMenu } from './sidebar-chat-filter-menu';
@@ -19,7 +19,6 @@ import type { LucideIcon } from 'lucide-react';
 import QuarryLogo from '@/components/icons/quarry-logo.svg';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { TrialOnboardingBanner } from '@/components/trial-onboarding-banner';
 import { useCommandMenuCallback } from '@/contexts/command-menu-callback';
 import { useSidebar } from '@/contexts/sidebar';
 import { useChatViewPreferences } from '@/hooks/use-chat-view-preferences';
@@ -33,12 +32,9 @@ import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
 import { SIDE_PANEL_ANIMATION_DURATION, SIDE_PANEL_ANIMATION_EASING } from '@/lib/side-panel';
 import { invalidateStoriesCaches } from '@/lib/stories-cache';
 import { capitalize, cn, hideIf } from '@/lib/utils';
-import { trpc } from '@/main';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings';
-import { useUnreadAutomationRunCount, useUnreadCount } from '@/queries/use-notifications';
 import { useSession } from '@/lib/auth-client';
-import { usePublicConfig } from '@/hooks/use-public-config';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
 
@@ -64,23 +60,15 @@ export function Sidebar() {
 	const project = useCurrentProject();
 	const projects = useProjects();
 	const switchProject = useProjectSwitch(project.data?.id);
-	const config = usePublicConfig();
-	const { isAdmin, isContextAdmin, isOrgAdmin, isViewer } = usePermissions();
+	const { isAdmin, isContextAdmin, isViewer } = usePermissions();
 	const canSeeAdvancedSettings = useCanSeeAdvancedSettings();
 	const isCloud = useIsCloud();
-	const betaAutomationsEnabled = config.data?.betaAutomationsEnabled === true;
-	const showAutomations = project.data != null && !isViewer && betaAutomationsEnabled;
-	const unreadCount = useUnreadCount(project.data?.id).data ?? 0;
-	const unreadAutomationRunCount = useUnreadAutomationRunCount(showAutomations, project.data?.id).data ?? 0;
-	const hasFeedActivity = unreadCount > 0 || unreadAutomationRunCount > 0;
 	const { groupBy, filters, setGroupBy, toggleFilter } = useChatViewPreferences();
 
 	const locationPath = useRouterState({ select: (s) => s.location.pathname });
 	const isSettingsRoute = matchRoute({ to: '/settings', fuzzy: true });
-	const isInSettings = !!isSettingsRoute && (!isViewer || (isCloud && isOrgAdmin));
+	const isInSettings = !!isSettingsRoute && !isViewer;
 	const effectiveIsCollapsed = isMobile ? false : isCollapsed;
-	const showTrialOnboarding =
-		isCloud && project.isSuccess && project.data === null && locationPath === '/' && !effectiveIsCollapsed;
 	useTrackLastAppLocation();
 
 	useEffect(() => {
@@ -113,13 +101,6 @@ export function Sidebar() {
 			closeMobile();
 		}
 	}, [navigate, isMobile, closeMobile, queryClient]);
-
-	const handleNavigateFeed = useCallback(() => {
-		navigate({ to: '/feed' });
-		if (isMobile) {
-			closeMobile();
-		}
-	}, [navigate, isMobile, closeMobile]);
 
 	const handleSearchChats = useCallback(() => {
 		openCommandMenu();
@@ -261,14 +242,6 @@ export function Sidebar() {
 								isCollapsed={effectiveIsCollapsed}
 								onClick={handleNavigateStories}
 							/>
-							<SidebarMenuButton
-								icon={NewspaperIcon as unknown as LucideIcon}
-								label='Feed'
-								shortcut=''
-								isCollapsed={effectiveIsCollapsed}
-								onClick={handleNavigateFeed}
-								indicator={hasFeedActivity}
-							/>
 						</div>
 					</>
 				)}
@@ -279,17 +252,13 @@ export function Sidebar() {
 					isCollapsed={effectiveIsCollapsed}
 					canSeeAdvancedSettings={canSeeAdvancedSettings}
 					isAdmin={isAdmin}
-					isAutomationsEnabled={betaAutomationsEnabled}
 					isContextAdmin={isContextAdmin}
 					isViewer={isViewer}
 					isCloud={isCloud}
-					isCloudBillingEnabled={config.data?.cloudBillingEnabled === true}
-					isOrgAdmin={isOrgAdmin}
-					isTrial={project.data === null}
+					hasProject={project.data != null}
 				/>
 			) : (
 				<>
-					<SidebarAutomationsNav isCollapsed={effectiveIsCollapsed} enabled={showAutomations} />
 					<SidebarChatHeader
 						isCollapsed={effectiveIsCollapsed}
 						groupBy={groupBy}
@@ -305,11 +274,6 @@ export function Sidebar() {
 						isTrial={project.isSuccess && project.data === null}
 					/>
 				</>
-			)}
-			{showTrialOnboarding && (
-				<div className='mx-2 mb-2'>
-					<TrialOnboardingBanner variant='card' />
-				</div>
 			)}
 			{!isInSettings && <div className='border-b border-sidebar-border mx-2'></div>}
 
@@ -435,31 +399,8 @@ function SidebarNav({
 		...chatApi.chat.listGrouped.queryOptions({ groupBy, filters }),
 		placeholderData: keepPreviousData,
 	});
-	const unfilteredChats = useQuery(chatApi.chat.listGrouped.queryOptions({ groupBy: 'none', filters: ['all'] }));
-	const onboardingChat = unfilteredChats.data?.groups
-		.flatMap((group) => group.chats)
-		.find((chat) => chat.isOnboarding);
-	const onboardingChatId = onboardingChat?.id;
-	const activeOnboardingJob = useQuery({
-		...trpc.onboarding.getActiveWarehouseProvisioningJob.queryOptions({
-			onboardingChatId: onboardingChatId ?? '',
-		}),
-		enabled: Boolean(onboardingChatId),
-		refetchInterval: (query) => {
-			const status = query.state.data?.status;
-			return status && status !== 'awaiting_context' ? 2000 : false;
-		},
-		refetchOnWindowFocus: 'always',
-	});
-	const onboardingNeedsAttention = activeOnboardingJob.data?.status === 'awaiting_context';
-
-	const groups = groupedChats.data?.groups.map((group) => ({
-		...group,
-		chats: group.chats.filter((chat) => !(onboardingNeedsAttention && chat.id === onboardingChatId)),
-	}));
-
-	const showAttentionChat = onboardingNeedsAttention ? onboardingChat : undefined;
-	const isEmpty = !showAttentionChat && groups?.every((group) => group.chats.length === 0);
+	const groups = groupedChats.data?.groups;
+	const isEmpty = groups?.every((group) => group.chats.length === 0);
 	const { data: session } = useSession();
 	const username = session?.user?.name;
 	return (
@@ -469,19 +410,8 @@ function SidebarNav({
 				hideIf(isCollapsed),
 			)}
 		>
-			{showAttentionChat && (
-				<div className='px-2 space-y-1'>
-					<ChatListItem chat={showAttentionChat} needsAttention resumeOnboarding={isTrial} />
-				</div>
-			)}
 			{groups?.map((group) => (
-				<GroupSection
-					key={group.label}
-					group={group}
-					groupBy={groupBy}
-					attentionChatId={onboardingNeedsAttention ? onboardingChatId : undefined}
-					resumeOnboardingChatId={isTrial ? onboardingChatId : undefined}
-				/>
+				<GroupSection key={group.label} group={group} groupBy={groupBy} />
 			))}
 
 			{isEmpty && (
@@ -510,127 +440,9 @@ function SidebarNav({
 	);
 }
 
-function SidebarAutomationsNav({ isCollapsed, enabled }: { isCollapsed: boolean; enabled: boolean }) {
-	const automations = useQuery({
-		...trpc.automation.list.queryOptions(),
-		enabled,
-	});
-	const items = automations.data ?? [];
-
-	if (!enabled || items.length === 0) {
-		return null;
-	}
-
-	return (
-		<div className={cn('transition-[opacity,visibility] duration-300', hideIf(isCollapsed))}>
-			<AutomationsSection items={items} />
-		</div>
-	);
-}
-
-function AutomationsSection({
-	items,
-}: {
-	items: Array<{
-		id: string;
-		title: string;
-		enabled: boolean;
-		cron: string;
-		webhookEnabled: boolean;
-		updatedAt: Date;
-	}>;
-}) {
-	const { isOpen, toggle } = useSidebarSectionOpen('section:automations');
-
-	if (items.length === 0) {
-		return null;
-	}
-
-	return (
-		<>
-			<div className='px-2'>
-				<button
-					type='button'
-					onClick={toggle}
-					className='group flex items-center gap-2 w-full text-left pt-[10px] pb-1.5 pl-2 cursor-pointer'
-				>
-					<span className='text-md font-medium'>Automations</span>
-					<ChevronRight
-						className={cn(
-							'size-4 shrink-0 transition-[transform,opacity,rotate] duration-200 group-hover:opacity-100',
-							isOpen ? 'opacity-100 rotate-90' : 'opacity-0 rotate-0',
-						)}
-					/>
-				</button>
-			</div>
-			{isOpen && (
-				<div className='px-2 space-y-1 max-h-48 overflow-y-auto'>
-					{items.map((item) => (
-						<AutomationListItem key={item.id} item={item} />
-					))}
-				</div>
-			)}
-		</>
-	);
-}
-
-function AutomationListItem({
-	item,
-}: {
-	item: {
-		id: string;
-		title: string;
-		enabled: boolean;
-		cron: string;
-		webhookEnabled: boolean;
-		updatedAt: Date;
-	};
-}) {
-	const timeAgo = useTimeAgo(new Date(item.updatedAt).getTime());
-	const hasSchedule = Boolean(item.cron);
-	const isActive = hasSchedule ? item.enabled : item.webhookEnabled;
-	const statusLabel = hasSchedule
-		? item.enabled
-			? timeAgo.humanReadable
-			: 'paused'
-		: item.webhookEnabled
-			? 'webhook'
-			: 'paused';
-
-	return (
-		<Link
-			params={{ automationId: item.id }}
-			to='/automations/$automationId'
-			className='group relative w-full rounded-md px-2 py-2 transition-[background-color,padding,opacity] min-w-0 flex-1 flex gap-2 items-center'
-			inactiveProps={{ className: 'text-sidebar-foreground hover:bg-sidebar-accent opacity-75' }}
-			activeProps={{ className: 'text-foreground bg-sidebar-accent font-medium' }}
-		>
-			<div className='truncate text-sm mr-auto'>{item.title}</div>
-			<div
-				className={cn(
-					'text-xs whitespace-nowrap',
-					isActive ? 'text-muted-foreground' : 'text-muted-foreground/60',
-				)}
-			>
-				{statusLabel}
-			</div>
-		</Link>
-	);
-}
-
 const GROUP_INITIAL_COUNT = 10;
 
-function GroupSection({
-	group,
-	groupBy,
-	attentionChatId,
-	resumeOnboardingChatId,
-}: {
-	group: ChatGroup;
-	groupBy: ChatGroupBy;
-	attentionChatId?: string;
-	resumeOnboardingChatId?: string;
-}) {
+function GroupSection({ group, groupBy }: { group: ChatGroup; groupBy: ChatGroupBy }) {
 	const { isOpen, toggle } = useSidebarSectionOpen(`section:chat-group:${group.label}`);
 	const [expanded, setExpanded] = useState(false);
 	const hasMore = group.chats.length > GROUP_INITIAL_COUNT;
@@ -656,12 +468,7 @@ function GroupSection({
 						item.kind === 'shared' ? (
 							<SharedChatGroupItem key={`shared-${item.shareId}`} item={item} groupBy={groupBy} />
 						) : (
-							<ChatListItem
-								key={item.id}
-								chat={item}
-								needsAttention={item.id === attentionChatId}
-								resumeOnboarding={item.id === resumeOnboardingChatId}
-							/>
+							<ChatListItem key={item.id} chat={item} />
 						),
 					)}
 

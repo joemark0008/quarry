@@ -8,7 +8,6 @@ import { ExecutePythonToolCall } from './execute-python';
 import { ExecuteSandboxedCodeToolCall } from './execute-sandboxed-code';
 import { ExecuteSemanticQueryToolCall } from './execute-semantic-query';
 import { ExecuteSqlToolCall } from './execute-sql';
-import { GenerateOnboardingRulesToolCall } from './generate-onboarding-rules';
 import { GrepToolCall } from './grep';
 import { ListToolCall } from './list';
 import { McpToolCall } from './mcp';
@@ -18,14 +17,13 @@ import { QueryAppDbToolCall } from './query-app-db';
 import { ReadToolCall } from './read';
 import { ReadQueryResultToolCall } from './read-query-result';
 import { RecordRecommendationToolCall } from './record-recommendation';
-import { RequestWarehouseCredentialsToolCall } from './request-warehouse-credentials';
 import { SearchToolCall } from './search';
 import { StrReplaceToolCall } from './str-replace';
 import { TaskToolCall } from './task';
 import { WebFetchToolCall } from './web-fetch';
 import { WebSearchToolCall } from './web-search';
 import { WriteToolCall } from './write';
-import type { StaticToolName, UIToolPart } from '@quarry/shared/backend/chat';
+import type { StaticToolName, UIToolPart } from '@quarry/api/agent/types/chat';
 import { getToolName, isToolSettled } from '@/lib/ai';
 import { ToolCallProvider } from '@/contexts/tool-call';
 import { useAssistantMessage } from '@/contexts/assistant-message';
@@ -45,14 +43,12 @@ const toolComponents: Partial<{
 	execute_sandboxed_code: ExecuteSandboxedCodeToolCall,
 	execute_sql: ExecuteSqlToolCall,
 	execute_semantic_query: ExecuteSemanticQueryToolCall,
-	generate_onboarding_rules: GenerateOnboardingRulesToolCall,
 	grep: GrepToolCall,
 	list: ListToolCall,
 	onboarding_agent_prompt: OnboardingAgentPromptToolCall,
 	onboarding_command: OnboardingCommandToolCall,
 	read: ReadToolCall,
 	read_query_result: ReadQueryResultToolCall,
-	request_warehouse_credentials: RequestWarehouseCredentialsToolCall,
 	request_warehouse_selection: RequestWarehouseSelectionToolCall,
 	search: SearchToolCall,
 	str_replace: StrReplaceToolCall,

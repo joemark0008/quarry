@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { CheckCircle2, CircleAlert, Loader2, Terminal } from 'lucide-react';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import { useAgentMessages } from '@/contexts/agent.provider';
 import { cn } from '@/lib/utils';
@@ -15,8 +14,7 @@ const ONBOARDING_STEPS = {
 	database: ['Connect warehouse', 'Initialize', 'Verify', 'Sync metadata', 'Prepare context'],
 } as const;
 
-type WarehouseProvisioningStatus =
-	inferRouterOutputs<TrpcRouter>['onboarding']['getWarehouseProvisioningStatus']['status'];
+type WarehouseProvisioningStatus = ApiOutputs['onboarding']['getWarehouseProvisioningStatus']['status'];
 
 const DATABASE_COMPLETED_STEPS: Partial<Record<WarehouseProvisioningStatus, number>> = {
 	queued: 1,

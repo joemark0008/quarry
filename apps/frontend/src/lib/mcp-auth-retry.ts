@@ -1,5 +1,5 @@
 import { isImageMediaType } from '@quarry/shared/attachments';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { ImageUploadData } from '@quarry/shared/attachments';
 import type { SendMessageArgs } from '@/hooks/use-agent';
 

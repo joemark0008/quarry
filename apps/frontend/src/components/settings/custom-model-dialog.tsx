@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ModelParametersFields } from './model-parameters-fields';
 import { useModelParameters } from './use-model-parameters';
-import type { CustomModelMetadata, ModelInferenceSettings } from '@quarry/shared/backend/llm';
+import type { CustomModelMetadata, ModelInferenceSettings } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';

@@ -1,16 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import type { UserRole } from '@quarry/shared/types';
 
-import { trpc } from '@/main';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { canSeeAdvancedSettings } from '@/lib/effective-user-group-features';
 
 export function useCanSeeAdvancedSettings(): boolean {
 	const project = useCurrentProject();
-	const effectiveAccess = useQuery({
-		...trpc.userGroup.effectiveAccess.queryOptions(),
-		enabled: Boolean(project.data),
-	});
 	if (project.isSuccess && !project.data) {
 		return true;
 	}
-	return effectiveAccess.data?.canSeeAdvancedSettings === true;
+	return canSeeAdvancedSettings(project.data?.userRole as UserRole | undefined);
 }

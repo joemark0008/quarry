@@ -6,7 +6,7 @@ import { AlertTriangle, Loader2, Play, Save } from 'lucide-react';
 import { usePanelRef } from 'react-resizable-panels';
 import { ResizableSeparator, ResizablePanel, ResizablePanelGroup } from '../ui/resizable';
 import type { Monaco } from '@monaco-editor/react';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { executeSql } from '@quarry/shared/tools';
 import type { editor } from 'monaco-editor';
 

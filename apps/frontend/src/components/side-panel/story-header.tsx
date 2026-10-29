@@ -4,7 +4,6 @@ import {
 	Code,
 	Ellipsis,
 	Eye,
-	Info,
 	Loader2,
 	Maximize2,
 	Pencil,
@@ -70,7 +69,6 @@ interface StoryHeaderBaseProps {
 	onSave?: () => void;
 	onCancel?: () => void;
 	onShare: () => void;
-	onOpenAnalytics: () => void;
 	onEnlarge: () => void;
 	isShared: boolean;
 	isAgentRunning: boolean;
@@ -124,7 +122,6 @@ export const StoryHeader = memo(function StoryHeader({
 	onSave,
 	onCancel,
 	onShare,
-	onOpenAnalytics,
 	onEnlarge,
 	isShared,
 	isAgentRunning,
@@ -286,23 +283,6 @@ export const StoryHeader = memo(function StoryHeader({
 		</>
 	);
 
-	const replayAnalyticsButton = isReplay && isReadonlyMode && (
-		<Tooltip>
-			<TooltipTrigger asChild>
-				<Button
-					variant='ghost'
-					size='icon-sm'
-					className='hover:rounded-full'
-					onClick={onOpenAnalytics}
-					aria-label='Analytics'
-				>
-					<Info className='size-3' />
-				</Button>
-			</TooltipTrigger>
-			<TooltipContent>Analytics</TooltipContent>
-		</Tooltip>
-	);
-
 	const downloadOptions = {
 		chatId,
 		storySlug,
@@ -329,10 +309,6 @@ export const StoryHeader = memo(function StoryHeader({
 				{canFavorite && <StoryFavoriteMenuItem storyId={storyId} />}
 				{!isReadonlyMode && (
 					<>
-						<DropdownMenuItem onSelect={onOpenAnalytics}>
-							<Info strokeWidth={2.25} />
-							<span>Analytics</span>
-						</DropdownMenuItem>
 						<DropdownMenuItem onSelect={onEnlarge} disabled={!storyId}>
 							<Maximize2 strokeWidth={2.25} />
 							<span>Expand</span>
@@ -363,7 +339,6 @@ export const StoryHeader = memo(function StoryHeader({
 						{feedbackButtons}
 						{favoritedButton}
 						{shareButton}
-						{replayAnalyticsButton}
 						{actionButtons}
 					</div>
 					<div className='flex items-center gap-2 border-b px-4 py-2'>
@@ -391,7 +366,6 @@ export const StoryHeader = memo(function StoryHeader({
 					{feedbackButtons}
 					{favoritedButton}
 					{shareButton}
-					{replayAnalyticsButton}
 					{actionButtons}
 				</div>
 			)}

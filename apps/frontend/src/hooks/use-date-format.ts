@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 import { DEFAULT_DATE_FORMAT_SETTINGS } from '@quarry/shared/date';
 import type { DateFormatSettings } from '@quarry/shared/date';
 
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 /**
  * Returns the project's date format settings, falling back to the European
  * default while the query is loading or when no project is selected.
  */
 export function useDateFormat(): DateFormatSettings {
-	const { data } = useQuery(trpc.project.getDisplaySettings.queryOptions());
+	const { data } = useQuery(projectApi.project.getDisplaySettings.queryOptions());
 	return useMemo(() => data?.dateFormat ?? { ...DEFAULT_DATE_FORMAT_SETTINGS }, [data?.dateFormat]);
 }

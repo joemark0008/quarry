@@ -1,12 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import type { Updater } from '@tanstack/react-query';
-import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import { isRetryableTrpcError } from '@/lib/trpc-error';
+import type { ApiOutputs } from '@/lib/api-types';
+import { isRetryableApiError } from '@/lib/api-error';
 import { chatApi } from '@/lib/chat-api';
 
-export type Chat = inferRouterOutputs<TrpcRouter>['chat']['get'];
+export type Chat = ApiOutputs['chat']['get'];
 
 /**
  * The chat cache is rewritten on every streamed chunk, so components that only need a few
@@ -25,7 +24,7 @@ export const useChatQuery = <TSelected = Chat>({
 			{
 				enabled: !!chatId,
 				refetchInterval: (query) => (query.state.data?.automationRun?.status === 'running' ? 1_500 : false),
-				retry: (failureCount, error) => failureCount < 3 && isRetryableTrpcError(error),
+				retry: (failureCount, error) => failureCount < 3 && isRetryableApiError(error),
 				retryDelay: 500,
 			},
 		),

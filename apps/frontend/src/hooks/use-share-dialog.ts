@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useActiveProjectId } from '@/lib/active-project';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
 
@@ -11,11 +11,8 @@ export function useShareAudience() {
 	const project = useCurrentProject();
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
-	const access = useQuery({
-		...trpc.userGroup.projectSharingAccess.queryOptions(),
-		enabled: hasProject,
-	});
-	const canShareToProject = hasProject && !access.isFetching && access.data?.canShareToProject === true;
+	// Until user groups (Phase 6) every member may share with the whole project, as apps/api's share audience.
+	const canShareToProject = hasProject;
 	return {
 		canShareToProject,
 		emptyMessage: canShareToProject ? undefined : 'No other members in your groups',
@@ -31,7 +28,7 @@ export function useMemberPicker(currentUserId: string | undefined, initialIds: s
 	const projectId = project.data?.id;
 	const hasProject = projectId != null && (!activeProjectId || activeProjectId === projectId);
 	const membersQuery = useQuery({
-		...trpc.project.getProjectMembersByChatId.queryOptions({ chatId }),
+		...chatApi.sharedChat.shareMembers.queryOptions({ chatId }),
 		enabled: hasProject,
 	});
 

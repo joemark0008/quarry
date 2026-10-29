@@ -6,7 +6,7 @@ import { ChatError } from './chat-error';
 import { FollowUpSuggestions } from './follow-up-suggestions';
 import { AssistantMessage } from './assistant-message';
 import { UserMessage } from './user-message';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { MessageGroup } from '@/types/ai';
 import type { Chat } from '@/queries/use-chat-query';
 import {

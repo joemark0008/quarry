@@ -8,7 +8,6 @@ import { CustomStoryFiles } from '@/components/custom-story/custom-story-files';
 import { CustomStoryViewLayers } from '@/components/custom-story/custom-story-view-mode';
 import { rememberStatePrompt } from '@/components/custom-story/remember-state-header';
 import { useCustomStory } from '@/components/custom-story/use-custom-story';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
 import { useStoryViewerEnlarge } from '@/components/side-panel/hooks/use-story-viewer-enlarge';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
@@ -23,7 +22,6 @@ import { useSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { storyBlockEditStore } from '@/stores/story-block-edit';
 
@@ -51,7 +49,6 @@ export function CustomStoryViewer({ chatId, storySlug }: CustomStoryViewerProps)
 	});
 	const { handleEnlarge } = useStoryViewerEnlarge({ storyId });
 	const [viewMode, setViewMode] = useState<CustomStoryViewMode>('app');
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const [isLiveSettingsOpen, setIsLiveSettingsOpen] = useState(false);
 	const renderStoryViewer = useCallback(
 		(nextStorySlug: string) => <StoryViewer chatId={chatId} storySlug={nextStorySlug} />,
@@ -104,13 +101,6 @@ export function CustomStoryViewer({ chatId, storySlug }: CustomStoryViewerProps)
 		}
 	}, [agent, content, storySlug]);
 
-	useTrackViewDuration({
-		assetType: 'story',
-		chatId,
-		storySlug,
-		storyId,
-		versionNumber: story.viewedVersion ?? undefined,
-	});
 	useEffect(() => {
 		setCurrentStorySlug(storySlug);
 	}, [setCurrentStorySlug, storySlug]);
@@ -140,7 +130,6 @@ export function CustomStoryViewer({ chatId, storySlug }: CustomStoryViewerProps)
 				isViewingLatest={story.isViewingLatest}
 				onRestore={story.restore}
 				onShare={() => sharing.setIsShareDialogOpen(true)}
-				onOpenAnalytics={() => setIsAnalyticsOpen(true)}
 				onEnlarge={handleEnlarge}
 				isShared={sharing.isShared}
 				isAgentRunning={story.isAgentRunning}
@@ -197,14 +186,6 @@ export function CustomStoryViewer({ chatId, storySlug }: CustomStoryViewerProps)
 				open={sharing.isShareDialogOpen}
 				onOpenChange={sharing.setIsShareDialogOpen}
 				chatId={chatId}
-				storySlug={storySlug}
-			/>
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				chatId={chatId}
-				storyId={storyId ?? undefined}
 				storySlug={storySlug}
 			/>
 			<LiveStorySettingsDialog

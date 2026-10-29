@@ -4,7 +4,7 @@ import { Activity, MessageSquare, X, ThumbsDown, ThumbsUp, Check, Plug } from 'l
 import { FeedbackDialog } from './chat-messages/assistant-message-actions';
 import { Button } from './ui/button';
 import StoryIcon from './ui/story-icon';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { FeedbackVote } from './chat-messages/assistant-message-actions';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
 import { LiveStorySettingsDialog } from '@/components/side-panel/live-story-settings-dialog';
@@ -18,7 +18,6 @@ import { createLocalStorage } from '@/lib/local-storage';
 import { lastUserMessagePayload } from '@/lib/mcp-auth-retry';
 import { openMcpConnectPopup } from '@/lib/mcp-oauth';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { chatApi } from '@/lib/chat-api';
 
 /**
@@ -533,12 +532,6 @@ function useConversationFeedback(): ConversationFeedback {
 							}
 						: prev,
 				);
-				void ctx.client.invalidateQueries({
-					queryKey: trpc.project.getChatReplay.queryKey({ chatId: variables.chatId }),
-				});
-				void ctx.client.invalidateQueries({
-					queryKey: trpc.project.getProjectChats.queryKey(),
-				});
 				setThanksForChat(variables.chatId);
 				setFeedbackDialogOpen(false);
 			},

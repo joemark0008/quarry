@@ -1,4 +1,4 @@
-import type { UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIToolPart } from '@quarry/api/agent/types/chat';
 import { isToolSettled } from '@/lib/ai';
 
 type StoryActionPhase = 'pending' | 'done' | 'failed' | 'interrupted';

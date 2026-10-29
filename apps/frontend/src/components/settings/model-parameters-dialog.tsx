@@ -1,6 +1,6 @@
 import { ModelParametersFields } from './model-parameters-fields';
 import { useModelParameters } from './use-model-parameters';
-import type { ModelInferenceSettings } from '@quarry/shared/backend/llm';
+import type { ModelInferenceSettings } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';

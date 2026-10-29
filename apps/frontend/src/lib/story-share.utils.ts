@@ -1,7 +1,7 @@
 import { isQueryResultPart } from '@quarry/shared/execute-sql-parts';
 import { extractQueryIds } from '@quarry/shared/story-segments';
 
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 /**
  * Scans story code for <chart|table query_id="..."> references and collects

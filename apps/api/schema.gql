@@ -623,6 +623,7 @@ type Query {
 
   """Upstream `chat.listGrouped`."""
   chatList(input: ChatListInput): GroupedChatList!
+  chatShareMembers(chatId: ID!): [ShareableMember!]!
   chatShareOptions(chatId: ID!): ChatShareOptions!
   checkUpdate: UpdateCheck!
 
@@ -1090,6 +1091,16 @@ input SetSandboxSecretInput {
   description: String
   name: String!
   value: String!
+}
+
+"""
+A project member a chat can be shared with (upstream `project.getProjectMembersByChatId`).
+"""
+type ShareableMember {
+  email: String!
+  id: ID!
+  name: String!
+  role: String!
 }
 
 """A shared chat (upstream `SharedChatWithDetails`)."""

@@ -68,3 +68,20 @@ export class ChatShareOptions {
 	@Field(() => [String])
 	allowedUserIds: string[];
 }
+
+@ObjectType({
+	description: 'A project member a chat can be shared with (upstream `project.getProjectMembersByChatId`).',
+})
+export class ShareableMember {
+	@Field(() => ID)
+	id: string;
+
+	@Field()
+	name: string;
+
+	@Field()
+	email: string;
+
+	@Field()
+	role: string;
+}

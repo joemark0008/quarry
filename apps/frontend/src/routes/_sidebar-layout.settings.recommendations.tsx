@@ -28,8 +28,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
 import type { TabBarItem } from '@/components/ui/tab-bar';
 
@@ -690,7 +689,7 @@ function RecommendationsPage() {
 	);
 }
 
-type Recommendation = inferRouterOutputs<TrpcRouter>['contextRecommendation']['list'][number];
+type Recommendation = ApiOutputs['contextRecommendation']['list'][number];
 
 type ChangeStatus = (id: string, status: 'applied' | 'dismissed') => void;
 

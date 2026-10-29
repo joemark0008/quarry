@@ -1,8 +1,9 @@
 import { redirect } from '@tanstack/react-router';
 
-import { queryClient, trpc } from '@/main';
+import type { UserRole } from '@quarry/shared/types';
 import { fetchPublicConfig } from '@/hooks/use-public-config';
 import { fetchCurrentProject } from '@/hooks/use-current-project';
+import { canSeeAdvancedSettings } from '@/lib/effective-user-group-features';
 
 export async function requireAdvancedSettingsAccess(pathname: string) {
 	if (pathname.startsWith('/settings/account')) {
@@ -12,8 +13,7 @@ export async function requireAdvancedSettingsAccess(pathname: string) {
 	if (!project) {
 		return;
 	}
-	const access = await queryClient.ensureQueryData(trpc.userGroup.effectiveAccess.queryOptions());
-	if (!access.canSeeAdvancedSettings) {
+	if (!canSeeAdvancedSettings(project.userRole as UserRole)) {
 		throw redirect({ to: '/settings/account' });
 	}
 }
@@ -30,14 +30,6 @@ export async function requireNonCloud() {
 	if (config.quarryMode === 'cloud') {
 		throw redirect({ to: '/settings/account' });
 	}
-}
-
-export async function requireOrganizationAdminCloudBilling() {
-	const config = await requireCloud();
-	if (!config.cloudBillingEnabled) {
-		throw redirect({ to: '/settings/account' });
-	}
-	await requireOrganizationAdmin();
 }
 
 export async function requireCloud() {
@@ -68,20 +60,6 @@ export async function requireContextAdminOrAdmin() {
 export async function requireNonViewer() {
 	const project = await fetchCurrentProject();
 	if (!project || project.userRole === 'viewer') {
-		throw redirect({ to: '/settings/account' });
-	}
-}
-
-export async function requireAutomationsEnabled() {
-	const config = await fetchPublicConfig();
-	if (!config.betaAutomationsEnabled) {
-		throw redirect({ to: '/' });
-	}
-}
-
-async function requireOrganizationAdmin() {
-	const organization = await queryClient.ensureQueryData(trpc.organization.get.queryOptions());
-	if (organization.role !== 'admin') {
 		throw redirect({ to: '/settings/account' });
 	}
 }

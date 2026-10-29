@@ -113,7 +113,8 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 	const openPreview = usePreviewPanel();
 	const invalidate = useInvalidateStoryTheme();
 
-	const whiteLabelLogo = state.data?.whiteLabelIdentity?.logo ?? null;
+	// No white-label branding in quarry (upstream enterprise), so no white-label logo to tell apart.
+	const whiteLabelLogo = null;
 	const saved = state.data?.theme ? mapPairBrand(state.data.theme, normalizeBrandHeader) : null;
 	const enabled = state.data?.enabled ?? false;
 	const baseline = saved ?? DEFAULT_STORY_THEME_PAIR;

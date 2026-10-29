@@ -1,5 +1,5 @@
 import { providerLabel } from '@quarry/shared/types';
-import type { MessageModel } from '@quarry/shared/backend/chat';
+import type { MessageModel } from '@quarry/api/agent/types/chat';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 

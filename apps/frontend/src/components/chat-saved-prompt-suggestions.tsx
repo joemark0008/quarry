@@ -1,7 +1,7 @@
 import { CornerDownRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from './ui/button';
-import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
+import type { SavedPrompt } from '@/lib/api-types';
 import { useSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { useSavedPromptsQuery } from '@/hooks/use-saved-prompts';
 import { pickUniqueFrom } from '@/lib/random';

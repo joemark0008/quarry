@@ -8,7 +8,7 @@ import type { Project } from '../generated/prisma/client.js';
 import { ChatForkService } from './chat-fork.service.js';
 import { CreateSharedChatInput, ForkSharedChatInput } from './dto/chat.input.js';
 import { ChatIdResult, QuickQuestionChat } from './models/chat.model.js';
-import { ChatShareOptions, SharedChat, SharedChatView } from './models/shared-chat.model.js';
+import { ChatShareOptions, ShareableMember, SharedChat, SharedChatView } from './models/shared-chat.model.js';
 import { SharedChatsService } from './shared-chats.service.js';
 
 /** Upstream tRPC `sharedChat.*` and the shared-chat procedures of `chatFork.*`. */
@@ -38,6 +38,14 @@ export class SharedChatsResolver {
 		@Args('chatId', { type: () => ID }) chatId: string,
 	): Promise<ChatShareOptions> {
 		return this.sharedChatsService.getShareOptionsByChatId(chatId, user.id);
+	}
+
+	@Query(() => [ShareableMember])
+	chatShareMembers(
+		@CurrentUser() user: AuthUser,
+		@Args('chatId', { type: () => ID }) chatId: string,
+	): Promise<ShareableMember[]> {
+		return this.sharedChatsService.listShareableMembers(chatId, user.id);
 	}
 
 	@ProjectNonViewer()

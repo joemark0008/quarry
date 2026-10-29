@@ -35,17 +35,15 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import { VisualizationSkeleton } from './visualization-skeleton';
 import type { ToolCallComponentProps } from '.';
 import type { ReactNode } from 'react';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { displayMap } from '@quarry/shared/tools';
 import type { MapPoint } from '@quarry/shared';
 import type { MapViewHandle } from './display-map-view';
-import type { DataExportFormat } from '@/components/export-data-menu';
 import type { MapStyleId } from '@/hooks/use-map-style';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { cn } from '@/lib/utils';
 import { chartsApi } from '@/lib/charts-api';
 import { projectApi } from '@/lib/project-api';
-import { trpc } from '@/main';
 import { useBreakoutStyle } from '@/hooks/use-breakout-width';
 import { useChatId } from '@/hooks/use-chat-id';
 import { MAP_STYLE_OPTIONS, useMapStyle } from '@/hooks/use-map-style';
@@ -86,7 +84,6 @@ export const DisplayMapToolCall = ({
 	}, [viewMode]);
 	const isEditable = Boolean(agent && !agent.isReadonly && !agent.isRunning);
 	const storyIds = useStoryIds();
-	const { mutate: logDownload } = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
 	const { data: customBoundaries = [] } = useQuery(projectApi.project.getMapBoundaries.queryOptions());
 
 	const { mutate: addToStory } = useMutation(
@@ -177,15 +174,6 @@ export const DisplayMapToolCall = ({
 		link.href = await addTitleToPng(dataUrl, title);
 		link.download = `${title || 'map'}.png`;
 		link.click();
-		if (chatId) {
-			logDownload({ chatId, format: 'png', queryId: config?.query_id, title: config?.title });
-		}
-	};
-
-	const handleExportData = (format: DataExportFormat) => {
-		if (chatId) {
-			logDownload({ chatId, format, queryId: config?.query_id, title: config?.title });
-		}
 	};
 
 	const resolvedConfig = useMemo<displayMap.Input | undefined>(() => {
@@ -328,7 +316,6 @@ export const DisplayMapToolCall = ({
 									columns={sourceData.columns}
 									data={sourceData.data as Record<string, unknown>[]}
 									filename={config.title || 'map'}
-									onExport={handleExportData}
 								>
 									<Button
 										variant='ghost-muted'

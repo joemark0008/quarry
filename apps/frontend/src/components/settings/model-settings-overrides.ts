@@ -1,5 +1,5 @@
-import { getDefaultModelId } from '@quarry/shared/backend/provider-meta';
-import type { ModelInferenceSettings, ModelSettingsMap } from '@quarry/shared/backend/llm';
+import { getDefaultModelId } from '@quarry/api/agent/providers/provider-meta';
+import type { ModelInferenceSettings, ModelSettingsMap } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 
 interface ApplySavedModelSettingsArgs {

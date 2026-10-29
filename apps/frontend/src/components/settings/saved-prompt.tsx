@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from 'lucide-react';
-import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
+import type { SavedPrompt } from '@/lib/api-types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';

@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { Chat } from '@/queries/use-chat-query';
 import { taskTitle } from '@/components/tool-calls/task';
 import { UserMessageBubble } from '@/components/chat-messages/user-message';

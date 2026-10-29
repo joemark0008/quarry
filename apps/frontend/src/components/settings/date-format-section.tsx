@@ -12,7 +12,7 @@ import type { DateFormatPreset } from '@quarry/shared/date';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 interface DateFormatSectionProps {
 	isAdmin: boolean;
@@ -52,13 +52,13 @@ const SAMPLE_DATE = '2024-03-15';
 
 export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 	const queryClient = useQueryClient();
-	const displaySettings = useQuery(trpc.project.getDisplaySettings.queryOptions());
+	const displaySettings = useQuery(projectApi.project.getDisplaySettings.queryOptions());
 
 	const updateDisplaySettings = useMutation(
-		trpc.project.updateDisplaySettings.mutationOptions({
+		projectApi.project.updateDisplaySettings.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.project.getDisplaySettings.queryOptions().queryKey,
+					queryKey: projectApi.project.getDisplaySettings.queryOptions().queryKey,
 				});
 			},
 		}),

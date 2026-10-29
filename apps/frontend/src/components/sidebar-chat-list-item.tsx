@@ -27,11 +27,9 @@ import { chatApi } from '@/lib/chat-api';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {
 	chat: GroupedChatItem;
-	needsAttention?: boolean;
-	resumeOnboarding?: boolean;
 }
 
-export function ChatListItem({ chat, needsAttention = false, resumeOnboarding = false }: Props) {
+export function ChatListItem({ chat }: Props) {
 	const navigate = useNavigate();
 	const { data: session } = useSession();
 	const timeAgo = useTimeAgo(chat.updatedAt);
@@ -123,15 +121,6 @@ export function ChatListItem({ chat, needsAttention = false, resumeOnboarding = 
 				activeProps={{
 					className: 'text-foreground bg-sidebar-accent font-medium',
 				}}
-				onClick={(event) => {
-					const isUnmodifiedPrimaryClick =
-						event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
-
-					if (resumeOnboarding && isUnmodifiedPrimaryClick) {
-						event.preventDefault();
-						navigate({ to: '/onboarding', search: { chatId: chat.id } });
-					}
-				}}
 				onDoubleClick={handleDoubleClick}
 			>
 				{isRenaming ? (
@@ -148,9 +137,7 @@ export function ChatListItem({ chat, needsAttention = false, resumeOnboarding = 
 						<div className='truncate text-sm mr-auto'>
 							{chat.isOnboarding ? 'Project setup' : chat.title}
 						</div>
-						{needsAttention ? (
-							<div className='whitespace-nowrap text-xs font-medium text-violet'>Almost there!</div>
-						) : activity.running ? (
+						{activity.running ? (
 							<Spinner className='size-3.5 shrink-0' />
 						) : (
 							<div className='text-xs text-muted-foreground whitespace-nowrap'>

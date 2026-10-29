@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from 'lucide-react';
-import type { UserMemoryRecord } from '@quarry/shared/backend/memory';
+import type { UserMemoryRecord } from '@quarry/api/agent/types/memory';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';

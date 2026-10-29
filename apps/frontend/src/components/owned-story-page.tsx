@@ -8,7 +8,6 @@ import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from '@/components/st
 import { HighlightBubble } from '@/components/highlight-bubble';
 import { StoryTabbedContent } from '@/components/story-tabbed-content';
 import { useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { Button } from '@/components/ui/button';
 import { LiveStorySettingsDialog } from '@/components/side-panel/live-story-settings-dialog';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
@@ -25,7 +24,6 @@ import { useChatActivity } from '@/hooks/use-chat-activity';
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { storyApi } from '@/lib/story-api';
 
 export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlug: string }) {
@@ -34,7 +32,6 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 	const { running: isChatRunning } = useChatActivity(chatId);
 	const [isLiveSettingsOpen, setIsLiveSettingsOpen] = useState(false);
 	const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 
 	const {
 		storyId,
@@ -56,8 +53,6 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 
 	const shareQuery = useQuery(storyApi.storyShare.getSharedStoryInfo.queryOptions({ chatId, storySlug }));
 	const isShared = shareQuery.data?.isShared === true;
-
-	useTrackViewDuration({ assetType: 'story', storyId, chatId, versionNumber: story.version });
 
 	const editor = useStoryPageEditor({
 		chatId,
@@ -112,7 +107,6 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 				canRename
 				isShared={isShared}
 				onShare={() => setIsShareDialogOpen(true)}
-				onOpenAnalytics={() => setIsAnalyticsOpen(true)}
 				viewModeControls={{
 					viewMode: editor.viewMode,
 					onViewModeChange: editor.setViewMode,
@@ -198,14 +192,6 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 				onOpenChange={setIsShareDialogOpen}
 				chatId={chatId}
 				storySlug={storySlug}
-			/>
-
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				storyId={storyId ?? undefined}
-				chatId={chatId}
 			/>
 		</div>
 	);

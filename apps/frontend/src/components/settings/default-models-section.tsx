@@ -8,26 +8,15 @@ import {
 	setSingleBackgroundModel,
 } from '@quarry/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
-import { ArrowUpRight } from 'lucide-react';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { BackgroundModelCategory, BackgroundModelMode, DefaultModelSettings } from '@quarry/shared';
-import type { LlmSelectedModel } from '@quarry/shared/types';
-import type { inferRouterOutputs } from '@trpc/server';
 import type { ReactNode } from 'react';
 import type { AvailableModel, ResolvedModel } from '@/components/settings/model-select-field';
 
-import McpIcon from '@/components/icons/model-context-protocol.svg';
-import { integrations } from '@/components/settings/integrations';
 import { findModel, ModelSelectField } from '@/components/settings/model-select-field';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { projectApi } from '@/lib/project-api';
-
-type DefaultModelsData = inferRouterOutputs<TrpcRouter>['project']['getDefaultModels'];
-type IntegrationModel = DefaultModelsData['integrations'][number];
 
 interface DefaultModelsSectionProps {
 	isAdmin: boolean;
@@ -40,24 +29,17 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 		Promise.all([
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.mcpEndpoint.getSettings.queryOptions().queryKey }),
 		]);
 	const updateMutation = useMutation(
 		projectApi.project.updateDefaultModels.mutationOptions({ onSuccess: invalidate }),
 	);
-	const updateIntegrationMutation = useMutation(
-		trpc.project.updateIntegrationModel.mutationOptions({ onSuccess: invalidate }),
-	);
-	const updateMcpMutation = useMutation(trpc.mcpEndpoint.updateSettings.mutationOptions({ onSuccess: invalidate }));
 
 	const availableModels = (data?.availableModels ?? []) as AvailableModel[];
 	const settings = data?.settings ?? null;
 	const builtInDefaults = data?.builtInDefaults;
 	const mode: BackgroundModelMode = settings?.mode ?? 'single';
-	const disabled =
-		!isAdmin || updateMutation.isPending || updateIntegrationMutation.isPending || updateMcpMutation.isPending;
+	const disabled = !isAdmin || updateMutation.isPending;
 	const hasModels = availableModels.length > 0;
-	const chatDefault = data?.chatModel ?? null;
 
 	const save = (next: DefaultModelSettings) => updateMutation.mutate(next);
 
@@ -65,13 +47,6 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 		if (nextMode !== mode) {
 			save(setBackgroundModelMode(settings, nextMode));
 		}
-	};
-
-	const handleIntegrationChange = (
-		integration: IntegrationModel['integration'],
-		selection: LlmSelectedModel | null,
-	) => {
-		updateIntegrationMutation.mutate({ integration, modelSelection: selection });
 	};
 
 	return (
@@ -86,10 +61,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 				</p>
 			) : (
 				<div className='flex flex-col gap-8'>
-					<SettingsGroup
-						title='Chat & integrations'
-						description='The model that answers users, in the chat and in every connected messaging tool.'
-					>
+					<SettingsGroup title='Chat' description='The model that answers users in the chat.'>
 						<ModelSelectField
 							label='New chats'
 							description='The model the chat picker starts on. Users can still switch models while chatting.'
@@ -99,40 +71,6 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 							disabled={disabled}
 							onChange={(selection) => save(setDefaultChatModel(settings, selection))}
 						/>
-						{data?.integrations.map((integrationModel) => (
-							<IntegrationModelField
-								key={integrationModel.integration}
-								integrationModel={integrationModel}
-								chatDefault={chatDefault}
-								availableModels={availableModels}
-								disabled={disabled}
-								onChange={(selection) =>
-									handleIntegrationChange(integrationModel.integration, selection)
-								}
-							/>
-						))}
-						{data?.mcpEndpointEnabled && (
-							<ModelSelectField
-								icon={<McpIcon className='size-4' />}
-								label={
-									<Link
-										to='/settings/project/integrations'
-										search={{ tab: 'quarry-mcp' }}
-										className={SETTINGS_LINK_CLASS}
-									>
-										quarry MCP · ask_nao
-										<SettingsLinkArrow />
-									</Link>
-								}
-								description='The model quarry answers with when external AI clients ask through the quarry MCP endpoint.'
-								value={data.mcpSubAgentModel}
-								unavailableWarning='The selected model is no longer offered to users. ask_nao falls back to another available model until you pick a new one.'
-								defaultOption={{ label: 'Default chat model', model: chatDefault }}
-								availableModels={availableModels}
-								disabled={disabled}
-								onChange={(selection) => updateMcpMutation.mutate({ subAgentModel: selection })}
-							/>
-						)}
 					</SettingsGroup>
 
 					<SettingsGroup
@@ -199,12 +137,6 @@ function SettingsGroup({ title, description, children }: { title: string; descri
 	);
 }
 
-const SETTINGS_LINK_CLASS = 'inline-flex items-center gap-1 hover:underline';
-
-function SettingsLinkArrow() {
-	return <ArrowUpRight className='size-3.5 text-muted-foreground' />;
-}
-
 function ModeToggle({
 	mode,
 	onChange,
@@ -239,49 +171,6 @@ function ModeToggle({
 				</button>
 			))}
 		</div>
-	);
-}
-
-function IntegrationModelField({
-	integrationModel,
-	chatDefault,
-	availableModels,
-	disabled,
-	onChange,
-}: {
-	integrationModel: IntegrationModel;
-	chatDefault: ResolvedModel | null;
-	availableModels: AvailableModel[];
-	disabled: boolean;
-	onChange: (selection: LlmSelectedModel | null) => void;
-}) {
-	const integration = integrations.find((candidate) => candidate.id === integrationModel.integration);
-	if (!integration) {
-		return null;
-	}
-	const Icon = integration.icon;
-
-	return (
-		<ModelSelectField
-			icon={<Icon className='size-4' />}
-			label={
-				<Link
-					to='/settings/project/integrations/$integrationId'
-					params={{ integrationId: integration.id }}
-					className={SETTINGS_LINK_CLASS}
-				>
-					{integration.name}
-					<SettingsLinkArrow />
-				</Link>
-			}
-			description={`The model used to answer questions asked in ${integration.name}.`}
-			value={integrationModel.modelSelection}
-			unavailableWarning={`The selected model is no longer offered to users. ${integration.name} keeps requesting it, so pick another model to keep answers reliable.`}
-			defaultOption={{ label: 'Default chat model', model: chatDefault }}
-			availableModels={availableModels}
-			disabled={disabled}
-			onChange={onChange}
-		/>
 	);
 }
 

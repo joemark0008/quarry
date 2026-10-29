@@ -8,7 +8,7 @@ import { useLocalStorage } from './use-local-storage';
 import { usePrevRef } from './use-prev';
 import { useMemoObject } from './useMemoObject';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { ImageUploadData } from '@quarry/shared/attachments';
 import type { CitationData, LlmSelectedModel } from '@quarry/shared/types';
 import type { DocumentAttachment } from '@/lib/attachments';
@@ -26,14 +26,10 @@ import {
 	getMessageText,
 	getTextFromUserMessageOrThrow,
 	NEW_CHAT_ID,
-	parseBudgetError,
-	parseChatAllowanceExhaustedError,
-	parseManagedCreditsError,
 	resolveImagesFromMessage,
 } from '@/lib/ai';
 import { useSession } from '@/lib/auth-client';
 import { createLocalStorage } from '@/lib/local-storage';
-import { trpc } from '@/main';
 import { useChatQuery, useSetChat } from '@/queries/use-chat-query';
 import { agentService } from '@/services/agents';
 import { chatActivityStore } from '@/stores/chat-activity';
@@ -220,7 +216,6 @@ export const useAgent = ({
 			}
 		};
 
-		let activeRequestProvider: LlmSelectedModel['provider'] | undefined;
 		const newAgent = new Agent<UIMessage>({
 			transport: new DefaultChatTransport({
 				api: '/api/agent',
@@ -247,7 +242,6 @@ export const useAgent = ({
 							: (activeSelectedModelRef.current ?? undefined);
 					const adminModeAtSend = activeAdminModeRef.current;
 					agentAdminModeStore.set(newAgent, adminModeAtSend);
-					activeRequestProvider = model?.provider;
 					return {
 						headers: getProjectRequestHeaders(),
 						body: {
@@ -270,17 +264,6 @@ export const useAgent = ({
 			}),
 			onData: (dataPart) => handleAgentDataPart(dataPart, newAgent),
 			onFinish: ({ isAbort, isError, isDisconnect }) => {
-				const finishedRequestProvider = activeRequestProvider;
-				activeRequestProvider = undefined;
-				if (finishedRequestProvider === 'nao') {
-					queryClient.invalidateQueries({ queryKey: trpc.account.getManagedCreditStatus.queryKey() });
-					queryClient.invalidateQueries({ queryKey: trpc.account.getCreditSummary.queryKey() });
-					queryClient.invalidateQueries({ queryKey: trpc.account.listCreditLedger.queryKey() });
-					queryClient.invalidateQueries({ queryKey: trpc.account.listManagedAiUsage.queryKey() });
-					queryClient.invalidateQueries({
-						queryKey: projectApi.project.listAvailableTranscribeModels.queryKey(),
-					});
-				}
 				const canSendNextMessage = !isAbort && !isError && !isDisconnect;
 				const next = canSendNextMessage ? messageQueueStore.dequeue(agentId) : undefined;
 				if (next) {
@@ -335,20 +318,6 @@ export const useAgent = ({
 			chatActivityStore.setUnread(chatId, false);
 		}
 	}, [chatId]);
-
-	useEffect(() => {
-		if (!parseBudgetError(error) && !parseManagedCreditsError(error) && !parseChatAllowanceExhaustedError(error)) {
-			return;
-		}
-		const lastMsg = messages.at(-1);
-		if (lastMsg?.role === 'user') {
-			const nextMessages = messages.slice(0, -1);
-			setMessages(nextMessages);
-			if (chatIdRef.current) {
-				setChat({ chatId: chatIdRef.current }, (prev) => (prev ? { ...prev, messages: nextMessages } : prev));
-			}
-		}
-	}, [error]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	// Carry admin mode across an admin conversation: enable it for chats whose first or
 	// last user message was sent from admin mode, and disable it for normal chats. A
@@ -436,13 +405,10 @@ export const useAgent = ({
 
 	const handleSendMessage = useCallback<UseChatHelpers<UIMessage>['sendMessage']>(
 		async (...args) => {
-			if (!hasProject && parseChatAllowanceExhaustedError(error)) {
-				return;
-			}
 			clearError();
 			return sendMessage(...args);
 		},
-		[sendMessage, clearError, error, hasProject],
+		[sendMessage, clearError],
 	);
 
 	const queueOrSendMessage = useCallback(

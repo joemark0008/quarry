@@ -1,7 +1,6 @@
 import { Pencil, Trash2 } from 'lucide-react';
-import { getDefaultModelId, getProviderAuth } from '@quarry/shared/backend/provider-meta';
+import { getDefaultModelId, getProviderAuth } from '@quarry/api/agent/providers/provider-meta';
 import { providerKind, providerLabel, providerLabels, providerName } from '@quarry/shared/types';
-import { Link } from '@tanstack/react-router';
 import { LlmProviderIcon } from '../ui/llm-provider-icon';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,6 @@ interface ProviderCardProps {
 	envBaseUrl?: string;
 	enabledModels?: string[] | null;
 	status?: string;
-	linkStatusToWallet?: boolean;
 	/** Where this provider comes from, e.g. `ENV` or `nao_config.yaml`. */
 	badges?: string[];
 	isAdmin: boolean;
@@ -33,7 +31,6 @@ export function ProviderCard({
 	envBaseUrl,
 	enabledModels,
 	status,
-	linkStatusToWallet = false,
 	badges = [],
 	isAdmin,
 	isFormActive,
@@ -83,24 +80,14 @@ export function ProviderCard({
 						</div>
 					) : (
 						<div className='flex items-center gap-2 text-xs text-muted-foreground'>
-							{status && linkStatusToWallet ? (
-								<Link
-									to='/settings/organization/billing'
-									search={{ checkout: undefined, portal: undefined, creditCheckout: undefined }}
-									className='hover:text-foreground hover:underline'
-								>
-									{status}
-								</Link>
-							) : (
-								<span>
-									{status ??
-										(getProviderAuth(provider).apiKey === 'required'
-											? 'API key from environment'
-											: getProviderAuth(provider).apiKey === 'optional'
-												? 'Using credentials from environment'
-												: 'No API key required')}
-								</span>
-							)}
+							<span>
+								{status ??
+									(getProviderAuth(provider).apiKey === 'required'
+										? 'API key from environment'
+										: getProviderAuth(provider).apiKey === 'optional'
+											? 'Using credentials from environment'
+											: 'No API key required')}
+							</span>
 							{envBaseUrl && (
 								<>
 									<span className='text-border'>•</span>

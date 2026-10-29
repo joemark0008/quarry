@@ -32,7 +32,7 @@ import { usePreviewHighlights } from '@/hooks/use-preview-highlights';
 import { createLocalStorage } from '@/lib/local-storage';
 import { joinMarkdownFrontmatter, markdownPlugins, parseMarkdownFrontmatter } from '@/lib/markdown';
 import { isMac } from '@/lib/platform';
-import { isForbiddenError } from '@/lib/trpc-error';
+import { isForbiddenError } from '@/lib/api-error';
 import { cn } from '@/lib/utils';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
@@ -670,14 +670,14 @@ function isConflictError(error: unknown): boolean {
 	if (!error || typeof error !== 'object') {
 		return false;
 	}
-	const trpcError = error as {
+	const apiError = error as {
 		data?: { code?: string };
 		shape?: { data?: { code?: string } };
 		message?: string;
 	};
 	return (
-		trpcError.data?.code === 'CONFLICT' ||
-		trpcError.shape?.data?.code === 'CONFLICT' ||
-		trpcError.message === 'This file changed on disk. Reload it before saving your changes.'
+		apiError.data?.code === 'CONFLICT' ||
+		apiError.shape?.data?.code === 'CONFLICT' ||
+		apiError.message === 'This file changed on disk. Reload it before saving your changes.'
 	);
 }

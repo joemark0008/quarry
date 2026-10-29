@@ -8,14 +8,14 @@ import {
 	toStoryReferenceMentionId,
 } from '@quarry/shared';
 import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
+import type { FolderSystemType } from '@quarry/shared/types';
 import type { MentionOption } from 'prompt-mentions';
-import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { ApiOutputs } from '@/lib/api-types';
 import type { MentionOrigin, MentionOriginNode } from '@/components/mention-origin-preview';
 import { DatabaseIcon } from '@/components/ui/database-icon';
 import StoryIcon from '@/components/ui/story-icon';
 
-type RouterOutputs = inferRouterOutputs<TrpcRouter>;
+type RouterOutputs = ApiOutputs;
 export type ReferenceableStory = RouterOutputs['story']['listReferenceable'][number];
 export type StoryFolder = RouterOutputs['storyFolder']['listTree'][number];
 export type StoryFolderItem = RouterOutputs['storyFolder']['listItems'][number];
@@ -152,7 +152,9 @@ function compareSystemFoldersFirst(a: StoryFolder, b: StoryFolder): number {
 }
 
 function systemFolderRank(folder: StoryFolder): number {
-	return folder.systemType ? FOLDER_SYSTEM_TYPE.indexOf(folder.systemType) : FOLDER_SYSTEM_TYPE.length;
+	return folder.systemType
+		? FOLDER_SYSTEM_TYPE.indexOf(folder.systemType as FolderSystemType)
+		: FOLDER_SYSTEM_TYPE.length;
 }
 
 /** Databases, then schemas, then tables. A single database is skipped to keep the tree shallow. */

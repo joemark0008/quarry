@@ -17,7 +17,6 @@ import { CustomStoryFiles } from '@/components/custom-story/custom-story-files';
 import { CustomStoryViewLayers } from '@/components/custom-story/custom-story-view-mode';
 import { useCustomStory } from '@/components/custom-story/use-custom-story';
 import { useCustomStoryDownload } from '@/components/custom-story/use-custom-story-download';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
 import { SharedStoryHeader } from '@/components/shared-story-header';
 import { useStoryViewerLiveSettings } from '@/components/side-panel/hooks/use-story-viewer-live-settings';
@@ -27,7 +26,6 @@ import { ArchivedBanner } from '@/components/side-panel/story-archived-banner';
 import { StoryPageHeader } from '@/components/story-page-header';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { storyApi } from '@/lib/story-api';
 import { requestAsk } from '@/stores/ask-bar';
 
@@ -52,7 +50,6 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 		refresh: live.handleRefreshData,
 	});
 	const [viewMode, setViewMode] = useState<CustomStoryViewMode>('app');
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const [isLiveSettingsOpen, setIsLiveSettingsOpen] = useState(false);
 	const [editTarget, setEditTarget] = useState<StoryBlockEditTarget | null>(null);
 	const [tableFormatTarget, setTableFormatTarget] = useState<StoryTableFormatEditTarget | null>(null);
@@ -78,7 +75,6 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 		requestAsk({ chatId: null, selection: { text: block.title ?? '', block } });
 	}, []);
 
-	useTrackViewDuration({ assetType: 'story', chatId, storyId, versionNumber: story.viewedVersion ?? undefined });
 	const showAskBar = Boolean(storyId) && !story.isArchived;
 	const isAskInputHidden = viewMode !== 'app';
 
@@ -103,7 +99,6 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 				canRename
 				isShared={sharing.isShared}
 				onShare={() => sharing.setIsShareDialogOpen(true)}
-				onOpenAnalytics={() => setIsAnalyticsOpen(true)}
 				viewModeControls={{ viewMode, onViewModeChange: setViewMode }}
 				versionControls={{
 					currentVersion: story.currentVersionIndex,
@@ -163,13 +158,6 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 				onOpenChange={sharing.setIsShareDialogOpen}
 				chatId={chatId}
 				storySlug={storySlug}
-			/>
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				storyId={storyId ?? undefined}
-				chatId={chatId}
 			/>
 			<LiveStorySettingsDialog
 				open={isLiveSettingsOpen}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { isManagedProvider, PROVIDER_META } from '@quarry/shared/backend/provider-meta';
+import { isManagedProvider, PROVIDER_META } from '@quarry/api/agent/providers/provider-meta';
 import {
 	LLM_PROVIDERS,
 	NAMED_PROVIDER_KIND,
@@ -9,10 +9,9 @@ import {
 	toNamedProvider,
 	toProviderName,
 } from '@quarry/shared/types';
-import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/shared/backend/llm';
+import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/api/agent/types/llm';
 import type { LlmProvider, LlmProviderKind } from '@quarry/shared/types';
 import type { InheritedKeySource } from '@/components/settings/llm-provider-form';
-import { trpc } from '@/main';
 import { projectApi } from '@/lib/project-api';
 
 export interface EditingState {
@@ -93,8 +92,6 @@ export function useLlmProviders() {
 			}),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.budget.getUnpricedModels.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.budget.getProvidersCostSupport.queryOptions().queryKey }),
 		]);
 	};
 

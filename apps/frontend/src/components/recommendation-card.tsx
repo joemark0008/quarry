@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 import {
 	Check,
 	ChevronRight,
@@ -24,15 +23,11 @@ import {
 	normalizeContextRecommendationCategory,
 } from '@quarry/shared/context-recommendation';
 import type { MouseEvent } from 'react';
-import type { inferRouterOutputs } from '@trpc/server';
+import type { ApiOutputs } from '@/lib/api-types';
 
-import type { ContextRecommendationSignalType } from '@quarry/shared/backend/context-recommendation';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
-import type { RecommendationTab } from '@/components/settings/recommendations-route-search';
-import type { ReplayHighlight } from '@/components/settings/usage-route-search';
+import type { ContextRecommendationSignalType } from '@quarry/api/agent/types/context-recommendation';
 import { RecommendationDiffPanel } from '@/components/side-panel/recommendation-diff-panel';
 import { RecommendationManualFixPanel } from '@/components/side-panel/recommendation-manual-fix-panel';
-import { DEFAULT_USAGE_SEARCH } from '@/components/settings/usage-route-search';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -46,7 +41,7 @@ import { RecommendationText } from '@/lib/recommendation-text';
 import { cn } from '@/lib/utils';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 
-type RouterOutputs = inferRouterOutputs<TrpcRouter>;
+type RouterOutputs = ApiOutputs;
 type Recommendation = RouterOutputs['contextRecommendation']['list'][number];
 type RecommendationStatus = 'applied' | 'dismissed';
 
@@ -58,6 +53,9 @@ const CONTEXT_RECOMMENDATION_CATEGORY_BADGE_VARIANT = {
 	skills: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
 	other: 'bg-gray-500/10 text-gray-600 dark:text-gray-400',
 } as const;
+
+/** What a trigger chat's replay would highlight; the replay itself comes back with Phase 6. */
+type ReplayHighlight = 'tool-error' | 'feedback';
 
 interface ChatLink {
 	chatId: string;
@@ -128,16 +126,6 @@ function buildRows(links: ChatLink[], feedbacks: FeedbackItem[]): CardRow[] {
 			highlight: link.highlight,
 		}));
 	return [...feedbackRows, ...chatRows];
-}
-
-function tabForStatus(status: Recommendation['status']): RecommendationTab {
-	if (status === 'applied') {
-		return 'applied';
-	}
-	if (status === 'dismissed') {
-		return 'dismissed';
-	}
-	return 'recommendations';
 }
 
 function initials(name: string): string {
@@ -473,21 +461,9 @@ export function RecommendationCard({
 												const title = meta?.title || row.chatId.slice(0, 8);
 												const userName = meta?.userName ?? 'Unknown user';
 												return (
-													<Link
+													<div
 														key={row.key}
-														to='/settings/usage/replay/$chatId'
-														params={{ chatId: row.chatId }}
-														search={{
-															...DEFAULT_USAGE_SEARCH,
-															highlight:
-																row.kind === 'feedback' ? 'feedback' : row.highlight,
-															targetId:
-																row.kind === 'feedback' ? row.messageId : row.targetId,
-															origin: 'recommendations',
-															recoId: rec.id,
-															recoTab: tabForStatus(rec.status),
-														}}
-														className='group/link flex items-center gap-2 px-2 py-1 text-sm transition-colors hover:bg-muted/50'
+														className='flex items-center gap-2 px-2 py-1 text-sm'
 													>
 														<span className='flex size-4 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-medium text-primary'>
 															{meta?.userName ? initials(meta.userName) : '?'}
@@ -495,9 +471,7 @@ export function RecommendationCard({
 														<span className='w-20 shrink-0 truncate text-muted-foreground'>
 															{userName}
 														</span>
-														<span className='flex-1 truncate text-foreground group-hover/link:text-primary'>
-															{title}
-														</span>
+														<span className='flex-1 truncate text-foreground'>{title}</span>
 														{row.kind === 'feedback' && (
 															<>
 																<ThumbsDown className='size-3.5 shrink-0 text-red-500 dark:text-red-400' />
@@ -509,7 +483,7 @@ export function RecommendationCard({
 															</>
 														)}
 														<ExternalLink className='size-3 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover/link:opacity-100' />
-													</Link>
+													</div>
 												);
 											})}
 											{hiddenCount > 0 && (

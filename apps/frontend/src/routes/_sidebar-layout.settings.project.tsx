@@ -1,14 +1,4 @@
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { Github } from 'lucide-react';
-import { GitHubRepoPicker } from '@/components/settings/github-repo-picker';
-import { GitLabRepoPicker } from '@/components/settings/gitlab-repo-picker';
-import { ImportProviderCard } from '@/components/settings/import-provider-card';
-import GitlabIcon from '@/components/icons/gitlab-icon.svg';
-import { OrgApiKeys } from '@/components/settings/org-api-keys';
-import { useIsCloud } from '@/hooks/use-quarry-mode';
-import { usePermissions } from '@/hooks/use-permissions';
-import { trpc } from '@/main';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { Empty } from '@/components/ui/empty';
 import { fetchCurrentProject, useCurrentProject } from '@/hooks/use-current-project';
@@ -32,14 +22,8 @@ export const Route = createFileRoute('/_sidebar-layout/settings/project')({
 
 function ProjectPage() {
 	const project = useCurrentProject();
-	const { isOrgAdmin } = usePermissions();
 	const pageHeader = useMatches().at(-1)?.staticData;
-	const isCloud = useIsCloud();
-	const isProjectlessCloud = !project.data && isCloud;
-
-	const emptyMessage = isCloud
-		? 'No project found. Create a project or ask your organization admin to add you to one.'
-		: 'No project configured. Set NAO_DEFAULT_PROJECT_PATH environment variable.';
+	const emptyMessage = 'No project selected. Create one with New project in the project switcher.';
 
 	return (
 		<SettingsPageWrapper>
@@ -55,8 +39,6 @@ function ProjectPage() {
 				<div className='flex flex-col gap-12 min-w-0 mb-4'>
 					{project.data ? (
 						<Outlet />
-					) : isProjectlessCloud ? (
-						<NoProjectCloudState isAdmin={isOrgAdmin} />
 					) : (
 						<SettingsCard>
 							<Empty>{emptyMessage}</Empty>
@@ -65,76 +47,5 @@ function ProjectPage() {
 				</div>
 			</div>
 		</SettingsPageWrapper>
-	);
-}
-
-function NoProjectCloudState({ isAdmin }: { isAdmin: boolean }) {
-	const deployUrl = typeof window === 'undefined' ? '' : window.location.origin;
-
-	const githubAvailable = useQuery(trpc.github.isAvailable.queryOptions());
-	const githubStatus = useQuery({
-		...trpc.github.getStatus.queryOptions(),
-		enabled: githubAvailable.data === true,
-	});
-	const isGithubConnected = githubStatus.data?.connected === true;
-	const showGithubOption = githubAvailable.data === true;
-
-	const gitlabAvailable = useQuery(trpc.gitlab.isAvailable.queryOptions());
-	const gitlabStatus = useQuery({
-		...trpc.gitlab.getStatus.queryOptions(),
-		enabled: gitlabAvailable.data === true,
-	});
-	const isGitlabConnected = gitlabStatus.data?.connected === true;
-	const showGitlabOption = gitlabAvailable.data === true;
-
-	return (
-		<div className='flex flex-col gap-6'>
-			{showGithubOption && (
-				<ImportProviderCard
-					providerLabel='GitHub'
-					icon={Github}
-					connectHref='/api/github/connect'
-					resourceNounSingular='repository'
-					resourceNounPlural='repositories'
-					connected={isGithubConnected}
-					Picker={GitHubRepoPicker}
-				/>
-			)}
-
-			{showGitlabOption && (
-				<ImportProviderCard
-					providerLabel='GitLab'
-					icon={GitlabIcon}
-					connectHref='/api/gitlab/connect'
-					resourceNounSingular='project'
-					resourceNounPlural='projects'
-					connected={isGitlabConnected}
-					Picker={GitLabRepoPicker}
-				/>
-			)}
-
-			{isAdmin && (
-				<>
-					<SettingsCard title='Deploy your first project'>
-						<div className='space-y-3 text-sm text-muted-foreground'>
-							<p>
-								Use <code>quarry deploy</code> to send a local project context to this quarry instance.
-							</p>
-							<p>
-								Run it from the directory that contains <code>nao_config.yaml</code>, or add{' '}
-								<code>--path /path/to/project</code> if you want to deploy from somewhere else.
-							</p>
-						</div>
-					</SettingsCard>
-
-					<OrgApiKeys
-						isAdmin
-						deployUrl={deployUrl}
-						title='Generate a deploy key'
-						description='Create an organization API key and copy the exact command you can run to deploy your first project.'
-					/>
-				</>
-			)}
-		</div>
 	);
 }

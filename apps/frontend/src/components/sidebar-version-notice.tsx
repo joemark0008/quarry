@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@apollo/client/react';
 import { CircleArrowUp } from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, hideIf } from '@/lib/utils';
-import { trpc } from '@/main';
+import { CheckUpdateDocument } from '@/graphql/generated/graphql';
 import { QUARRY_REPOSITORY_URL } from '@/lib/quarry-links';
 
 interface SidebarVersionNoticeProps {
@@ -11,11 +11,8 @@ interface SidebarVersionNoticeProps {
 }
 
 export function SidebarVersionNotice({ isCollapsed }: SidebarVersionNoticeProps) {
-	const { data } = useQuery({
-		...trpc.system.checkUpdate.queryOptions(),
-		staleTime: 60 * 60 * 1000,
-		retry: false,
-	});
+	const { data: result } = useQuery(CheckUpdateDocument);
+	const data = result?.checkUpdate;
 
 	if (!data?.updateAvailable || !data.latestVersion) {
 		return null;

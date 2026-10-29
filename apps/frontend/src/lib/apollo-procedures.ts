@@ -13,8 +13,8 @@ import type {
 import { apolloClient } from '@/lib/apollo-client';
 
 /**
- * Builders for procedures moved from upstream tRPC to apps/api, shaped like the tRPC options proxy
- * (`queryOptions`, `queryKey`, `mutationOptions`, `pathFilter`) so call sites only swap the `trpc` prefix.
+ * Builders for the apps/api procedures, shaped like upstream's tRPC options proxy (`queryOptions`, `queryKey`,
+ * `mutationOptions`, `pathFilter`), which the frontend was written against.
  *
  * Requests go through Apollo Client without its cache; results stay in TanStack Query (the chat view rewrites
  * its cached chat on every streamed chunk). Query keys keep tRPC's `[path, { input, type }]` shape so prefix
@@ -57,7 +57,7 @@ export function query<TInput, TOutput>(path: Path, fetch: (input: TInput) => Pro
 		queryKey: (input?: DeepPartial<TInput>) => keyOf(input),
 		queryOptions,
 		pathFilter: () => ({ queryKey: [path] as QueryKey }),
-		/** Imperative call, like `trpcClient.x.y.query`. */
+		/** Imperative call. */
 		query: fetch,
 	};
 }
@@ -72,7 +72,7 @@ export function mutation<TInput, TOutput>(path: Path, run: (input: TInput) => Pr
 			mutationFn: run,
 		}),
 		mutationKey: () => [path] as QueryKey,
-		/** Imperative call, like `trpcClient.x.y.mutate`. */
+		/** Imperative call. */
 		mutate: run,
 	};
 }
@@ -106,7 +106,7 @@ export async function runMutation<TData, TVariables extends Record<string, unkno
 	}
 }
 
-/** Errors carry the GraphQL code as `data.code`, like tRPC's, so `lib/trpc-error.ts` keeps classifying them. */
+/** Errors carry the GraphQL code as `data.code` (tRPC's shape), which `lib/api-error.ts` classifies. */
 function toCodedError(error: unknown): unknown {
 	if (CombinedGraphQLErrors.is(error)) {
 		const [first] = error.errors;

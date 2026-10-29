@@ -93,6 +93,22 @@ export class SharedChatsService {
 		return { shareId: share.id, visibility: share.visibility, allowedUserIds };
 	}
 
+	/**
+	 * Upstream `project.getProjectMembersByChatId`: who the chat can be shared with. Every member of the chat's project
+	 * until user groups narrow share audiences (Phase 6, `ProjectSharingService`).
+	 */
+	async listShareableMembers(
+		chatId: string,
+		userId: string,
+	): Promise<{ id: string; name: string; email: string; role: string }[]> {
+		const projectId = await this.chats.getChatProjectId(chatId);
+		if (!projectId) {
+			return [];
+		}
+		await this.requireProjectRole(projectId, userId);
+		return this.projects.listUsersWithProjectAccess(projectId);
+	}
+
 	async updateAccess(shareId: string, userId: string, allowedUserIds: string[]): Promise<void> {
 		const { share, userRole } = await this.resolveShare(shareId, userId, false);
 		const chatOwnerId = await this.chats.getChatOwnerId(share.chatId);

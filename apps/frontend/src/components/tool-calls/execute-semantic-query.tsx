@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { Code, Copy, Download, Layers, Palette, PanelRight, Table as TableIcon } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { ToolOutputFallback } from './tool-output-fallback';
@@ -9,14 +8,11 @@ import { SqlResultDisplay } from './sql-result-display';
 import type { ActionButton } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
-import type { DataExportFormat } from '@/components/export-data-menu';
-import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useLoadAllQueryRows, useQueryRowsSource } from '@/hooks/use-query-rows';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { SidePanelContent } from '@/components/side-panel/sql-editor';
 import { semanticQueryAsSql } from '@/lib/execute-sql-messages';
-import { trpc } from '@/main';
 
 type ViewMode = 'results' | 'definition' | 'sql';
 
@@ -28,9 +24,6 @@ export const ExecuteSemanticQueryToolCall = ({
 	const [isFormatOpen, setIsFormatOpen] = useState(false);
 	const { isSettled } = useToolCallContext();
 	const { open: openSidePanel } = useSidePanel();
-	const agent = useOptionalAgentContext();
-	const chatId = agent?.chatId;
-	const logDownload = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
 	const rowsSource = useQueryRowsSource(toolCallId, output);
 	const loadAllRows = useLoadAllQueryRows(rowsSource);
 
@@ -42,12 +35,6 @@ export const ExecuteSemanticQueryToolCall = ({
 		openSidePanel(
 			<SidePanelContent input={asSql.input!} output={output} toolCallId={toolCallId} editable={false} />,
 		);
-	};
-
-	const handleExport = (format: DataExportFormat) => {
-		if (chatId) {
-			logDownload.mutate({ chatId, format, queryId: toolCallId, title: input?.name });
-		}
 	};
 
 	const actions: ActionButton[] = [
@@ -106,7 +93,6 @@ export const ExecuteSemanticQueryToolCall = ({
 							data: output.data as Record<string, unknown>[],
 							filename: input?.name || 'semantic-query',
 							loadAllRows,
-							onExport: handleExport,
 						},
 					},
 				]

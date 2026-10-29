@@ -8,7 +8,6 @@ import { SharedChatButton } from '@/components/shared-chat-button';
 import { SidePanel } from '@/components/side-panel/side-panel';
 import { Spinner } from '@/components/ui/spinner';
 import { useSession } from '@/lib/auth-client';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { ReadonlyAgentMessagesProvider } from '@/contexts/agent.provider';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { SidePanelProvider } from '@/contexts/side-panel';
@@ -44,7 +43,6 @@ function SharedChatPage() {
 
 	const sharedChatData = chatQuery.data;
 	const isOwner = session?.user?.id === sharedChatData?.share.userId;
-	useTrackViewDuration({ assetType: 'chat', chatId: sharedChatData?.share.chatId, enabled: !isOwner });
 
 	if (chatQuery.isLoading) {
 		return (

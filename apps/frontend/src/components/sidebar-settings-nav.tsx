@@ -9,11 +9,8 @@ import { cn, hideIf } from '@/lib/utils';
 export interface NavContext {
 	canSeeAdvancedSettings: boolean;
 	isAdmin: boolean;
-	isAutomationsEnabled: boolean;
-	isCloudBillingEnabled: boolean;
 	isContextAdmin: boolean;
 	isCloud: boolean;
-	isOrgAdmin: boolean;
 	isViewer: boolean;
 }
 
@@ -64,32 +61,9 @@ const settingsNavGroups: NavGroup[] = [
 				requiresProject: true,
 			},
 			{
-				label: 'Budget',
-				to: '/settings/project/budgets',
-				visible: ({ isViewer }) => !isViewer,
-			},
-			{
-				label: 'Users & Groups',
-				to: '/settings/project/user-groups',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
 				label: 'Agent',
 				to: '/settings/project/agent',
 				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
-				label: 'Integrations & MCP',
-				to: '/settings/project/integrations',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
-				label: 'Automations',
-				to: '/settings/project/automations',
-				visible: ({ isAdmin, isAutomationsEnabled }) => isAdmin && isAutomationsEnabled,
 				requiresProject: true,
 			},
 			{
@@ -133,40 +107,12 @@ const settingsNavGroups: NavGroup[] = [
 				exact: true,
 				leavesSettings: true,
 			},
-			{
-				label: 'Usage & Costs',
-				to: '/settings/usage',
-				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,
-			},
-			{
-				label: 'Server logs',
-				to: '/settings/logs',
-				visible: ({ isAdmin, isCloud }) => isAdmin && !isCloud,
-			},
 		],
 	},
 	{
-		label: 'Organization',
+		label: 'Instance',
 		isAdvanced: true,
 		items: [
-			{
-				label: 'Organization Settings',
-				to: '/settings/organization',
-				visible: ({ isViewer }) => !isViewer,
-				exact: true,
-			},
-			{
-				label: 'Members',
-				to: '/settings/organization/members',
-				visible: ({ isViewer }) => !isViewer,
-				exact: true,
-			},
-			{
-				label: 'Billing & Credits',
-				to: '/settings/organization/billing',
-				visible: ({ isCloudBillingEnabled, isOrgAdmin }) => isCloudBillingEnabled && isOrgAdmin,
-				exact: true,
-			},
 			{
 				label: 'Storage',
 				to: '/settings/storage',
@@ -183,26 +129,20 @@ interface SidebarSettingsNavProps {
 	isCollapsed: boolean;
 	canSeeAdvancedSettings: boolean;
 	isAdmin: boolean;
-	isAutomationsEnabled: boolean;
 	isContextAdmin: boolean;
 	isViewer: boolean;
 	isCloud: boolean;
-	isCloudBillingEnabled: boolean;
-	isOrgAdmin: boolean;
-	isTrial: boolean;
+	hasProject: boolean;
 }
 
 export function SidebarSettingsNav({
 	isCollapsed,
 	canSeeAdvancedSettings,
 	isAdmin,
-	isAutomationsEnabled,
 	isContextAdmin,
 	isViewer,
 	isCloud,
-	isCloudBillingEnabled,
-	isOrgAdmin,
-	isTrial,
+	hasProject,
 }: SidebarSettingsNavProps) {
 	const navigate = useNavigate();
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -212,14 +152,11 @@ export function SidebarSettingsNav({
 	const navContext: NavContext = {
 		canSeeAdvancedSettings,
 		isAdmin,
-		isAutomationsEnabled,
-		isCloudBillingEnabled,
 		isContextAdmin,
 		isCloud,
-		isOrgAdmin,
 		isViewer,
 	};
-	const navGroups = getVisibleSettingsNavGroups(navContext, isTrial);
+	const navGroups = getVisibleSettingsNavGroups(navContext, hasProject);
 
 	useEffect(() => {
 		const handleSlashKey = (e: KeyboardEvent) => {
@@ -410,13 +347,13 @@ export function SidebarSettingsNav({
 	);
 }
 
-export function getVisibleSettingsNavGroups(context: NavContext, isTrial = false): NavGroup[] {
+export function getVisibleSettingsNavGroups(context: NavContext, hasProject = true): NavGroup[] {
 	return settingsNavGroups
 		.filter((group) => !group.isAdvanced || context.canSeeAdvancedSettings)
 		.map((group) => ({
 			...group,
 			items: group.items.filter(
-				(item) => (!item.requiresProject || !isTrial) && (item.visible?.(context) ?? true),
+				(item) => (!item.requiresProject || hasProject) && (item.visible?.(context) ?? true),
 			),
 		}))
 		.filter((group) => group.items.length > 0);

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
 import type { ToolCallComponentProps } from '.';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { getMessageText, isOnboardingContextRequestMessage, isToolUIPart } from '@/lib/ai';

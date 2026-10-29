@@ -56,7 +56,6 @@ import {
 } from '@/lib/stories-page';
 import { invalidateStoryArchiveCaches, invalidateStoryPlacementCaches } from '@/lib/stories-cache';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { selectedStoryReferencesStore, storyDragOverNewChatStore } from '@/stores/story-references';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
@@ -163,10 +162,6 @@ function StoriesPage() {
 		enabled: !!storiesProjectId,
 	});
 	const favorites = useQuery({ ...storyApi.favorite.list.queryOptions(), enabled: !!activeProjectId });
-	const storyViewCounts = useQuery({
-		...trpc.analyticsEvent.storyViewCounts.queryOptions(),
-		enabled: !!activeProjectId && (sort.field === 'views' || displayMode === 'lines'),
-	});
 	const archivedStories = useQuery({
 		...storyApi.story.listArchived.queryOptions({ projectId: activeProjectId }),
 		enabled: showArchived && !!activeProjectId,
@@ -211,7 +206,6 @@ function StoriesPage() {
 				sharedStories: archivedSharedStories.data ?? [],
 				currentUserName,
 				favoriteStoryIds: favorites.data?.storyIds,
-				viewCountByStoryId: storyViewCounts.data,
 				folderItemMap,
 				folders: folderTree.data ?? [],
 			});
@@ -222,12 +216,10 @@ function StoriesPage() {
 			sharedStories: sharedStories.data ?? [],
 			currentUserName,
 			favoriteStoryIds: favorites.data?.storyIds,
-			viewCountByStoryId: storyViewCounts.data,
 			folderItemMap,
 			folders: folderTree.data ?? [],
 		});
 	}, [
-		storyViewCounts.data,
 		showArchived,
 		userStories.data,
 		standaloneStories.data,

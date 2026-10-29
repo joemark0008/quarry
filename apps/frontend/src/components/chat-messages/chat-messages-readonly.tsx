@@ -4,7 +4,7 @@ import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { filterSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
 import { UserMessageBubble } from './user-message';
 import type { StickToBottomContext } from 'use-stick-to-bottom';
-import type { ForkMetadata, MessageModel, UIMessage } from '@quarry/shared/backend/chat';
+import type { ForkMetadata, MessageModel, UIMessage } from '@quarry/api/agent/types/chat';
 import { SelectionCitationExcerpt } from '@/components/selection-citation-excerpt';
 import { MessageModelLabel } from '@/components/chat-messages/message-model-label';
 import { checkAssistantMessageHasContent, groupMessages, groupToolCalls } from '@/lib/ai';

@@ -43,9 +43,7 @@ import type { ChartConfig } from '@quarry/shared/chart-tooltip';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ToolCallComponentProps } from '.';
 import type { DateRange } from '@/lib/charts.utils';
-import type { DataExportFormat } from '@/components/export-data-menu';
 import { chartsApi } from '@/lib/charts-api';
-import { trpc } from '@/main';
 import {
 	DATE_RANGE_OPTIONS,
 	filterByDateRange,
@@ -93,7 +91,6 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 	const [viewMode, setViewMode] = useState<ViewMode>('chart');
 	const storyIds = useStoryIds();
 	const normalSize = useMemo(() => (document.querySelector('[data-selection-container]') ? true : false), []);
-	const { mutate: logDownload } = useMutation(trpc.analyticsEvent.logChatDownload.mutationOptions());
 
 	const { mutate: addToStory } = useMutation(
 		storyApi.story.createVersion.mutationOptions({
@@ -138,12 +135,6 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 			console.error('Error downloading chart image:', err);
 		} finally {
 			setIsDownloading(false);
-		}
-	};
-
-	const handleExportData = (format: DataExportFormat) => {
-		if (chatId) {
-			logDownload({ chatId, format, queryId: chartConfig?.query_id, title: chartConfig?.title });
 		}
 	};
 
@@ -372,7 +363,6 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 								columns={sourceData.columns}
 								data={sourceData.data as Record<string, unknown>[]}
 								filename={chartConfig.title || 'chart'}
-								onExport={handleExportData}
 							>
 								<Button
 									variant='ghost-muted'

@@ -24,3 +24,11 @@ mutation UpdateProfile($input: UpdateProfileInput!) {
 mutation ModifyPassword($input: ModifyPasswordInput!) {
 	modifyPassword(input: $input)
 }
+
+query UserPreferences {
+	userPreferences
+}
+
+mutation UpdateUserPreferences($input: UpdateUserPreferencesInput!) {
+	updateUserPreferences(input: $input)
+}

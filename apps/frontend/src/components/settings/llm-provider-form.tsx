@@ -6,12 +6,12 @@ import {
 	getModelParameterSpec,
 	getProviderAuth,
 	PROVIDER_META,
-} from '@quarry/shared/backend/provider-meta';
+} from '@quarry/api/agent/providers/provider-meta';
 import { NAMED_PROVIDER_KIND, providerKind, providerLabels, toProviderName } from '@quarry/shared/types';
 import { CustomModelDialog } from './custom-model-dialog';
 import { ModelParametersDialog } from './model-parameters-dialog';
 import { applySavedModelSettings } from './model-settings-overrides';
-import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/shared/backend/llm';
+import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

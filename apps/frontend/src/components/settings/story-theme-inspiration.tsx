@@ -1,5 +1,5 @@
 import { joinWithAnd } from '@quarry/shared';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { BadgeCheck, Globe, Loader2, PenLine, Sparkles, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -13,8 +13,7 @@ import {
 
 import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
 import { STORY_LOGO_MEDIA_TYPES } from '@quarry/shared/story-theme';
-import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { ApiOutputs } from '@/lib/api-types';
 import type { SourceImageMediaType } from '@quarry/shared/story-theme-source';
 import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 import type { StoryLogoMediaType } from '@quarry/shared/story-theme';
@@ -36,7 +35,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn, formatBytes } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
 
-export type GenerateResult = inferRouterOutputs<TrpcRouter>['storyTheme']['generate'];
+export type GenerateResult = ApiOutputs['storyTheme']['generate'];
 type FileSourceKind = 'image' | 'pdf' | 'zip';
 
 interface PickedFile {
@@ -646,19 +645,9 @@ interface WhiteLabelSourceInfo {
 	logoUrl: string | null;
 }
 
-/** The white-label identity, when this instance has one worth reading. */
+/** The white-label identity: quarry has no white-label branding (an upstream enterprise feature), so none. */
 function useWhiteLabelSource(): WhiteLabelSourceInfo | null {
-	const state = useQuery(storyApi.storyTheme.getState.queryOptions());
-	const identity = state.data?.whiteLabelIdentity;
-	if (!identity) {
-		return null;
-	}
-	return {
-		name: identity.name || 'White-label settings',
-		hasName: Boolean(identity.name),
-		brandColor: identity.brandColor,
-		logoUrl: identity.logo,
-	};
+	return null;
 }
 
 function WhiteLabelSource({

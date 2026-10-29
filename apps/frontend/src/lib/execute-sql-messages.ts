@@ -1,6 +1,6 @@
 import { areStructurallyEqual } from './ai';
 import type { executeSemanticQuery, executeSql } from '@quarry/shared/tools';
-import type { UIMessage, UIMessagePart, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIMessagePart, UIToolPart } from '@quarry/api/agent/types/chat';
 
 export type SourceQuery = { input?: executeSql.Input; output: executeSql.Output; toolCallId?: string };
 const sourceQueryIndex = new WeakMap<UIMessage[], Map<string, SourceQuery>>();

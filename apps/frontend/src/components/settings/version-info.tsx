@@ -1,14 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { trpc } from '@/main';
+import { useQuery } from '@apollo/client/react';
+
+import { AppVersionDocument } from '@/graphql/generated/graphql';
 
 export function SettingsVersionInfo() {
-	const versionInfo = useQuery({
-		...trpc.system.version.queryOptions(),
-	});
+	const versionInfo = useQuery(AppVersionDocument);
 
-	const version = versionInfo.data?.version;
-	const commit = versionInfo.data?.commit;
-	const buildDate = versionInfo.data?.buildDate;
+	const version = versionInfo.data?.version.version;
+	const commit = versionInfo.data?.version.commit;
+	const buildDate = versionInfo.data?.version.buildDate;
 
 	return (
 		<div className='flex flex-col gap-2 text-xs mt-auto opacity-50'>

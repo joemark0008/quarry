@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@apollo/client/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import type { UserRole } from '@quarry/shared/types';
 
-import type { TeamMember } from '@/components/settings/team';
-import { EditMemberDialog } from '@/components/settings/team';
+import { EditProfileDialog } from '@/components/settings/edit-profile-dialog';
+import { UpdateProfileDocument } from '@/graphql/generated/graphql';
 import { NewsletterSubscribeInlineForm } from '@/components/newsletter-subscribe';
 import { signOut, useSession } from '@/lib/auth-client';
 import { SettingsVersionInfo } from '@/components/settings/version-info';
@@ -20,7 +20,6 @@ import { DangerZone } from '@/components/settings/danger-zone';
 import { SettingsMemories } from '@/components/settings/memories';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { SettingsControlRow, SettingsToggleRow } from '@/components/ui/settings-toggle-row';
-import { trpc } from '@/main';
 import { clearApolloCache } from '@/lib/apollo-client';
 import { QUARRY_NEWSLETTER_SUBSCRIBE_URL } from '@/lib/quarry-links';
 import { refetchProjectQueries } from '@/hooks/use-current-project';
@@ -34,7 +33,7 @@ function GeneralPage() {
 	const { data: session, refetch } = useSession();
 	const user = session?.user;
 	const queryClient = useQueryClient();
-	const { isAdmin, isViewer, role } = usePermissions();
+	const { isAdmin, isViewer } = usePermissions();
 	const [soundEnabled, setSoundEnabled] = useLocalStorage(soundNotificationStorage);
 	const [toolCallDensity, setToolCallDensity, toolCallDensityState] = useToolCallDensity();
 
@@ -42,25 +41,11 @@ function GeneralPage() {
 
 	const [editOpen, setEditOpen] = useState(false);
 
-	const modifyUser = useMutation(trpc.user.modify.mutationOptions());
+	const [updateProfile] = useMutation(UpdateProfileDocument);
 
-	const editMember: TeamMember | null =
-		user && editOpen
-			? {
-					id: user.id,
-					name: user.name,
-					email: user.email,
-					role: role ?? 'user',
-					status: 'active',
-				}
-			: null;
-
-	const handleEdit = async (data: { userId: string; name?: string; newRole?: UserRole }) => {
-		await modifyUser.mutateAsync(data);
-		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.project.listAllUsersWithRoles.queryKey() }),
-			refetchProjectQueries(),
-		]);
+	const handleEdit = async (name: string) => {
+		await updateProfile({ variables: { input: { name } } });
+		await refetchProjectQueries();
 		await refetch();
 	};
 
@@ -91,12 +76,10 @@ function GeneralPage() {
 						onSignOut={handleSignOut}
 					/>
 
-					<EditMemberDialog
+					<EditProfileDialog
 						open={editOpen}
 						onOpenChange={setEditOpen}
-						member={editMember}
-						isAdmin={isAdmin}
-						roleScope='project'
+						name={user?.name}
 						onSubmit={handleEdit}
 					/>
 

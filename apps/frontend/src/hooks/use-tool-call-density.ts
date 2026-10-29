@@ -4,7 +4,7 @@ import type { ToolCallDensity, UserPreferences } from '@quarry/shared/types';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { useSession } from '@/lib/auth-client';
 import { getEffectiveToolCallDensity } from '@/lib/effective-user-group-features';
-import { trpc } from '@/main';
+import { userApi } from '@/lib/user-api';
 
 const PREFERENCES_STALE_TIME_MS = 5 * 60 * 1000;
 
@@ -12,16 +12,16 @@ export const useToolCallDensity = () => {
 	const { data: session } = useSession();
 	const { toolCallDensityPolicy, isLoading: isPolicyLoading } = useEffectiveUserGroupFeatures();
 	const queryClient = useQueryClient();
-	const preferencesQueryKey = trpc.user.getPreferences.queryKey();
+	const preferencesQueryKey = userApi.user.getPreferences.queryKey();
 
 	const preferencesQuery = useQuery({
-		...trpc.user.getPreferences.queryOptions(),
+		...userApi.user.getPreferences.queryOptions(),
 		enabled: !!session?.user,
 		staleTime: PREFERENCES_STALE_TIME_MS,
 	});
 
 	const { mutate: updatePreferences } = useMutation(
-		trpc.user.updatePreferences.mutationOptions({
+		userApi.user.updatePreferences.mutationOptions({
 			onMutate: async ({ toolCallDensity }) => {
 				if (!toolCallDensity) {
 					return;

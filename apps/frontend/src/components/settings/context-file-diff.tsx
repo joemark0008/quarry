@@ -6,7 +6,7 @@ import { FileDiffBody } from '@/components/settings/file-diff';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { computeLineDiff } from '@/lib/line-diff';
-import { getTrpcErrorCode } from '@/lib/trpc-error';
+import { getApiErrorCode } from '@/lib/api-error';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
 
 interface ContextFileDiffProps {
@@ -33,7 +33,7 @@ export function ContextFileDiff({ path, range }: ContextFileDiffProps) {
 		);
 	}
 
-	if (fileDiff.isError && getTrpcErrorCode(fileDiff.error) === 'BAD_REQUEST') {
+	if (fileDiff.isError && getApiErrorCode(fileDiff.error) === 'BAD_REQUEST') {
 		return (
 			<div className='flex h-full items-center justify-center text-sm text-muted-foreground'>
 				<p>{range ? 'This historical change is unavailable.' : 'This file no longer has changes.'}</p>

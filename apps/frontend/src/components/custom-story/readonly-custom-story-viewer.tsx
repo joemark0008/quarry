@@ -5,7 +5,6 @@ import type { DownloadFormat } from '@quarry/shared/types';
 
 import type { CustomStoryViewMode } from '@/components/custom-story/custom-story-view-mode';
 import type { CustomStoryFileSource } from '@/components/custom-story/story-data-options';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { CustomStoryBody } from '@/components/custom-story/custom-story-body';
 import { CustomStoryFiles } from '@/components/custom-story/custom-story-files';
 import { CustomStoryViewLayers } from '@/components/custom-story/custom-story-view-mode';
@@ -15,8 +14,7 @@ import { useStoryViewerSwitchStory } from '@/components/side-panel/hooks/use-sto
 import { StoryHeader } from '@/components/side-panel/story-header';
 import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useSidePanel } from '@/contexts/side-panel';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
-import { isNotFoundError } from '@/lib/trpc-error';
+import { isNotFoundError } from '@/lib/api-error';
 import { storyApi } from '@/lib/story-api';
 
 interface ReadonlyCustomStoryViewerProps {
@@ -28,7 +26,6 @@ interface ReadonlyCustomStoryViewerProps {
 export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: ReadonlyCustomStoryViewerProps) {
 	const { close, setCurrentStorySlug, isReplay, shareSource } = useSidePanel();
 	const [viewMode, setViewMode] = useState<CustomStoryViewMode>('app');
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const contentQuery = useQuery(storyApi.customStoryViewer.getVersion.queryOptions({ access, storySlug }));
 	const content = contentQuery.data;
 	const versionNumber = content?.version.number;
@@ -49,14 +46,6 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 	);
 	const download = useCustomStoryDownload(content, dataSource, renderExport);
 
-	useTrackViewDuration({
-		assetType: 'story',
-		chatId,
-		storySlug,
-		storyId: content?.storyId,
-		versionNumber: content?.version.number,
-		enabled: !isReplay,
-	});
 	useEffect(() => {
 		setCurrentStorySlug(storySlug);
 	}, [setCurrentStorySlug, storySlug]);
@@ -81,7 +70,6 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 				isViewingLatest
 				onRestore={ignore}
 				onShare={ignore}
-				onOpenAnalytics={() => setIsAnalyticsOpen(true)}
 				onEnlarge={ignore}
 				isShared={false}
 				isAgentRunning={false}
@@ -120,15 +108,6 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 						/>
 					)
 				}
-			/>
-
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				chatId={chatId}
-				storyId={content?.storyId}
-				storySlug={storySlug}
 			/>
 		</div>
 	);

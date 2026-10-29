@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowUp, ChevronDown, ChevronUp, Loader2, Maximize2, MessageCircle, X } from 'lucide-react';
 import type { FormEvent, ReactNode, RefObject } from 'react';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import type { AskQuestion, AskSelection } from '@/stores/ask-bar';
 import { ChatInputAnimatedBorder } from '@/components/chat-input-animated-border';

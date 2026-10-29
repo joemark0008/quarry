@@ -1,28 +1,20 @@
-import { Link } from '@tanstack/react-router';
 import { PanelLeft } from 'lucide-react';
 import { ChatArtifactsMenu } from '@/components/chat-artifacts-menu';
 import { EditableChatTitle } from '@/components/editable-chat-title';
 import { ExampleProjectInfoCard } from '@/components/example-project-info-card';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/contexts/sidebar';
-import { usePermissions } from '@/hooks/use-permissions';
-import { usePublicConfig } from '@/hooks/use-public-config';
 
 export function MobileHeader({
 	chatId,
 	title,
-	automationId,
 	showExampleProjectInfo = false,
 }: {
 	chatId?: string;
 	title?: string;
-	automationId?: string;
 	showExampleProjectInfo?: boolean;
 }) {
 	const { isMobile, openMobile } = useSidebar();
-	const { role } = usePermissions();
-	const config = usePublicConfig();
-	const showAutomationLink = role !== undefined && role !== 'viewer' && config.data?.betaAutomationsEnabled === true;
 
 	if (!isMobile) {
 		return null;
@@ -44,13 +36,6 @@ export function MobileHeader({
 				</>
 			)}
 			<div className='ml-auto flex shrink-0 items-center gap-1'>
-				{showAutomationLink && automationId && (
-					<Button variant='ghost' size='sm' asChild>
-						<Link to='/automations/$automationId' params={{ automationId }}>
-							Automation
-						</Link>
-					</Button>
-				)}
 				{chatId && <ChatArtifactsMenu key={chatId} chatId={chatId} panelClassName='right-3 mt-1' />}
 			</div>
 		</div>

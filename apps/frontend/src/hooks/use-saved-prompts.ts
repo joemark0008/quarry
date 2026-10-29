@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import type { SavedPrompt } from '@quarry/shared/backend/saved-prompts';
+import type { SavedPrompt } from '@/lib/api-types';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { projectApi } from '@/lib/project-api';
 

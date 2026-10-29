@@ -80,3 +80,21 @@ query ProjectSavedPrompts($projectId: ID!) {
 		updatedAt
 	}
 }
+
+query DatabaseObjects {
+	databaseObjects {
+		type
+		database
+		schema
+		table
+		fqdn
+	}
+}
+
+query DisplaySettings {
+	displaySettings
+}
+
+mutation UpdateDisplaySettings($input: JSON!) {
+	updateDisplaySettings(input: $input)
+}

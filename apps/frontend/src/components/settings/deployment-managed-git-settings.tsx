@@ -15,8 +15,6 @@ interface DeploymentContextSource {
 interface DeploymentManagedGitSettingsProps {
 	contextSource: DeploymentContextSource | null;
 	configurationError: string | null;
-	recommendedSetupVisible: boolean;
-	onToggleRecommendedSetup: () => void;
 }
 
 const AUTH_METHOD_LABELS: Record<DeploymentContextSource['authMethod'], string> = {
@@ -25,12 +23,7 @@ const AUTH_METHOD_LABELS: Record<DeploymentContextSource['authMethod'], string> 
 	public: 'Public repository',
 };
 
-export function DeploymentManagedGitSettings({
-	contextSource,
-	configurationError,
-	recommendedSetupVisible,
-	onToggleRecommendedSetup,
-}: DeploymentManagedGitSettingsProps) {
+export function DeploymentManagedGitSettings({ contextSource, configurationError }: DeploymentManagedGitSettingsProps) {
 	const repositoryUrl = contextSource?.repositoryUrl ?? null;
 	const secondaryFacts = contextSource ? getSecondaryFacts(contextSource) : [];
 
@@ -68,38 +61,13 @@ export function DeploymentManagedGitSettings({
 					</p>
 				)}
 			</div>
-
-			<div className='flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6'>
-				<p className='max-w-2xl text-sm text-muted-foreground'>
-					{getRecommendedSetupMessage(contextSource?.authMethod)}
-				</p>
-				<Button
-					size='sm'
-					variant='secondary'
-					aria-expanded={recommendedSetupVisible}
-					aria-controls={recommendedSetupVisible ? 'recommended-git-setup' : undefined}
-					onClick={onToggleRecommendedSetup}
-				>
-					{recommendedSetupVisible ? 'Hide OAuth setup' : 'Set up Git OAuth'}
-				</Button>
-			</div>
 		</SettingsCard>
 	);
 }
 
-function getRecommendedSetupMessage(authMethod: DeploymentContextSource['authMethod'] | undefined): string {
-	if (authMethod === 'public') {
-		return 'Set up Git OAuth to enable editing with personal accounts.';
-	}
-	if (authMethod === 'ssh-key') {
-		return "Review requests currently use the deployment's shared deploy key. Set up Git OAuth to use each person's own account.";
-	}
-	return "Review requests currently come from the deployment token owner's account. Set up Git OAuth to use each person's own account.";
-}
-
 function getDescription(authMethod: DeploymentContextSource['authMethod'] | undefined): string {
 	if (authMethod === 'public') {
-		return 'File Explorer reads context files from this public repository. Add Git OAuth to enable editing and review requests.';
+		return 'File Explorer reads context files from this public repository. Add an access token or SSH deploy key to enable editing.';
 	}
 	return "File Explorer commits and review requests use this repository with the deployment's shared credential.";
 }

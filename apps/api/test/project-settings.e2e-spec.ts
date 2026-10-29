@@ -12,8 +12,8 @@ const ORIGIN = 'http://localhost:3000';
 
 /**
  * The project and user settings ported at cut-over (Phase 8): `databaseObjects`, `displaySettings`,
- * `userPreferences` and `chatDownload` (upstream `project.getDatabaseObjects`, `get/updateDisplaySettings`,
- * `user.get/updatePreferences`, `chat.download`). Upstream had no tests for these procedures.
+ * `userPreferences`, `chatShareMembers` and `chatDownload` (upstream `project.getDatabaseObjects`, `get/updateDisplaySettings`,
+ * `user.get/updatePreferences`, `project.getProjectMembersByChatId`, `chat.download`). Upstream had no tests for these procedures.
  */
 describe('project and user settings (e2e)', () => {
 	let app: NestExpressApplication;
@@ -107,6 +107,14 @@ describe('project and user settings (e2e)', () => {
 	it('rejects an unknown tool-call density', async () => {
 		const res = await graphql('mutation { updateUserPreferences(input: { toolCallDensity: "huge" }) }');
 		expect(res.body.errors).toBeDefined();
+	});
+
+	it('lists no share members for an unknown chat', async () => {
+		const res = await graphql('query ($chatId: ID!) { chatShareMembers(chatId: $chatId) { id email } }', {
+			chatId: 'missing-chat',
+		});
+		expect(res.body.errors).toBeUndefined();
+		expect(res.body.data.chatShareMembers).toEqual([]);
 	});
 
 	it('does not download a chat the user does not own', async () => {

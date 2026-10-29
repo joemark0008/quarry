@@ -1,4 +1,4 @@
-import type { ModelInferenceSettings, ParamControl, ParamKey, ReasoningEffort } from '@quarry/shared/backend/llm';
+import type { ModelInferenceSettings, ParamControl, ParamKey, ReasoningEffort } from '@quarry/api/agent/types/llm';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 

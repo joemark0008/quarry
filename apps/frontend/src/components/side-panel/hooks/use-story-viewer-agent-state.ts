@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import { useAgentMessages, useOptionalAgentContext } from '@/contexts/agent.provider';
 import { findStories, findStoryDraft } from '@/lib/story.utils';
 

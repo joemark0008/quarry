@@ -4,7 +4,6 @@ import {
 	Code,
 	Ellipsis,
 	Eye,
-	Info,
 	Loader2,
 	Mail,
 	Pencil,
@@ -97,7 +96,6 @@ export interface StoryPageHeaderProps {
 	canRename?: boolean;
 	isShared?: boolean;
 	onShare?: () => void;
-	onOpenAnalytics?: () => void;
 	viewModeControls?: ViewModeControls;
 	versionControls?: VersionControls;
 }
@@ -113,12 +111,11 @@ export function StoryPageHeader({
 	canRename = false,
 	isShared = false,
 	onShare,
-	onOpenAnalytics,
 	viewModeControls,
 	versionControls,
 }: StoryPageHeaderProps) {
 	const liveMenu = live?.isLive && live.isInActionsMenu ? live : undefined;
-	const showActionsMenu = (download && canDownloadStory(download)) || !!storyId || !!onOpenAnalytics || !!liveMenu;
+	const showActionsMenu = (download && canDownloadStory(download)) || !!storyId || !!liveMenu;
 
 	return (
 		<div className='shrink-0'>
@@ -172,12 +169,6 @@ export function StoryPageHeader({
 								{download && <StoryDownloadMenu {...download} />}
 								{storyId && <StoryCertifyMenuItem storyId={storyId} />}
 								{storyId && <StoryFavoriteMenuItem storyId={storyId} />}
-								{onOpenAnalytics && (
-									<DropdownMenuItem onSelect={onOpenAnalytics}>
-										<Info strokeWidth={2.25} />
-										<span>Analytics</span>
-									</DropdownMenuItem>
-								)}
 								{liveMenu && <LiveStoryMenuItems live={liveMenu} />}
 								{canDuplicate && storyId && <StoryDuplicateMenuItem storyId={storyId} />}
 							</DropdownMenuContent>

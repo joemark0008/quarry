@@ -5,7 +5,6 @@ import type { ProviderToEdit } from '@/components/settings/llm-providers-section
 import type { TabBarItem } from '@/components/ui/tab-bar';
 
 import { DefaultModelsSection } from '@/components/settings/default-models-section';
-import { McpSettings } from '@/components/settings/display-mcp';
 import { SettingsExcludeColumns } from '@/components/settings/exclude-columns';
 import { SettingsExperimental } from '@/components/settings/experimental';
 import { LlmProvidersSection } from '@/components/settings/llm-providers-section';
@@ -22,7 +21,7 @@ import { TabBar, TabPanel } from '@/components/ui/tab-bar';
 import { usePermissions } from '@/hooks/use-permissions';
 import { usePublicConfig } from '@/hooks/use-public-config';
 
-type AgentTab = 'models' | 'tools' | 'mcp-servers';
+type AgentTab = 'models' | 'tools';
 
 type AgentSearch = {
 	tab: AgentTab;
@@ -33,7 +32,6 @@ type AgentSearch = {
 const tabs: TabBarItem<AgentTab>[] = [
 	{ id: 'models', label: 'Models' },
 	{ id: 'tools', label: 'Capabilities' },
-	{ id: 'mcp-servers', label: 'MCP servers' },
 ];
 
 const tabIdBase = 'project-agent';
@@ -79,7 +77,6 @@ function ProjectAgentPage() {
 					/>
 				)}
 				{tab === 'tools' && <ToolsSettings isAdmin={isAdmin} />}
-				{tab === 'mcp-servers' && <McpSettings isAdmin={isAdmin} />}
 			</TabPanel>
 		</>
 	);
@@ -132,5 +129,5 @@ function ToolsSettings({ isAdmin }: { isAdmin: boolean }) {
 }
 
 function isAgentTab(value: unknown): value is AgentTab {
-	return value === 'models' || value === 'tools' || value === 'mcp-servers';
+	return value === 'models' || value === 'tools';
 }

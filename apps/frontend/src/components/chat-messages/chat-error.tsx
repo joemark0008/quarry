@@ -1,18 +1,9 @@
-import { AlertCircleIcon, CheckIcon, CopyIcon, CreditCardIcon, RotateCcwIcon } from 'lucide-react';
+import { AlertCircleIcon, CheckIcon, CopyIcon, RotateCcwIcon } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Callout } from '../ui/callout';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
-import { useCloudBillingAccess } from '@/hooks/use-cloud-billing-access';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import { useOpenOrganizationBilling } from '@/hooks/use-open-organization-billing';
-import {
-	getLastUserMessageIdx,
-	parseBudgetError,
-	parseChatAllowanceExhaustedError,
-	parseManagedCreditsError,
-} from '@/lib/ai';
-import { isCloudBillingAccessError } from '@/lib/cloud-billing-access';
+import { getLastUserMessageIdx } from '@/lib/ai';
 import { cn } from '@/lib/utils';
 
 export interface Props {
@@ -53,17 +44,9 @@ export function ChatError({ className }: Props) {
 	const { error, isRunning, resendMessage, clearError } = useAgentContext();
 	const lastUserMessageId = useAgentMessagesSelector(findLastUserMessageId);
 	const { isCopied, copy } = useCopyToClipboard();
-	const openOrganizationBilling = useOpenOrganizationBilling();
 	const parsed = error ? parseError(error) : null;
-	const isBillingAccessError = isCloudBillingAccessError(parsed);
-	const billingAccess = useCloudBillingAccess({ enabled: isBillingAccessError });
 
-	if (
-		!error ||
-		parseBudgetError(error) ||
-		parseManagedCreditsError(error) ||
-		parseChatAllowanceExhaustedError(error)
-	) {
+	if (!error) {
 		return null;
 	}
 
@@ -76,23 +59,6 @@ export function ChatError({ className }: Props) {
 		clearError();
 		await resendMessage({ messageId: lastUserMessageId });
 	};
-
-	if (isBillingAccessError) {
-		return (
-			<BillingAccessError
-				access={billingAccess.data}
-				className={className}
-				isRunning={isRunning}
-				isAccessPending={billingAccess.isPending}
-				isAccessError={billingAccess.isError}
-				isAccessFetching={billingAccess.isFetching}
-				canRetry={Boolean(lastUserMessageId)}
-				onManageBilling={(organizationId) => void openOrganizationBilling(organizationId)}
-				onRetryAccess={() => void billingAccess.refetch()}
-				onRetry={() => void retry()}
-			/>
-		);
-	}
 
 	return (
 		<div className={cn('flex items-start gap-2.5 px-4 py-3 text-red-500', className)}>
@@ -135,75 +101,6 @@ export function ChatError({ className }: Props) {
 				)}
 			</div>
 		</div>
-	);
-}
-
-function BillingAccessError({
-	access,
-	className,
-	isRunning,
-	isAccessPending,
-	isAccessError,
-	isAccessFetching,
-	canRetry,
-	onManageBilling,
-	onRetryAccess,
-	onRetry,
-}: {
-	access:
-		| {
-				organizationId: string;
-				canManageBilling: boolean;
-				trialAvailable: boolean;
-		  }
-		| undefined;
-	className?: string;
-	isRunning: boolean;
-	isAccessPending: boolean;
-	isAccessError: boolean;
-	isAccessFetching: boolean;
-	canRetry: boolean;
-	onManageBilling: (organizationId: string) => void;
-	onRetryAccess: () => void;
-	onRetry: () => void;
-}) {
-	return (
-		<Callout icon={CreditCardIcon} className={cn('px-4 py-3 text-sm', className)} role='status'>
-			<p className='font-medium text-foreground'>A subscription is needed to continue chatting.</p>
-			<p className='mt-1 text-muted-foreground'>
-				{isAccessPending
-					? 'Loading billing details...'
-					: isAccessError
-						? 'Billing details could not be loaded.'
-						: access?.trialAvailable
-							? access.canManageBilling
-								? 'Start your free trial, then retry your message.'
-								: 'Ask an organization admin to start the free trial, then retry your message.'
-							: 'Manage your subscription, then retry your message.'}
-			</p>
-			<div className='mt-3 flex flex-wrap gap-2'>
-				{access?.canManageBilling && (
-					<Button size='sm' onClick={() => onManageBilling(access.organizationId)}>
-						Manage billing
-					</Button>
-				)}
-				{isAccessError && (
-					<Button size='sm' disabled={isAccessFetching} onClick={onRetryAccess}>
-						<RotateCcwIcon />
-						Retry billing details
-					</Button>
-				)}
-				{canRetry && (
-					<Button variant='secondary' size='sm' disabled={isRunning} onClick={onRetry}>
-						<RotateCcwIcon />
-						Retry
-					</Button>
-				)}
-			</div>
-			{access && !access.canManageBilling && (
-				<p className='mt-2 text-xs text-muted-foreground'>Ask an organization admin to manage billing.</p>
-			)}
-		</Callout>
 	);
 }
 

@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Switch } from '@/components/ui/switch';
 import { capitalize } from '@/lib/utils';
-import { trpcClient } from '@/main';
+import { transcribeAudio } from '@/lib/transcribe';
 import { projectApi } from '@/lib/project-api';
 
 const TEST_DURATION_MS = 5000;
@@ -274,7 +274,7 @@ function useTranscribeTest() {
 
 			try {
 				const base64 = await blobToBase64(blob);
-				const { text } = await trpcClient.transcribe.transcribe.mutate({ audio: base64 });
+				const { text } = await transcribeAudio({ audio: base64 });
 				setTestResult({ success: true, text: text?.trim() ?? '' });
 			} catch (err) {
 				const message = err instanceof Error ? err.message : 'Transcription failed';

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import type { UserMemoryRecord } from '@quarry/shared/backend/memory';
+import type { UserMemoryRecord } from '@quarry/api/agent/types/memory';
 import {
 	AlertDialog,
 	AlertDialogAction,

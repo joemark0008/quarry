@@ -4,7 +4,7 @@ import { ArrowRight, PlusIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { StoryItem } from '@/lib/stories-page';
 
 import { ChatInput } from '@/components/chat-input';
@@ -233,8 +233,8 @@ function HomePage() {
 								<HomeLinkCard
 									to='/settings/project'
 									label='Project required'
-									title='Configure your quarry project'
-									subtitle='Set NAO_DEFAULT_PROJECT_PATH to start chatting'
+									title='Create your first project'
+									subtitle='Use New project in the project switcher to start chatting'
 									logoSrc={cardLogoSrc}
 								/>
 							</div>
@@ -270,7 +270,7 @@ function HomeLinkCard({
 	subtitle,
 	logoSrc,
 }: {
-	to: '/onboarding' | '/settings/project';
+	to: '/settings/project';
 	label: string;
 	title: string;
 	subtitle: string;

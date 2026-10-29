@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useIsStoryRefreshing } from '@/hooks/use-is-story-refreshing';
-import { trpc } from '@/main';
 import { storyApi } from '@/lib/story-api';
 
 interface UseStoryViewerLiveSettingsParams {
@@ -58,9 +57,6 @@ export const useStoryViewerLiveSettings = ({ chatId, storySlug, enabled = true }
 					}),
 					queryClient.invalidateQueries({
 						queryKey: storyApi.story.getLatest.queryKey({ chatId, storySlug }),
-					}),
-					queryClient.invalidateQueries({
-						queryKey: trpc.automation.feed.queryKey(),
 					}),
 					invalidateCustomStory(),
 				];

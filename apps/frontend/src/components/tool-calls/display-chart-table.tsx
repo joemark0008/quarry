@@ -10,7 +10,7 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import { TableFormatEditDialog } from './display-table-edit-dialog';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type { displayChart } from '@quarry/shared/tools';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import { useAgentMessagesGetter, useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useSidePanel } from '@/contexts/side-panel';
@@ -196,7 +196,6 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 				data={rows}
 				columns={columns}
 				title={config.title}
-				chatId={chatId ?? undefined}
 				conditionalFormats={conditionalFormats}
 				headerActions={headerActions}
 				className='-mx-3'

@@ -1,13 +1,12 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
-import type { inferRouterOutputs } from '@trpc/server';
-import type { TrpcRouter } from '@quarry/shared/backend/trpc';
+import type { ApiOutputs } from '@/lib/api-types';
 import type { MentionedStoryArtifact } from '@/lib/chat-artifacts';
 import { useSidePanel } from '@/contexts/side-panel';
 import { storyApi } from '@/lib/story-api';
 
-export type ResolvedStory = inferRouterOutputs<TrpcRouter>['story']['resolve'];
+export type ResolvedStory = ApiOutputs['story']['resolve'];
 
 /**
  * The existing stories a conversation references that the user can still open. Stories of the

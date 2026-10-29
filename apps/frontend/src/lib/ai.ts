@@ -7,7 +7,7 @@ import {
 import { isImageMediaType } from '@quarry/shared/attachments';
 import type { ReasoningUIPart, ToolUIPart } from 'ai';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import type { UITools, UIToolPart, UIMessage, UIMessagePart, StaticToolName } from '@quarry/shared/backend/chat';
+import type { UITools, UIToolPart, UIMessage, UIMessagePart, StaticToolName } from '@quarry/api/agent/types/chat';
 import type { ImageUploadData } from '@quarry/shared/attachments';
 import type { ToolCallDensity } from '@quarry/shared/types';
 import type {

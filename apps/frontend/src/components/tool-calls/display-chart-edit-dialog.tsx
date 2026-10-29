@@ -29,7 +29,7 @@ import type { SourceQuery } from '@/lib/execute-sql-messages';
 import type { LucideIcon } from 'lucide-react';
 import type { executeSql } from '@quarry/shared/tools';
 import type { ChartType } from '@quarry/shared/chart-types';
-import type { UIMessage, UIToolPart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import { acceptNumericKind, useColumnDropTarget, useDraggedColumnKind } from '@/hooks/use-column-drag';
 import { chartsApi } from '@/lib/charts-api';
 import { cn } from '@/lib/utils';

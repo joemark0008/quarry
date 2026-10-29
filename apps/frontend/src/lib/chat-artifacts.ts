@@ -2,7 +2,7 @@ import { extractStoryReferenceIds, extractStoryReferenceTags } from '@quarry/sha
 import { isQueryResultPart } from '@quarry/shared/execute-sql-parts';
 import { getMessageDocuments } from './ai';
 import { findStories } from './story.utils';
-import type { UIMessage, UIMessagePart } from '@quarry/shared/backend/chat';
+import type { UIMessage, UIMessagePart } from '@quarry/api/agent/types/chat';
 import type { StorySummary } from './story.utils';
 
 export interface FileArtifact {

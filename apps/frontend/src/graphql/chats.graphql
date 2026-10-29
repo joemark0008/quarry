@@ -198,3 +198,16 @@ mutation UpdateSqlQuery($input: SqlEditInput!) {
 		chatId
 	}
 }
+
+query ChatDownload($input: JSON) {
+	chatDownload(input: $input)
+}
+
+query ChatShareMembers($chatId: ID!) {
+	chatShareMembers(chatId: $chatId) {
+		id
+		name
+		email
+		role
+	}
+}

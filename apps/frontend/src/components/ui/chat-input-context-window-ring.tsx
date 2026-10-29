@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import type { UIMessage } from '@quarry/shared/backend/chat';
+import type { UIMessage } from '@quarry/api/agent/types/chat';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { trpc } from '@/main';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { chatApi } from '@/lib/chat-api';
@@ -140,27 +139,4 @@ export function ContextWindowRing({ className }: { className?: string }) {
 
 function hasSomeAssistantMessage(messages: UIMessage[]): boolean {
 	return messages.some((message) => message.role === 'assistant');
-}
-
-export function ReplayContextWindowRing({ chatId, className }: { chatId: string; className?: string }) {
-	const contextUsage = useQuery(
-		trpc.project.getChatReplayContextUsage.queryOptions(
-			{ chatId },
-			{
-				enabled: !!chatId,
-			},
-		),
-	);
-
-	if (contextUsage.data?.contextWindow == null) {
-		return null;
-	}
-
-	return (
-		<ContextWindowRingView
-			tokensUsed={contextUsage.data.tokensUsed}
-			contextWindow={contextUsage.data.contextWindow}
-			className={className}
-		/>
-	);
 }

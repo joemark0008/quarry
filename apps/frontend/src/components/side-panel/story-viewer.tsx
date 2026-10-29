@@ -26,7 +26,6 @@ import type { ShareSource, StoryFormat } from '@quarry/shared/types';
 import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
 import type { Editor as TiptapEditor } from '@tiptap/react';
 import type { StoryCodeViewHandle } from './story-code-view';
-import { AssetAnalyticsDialog } from '@/components/asset-analytics-dialog';
 import { CustomStoryViewer } from '@/components/custom-story/custom-story-viewer';
 import { ReadonlyCustomStoryViewer } from '@/components/custom-story/readonly-custom-story-viewer';
 import { MentionedStoriesProvider } from '@/contexts/mentioned-stories';
@@ -35,7 +34,6 @@ import { useChatActivity } from '@/hooks/use-chat-activity';
 import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { selectStoryEditorCode, useStoryEditBuffer } from '@/hooks/use-story-edit-buffer';
 import { useStoryEditTransitions } from '@/hooks/use-story-edit-transitions';
 import { useStoryExitGuard } from '@/hooks/use-story-exit-guard';
@@ -116,10 +114,10 @@ function useStoryFormat(
 		enabled: viewerAccess !== null,
 	});
 	if (!isReadonlyMode) {
-		return ownerQuery.isPending ? null : (ownerQuery.data?.format ?? 'classic');
+		return ownerQuery.isPending ? null : ((ownerQuery.data?.format ?? 'classic') as StoryFormat);
 	}
 	if (viewerAccess) {
-		return viewerQuery.isPending ? null : (viewerQuery.data?.format ?? 'classic');
+		return viewerQuery.isPending ? null : ((viewerQuery.data?.format ?? 'classic') as StoryFormat);
 	}
 	return 'classic';
 }
@@ -224,13 +222,6 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 	const activeTab = tabs?.length ? Math.min(activeTabIndex, tabs.length - 1) : 0;
 	const storyBuffer = useStoryEditBuffer(storyCode ?? '');
 	const isCodeDirty = storyBuffer.isDirty;
-	useTrackViewDuration({
-		assetType: 'story',
-		chatId,
-		storySlug: resolvedStorySlug,
-		storyId,
-		versionNumber: storedVersionNumber > 0 ? storedVersionNumber : undefined,
-	});
 
 	const { handleSave, saveCurrentVersion, handleRestore, isSaving } = useStoryViewerVersionActions({
 		chatId,
@@ -287,7 +278,6 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 		chatId,
 		storySlug: resolvedStorySlug,
 	});
-	const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
 	const {
 		isLive,
 		isLiveTextDynamic,
@@ -308,7 +298,6 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 	const { handleEnlarge } = useStoryViewerEnlarge({ storyId });
 
 	const handleOpenShare = useCallback(() => setIsShareDialogOpen(true), [setIsShareDialogOpen]);
-	const handleOpenAnalytics = useCallback(() => setIsAnalyticsOpen(true), []);
 	const handleOpenLiveSettings = useCallback(() => setIsLiveSettingsOpen(true), []);
 
 	const renderStoryViewer = useCallback(
@@ -404,7 +393,6 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 				onSave={handleSave}
 				onCancel={transitions.requestCancel}
 				onShare={handleOpenShare}
-				onOpenAnalytics={handleOpenAnalytics}
 				onEnlarge={handleEnlarge}
 				isShared={isShared}
 				isAgentRunning={isAgentRunning}
@@ -508,15 +496,6 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 				open={isShareDialogOpen}
 				onOpenChange={setIsShareDialogOpen}
 				chatId={chatId}
-				storySlug={resolvedStorySlug}
-			/>
-
-			<AssetAnalyticsDialog
-				open={isAnalyticsOpen}
-				onOpenChange={setIsAnalyticsOpen}
-				assetType='story'
-				chatId={chatId}
-				storyId={storyId ?? undefined}
 				storySlug={resolvedStorySlug}
 			/>
 

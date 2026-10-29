@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Clock } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
-import { extractStorySummary } from '@quarry/shared/backend/story-summary';
+import { extractStorySummary } from '@quarry/api/stories/utils/story-summary';
 import { StoryCard } from '../story-card';
 import { Skeleton } from '../ui/skeleton';
 import { TextShimmer } from '../ui/text-shimmer';

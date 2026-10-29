@@ -21,7 +21,6 @@ import { useResolvedStory } from '@/hooks/use-mentioned-stories';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
-import { useTrackViewDuration } from '@/hooks/use-track-view-duration';
 import { useSession } from '@/lib/auth-client';
 import { storyApi } from '@/lib/story-api';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
@@ -38,13 +37,6 @@ function SharedCustomStory({ storyId }: { storyId: string }) {
 	const { data: session } = useSession();
 	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));
 	const isOwner = useResolvedStory(storyId).data?.isOwner === true;
-
-	useTrackViewDuration({
-		assetType: 'story',
-		storyId,
-		chatId: story.chatId ?? undefined,
-		storySlug: story.slug,
-	});
 
 	return (
 		<SharedCustomStoryPage
@@ -92,13 +84,6 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 	const isOwner = useResolvedStory(storyId).data?.isOwner === true;
 	const storyChatHeader = toStoryChatHeader(storyId, story, isOwner);
 	const canAsk = storyChatHeader.storyChat?.canChat === true;
-
-	useTrackViewDuration({
-		assetType: 'story',
-		storyId,
-		chatId: story?.chatId ?? undefined,
-		storySlug: story?.slug,
-	});
 
 	const editor = useStoryPageEditor({
 		chatId: story?.chatId ?? '',
