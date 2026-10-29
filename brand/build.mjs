@@ -3,13 +3,12 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const require = createRequire(
-	'/Users/jjgimeno/Documents/Projects/personal/nao/fork-reference/apps/backend/package.json',
-);
+const HERE = dirname(fileURLToPath(import.meta.url));
+// @resvg/resvg-js is a dependency of apps/api (chart images).
+const require = createRequire(join(HERE, '..', 'apps', 'api', 'package.json'));
 const { Resvg } = require('@resvg/resvg-js');
 
 const OUT = process.argv[2];
-const HERE = dirname(fileURLToPath(import.meta.url));
 const WORDMARK_PATH = JSON.parse(readFileSync(join(HERE, 'wordmark.json'), 'utf8')).d;
 
 const color = {

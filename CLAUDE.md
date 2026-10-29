@@ -2,13 +2,13 @@
 
 Rewrite of getnao/nao on NestJS 11 (Express) + GraphQL code-first (Apollo) + Prisma/PostgreSQL, keeping the React frontend. Read [PLAN.md](PLAN.md) for what is built and [PHASES.md](PHASES.md) for the order and checklists.
 
-`../fork-reference` is the upstream source: **read-only reference**. Never edit tracked files there (local `.env` files are fine).
+`../fork-reference` is the upstream source: **read-only reference**. Never edit tracked files there (local `.env` files are fine). quarry no longer depends on it at runtime or build time; it is only for porting (see [docs/deferred-features.md](docs/deferred-features.md) for the areas not ported).
 
 ## Stack rules
 
 - NestJS 11 on Express, GraphQL code-first (`@nestjs/graphql` + Apollo), one server, no federation. REST only for the endpoints listed in PLAN.md §5.
 - Prisma on PostgreSQL only. No SQLite, no Python, no billing, nothing marked `/* @license Enterprise */` upstream.
-- Frontend: React (TanStack Router, Shadcn, Tailwind) with Apollo Client + GraphQL Code Generator.
+- Frontend: React (TanStack Router, Shadcn, Tailwind) with Apollo Client + GraphQL Code Generator. Calls go through the `lib/*-api.ts` modules (`lib/apollo-procedures.ts`), typed by `lib/api-types.ts`; types of `apps/api` are imported with `import type` from `@quarry/api/*`.
 - Node from `.nvmrc` (`nvm use`), npm pinned by `packageManager` (`engine-strict`).
 
 ## Module conventions
@@ -51,10 +51,10 @@ Plus `npm run format:check`, and the phase's "Verify" items in PHASES.md.
 nvm use
 npm install
 cp .env.example .env            # fill in BETTER_AUTH_SECRET and an LLM key
-docker compose up -d --wait     # Postgres on localhost:5434: quarry, warehouse, nao_baseline
+docker compose up -d --wait     # Postgres on localhost:5434: quarry, warehouse
 npm run warehouse:load          # jaffle_shop → warehouse (needs `brew install duckdb`)
 npm run db:deploy -w @quarry/api   # apply Prisma migrations to the quarry database
 npm run db:seed -w @quarry/api     # test@test.test / test1234
 npm run dev:api                    # apps/api on :5006
-npm run dev:frontend               # frontend on :3000 (proxy split: docs/proxy-split.md)
+npm run dev:frontend               # frontend on :3000, proxies the API to :5006
 ```

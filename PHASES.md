@@ -20,12 +20,14 @@ Step-by-step breakdown of the phases in [PLAN.md](PLAN.md) §9. PLAN.md says _wh
 | 2     | Core: warehouse, projects, chat agent | yes      | 1                          | XL (4 milestones) |
 | 3     | Context                               | optional | 2                          | L                 |
 | 4     | Stories                               | optional | 2                          | L                 |
-| 5     | Automations & jobs                    | optional | 2                          | M                 |
-| 6     | Platform                              | optional | 1                          | M                 |
-| 7     | Integrations                          | optional | 2                          | L                 |
+| 5     | Automations & jobs                    | deferred | 2                          | M                 |
+| 6     | Platform                              | deferred | 1                          | M                 |
+| 7     | Integrations                          | deferred | 2                          | L                 |
 | 8     | Cut-over                              | yes      | 2 + chosen optional phases | M                 |
 
 **Decision point after Phase 2:** choose which of Phases 3–7 to build. They don't depend on each other, so they can run in any order or in parallel.
+
+**Decided (2026-10-29):** Phases 3 and 4 are built; 5, 6 and 7 are deferred and Phase 8 cut over without them. What was removed and where it comes from upstream: [docs/deferred-features.md](docs/deferred-features.md).
 
 Agent tools that belong to optional phases (`load_skill`, `execute_semantic_query`, `onboarding_*` → 3; `story` → 4; `mcp_call`, `mcp_connect` → 7) stay **out of the tool registry** until their module exists. The registry builds the tool set from the modules that are loaded, so a skipped phase simply means fewer tools.
 
@@ -89,12 +91,12 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 ### Milestone 1c — frontend on Apollo
 
 - [x] Copy `fork-reference/apps/frontend` → `quarry/apps/frontend`, delete enterprise-licensed files (PLAN.md §8 step 1) — _15 files and their 3 tests; importers (auth form, sidebar, root, appearance, budgets, org settings, user groups, settings nav/search) edited. Billing UI is not enterprise-licensed and stays until it is removed separately_
-- [x] Create `apps/shared` and move the type exports the frontend imports from `@nao/backend/*` into it — _`apps/shared` is upstream's `@nao/shared`; the `@nao/backend/*` types become `@nao/shared/backend/*` bridges that re-export upstream until each module is ported ([docs/proxy-split.md](docs/proxy-split.md))_
+- [x] Create `apps/shared` and move the type exports the frontend imports from `@nao/backend/*` into it — _`apps/shared` is upstream's `@nao/shared`; the `@nao/backend/*` types become `@nao/shared/backend/*` bridges that re-export upstream until each module is ported (`docs/proxy-split.md` (retired in Phase 8, see git history))_
 - [x] Add Apollo Client (`ApolloProvider`, `InMemoryCache`, credentials: include) and GraphQL Code Generator (`npm run codegen`)
 - [x] Vite proxy: `/graphql`, `/api/auth/*`, `/health` → `apps/api`; everything else → upstream backend — _`apps/api` moves to port 5006; upstream keeps 5005_
 - [x] Switch login, sign-up, logout, current user and public config to generated Apollo hooks — _login/sign-up/logout keep the better-auth client (now served by `apps/api`); their public config, auth providers and `hasUsers`, the sidebar user (`me`) and every `system.getPublicConfig` call site use Apollo_
 - [x] Rebrand nao → quarry in `apps/frontend`, `apps/shared` and `apps/api`: `@quarry/*` package scope, `quarry-*` file names, identifiers, CSS class prefixes and UI text, `QUARRY_*` env vars in `apps/api`, the `brand/` logo, favicon, app icons and manifest, the teal palette. Links that pointed at getnao.io (docs, support, repository, community, newsletter, privacy) come from `VITE_QUARRY_*` build variables and their UI is hidden when unset; the update check reads `QUARRY_RELEASES_REPOSITORY`.
-    - **Rename at cut-over** — kept because the upstream backend or its agent still produces or expects them:
+    - **Rename at cut-over** — kept because the upstream backend or its agent still produces or expects them. _Done in Phase 8: headers are `x-quarry-project-id` / `x-quarry-organization-id`, `openInQuarryPath`, `quarryUrl`, `quarry-mcp-oauth`, `quarry-embed-size`, `quarry_config.yaml`, `ask_quarry`, the story protocol is `@quarry/story-kit`, `@quarry/story-host`, `quarry.json`, the `quarry` API global, `<!--quarry:head-->`/`<!--quarry:body-->`, `__quarryStory*`, `data-quarry-*`, `quarry-frame`, `quarry-story:*`, `$quarryDate`; the managed `nao` provider and the `support@getnao.io` link handling are removed, the `@nao/shared` aliases are gone, and the `NAO_DEFAULT_PROJECT_PATH` message now points at New project. The `get_nao_answer`/`*_nao_context` tool names were never ported (MCP server, Phase 7)._
         - `x-nao-project-id`, `x-nao-organization-id` request headers (read by the upstream backend, and by `apps/api` to match)
         - `openInNaoPath` (tRPC `embed` response field) and `naoUrl` (MCP embed payload field)
         - `nao-mcp-oauth` and `nao-embed-size` `postMessage` types sent by upstream's MCP OAuth and embed pages
@@ -108,7 +110,7 @@ Agent tools that belong to optional phases (`load_skill`, `execute_semantic_quer
 
 ### Done when
 
-- Sign up, log in, see the current user and log out in the frontend, all served by `apps/api` — _checked in the browser, see [docs/proxy-split.md](docs/proxy-split.md)_
+- Sign up, log in, see the current user and log out in the frontend, all served by `apps/api` — _checked in the browser, see `docs/proxy-split.md` (retired in Phase 8, see git history)_
 - `prisma migrate reset` builds the schema from scratch and seeds it — _checked as `migrate deploy` + `db:seed` on a new empty database; `migrate reset` itself was not run: Prisma refuses it for AI agents without the user's consent_
 - Any other screen still works through the upstream backend — _home, chat list, chat view and settings checked; both backends share the `nao_baseline` database and auth secret in this mode_
 
@@ -228,6 +230,8 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ## Phase 5 — Automations & jobs _(optional)_
 
+> **Deferred** (decided 2026-10-29, at the cut-over): not built for now. The screens that needed it were removed from the frontend; [docs/deferred-features.md](docs/deferred-features.md) lists them with their upstream frontend and backend sources so they can be brought back.
+
 **Goal:** scheduled and webhook-triggered agent runs, with notifications.
 
 ### Tasks
@@ -247,6 +251,8 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 ---
 
 ## Phase 6 — Platform _(optional)_
+
+> **Deferred** (decided 2026-10-29, at the cut-over): not built for now. The screens that needed it were removed from the frontend; [docs/deferred-features.md](docs/deferred-features.md) lists them with their upstream frontend and backend sources so they can be brought back.
 
 **Goal:** multi-user organisations and administration.
 
@@ -270,6 +276,8 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 ---
 
 ## Phase 7 — Integrations _(optional)_
+
+> **Deferred** (decided 2026-10-29, at the cut-over): not built for now. The screens that needed it were removed from the frontend; [docs/deferred-features.md](docs/deferred-features.md) lists them with their upstream frontend and backend sources so they can be brought back.
 
 **Goal:** use the agent outside the web app.
 
@@ -296,16 +304,20 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ### Tasks
 
-- [ ] Remove the Vite proxy split; all traffic to `apps/api`
-- [ ] Remove `@trpc/*` and any leftover upstream imports
-- [ ] Dockerfile (api + built frontend) and `docker-compose.yml` for production
-- [ ] Helm chart (optional)
-- [ ] README: setup, env vars, deployment
+- [x] Inventory the frontend calls still going to upstream and sort them — _99 files, 191 procedures (classification in the Phase 8 report and `docs/deferred-features.md`): (a) already on apps/api → switched to Apollo (memories, version/update check, transcription test, password change, own profile, project lists); (b) needed by the core flow → ported: `databaseObjects`, `displaySettings`/`updateDisplaySettings`, `userPreferences`/`updateUserPreferences`, `chatDownload`, `chatShareMembers` (`test/project-settings.e2e-spec.ts`), user-group access as a frontend stand-in until Phase 6; (c) Phases 5–7 and dropped billing/budgets/license/trials/cloud onboarding → removed_
+- [x] Remove the deferred screens: routes, nav and search entries, components, hooks, tests — _removed areas and their upstream sources: [docs/deferred-features.md](docs/deferred-features.md)_
+- [x] Remove the Vite proxy split; all traffic to `apps/api` — _`/graphql`, `/api`, `/health`, `/i/`, `/c/` proxied to apps/api; `scripts/dev-api-split.sh`, `dev:api:split` and `docs/proxy-split.md` removed_
+- [x] Remove `@trpc/*` and any leftover upstream imports — _no tRPC client; `@trpc/*`, `superjson`, `posthog-js` removed; the `@quarry/shared/backend/*` bridges to `../fork-reference` are gone. Procedure types are `apps/frontend/src/lib/api-types.ts` (story routers inferred from apps/api's procedure objects, the rest generated once from upstream's router onto quarry's type modules); apps/api types come through `@quarry/api/*`; `lib/trpc-error.ts` → `lib/api-error.ts`; tests mock `@/test/procedures`_
+- [x] Rename the remaining `nao` exceptions recorded under 1c — _see 1c. Other `nao` strings in apps/api's ported code were never on that list and stay for now: `.nao/` worktree and live-repository folders, the `nao/` context branch prefix, "nao sync" messages, the git co-author `nao <naoagent@getnao.io>`, the system prompt's "made by nao Labs", `nao-config.ts`/`nao-context-*` file names_
+- [x] quarry runs on its own `quarry` database through Prisma migrations — _`nao_baseline` dropped from `docker-compose.yml`/init SQL; `db:deploy` + `db:seed` checked on a new empty database_
+- [x] Dockerfile (api + built frontend) and `docker-compose.yml` for production — _`Dockerfile` (apps/api from its TS sources via `@swc-node/register`, frontend built at image build, Chromium for story downloads, migrations on start), `docker-compose.prod.yml` (app + Postgres, `quarry_data` volume); apps/api serves the built frontend when `QUARRY_FRONTEND_DIST` is set (`src/frontend-static.ts`)_
+- [ ] Helm chart (optional) — _not done_
+- [x] README: setup, env vars, deployment
 
 ### Done when
 
-- quarry runs with no dependency on `fork-reference`
+- quarry runs with no dependency on `fork-reference` — _the frontend, apps/api and the Docker build read nothing from `../fork-reference` (only `semantic-layer-sync.spec.ts` compares with its example project when present, skipped otherwise)_
 
 ### Verify
 
-- `docker compose up` from a clean checkout; full test suite and lint green; smoke test: sign up → project → sync → chat → (story, if Phase 4 was built)
+- `docker compose up` from a clean checkout; full test suite and lint green; smoke test: sign up → project → sync → chat → (story, if Phase 4 was built) — _checked 2026-10-29: `docker build` succeeded and the image, started on an empty database, applied the migrations and served `/health`, the SPA, its assets and `/graphql`. In the browser against apps/api alone (dev servers on :5016/:3010, nothing proxied to :5005): seed login, new project, jaffle_shop warehouse connected and synced (9 tables, `@` mentions list them), chat "total order amount by month for 2018 as a bar chart" answered with a chart, `chatDownload` returned the HTML export, a story created from the chat opened in the side panel, `RULES.md` edited in the File Explorer and committed (generic git source on a local bare repo). TEST_COUNTS_

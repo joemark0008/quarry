@@ -1,8 +1,7 @@
-# Local Postgres for quarry. One server, three databases:
-#   quarry       app database (Prisma)
-#   warehouse    test warehouse the agent queries (jaffle_shop, loaded by `npm run warehouse:load`)
-#   nao_baseline upstream nao (../fork-reference) running as the comparison baseline
-# Host port 5434, since 5432 is often taken by another local Postgres.
+# Local Postgres for development. One server, two databases:
+#   quarry     app database (Prisma)
+#   warehouse  test warehouse the agent queries (jaffle_shop, loaded by `npm run warehouse:load`)
+# Host port 5434, since 5432 is often taken by another local Postgres. Production: docker-compose.prod.yml.
 services:
     postgres:
         image: postgres:16-alpine

@@ -104,6 +104,8 @@ const baseEnvSchema = z.object({
 
 	QUARRY_DEFAULT_PROJECT_PATH: z.string().optional(),
 	QUARRY_PROJECTS_DIR: z.string().default('./projects'),
+	/** Built frontend (`apps/frontend/dist`) served by the API, as in the Docker image. Unset in development (Vite). */
+	QUARRY_FRONTEND_DIST: optionalNonEmptyString,
 	QUARRY_CONTEXT_SOURCE: z.enum(['local', 'git', 'api']).optional(),
 	QUARRY_CONTEXT_GIT_URL: z.string().optional(),
 	QUARRY_CONTEXT_GIT_BRANCH: z.string().optional(),

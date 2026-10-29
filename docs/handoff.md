@@ -19,7 +19,7 @@ Context carried over from Claude Code sessions run under another account (transc
 | ORM             | Prisma on Postgres; schema from upstream migrations → `db pull` → cleanup (73 of 87 tables kept)                                                                                  |
 | Frontend        | Keep upstream React app; **Apollo Client** + GraphQL Code Generator (matches `sda-graphql-crm`)                                                                                   |
 | Jobs            | pg-boss (no Redis)                                                                                                                                                                |
-| Billing         | Dropped (Stripe, credits, trials). Billing UI screens still in the frontend — to remove                                                                                           |
+| Billing         | Dropped (Stripe, credits, trials, budgets, license); its screens were removed at the cut-over (Phase 8)                                                                           |
 | Python          | None. FastAPI sidecar + `nao_core` ported to Node as `sql-engine`; Python CLI dropped; `nao sync` → in-app **Sync** button (`context.sync` job)                                   |
 | Warehouses      | Postgres only for now; more drivers later behind `WarehouseDriver`                                                                                                                |
 | SSO             | Own OIDC on better-auth generic OAuth (Phase 6), no upstream enterprise code                                                                                                      |
@@ -28,17 +28,18 @@ Context carried over from Claude Code sessions run under another account (transc
 
 ## Status
 
-| Phase                                                | State                                                                                            |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| 0 Setup                                              | Done, merged to `main` (GitHub remote still missing)                                             |
-| 1 API skeleton + auth + frontend on Apollo + rebrand | Done, merged to `main` (`d7f70d4`)                                                               |
-| 2a SQL engine                                        | Committed on `phase-2-core` (`7791b57`) — `pgsql-parser` instead of `node-sql-parser`, 122 tests |
-| 2b Projects, warehouse, context sync                 | Committed on `phase-2-core` (`5c35aa6`)                                                          |
-| **2c Chats + agent**                                 | **In progress** — agent + tests committed on `phase-2-core`, see below                           |
-| 2d Attachments, charts, transcribe, sandbox          | Committed on `phase-2-core` — Phase 2 complete, see PHASES.md 2d                                 |
-| 3 Context                                            | Done on `phase-3-context` (not merged) — see PHASES.md Phase 3 and "Phase 3 notes" below         |
-| 4 Stories                                            | Done on `phase-4-stories` (not merged) — see PHASES.md Phase 4 and "Phase 4 notes" below         |
-| 5–8                                                  | Not started — chosen: 5 Automations, 6 Platform (one session each); 7 not chosen yet             |
+| Phase                                                | State                                                                                                  |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 0 Setup                                              | Done, merged to `main` (GitHub remote still missing)                                                   |
+| 1 API skeleton + auth + frontend on Apollo + rebrand | Done, merged to `main` (`d7f70d4`)                                                                     |
+| 2a SQL engine                                        | Committed on `phase-2-core` (`7791b57`) — `pgsql-parser` instead of `node-sql-parser`, 122 tests       |
+| 2b Projects, warehouse, context sync                 | Committed on `phase-2-core` (`5c35aa6`)                                                                |
+| **2c Chats + agent**                                 | **In progress** — agent + tests committed on `phase-2-core`, see below                                 |
+| 2d Attachments, charts, transcribe, sandbox          | Committed on `phase-2-core` — Phase 2 complete, see PHASES.md 2d                                       |
+| 3 Context                                            | Done on `phase-3-context` (not merged) — see PHASES.md Phase 3 and "Phase 3 notes" below               |
+| 4 Stories                                            | Done on `phase-4-stories` (not merged) — see PHASES.md Phase 4 and "Phase 4 notes" below               |
+| 5–7                                                  | Deferred (2026-10-29): screens removed, sources listed in [deferred-features.md](deferred-features.md) |
+| 8 Cut-over                                           | Done on `phase-8-cutover` (built on `phase-4-stories`, not merged) — see "Phase 8 notes" below         |
 
 ### Where 2c stopped
 
@@ -63,15 +64,13 @@ The Phase 2 session hit its usage limit at 10:56 (Manila) on 2026-10-29 mid-2c. 
     - Verify items done: `test/agent-chat.e2e-spec.ts` (streamed chat saved, mock model) and the live upstream/quarry comparison in `docs/upstream-baseline.md` (upstream needs its FastAPI service on :8005: `npm run dev:fastapi` in `fork-reference`).
     7. ~~lint, test, format, tick PHASES.md, commit 2c~~ — done.
 
-## Running locally (split mode)
+## Running locally
 
-Until Phase 8 the frontend talks to two backends: `/graphql`, `/api/auth/*`, `/health` → `apps/api` (:5006); everything else → upstream backend (:5005). Both share the `nao_baseline` database and `BETTER_AUTH_SECRET`. See [proxy-split.md](proxy-split.md).
+Since Phase 8 there is one backend: the frontend (Vite, :3000) proxies `/graphql`, `/api`, `/health`, `/i/`, `/c/` to `apps/api` (:5006), which uses the `quarry` database. The upstream backend (:5005) and `nao_baseline` are no longer needed (`docs/upstream-baseline.md` still describes running upstream for comparisons).
 
-- Postgres in Docker on **5434** (5432 was taken): databases `quarry`, `warehouse` (jaffle_shop), `nao_baseline`.
-- Start the API with `npm run dev:api:split` (plain `dev:api` uses the `quarry` DB and login breaks). Frontend `npm run dev:frontend` on :3000. Upstream backend: `npm run dev:backend` in `fork-reference`.
-- Login: the baseline test account on line 12 of `fork-reference/.env`.
-- Don't run `prisma migrate` against `nao_baseline` — its schema belongs to upstream.
-- Strings still named `nao` until Phase 8 (headers, tool names, `nao_config`, `nao` provider id, custom-story protocol) are listed in PHASES.md under 1c.
+- Postgres in Docker on **5434**: databases `quarry` and `warehouse` (jaffle_shop). Existing local volumes still have `nao_baseline`; new ones don't.
+- `npm run dev:api`, `npm run dev:frontend`; seed login `test@test.test` / `test1234` (`npm run db:seed -w @quarry/api`).
+- Production: `Dockerfile` + `docker-compose.prod.yml` (README "Deployment").
 
 ## Phase 3 notes (2026-10-29)
 
@@ -90,3 +89,14 @@ Until Phase 8 the frontend talks to two backends: `/graphql`, `/api/auth/*`, `/h
 - **For Phase 6 (Platform):** user groups are a stand-in in `stories/services/share-audience.ts` (no group audiences, empty `listShareableGroups`, fork = membership, empty `listDeliveryRecipientGroups`); `analyticsEvent.storyViewCounts` / `logChatDownload` still go to upstream; `storyTheme.getState` returns no white-label identity (no branding service); `storyThemeGenerate` records no `llm_inference`.
 - **For Phase 7:** embed tokens are minted only by MCP (`stories/sharing/embed-token.ts` `generateEmbedToken`), and embeds require MCP enabled for the project (`project.mcp_endpoint_settings` or `MCP_ENDPOINT_ENABLED`); `chatFork.fork` with a story source is not ported.
 - **Open items:** `apps/api` installs its own react 19.2.5 next to the root react-dom 19.3.1; `stories/utils/server-react.ts` works around the duplicate context. `npm dedupe` fixes it but also moves a frontend Radix dialog version, so it was left. resvg loads lazily in `charts/utils/generate-chart.ts` (it picks its native binary by platform at import). Test resets clear `story-*` pg-boss schedules (`test/test-app.ts`).
+
+## Phase 8 notes (2026-10-29)
+
+- **Branch:** `phase-8-cutover` in worktree `nao/quarry-phase-8`, built on `phase-4-stories` (which includes Phase 3). Merge order into `main`: `phase-2-core` → `phase-3-context` → `phase-4-stories` → `phase-8-cutover`.
+- **Frontend API layer:** every call goes through a `lib/*-api.ts` module (`lib/apollo-procedures.ts`); `lib/api-types.ts` gives the procedures' input/output types in upstream's router shape. The story routers are inferred from apps/api's procedure objects (`stories/procedure.ts` now carries the client-side input type); the other procedures' types were generated once from upstream's router and point at quarry type modules, so keep them in step by hand when a GraphQL `JSON` field changes. Frontend code imports apps/api types with `import type … from '@quarry/api/…'` (tsconfig path + Vite alias); the only runtime modules it takes from apps/api are `agent/providers/provider-meta.ts`, `agent/types/llm.ts` and `stories/utils/story-summary.ts`.
+- **Tests:** frontend specs that need fake procedures mock `@/test/procedures` and point the api module under test at it (`vi.mock('@/lib/story-api', …)`).
+- **Stand-ins until Phase 6:** user-group access (`lib/effective-user-group-features.ts` `PROJECT_MEMBER_ACCESS`, `canSeeAdvancedSettings`), sharing audience (everyone may share with the project), `contexts/mcp.tsx` (no MCP servers, Phase 7). Project members can't be managed from the UI (the account page only edits the user's name).
+- **Git context source:** project folders created under `QUARRY_PROJECTS_DIR` are not Git checkouts. With `QUARRY_CONTEXT_SOURCE=git` the File Explorer only edits when the project folder is a clone of the context repository (checked by cloning the bare repo into the project folder). The default `./projects` lives inside the quarry checkout, so a non-clone project folder resolves quarry's own repository and reports "No tracked quarry_config.yaml". Worth a follow-up: clone the context repository into new projects, or keep `QUARRY_PROJECTS_DIR` outside any repository.
+- **Image size:** `quarry:phase8` is 3.9 GB (dev dependencies, since apps/api runs from TS sources, plus Chromium). Compiling apps/api with SWC and pruning dev dependencies would shrink it.
+- **Left as `nao`:** see PHASES.md Phase 8 (`.nao/` folders, `nao/` branch prefix, co-author, system prompt credit, file names).
+- **Seen in the browser check, not caused by the cut-over:** after creating a story the agent sometimes adds a `<story-reference>` card with the story's slug instead of its id, which shows "Story no longer available" (the system prompt meant it for existing library stories).

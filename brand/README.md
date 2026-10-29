@@ -37,4 +37,4 @@ See `preview.png` for every asset.
 
 ## Regenerate
 
-`node brand/build.mjs brand` rebuilds everything from `wordmark.json` (the outlined Poppins glyphs). It needs `@resvg/resvg-js`, currently resolved from `../fork-reference/apps/backend`.
+`node brand/build.mjs brand` rebuilds everything from `wordmark.json` (the outlined Poppins glyphs). It needs `@resvg/resvg-js`, resolved from `apps/api`'s dependencies (`npm install` first).
