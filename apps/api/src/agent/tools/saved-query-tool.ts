@@ -3,7 +3,7 @@ import { savedQueryTool } from '@quarry/shared/tools';
 import type { Tool } from 'ai';
 import z from 'zod/v3';
 
-import type { SavedQueryToolDefinition } from '../../query-tools/query-tool.service.js';
+import type { SavedQueryToolDefinition } from '../../query-tools/query-tool.types.js';
 import { prepareQueryToolSql } from '../../query-tools/query-tool-sql.js';
 import { ExecuteSqlOutput, renderToModelOutput } from '../tool-outputs/index.js';
 import { createTool } from '../utils/tools.js';

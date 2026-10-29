@@ -1,7 +1,7 @@
 import { asSchema, type ToolCallOptions } from 'ai';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { SavedQueryToolDefinition } from '../../query-tools/query-tool.service.js';
+import type { SavedQueryToolDefinition } from '../../query-tools/query-tool.types.js';
 import type { ToolContext } from '../types/tools.js';
 import executeSql from './execute-sql.js';
 import { createSavedQueryTools } from './saved-query-tool.js';

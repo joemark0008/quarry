@@ -19,19 +19,16 @@ import {
 	type WarehouseSqlOptions,
 	WarehouseSqlService,
 } from '../warehouse/warehouse-sql.service.js';
-import type { ProjectQueryTool, QueryToolColumn, QueryToolPreview } from './models/query-tool.model.js';
 import { QueryToolRepository } from './query-tool.repository.js';
-import { prepareQueryToolSql } from './query-tool-sql.js';
+import type {
+	QueryToolColumnInfo as QueryToolColumn,
+	QueryToolPreviewResult as QueryToolPreview,
+	QueryToolView as ProjectQueryTool,
+	SavedQueryToolDefinition,
+} from './query-tool.types.js';
 
-/** What the agent needs to expose a saved tool (`agent/tools/saved-query-tool.ts`). */
-export interface SavedQueryToolDefinition {
-	id: string;
-	name: string;
-	description: string;
-	sqlTemplate: string;
-	parameters: QueryToolParameter[];
-	databaseId: string | null;
-}
+export type { SavedQueryToolDefinition };
+import { prepareQueryToolSql } from './query-tool-sql.js';
 
 export interface QueryToolDraft {
 	name: string;
