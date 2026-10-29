@@ -19,6 +19,7 @@ import { ConfigService } from './config/config.service.js';
 import { ContextSyncModule } from './context-sync/context-sync.module.js';
 import { HealthModule } from './health/health.module.js';
 import { JobsModule } from './jobs/jobs.module.js';
+import { ModelSettingsModule } from './model-settings/model-settings.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
 import { SystemModule } from './system/system.module.js';
@@ -61,6 +62,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		ContextSyncModule,
 		AgentModule,
 		ChatsModule,
+		ModelSettingsModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

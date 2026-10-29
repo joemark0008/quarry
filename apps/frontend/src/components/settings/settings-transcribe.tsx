@@ -8,6 +8,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { Switch } from '@/components/ui/switch';
 import { capitalize } from '@/lib/utils';
 import { trpc, trpcClient } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 const TEST_DURATION_MS = 5000;
 
@@ -17,14 +18,14 @@ interface SettingsTranscribeProps {
 
 export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 	const knownModels = useQuery(trpc.project.getKnownTranscribeModels.queryOptions());
 
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
 				queryClient.invalidateQueries({
-					queryKey: trpc.project.getAgentSettings.queryOptions().queryKey,
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
 				});
 			},
 		}),

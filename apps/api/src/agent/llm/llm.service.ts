@@ -212,6 +212,15 @@ export function getEnvProviders(): LlmProvider[] {
 	return (Object.keys(LLM_PROVIDERS) as LlmProvider[]).filter(hasEnvApiKey);
 }
 
+/** `getEnvBaseUrls`: base URLs set via environment, keyed by provider. */
+export function getEnvBaseUrls(): Record<string, string> {
+	return Object.fromEntries(
+		getEnvProviders()
+			.map((provider) => [provider, getEnvBaseUrl(provider)] as const)
+			.filter((entry): entry is [LlmProvider, string] => Boolean(entry[1])),
+	);
+}
+
 function getModelName(provider: LlmProvider, modelId: string): string {
 	return getProviderMeta(provider).models.find((model) => model.id === modelId)?.name ?? modelId;
 }

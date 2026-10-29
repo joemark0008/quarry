@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { projectApi } from '@/lib/project-api';
 
 interface SettingsDisplayMapProps {
 	isAdmin: boolean;
@@ -37,12 +38,14 @@ interface SettingsDisplayMapProps {
 
 export function SettingsDisplayMap({ isAdmin }: SettingsDisplayMapProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: trpc.project.getAgentSettings.queryOptions().queryKey });
+				queryClient.invalidateQueries({
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
+				});
 			},
 		}),
 	);

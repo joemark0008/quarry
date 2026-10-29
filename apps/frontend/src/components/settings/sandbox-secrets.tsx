@@ -27,8 +27,8 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTimeAgo } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
 import { useSandboxSecretMutations, useSandboxSecretsQuery } from '@/queries/use-sandbox-secrets';
+import { projectApi } from '@/lib/project-api';
 
 type SandboxSecret = NonNullable<ReturnType<typeof useSandboxSecretsQuery>['data']>[number];
 
@@ -36,7 +36,7 @@ type DialogState = { mode: 'create' } | { mode: 'edit'; secret: SandboxSecret } 
 
 export function SettingsSandboxSecrets() {
 	const secrets = useSandboxSecretsQuery();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
 	const { setMutation, updateDescriptionMutation, deleteMutation } = useSandboxSecretMutations();
 	const [dialog, setDialog] = useState<DialogState>(null);
 	const [secretToDelete, setSecretToDelete] = useState<SandboxSecret | null>(null);

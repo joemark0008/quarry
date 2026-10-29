@@ -60,6 +60,14 @@ export class ProjectsResolver {
 		return this.projectsService.listSavedPrompts(project.id);
 	}
 
+	@Query(() => [SavedPrompt], { description: "A project's saved prompts; empty when the user is not in it." })
+	projectSavedPrompts(
+		@CurrentUser() user: AuthUser,
+		@Args('projectId', { type: () => ID }) projectId: string,
+	): Promise<SavedPrompt[]> {
+		return this.projectsService.listProjectSavedPromptsForUser(projectId, user.id);
+	}
+
 	@ProjectAdmin()
 	@Mutation(() => SavedPrompt)
 	createSavedPrompt(

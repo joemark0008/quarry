@@ -13,6 +13,7 @@ import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/shared/backe
 import type { LlmProvider, LlmProviderKind } from '@quarry/shared/types';
 import type { InheritedKeySource } from '@/components/settings/llm-provider-form';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 export interface EditingState {
 	provider: LlmProvider;
@@ -31,12 +32,12 @@ export function useLlmProviders() {
 	const queryClient = useQueryClient();
 
 	// Queries
-	const llmConfigs = useQuery(trpc.project.getLlmConfigs.queryOptions());
-	const knownModels = useQuery(trpc.project.getKnownModels.queryOptions());
+	const llmConfigs = useQuery(projectApi.project.getLlmConfigs.queryOptions());
+	const knownModels = useQuery(projectApi.project.getKnownModels.queryOptions());
 
 	// Mutations
-	const upsertLlmConfig = useMutation(trpc.project.upsertLlmConfig.mutationOptions());
-	const deleteLlmConfig = useMutation(trpc.project.deleteLlmConfig.mutationOptions());
+	const upsertLlmConfig = useMutation(projectApi.project.upsertLlmConfig.mutationOptions());
+	const deleteLlmConfig = useMutation(projectApi.project.deleteLlmConfig.mutationOptions());
 
 	// Local state
 	const [editingState, setEditingState] = useState<EditingState | null>(null);
@@ -83,13 +84,13 @@ export function useLlmProviders() {
 	// Handlers
 	const invalidateQueries = async () => {
 		await Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.project.getLlmConfigs.queryOptions().queryKey }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getLlmConfigs.queryOptions().queryKey }),
 			queryClient.invalidateQueries({
 				queryKey: trpc.project.listAvailableTranscribeModels.queryOptions().queryKey,
 			}),
 			queryClient.invalidateQueries({ queryKey: trpc.project.getKnownTranscribeModels.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultModels.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultChatModel.queryOptions().queryKey }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: trpc.budget.getUnpricedModels.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: trpc.budget.getProvidersCostSupport.queryOptions().queryKey }),
 		]);

@@ -70,4 +70,20 @@ export class ProjectLlmConfigRepository {
 		});
 		return project?.agentSettings ?? null;
 	}
+
+	async updateDefaultModelSettings(projectId: string, settings: Prisma.InputJsonValue): Promise<void> {
+		await this.prisma.project.update({ where: { id: projectId }, data: { defaultModels: settings } });
+	}
+
+	async updateAgentSettings(projectId: string, settings: Prisma.InputJsonValue): Promise<void> {
+		await this.prisma.project.update({ where: { id: projectId }, data: { agentSettings: settings } });
+	}
+
+	/** A configured anthropic, else openai, provider (first half of upstream `getProjectModelProvider`). */
+	async getConfiguredTaskProvider(projectId: string): Promise<LlmProvider | undefined> {
+		const configs = await this.getProjectLlmConfigs(projectId);
+		return (['anthropic', 'openai'] as LlmProvider[]).find((provider) =>
+			configs.some((config) => config.provider === provider),
+		);
+	}
 }

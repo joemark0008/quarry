@@ -96,6 +96,14 @@ export class ProjectsService {
 		return this.savedPrompts.listSavedPrompts(projectId);
 	}
 
+	/** Upstream `getProjectSavedPrompts`: another project's prompts, empty when the user isn't in it. */
+	async listProjectSavedPromptsForUser(projectId: string, userId: string): Promise<ProjectSavedPrompt[]> {
+		if (!(await this.projects.getUserRoleInProject(projectId, userId))) {
+			return [];
+		}
+		return this.savedPrompts.listSavedPrompts(projectId);
+	}
+
 	createSavedPrompt(projectId: string, title: string, prompt: string): Promise<ProjectSavedPrompt> {
 		return this.savedPrompts.createSavedPrompt({ projectId, title, prompt });
 	}

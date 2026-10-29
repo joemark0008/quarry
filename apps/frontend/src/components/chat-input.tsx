@@ -82,6 +82,7 @@ import { ChatInputSuggestions, SuggestionCard } from '@/components/chat-input-su
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -213,7 +214,7 @@ function ChatInputBase({
 	const chatInputRestore = useChatInputRestore(!!allowQueueing);
 
 	const agentSettings = useQuery({
-		...trpc.project.getAgentSettings.queryOptions(),
+		...projectApi.project.getAgentSettings.queryOptions(),
 		enabled: hasProject,
 	});
 	const transcribeModels = useQuery({

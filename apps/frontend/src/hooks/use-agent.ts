@@ -43,6 +43,7 @@ import { chatInputRestoreStore } from '@/stores/chat-input-restore';
 import { messageQueueStore } from '@/stores/chat-message-queue';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
+import { projectApi } from '@/lib/project-api';
 
 export type AgentMode = 'default' | 'onboarding' | 'example';
 
@@ -121,7 +122,7 @@ export const useAgent = ({
 	const currentProject = useCurrentProject();
 	const hasProject = currentProject.data != null;
 	const defaultChatModel = useQuery({
-		...trpc.project.getDefaultChatModel.queryOptions(),
+		...projectApi.project.getDefaultChatModel.queryOptions(),
 		enabled: hasProject,
 	});
 	const usesDefaultModel = pinnedModel === null;

@@ -1,16 +1,5 @@
-import { CombinedGraphQLErrors } from '@apollo/client';
-import { skipToken } from '@tanstack/react-query';
-import type {
-	DataTag,
-	QueryFunction,
-	QueryKey,
-	SkipToken,
-	UseMutationOptions,
-	UseQueryOptions,
-} from '@tanstack/react-query';
 import type { TrpcRouter } from '@quarry/shared/backend/trpc';
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
-import type { DocumentNode, TypedDocumentNode } from '@apollo/client';
 
 import type { ChatFieldsFragment, SharedChatFieldsFragment } from '@/graphql/generated/graphql';
 import {
@@ -41,19 +30,14 @@ import {
 	UpdateSharedChatAccessDocument,
 	UpdateSqlQueryDocument,
 } from '@/graphql/generated/graphql';
-import { apolloClient } from '@/lib/apollo-client';
+import { mutation, query, runMutation, runQuery } from '@/lib/apollo-procedures';
 
 type Inputs = inferRouterInputs<TrpcRouter>;
 type Outputs = inferRouterOutputs<TrpcRouter>;
 
 /**
- * The chat procedures moved to apps/api, shaped like the tRPC options proxy (`queryOptions`, `queryKey`,
- * `mutationOptions`, `pathFilter`) so call sites only swap `trpc.chat.*` for `chatApi.chat.*`.
- *
- * Requests go through Apollo Client; results stay in TanStack Query, because the chat view rewrites the
- * cached chat on every streamed chunk (`useSetChat`). Query keys keep tRPC's `[path, { input, type }]` shape
- * so prefix invalidations such as `[['chat', 'listGrouped']]` keep working. Types are upstream's router types
- * until the shared bridge goes away (Phase 8).
+ * The chat procedures moved to apps/api (`lib/apollo-procedures.ts`): call sites swap `trpc.chat.*` for
+ * `chatApi.chat.*`. Types are upstream's router types until the shared bridge goes away (Phase 8).
  */
 export const chatApi = {
 	chat: {
@@ -214,78 +198,6 @@ export const chatApi = {
 		),
 	},
 };
-
-type Path = readonly [string, string];
-
-function query<TInput, TOutput>(path: Path, fetch: (input: TInput) => Promise<TOutput>) {
-	type Key = DataTag<QueryKey, TOutput, Error>;
-	const keyOf = (input: TInput | undefined) =>
-		(input === undefined ? [path, { type: 'query' }] : [path, { input, type: 'query' }]) as unknown as Key;
-	return {
-		queryKey: (input: TInput) => keyOf(input),
-		queryOptions: <TData = TOutput>(
-			input: TInput | SkipToken,
-			opts?: Omit<UseQueryOptions<TOutput, Error, TData, Key>, 'queryKey' | 'queryFn'>,
-		): UseQueryOptions<TOutput, Error, TData, Key> & { queryKey: Key } => {
-			const queryFn: QueryFunction<TOutput, Key> | SkipToken =
-				input === skipToken ? skipToken : () => fetch(input as TInput);
-			return { ...opts, queryKey: keyOf(input === skipToken ? undefined : input), queryFn };
-		},
-		pathFilter: () => ({ queryKey: [path] as QueryKey }),
-	};
-}
-
-function mutation<TInput, TOutput>(path: Path, run: (input: TInput) => Promise<TOutput>) {
-	return {
-		mutationOptions: <TContext = unknown>(
-			opts?: Omit<UseMutationOptions<TOutput, Error, TInput, TContext>, 'mutationFn' | 'mutationKey'>,
-		): UseMutationOptions<TOutput, Error, TInput, TContext> => ({
-			...opts,
-			mutationKey: [path],
-			mutationFn: run,
-		}),
-	};
-}
-
-/** No Apollo caching: TanStack Query holds the results (and the streamed updates of a chat). */
-async function runQuery<TData, TVariables extends Record<string, unknown>>(
-	document: TypedDocumentNode<TData, TVariables> | DocumentNode,
-	variables: TVariables,
-): Promise<TData> {
-	try {
-		const { data } = await apolloClient.query<TData, TVariables>({
-			query: document,
-			variables,
-			fetchPolicy: 'no-cache',
-		} as never);
-		return data as TData;
-	} catch (error) {
-		throw toCodedError(error);
-	}
-}
-
-async function runMutation<TData, TVariables extends Record<string, unknown>>(
-	document: TypedDocumentNode<TData, TVariables>,
-	variables: TVariables,
-): Promise<TData> {
-	try {
-		const { data } = await apolloClient.mutate({ mutation: document, variables } as never);
-		return data as TData;
-	} catch (error) {
-		throw toCodedError(error);
-	}
-}
-
-/** Errors carry the GraphQL code as `data.code`, like tRPC's, so `lib/trpc-error.ts` keeps classifying them. */
-function toCodedError(error: unknown): unknown {
-	if (CombinedGraphQLErrors.is(error)) {
-		const [first] = error.errors;
-		const coded = new Error(first?.message ?? error.message) as Error & { data: { code?: string } };
-		coded.data = { code: first?.extensions?.code as string | undefined };
-		return coded;
-	}
-	return error;
-}
 
 function toUIChat(chat: ChatFieldsFragment): Outputs['chat']['get'] {
 	return {

@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { projectApi } from '@/lib/project-api';
 
 interface ProjectItem {
 	id: string;
@@ -54,7 +55,9 @@ export function McpEndpointSettings({ isAdmin }: Props) {
 			},
 			onSettled: () => {
 				queryClient.invalidateQueries({ queryKey: trpc.mcpEndpoint.getSettings.queryOptions().queryKey });
-				queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultModels.queryOptions().queryKey });
+				queryClient.invalidateQueries({
+					queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey,
+				});
 			},
 		}),
 	);
@@ -138,7 +141,7 @@ function SubAgentModelField({
 	onChange: (selection: LlmSelectedModel | null) => void;
 }) {
 	const availableModels = useQuery(trpc.project.listAvailableTranscribeModels.queryOptions());
-	const defaultChatModel = useQuery(trpc.project.getDefaultChatModel.queryOptions());
+	const defaultChatModel = useQuery(projectApi.project.getDefaultChatModel.queryOptions());
 	const models = availableModels.data ?? [];
 	const chatDefault = defaultChatModel.data
 		? {

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 const CONFIRMATION_TIMEOUT_MS = 15_000;
 
@@ -61,7 +62,7 @@ export function useCreditTopUp(creditCheckout: string | undefined) {
 			queryClient.invalidateQueries({ queryKey: trpc.account.listCreditLedger.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.account.listManagedAiUsage.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.project.listAvailableTranscribeModels.queryKey() }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultChatModel.queryKey() }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryKey() }),
 			queryClient.invalidateQueries({ queryKey: trpc.billing.getInvoices.queryKey() }),
 		]);
 	}, [confirmationData?.credited, queryClient]);

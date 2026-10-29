@@ -24,6 +24,7 @@ import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { cn } from '@/lib/utils';
 import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 type DefaultModelsData = inferRouterOutputs<TrpcRouter>['project']['getDefaultModels'];
 type IntegrationModel = DefaultModelsData['integrations'][number];
@@ -34,14 +35,16 @@ interface DefaultModelsSectionProps {
 
 export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 	const queryClient = useQueryClient();
-	const { data } = useQuery(trpc.project.getDefaultModels.queryOptions());
+	const { data } = useQuery(projectApi.project.getDefaultModels.queryOptions());
 	const invalidate = () =>
 		Promise.all([
-			queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultModels.queryOptions().queryKey }),
-			queryClient.invalidateQueries({ queryKey: trpc.project.getDefaultChatModel.queryOptions().queryKey }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultModels.queryOptions().queryKey }),
+			queryClient.invalidateQueries({ queryKey: projectApi.project.getDefaultChatModel.queryOptions().queryKey }),
 			queryClient.invalidateQueries({ queryKey: trpc.mcpEndpoint.getSettings.queryOptions().queryKey }),
 		]);
-	const updateMutation = useMutation(trpc.project.updateDefaultModels.mutationOptions({ onSuccess: invalidate }));
+	const updateMutation = useMutation(
+		projectApi.project.updateDefaultModels.mutationOptions({ onSuccess: invalidate }),
+	);
 	const updateIntegrationMutation = useMutation(
 		trpc.project.updateIntegrationModel.mutationOptions({ onSuccess: invalidate }),
 	);

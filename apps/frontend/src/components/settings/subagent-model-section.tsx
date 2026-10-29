@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { trpc } from '@/main';
+import { projectApi } from '@/lib/project-api';
 
 type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 
@@ -20,12 +20,14 @@ interface SubagentModelSectionProps {
 
 export function SubagentModelSection({ isAdmin }: SubagentModelSectionProps) {
 	const queryClient = useQueryClient();
-	const agentSettings = useQuery(trpc.project.getAgentSettings.queryOptions());
-	const defaultModels = useQuery(trpc.project.getDefaultModels.queryOptions());
+	const agentSettings = useQuery(projectApi.project.getAgentSettings.queryOptions());
+	const defaultModels = useQuery(projectApi.project.getDefaultModels.queryOptions());
 	const updateAgentSettings = useMutation(
-		trpc.project.updateAgentSettings.mutationOptions({
+		projectApi.project.updateAgentSettings.mutationOptions({
 			onSuccess: () =>
-				queryClient.invalidateQueries({ queryKey: trpc.project.getAgentSettings.queryOptions().queryKey }),
+				queryClient.invalidateQueries({
+					queryKey: projectApi.project.getAgentSettings.queryOptions().queryKey,
+				}),
 		}),
 	);
 

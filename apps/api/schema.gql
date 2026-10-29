@@ -216,6 +216,7 @@ type Mutation {
   """Deletes every chat that is not starred; returns how many."""
   deleteAllNonStarredChats: Int!
   deleteChat(chatId: ID!): Boolean!
+  deleteLlmConfig(provider: String!): Boolean!
   deleteProject(projectId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
@@ -243,12 +244,21 @@ type Mutation {
   """
   syncContext(select: [String!]): ContextSyncStatus!
   testWarehouseConnection(name: String): WarehouseConnectionResult!
+
+  """Upstream `project.updateAgentSettings`: merges each section."""
+  updateAgentSettings(input: JSON!): JSON!
+
+  """Upstream `project.updateDefaultModels`."""
+  updateDefaultModels(settings: JSON!): JSON!
   updateProfile(input: UpdateProfileInput!): User!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
 
   """Runs an edited query and saves it in the chat's message."""
   updateSqlQuery(input: SqlEditInput!): SqlEditResult!
+
+  """Upstream `project.upsertLlmConfig`."""
+  upsertLlmConfig(input: JSON!): JSON!
 }
 
 """A project the user can access, with their role in it."""
@@ -284,6 +294,9 @@ type PublicConfig {
 }
 
 type Query {
+  """Upstream `project.getAgentSettings`, with the instance capabilities."""
+  agentSettings: JSON!
+
   """The user's own chat (upstream `chat.get`)."""
   chat(chatId: ID!): Chat!
 
@@ -305,13 +318,28 @@ type Query {
   """The selected project (`x-nao-project-id`)."""
   currentProject: ProjectSummary
 
+  """Upstream `project.getDefaultChatModel`."""
+  defaultChatModel: JSON
+
+  """Upstream `project.getDefaultModels`."""
+  defaultModels: JSON!
+
   """
   Whether anyone has signed up yet (the login page offers sign-up when not).
   """
   hasUsers: Boolean!
 
+  """Models known per provider (upstream `project.getKnownModels`)."""
+  knownModels: JSON!
+
+  """Upstream `project.getLlmConfigs`: provider configs, keys previewed."""
+  llmConfigs: JSON!
+
   """The signed-in user."""
   me: User!
+
+  """A project's saved prompts; empty when the user is not in it."""
+  projectSavedPrompts(projectId: ID!): [SavedPrompt!]!
 
   """Projects the signed-in user can access."""
   projects: [ProjectSummary!]!
