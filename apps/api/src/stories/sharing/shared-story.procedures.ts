@@ -48,7 +48,7 @@ import {
 	storyStateChange,
 	toCustomStoryQueryTrpcError,
 	toCustomStoryTrpcError,
-} from '../utils/custom-story-trpc.js';
+} from '../utils/custom-story-errors.js';
 import { buildDownloadResponse } from '../utils/story-download.js';
 import { themeFontStylesheets } from '../utils/story-headless-page.js';
 import { withKpiPreviewData } from '../utils/story-query-data.js';

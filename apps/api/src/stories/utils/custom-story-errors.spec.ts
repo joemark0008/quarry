@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { storySnapshotHtml } from './custom-story-trpc.js';
-import { MAX_STORY_SNAPSHOT_BYTES } from './custom-story-trpc.js';
+import { storySnapshotHtml } from './custom-story-errors.js';
+import { MAX_STORY_SNAPSHOT_BYTES } from './custom-story-errors.js';
 
 describe('storySnapshotHtml', () => {
 	it('accepts a snapshot at the byte limit', () => {

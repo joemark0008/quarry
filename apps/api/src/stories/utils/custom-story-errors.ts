@@ -45,7 +45,7 @@ export function toCustomStoryTrpcError(error: unknown): unknown {
 }
 
 /**
- * Upstream `utils/custom-story-trpc.ts`: tRPC errors become `HandlerError`s (GraphQL `extensions.code`).
+ * Upstream `utils/custom-story-errors.ts`: tRPC errors become `HandlerError`s (GraphQL `extensions.code`).
  * A failing query is the story's content, not a server fault: its message reaches the frame instead of a masked 500. */
 export function toCustomStoryQueryTrpcError(error: unknown): unknown {
 	if (error instanceof CustomStoryQueryExecutionError) {

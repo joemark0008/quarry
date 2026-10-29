@@ -21,7 +21,7 @@ import {
 	storyStateChange,
 	toCustomStoryQueryTrpcError,
 	toCustomStoryTrpcError,
-} from '../utils/custom-story-trpc.js';
+} from '../utils/custom-story-errors.js';
 import { themeFontStylesheets } from '../utils/story-headless-page.js';
 import { buildStorySnapshotDownload } from '../utils/story-snapshot.js';
 

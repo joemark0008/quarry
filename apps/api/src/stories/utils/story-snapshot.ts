@@ -7,7 +7,7 @@ import { formatDownloadFilename } from './story-download.js';
 import { delay, isolateStoryPage, STORY_DOCUMENT_URL, waitForStoryReady } from './story-headless-page.js';
 import { expandStoryViews } from './story-print-views.js';
 
-export { MAX_STORY_SNAPSHOT_BYTES } from './custom-story-trpc.js';
+export { MAX_STORY_SNAPSHOT_BYTES } from './custom-story-errors.js';
 
 const LAYOUT_WIDTH_PX = 1100;
 const A4_SHORT_SIDE_PX = 794;
