@@ -255,6 +255,15 @@ type Mutation {
   """The run, with `alreadyTerminal` when it had already ended."""
   cancelContextRecommendationRun(runId: String!): JSON!
 
+  """Upstream `trpc.chatFork.askStory`."""
+  chatForkAskStory(input: JSON): JSON
+
+  """Upstream `trpc.chatFork.forkStory`."""
+  chatForkForkStory(input: JSON): JSON
+
+  """Upstream `trpc.chatFork.openStandalone`."""
+  chatForkOpenStandalone(input: JSON): JSON
+
   """Upstream `contextExplorer.commitChanges`: `{ paths, message }`."""
   commitContextChanges(input: JSON!): JSON!
 
@@ -284,6 +293,9 @@ type Mutation {
   createProject(input: CreateProjectInput!): ProjectSummary!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
+
+  """Upstream `trpc.customStoryViewer.setState`."""
+  customStoryViewerSetState(input: JSON): JSON
 
   """Deletes every chat that is not starred; returns how many."""
   deleteAllNonStarredChats: Int!
@@ -344,6 +356,102 @@ type Mutation {
 
   """Stops the running agent of a chat (the Stop button)."""
   stopChat(chatId: ID!): Boolean!
+
+  """Upstream `trpc.story.archive`."""
+  storyArchive(input: JSON): JSON
+
+  """Upstream `trpc.story.archiveShared`."""
+  storyArchiveShared(input: JSON): JSON
+
+  """Upstream `trpc.story.archiveStandalone`."""
+  storyArchiveStandalone(input: JSON): JSON
+
+  """Upstream `trpc.story.bulkArchive`."""
+  storyBulkArchive(input: JSON): JSON
+
+  """Upstream `trpc.story.bulkUnarchive`."""
+  storyBulkUnarchive(input: JSON): JSON
+
+  """Upstream `trpc.story.createVersion`."""
+  storyCreateVersion(input: JSON): JSON
+
+  """Upstream `trpc.story.editCustomStoryBlock`."""
+  storyEditCustomStoryBlock(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.archive`."""
+  storyFolderArchive(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.bulkArchive`."""
+  storyFolderBulkArchive(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.bulkMove`."""
+  storyFolderBulkMove(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.bulkUnarchive`."""
+  storyFolderBulkUnarchive(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.create`."""
+  storyFolderCreate(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.delete`."""
+  storyFolderDelete(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.move`."""
+  storyFolderMove(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.moveStory`."""
+  storyFolderMoveStory(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.rename`."""
+  storyFolderRename(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.unarchive`."""
+  storyFolderUnarchive(input: JSON): JSON
+
+  """Upstream `trpc.story.parseCronFromText`."""
+  storyParseCronFromText(input: JSON): JSON
+
+  """Upstream `trpc.story.refreshData`."""
+  storyRefreshData(input: JSON): JSON
+
+  """Upstream `trpc.story.rename`."""
+  storyRename(input: JSON): JSON
+
+  """Upstream `trpc.story.restoreCustomVersion`."""
+  storyRestoreCustomVersion(input: JSON): JSON
+
+  """Upstream `trpc.story.saveCustomStoryFiles`."""
+  storySaveCustomStoryFiles(input: JSON): JSON
+
+  """Upstream `trpc.story.setCustomStoryState`."""
+  storySetCustomStoryState(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.restoreVersion`."""
+  storyThemeRestoreVersion(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.save`."""
+  storyThemeSave(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.setEnabled`."""
+  storyThemeSetEnabled(input: JSON): JSON
+
+  """Upstream `trpc.story.toggleCertification`."""
+  storyToggleCertification(input: JSON): JSON
+
+  """Upstream `trpc.story.unarchive`."""
+  storyUnarchive(input: JSON): JSON
+
+  """Upstream `trpc.story.unarchiveShared`."""
+  storyUnarchiveShared(input: JSON): JSON
+
+  """Upstream `trpc.story.unarchiveStandalone`."""
+  storyUnarchiveStandalone(input: JSON): JSON
+
+  """Upstream `trpc.story.updateDelivery`."""
+  storyUpdateDelivery(input: JSON): JSON
+
+  """Upstream `trpc.story.updateLiveSettings`."""
+  storyUpdateLiveSettings(input: JSON): JSON
 
   """Upstream `feedback.submit`."""
   submitMessageFeedback(input: MessageFeedbackInput!): MessageFeedback!
@@ -518,6 +626,30 @@ type Query {
   """The selected project (`x-nao-project-id`)."""
   currentProject: ProjectSummary
 
+  """Upstream `trpc.customStoryViewer.getFile`."""
+  customStoryViewerGetFile(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getFormat`."""
+  customStoryViewerGetFormat(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getNarratives`."""
+  customStoryViewerGetNarratives(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getQueryData`."""
+  customStoryViewerGetQueryData(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getQuerySql`."""
+  customStoryViewerGetQuerySql(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getState`."""
+  customStoryViewerGetState(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getTheme`."""
+  customStoryViewerGetTheme(input: JSON): JSON
+
+  """Upstream `trpc.customStoryViewer.getVersion`."""
+  customStoryViewerGetVersion(input: JSON): JSON
+
   """Upstream `project.getDefaultChatModel`."""
   defaultChatModel: JSON
 
@@ -598,6 +730,111 @@ type Query {
 
   """Upstream `storage.getUsage`."""
   storageUsage: JSON!
+
+  """Upstream `trpc.storyFolder.listItems`."""
+  storyFolderListItems(input: JSON): JSON
+
+  """Upstream `trpc.storyFolder.listTree`."""
+  storyFolderListTree(input: JSON): JSON
+
+  """Upstream `trpc.story.getCertification`."""
+  storyGetCertification(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomStoryNarratives`."""
+  storyGetCustomStoryNarratives(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomStoryQueryData`."""
+  storyGetCustomStoryQueryData(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomStoryQuerySql`."""
+  storyGetCustomStoryQuerySql(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomStoryState`."""
+  storyGetCustomStoryState(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomVersion`."""
+  storyGetCustomVersion(input: JSON): JSON
+
+  """Upstream `trpc.story.getCustomVersionFile`."""
+  storyGetCustomVersionFile(input: JSON): JSON
+
+  """Upstream `trpc.story.getDelivery`."""
+  storyGetDelivery(input: JSON): JSON
+
+  """Upstream `trpc.story.getFilterOptions`."""
+  storyGetFilterOptions(input: JSON): JSON
+
+  """Upstream `trpc.story.getFilteredQueryData`."""
+  storyGetFilteredQueryData(input: JSON): JSON
+
+  """Upstream `trpc.story.getIdByChatAndSlug`."""
+  storyGetIdByChatAndSlug(input: JSON): JSON
+
+  """Upstream `trpc.story.getLatest`."""
+  storyGetLatest(input: JSON): JSON
+
+  """Upstream `trpc.story.getLiveQueryData`."""
+  storyGetLiveQueryData(input: JSON): JSON
+
+  """Upstream `trpc.story.getQuerySql`."""
+  storyGetQuerySql(input: JSON): JSON
+
+  """Upstream `trpc.story.getStandalone`."""
+  storyGetStandalone(input: JSON): JSON
+
+  """Upstream `trpc.story.getVersionQueryData`."""
+  storyGetVersionQueryData(input: JSON): JSON
+
+  """Upstream `trpc.story.listAll`."""
+  storyListAll(input: JSON): JSON
+
+  """Upstream `trpc.story.listArchived`."""
+  storyListArchived(input: JSON): JSON
+
+  """Upstream `trpc.story.listDeliveryRecipientGroups`."""
+  storyListDeliveryRecipientGroups(input: JSON): JSON
+
+  """Upstream `trpc.story.listDeliveryRecipients`."""
+  storyListDeliveryRecipients(input: JSON): JSON
+
+  """Upstream `trpc.story.listMentioningChats`."""
+  storyListMentioningChats(input: JSON): JSON
+
+  """Upstream `trpc.story.listMostViewed`."""
+  storyListMostViewed(input: JSON): JSON
+
+  """Upstream `trpc.story.listQuickQuestions`."""
+  storyListQuickQuestions(input: JSON): JSON
+
+  """Upstream `trpc.story.listReferenceable`."""
+  storyListReferenceable(input: JSON): JSON
+
+  """Upstream `trpc.story.listSharedArchived`."""
+  storyListSharedArchived(input: JSON): JSON
+
+  """Upstream `trpc.story.listStandalone`."""
+  storyListStandalone(input: JSON): JSON
+
+  """Upstream `trpc.story.listStandaloneArchived`."""
+  storyListStandaloneArchived(input: JSON): JSON
+
+  """Upstream `trpc.story.listStories`."""
+  storyListStories(input: JSON): JSON
+
+  """Upstream `trpc.story.listVersions`."""
+  storyListVersions(input: JSON): JSON
+
+  """Upstream `trpc.story.resolve`."""
+  storyResolve(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.getActive`."""
+  storyThemeGetActive(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.getState`."""
+  storyThemeGetState(input: JSON): JSON
+
+  """Upstream `trpc.storyTheme.listVersions`."""
+  storyThemeListVersions(input: JSON): JSON
   version: AppVersion!
 
   """Databases configured in the selected project."""

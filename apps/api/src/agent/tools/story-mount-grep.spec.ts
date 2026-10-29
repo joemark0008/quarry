@@ -9,7 +9,7 @@ import { storyLibraryFileBatchesToGrep } from '../services/story-library.js';
 import type { ToolContext } from '../types/tools.js';
 import grepTool from './grep.js';
 
-// quarry: the story mount and library are Phase 4 stand-ins; mocked here as upstream mocked the real services.
+// Mocked as upstream mocks the story mount and library services.
 vi.mock('../services/story-mount.js', async (importOriginal) => ({
 	...(await importOriginal<typeof import('../services/story-mount.js')>()),
 	isCustomStoriesEnabled: () => true,

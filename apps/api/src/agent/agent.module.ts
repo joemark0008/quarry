@@ -7,6 +7,7 @@ import { OnboardingModule } from '../onboarding/onboarding.module.js';
 import { ProjectsCoreModule } from '../projects/projects-core.module.js';
 import { SandboxModule } from '../sandbox/sandbox.module.js';
 import { SkillsModule } from '../skills/skills.module.js';
+import { StoriesCoreModule } from '../stories/stories-core.module.js';
 import { WarehouseModule } from '../warehouse/warehouse.module.js';
 import { AgentController } from './agent.controller.js';
 import { AgentService } from './agent.service.js';
@@ -26,9 +27,10 @@ import { CompactionService } from './services/compaction.js';
 		SkillsModule,
 		MemoryModule,
 		OnboardingModule,
+		StoriesCoreModule,
 	],
 	controllers: [AgentController],
 	providers: [AgentService, CompactionService, AppDbRepository],
-	exports: [AgentService, AgentCoreModule, CompactionService],
+	exports: [AgentService, AgentCoreModule, CompactionService, AppDbRepository],
 })
 export class AgentModule {}

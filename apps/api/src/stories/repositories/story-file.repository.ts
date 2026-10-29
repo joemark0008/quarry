@@ -46,6 +46,11 @@ interface CutVersionInput {
 export class StoryFileRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
+	/** Upstream `db.transaction`, for the story services that write drafts, versions and folders together. */
+	transaction<T>(run: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+		return this.prisma.$transaction(run);
+	}
+
 	listDraftFiles(storyId: string, executor: DbExecutor = this.prisma): Promise<StoryDraftFile[]> {
 		return executor.storyDraftFile.findMany({ where: { storyId }, orderBy: { path: 'asc' } });
 	}

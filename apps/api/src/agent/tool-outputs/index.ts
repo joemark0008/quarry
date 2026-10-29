@@ -13,6 +13,7 @@ export { QueryAppDbOutput } from './query-app-db.js';
 export { ReadOutput } from './read.js';
 export { ReadQueryResultOutput } from './read-query-result.js';
 export { SearchOutput } from './search.js';
+export { StoryOutput } from './story.js';
 export { StrReplaceOutput } from './str-replace.js';
 export { WriteOutput } from './write.js';
 

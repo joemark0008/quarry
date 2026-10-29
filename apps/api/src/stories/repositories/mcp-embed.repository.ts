@@ -9,6 +9,37 @@ import { PrismaService } from '../../prisma/prisma.service.js';
 export class McpEmbedRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
+	/** Port of upstream `queries/mcp-query-data.queries.ts` `getMcpQueryData`: an unexpired MCP result, optionally the user's own. */
+	async getMcpQueryData(
+		queryId: string,
+		projectId: string,
+		options?: { userId?: string },
+	): Promise<{ columns: string[]; data: Record<string, unknown>[]; sourceChatId: string | null } | null> {
+		const row = await this.prisma.mcpQueryData.findFirst({
+			where: { queryId, projectId, expiresAt: { gt: new Date() } },
+			select: { columns: true, data: true, sourceChatId: true, callLogId: true },
+		});
+		if (!row) {
+			return null;
+		}
+		if (options?.userId) {
+			const callLog = row.callLogId
+				? await this.prisma.mcpCallLog.findFirst({
+						where: { id: row.callLogId, userId: options.userId },
+						select: { id: true },
+					})
+				: null;
+			if (!callLog) {
+				return null;
+			}
+		}
+		return {
+			columns: row.columns as string[],
+			data: row.data as Record<string, unknown>[],
+			sourceChatId: row.sourceChatId ?? null,
+		};
+	}
+
 	insertMcpChartEmbed(params: {
 		chartEmbedId: string;
 		queryId: string;

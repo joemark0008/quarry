@@ -28,6 +28,7 @@ import readQueryResult from './read-query-result.js';
 import requestWarehouseCredentials from './request-warehouse-credentials.js';
 import requestWarehouseSelection from './request-warehouse-selection.js';
 import search from './search.js';
+import story, { buildStoryToolDescription } from './story.js';
 import strReplace, { buildStrReplaceToolDescription } from './str-replace.js';
 import suggestFollowUps from './suggest-follow-ups.js';
 import task from './task.js';
@@ -39,8 +40,8 @@ export { createRecommendationCollector } from './record-recommendation.js';
 export { createWebSearchTools } from './web-search.js';
 
 /**
- * Port of upstream `agents/tools/index.ts`. Tools of modules quarry doesn't have yet stay out (PHASES.md): `story`
- * (Phase 4), `mcp_call`/`mcp_connect` (Phase 7). Upstream's gating is kept: `execute_semantic_query` needs a semantic
+ * Port of upstream `agents/tools/index.ts`. Tools of modules quarry doesn't have yet stay out (PHASES.md):
+ * `mcp_call`/`mcp_connect` (Phase 7). Upstream's gating is kept: `execute_semantic_query` needs a semantic
  * layer in `nao_config.yaml` and a querying mode, `task` needs `BETA_SUBAGENTS_ENABLED`,
  * `write`/`str_replace` need permanent storage (Phase 2d) or custom stories (Phase 4), `execute_python` and
  * `execute_sandboxed_code` need their runtime and the experimental agent setting, `display_map` the map setting,
@@ -53,6 +54,7 @@ export { createWebSearchTools } from './web-search.js';
 export const MCP_SUB_AGENT_EXCLUDED_TOOLS = ['display_map'];
 
 export const tools = {
+	story,
 	clarification,
 	display_chart: displayChart,
 	...(executePython && { execute_python: executePython }),
@@ -168,6 +170,18 @@ export const getTools = (
 				...writeTool,
 				description: buildWriteToolDescription({ customStories: customStoryAuthoring, canReplace }),
 				inputSchema: writeFile.buildInputSchema({ customStories: customStoryAuthoring }),
+			},
+		};
+	}
+
+	if ('story' in result) {
+		const mapsEnabled = 'display_map' in result;
+		const customStories = customStoryAuthoring && 'write' in result;
+		result = {
+			...result,
+			story: {
+				...result.story,
+				description: buildStoryToolDescription({ mapsEnabled, customStories, canReplace }),
 			},
 		};
 	}

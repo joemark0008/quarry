@@ -98,6 +98,16 @@ export class LlmService {
 		return fallbackModelId;
 	}
 
+	/** Upstream `getProjectModelProvider`: a configured anthropic/openai, else the env, else any available model. */
+	async getProjectModelProvider(projectId: string): Promise<LlmProvider | undefined> {
+		const configured = await this.configs.getConfiguredTaskProvider(projectId);
+		if (configured) {
+			return configured;
+		}
+		const envProvider = (['anthropic', 'openai'] as LlmProvider[]).find(hasEnvApiKey);
+		return envProvider ?? (await this.getProjectAvailableModels(projectId)).at(0)?.provider;
+	}
+
 	async getProjectAvailableModels(
 		projectId: string,
 	): Promise<Array<{ provider: LlmProvider; modelId: string; name: string; baseUrl: string | null }>> {

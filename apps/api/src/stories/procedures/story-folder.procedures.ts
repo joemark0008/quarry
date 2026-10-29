@@ -1,0 +1,299 @@
+import { BULK_ITEMS_LIMIT } from '@quarry/shared';
+import type { UserRole } from '@quarry/shared/types';
+import { z } from 'zod/v4';
+
+import { HandlerError } from '../../common/errors/handler-error.js';
+import type { StoryFolder as DBStoryFolder } from '../../generated/prisma/client.js';
+import { canSendProcedure, projectProtectedProcedure } from '../procedure.js';
+import { assertAudienceIncludesProject, getShareAudience } from '../services/share-audience.js';
+import { db, storyFolderQueries, storyQueries, storyRuntime } from '../story-queries.js';
+
+/** Port of upstream `trpc/story-folder.routes.ts` (`trpc.storyFolder.*`), run by `StoriesService`. */
+
+/** Upstream `project-sharing.service` `assertCanShareToProject`. */
+async function assertCanShareToProject(projectId: string, userId: string): Promise<void> {
+	assertAudienceIncludesProject(await getShareAudience(projectId, userId));
+}
+
+async function assertFolderInProject(
+	folderId: string,
+	ctx: { user: { id: string }; project: { id: string } },
+	label = 'Folder',
+) {
+	const folder = await storyFolderQueries.getFolderById(folderId);
+	if (!folder || folder.projectId !== ctx.project.id) {
+		throw new HandlerError('NOT_FOUND', `${label} not found.`);
+	}
+	return folder;
+}
+
+function assertCanModifyFolder(folder: DBStoryFolder, userId: string, userRole: UserRole | null) {
+	if (folder.ownerId !== userId && userRole !== 'admin') {
+		throw new HandlerError('FORBIDDEN', 'Only the owner or an admin can modify this folder.');
+	}
+}
+
+function assertCanReadPrivateFolder(folder: DBStoryFolder, userId: string, label = 'Folder') {
+	if (folder.visibility === 'private' && folder.ownerId !== userId) {
+		throw new HandlerError('NOT_FOUND', `${label} not found.`);
+	}
+}
+
+function assertCanPlaceInDestination(target: DBStoryFolder | null, userId: string) {
+	if (target && target.visibility === 'private' && target.ownerId !== userId) {
+		throw new HandlerError('FORBIDDEN', 'You can only move items into your own private folder.');
+	}
+}
+
+function assertCanChangeFolderScope(folder: DBStoryFolder, target: DBStoryFolder | null, userId: string) {
+	if (folder.visibility !== resolveDestinationVisibility(target) && folder.ownerId !== userId) {
+		throw new HandlerError('FORBIDDEN', "Only the owner can change a folder's visibility.");
+	}
+}
+
+function resolveDestinationVisibility(target: DBStoryFolder | null) {
+	return target ? target.visibility : 'public';
+}
+
+async function assertStoryNotBeingEdited(storyId: string) {
+	const story = await storyQueries.getStoryById(storyId);
+	if (story?.chatId && storyRuntime.isAgentRunning(story.chatId)) {
+		throw new HandlerError('CONFLICT', 'The agent is working on this story. Move it once it is done.');
+	}
+}
+
+type MoveContext = { user: { id: string }; project: { id: string }; userRole: UserRole | null };
+
+async function resolveMoveTarget(folderId: string | null, ctx: MoveContext, label = 'Target folder') {
+	if (!folderId) {
+		assertCanPlaceInDestination(null, ctx.user.id);
+		return null;
+	}
+	const target = await assertFolderInProject(folderId, ctx, label);
+	assertCanReadPrivateFolder(target, ctx.user.id, label);
+	assertCanPlaceInDestination(target, ctx.user.id);
+	return target;
+}
+
+async function assertCanMoveFolder(folderId: string, target: DBStoryFolder | null, ctx: MoveContext) {
+	const folder = await assertFolderInProject(folderId, ctx);
+	assertCanReadPrivateFolder(folder, ctx.user.id);
+	assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+	assertCanChangeFolderScope(folder, target, ctx.user.id);
+	return folder;
+}
+
+async function assertCanMoveStory(storyId: string, ctx: MoveContext): Promise<string> {
+	const storyProjectId = await storyQueries.getStoryProjectId(storyId);
+	if (storyProjectId !== ctx.project.id) {
+		throw new HandlerError('NOT_FOUND', 'Story not found in this project.');
+	}
+
+	const storyOwnerId = await storyQueries.getStoryOwnerId(storyId);
+	if (!storyOwnerId) {
+		throw new HandlerError('NOT_FOUND', 'Story not found.');
+	}
+
+	if (storyOwnerId !== ctx.user.id && ctx.userRole !== 'admin') {
+		throw new HandlerError('FORBIDDEN', 'Only the owner or an admin can move this story.');
+	}
+
+	await assertStoryNotBeingEdited(storyId);
+	return storyOwnerId;
+}
+
+async function assertTargetOutsideMovedFolders(folderIds: string[], targetFolderId: string | null) {
+	if (!targetFolderId) {
+		return;
+	}
+	for (const folderId of folderIds) {
+		if (await storyFolderQueries.proposedParentChainContains(targetFolderId, folderId)) {
+			throw new HandlerError('BAD_REQUEST', new storyFolderQueries.MoveFolderCycleError().message);
+		}
+	}
+}
+
+async function runFolderMove(move: () => Promise<void>) {
+	try {
+		await move();
+	} catch (err) {
+		if (err instanceof storyFolderQueries.MoveFolderCycleError) {
+			throw new HandlerError('BAD_REQUEST', err.message);
+		}
+		if (err instanceof storyFolderQueries.SystemFolderError) {
+			throw new HandlerError('FORBIDDEN', err.message);
+		}
+		throw err;
+	}
+}
+
+export const storyFolderRoutes = {
+	listTree: projectProtectedProcedure
+		.input(z.object({ archived: z.boolean().optional() }).optional())
+		.query(async ({ ctx, input }) => {
+			const isViewer = ctx.userRole === 'viewer';
+			if (!input?.archived && !isViewer) {
+				await storyFolderQueries.ensurePrivateRoot(ctx.user.id, ctx.project.id);
+			}
+			return storyFolderQueries.listFolderTree(ctx.user.id, ctx.project.id, {
+				archived: input?.archived,
+				isViewer,
+			});
+		}),
+
+	listItems: projectProtectedProcedure.query(async ({ ctx }) => {
+		return storyFolderQueries.listFolderItemsForProject(ctx.user.id, ctx.project.id, {
+			isViewer: ctx.userRole === 'viewer',
+		});
+	}),
+
+	create: canSendProcedure
+		.input(
+			z.object({
+				name: z.string().min(1).max(100),
+				parentId: z.string().nullable().optional(),
+			}),
+		)
+		.mutation(async ({ input, ctx }) => {
+			let parent: DBStoryFolder | null = null;
+			if (input.parentId) {
+				parent = await assertFolderInProject(input.parentId, ctx, 'Parent folder');
+				assertCanReadPrivateFolder(parent, ctx.user.id, 'Parent folder');
+			}
+			assertCanPlaceInDestination(parent, ctx.user.id);
+			return storyFolderQueries.createFolder({
+				ownerId: ctx.user.id,
+				projectId: ctx.project.id,
+				name: input.name,
+				parentId: input.parentId ?? null,
+			});
+		}),
+
+	rename: canSendProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				name: z.string().min(1).max(100).optional(),
+			}),
+		)
+		.mutation(async ({ input, ctx }) => {
+			const folder = await assertFolderInProject(input.id, ctx);
+			assertCanReadPrivateFolder(folder, ctx.user.id);
+			assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+			await storyFolderQueries.updateFolder(input.id, { name: input.name });
+		}),
+
+	delete: canSendProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+		const folder = await assertFolderInProject(input.id, ctx);
+		assertCanReadPrivateFolder(folder, ctx.user.id);
+		assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+		await storyFolderQueries.deleteFolderMovingContentsToParent(input.id);
+	}),
+
+	archive: canSendProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+		const folder = await assertFolderInProject(input.id, ctx);
+		assertCanReadPrivateFolder(folder, ctx.user.id);
+		assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+		await storyFolderQueries.archiveFolder(input.id);
+	}),
+
+	unarchive: canSendProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+		const folder = await assertFolderInProject(input.id, ctx);
+		assertCanReadPrivateFolder(folder, ctx.user.id);
+		assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+		await storyFolderQueries.unarchiveFolder(ctx.user.id, ctx.project.id, input.id);
+	}),
+
+	bulkArchive: canSendProcedure
+		.input(z.object({ ids: z.array(z.string()).min(1).max(BULK_ITEMS_LIMIT) }))
+		.mutation(async ({ input, ctx }) => {
+			for (const id of input.ids) {
+				const folder = await assertFolderInProject(id, ctx);
+				assertCanReadPrivateFolder(folder, ctx.user.id);
+				assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+			}
+			await db.transaction(async (tx) => {
+				for (const id of input.ids) {
+					await storyFolderQueries.archiveFolder(id, tx);
+				}
+			});
+		}),
+
+	bulkUnarchive: canSendProcedure
+		.input(z.object({ ids: z.array(z.string()).min(1).max(BULK_ITEMS_LIMIT) }))
+		.mutation(async ({ input, ctx }) => {
+			for (const id of input.ids) {
+				const folder = await assertFolderInProject(id, ctx);
+				assertCanReadPrivateFolder(folder, ctx.user.id);
+				assertCanModifyFolder(folder, ctx.user.id, ctx.userRole);
+			}
+			await db.transaction(async (tx) => {
+				for (const id of input.ids) {
+					await storyFolderQueries.unarchiveFolder(ctx.user.id, ctx.project.id, id, tx);
+				}
+			});
+		}),
+
+	move: canSendProcedure
+		.input(z.object({ id: z.string(), newParentId: z.string().nullable() }))
+		.mutation(async ({ input, ctx }) => {
+			const target = await resolveMoveTarget(input.newParentId, ctx);
+			const folder = await assertCanMoveFolder(input.id, target, ctx);
+			if (folder.visibility === 'private' && resolveDestinationVisibility(target) === 'public') {
+				await assertCanShareToProject(ctx.project.id, ctx.user.id);
+			}
+			await runFolderMove(() =>
+				storyFolderQueries.moveFolder(ctx.user.id, ctx.project.id, input.id, input.newParentId),
+			);
+		}),
+
+	moveStory: canSendProcedure
+		.input(z.object({ storyId: z.string(), folderId: z.string().nullable() }))
+		.mutation(async ({ input, ctx }) => {
+			const storyOwnerId = await assertCanMoveStory(input.storyId, ctx);
+			const target = await resolveMoveTarget(input.folderId, ctx, 'Folder');
+			if (resolveDestinationVisibility(target) === 'public') {
+				await assertCanShareToProject(ctx.project.id, ctx.user.id);
+			}
+			await storyFolderQueries.moveStoryToFolder(input.storyId, input.folderId, {
+				storyOwnerId,
+				projectId: ctx.project.id,
+			});
+		}),
+
+	bulkMove: canSendProcedure
+		.input(
+			z
+				.object({
+					storyIds: z.array(z.string()).max(BULK_ITEMS_LIMIT),
+					folderIds: z.array(z.string()).max(BULK_ITEMS_LIMIT),
+					targetFolderId: z.string().nullable(),
+				})
+				.refine((input) => input.storyIds.length + input.folderIds.length > 0, {
+					message: 'Select at least one story or folder to move.',
+				}),
+		)
+		.mutation(async ({ input, ctx }) => {
+			const target = await resolveMoveTarget(input.targetFolderId, ctx);
+			const folders = await Promise.all(input.folderIds.map((id) => assertCanMoveFolder(id, target, ctx)));
+			const storyOwnerIds = await Promise.all(input.storyIds.map((id) => assertCanMoveStory(id, ctx)));
+			await assertTargetOutsideMovedFolders(input.folderIds, input.targetFolderId);
+
+			const makesItemsPublic =
+				resolveDestinationVisibility(target) === 'public' &&
+				(input.storyIds.length > 0 || folders.some((folder) => folder.visibility === 'private'));
+			if (makesItemsPublic) {
+				await assertCanShareToProject(ctx.project.id, ctx.user.id);
+			}
+
+			const stories = input.storyIds.map((storyId, index) => ({ storyId, storyOwnerId: storyOwnerIds[index] }));
+			await runFolderMove(() =>
+				storyFolderQueries.moveItemsToFolder(
+					ctx.user.id,
+					ctx.project.id,
+					{ folderIds: input.folderIds, stories },
+					input.targetFolderId,
+				),
+			);
+		}),
+};

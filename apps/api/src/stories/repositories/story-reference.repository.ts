@@ -83,6 +83,30 @@ const TRUSTED_THEN_RECENT = Prisma.sql`
 export class StoryReferenceRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
+	/**
+	 * Upstream `analytics-event.queries` `listMostViewedStoryIds`: stories of the project ranked by distinct viewers
+	 * since a date, then by their latest view.
+	 */
+	async listMostViewedStoryIds(
+		projectId: string,
+		since: Date,
+		page: { limit: number; offset: number },
+	): Promise<string[]> {
+		const rows = await this.prisma.$queryRaw<{ storyId: string }[]>`
+			SELECT story_id AS "storyId"
+			FROM analytics_event
+			WHERE project_id = ${projectId}
+				AND type = 'page_view'
+				AND asset_type = 'story'
+				AND story_id IS NOT NULL
+				AND actor_user_id IS NOT NULL
+				AND created_at >= ${since}
+			GROUP BY story_id
+			ORDER BY COUNT(DISTINCT actor_user_id) DESC, MAX(created_at) DESC, story_id
+			LIMIT ${page.limit} OFFSET ${page.offset}`;
+		return rows.map((row) => row.storyId);
+	}
+
 	/** Lists stories pinned first, then certified, then the most recently updated and shared with the user. */
 	async listReferenceableStories(
 		userId: string,

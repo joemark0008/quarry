@@ -17,17 +17,22 @@ import { OnboardingService } from '../onboarding/onboarding.service.js';
 import { ProjectRepository } from '../projects/project.repository.js';
 import { SandboxSecretService } from '../sandbox/sandbox-secret.service.js';
 import { SkillService } from '../skills/skill.service.js';
+import { resolveLinkedStory } from '../stories/services/story-question.js';
+import { listTrustedStoriesForPrompt } from '../stories/services/story-reference.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
 import { WarehouseSqlService } from '../warehouse/warehouse-sql.service.js';
 import { type AgentChat, AgentManager, type AgentProfile } from './agent-manager.js';
 import { AppDbRepository } from './app-db/app-db.repository.js';
 import { LlmService } from './llm/llm.service.js';
 import { ProjectLlmConfigRepository } from './llm/project-llm-config.repository.js';
+import { renderToMarkdown } from './markdown/render-to-markdown.js';
+import { ChatForkContextPrompt } from './prompts/chat-fork-context-prompt.js';
 import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
 import { CompactionService } from './services/compaction.js';
 import { resolveSemanticLayerMode } from './services/semantic-layer.service.js';
+import { customStoryAuthoringError } from './services/story-mount.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
 import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
@@ -151,6 +156,7 @@ export class AgentService {
 			agentSettings,
 			modelSelection,
 		});
+		toolContext.linkedStory = await resolveLinkedStory(chat);
 		const webTools = await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
 		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`) unless the profile brings its own.
 		const tools = (
@@ -160,6 +166,7 @@ export class AgentService {
 						customBoundaries,
 						semanticLayerMode: toolContext.semanticLayerMode,
 						subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
+						customStoryAuthoring: customStoryAuthoringError(toolContext.userGroupFeatures) === null,
 					})
 		) as AgentTools;
 		const agent = new AgentManager(
@@ -179,7 +186,7 @@ export class AgentService {
 				buildSystemPrompt: async ({ toolNames, timezone }) =>
 					profile.systemPrompt
 						? profile.systemPrompt({ timezone })
-						: this.buildProjectSystemPrompt(toolContext, toolNames, timezone),
+						: this.buildProjectSystemPrompt(toolContext, toolNames, timezone, chat.forkMetadata),
 				getSkillContent: (skillName) => this.skills.getSkillContent(chat.projectId, skillName),
 				scheduleMemoryExtraction: ({ messages, provider, modelId }) =>
 					this.memory.safeScheduleMemoryExtraction({
@@ -341,17 +348,34 @@ export class AgentService {
 		toolContext: ToolContext,
 		toolNames: string[],
 		timezone?: string,
+		forkMetadata?: AgentChat['forkMetadata'],
+	): Promise<string> {
+		const prompt = await this.buildBaseSystemPrompt(toolContext, toolNames, timezone);
+		return forkMetadata
+			? renderToMarkdown(
+					ChatForkContextPrompt({ basePrompt: prompt, forkMetadata, linkedStory: toolContext.linkedStory }),
+				)
+			: prompt;
+	}
+
+	private async buildBaseSystemPrompt(
+		toolContext: ToolContext,
+		toolNames: string[],
+		timezone?: string,
 	): Promise<string> {
 		const override = getSystemPromptOverride(toolContext.projectFolder);
 		if (override && !hasNaoPromptPlaceholder(override)) {
 			return override;
 		}
 		const { repos, templates, presence } = readProjectContext(toolContext.projectFolder);
-		const [sandboxSecrets, memories] = await Promise.all([
+		const [sandboxSecrets, memories, trustedStories] = await Promise.all([
 			toolNames.includes('execute_sandboxed_code')
 				? this.sandboxSecrets.safeListDefinitions(toolContext.userId, toolContext.projectId)
 				: Promise.resolve([]),
 			this.memory.safeGetUserMemories(toolContext.userId, toolContext.projectId, toolContext.chatId),
+			toolNames.includes('list') && toolNames.includes('read')
+				? listTrustedStoriesForPrompt({ userId: toolContext.userId, projectId: toolContext.projectId })
+				: Promise.resolve([]),
 		]);
 		const skills = this.skills
 			.getSkills(toolContext.projectId)
@@ -366,6 +390,7 @@ export class AgentService {
 			configuredDatabases: extractConfiguredDatabases(toolContext.projectFolder),
 			customCharts: toolContext.supportsCustomCharts ? listChartPlugins(toolContext.projectFolder) : [],
 			sandboxSecrets,
+			trustedStories,
 			semanticLayerMode: toolContext.semanticLayerMode,
 			templates,
 			repoNames: repos.map((repo) => repo.name),
@@ -375,7 +400,7 @@ export class AgentService {
 			options: {
 				savedFilesEnabled: isStorageEnabled(),
 				canGrepSavedFiles: canGrepUserFiles(),
-				customStoriesEnabled: false,
+				customStoriesEnabled: customStoryAuthoringError(toolContext.userGroupFeatures) === null,
 			},
 		});
 		return override ? injectNaoPrompt(override, defaultPrompt) : defaultPrompt;

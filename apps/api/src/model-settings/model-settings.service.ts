@@ -9,7 +9,7 @@ import {
 } from '@quarry/shared/types';
 import { z } from 'zod/v4';
 
-import { getEnvApiKey, getEnvBaseUrls, getEnvProviders, hasEnvApiKey, LlmService } from '../agent/llm/llm.service.js';
+import { getEnvApiKey, getEnvBaseUrls, getEnvProviders, LlmService } from '../agent/llm/llm.service.js';
 import { ProjectLlmConfigRepository } from '../agent/llm/project-llm-config.repository.js';
 import {
 	getDefaultModelId,
@@ -270,7 +270,7 @@ export class ModelSettingsService {
 		chat: LlmSelectedModel,
 		named: (selection: LlmSelectedModel) => ResolvedDefaultModel,
 	): Promise<Partial<Record<BackgroundModelCategory, ResolvedDefaultModel>>> {
-		const taskProvider = await this.getProjectModelProvider(projectId);
+		const taskProvider = await this.llm.getProjectModelProvider(projectId);
 		const annotationModel = async (fallbackModelId: string): Promise<LlmSelectedModel> => ({
 			provider: chat.provider,
 			modelId: await this.llm.resolveAnnotationModelId(projectId, chat, fallbackModelId),
@@ -290,16 +290,6 @@ export class ModelSettingsService {
 			context_recommendation: named(chat),
 			other: named(extractor),
 		};
-	}
-
-	/** Upstream `getProjectModelProvider`: a configured anthropic/openai, else the env, else any available model. */
-	private async getProjectModelProvider(projectId: string): Promise<LlmProvider | undefined> {
-		const configured = await this.configs.getConfiguredTaskProvider(projectId);
-		if (configured) {
-			return configured;
-		}
-		const envProvider = (['anthropic', 'openai'] as LlmProvider[]).find(hasEnvApiKey);
-		return envProvider ?? (await this.llm.getProjectAvailableModels(projectId)).at(0)?.provider;
 	}
 }
 

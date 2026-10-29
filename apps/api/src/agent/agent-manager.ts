@@ -10,6 +10,7 @@ import {
 } from '@quarry/shared';
 import { fileExtension } from '@quarry/shared/attachments';
 import { markSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
+import { story } from '@quarry/shared/tools';
 import type { CitationData, LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 import {
 	convertToModelMessages,
@@ -26,6 +27,12 @@ import {
 } from 'ai';
 
 import type { ChatRepository } from '../chats/chat.repository.js';
+import { env } from '../stories/env.js';
+import { addStoryQuestionReference } from '../stories/services/story-question.js';
+import {
+	keepStoryReferencesThroughCompaction,
+	safeExpandStoryReferences,
+} from '../stories/services/story-reference.js';
 import type { LlmService } from './llm/llm.service.js';
 import {
 	disableModelReasoning,
@@ -33,6 +40,7 @@ import {
 	getProviderMeta,
 	type ProviderModelResult,
 } from './providers/providers.js';
+import { appendChatArtifacts, collapseStoryToolOutputs, safeGetChatArtifacts } from './services/chat-artifacts.js';
 import { type CompactionService, RunCompaction } from './services/compaction.js';
 import { interactiveStopConditions } from './stop-conditions.js';
 import { llmTelemetry } from './telemetry.js';
@@ -53,11 +61,38 @@ import { normalizeCitationMarkersStream } from './utils/citation-markers-stream.
 import { logger } from './utils/logger.js';
 import { sanitizeToolCalls } from './utils/model-message.js';
 import { addPromptCache, cachedSystemInstructions } from './utils/prompt-cache.js';
+import { STORY_LIBRARY_MOUNT } from './utils/story-library.js';
 import { sanitizeTitle, TITLE_MAX_OUTPUT_TOKENS, titleFromPrompt, titleGenerationUserMessage } from './utils/title.js';
 import { isStoragePath } from './utils/tools.js';
 import { formatErrorMessageForUI, truncateMiddle } from './utils/utils.js';
 
 export const MAX_OUTPUT_TOKENS = 16_000;
+
+/** Upstream `resolveStoryMode`, on the run's user-group features (quarry has no per-tool user-group access yet). */
+export function resolveStoryMode(
+	mentions: Mention[] | undefined,
+	userGroupFeatures: ToolContext['userGroupFeatures'],
+): 'classic' | 'custom' | null {
+	if (!userGroupFeatures.includes('storyCreation')) {
+		return null;
+	}
+	const mentioned = (id: string) => Boolean(mentions?.some((mention) => mention.id === id));
+	if (
+		env.BETA_CUSTOM_STORIES_ENABLED &&
+		userGroupFeatures.includes('customStoryCreation') &&
+		mentioned(story.CUSTOM_MENTION_ID)
+	) {
+		return 'custom';
+	}
+	return mentioned(story.MENTION_ID) ? 'classic' : null;
+}
+
+const EXISTING_STORY_FIRST = `If a story in /${STORY_LIBRARY_MOUNT} already answers the request, whatever its format, hand it over instead of creating a duplicate and offer to build a new one`;
+
+const STORY_MODE_INSTRUCTIONS = {
+	classic: `[Story mode: present your response as an interactive nao Story using the story tool (format "classic"), combining markdown and charts. ${EXISTING_STORY_FIRST}]`,
+	custom: `[Custom story mode: present your response as a custom story: call the story tool with format "custom" and build the app with @nao/story-kit blocks. ${EXISTING_STORY_FIRST}]`,
+} as const;
 const MAX_SCHEMA_TABLES_WITH_COLUMNS = 15;
 const MAX_SCHEMA_TABLES_NAMED = 200;
 
@@ -100,7 +135,9 @@ export interface AgentManagerDependencies {
  * UI message stream, persists the assistant message when the run ends (stopped or not), and generates the chat
  * title for a new chat. Long conversations are compacted (`RunCompaction` in the step preparation, summary rebuilt
  * from the last `data-compaction` part). Memory extraction is scheduled once the request is sent and `/` skill
- * mentions are expanded in the last user message. Not ported: story mentions (Phase 4), PostHog tracking.
+ * mentions are expanded in the last user message. Story mode, story references (`@[story:…]`, kept through
+ * compaction), quick-question references and the conversation artifacts are added as upstream (Phase 4).
+ * Not ported: PostHog tracking.
  */
 export class AgentManager {
 	private readonly _agent: ToolLoopAgent<never, AgentTools, never>;
@@ -311,12 +348,26 @@ export class AgentManager {
 		timezone?: string,
 	): Promise<ModelMessage[]> {
 		const settled = await settleToolParts(uiMessages);
+		const artifacts = await safeGetChatArtifacts(this.chat.id, settled, this.chat.projectId);
 		const withoutStaleQueries = markSupersededExecuteSqlParts(settled);
-		const withCitation = this._addCitationContext(withoutStaleQueries);
-		const withSkills = this._addSkills(withCitation, mentions);
-		const withDbContext = this._addDatabaseContext(withSkills, mentions);
-		const withCompaction = this._deps.compaction.useLastCompaction(withDbContext);
-		const withResolvedAttachments = await resolveAttachments(withCompaction, this._deps.getImageById);
+		const withCollapsedStories = artifacts
+			? collapseStoryToolOutputs(withoutStaleQueries, artifacts)
+			: withoutStaleQueries;
+		const withStoryMode = this._addStoryMode(withCollapsedStories, mentions);
+		const withSkills = this._addSkills(withStoryMode, mentions);
+		const withCitation = this._addCitationContext(withSkills);
+		const withDbContext = this._addDatabaseContext(withCitation, mentions);
+		const withStoryQuestion = addStoryQuestionReference(withDbContext, this.chat.forkMetadata);
+		const withCompaction = keepStoryReferencesThroughCompaction(
+			withStoryQuestion,
+			this._deps.compaction.useLastCompaction(withStoryQuestion),
+		);
+		const withStoryReferences = await safeExpandStoryReferences(withCompaction, {
+			userId: this.chat.userId,
+			projectId: this.chat.projectId,
+		});
+		const withArtifacts = artifacts ? appendChatArtifacts(withStoryReferences, artifacts) : withStoryReferences;
+		const withResolvedAttachments = await resolveAttachments(withArtifacts, this._deps.getImageById);
 
 		this._systemPrompt = await this._deps.buildSystemPrompt({ toolNames: Object.keys(this._agentTools), timezone });
 		this._runCompaction = new RunCompaction(this._deps.compaction);
@@ -399,6 +450,15 @@ export class AgentManager {
 		} finally {
 			this._markFinished();
 		}
+	}
+
+	private _addStoryMode(messages: UIMessage[], mentions?: Mention[]): UIMessage[] {
+		const mode = resolveStoryMode(mentions, this._toolContext.userGroupFeatures);
+		if (!mode) {
+			return messages;
+		}
+		const instruction = STORY_MODE_INSTRUCTIONS[mode];
+		return this._transformLastUserMessageText(messages, (text) => `${instruction}\n\n${text}`);
 	}
 
 	private _addCitationContext(messages: UIMessage[]): UIMessage[] {

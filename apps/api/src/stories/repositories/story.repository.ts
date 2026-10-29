@@ -6,7 +6,7 @@ import { ChatRepository, type StoredSqlQuery } from '../../chats/chat.repository
 import { Prisma, type Story, type StoryDataCache, type StoryVersion } from '../../generated/prisma/client.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import type { DbExecutor } from '../../prisma/prisma.types.js';
-import type { StoryQuerySources } from '../types/story-cache.js';
+import type { StoryCachedQueryData, StoryDataCacheRow, StoryQuerySources } from '../types/story-cache.js';
 import { sharedStoryGrantsUser } from './shared-story.repository.js';
 import { andAll, anyOf, inList, insertNextStoryVersion, LATEST_VERSIONS } from './story-sql.js';
 
@@ -91,6 +91,8 @@ function archivedStoryFilter(archived: boolean | undefined): Prisma.Sql {
 	return archived ? Prisma.sql`story.archived_at IS NOT NULL` : Prisma.sql`story.archived_at IS NULL`;
 }
 
+const ANALYTICS_THROTTLE_MS = 2 * 60 * 1_000;
+
 /** Port of upstream `queries/story.queries.ts`. */
 @Injectable()
 export class StoryRepository {
@@ -112,6 +114,92 @@ export class StoryRepository {
 		executor: DbExecutor = this.prisma,
 	): Promise<Story> {
 		return executor.story.create({ data: { ...data, format: 'custom' } });
+	}
+
+	/** Upstream `activity.queries` `startStoryRefreshActivity`: a running `story.refreshed` activity. */
+	startStoryRefreshActivity(input: {
+		projectId: string;
+		userId: string | null;
+		storyId: string;
+		chatId: string | null;
+		trigger: 'manual' | 'schedule' | 'system';
+	}): Promise<{ id: string }> {
+		return this.prisma.activity.create({
+			data: {
+				projectId: input.projectId,
+				userId: input.userId,
+				type: 'story.refreshed',
+				trigger: input.trigger,
+				status: 'running',
+				storyId: input.storyId,
+				chatId: input.chatId,
+				payload: { queriesRefreshed: 0 },
+			},
+			select: { id: true },
+		});
+	}
+
+	/** Upstream `activity.queries` `completeActivity`. */
+	async completeActivity(activityId: string, payload?: Record<string, unknown> | null): Promise<void> {
+		await this.prisma.activity.updateMany({
+			where: { id: activityId, status: 'running' },
+			data: {
+				status: 'completed',
+				completedAt: new Date(),
+				...(payload !== undefined && { payload: (payload ?? Prisma.DbNull) as Prisma.InputJsonValue }),
+			},
+		});
+	}
+
+	/** Upstream `activity.queries` `failActivity`. */
+	async failActivity(activityId: string, errorMessage: string): Promise<void> {
+		await this.prisma.activity.updateMany({
+			where: { id: activityId, status: 'running' },
+			data: { status: 'failed', completedAt: new Date(), errorMessage },
+		});
+	}
+
+	/** Upstream `analytics-event.queries` `createEvent`. */
+	async createAnalyticsEvent(input: Prisma.AnalyticsEventUncheckedCreateInput): Promise<void> {
+		await this.prisma.analyticsEvent.create({ data: input });
+	}
+
+	/** Upstream `analytics-event.queries` `getLastEvent`: the same actor's event on the asset in the last 2 minutes. */
+	async getLastAnalyticsEvent(input: {
+		type: string;
+		assetType: string;
+		actorUserId: string | null;
+		chatId?: string | null;
+		storyId?: string | null;
+	}): Promise<{ id: string } | null> {
+		return this.prisma.analyticsEvent.findFirst({
+			where: {
+				type: input.type,
+				assetType: input.assetType,
+				actorUserId: input.actorUserId,
+				...(input.chatId && { chatId: input.chatId }),
+				...(input.storyId && { storyId: input.storyId }),
+				createdAt: { gte: new Date(Date.now() - ANALYTICS_THROTTLE_MS) },
+			},
+			orderBy: { createdAt: 'desc' },
+			select: { id: true },
+		});
+	}
+
+	/** Upstream `activity.queries` `getLatestStoryRefreshFailure`: the latest refresh activity, when it failed. */
+	async getLatestStoryRefreshFailure(storyId: string): Promise<{ errorMessage: string; failedAt: Date } | null> {
+		const latestRefresh = await this.prisma.activity.findFirst({
+			where: { storyId, type: 'story.refreshed' },
+			orderBy: { startedAt: 'desc' },
+			select: { status: true, errorMessage: true, startedAt: true, completedAt: true },
+		});
+		if (!latestRefresh || latestRefresh.status !== 'failed') {
+			return null;
+		}
+		return {
+			errorMessage: latestRefresh.errorMessage ?? 'Story refresh failed.',
+			failedAt: latestRefresh.completedAt ?? latestRefresh.startedAt,
+		};
 	}
 
 	getStoryById(storyId: string): Promise<Story | null> {
@@ -429,12 +517,14 @@ export class StoryRepository {
 		});
 	}
 
-	getStoryDataCacheByChatAndSlug(chatId: string, slug: string): Promise<StoryDataCache | null> {
-		return this.prisma.storyDataCache.findFirst({ where: { story: { chatId, slug } } });
+	async getStoryDataCacheByChatAndSlug(chatId: string, slug: string): Promise<StoryDataCacheRow | null> {
+		return (await this.prisma.storyDataCache.findFirst({
+			where: { story: { chatId, slug } },
+		})) as StoryDataCacheRow | null;
 	}
 
-	getStoryDataCacheByStoryId(storyId: string): Promise<StoryDataCache | null> {
-		return this.prisma.storyDataCache.findFirst({ where: { storyId } });
+	async getStoryDataCacheByStoryId(storyId: string): Promise<StoryDataCacheRow | null> {
+		return (await this.prisma.storyDataCache.findFirst({ where: { storyId } })) as StoryDataCacheRow | null;
 	}
 
 	async getStoryDataCachedAt(storyId: string): Promise<Date | null> {
@@ -442,7 +532,7 @@ export class StoryRepository {
 		return row?.cachedAt ?? null;
 	}
 
-	async getStoryQueryDataByStoryIds(storyIds: string[]): Promise<Map<string, StoryDataCache['queryData']>> {
+	async getStoryQueryDataByStoryIds(storyIds: string[]): Promise<Map<string, StoryCachedQueryData>> {
 		if (storyIds.length === 0) {
 			return new Map();
 		}
@@ -450,7 +540,7 @@ export class StoryRepository {
 			where: { storyId: { in: storyIds } },
 			select: { storyId: true, queryData: true },
 		});
-		return new Map(rows.map((row) => [row.storyId, row.queryData]));
+		return new Map(rows.map((row) => [row.storyId, row.queryData as StoryCachedQueryData]));
 	}
 
 	async upsertStoryDataCache(

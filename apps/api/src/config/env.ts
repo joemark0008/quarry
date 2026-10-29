@@ -268,3 +268,9 @@ export function parseEnv(source: NodeJS.ProcessEnv = process.env): Env {
 export function loadDotenv(): void {
 	dotenv.config({ path: path.join(import.meta.dirname, '..', '..', '..', '..', '.env'), quiet: true });
 }
+
+/** The story beta flags; upstream's module-level story services read them through `stories/env.ts`. */
+export const storyEnvSchema = baseEnvSchema.pick({
+	BETA_CUSTOM_STORIES_ENABLED: true,
+	BETA_STORY_FILTERS_ENABLED: true,
+});

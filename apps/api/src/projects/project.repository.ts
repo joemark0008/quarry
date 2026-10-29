@@ -151,6 +151,17 @@ export class ProjectRepository {
 		return orgMember ? (orgMember.role as UserRole) : null;
 	}
 
+	/** Upstream `listProjectMembersWithRoles`: the project's own members, with their role. */
+	listProjectMembersWithRoles(
+		projectId: string,
+	): Promise<{ id: string; name: string; email: string; role: UserRole }[]> {
+		return this.prisma.$queryRaw`
+			SELECT u.id, u.name, u.email, pm.role
+			FROM "user" u
+			JOIN project_member pm ON pm.user_id = u.id
+			WHERE pm.project_id = ${projectId}`;
+	}
+
 	/** Users who are project members or members of the project's organization (upstream `listUsersWithProjectAccess`). */
 	listUsersWithProjectAccess(
 		projectId: string,

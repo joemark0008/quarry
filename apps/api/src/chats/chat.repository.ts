@@ -621,12 +621,19 @@ export class ChatRepository {
 
 	/** A chat seeded with copies of other messages; tool call ids are renewed (upstream `createForkedChat`). */
 	createForkedChat(
-		newChat: { projectId: string; userId: string; title: string; forkMetadata: ForkMetadata },
+		newChat: { projectId: string; userId: string; title: string; forkMetadata?: ForkMetadata },
 		messages: Array<Omit<UIMessage, 'id'>>,
 	): Promise<Chat> {
 		return this.prisma.$transaction(async (tx) => {
 			const chat = await tx.chat.create({
-				data: { ...newChat, forkMetadata: newChat.forkMetadata as unknown as Prisma.InputJsonValue },
+				data: {
+					projectId: newChat.projectId,
+					userId: newChat.userId,
+					title: newChat.title,
+					...(newChat.forkMetadata && {
+						forkMetadata: newChat.forkMetadata as unknown as Prisma.InputJsonValue,
+					}),
+				},
 			});
 			if (messages.length === 0) {
 				return chat;

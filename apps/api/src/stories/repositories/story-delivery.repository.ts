@@ -1,7 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import type { NotificationChannel, RecipientMode } from '@quarry/shared/types';
 
 import { Prisma, type StoryDelivery } from '../../generated/prisma/client.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
+
+/** A `story_delivery` row with its JSON columns typed (upstream Drizzle's `DBStoryDelivery`). */
+export type StoryDeliveryRow = Omit<
+	StoryDelivery,
+	'channels' | 'recipientMode' | 'recipientUserIds' | 'recipientGroupIds'
+> & {
+	channels: NotificationChannel[];
+	recipientMode: RecipientMode;
+	recipientUserIds: string[];
+	recipientGroupIds: string[];
+};
 
 /**
  * Port of upstream `queries/story-delivery.queries.ts`. Upstream `setScheduledJobId` is not ported:
@@ -11,8 +23,8 @@ import { PrismaService } from '../../prisma/prisma.service.js';
 export class StoryDeliveryRepository {
 	constructor(private readonly prisma: PrismaService) {}
 
-	getByStoryId(storyId: string): Promise<StoryDelivery | null> {
-		return this.prisma.storyDelivery.findUnique({ where: { storyId } });
+	async getByStoryId(storyId: string): Promise<StoryDeliveryRow | null> {
+		return (await this.prisma.storyDelivery.findUnique({ where: { storyId } })) as StoryDeliveryRow | null;
 	}
 
 	upsert(input: Prisma.StoryDeliveryUncheckedCreateInput): Promise<StoryDelivery> {

@@ -6,15 +6,13 @@ import {
 import type { executeSql } from '@quarry/shared/tools';
 import { executeSql as schemas, LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 
+import { env } from '../../stories/env.js';
 import { isWarehouseSqlEnabled } from '../services/semantic-layer.service.js';
 import { ExecuteSqlOutput, renderToModelOutput } from '../tool-outputs/index.js';
 import { ToolContext } from '../types/tools.js';
 import { containsBlockedPassthroughCall, detectQueryRowLimit, isReadOnlySqlQuery } from '../utils/sql-filter.js';
 import { createTool } from '../utils/tools.js';
 import { queryAppDb } from './query-app-db.js';
-
-/** Story filter templates belong to stories (Phase 4). */
-const STORY_FILTERS_ENABLED = false;
 
 const EXECUTE_SEMANTIC_QUERY_TOOL_NAME = 'execute_semantic_query';
 
@@ -50,7 +48,7 @@ export async function executeQuery(
 	if (!options.compiledBySemanticLayer) {
 		assertWarehouseSqlAllowed(database_id, context);
 	}
-	const templateWarnings = STORY_FILTERS_ENABLED ? validateSqlFilterTemplate(sql_query) : [];
+	const templateWarnings = env.BETA_STORY_FILTERS_ENABLED ? validateSqlFilterTemplate(sql_query) : [];
 	const effectiveSql = stripSqlFilterBlocks(sql_query);
 	if (templateWarnings.length > 0 && sqlIncludesFilterTemplate(effectiveSql)) {
 		throw new Error(`Invalid story filter SQL template: ${templateWarnings.join(' ')}`);
@@ -248,7 +246,7 @@ const LOCAL_ONLY_DESCRIPTION = [
 function buildExecuteSqlToolDescription() {
 	return [
 		'Execute a SQL query against the connected database and return the results. If multiple databases are configured, specify the database_id.',
-		...(STORY_FILTERS_ENABLED
+		...(env.BETA_STORY_FILTERS_ENABLED
 			? [
 					'Story filters may be embedded as SQL template blocks that are stripped when this tool runs in chat.',
 					'Correct syntax: WHERE 1 = 1 {% filter country %} AND country IN ({{ filters.country.sql }}) {% endfilter %}.',
