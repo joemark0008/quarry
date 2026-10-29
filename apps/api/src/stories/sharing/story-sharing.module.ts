@@ -8,6 +8,7 @@ import { storyDeliveryRendering } from './story-delivery-rendering.js';
 import { EmbedStoryDownloadController, StoryThumbnailController } from './story-sharing.controller.js';
 import { StorySharingRepository } from './story-sharing.repository.js';
 import {
+	ChatDownloadResolver,
 	CustomStoryViewerDownloadResolver,
 	EmbedResolver,
 	SharedChatStoryResolver,
@@ -35,6 +36,7 @@ import { StorySharingService } from './story-sharing.service.js';
 		StoryDownloadResolver,
 		CustomStoryViewerDownloadResolver,
 		SharedChatStoryResolver,
+		ChatDownloadResolver,
 		StoryThemeGenerateResolver,
 	],
 })

@@ -1,12 +1,19 @@
 import crypto from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';
+import type { UserPreferences } from '@quarry/shared/types';
 
 import type { Prisma, User } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import type { DbExecutor } from '../prisma/prisma.types.js';
 
 const CREDENTIAL_PROVIDER_ID = 'credential';
+
+/** Upstream `StoredUserPreferences`: what `user_preference.preferences` holds. */
+export interface StoredUserPreferences extends UserPreferences {
+	projectPreferences?: Record<string, unknown>;
+	supportRequestSentAt?: number;
+}
 
 export interface UserProfile {
 	id: string;
@@ -110,5 +117,26 @@ export class UserRepository {
 			this.prisma.account.update({ where: { id: accountId }, data: { password: hashedPassword } }),
 			this.prisma.user.update({ where: { id: userId }, data: { requiresPasswordReset: needToResetPassword } }),
 		]);
+	}
+
+	/** Port of upstream `queries/user-preference.queries.ts`. */
+	async getUserPreferences(userId: string): Promise<StoredUserPreferences> {
+		const row = await this.prisma.userPreference.findUnique({ where: { userId }, select: { preferences: true } });
+		return (row?.preferences ?? {}) as StoredUserPreferences;
+	}
+
+	/** Merges `partial` into the stored preferences, with the row locked so concurrent updates don't drop keys. */
+	updateUserPreferences(userId: string, partial: Partial<StoredUserPreferences>): Promise<StoredUserPreferences> {
+		return this.prisma.$transaction(async (tx) => {
+			await tx.userPreference.upsert({ where: { userId }, create: { userId, preferences: {} }, update: {} });
+			const [row] = await tx.$queryRaw<{ preferences: StoredUserPreferences }[]>`
+				SELECT preferences FROM user_preference WHERE user_id = ${userId} FOR UPDATE`;
+			const preferences = { ...(row?.preferences ?? {}), ...partial };
+			await tx.userPreference.update({
+				where: { userId },
+				data: { preferences: preferences as Prisma.InputJsonValue },
+			});
+			return preferences;
+		});
 	}
 }

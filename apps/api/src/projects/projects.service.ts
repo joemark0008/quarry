@@ -3,8 +3,13 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { Injectable } from '@nestjs/common';
+import { DATE_FORMAT_PRESETS, type DisplaySettings } from '@quarry/shared/date';
 import type { UserRole } from '@quarry/shared/types';
+import { z } from 'zod/v4';
 
+import { isDatabaseObjectAllowed } from '../agent/services/context-access.js';
+import { fullProjectContextAccess } from '../agent/services/user-group-context-access.service.js';
+import { type DatabaseObject, getDatabaseObjects } from '../agent/user-rules.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
 import type { Project, ProjectSavedPrompt } from '../generated/prisma/client.js';
@@ -13,6 +18,15 @@ import { PROJECT_CONFIG_FILE } from '../sql-engine/project-config.js';
 import type { ProjectSummary } from './models/project.model.js';
 import { ProjectRepository } from './project.repository.js';
 import { ProjectSavedPromptRepository } from './project-saved-prompt.repository.js';
+
+const displaySettingsInputSchema = z.object({
+	dateFormat: z
+		.object({
+			preset: z.enum(DATE_FORMAT_PRESETS),
+			customFormat: z.string().trim().max(64).optional(),
+		})
+		.optional(),
+});
 
 /** Port of upstream trpc `project` (core procedures) and `services/project*.ts`. */
 @Injectable()
@@ -126,6 +140,30 @@ export class ProjectsService {
 
 	private projectsDir(): string {
 		return path.resolve(this.config.env.QUARRY_PROJECTS_DIR);
+	}
+
+	/**
+	 * Upstream `project.getDatabaseObjects`: the synced tables, for `@` mentions in the chat input. Filtered by the
+	 * user's warehouse table access, which is full access until user groups are ported (Phase 6).
+	 */
+	listDatabaseObjects(project: Project): DatabaseObject[] {
+		if (!project.path) {
+			return [];
+		}
+		const access = fullProjectContextAccess().warehouseTableAccess;
+		return getDatabaseObjects(project.path).filter((object) => isDatabaseObjectAllowed(access, object));
+	}
+
+	getDisplaySettings(projectId: string): Promise<DisplaySettings> {
+		return this.projects.getDisplaySettings(projectId);
+	}
+
+	updateDisplaySettings(projectId: string, input: unknown): Promise<DisplaySettings> {
+		const result = displaySettingsInputSchema.safeParse(input);
+		if (!result.success) {
+			throw new HandlerError('BAD_REQUEST', result.error.issues.map((issue) => issue.message).join('; '));
+		}
+		return this.projects.updateDisplaySettings(projectId, result.data);
 	}
 }
 

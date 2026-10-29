@@ -1,10 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLJSON } from 'graphql-type-json';
 
 import type { AuthUser } from '../auth/auth.service.js';
 import { CurrentUser } from '../common/decorators/current.decorator.js';
 import { Public } from '../common/decorators/public.decorator.js';
 import { ModifyPasswordInput } from './dto/modify-password.input.js';
 import { UpdateProfileInput } from './dto/update-profile.input.js';
+import { UpdateUserPreferencesInput } from './dto/update-user-preferences.input.js';
 import { User } from './models/user.model.js';
 import { UsersService } from './users.service.js';
 
@@ -32,5 +34,15 @@ export class UsersResolver {
 	async modifyPassword(@CurrentUser() user: AuthUser, @Args('input') input: ModifyPasswordInput): Promise<boolean> {
 		await this.users.modifyPassword(user.id, input.newPassword, input.confirmPassword);
 		return true;
+	}
+
+	@Query(() => GraphQLJSON, { description: "The signed-in user's preferences (upstream `user.getPreferences`)." })
+	userPreferences(@CurrentUser() user: AuthUser) {
+		return this.users.getPreferences(user.id);
+	}
+
+	@Mutation(() => GraphQLJSON, { description: 'Upstream `user.updatePreferences`.' })
+	updateUserPreferences(@CurrentUser() user: AuthUser, @Args('input') input: UpdateUserPreferencesInput) {
+		return this.users.updatePreferences(user.id, input);
 	}
 }

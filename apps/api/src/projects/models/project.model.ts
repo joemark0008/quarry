@@ -44,3 +44,21 @@ export class SavedPrompt {
 	@Field()
 	updatedAt: Date;
 }
+
+@ObjectType({ description: 'A synced warehouse table (upstream `project.getDatabaseObjects`).' })
+export class DatabaseObject {
+	@Field()
+	type: string;
+
+	@Field()
+	database: string;
+
+	@Field()
+	schema: string;
+
+	@Field()
+	table: string;
+
+	@Field()
+	fqdn: string;
+}

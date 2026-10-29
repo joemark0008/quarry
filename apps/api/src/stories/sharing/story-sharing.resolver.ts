@@ -10,6 +10,7 @@ import type { Project } from '../../generated/prisma/client.js';
 import { customStoryViewerRoutes } from '../procedures/custom-story-viewer.procedures.js';
 import { storyRoutes } from '../procedures/story.procedures.js';
 import { storyThemeRoutes } from '../procedures/story-theme.procedures.js';
+import { chatDownloadRoutes } from './chat-download.procedures.js';
 import { embedRoutes } from './embed.procedures.js';
 import { sharedChatStoryRoutes } from './shared-chat-story.procedures.js';
 import { sharedStoryRoutes } from './shared-story.procedures.js';
@@ -320,6 +321,22 @@ export class SharedChatStoryResolver {
 		@Args('input', { type: () => GraphQLJSON, nullable: true }) input?: unknown,
 	) {
 		return this.sharing.run(sharedChatStoryRoutes, 'downloadStory', { user, project, userRole }, input);
+	}
+}
+
+/** Upstream `trpc.chat.download`: a whole chat rendered through the story download pipeline. */
+@Resolver()
+export class ChatDownloadResolver {
+	constructor(private readonly sharing: StorySharingService) {}
+
+	@Query(() => GraphQLJSON, {
+		description: 'Upstream `trpc.chat.download`: `{ data (base64), filename, mimeType }`.',
+	})
+	chatDownload(
+		@CurrentUser() user: AuthUser,
+		@Args('input', { type: () => GraphQLJSON, nullable: true }) input?: unknown,
+	) {
+		return this.sharing.run(chatDownloadRoutes, 'download', { user }, input);
 	}
 }
 

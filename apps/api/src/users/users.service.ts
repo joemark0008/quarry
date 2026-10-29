@@ -6,7 +6,7 @@ import { regexPassword } from '../common/utils/auth-utils.js';
 import type { User as DbUser } from '../generated/prisma/client.js';
 import { DEACTIVATED_ACCOUNT_MESSAGE } from './account-status.js';
 import type { User } from './models/user.model.js';
-import { UserRepository } from './user.repository.js';
+import { type StoredUserPreferences, UserRepository } from './user.repository.js';
 
 /** Ports of upstream trpc `user` (hasUsers), `account` (modifyPassword) and `account-status.service.ts`. */
 @Injectable()
@@ -51,11 +51,27 @@ export class UsersService {
 		await this.users.updateAccountPassword(account.id, hashedPassword, userId, false);
 	}
 
+	/** Upstream `user.getPreferences` (minus the internal `supportRequestSentAt`). */
+	async getPreferences(userId: string): Promise<PublicUserPreferences> {
+		return toPublicUserPreferences(await this.users.getUserPreferences(userId));
+	}
+
+	async updatePreferences(userId: string, input: Pick<StoredUserPreferences, 'toolCallDensity'>) {
+		return toPublicUserPreferences(await this.users.updateUserPreferences(userId, input));
+	}
+
 	async assertUserIsActive(userId: string): Promise<void> {
 		if (await this.users.isUserDeactivated(userId)) {
 			throw new HandlerError('FORBIDDEN', DEACTIVATED_ACCOUNT_MESSAGE);
 		}
 	}
+}
+
+type PublicUserPreferences = Omit<StoredUserPreferences, 'supportRequestSentAt'>;
+
+function toPublicUserPreferences(preferences: StoredUserPreferences): PublicUserPreferences {
+	const { supportRequestSentAt: _, ...publicPreferences } = preferences;
+	return publicPreferences;
 }
 
 export function toUserModel(user: DbUser): User {

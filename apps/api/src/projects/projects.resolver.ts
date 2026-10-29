@@ -1,4 +1,5 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLJSON } from 'graphql-type-json';
 
 import type { AuthUser } from '../auth/auth.service.js';
 import { ProjectAccess, ProjectAdmin } from '../common/decorators/access.decorator.js';
@@ -10,7 +11,7 @@ import {
 	SavedPromptInput,
 	UpdateSavedPromptInput,
 } from './dto/project.input.js';
-import { ProjectSummary, SavedPrompt } from './models/project.model.js';
+import { DatabaseObject, ProjectSummary, SavedPrompt } from './models/project.model.js';
 import { ProjectsService } from './projects.service.js';
 
 @Resolver(() => ProjectSummary)
@@ -97,5 +98,26 @@ export class ProjectsResolver {
 	): Promise<boolean> {
 		await this.projectsService.deleteSavedPrompt(project.id, promptId);
 		return true;
+	}
+
+	@ProjectAccess()
+	@Query(() => [DatabaseObject], { description: 'Synced warehouse tables of the selected project (`@` mentions).' })
+	databaseObjects(@CurrentProject() project: Project): DatabaseObject[] {
+		return this.projectsService.listDatabaseObjects(project);
+	}
+
+	@ProjectAccess()
+	@Query(() => GraphQLJSON, { description: 'Upstream `project.getDisplaySettings`: the date format.' })
+	displaySettings(@CurrentProject() project: Project) {
+		return this.projectsService.getDisplaySettings(project.id);
+	}
+
+	@ProjectAdmin()
+	@Mutation(() => GraphQLJSON, { description: 'Upstream `project.updateDisplaySettings`.' })
+	updateDisplaySettings(
+		@CurrentProject() project: Project,
+		@Args('input', { type: () => GraphQLJSON }) input: unknown,
+	) {
+		return this.projectsService.updateDisplaySettings(project.id, input);
 	}
 }

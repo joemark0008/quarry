@@ -155,6 +155,15 @@ input CreateSharedChatInput {
   visibility: String! = "project"
 }
 
+"""A synced warehouse table (upstream `project.getDatabaseObjects`)."""
+type DatabaseObject {
+  database: String!
+  fqdn: String!
+  schema: String!
+  table: String!
+  type: String!
+}
+
 type DatabaseSyncResult {
   databaseName: String!
   removedPaths: Int!
@@ -517,6 +526,9 @@ type Mutation {
   """Upstream `project.updateDefaultModels`."""
   updateDefaultModels(settings: JSON!): JSON!
 
+  """Upstream `project.updateDisplaySettings`."""
+  updateDisplaySettings(input: JSON!): JSON!
+
   """Upstream `project.updateMapBoundary`: the updated boundary sets."""
   updateMapBoundary(input: JSON!): JSON!
 
@@ -529,6 +541,9 @@ type Mutation {
 
   """Runs an edited query and saves it in the chat's message."""
   updateSqlQuery(input: SqlEditInput!): SqlEditResult!
+
+  """Upstream `user.updatePreferences`."""
+  updateUserPreferences(input: UpdateUserPreferencesInput!): JSON!
 
   """Upstream `project.upsertLlmConfig`."""
   upsertLlmConfig(input: JSON!): JSON!
@@ -597,6 +612,11 @@ type Query {
 
   """Upstream `chat.getContextUsage`."""
   chatContextUsage(input: ChatContextUsageInput!): ContextUsage!
+
+  """
+  Upstream `trpc.chat.download`: `{ data (base64), filename, mimeType }`.
+  """
+  chatDownload(input: JSON): JSON!
 
   """Upstream `chat.getForkMetadata`."""
   chatForkMetadata(chatId: ID!): JSON
@@ -689,11 +709,17 @@ type Query {
   """Upstream `trpc.customStoryViewer.getVersion`."""
   customStoryViewerGetVersion(input: JSON): JSON
 
+  """Synced warehouse tables of the selected project (`@` mentions)."""
+  databaseObjects: [DatabaseObject!]!
+
   """Upstream `project.getDefaultChatModel`."""
   defaultChatModel: JSON
 
   """Upstream `project.getDefaultModels`."""
   defaultModels: JSON!
+
+  """Upstream `project.getDisplaySettings`: the date format."""
+  displaySettings: JSON!
 
   """Upstream `trpc.embed.getChart`."""
   embedGetChart(input: JSON): JSON
@@ -946,6 +972,9 @@ type Query {
 
   """Upstream `trpc.storyTheme.listVersions`."""
   storyThemeListVersions(input: JSON): JSON
+
+  """The signed-in user's preferences (upstream `user.getPreferences`)."""
+  userPreferences: JSON!
   version: AppVersion!
 
   """Databases configured in the selected project."""
@@ -1138,6 +1167,11 @@ input UpdateSavedPromptInput {
   prompt: String
   promptId: ID!
   title: String
+}
+
+input UpdateUserPreferencesInput {
+  """compact or detailed"""
+  toolCallDensity: String
 }
 
 type User {

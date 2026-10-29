@@ -182,6 +182,21 @@ export class ProjectRepository {
 		return { dateFormat: stored.dateFormat ?? { ...DEFAULT_DATE_FORMAT_SETTINGS } };
 	}
 
+	/** Upstream `updateDisplaySettings`: merges into the stored settings, keeping the date format when not given. */
+	async updateDisplaySettings(projectId: string, settings: DisplaySettings): Promise<DisplaySettings> {
+		const current = await this.getDisplaySettings(projectId);
+		const next: DisplaySettings = {
+			...current,
+			...settings,
+			dateFormat: settings.dateFormat ?? current.dateFormat,
+		};
+		await this.prisma.project.update({
+			where: { id: projectId },
+			data: { displaySettings: next as unknown as Prisma.InputJsonValue },
+		});
+		return next;
+	}
+
 	async getMapSettings(projectId: string): Promise<MapSettings> {
 		const project = await this.getProjectById(projectId);
 		return (project?.mapSettings ?? {}) as MapSettings;
