@@ -100,3 +100,12 @@ Since Phase 8 there is one backend: the frontend (Vite, :3000) proxies `/graphql
 - **Image size:** `quarry:phase8` is 3.9 GB (dev dependencies, since apps/api runs from TS sources, plus Chromium). Compiling apps/api with SWC and pruning dev dependencies would shrink it.
 - **Left as `nao`:** see PHASES.md Phase 8 (`.nao/` folders, `nao/` branch prefix, co-author, system prompt credit, file names).
 - **Seen in the browser check, not caused by the cut-over:** after creating a story the agent sometimes adds a `<story-reference>` card with the story's slug instead of its id, which shows "Story no longer available" (the system prompt meant it for existing library stories).
+
+## Saved query tools (2026-10-30)
+
+- **New quarry feature, not a port** (upstream has none). Branch `claude/query-tools-05a582`.
+- **Model:** `project_query_tool` (migration `0001_project_query_tool`): name, description, SQL template with `{{ name }}` placeholders, typed `parameters` JSON (`@quarry/shared/query-tools`), optional warehouse `database_id`, `enabled`, `created_by`.
+- **API:** `apps/api/src/query-tools/`. Reads need project access; create, preview and writes need a non-viewer role, and editing or deleting someone else's tool needs project admin. Saving validates the SQL with the warehouse guards.
+- **Binding:** placeholders compile to `$1…$n`; values are type-checked and sent to `pg` as bind values (`WarehouseSqlOptions.params` → `SqlRequest.params` → `WarehouseDriver.execute(sql, limits, params)`). A literal copy, deparsed from the AST, is kept as the result's SQL for display and re-runs. Placeholders only fit where a value goes (`FROM {{ t }}` is a parse error).
+- **Agent:** each enabled tool is `qt_<name>` (`agent/tools/saved-query-tool.ts`, added in `AgentService.create` next to the web tools; left out when the semantic layer is exclusive). It runs through `execute_sql`'s `executeQuery`; its output is an `execute_sql` result plus `query_tool` (name, SQL). Query-result lookups accept `qt_` parts (`isQueryResultPartType`, `isQueryResultToolName`, `QUERY_RESULT_TOOL_NAME_SQL`); they can't be edited in place through `execute_sql`.
+- **Frontend:** Settings → Project → Query tools (builder in `lib/query-builder.ts`, columns from the synced `columns.json` via `queryToolTableColumns`), `SavedQueryToolCall` in chat, and "Save as query tool" on `execute_sql` results (`?sql=`).
