@@ -36,7 +36,8 @@ Context carried over from Claude Code sessions run under another account (transc
 | 2b Projects, warehouse, context sync                 | Committed on `phase-2-core` (`5c35aa6`)                                                          |
 | **2c Chats + agent**                                 | **In progress** — agent + tests committed on `phase-2-core`, see below                           |
 | 2d Attachments, charts, transcribe, sandbox          | Committed on `phase-2-core` — Phase 2 complete, see PHASES.md 2d                                 |
-| 3–8                                                  | Not started — next: the Phase 3–7 decision point                                                 |
+| 3 Context                                            | Done on `phase-3-context` (not merged) — see PHASES.md Phase 3 and "Phase 3 notes" below         |
+| 4–8                                                  | Not started — chosen: 4 Stories, 5 Automations, 6 Platform (one session each); 7 not chosen yet  |
 
 ### Where 2c stopped
 
@@ -70,3 +71,10 @@ Until Phase 8 the frontend talks to two backends: `/graphql`, `/api/auth/*`, `/h
 - Login: the baseline test account on line 12 of `fork-reference/.env`.
 - Don't run `prisma migrate` against `nao_baseline` — its schema belongs to upstream.
 - Strings still named `nao` until Phase 8 (headers, tool names, `nao_config`, `nao` provider id, custom-story protocol) are listed in PHASES.md under 1c.
+
+## Phase 3 notes (2026-10-29)
+
+- **Semantic layer without Python:** `apps/api/src/semantic-layer/metricflow/` compiles MetricFlow manifests to Postgres SQL. Manifests made by `dbt parse` against DuckDB name DuckDB relations (`"jaffle_shop"."main".orders`); a Postgres project needs a manifest whose `relation_name`s point at Postgres. Comparison script: `metricflow/__fixtures__/reference_queries.json` + the specs.
+- **Context explorer Git:** only the generic provider (`QUARRY_CONTEXT_SOURCE=git`, `QUARRY_CONTEXT_GIT_URL`, `_BRANCH`, `_SUBPATH`, `_TOKEN` or `_SSH_KEY`) works until Phase 7; edits happen in per-user worktrees under `<projects dir>/.nao/worktrees/`, reach the agent after the branch is merged and live context is pulled.
+- **Agent profiles:** `AgentProfile` (agent-manager.ts) takes `tools`, `systemPrompt`, `maxSteps`, `skipMemoryExtraction`; `AgentService.create` honours them. Phases 4/5 (story refresh, automations) should build their runs the same way (see `agent/profiles/context-recommendations.ts`).
+- **For later phases:** `ensureContextRecommendationsScheduleForNewProject` exists but project creation doesn't call it; `AgentToolServices` (types/tools.ts) is where new services reach tools (`skills`, `scheduleOnboardingRules` added); `reviveDates` in the frontend's `apollo-procedures.ts` for JSON-scalar results; user-group grants (skills, files, docs) still use `fullProjectContextAccess()` until Phase 6.

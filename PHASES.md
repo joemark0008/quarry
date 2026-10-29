@@ -184,13 +184,13 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ### Tasks
 
-- [ ] `context-explorer`: file tree, read/edit files, git sync, path access rules
-- [ ] `semantic-layer`: port `nao_core/semantic_layer` + compile to Postgres SQL; register `execute_semantic_query`
-- [ ] `skills`: skill CRUD; register `load_skill`
-- [ ] `memory`: memory CRUD and agent memory hooks
-- [ ] `onboarding`: onboarding rules; register `onboarding_*` and `generate_onboarding_rules`
-- [ ] `context-recommendations`: service + `context.recommendations` job; `context.branch.cleanup` job
-- [ ] Frontend screens on Apollo
+- [x] `context-explorer`: file tree, read/edit files, git sync, path access rules — _`ContextExplorerModule`: upstream's `context-explorer*` services, `context-explorer-git/*`, `context-repo`, `git-repo`, `generic-git`, `safe-file-write`, `file-tree-catalog` copied nearly unchanged under `files/` and `git/` (module-level, the repository bound at boot); `NAO_CONTEXT_*` → `QUARRY_CONTEXT_*`. 22 GraphQL operations (`contextRepositoryStatus`, `contextFile`, `writeContextFile`, `createContextBranchAndCommit`, `pushContextBranch`, `pullLiveContext`…) return upstream's shapes as `JSON`. Only the generic Git provider works: GitHub/GitLab connections, tokens and PR/MR creation are stand-ins until Phase 7 (`git-providers`); user-group license locking not ported_
+- [x] `semantic-layer`: port `nao_core/semantic_layer` + compile to Postgres SQL; register `execute_semantic_query` — _no Python: `semantic-layer/metricflow/` is a TypeScript compiler for the manifest subset (simple/ratio/derived/cumulative metrics, all aggregations, one-hop entity joins, `Dimension`/`TimeDimension`/`Entity`/`Metric` filters, time ranges, multi-metric joins), Postgres only; unsupported (clear error): conversion metrics, `non_additive_dimension`, `join_to_timespine`, `offset_window`/`offset_to_grain`, multi-hop joins, `date_part`, non-daily time spines. `agent/services/semantic-layer.service.ts` is upstream's service with the FastAPI `/semantic_layer/compile` logic in process; context sync runs upstream's semantic-layer sync provider (`semantics/*.md` + `.meta/semantic_layer/semantic_manifest.json`, byte-identical docs for the example project)_
+- [x] `skills`: skill CRUD; register `load_skill` — _upstream has no skill CRUD (skills are `agent/skills/*.md` edited in the context explorer): `SkillsModule` ports `services/skill.ts` (`skills`, `skillCatalog`, `skillLoadErrors`), the internal `excel-handling`/`pdf-handling` skills and `load_skill`; `/skill` mentions and preloaded skills reach the agent. User-group skill grants are Phase 6 (everyone sees every skill)_
+- [x] `memory`: memory CRUD and agent memory hooks — _`MemoryModule` (`memories`, `memorySettings`, `projectMemorySettings`, `setMemoryEnabled`, `editMemory`, `deleteMemory`); memories are injected into the system prompt and extracted after each user message. Dropped with usage tracking: PostHog events and `llm_inference` rows. `AgentCoreModule` now holds `LlmService` so memory/onboarding/recommendations can use it without importing `AgentModule`_
+- [x] `onboarding`: onboarding rules; register `onboarding_*` and `generate_onboarding_rules` — _`OnboardingModule` ports `onboarding-rules.ts` (the `write-context-rules` skill ships in `apps/api/assets/skills/`; no `cheerio`) and exposes `generateOnboardingRules` for admins; the tools are registered behind `getTools({ onboarding: true })` as upstream. Upstream's onboarding chat (example project, CLI warehouse provisioning, `onboarding.*` tRPC) is not ported — its tables were dropped in 1a — so no run enables those tools yet and `generate_onboarding_rules` writes RULES.md for the run's project instead of finalizing a provisioning job_
+- [x] `context-recommendations`: service + `context.recommendations` job; `context.branch.cleanup` job — _`ContextRecommendationsModule`: the 789-line queries file as a Prisma repository, the run (agent profile with the recommendation tools, 40 steps), feedback coverage, 17 GraphQL operations, `@Job('context.recommendations')` with one pg-boss schedule per project from its frequency (beta flag). `context.branch.cleanup` runs daily at 05:00 UTC in `ContextExplorerModule`. Phase 7 leftovers: PR creation (`createPullRequest`, batch, `getPrStatus`, auto-PRs) and repo sub-path detection; new projects get their schedule at the next boot_
+- [x] Frontend screens on Apollo — _`lib/context-explorer-api.ts`, `lib/context-recommendation-api.ts`, `lib/memory-api.ts`, `lib/skill-api.ts`; call sites only swap the `trpc.` prefix. `reviveDates` in `apollo-procedures.ts` turns ISO strings under date keys back into `Date` (upstream used superjson). No new REST paths (all GraphQL), so the Vite proxy is unchanged_
 
 ### Done when
 
@@ -199,7 +199,8 @@ Port of the Python service and `nao_core/config/databases/*` (PLAN.md §6).
 
 ### Verify
 
-- Ported tests; semantic layer compiled SQL compared with upstream's Python output for the example project's `semantics/`
+- Ported tests; semantic layer compiled SQL compared with upstream's Python output for the example project's `semantics/` — _done 2026-10-29: 43 queries (15 on the example manifest, 28 on an extended one covering every supported feature) compiled by upstream's MetricFlow and by quarry, both run on the `warehouse` Postgres: identical rows for all, same errors for the 5 invalid ones. Ported specs: `test_metricflow.py`, `test_sync_provider.py`, `semantic-layer*.test.ts`, skill/load-skill/internal-skills, onboarding-rules, the context-explorer suites (git, search, write, routes, file-tree catalog, branch cleanup) and the recommendation suites (api 1840+ tests)_
+- Done-when checked live 2026-10-29 (split mode, project `jaffle-phase3` on the `warehouse` DB, `QUARRY_CONTEXT_SOURCE=git` on a local bare repo): RULES.md edited through `writeContextFile`, committed on a branch, pushed, merged on the remote, `pullLiveContext` → a new chat followed the new rule; "Show revenue by month" → `execute_semantic_query` compiled and ran on Postgres and charted 4 months
 
 ---
 
