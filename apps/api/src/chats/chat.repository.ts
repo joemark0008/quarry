@@ -34,6 +34,9 @@ import type { DbExecutor } from '../prisma/prisma.types.js';
 
 type MessageWithParts = ChatMessage & { messageParts: MessagePart[]; messageFeedback?: MessageFeedback | null };
 
+/** A stored query read back as SQL (upstream `StoredSqlQuery` of `execute-sql.queries`). */
+export type StoredSqlQuery = { sqlQuery: string; databaseId?: string; dialect?: string; adminMode: boolean };
+
 /** Columns of an own chat in the sidebar list (upstream `listOwnChats` / `listSharedWithMeChats`). */
 export interface ChatListRow {
 	id: string;
@@ -468,6 +471,69 @@ export class ChatRepository {
 		};
 	}
 
+	/** SQL of the latest active query parts holding these query ids in a chat (upstream `getLatestSqlQueriesByIds`). */
+	async getLatestSqlQueriesByIds(chatId: string, queryIds: Set<string>): Promise<Record<string, StoredSqlQuery>> {
+		const queriesByChat = await this.getLatestSqlQueriesByChats(new Map([[chatId, queryIds]]));
+		return queriesByChat.get(chatId) ?? {};
+	}
+
+	/** Load SQL templates for the given query ids from several chats at once (upstream `getLatestSqlQueriesByChats`). */
+	async getLatestSqlQueriesByChats(
+		queryIdsByChat: Map<string, Set<string>>,
+	): Promise<Map<string, Record<string, StoredSqlQuery>>> {
+		const allQueryIds = [...new Set([...queryIdsByChat.values()].flatMap((ids) => [...ids]))];
+		const parts = await this.loadLatestQueryParts([...queryIdsByChat.keys()], allQueryIds);
+
+		const queriesByChat = new Map<string, Record<string, StoredSqlQuery>>();
+		for (const part of parts) {
+			const output = part.toolOutput as { id?: string; dialect?: string } | null;
+			if (!output?.id || !queryIdsByChat.get(part.chatId)?.has(output.id) || !part.toolName) {
+				continue;
+			}
+			const { sqlQuery, databaseId } = readStoredSql(part.toolName, part.toolInput, part.toolOutput);
+			if (sqlQuery) {
+				const chatQueries = queriesByChat.get(part.chatId) ?? {};
+				chatQueries[output.id] = {
+					sqlQuery,
+					...(databaseId && { databaseId }),
+					...(output.dialect && { dialect: output.dialect }),
+					adminMode: part.messageSource === 'admin',
+				};
+				queriesByChat.set(part.chatId, chatQueries);
+			}
+		}
+		return queriesByChat;
+	}
+
+	/** Cached rows of the given query ids in a chat; the latest active part wins (upstream `getLatestSqlQueryDataByIds`). */
+	async getLatestSqlQueryDataByIds(
+		chatId: string,
+		queryIds: Set<string>,
+	): Promise<Record<string, { data: unknown[]; columns: string[] }>> {
+		const dataByChat = await this.getLatestSqlQueryDataByChats(new Map([[chatId, queryIds]]));
+		return dataByChat.get(chatId) ?? {};
+	}
+
+	/** Cached rows of the given query ids from several chats at once (upstream `getLatestSqlQueryDataByChats`). */
+	async getLatestSqlQueryDataByChats(
+		queryIdsByChat: Map<string, Set<string>>,
+	): Promise<Map<string, Record<string, { data: unknown[]; columns: string[] }>>> {
+		const allQueryIds = [...new Set([...queryIdsByChat.values()].flatMap((ids) => [...ids]))];
+		const parts = await this.loadLatestQueryParts([...queryIdsByChat.keys()], allQueryIds);
+
+		const dataByChat = new Map<string, Record<string, { data: unknown[]; columns: string[] }>>();
+		for (const part of parts) {
+			const output = part.toolOutput as { id?: string; data?: unknown[]; columns?: string[] } | null;
+			if (!output?.id || !queryIdsByChat.get(part.chatId)?.has(output.id)) {
+				continue;
+			}
+			const chatData = dataByChat.get(part.chatId) ?? {};
+			chatData[output.id] = { data: output.data ?? [], columns: output.columns ?? [] };
+			dataByChat.set(part.chatId, chatData);
+		}
+		return dataByChat;
+	}
+
 	/** Columns and rows of a persisted query result (upstream `getQueryResultByQueryId`). */
 	async getQueryResultByQueryId(
 		chatId: string,
@@ -640,6 +706,33 @@ export class ChatRepository {
 		};
 	}
 
+	/** Active query parts of the chats holding one of the query ids, oldest first so the latest one wins. */
+	private loadLatestQueryParts(
+		chatIds: string[],
+		queryIds: string[],
+	): Promise<
+		{
+			chatId: string;
+			toolName: string | null;
+			toolInput: unknown;
+			toolOutput: unknown;
+			messageSource: string | null;
+		}[]
+	> {
+		if (chatIds.length === 0 || queryIds.length === 0) {
+			return Promise.resolve([]);
+		}
+		return this.prisma.$queryRaw`
+			SELECT m.chat_id AS "chatId", mp.tool_name AS "toolName", mp.tool_input AS "toolInput",
+				mp.tool_output AS "toolOutput", m.source AS "messageSource"
+			FROM message_part mp
+			JOIN chat_message m ON m.id = mp.message_id
+			WHERE m.chat_id = ANY(${chatIds}::text[]) AND m.superseded_at IS NULL
+				AND mp.tool_name IN (${QUERY_TOOL_NAMES[0]}, ${QUERY_TOOL_NAMES[1]})
+				AND mp.tool_output->>'id' = ANY(${queryIds}::text[])
+			ORDER BY m.created_at ASC, mp.created_at ASC, mp."order" ASC`;
+	}
+
 	/** Active messages of several chats with feedback and version info, for the `Chat.messages` DataLoader. */
 	async getMessagesByChatIds(chatIds: readonly string[]): Promise<Map<string, UIMessage[]>> {
 		const [messages, versionInfo] = await Promise.all([
@@ -729,6 +822,20 @@ const IS_QUICK_QUESTION = PrismaSql(
 const EXCLUDED_CHATS = PrismaSql(`NOT exists(SELECT 1 FROM automation_run r WHERE r.chat_id = c.id)
 	AND NOT exists(SELECT 1 FROM chat_message m WHERE m.chat_id = c.id AND m.source = 'onboarding')
 	AND NOT coalesce(c.fork_metadata->>'type', '') IN ('chat_selection', 'chat_question', 'story_selection', 'story_question')`);
+
+/** Loose read of the SQL a stored part ran, tolerant of parts written by older versions (upstream `readStoredSql`). */
+function readStoredSql(
+	toolName: string,
+	toolInput: unknown,
+	toolOutput: unknown,
+): { sqlQuery?: string; databaseId?: string } {
+	if (toolName === EXECUTE_SEMANTIC_QUERY_TOOL_NAME) {
+		const output = toolOutput as { compiled_sql?: string; database_id?: string } | null;
+		return { sqlQuery: output?.compiled_sql, databaseId: output?.database_id };
+	}
+	const input = toolInput as { sql_query?: string; database_id?: string } | null;
+	return { sqlQuery: input?.sql_query, databaseId: input?.database_id };
+}
 
 function PrismaSql(text: string) {
 	return Prisma.raw(text);
