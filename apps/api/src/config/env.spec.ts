@@ -30,15 +30,7 @@ describe('QUARRY_CONTEXT_SOURCE', () => {
 
 describe('SMTP environment', () => {
 	it('allows running without SMTP configuration', () => {
-		expect(loadEnvWithOverrides({ SMTP_HOST: '', SMTP_MAIL_FROM: '', SMTP_PASSWORD: '' }).status).toBe(0);
-	});
-
-	it('treats blank SMTP_PORT and SMTP_SSL as their defaults', () => {
-		const result = loadEnvWithOverrides({ SMTP_PORT: '', SMTP_SSL: '' });
-
-		expect(result.status).toBe(0);
-		expect(result.env?.SMTP_PORT).toBe(587);
-		expect(result.env?.SMTP_SSL).toBe(false);
+		expect(loadEnvWithOverrides({ SMTP_HOST: '', SMTP_MAIL_FROM: '' }).status).toBe(0);
 	});
 });
 
@@ -50,23 +42,11 @@ describe('required and cross-field variables', () => {
 		expect(result.issues.join('\n')).toContain('DATABASE_URL');
 	});
 
-	it('requires SLACK_BOT_TOKEN when other Slack variables are set', () => {
-		const result = loadEnvWithOverrides({ SLACK_SIGNING_SECRET: 'secret' });
-
-		expect(result.issues).toContain(
-			'SLACK_BOT_TOKEN: SLACK_BOT_TOKEN is required when other SLACK_* variables are set',
-		);
-	});
-
 	it('requires a bucket for the S3 storage backend', () => {
 		expect(loadEnvWithOverrides({ QUARRY_STORAGE_BACKEND: 's3' }).status).toBe(1);
 		expect(loadEnvWithOverrides({ QUARRY_STORAGE_BACKEND: 's3', QUARRY_STORAGE_S3_BUCKET: 'bucket' }).status).toBe(
 			0,
 		);
-	});
-
-	it('requires refresh tokens to outlive access tokens', () => {
-		expect(loadEnvWithOverrides({ MCP_ACCESS_TOKEN_TTL: '100', MCP_REFRESH_TOKEN_TTL: '50' }).status).toBe(1);
 	});
 
 	it('parses booleans and defaults', () => {

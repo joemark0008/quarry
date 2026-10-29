@@ -4,3 +4,4 @@ schema.gql
 *.gen.ts
 apps/api/src/generated/
 apps/frontend/src/graphql/generated/
+.claude/

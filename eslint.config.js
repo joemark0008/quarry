@@ -29,5 +29,5 @@ export default tseslint.config(
 			globals: { process: 'readonly', Buffer: 'readonly', console: 'readonly', URL: 'readonly' },
 		},
 	},
-	{ ignores: ['**/dist/', '**/node_modules/', '**/src/generated/', 'apps/frontend/'] },
+	{ ignores: ['**/dist/', '**/node_modules/', '**/src/generated/', 'apps/frontend/', '.claude/'] },
 );
