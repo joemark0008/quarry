@@ -13,6 +13,7 @@ import { useProjectSwitch } from '@/hooks/use-project-switch';
 import { VIEWER_DISPLAY_KEY, VIEWER_GROUP_KEY, filterItems, getStoredSetting, groupItems } from '@/lib/viewer-home';
 import { trpc } from '@/main';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 export function ViewerHome() {
 	const project = useCurrentProject();
@@ -20,7 +21,7 @@ export function ViewerHome() {
 	const projectId = project.data?.id;
 	const switchProject = useProjectSwitch(projectId);
 	const multiProjectMode = useMultiProject();
-	const sharedChats = useQuery(trpc.sharedChat.list.queryOptions());
+	const sharedChats = useQuery(chatApi.sharedChat.list.queryOptions());
 	const sharedStories = useQuery({
 		...trpc.storyShare.list.queryOptions({ projectId: projectId ?? '' }),
 		enabled: !!projectId,

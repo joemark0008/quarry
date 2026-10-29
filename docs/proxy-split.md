@@ -1,6 +1,6 @@
 # Running quarry next to upstream (proxy split)
 
-During Phases 1–7 the frontend talks to two backends (PLAN.md §8): Vite sends `/graphql`, `/api/auth/*` and
+During Phases 1–7 the frontend talks to two backends (PLAN.md §8): Vite sends `/graphql`, `/api/auth/*`, `/api/agent` and
 `/health` to `apps/api`, everything else to the upstream backend in `../fork-reference`.
 
 Both backends must read the same users and sessions, so in this mode:

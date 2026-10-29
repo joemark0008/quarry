@@ -8,6 +8,7 @@ import type { Response } from 'express';
 
 import { AgentModule } from './agent/agent.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { ChatsModule } from './chats/chats.module.js';
 import { RequestLoaders } from './common/dataloader/request-loaders.js';
 import { AllExceptionsFilter } from './common/errors/all-exceptions.filter.js';
 import type { GraphQLContext } from './common/graphql-context.js';
@@ -59,6 +60,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		WarehouseModule,
 		ContextSyncModule,
 		AgentModule,
+		ChatsModule,
 	],
 	providers: [
 		{ provide: APP_FILTER, useClass: AllExceptionsFilter },

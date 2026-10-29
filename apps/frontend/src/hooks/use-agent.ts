@@ -42,6 +42,7 @@ import { editedMessageIdStore } from '@/stores/chat-edited-message';
 import { chatInputRestoreStore } from '@/stores/chat-input-restore';
 import { messageQueueStore } from '@/stores/chat-message-queue';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 export type AgentMode = 'default' | 'onboarding' | 'example';
 
@@ -288,7 +289,7 @@ export const useAgent = ({
 				} else {
 					chatActivityStore.setRunning(agentId, false);
 					if (agentId !== NEW_CHAT_ID && !isAbort) {
-						queryClient.invalidateQueries({ queryKey: trpc.chat.get.queryKey({ chatId: agentId }) });
+						queryClient.invalidateQueries({ queryKey: chatApi.chat.get.queryKey({ chatId: agentId }) });
 					}
 					if (chatIdRef.current !== agentId) {
 						chatActivityStore.setUnread(agentId, true);
@@ -317,9 +318,9 @@ export const useAgent = ({
 	const messagesRef = useRef(messages);
 	messagesRef.current = messages;
 
-	const stopAgentMutation = useMutation(trpc.chat.stop.mutationOptions());
-	const cancelAgentMutation = useMutation(trpc.chat.cancel.mutationOptions());
-	const switchMessageVersionMutation = useMutation(trpc.chat.switchMessageVersion.mutationOptions());
+	const stopAgentMutation = useMutation(chatApi.chat.stop.mutationOptions());
+	const cancelAgentMutation = useMutation(chatApi.chat.cancel.mutationOptions());
+	const switchMessageVersionMutation = useMutation(chatApi.chat.switchMessageVersion.mutationOptions());
 	const isRunning = checkIsAgentRunning({ status });
 
 	useEffect(() => {
@@ -559,7 +560,7 @@ export const useAgent = ({
 			}
 
 			await switchMessageVersionMutation.mutateAsync({ chatId: targetChatId, messageId });
-			await queryClient.invalidateQueries({ queryKey: trpc.chat.get.queryKey({ chatId: targetChatId }) });
+			await queryClient.invalidateQueries({ queryKey: chatApi.chat.get.queryKey({ chatId: targetChatId }) });
 		},
 		[isRunning, switchMessageVersionMutation.mutateAsync, queryClient], // eslint-disable-line
 	);

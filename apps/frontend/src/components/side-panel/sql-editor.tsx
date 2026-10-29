@@ -21,6 +21,7 @@ import { applyExecuteSqlResultToMessages } from '@/lib/execute-sql-messages';
 import { formatSQL } from '@/lib/sql-formatter';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
 import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 const RESULTS_MIN_HEIGHT = 240;
 const SQL_MIN_HEIGHT = 100;
@@ -109,8 +110,8 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 	const isDirty = sqlQuery !== savedSql;
 	const validationIssues = useMemo(() => (canEdit ? validateSqlFilterTemplate(sqlQuery) : []), [canEdit, sqlQuery]);
 
-	const previewMutation = useMutation(trpc.sql.previewQuery.mutationOptions());
-	const saveMutation = useMutation(trpc.sql.updateQuery.mutationOptions());
+	const previewMutation = useMutation(chatApi.sql.previewQuery.mutationOptions());
+	const saveMutation = useMutation(chatApi.sql.updateQuery.mutationOptions());
 	const isBusy = previewMutation.isPending || saveMutation.isPending;
 	const isBusyRef = useRef(isBusy);
 	isBusyRef.current = isBusy;
@@ -170,13 +171,15 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 				if (currentAgent) {
 					currentAgent.setMessages((messages) => applyUpdate(messages));
 					if (currentAgent.chatId) {
-						queryClient.setQueryData(trpc.chat.get.queryKey({ chatId: currentAgent.chatId }), (previous) =>
-							previous ? { ...previous, messages: applyUpdate(previous.messages) } : previous,
+						queryClient.setQueryData(
+							chatApi.chat.get.queryKey({ chatId: currentAgent.chatId }),
+							(previous) =>
+								previous ? { ...previous, messages: applyUpdate(previous.messages) } : previous,
 						);
 					}
 				}
 
-				queryClient.removeQueries(trpc.chat.getQueryRows.pathFilter());
+				queryClient.removeQueries(chatApi.chat.getQueryRows.pathFilter());
 				void queryClient.invalidateQueries(trpc.story.getQuerySql.pathFilter());
 				void queryClient.invalidateQueries(trpc.story.getFilteredQueryData.pathFilter());
 				void queryClient.invalidateQueries(trpc.storyShare.getQuerySql.pathFilter());

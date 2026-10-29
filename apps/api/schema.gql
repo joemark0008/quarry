@@ -18,6 +18,96 @@ type AuthProviders {
   smtp: Boolean!
 }
 
+type CancelChatResult {
+  chatDeleted: Boolean!
+
+  """deleted or kept."""
+  outcome: String!
+}
+
+"""
+A chat (upstream `chat.get`'s `UIChat`). Dates are epoch milliseconds, as upstream.
+"""
+type Chat {
+  author: ChatAuthor
+
+  """The automation run behind the chat (Phase 5)."""
+  automationRun: JSON
+  createdAt: Float!
+
+  """Where the chat was forked from (`ForkMetadata`)."""
+  forkMetadata: JSON
+  id: ID!
+  isOnboarding: Boolean!
+  isStarred: Boolean!
+
+  """Active messages (`UIMessage[]`), query results cut to a preview."""
+  messages: [JSON!]!
+  projectId: String!
+  title: String!
+  updatedAt: Float!
+}
+
+"""Who wrote a chat: shown on shared chats and forks."""
+type ChatAuthor {
+  id: ID!
+  image: String
+  name: String!
+}
+
+input ChatContextUsageInput {
+  chatId: ID!
+  model: ModelSelectionInput
+}
+
+type ChatGroup {
+  chats: [ChatListItem!]!
+  label: String
+}
+
+type ChatIdResult {
+  chatId: ID!
+}
+
+input ChatListInput {
+  """all, mine, starred, shared, shared_with_me."""
+  filters: [String!]! = ["all"]
+
+  """star, date, project, ownership, sourcePlatform or none."""
+  groupBy: String! = "none"
+}
+
+"""A chat in the sidebar list (`GroupedChatItem`)."""
+type ChatListItem {
+  createdAt: Float!
+  id: ID!
+  isOnboarding: Boolean!
+  isStarred: Boolean!
+
+  """own or shared."""
+  kind: String!
+  ownerName: String!
+  projectId: String!
+  shareId: String
+  title: String!
+  updatedAt: Float!
+}
+
+type ChatSearchResult {
+  createdAt: Float!
+  id: ID!
+  matchedText: String
+  title: String!
+  updatedAt: Float!
+}
+
+"""How a chat is shared (upstream `sharedChat.getShareOptionsByChatId`)."""
+type ChatShareOptions {
+  allowedUserIds: [String!]!
+  shareId: String
+  visibility: String
+}
+
 """State of the last context sync of the project."""
 type ContextSyncStatus {
   databases: [DatabaseSyncResult!]!
@@ -31,8 +121,24 @@ type ContextSyncStatus {
   state: String!
 }
 
+type ContextUsage {
+  contextWindow: Int
+  tokensUsed: Int!
+}
+
 input CreateProjectInput {
   name: String!
+}
+
+input CreateSharedChatInput {
+  allowedUserIds: [String!]
+  chatId: ID!
+
+  """Also notify recipients outside the app (Phase 5 notifications)."""
+  notify: Boolean! = false
+
+  """project or specific."""
+  visibility: String! = "project"
 }
 
 type DatabaseSyncResult {
@@ -48,23 +154,89 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input ForkSharedChatInput {
+  selection: SelectionInput
+  shareId: ID!
+}
+
+"""Upstream `chat.listGrouped`."""
+type GroupedChatList {
+  groups: [ChatGroup!]!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type MessageBubble {
+  charCount: Int!
+  role: String!
+}
+
+type MessageFeedback {
+  createdAt: DateTime!
+  explanation: String
+  messageId: ID!
+  vote: String!
+}
+
+input MessageFeedbackInput {
+  chatId: ID!
+  explanation: String
+  messageId: ID!
+
+  """up or down."""
+  vote: String!
+}
+
+input ModelSelectionInput {
+  modelId: String!
+  provider: String!
+}
+
 input ModifyPasswordInput {
   confirmPassword: String!
   newPassword: String!
 }
 
 type Mutation {
+  """A quick question about a shared chat, kept out of the chat history."""
+  askSharedChat(input: ForkSharedChatInput!): ChatIdResult!
+  cancelChat(chatId: ID!): CancelChatResult!
+
   """
   Checks the credentials on a live connection, then saves them (encrypted) for the project.
   """
   connectWarehouse(input: WarehouseConnectionInput!): WarehouseConnectionResult!
   createProject(input: CreateProjectInput!): ProjectSummary!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
+  createSharedChat(input: CreateSharedChatInput!): SharedChat!
+
+  """Deletes every chat that is not starred; returns how many."""
+  deleteAllNonStarredChats: Int!
+  deleteChat(chatId: ID!): Boolean!
   deleteProject(projectId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
+  deleteSharedChat(shareId: ID!): Boolean!
   disconnectWarehouse(name: String!): Boolean!
+
+  """Forks a shared chat, or a selection of it (upstream `chatFork.fork`)."""
+  forkSharedChat(input: ForkSharedChatInput!): ChatIdResult!
   modifyPassword(input: ModifyPasswordInput!): Boolean!
+
+  """Runs an edited query without saving it (`execute_sql` output)."""
+  previewSqlQuery(input: SqlEditInput!): JSON!
+  renameChat(input: RenameChatInput!): Boolean!
   renameProject(input: RenameProjectInput!): ProjectSummary!
+  setChatStarred(chatId: ID!, isStarred: Boolean!): Boolean!
+
+  """Stops the running agent of a chat (the Stop button)."""
+  stopChat(chatId: ID!): Boolean!
+
+  """Upstream `feedback.submit`."""
+  submitMessageFeedback(input: MessageFeedbackInput!): MessageFeedback!
+  switchMessageVersion(chatId: ID!, messageId: ID!): Boolean!
 
   """
   Queues a `context.sync` job that writes the warehouse schemas and table previews to the context.
@@ -73,6 +245,10 @@ type Mutation {
   testWarehouseConnection(name: String): WarehouseConnectionResult!
   updateProfile(input: UpdateProfileInput!): User!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
+  updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
+
+  """Runs an edited query and saves it in the chat's message."""
+  updateSqlQuery(input: SqlEditInput!): SqlEditResult!
 }
 
 """A project the user can access, with their role in it."""
@@ -108,7 +284,22 @@ type PublicConfig {
 }
 
 type Query {
+  """The user's own chat (upstream `chat.get`)."""
+  chat(chatId: ID!): Chat!
+
+  """Upstream `chat.getContextUsage`."""
+  chatContextUsage(input: ChatContextUsageInput!): ContextUsage!
+
+  """Upstream `chat.getForkMetadata`."""
+  chatForkMetadata(chatId: ID!): JSON
+
+  """Upstream `chat.listGrouped`."""
+  chatList(input: ChatListInput): GroupedChatList!
+  chatShareOptions(chatId: ID!): ChatShareOptions!
   checkUpdate: UpdateCheck!
+
+  """SQL and column lineage behind a cited value (upstream `citation.get`)."""
+  citation(column: String!, queryId: String!): JSON!
   contextSyncStatus: ContextSyncStatus!
 
   """The selected project (`x-nao-project-id`)."""
@@ -125,11 +316,68 @@ type Query {
   """Projects the signed-in user can access."""
   projects: [ProjectSummary!]!
   publicConfig: PublicConfig!
+
+  """Upstream `chat.getQueryRows`."""
+  queryRows(input: QueryRowsInput!): QueryRowsPage!
+
+  """Upstream `feedback.getRecent`."""
+  recentFeedbacks(limit: Int): [RecentFeedback!]!
   savedPrompts: [SavedPrompt!]!
+  searchChats(limit: Int, query: String!): [ChatSearchResult!]!
+  sharedChat(shareId: ID!): SharedChatView!
+  sharedChatQuickQuestions(shareId: ID!): [QuickQuestionChat!]!
+
+  """Chats shared in the projects the user can access."""
+  sharedChats: [SharedChat!]!
   version: AppVersion!
 
   """Databases configured in the selected project."""
   warehouseConnections: [WarehouseConnection!]!
+}
+
+input QueryRowsInput {
+  chatId: ID!
+
+  """Every row from `offset` when omitted."""
+  limit: Int
+  offset: Int! = 0
+  queryId: String!
+  sort: QuerySortInput
+  toolCallId: String!
+}
+
+"""A page of a stored query result (upstream `chat.getQueryRows`)."""
+type QueryRowsPage {
+  columns: [String!]!
+  rows: [JSON!]!
+  totalRows: Int!
+}
+
+input QuerySortInput {
+  column: String!
+
+  """asc or desc."""
+  direction: String!
+}
+
+type QuickQuestionChat {
+  chatId: ID!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type RecentFeedback {
+  createdAt: DateTime!
+  explanation: String
+  messageId: ID!
+  messageText: String
+  userName: String!
+  vote: String!
+}
+
+input RenameChatInput {
+  chatId: ID!
+  title: String!
 }
 
 input RenameProjectInput {
@@ -148,6 +396,53 @@ type SavedPrompt {
 input SavedPromptInput {
   prompt: String!
   title: String!
+}
+
+input SelectionInput {
+  end: Int!
+  start: Int!
+  text: String!
+}
+
+"""A shared chat (upstream `SharedChatWithDetails`)."""
+type SharedChat {
+  authorName: String!
+  chatId: String!
+  createdAt: DateTime!
+  forkMetadata: JSON
+  id: ID!
+  messageBubbles: [MessageBubble!]
+  projectId: String!
+  title: String!
+  userId: String!
+
+  """project or specific."""
+  visibility: String!
+}
+
+type SharedChatView {
+  chat: Chat!
+  share: SharedChat!
+  userRole: String
+}
+
+input SqlEditInput {
+  databaseId: String
+  name: String
+  queryId: String!
+  sqlQuery: String!
+}
+
+"""A saved SQL edit (upstream `sql.updateQuery`)."""
+type SqlEditResult {
+  chatId: String!
+
+  """`execute_sql` input."""
+  input: JSON!
+
+  """`execute_sql` output."""
+  output: JSON!
+  toolCallId: String!
 }
 
 type UpdateCheck {

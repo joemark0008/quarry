@@ -42,6 +42,7 @@ import { useSession } from '@/lib/auth-client';
 import { trpc } from '@/main';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { refetchProjectQueries, useCurrentProject } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 interface OnboardingSearch {
 	chatId?: string;
@@ -98,7 +99,7 @@ function OnboardingPage() {
 	const queryClient = useQueryClient();
 	const waitingForDeployment = isDeployStepReached(progress);
 	const onboardingChat = useQuery({
-		...trpc.chat.get.queryOptions({ chatId: isSavedChat ? chatId! : '' }),
+		...chatApi.chat.get.queryOptions({ chatId: isSavedChat ? chatId! : '' }),
 		enabled: isSavedChat,
 	});
 	const onboardingStartedAt = onboardingChat.data?.createdAt;

@@ -40,6 +40,7 @@ import { useUnreadAutomationRunCount, useUnreadCount } from '@/queries/use-notif
 import { useSession } from '@/lib/auth-client';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
+import { chatApi } from '@/lib/chat-api';
 
 const SIDEBAR_TRANSITION_STYLE: React.CSSProperties = {
 	transitionDuration: `${SIDE_PANEL_ANIMATION_DURATION}ms`,
@@ -431,10 +432,10 @@ function SidebarNav({
 	isTrial: boolean;
 }) {
 	const groupedChats = useQuery({
-		...trpc.chat.listGrouped.queryOptions({ groupBy, filters }),
+		...chatApi.chat.listGrouped.queryOptions({ groupBy, filters }),
 		placeholderData: keepPreviousData,
 	});
-	const unfilteredChats = useQuery(trpc.chat.listGrouped.queryOptions({ groupBy: 'none', filters: ['all'] }));
+	const unfilteredChats = useQuery(chatApi.chat.listGrouped.queryOptions({ groupBy: 'none', filters: ['all'] }));
 	const onboardingChat = unfilteredChats.data?.groups
 		.flatMap((group) => group.chats)
 		.find((chat) => chat.isOnboarding);

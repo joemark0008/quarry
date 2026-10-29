@@ -1,0 +1,77 @@
+import { Injectable } from '@nestjs/common';
+import { type SortDirection, sortTableRows } from '@quarry/shared/story-table-utils';
+
+import { AgentService } from '../agent/agent.service.js';
+import type { QueryResult } from '../agent/types/tools.js';
+import { HandlerError } from '../common/errors/handler-error.js';
+import { ProjectRepository } from '../projects/project.repository.js';
+import { ChatRepository } from './chat.repository.js';
+
+export interface QueryRowsRequest {
+	chatId: string;
+	toolCallId: string;
+	queryId: string;
+	offset: number;
+	/** All rows from `offset` when omitted. */
+	limit?: number;
+	sort?: { column: string; direction: SortDirection };
+}
+
+export interface QueryRowsPage {
+	columns: string[];
+	rows: Record<string, unknown>[];
+	totalRows: number;
+}
+
+/** Port of upstream `services/query-rows.service.ts` and `chat.getQueryRows`'s access check (`utils/chat-access.ts`). */
+@Injectable()
+export class QueryRowsService {
+	constructor(
+		private readonly chats: ChatRepository,
+		private readonly projects: ProjectRepository,
+		private readonly agents: AgentService,
+	) {}
+
+	async getQueryRowsForUser(request: QueryRowsRequest, userId: string): Promise<QueryRowsPage> {
+		const projectId = await this.chats.getActiveChatProjectId(request.chatId);
+		if (!projectId || !(await this.canUserViewChatContent(request.chatId, projectId, userId))) {
+			throw new HandlerError('NOT_FOUND', `Chat with id ${request.chatId} not found.`);
+		}
+		const page = await this.getQueryRowsPage(request);
+		if (!page) {
+			throw new HandlerError('NOT_FOUND', `Query ${request.queryId} not found.`);
+		}
+		return page;
+	}
+
+	async getQueryRowsPage(request: QueryRowsRequest): Promise<QueryRowsPage | null> {
+		const result = await this.findQueryResult(request.chatId, request.toolCallId, request.queryId);
+		if (!result) {
+			return null;
+		}
+
+		const rows = request.sort
+			? sortTableRows(result.data, request.sort.column, request.sort.direction)
+			: result.data;
+		const end = request.limit === undefined ? undefined : request.offset + request.limit;
+		return { columns: result.columns, rows: rows.slice(request.offset, end), totalRows: rows.length };
+	}
+
+	/** Whoever can open the chat (owner or share recipient) can view its content, and so can the project admins who replay it. */
+	private async canUserViewChatContent(chatId: string, chatProjectId: string, userId: string): Promise<boolean> {
+		if (await this.chats.canUserAccessChat(chatId, userId)) {
+			return true;
+		}
+		const role = await this.projects.getUserRoleInProject(chatProjectId, userId);
+		return role === 'admin' || role === 'context_admin';
+	}
+
+	/** A query from the turn still running is only in the agent's memory: its part is saved when the turn ends. */
+	private async findQueryResult(chatId: string, toolCallId: string, queryId: string): Promise<QueryResult | null> {
+		const persisted = await this.chats.getQueryToolOutputInChat(chatId, toolCallId);
+		if (persisted?.id === queryId && Array.isArray(persisted.columns) && Array.isArray(persisted.data)) {
+			return { columns: persisted.columns, data: persisted.data };
+		}
+		return this.agents.get(chatId)?.getQueryResult(queryId) ?? null;
+	}
+}

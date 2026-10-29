@@ -52,10 +52,10 @@ The Phase 2 session hit its usage limit at 10:56 (Manila) on 2026-10-29 mid-2c. 
 - **Not done yet:**
     1. ~~Boot the API and hit `POST /api/agent` end to end~~ — done 2026-10-29: "top 5 customers by total order amount" on jaffle_shop ran `read`/`search`/`execute_sql`/`suggest_follow_ups` and saved the turn. Runtime fixes: `WarehouseSqlService` missing from `WarehouseModule` providers; `@vscode/ripgrep` missing (grep tool); `@ai-sdk/anthropic` pinned to `3.0.121` (3.0.69 drops `thinking.display`, 3.0.135 breaks the `ProviderOptionsMap` types).
     2. ~~Port the tests~~ — done: 49 spec files under `src/agent/` (998 api tests). Skipped cases are commented in each spec (logger, file-text, billing/managed AI, `write`/`/home`, onboarding agent-run).
-    3. `chats` GraphQL module: chats, messages, fork, citations, favorites, feedback, shared chats + DataLoaders (only the repository exists).
-    4. Remaining core tools: `display_map`, `write`, `str_replace`, `task`, `web_search`, `execute_python` (`@pydantic/monty`), `execute_sandboxed_code`, `request_warehouse_credentials`, `request_warehouse_selection`, `query_app_db`, `propose_context_fix`, `record_recommendation`; plus compaction and subagents.
-    5. Moved from 2b: `warehouse` run-SQL from the UI, query results/rows services.
-    6. Frontend: chat list/view, sharing, feedback on Apollo; Vite proxy sends `/api/agent` to `apps/api`; `useChat` unchanged. Also saved prompts and LLM/model settings, still on upstream tRPC.
+    3. ~~`chats` GraphQL module~~ — done (see PHASES.md 2c for the deviations).
+    4. ~~Remaining core tools, compaction and subagents~~ — done; which tools are stand-in-backed is in PHASES.md 2c.
+    5. ~~Moved from 2b: `warehouse` run-SQL from the UI, query results/rows services~~ — done in the `chats` module.
+    6. ~~Frontend: chat list/view, sharing, feedback on Apollo; Vite proxy sends `/api/agent` to `apps/api`~~ — done through `apps/frontend/src/lib/chat-api.ts`. **Still open:** saved prompts UI and LLM/model settings (project LLM config, default models, agent settings) remain on upstream tRPC; the agent reads the same tables, so split mode works.
     7. `npm run lint`, `npm test`, `npm run format:check`, tick PHASES.md, commit 2c.
 
 ## Running locally (split mode)

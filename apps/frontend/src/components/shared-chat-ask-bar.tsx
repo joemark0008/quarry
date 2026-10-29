@@ -2,16 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { AskSelection } from '@/stores/ask-bar';
 import { AskBar } from '@/components/ask-bar';
-import { trpc } from '@/main';
+import { chatApi } from '@/lib/chat-api';
 
 /** Asks about a shared chat: each question is a fork of it, so the agent answers knowing the whole conversation. */
 export function SharedChatAskBar({ shareId }: { shareId: string }) {
 	const queryClient = useQueryClient();
 	const askMutation = useMutation(
-		trpc.chatFork.askSharedChat.mutationOptions({
+		chatApi.chatFork.askSharedChat.mutationOptions({
 			onSuccess: () =>
 				queryClient.invalidateQueries({
-					queryKey: trpc.chatFork.listSharedChatQuickQuestions.queryKey({ shareId }),
+					queryKey: chatApi.chatFork.listSharedChatQuickQuestions.queryKey({ shareId }),
 				}),
 		}),
 	);
