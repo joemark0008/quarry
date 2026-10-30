@@ -1,23 +1,64 @@
-# quarry
+<p align="center">
+    <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="brand/png/quarry-logo-dark-1200.png" />
+        <img alt="quarry" src="brand/png/quarry-logo-light-1200.png" width="360" />
+    </picture>
+</p>
 
-An analytics agent: connect a Postgres warehouse, sync its context, chat with an agent that writes SQL and draws
-charts, turn answers into stories, and curate the context it reads. A rewrite of [getnao/nao](https://github.com/getnao/nao)
-on NestJS 11 (Express) + GraphQL (Apollo, code-first) + Prisma/PostgreSQL, with nao's React frontend on Apollo Client.
+<p align="center">
+    An analytics agent for your Postgres warehouse: ask in plain language, get SQL, charts and stories.
+</p>
 
-- `apps/api` — the API (GraphQL at `/graphql`, REST for auth, agent streaming, uploads, story downloads) and, in
-  production, the built frontend.
-- `apps/frontend` — React (TanStack Router, Shadcn, Tailwind), Apollo Client + GraphQL Code Generator.
-- `apps/shared` — types and helpers used by both.
+---
 
-What is built and what was left out: [PLAN.md](PLAN.md), [PHASES.md](PHASES.md) and
-[docs/deferred-features.md](docs/deferred-features.md) (automations, platform and integration screens that can be
-brought back from upstream).
+quarry connects to a Postgres warehouse, syncs its schema into a context the agent reads, and lets you chat with an
+agent that writes SQL and draws charts. Answers can be turned into stories, and the context the agent works from can be
+browsed, edited and improved from the app.
 
-## Development
+It is a rewrite of [getnao/nao](https://github.com/getnao/nao) on NestJS 11 (Express) + GraphQL (Apollo, code-first) +
+Prisma/PostgreSQL, keeping nao's React frontend on Apollo Client. No Python: nao's SQL engine and semantic layer were
+ported to Node.
 
-Needs Node from `.nvmrc`, Docker, and DuckDB (`brew install duckdb`, only to load the example warehouse).
+## Features
+
+- **Chat agent** — writes and runs SQL, reads results, draws charts and maps, asks clarifying questions, suggests
+  follow-ups, searches the web, and can run Python or sandboxed code (experimental). Chats can be forked, starred and
+  shared.
+- **Any LLM provider** — OpenAI, Anthropic and the other Vercel AI SDK providers, from the environment or
+  **Settings → Agent**.
+- **Context** — **Sync** pulls the warehouse schema into project context files. The context explorer edits them (optionally
+  in a Git repository), and context recommendations propose fixes from chat feedback.
+- **Semantic layer** — MetricFlow-style metrics compiled to Postgres SQL in process.
+- **Saved query tools** — build a parameterized query in **Settings**, or save one from a chat, and the agent can call it
+  as a tool.
+- **Skills and memory** — Markdown skills the agent loads on demand; memories extracted from chats and added to the
+  system prompt.
+- **Stories** — turn answers into stories with folders, themes, sharing, embeds, scheduled refresh and delivery, and
+  HTML/PDF downloads.
+- **Attachments and voice** — upload files (PDF and XLSX text extraction), local or S3 storage, and speech-to-text
+  input.
+
+Not included: billing, enterprise-licensed upstream code, and (for now) automations, platform administration and
+integrations. See [docs/deferred-features.md](docs/deferred-features.md) for what was left out and how to bring it back.
+
+## Repository layout
+
+| Path                             | What                                                                                                                              |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [`apps/api`](apps/api)           | NestJS API: GraphQL at `/graphql`, REST for auth, agent streaming, uploads and downloads; serves the built frontend in production |
+| [`apps/frontend`](apps/frontend) | React (TanStack Router, Shadcn, Tailwind), Apollo Client + GraphQL Code Generator                                                 |
+| [`apps/shared`](apps/shared)     | types and helpers used by both                                                                                                    |
+| [`brand`](brand)                 | logo, icons and colours                                                                                                           |
+| [`docs`](docs)                   | design notes and deferred features                                                                                                |
+
+## Getting started
+
+Needs Node from `.nvmrc` (22.23), npm 11.10.1, Docker, and DuckDB (`brew install duckdb`, only to load the example
+warehouse).
 
 ```bash
+git clone https://github.com/advancedlocal/explore-joe-ai-tools.git
+cd explore-joe-ai-tools
 nvm use
 npm install
 cp .env.example .env               # set BETTER_AUTH_SECRET (openssl rand -base64 32) and an LLM key
@@ -33,9 +74,17 @@ Open http://localhost:3000, sign up (the first user becomes the admin) or log in
 from the project switcher, then add the warehouse in **Settings → Warehouse** (`localhost:5434`, database `warehouse`,
 user/password `quarry`) and press **Sync**.
 
-Checks: `npm run lint`, `npm test`, `npm run format:check`, `npm run build -w @quarry/frontend`. After changing the
-GraphQL schema, `npm run codegen` regenerates the frontend's typed documents (the API writes `apps/api/schema.gql`
-when it boots).
+### Checks
+
+```bash
+npm run lint
+npm test
+npm run format:check
+npm run build -w @quarry/frontend
+```
+
+After changing the GraphQL schema, `npm run codegen` regenerates the frontend's typed documents (the API writes
+`apps/api/schema.gql` when it boots).
 
 ## Configuration
 
@@ -66,3 +115,11 @@ docker compose -f docker-compose.prod.yml up -d --build
 The container applies pending migrations on start. Data lives in two volumes: `quarry_postgres_data` (database) and
 `quarry_data` (`/data/projects`, `/data/storage`). Put a TLS-terminating proxy in front and point `BETTER_AUTH_URL`
 at its public URL.
+
+## Documentation
+
+- [PLAN.md](PLAN.md) — architecture, decisions, and how each Nest module maps to upstream code
+- [PHASES.md](PHASES.md) — build order and what each phase delivered
+- [docs/deferred-features.md](docs/deferred-features.md) — areas not ported yet, and how to port them
+- [docs/stories-api.md](docs/stories-api.md) — the stories GraphQL API
+- [CLAUDE.md](CLAUDE.md) — module conventions and coding rules

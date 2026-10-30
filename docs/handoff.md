@@ -7,7 +7,7 @@ Context carried over from Claude Code sessions run under another account (transc
 - One **master session** plans and coordinates; **each phase runs in its own new session**, on branch `phase-N-…`, and reports back. Phases aren't implemented in the master session.
 - Phase sessions may use the `reverse-engineer-anything` (REA) skill, mainly to observe the running upstream app and compare behaviour. Ordinary porting is plain code reading.
 - `../fork-reference` is the upstream getnao/nao clone (remote `upstream`), read-only.
-- No GitHub remote for quarry yet: `gh` isn't installed (`brew install gh`), or create an empty repo and add it as `origin`.
+- GitHub remote: `origin` → https://github.com/advancedlocal/explore-joe-ai-tools
 
 ## Decisions (why the stack looks like this)
 
@@ -30,7 +30,7 @@ Context carried over from Claude Code sessions run under another account (transc
 
 | Phase                                                | State                                                                                                  |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| 0 Setup                                              | Done, merged to `main` (GitHub remote still missing)                                                   |
+| 0 Setup                                              | Done, merged to `main`                                                                                 |
 | 1 API skeleton + auth + frontend on Apollo + rebrand | Done, merged to `main` (`d7f70d4`)                                                                     |
 | 2a SQL engine                                        | Committed on `phase-2-core` (`7791b57`) — `pgsql-parser` instead of `node-sql-parser`, 122 tests       |
 | 2b Projects, warehouse, context sync                 | Committed on `phase-2-core` (`5c35aa6`)                                                                |
