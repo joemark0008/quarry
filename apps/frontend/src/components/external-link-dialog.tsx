@@ -5,6 +5,7 @@ import type { LinkSafetyConfig, LinkSafetyModalProps } from 'streamdown';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import styles from './external-link-dialog.module.css';
 
 /** Streamdown link handling: same-origin links open directly, external ones ask for confirmation first. */
 export const markdownLinkSafety: LinkSafetyConfig = {
@@ -31,23 +32,23 @@ export function ExternalLinkDialog({ isOpen, onClose, onConfirm, url }: LinkSafe
 		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle className='flex items-center gap-2'>
-						<ExternalLink className='size-4.5' />
+					<DialogTitle className={styles.externalLinkDialogDialogTitle}>
+						<ExternalLink className={styles.externalLinkDialogExternalLink} />
 						<span>Open external link?</span>
 					</DialogTitle>
 				</DialogHeader>
-				<DialogDescription className='text-[15px] text-muted-foreground'>
+				<DialogDescription className={styles.externalLinkDialogDialogDescription}>
 					You're about to visit an external website.
 				</DialogDescription>
-				<div className='rounded-lg bg-muted px-4 py-3.5 font-mono text-[15px] text-foreground break-all'>
+				<div className={styles.externalLinkDialogDiv}>
 					{url}
 				</div>
-				<div className='flex justify-end gap-2'>
-					<Button variant='outline' className='rounded-full border' onClick={handleCopy}>
+				<div className={styles.externalLinkDialogDiv2}>
+					<Button variant='outline' className={styles.externalLinkDialogButton} onClick={handleCopy}>
 						<CopyButtonContent isCopied={isCopied} isCopyFailed={isCopyFailed} />
 					</Button>
-					<Button className='rounded-full' onClick={handleOpen}>
-						<ExternalLink className='size-3.5' />
+					<Button className={styles.externalLinkDialogButton2} onClick={handleOpen}>
+						<ExternalLink className={styles.externalLinkDialogExternalLink2} />
 						Open link
 					</Button>
 				</div>
@@ -60,7 +61,7 @@ function CopyButtonContent({ isCopied, isCopyFailed }: { isCopied: boolean; isCo
 	if (isCopyFailed) {
 		return (
 			<>
-				<X className='size-3.5' />
+				<X className={styles.externalLinkDialogExternalLink2} />
 				Copy failed
 			</>
 		);
@@ -68,14 +69,14 @@ function CopyButtonContent({ isCopied, isCopyFailed }: { isCopied: boolean; isCo
 	if (isCopied) {
 		return (
 			<>
-				<Check className='size-3.5' />
+				<Check className={styles.externalLinkDialogExternalLink2} />
 				Copied
 			</>
 		);
 	}
 	return (
 		<>
-			<Copy className='size-3.5' />
+			<Copy className={styles.externalLinkDialogExternalLink2} />
 			Copy link
 		</>
 	);

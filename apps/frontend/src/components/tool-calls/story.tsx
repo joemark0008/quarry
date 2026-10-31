@@ -15,6 +15,7 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useTimeAgo } from '@/hooks/use-time-ago';
 import { storyApi } from '@/lib/story-api';
+import styles from './story.module.css';
 
 const STORY_ACTION_LABELS = {
 	create: { pending: 'Creating...', done: 'Created' },
@@ -97,10 +98,10 @@ export const StoryToolCall = ({ toolPart }: ToolCallComponentProps<'story'>) => 
 			partialAction === 'update' || partialAction === 'replace' ? 'Updating story' : 'Creating story';
 
 		return (
-			<div className='my-2 -mx-3 flex items-center gap-3 rounded-xl border p-4'>
-				<Skeleton className='size-8 rounded-lg' />
-				<Skeleton className='h-4 w-40' />
-				<TextShimmer text={loadingLabel} className='ml-auto text-xs' />
+			<div className={styles.storyToolCallDiv}>
+				<Skeleton className={styles.storyToolCallSkeleton} />
+				<Skeleton className={styles.storyToolCallSkeleton2} />
+				<TextShimmer text={loadingLabel} className={styles.storyToolCallTextShimmer} />
 			</div>
 		);
 	}
@@ -143,7 +144,7 @@ export const StoryToolCall = ({ toolPart }: ToolCallComponentProps<'story'>) => 
 			onOpen={handleOpen}
 			status={
 				<>
-					<span className='text-xs text-muted-foreground'>{statusLabel}</span>
+					<span className={styles.storyToolCallSpan}>{statusLabel}</span>
 					{latestStory?.isLive && latestStory?.cachedAt && (
 						<LiveStoryTimestamp cachedAt={latestStory.cachedAt} />
 					)}
@@ -155,7 +156,7 @@ export const StoryToolCall = ({ toolPart }: ToolCallComponentProps<'story'>) => 
 
 function StoryError({ message }: { message: string }) {
 	return (
-		<div className='my-2 rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-sm text-red-400'>{message}</div>
+		<div className={styles.storyErrorDiv}>{message}</div>
 	);
 }
 
@@ -166,8 +167,8 @@ function LiveStoryTimestamp({ cachedAt }: { cachedAt: string | Date }) {
 	return (
 		<Tooltip>
 			<TooltipTrigger asChild>
-				<div className='flex items-center gap-1 rounded-full bg-secondary/50 px-1.5 py-0.5 text-[10px] text-muted-foreground'>
-					<Clock className='size-3' />
+				<div className={styles.liveStoryTimestampDiv}>
+					<Clock className={styles.liveStoryTimestampClock} />
 					<span>Updated {timeAgo.humanReadable.toLowerCase()}</span>
 				</div>
 			</TooltipTrigger>

@@ -2,6 +2,7 @@ import { FileSearch, AlertCircle } from 'lucide-react';
 import { useToolCallContext } from '../../contexts/tool-call';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
+import styles from './grep.module.css';
 
 export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'grep'>) => {
 	const { isSettled } = useToolCallContext();
@@ -12,10 +13,10 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 				title={
 					<>
 						Searching for{' '}
-						<code className='text-xs bg-background/50 px-1 py-0.5 rounded font-mono'>{input?.pattern}</code>
+						<code className={styles.grepToolCallCode}>{input?.pattern}</code>
 					</>
 				}
-				children={<div className='p-4 text-center text-foreground/50 text-sm'>Searching...</div>}
+				children={<div className={styles.grepToolCallDiv}>Searching...</div>}
 			/>
 		);
 	}
@@ -31,10 +32,10 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 			title={
 				<>
 					Grepped{' '}
-					<code className='text-xs bg-background/50 px-1 py-0.5 rounded font-mono'>{input?.pattern}</code>
+					<code className={styles.grepToolCallCode}>{input?.pattern}</code>
 					{input?.glob && (
-						<span className='text-foreground/50 text-xs ml-1'>
-							in <code className='bg-background/50 px-1 py-0.5 rounded'>{input.glob}</code>
+						<span className={styles.grepToolCallSpan}>
+							in <code className={styles.grepToolCallCode2}>{input.glob}</code>
 						</span>
 					)}
 				</>
@@ -42,33 +43,33 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 			badge={badge}
 		>
 			{output && (
-				<div className='overflow-auto max-h-96'>
+				<div className={styles.grepToolCallDiv2}>
 					{output.truncated && (
-						<div className='px-3 py-2 border-b border-amber-500/20 bg-amber-500/5 flex items-center gap-2'>
-							<AlertCircle size={14} className='text-amber-500 shrink-0' />
-							<span className='text-xs text-amber-500'>
+						<div className={styles.grepToolCallDiv3}>
+							<AlertCircle size={14} className={styles.grepToolCallAlertCircle} />
+							<span className={styles.grepToolCallSpan2}>
 								Results truncated. Showing {output.matches.length} of {output.total_matches} matches.
 							</span>
 						</div>
 					)}
 
-					<div className='flex flex-col'>
+					<div className={styles.grepToolCallDiv4}>
 						{output.matches.map((match, index) => (
-							<div key={index} className='border-b border-foreground/5 last:border-b-0'>
+							<div key={index} className={styles.grepToolCallDiv5}>
 								{/* File header */}
-								<div className='flex items-center gap-2 px-3 py-1.5 bg-foreground/[0.02]'>
-									<FileSearch size={12} className='text-foreground/40 shrink-0' />
-									<span className='font-mono text-[11px] text-foreground/60 truncate'>
+								<div className={styles.grepToolCallDiv6}>
+									<FileSearch size={12} className={styles.grepToolCallFileSearch} />
+									<span className={styles.grepToolCallSpan3}>
 										{match.path}
 									</span>
-									<span className='text-[10px] text-foreground/30 shrink-0'>
+									<span className={styles.grepToolCallSpan4}>
 										:{match.line_number}
 									</span>
 								</div>
 
 								{/* Context before */}
 								{match.context_before && match.context_before.length > 0 && (
-									<div className='px-3 py-1 bg-foreground/[0.01]'>
+									<div className={styles.grepToolCallDiv7}>
 										{match.context_before.map((line, contextIndex) => {
 											const contextLine = normalizeContextLine(
 												line,
@@ -77,9 +78,9 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 											return (
 												<div
 													key={`${contextLine.line_number}-${contextIndex}`}
-													className='font-mono text-xs text-foreground/30 leading-relaxed'
+													className={styles.grepToolCallDiv8}
 												>
-													<span className='inline-block w-8 text-right mr-2 text-foreground/20 select-none'>
+													<span className={styles.grepToolCallSpan5}>
 														{contextLine.line_number}
 													</span>
 													{contextLine.line_content}
@@ -90,9 +91,9 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 								)}
 
 								{/* Match line */}
-								<div className='px-3 py-1 bg-yellow-500/5'>
-									<div className='font-mono text-xs leading-relaxed'>
-										<span className='inline-block w-8 text-right mr-2 text-foreground/40 select-none'>
+								<div className={styles.grepToolCallDiv9}>
+									<div className={styles.grepToolCallDiv10}>
+										<span className={styles.grepToolCallSpan6}>
 											{match.line_number}
 										</span>
 										<HighlightedLine content={match.line_content} pattern={input?.pattern} />
@@ -101,7 +102,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 
 								{/* Context after */}
 								{match.context_after && match.context_after.length > 0 && (
-									<div className='px-3 py-1 bg-foreground/[0.01]'>
+									<div className={styles.grepToolCallDiv7}>
 										{match.context_after.map((line, contextIndex) => {
 											const contextLine = normalizeContextLine(
 												line,
@@ -110,9 +111,9 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 											return (
 												<div
 													key={`${contextLine.line_number}-${contextIndex}`}
-													className='font-mono text-xs text-foreground/30 leading-relaxed'
+													className={styles.grepToolCallDiv8}
 												>
-													<span className='inline-block w-8 text-right mr-2 text-foreground/20 select-none'>
+													<span className={styles.grepToolCallSpan5}>
 														{contextLine.line_number}
 													</span>
 													{contextLine.line_content}
@@ -126,7 +127,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 					</div>
 
 					{output.matches.length === 0 && (
-						<div className='p-4 text-center text-foreground/50 text-sm'>No matches found</div>
+						<div className={styles.grepToolCallDiv}>No matches found</div>
 					)}
 				</div>
 			)}
@@ -160,7 +161,7 @@ const HighlightedLine = ({ content, pattern }: { content: string; pattern?: stri
 					// Reset regex lastIndex after test
 					regex.lastIndex = 0;
 					return isMatch ? (
-						<mark key={i} className='bg-yellow-400/30 text-foreground rounded-sm px-0.5'>
+						<mark key={i} className={styles.highlightedLineMark}>
 							{part}
 						</mark>
 					) : (

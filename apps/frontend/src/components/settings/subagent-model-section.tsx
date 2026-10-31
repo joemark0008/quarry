@@ -9,6 +9,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
+import styles from './subagent-model-section.module.css';
 
 type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 
@@ -45,9 +46,9 @@ export function SubagentModelSection({ isAdmin }: SubagentModelSectionProps) {
 			description='Subagents run focused side tasks (such as searching the project context) in their own loop. A smaller model here saves cost; the agent can still pick another model when a user explicitly asks for one.'
 		>
 			{availableModels.length === 0 ? (
-				<p className='text-sm text-muted-foreground'>
+				<p className={styles.subagentModelSectionP}>
 					No models are available yet. Configure an LLM provider in the{' '}
-					<span className='font-medium text-foreground'>LLM Configuration</span> section above.
+					<span className={styles.subagentModelSectionSpan}>LLM Configuration</span> section above.
 				</p>
 			) : (
 				<ModelField
@@ -90,33 +91,33 @@ function ModelField({
 	};
 
 	return (
-		<div className='grid gap-1.5'>
-			<div className='flex items-center gap-2'>
-				<label id={labelId} className='text-sm font-medium text-foreground'>
+		<div className={styles.modelFieldDiv}>
+			<div className={styles.modelFieldDiv2}>
+				<label id={labelId} className={styles.modelFieldLabel}>
 					Default model for subagents
 				</label>
 				{isUnavailable && (
 					<SimpleTooltip content='The selected model is no longer available. Subagents use the chat model until you pick a new one.'>
-						<AlertTriangle className='size-3.5 text-amber-500' />
+						<AlertTriangle className={styles.modelFieldAlertTriangle} />
 					</SimpleTooltip>
 				)}
 			</div>
 			<Select value={value ? modelValue(value) : INHERIT_VALUE} onValueChange={handleChange} disabled={disabled}>
-				<SelectTrigger className='w-full' aria-labelledby={labelId}>
+				<SelectTrigger className={styles.modelFieldSelectTrigger} aria-labelledby={labelId}>
 					<SelectValue>
 						{value ? (
-							<div className='flex items-center gap-2'>
+							<div className={styles.modelFieldDiv2}>
 								<LlmProviderIcon
 									provider={value.provider}
 									baseUrl={selected?.baseUrl ?? null}
-									className='size-4'
+									className={styles.modelFieldLlmProviderIcon}
 								/>
-								<span className={cn(isUnavailable && 'text-amber-600 dark:text-amber-500')}>
+								<span className={cn(isUnavailable && styles.modelFieldSpan)}>
 									{selected?.name ?? value.modelId}
 								</span>
 							</div>
 						) : (
-							<span className='text-muted-foreground'>Same model as the chat</span>
+							<span className={styles.modelFieldSpan2}>Same model as the chat</span>
 						)}
 					</SelectValue>
 				</SelectTrigger>
@@ -124,7 +125,7 @@ function ModelField({
 					<SelectItem value={INHERIT_VALUE}>Same model as the chat</SelectItem>
 					{availableModels.map((model) => (
 						<SelectItem key={modelValue(model)} value={modelValue(model)}>
-							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className='size-4' />
+							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className={styles.modelFieldLlmProviderIcon} />
 							{model.name}
 						</SelectItem>
 					))}

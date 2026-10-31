@@ -1,0 +1,9 @@
+.storyDownloadMenuLoader2 {
+	width: 0.875rem;
+	height: 0.875rem;
+	animation: var(--animate-spin);
+}
+.storyDownloadMenuDownload {
+	width: 0.875rem;
+	height: 0.875rem;
+}

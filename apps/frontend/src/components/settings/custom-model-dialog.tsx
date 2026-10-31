@@ -6,6 +6,7 @@ import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import styles from './custom-model-dialog.module.css';
 
 interface CustomModelDialogProps {
 	open: boolean;
@@ -82,17 +83,17 @@ export function CustomModelDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.customModelDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Custom model settings</DialogTitle>
-					<DialogDescription className='font-mono text-xs break-all'>{modelId}</DialogDescription>
+					<DialogDescription className={styles.customModelDialogDialogDescription}>{modelId}</DialogDescription>
 				</DialogHeader>
 
-				<div className='grid gap-4'>
-					<div className='grid gap-2'>
-						<label htmlFor='custom-model-display-name' className='text-sm font-medium text-foreground'>
+				<div className={styles.customModelDialogDiv}>
+					<div className={styles.customModelDialogDiv2}>
+						<label htmlFor='custom-model-display-name' className={styles.customModelDialogLabel}>
 							Display name
-							<span className='text-muted-foreground font-normal ml-1'>(optional)</span>
+							<span className={styles.customModelDialogSpan}>(optional)</span>
 						</label>
 						<Input
 							id='custom-model-display-name'
@@ -102,22 +103,22 @@ export function CustomModelDialog({
 						/>
 					</div>
 
-					<div className='grid gap-2'>
-						<div className='flex items-baseline justify-between'>
-							<span className='text-sm font-medium text-foreground'>Token cost</span>
-							<span className='text-xs text-muted-foreground'>USD / 1M tokens</span>
+					<div className={styles.customModelDialogDiv2}>
+						<div className={styles.customModelDialogDiv3}>
+							<span className={styles.customModelDialogLabel}>Token cost</span>
+							<span className={styles.customModelDialogSpan2}>USD / 1M tokens</span>
 						</div>
-						<div className='grid grid-cols-2 gap-3'>
+						<div className={styles.customModelDialogDiv4}>
 							{COST_FIELDS.map((field) => (
-								<div key={field.key} className='grid gap-1'>
+								<div key={field.key} className={styles.customModelDialogDiv5}>
 									<label
 										htmlFor={`custom-model-cost-${field.key}`}
-										className='text-xs font-medium text-muted-foreground'
+										className={styles.customModelDialogLabel2}
 									>
 										{field.label}
 									</label>
-									<div className='relative'>
-										<span className='absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-muted-foreground'>
+									<div className={styles.customModelDialogDiv6}>
+										<span className={styles.customModelDialogSpan3}>
 											$
 										</span>
 										<Input
@@ -127,7 +128,7 @@ export function CustomModelDialog({
 											step='0.01'
 											min='0'
 											placeholder='0'
-											className='pl-6'
+											className={styles.customModelDialogInput}
 											value={costs[field.key]}
 											onChange={(e) =>
 												setCosts((prev) => ({ ...prev, [field.key]: e.target.value }))
@@ -137,14 +138,14 @@ export function CustomModelDialog({
 								</div>
 							))}
 						</div>
-						<p className='text-xs text-muted-foreground'>
+						<p className={styles.customModelDialogSpan2}>
 							Leave a field empty to skip cost tracking for that token type.
 						</p>
 					</div>
 
 					{supportsModelParameters && (
-						<div className='grid gap-2 border-t border-border pt-4'>
-							<span className='text-sm font-medium text-foreground'>Model parameters</span>
+						<div className={styles.customModelDialogDiv7}>
+							<span className={styles.customModelDialogLabel}>Model parameters</span>
 							<ModelParametersFields
 								controls={parameters.controls}
 								values={parameters.values}
@@ -155,7 +156,7 @@ export function CustomModelDialog({
 					)}
 				</div>
 
-				<div className='flex justify-end gap-2 pt-2'>
+				<div className={styles.customModelDialogDiv8}>
 					<Button variant='ghost' size='sm' onClick={() => onOpenChange(false)} type='button'>
 						Cancel
 					</Button>

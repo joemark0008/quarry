@@ -21,6 +21,7 @@ import { EditorStoryMapEditProvider } from '@/contexts/story-map-edit';
 import { markdownPlugins } from '@/lib/markdown';
 import { cn } from '@/lib/utils';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './story-editor-grid-block.module.css';
 
 const markdownComponents = { table: ({ node, className }: any) => <MarkdownTable node={node} className={className} /> };
 
@@ -81,9 +82,9 @@ function renderColumnContent(
 			);
 		case 'grid':
 			return (
-				<div className='flex flex-col gap-4'>
+				<div className={styles.renderColumnContentDiv}>
 					{segment.children.map((child, index) => (
-						<div key={index} className='min-w-0'>
+						<div key={index} className={styles.renderColumnContentDiv2}>
 							{renderColumnContent(child, null, onReplaceTag, 'trailing', false)}
 						</div>
 					))}
@@ -122,7 +123,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 	return (
 		<NodeViewWrapper draggable data-type='grid-block'>
 			<div
-				className='@container relative my-2'
+				className={styles.gridBlockViewDiv}
 				onDragOver={handleGridDragOver}
 				onDragLeave={(event) => {
 					if (!event.currentTarget.contains(event.relatedTarget as globalThis.Node | null)) {
@@ -135,8 +136,8 @@ function GridBlockView(props: ReactNodeViewProps) {
 					ref={gridRef}
 					className={
 						visualWidths !== null
-							? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--quarry-grid-cols)]'
-							: `grid ${getGridClass(cols)} gap-4`
+							? styles.gridBlockViewDiv2
+							: `${styles.gridBlockViewDiv3} ${getGridClass(cols)} ${styles.gridBlockViewDiv4}`
 					}
 					{...(visualWidths !== null
 						? { style: { ['--quarry-grid-cols' as string]: getGridTemplateColumns(visualWidths) } }
@@ -172,7 +173,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 							<div
 								key={i}
 								className={cn(
-									'group relative min-w-0',
+									`${styles.gridBlockViewDiv5} group`,
 									gridPos !== null &&
 										selectedGridColumns.some(
 											(column) => column.gridPos === gridPos && column.index === i,
@@ -199,7 +200,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 										})}
 							>
 								{isLeftmostColumn && columnGrip ? (
-									<div contentEditable={false} className='absolute -left-10 top-2 z-20'>
+									<div contentEditable={false} className={styles.gridBlockViewDiv6}>
 										{columnGrip}
 									</div>
 								) : null}
@@ -218,7 +219,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 					<>
 						<div
 							contentEditable={false}
-							className='absolute inset-y-0 -left-3 z-40 w-8'
+							className={styles.gridBlockViewDiv7}
 							onDragOver={(event) => {
 								event.preventDefault();
 								event.stopPropagation();
@@ -242,7 +243,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 						/>
 						<div
 							contentEditable={false}
-							className='absolute inset-y-0 -right-3 z-40 w-8'
+							className={styles.gridBlockViewDiv8}
 							onDragOver={(event) => {
 								event.preventDefault();
 								event.stopPropagation();
@@ -271,7 +272,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 					storyBlockDrag?.activeDropZone === `grid:${gridPos}` && (
 						<div
 							contentEditable={false}
-							className='pointer-events-none absolute inset-y-0 z-20 w-0.5 -translate-x-1/2 rounded-full bg-primary-muted'
+							className={styles.gridBlockViewDiv9}
 							style={{ left: dropIndicatorLeft }}
 						/>
 					)}
@@ -281,7 +282,7 @@ function GridBlockView(props: ReactNodeViewProps) {
 						type='button'
 						aria-label={`Resize columns ${index + 1} and ${index + 2}`}
 						contentEditable={false}
-						className='group absolute inset-y-0 z-10 hidden w-4 -translate-x-1/2 cursor-col-resize touch-none select-none @lg:block'
+						className={`${styles.gridBlockViewButton} group`}
 						draggable={false}
 						style={{ left }}
 						onKeyDown={(event) => {
@@ -303,11 +304,9 @@ function GridBlockView(props: ReactNodeViewProps) {
 						}}
 					>
 						<div
-							className={`mx-auto h-full w-0.5 transition-colors ${
-								activeBoundary === index
-									? 'bg-primary'
-									: 'bg-border/50 group-hover:bg-primary group-focus-visible:bg-primary'
-							}`}
+							className={`${styles.gridBlockViewDiv10} ${activeBoundary === index
+									? styles.state100
+									: styles.state101}`}
 						/>
 					</button>
 				))}

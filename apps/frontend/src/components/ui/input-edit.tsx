@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import styles from './input-edit.module.css';
 
 interface Props extends React.ComponentProps<'input'> {
 	value: string;
@@ -24,7 +25,7 @@ export const InputEdit = ({ value, onChange, onSubmit, onEscape, className, auto
 		<div
 			data-value={value}
 			className={cn(
-				'inline-grid w-full min-w-px after:invisible after:whitespace-pre after:content-[attr(data-value)] after:[grid-area:1/1] after:text-sm after:p-0 overflow-hidden',
+				styles.inputEditDiv,
 			)}
 		>
 			<input
@@ -40,7 +41,7 @@ export const InputEdit = ({ value, onChange, onSubmit, onEscape, className, auto
 				}}
 				onBlur={onSubmit}
 				className={cn(
-					'min-w-0 bg-transparent text-inherit outline-none border-none [grid-area:1/1] text-sm p-0 focus:outline-none placeholder:font-normal',
+					styles.inputEditInput,
 					className,
 				)}
 				{...rest}

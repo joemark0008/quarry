@@ -3,6 +3,7 @@ import { CheckCircle2, CircleAlert } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { sendVerificationEmail } from '@/lib/auth-client';
+import styles from './email-verification-pending.module.css';
 
 interface EmailVerificationPendingProps {
 	email: string;
@@ -55,11 +56,11 @@ export function EmailVerificationPending({ email, callbackURL, onChangeEmail }: 
 	};
 
 	return (
-		<div className='flex flex-col items-center text-center'>
-			<div className='max-w-sm'>
-				<p className='text-sm text-muted-foreground'>We sent an email to</p>
-				<p className='mt-1 break-all text-sm font-semibold text-foreground'>{email}</p>
-				<p className='mt-3 text-sm leading-6 text-muted-foreground'>
+		<div className={styles.emailVerificationPendingDiv}>
+			<div className={styles.emailVerificationPendingDiv2}>
+				<p className={styles.emailVerificationPendingP}>We sent an email to</p>
+				<p className={styles.emailVerificationPendingP2}>{email}</p>
+				<p className={styles.emailVerificationPendingP3}>
 					Click the link in it to continue to quarry. Verification links expire in one hour.
 				</p>
 			</div>
@@ -67,7 +68,7 @@ export function EmailVerificationPending({ email, callbackURL, onChangeEmail }: 
 			<Button
 				type='button'
 				variant='outline'
-				className='mt-6 h-11 w-full rounded-full'
+				className={styles.emailVerificationPendingButton}
 				isLoading={isSending}
 				disabled={isSending || resendCooldown > 0}
 				onClick={resend}
@@ -77,23 +78,23 @@ export function EmailVerificationPending({ email, callbackURL, onChangeEmail }: 
 			{feedback && (
 				<div
 					role={feedback.type === 'error' ? 'alert' : 'status'}
-					className='mt-4 flex items-start gap-2 text-left text-xs leading-5 text-muted-foreground'
+					className={styles.emailVerificationPendingDiv3}
 				>
 					{feedback.type === 'success' ? (
-						<CheckCircle2 className='mt-0.5 size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400' />
+						<CheckCircle2 className={styles.emailVerificationPendingCheckCircle2} />
 					) : (
-						<CircleAlert className='mt-0.5 size-3.5 shrink-0 text-destructive' />
+						<CircleAlert className={styles.emailVerificationPendingCircleAlert} />
 					)}
 					<span>{feedback.message}</span>
 				</div>
 			)}
 			{onChangeEmail && (
-				<p className='mt-5 text-xs text-muted-foreground'>
+				<p className={styles.emailVerificationPendingP4}>
 					Wrong email?{' '}
 					<button
 						type='button'
 						aria-label='Use a different email'
-						className='cursor-pointer font-medium text-foreground underline underline-offset-2'
+						className={styles.emailVerificationPendingButton2}
 						onClick={onChangeEmail}
 					>
 						Change it

@@ -3,6 +3,7 @@ import { Check, Copy } from 'lucide-react';
 import { SidePanelHeader } from './side-panel-header';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import styles from './recommendation-manual-fix-panel.module.css';
 
 interface RecommendationManualFixPanelProps {
 	title: string;
@@ -14,35 +15,35 @@ export function RecommendationManualFixPanel({ title, guidance, prompt }: Recomm
 	const { isCopied, copy } = useCopyToClipboard();
 
 	return (
-		<div className='flex h-full min-h-0 flex-col bg-background'>
+		<div className={styles.recommendationManualFixPanelDiv}>
 			<SidePanelHeader label='How to fix' title={title} />
 
-			<div className='min-h-0 flex-1 overflow-auto p-4'>
-				<div className='flex flex-col gap-4'>
-					<p className='text-sm text-muted-foreground'>
+			<div className={styles.recommendationManualFixPanelDiv2}>
+				<div className={styles.recommendationManualFixPanelDiv3}>
+					<p className={styles.recommendationManualFixPanelP}>
 						This change targets an auto-generated file, so quarry can&apos;t open a pull request directly.
 						Apply it at the source, or paste the prompt below into your own coding assistant.
 					</p>
 
 					{guidance && (
-						<div className='flex flex-col gap-1.5'>
-							<div className='text-xs font-medium text-muted-foreground'>What to do</div>
-							<p className='text-sm whitespace-pre-wrap'>{guidance}</p>
+						<div className={styles.recommendationManualFixPanelDiv4}>
+							<div className={styles.recommendationManualFixPanelDiv5}>What to do</div>
+							<p className={styles.recommendationManualFixPanelP2}>{guidance}</p>
 						</div>
 					)}
 
 					{prompt && (
-						<div className='flex flex-col gap-1.5'>
-							<div className='flex items-center justify-between'>
-								<div className='text-xs font-medium text-muted-foreground'>
+						<div className={styles.recommendationManualFixPanelDiv4}>
+							<div className={styles.recommendationManualFixPanelDiv6}>
+								<div className={styles.recommendationManualFixPanelDiv5}>
 									Prompt for your coding LLM
 								</div>
 								<Button size='sm' variant='outline' onClick={() => copy(prompt)}>
-									{isCopied ? <Check className='size-3.5' /> : <Copy className='size-3.5' />}
+									{isCopied ? <Check className={styles.recommendationManualFixPanelCheck} /> : <Copy className={styles.recommendationManualFixPanelCheck} />}
 									{isCopied ? 'Copied' : 'Copy'}
 								</Button>
 							</div>
-							<pre className='overflow-auto rounded-md border bg-muted/40 p-3 text-xs whitespace-pre-wrap'>
+							<pre className={styles.recommendationManualFixPanelPre}>
 								{prompt}
 							</pre>
 						</div>

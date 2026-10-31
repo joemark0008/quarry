@@ -4,17 +4,18 @@ import type { StoryPanelDisplayMode, Visibility } from '@quarry/shared/types';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
+import styles from './item-card.module.css';
 
 export const GRID_CARD_CLASS =
-	'group relative h-[150px] rounded-lg border bg-background dark:bg-background overflow-hidden';
+	`${styles.gRIDCARDCLASS} group`;
 
-export const LINES_CARD_CLASS = 'group flex items-center gap-3 rounded-md px-3 py-2 hover:bg-sidebar-accent';
+export const LINES_CARD_CLASS = `${styles.lINESCARDCLASS} group`;
 
 export const GRID_THUMBNAIL_CLASS =
-	'absolute top-0 left-0 right-0 bottom-12 pointer-events-none overflow-hidden bg-background dark:bg-background mx-1 mt-1 mb-2 rounded-lg';
+	styles.gRIDTHUMBNAILCLASS;
 
 export const GRID_HOVER_ACTION_GRADIENT_CLASS =
-	'pointer-events-none absolute inset-x-0 top-0 z-[1] h-16 bg-gradient-to-b from-background/95 via-background/70 to-transparent opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 dark:from-background/95 dark:via-background/75';
+	styles.gRIDHOVERACTIONGRADIENTCLASS;
 
 export function CardsSection({
 	title,
@@ -29,8 +30,8 @@ export function CardsSection({
 }) {
 	return (
 		<section className={className}>
-			<div className='flex items-center justify-between mb-4'>
-				<h2 className='text-sm font-medium text-muted-foreground'>{title}</h2>
+			<div className={styles.cardsSectionDiv}>
+				<h2 className={styles.cardsSectionH2}>{title}</h2>
 				{action}
 			</div>
 			{children}
@@ -42,9 +43,9 @@ export function CardsGrid({ displayMode, children }: { displayMode: StoryPanelDi
 	return (
 		<div
 			className={cn(
-				displayMode === 'grid' &&
-					'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3',
-				displayMode === 'lines' && 'flex flex-col gap-1',
+				displayMode === styles.cardsGridDiv &&
+					`${styles.cardsGridDiv2} 2xl:grid-cols-6`,
+				displayMode === 'lines' && styles.cardsGridDiv3,
 			)}
 		>
 			{children}
@@ -54,9 +55,9 @@ export function CardsGrid({ displayMode, children }: { displayMode: StoryPanelDi
 
 export function GridCardFooter({ title, subtitle }: { title: string; subtitle: ReactNode }) {
 	return (
-		<div className='flex-1 min-w-0 transition-transform duration-200 ease-out group-hover:-translate-y-0.5'>
-			<span className='block text-xs font-medium truncate mb-1'>{title}</span>
-			<span className='flex items-center text-[10px] font-medium text-muted-foreground/60 truncate'>
+		<div className={styles.gridCardFooterDiv}>
+			<span className={styles.gridCardFooterSpan}>{title}</span>
+			<span className={styles.gridCardFooterSpan2}>
 				{subtitle}
 			</span>
 		</div>
@@ -67,7 +68,7 @@ export function AuthorDateLabel({ author, createdAt }: { author: string; created
 	return (
 		<>
 			{author}
-			<Dot className='size-5 -my-2 shrink-0' />
+			<Dot className={styles.authorDateLabelDot} />
 			{formatRelativeDate(createdAt)}
 		</>
 	);
@@ -75,7 +76,7 @@ export function AuthorDateLabel({ author, createdAt }: { author: string; created
 
 export function NoResults({ query }: { query: string }) {
 	return (
-		<p className='text-muted-foreground text-sm py-12 text-center'>
+		<p className={styles.noResultsP}>
 			No results matching &ldquo;{query.trim()}&rdquo;
 		</p>
 	);
@@ -84,9 +85,9 @@ export function NoResults({ query }: { query: string }) {
 export function LiveBadge({ iconOnly = false }: { iconOnly?: boolean }) {
 	return (
 		<SimpleTooltip content='Live story'>
-			<span className='inline-flex items-center text-primary gap-1'>
-				<Activity className='size-3' />
-				<span className={iconOnly ? 'sr-only' : 'text-[11px] font-medium truncate'}>Live</span>
+			<span className={styles.liveBadgeSpan}>
+				<Activity className={styles.liveBadgeActivity} />
+				<span className={iconOnly ? 'sr-only' : styles.liveBadgeSpan2}>Live</span>
 			</span>
 		</SimpleTooltip>
 	);
@@ -95,9 +96,9 @@ export function LiveBadge({ iconOnly = false }: { iconOnly?: boolean }) {
 export function CertifiedBadge({ certifiedByName }: { certifiedByName?: string | null }) {
 	return (
 		<SimpleTooltip content={certifiedByName ? `Certified by ${certifiedByName}` : 'Certified by an admin'}>
-			<span className='inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-amber-700 shadow-xs dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300'>
-				<ShieldCheck className='size-3' />
-				<span className='text-[11px] font-medium truncate'>Certified</span>
+			<span className={styles.certifiedBadgeSpan}>
+				<ShieldCheck className={styles.liveBadgeActivity} />
+				<span className={styles.liveBadgeSpan2}>Certified</span>
 			</span>
 		</SimpleTooltip>
 	);
@@ -106,8 +107,8 @@ export function CertifiedBadge({ certifiedByName }: { certifiedByName?: string |
 export function PrivateBadge({ label = 'Private story' }: { label?: string }) {
 	return (
 		<SimpleTooltip content={label}>
-			<span className='inline-flex items-center text-muted-foreground'>
-				<Lock className='size-3' />
+			<span className={styles.privateBadgeSpan}>
+				<Lock className={styles.liveBadgeActivity} />
 			</span>
 		</SimpleTooltip>
 	);
@@ -131,8 +132,8 @@ export function SharingBadge({
 
 	return (
 		<SimpleTooltip content={tooltip}>
-			<span className='inline-flex items-center text-primary'>
-				{visibility === 'project' ? <Globe className='size-3' /> : <Users className='size-3' />}
+			<span className={styles.sharingBadgeSpan}>
+				{visibility === 'project' ? <Globe className={styles.liveBadgeActivity} /> : <Users className={styles.liveBadgeActivity} />}
 			</span>
 		</SimpleTooltip>
 	);

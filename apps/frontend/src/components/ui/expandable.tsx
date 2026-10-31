@@ -2,6 +2,7 @@ import { ChevronRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import styles from './expandable.module.css';
 
 /** `grouped` reads like `inline` but keeps a header row so trailing actions can sit beside the title. */
 type ExpandableVariant = 'inline' | 'bordered' | 'plain' | 'grouped';
@@ -40,7 +41,7 @@ export const Expandable = ({
 	const canExpand = !disabled;
 	const isBordered = variant === 'bordered';
 	const isPlain = variant === 'plain';
-	const isInline = variant === 'inline';
+	const isInline = variant === styles.isInline;
 	const isGrouped = variant === 'grouped';
 	const hasHeaderRow = !isInline;
 	const hasHeaderEmphasis = isBordered || isPlain;
@@ -54,7 +55,7 @@ export const Expandable = ({
 	const icon = leadingIcon ?? (
 		<ChevronRight
 			size={12}
-			className={cn('transition-transform duration-200', expanded && 'rotate-90')}
+			className={cn(styles.iconChevronRight, expanded && styles.iconChevronRight2)}
 			strokeWidth={3.25}
 		/>
 	);
@@ -67,45 +68,45 @@ export const Expandable = ({
 			onValueChange={handleValueChange}
 			disabled={!canExpand}
 			className={cn(
-				isBordered && 'border border-border rounded-lg overflow-hidden bg-backgroundSecondary/30',
+				isBordered && `${styles.expandableAccordion} bg-backgroundSecondary/30`,
 				className,
 			)}
 		>
-			<AccordionItem value='expandable-content' className='border-b-0' style={{ padding: 0 }}>
+			<AccordionItem value='expandable-content' className={styles.expandableAccordionItem} style={{ padding: 0 }}>
 				{hasHeaderRow ? (
 					<div
 						className={cn(
-							'flex items-center justify-between gap-2',
-							isBordered && 'py-2 px-3',
-							isPlain && 'px-2 py-2',
-							canExpand && 'cursor-pointer',
+							styles.expandableDiv,
+							isBordered && styles.expandableDiv2,
+							isPlain && styles.expandableDiv3,
+							canExpand && styles.expandableDiv4,
 						)}
 						onClick={() => canExpand && onExpandedChange(!expanded)}
 					>
-						<div className={cn('flex min-w-0 flex-1 items-center', titleAction ? 'gap-2' : 'gap-1')}>
+						<div className={cn(styles.expandableDiv5, titleAction ? styles.expandableDiv6 : styles.expandableDiv7)}>
 							<AccordionTrigger
-								headerClassName='w-auto min-w-0 shrink'
+								headerClassName={styles.expandableAccordionTrigger}
 								className={cn(
-									'select-none flex items-baseline gap-2 py-0 overflow-hidden transition-opacity duration-150 hover:no-underline [&>svg:last-child]:hidden',
-									'min-w-0 flex-1',
-									canExpand ? 'cursor-pointer' : '',
+									styles.expandableAccordionTrigger2,
+									styles.expandableAccordionTrigger3,
+									canExpand ? styles.expandableDiv4 : '',
 									triggerClassName,
 								)}
 							>
-								<div className='size-3 flex items-center justify-center shrink-0 self-center'>
+								<div className={styles.expandableDiv8}>
 									{icon}
 								</div>
 								<span
 									className={cn(
-										'flex-1 truncate min-w-0',
-										hasHeaderEmphasis ? 'font-medium' : 'text-sm font-normal',
-										isLoading && 'text-shimmer',
+										styles.expandableSpan,
+										hasHeaderEmphasis ? styles.expandableSpan2 : styles.expandableSpan3,
+										isLoading && styles.expandableSpan4,
 									)}
 								>
 									{title}
 								</span>
 								{badge && !expanded && (
-									<span className='text-xs opacity-30 ml-auto shrink-0'>{badge}</span>
+									<span className={styles.expandableSpan5}>{badge}</span>
 								)}
 							</AccordionTrigger>
 							{titleAction}
@@ -115,32 +116,32 @@ export const Expandable = ({
 				) : (
 					<AccordionTrigger
 						className={cn(
-							'select-none flex items-center gap-2 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap transition-colors duration-150 py-0 hover:no-underline [&>svg:last-child]:hidden opacity-100',
-							canExpand ? 'cursor-pointer' : '',
+							styles.expandableAccordionTrigger4,
+							canExpand ? styles.expandableDiv4 : '',
 							triggerClassName,
 						)}
 					>
-						<div className='size-3 flex items-center justify-center shrink-0'>{icon}</div>
+						<div className={styles.expandableDiv9}>{icon}</div>
 						<span
 							className={cn(
-								'flex-1 text-sm text-foreground font-normal truncate min-w-0',
-								isLoading && 'text-shimmer',
+								styles.expandableSpan6,
+								isLoading && styles.expandableSpan4,
 							)}
 						>
 							{title}
 						</span>
-						{badge && !expanded && <span className='text-xs opacity-50 shrink-0'>{badge}</span>}
+						{badge && !expanded && <span className={styles.expandableSpan7}>{badge}</span>}
 					</AccordionTrigger>
 				)}
 
-				<AccordionContent className={cn('pb-0', isInline && 'pt-1.5')}>
+				<AccordionContent className={cn(styles.expandableAccordionContent, isInline && styles.expandableAccordionContent2)}>
 					{isBordered ? (
-						<div className='border-t border-border'>{children}</div>
+						<div className={styles.expandableDiv10}>{children}</div>
 					) : isPlain || isGrouped ? (
 						<div>{children}</div>
 					) : (
-						<div className='pl-5 bg-backgroundSecondary relative'>
-							<div className='h-full border-l border-l-border absolute top-0 left-[6px]' />
+						<div className={`${styles.expandableDiv11} bg-backgroundSecondary`}>
+							<div className={styles.expandableDiv12} />
 							<div>{children}</div>
 						</div>
 					)}

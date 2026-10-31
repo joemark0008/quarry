@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import styles from './command-block.module.css';
 
 export function CommandBlock({ command }: { command: string }) {
 	const { isCopied, copy } = useCopyToClipboard();
@@ -19,15 +20,15 @@ export function CommandBlock({ command }: { command: string }) {
 	};
 
 	return (
-		<div className='group flex items-center gap-3 rounded-xl border border-border bg-background px-4 py-3'>
-			<span aria-hidden className='shrink-0 font-mono text-sm text-muted-foreground'>
+		<div className={`${styles.commandBlockDiv} group`}>
+			<span aria-hidden className={styles.commandBlockSpan}>
 				$
 			</span>
-			<code className='block min-w-0 flex-1 whitespace-pre-wrap rounded-none bg-transparent! p-0! text-left font-mono text-sm leading-relaxed'>
+			<code className={styles.commandBlockCode}>
 				{command}
 			</code>
 			{copyFailed && (
-				<span role='status' className='text-xs text-destructive'>
+				<span role='status' className={styles.commandBlockSpan2}>
 					Command was not copied
 				</span>
 			)}
@@ -38,12 +39,12 @@ export function CommandBlock({ command }: { command: string }) {
 				aria-label={copyLabel}
 				title={copyLabel}
 				onClick={() => void handleCopy()}
-				className='shrink-0 opacity-0 transition-opacity hover:rounded-full group-hover:opacity-100 group-focus-within:opacity-100'
+				className={styles.commandBlockButton}
 			>
 				{isCopied && !copyFailed ? (
-					<Check className='size-3.5 text-emerald-500' />
+					<Check className={styles.commandBlockCheck} />
 				) : (
-					<Copy className={copyFailed ? 'size-3.5 text-destructive' : 'size-3.5'} />
+					<Copy className={copyFailed ? styles.commandBlockCopy : styles.commandBlockCopy2} />
 				)}
 			</Button>
 		</div>

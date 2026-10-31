@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
+import styles from './recommendation-repo-card.module.css';
 
 export function RecommendationRepoCard() {
 	const repo = useQuery({
@@ -22,8 +23,8 @@ export function RecommendationRepoCard() {
 
 	if (repo.isLoading) {
 		return (
-			<SettingsCard title='Repository' icon={<Github className='size-4' />}>
-				<Skeleton className='h-4 w-48' />
+			<SettingsCard title='Repository' icon={<Github className={styles.recommendationRepoCardGithub} />}>
+				<Skeleton className={styles.recommendationRepoCardSkeleton} />
 			</SettingsCard>
 		);
 	}
@@ -32,7 +33,7 @@ export function RecommendationRepoCard() {
 		return (
 			<SettingsCard
 				title='Repository'
-				icon={<Github className='size-4' />}
+				icon={<Github className={styles.recommendationRepoCardGithub} />}
 				description='Connect a context repository on the Git settings page so recommendations can include proposed changes.'
 				action={<GitSettingsLink label='Open Git settings' />}
 			>
@@ -47,22 +48,22 @@ export function RecommendationRepoCard() {
 	return (
 		<SettingsCard
 			title='Repository'
-			icon={<ProviderIcon className='size-4' />}
+			icon={<ProviderIcon className={styles.recommendationRepoCardGithub} />}
 			description='Pull requests with drafted context changes are opened against this repository.'
 			action={<GitSettingsLink label='Manage in Git settings' />}
 		>
-			<div className='flex flex-wrap items-center gap-2 text-sm'>
+			<div className={styles.recommendationRepoCardDiv}>
 				<a
 					href={webUrl}
 					target='_blank'
 					rel='noopener noreferrer'
-					className='font-mono text-foreground hover:underline'
+					className={styles.recommendationRepoCardA}
 				>
 					{repoFullName}
 				</a>
 				{branch && (
-					<span className='flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground'>
-						<GitBranch className='size-3' />
+					<span className={styles.recommendationRepoCardSpan}>
+						<GitBranch className={styles.recommendationRepoCardGitBranch} />
 						{branch}
 					</span>
 				)}
@@ -95,30 +96,30 @@ function LinkedReposList({ repos }: { repos: LinkedRepo[] }) {
 		return null;
 	}
 	return (
-		<div className='flex flex-col gap-1.5 rounded-md border border-dashed bg-muted/30 p-2 text-xs'>
-			<div className='font-medium text-muted-foreground'>Linked repos from quarry_config.yaml</div>
-			<div className='flex flex-col gap-1'>
+		<div className={styles.linkedReposListDiv}>
+			<div className={styles.linkedReposListDiv2}>Linked repos from quarry_config.yaml</div>
+			<div className={styles.linkedReposListDiv3}>
 				{repos.map((repo) => (
-					<div key={repo.name} className='flex flex-wrap items-center gap-x-1.5 gap-y-1'>
-						<span className='font-mono text-muted-foreground'>{repo.contextPath}/</span>
-						<span className='text-muted-foreground'>→</span>
+					<div key={repo.name} className={styles.linkedReposListDiv4}>
+						<span className={styles.linkedReposListSpan}>{repo.contextPath}/</span>
+						<span className={styles.linkedReposListSpan2}>→</span>
 						{repo.repoFullName && repo.url ? (
 							<a
 								href={repo.url}
 								target='_blank'
 								rel='noopener noreferrer'
-								className='font-mono text-foreground hover:underline'
+								className={styles.recommendationRepoCardA}
 							>
 								{repo.repoFullName}
 							</a>
 						) : (
-							<span className='font-mono text-muted-foreground'>
+							<span className={styles.linkedReposListSpan}>
 								{repo.localPath ?? repo.url ?? 'unlinked'}
 							</span>
 						)}
 						{repo.branch && (
-							<span className='flex items-center gap-1 rounded bg-background px-1.5 py-0.5 text-[11px] text-muted-foreground'>
-								<GitBranch className='size-3' />
+							<span className={styles.linkedReposListSpan3}>
+								<GitBranch className={styles.recommendationRepoCardGitBranch} />
 								{repo.branch}
 							</span>
 						)}

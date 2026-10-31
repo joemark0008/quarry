@@ -8,15 +8,13 @@ import type { QueryDataMap } from '@/components/story-embeds';
 import { ChartContainer } from '@/components/ui/chart';
 import { StoryThemeProvider } from '@/components/story-theme-provider';
 import { cn } from '@/lib/utils';
+import styles from './story-thumbnail.module.css';
 
-export const SHEET_VISUAL = `rounded-[2px]
-	 shadow-[-20px_26px_52px_-18px_rgba(17,17,40,0.13),-8px_8px_18px_-10px_rgba(17,17,40,0.06)]
-	 dark:shadow-[-14px_18px_34px_-22px_rgba(255,255,255,0.02),-6px_6px_14px_-12px_rgba(255,255,255,0.012)]
-`;
+export const SHEET_VISUAL = styles.sHEETVISUAL;
 
 export const SHEET_TRANSFORM = 'perspective(400px) rotateX(30deg) rotateY(20deg) rotateZ(-20deg)';
 
-export const SHEET_SURFACE = 'bg-gradient-to-b from-background to-background/90';
+export const SHEET_SURFACE = styles.sHEETSURFACE;
 
 export function PaperSheet({
 	children,
@@ -30,27 +28,27 @@ export function PaperSheet({
 	theme?: StoryTheme | null;
 }) {
 	return (
-		<div className={cn('absolute inset-0', className)}>
-			<StoryThemeProvider theme={theme ?? null} className='relative'>
+		<div className={cn(styles.paperSheetDiv, className)}>
+			<StoryThemeProvider theme={theme ?? null} className={styles.paperSheetStoryThemeProvider}>
 				<div
 					className={cn(
-						'absolute left-[15%] w-[130%] h-[200%] origin-top-left bg-secondary',
-						isToolPart ? 'top-[23%]' : 'top-[27%]',
+						styles.paperSheetDiv2,
+						isToolPart ? styles.paperSheetDiv3 : styles.paperSheetDiv4,
 						SHEET_VISUAL,
 					)}
 					style={{ transform: SHEET_TRANSFORM }}
 				/>
 				<div
 					className={cn(
-						'absolute left-[16%] w-[130%] h-[200%] origin-top-left',
-						isToolPart ? 'top-[22%]' : 'top-[26%]',
+						styles.paperSheetDiv5,
+						isToolPart ? styles.paperSheetDiv6 : styles.paperSheetDiv7,
 						SHEET_SURFACE,
-						'rounded-[2px]',
-						isToolPart ? 'border-t border-r' : 'pr-5',
+						styles.paperSheetDiv8,
+						isToolPart ? styles.paperSheetDiv9 : styles.paperSheetDiv10,
 					)}
 					style={{ transform: SHEET_TRANSFORM }}
 				>
-					<div className='flex flex-col gap-[7px] p-[7%]'>{children}</div>
+					<div className={styles.paperSheetDiv11}>{children}</div>
 				</div>
 			</StoryThemeProvider>
 		</div>
@@ -101,12 +99,12 @@ function FlatStorySheet({
 	theme?: StoryTheme | null;
 }) {
 	return (
-		<div className={cn('absolute inset-0 overflow-hidden bg-background', className)}>
+		<div className={cn(styles.flatStorySheetDiv, className)}>
 			<StoryThemeProvider
 				theme={theme ?? null}
-				className='relative overflow-hidden bg-background text-foreground'
+				className={styles.flatStorySheetStoryThemeProvider}
 			>
-				<div className='absolute top-0 left-0 flex w-[calc(100%/0.42)] origin-top-left scale-[0.42] flex-col gap-4 bg-background px-6 py-2'>
+				<div className={styles.flatStorySheetDiv2}>
 					{children}
 				</div>
 			</StoryThemeProvider>
@@ -116,21 +114,21 @@ function FlatStorySheet({
 
 export function FolderThumbnail({ theme }: { theme?: StoryTheme | null } = {}) {
 	return (
-		<div className='pointer-events-none absolute inset-0 overflow-hidden'>
-			<StoryThemeProvider theme={theme ?? null} className='relative overflow-hidden text-foreground'>
+		<div className={styles.folderThumbnailDiv}>
+			<StoryThemeProvider theme={theme ?? null} className={styles.folderThumbnailStoryThemeProvider}>
 				<div
 					className={cn(
-						'absolute top-[41%] left-[11%] w-[130%] h-[200%] origin-top-left bg-secondary',
+						styles.folderThumbnailDiv2,
 						SHEET_VISUAL,
 					)}
 					style={{ transform: SHEET_TRANSFORM }}
 				>
-					<div className='absolute -top-[5%] left-[5%] h-[9%] w-[32%] rounded-t-[3px] bg-secondary' />
+					<div className={styles.folderThumbnailDiv3} />
 				</div>
 
 				<div
 					className={cn(
-						'pr-5 absolute top-[24%] left-[12%] w-[140%] h-[200%] origin-top-left bg-secondary',
+						styles.folderThumbnailDiv4,
 						SHEET_VISUAL,
 					)}
 					style={{ transform: SHEET_TRANSFORM }}
@@ -138,7 +136,7 @@ export function FolderThumbnail({ theme }: { theme?: StoryTheme | null } = {}) {
 
 				<div
 					className={cn(
-						'pr-5 absolute top-[23%] left-[13%] w-[140%] h-[200%] origin-top-left',
+						styles.folderThumbnailDiv5,
 						SHEET_SURFACE,
 						SHEET_VISUAL,
 					)}
@@ -146,11 +144,11 @@ export function FolderThumbnail({ theme }: { theme?: StoryTheme | null } = {}) {
 				/>
 
 				<div
-					className='absolute top-[40%] left-[12%] w-[50%] h-[200%] origin-top-left rounded-[2px] rounded-b-none bg-sidebar dark:bg-background'
+					className={styles.folderThumbnailDiv6}
 					style={{ transform: SHEET_TRANSFORM }}
 				>
 					<div
-						className='pointer-events-none absolute inset-0 rounded-[2px] rounded-b-none border-t-2 border-r-2 border-primary'
+						className={styles.folderThumbnailDiv7}
 						style={{
 							maskImage: 'linear-gradient(to top right, transparent 20%, black 78%)',
 							WebkitMaskImage: 'linear-gradient(to top right, transparent 20%, black 78%)',
@@ -159,11 +157,11 @@ export function FolderThumbnail({ theme }: { theme?: StoryTheme | null } = {}) {
 				</div>
 
 				<div
-					className='absolute top-[35%] left-[52.5%] w-[70%] h-[200%] origin-top-left rounded-[2px] rounded-tl-none bg-sidebar dark:bg-background'
+					className={styles.folderThumbnailDiv8}
 					style={{ transform: `${SHEET_TRANSFORM} rotateY(-1.5deg)` }}
 				>
 					<div
-						className='pointer-events-none absolute inset-0 rounded-[2px] rounded-tl-none border-t-2 border-primary'
+						className={styles.folderThumbnailDiv9}
 						style={{
 							maskImage: 'linear-gradient(to left, transparent 8%, black 70%)',
 							WebkitMaskImage: 'linear-gradient(to left, transparent 8%, black 70%)',
@@ -226,8 +224,8 @@ function TextBlock({ content, variant }: { content: string; variant: ThumbnailVa
 		.filter((line) => line.length > 0);
 
 	return (
-		<div className='min-h-0 overflow-hidden'>
-			<div className='flex min-h-0 flex-col'>{renderMarkdownPreview(lines, variant)}</div>
+		<div className={styles.textBlockDiv}>
+			<div className={styles.textBlockDiv2}>{renderMarkdownPreview(lines, variant)}</div>
 		</div>
 	);
 }
@@ -266,13 +264,13 @@ function renderMarkdownLine(line: string, variant: ThumbnailVariant, key: number
 			<span
 				key={key}
 				className={cn(
-					'truncate font-semibold leading-tight text-foreground/85',
-					variant === 'flat' && level === 1 && 'mb-1 text-[15px]',
-					variant === 'flat' && level === 2 && 'mb-1 text-[13px]',
-					variant === 'flat' && level === 3 && 'text-[12px]',
-					variant === 'mini' && level === 1 && 'text-[5.75px] mb-px',
-					variant === 'mini' && level === 2 && 'text-[5.25px] mb-px',
-					variant === 'mini' && level === 3 && 'text-[4.75px]',
+					styles.renderMarkdownLineSpan,
+					variant === 'flat' && level === 1 && styles.renderMarkdownLineSpan2,
+					variant === 'flat' && level === 2 && styles.renderMarkdownLineSpan3,
+					variant === 'flat' && level === 3 && styles.renderMarkdownLineSpan4,
+					variant === 'mini' && level === 1 && styles.renderMarkdownLineSpan5,
+					variant === 'mini' && level === 2 && styles.renderMarkdownLineSpan6,
+					variant === 'mini' && level === 3 && styles.renderMarkdownLineSpan7,
 				)}
 			>
 				{headingMatch[2]}
@@ -284,7 +282,7 @@ function renderMarkdownLine(line: string, variant: ThumbnailVariant, key: number
 		return (
 			<div
 				key={key}
-				className={cn(variant === 'flat' ? 'my-2 h-px bg-foreground/25' : 'my-[0.5px] h-px bg-foreground/12')}
+				className={cn(variant === 'flat' ? styles.renderMarkdownLineDiv : styles.renderMarkdownLineDiv2)}
 			/>
 		);
 	}
@@ -292,14 +290,14 @@ function renderMarkdownLine(line: string, variant: ThumbnailVariant, key: number
 	const bulletMatch = line.match(/^[-*]\s+(.+)/);
 	if (bulletMatch) {
 		return (
-			<span key={key} className={cn('flex min-w-0 items-start gap-1.5 text-foreground/65', textSize(variant))}>
+			<span key={key} className={cn(styles.renderMarkdownLineSpan8, textSize(variant))}>
 				<span
 					className={cn(
-						'shrink-0 rounded-full bg-foreground/45',
-						variant === 'flat' ? 'mt-[6px] size-[2.5px]' : 'mt-[2.5px] size-[1.25px]',
+						styles.renderMarkdownLineSpan9,
+						variant === 'flat' ? styles.renderMarkdownLineSpan10 : styles.renderMarkdownLineSpan11,
 					)}
 				/>
-				<span className='min-w-0 truncate'>
+				<span className={styles.renderMarkdownLineSpan12}>
 					<InlineMarkdown text={bulletMatch[1]} />
 				</span>
 			</span>
@@ -307,14 +305,14 @@ function renderMarkdownLine(line: string, variant: ThumbnailVariant, key: number
 	}
 
 	return (
-		<span key={key} className={cn('truncate text-foreground/65', textSize(variant))}>
+		<span key={key} className={cn(styles.renderMarkdownLineSpan13, textSize(variant))}>
 			<InlineMarkdown text={line} />
 		</span>
 	);
 }
 
 function textSize(variant: ThumbnailVariant): string {
-	return variant === 'flat' ? 'text-[11.5px] leading-[15px]' : 'text-[4.75px] leading-[1.2]';
+	return variant === 'flat' ? styles.textSize : styles.textSize2;
 }
 
 function MarkdownTablePreview({ lines, variant }: { lines: string[]; variant: ThumbnailVariant }) {
@@ -325,24 +323,24 @@ function MarkdownTablePreview({ lines, variant }: { lines: string[]; variant: Th
 	return (
 		<div
 			className={cn(
-				'overflow-hidden rounded-[4px] ring-1 ring-foreground/8',
-				variant === 'flat' ? 'my-2' : 'my-px',
+				styles.markdownTablePreviewDiv,
+				variant === 'flat' ? styles.markdownTablePreviewDiv2 : styles.markdownTablePreviewDiv3,
 			)}
 		>
-			<div className='flex bg-foreground/6'>
+			<div className={styles.markdownTablePreviewDiv4}>
 				{header.slice(0, 3).map((cell, i) => (
 					<span
 						key={i}
-						className={cn('flex-1 truncate px-1 font-medium text-foreground/75', textSize(variant))}
+						className={cn(styles.markdownTablePreviewSpan, textSize(variant))}
 					>
 						<InlineMarkdown text={cell} />
 					</span>
 				))}
 			</div>
 			{visibleBody.map((row, i) => (
-				<div key={i} className={cn('flex', i % 2 === 1 && 'bg-foreground/[0.025]')}>
+				<div key={i} className={cn(styles.markdownTablePreviewDiv5, i % 2 === 1 && styles.markdownTablePreviewDiv6)}>
 					{row.slice(0, 3).map((cell, j) => (
-						<span key={j} className={cn('flex-1 truncate px-1 text-foreground/60', textSize(variant))}>
+						<span key={j} className={cn(styles.markdownTablePreviewSpan2, textSize(variant))}>
 							<InlineMarkdown text={cell} />
 						</span>
 					))}
@@ -378,7 +376,7 @@ function InlineMarkdown({ text }: { text: string }) {
 		<>
 			{parts.map((part, i) =>
 				part.startsWith('**') && part.endsWith('**') ? (
-					<strong key={i} className='font-medium text-foreground/80'>
+					<strong key={i} className={styles.inlineMarkdownStrong}>
 						{part.slice(2, -2)}
 					</strong>
 				) : (
@@ -389,7 +387,7 @@ function InlineMarkdown({ text }: { text: string }) {
 	);
 }
 
-const KPI_COLOR = 'bg-primary/50';
+const KPI_COLOR = styles.kPICOLOR;
 const DEFAULT_CHART_COLORS = Array.from({ length: 11 }, (_, i) => `var(--chart-${i + 1})`);
 
 type KpiPreviewValue = {
@@ -414,15 +412,15 @@ function KpiSilhouette({
 		const visibleValues = values.slice(0, Math.min(Math.max(count, 1), 4));
 		if (variant === 'flat') {
 			return (
-				<div className='flex w-full flex-wrap justify-start'>
+				<div className={styles.kpiSilhouetteDiv}>
 					{visibleValues.map((item, i) => (
-						<div key={`${item.label}-${i}`} className='w-[104px] min-w-0'>
-							<div className='flex items-center'>
-								<div className='truncate text-[8px] leading-[9px] tracking-wide text-foreground/70'>
+						<div key={`${item.label}-${i}`} className={styles.kpiSilhouetteDiv2}>
+							<div className={styles.kpiSilhouetteDiv3}>
+								<div className={styles.kpiSilhouetteDiv4}>
 									{item.label}
 								</div>
 							</div>
-							<div className='truncate text-[12px] leading-[13px] font-semibold tabular-nums text-foreground'>
+							<div className={styles.kpiSilhouetteDiv5}>
 								{item.value}
 							</div>
 						</div>
@@ -432,11 +430,11 @@ function KpiSilhouette({
 		}
 
 		return (
-			<div className={cn('grid', visibleValues.length > 1 ? 'grid-cols-2' : 'grid-cols-1', 'gap-[2px]')}>
+			<div className={cn(styles.kpiSilhouetteDiv6, visibleValues.length > 1 ? styles.kpiSilhouetteDiv7 : styles.kpiSilhouetteDiv8, styles.kpiSilhouetteDiv9)}>
 				{visibleValues.map((item, i) => (
-					<div key={`${item.label}-${i}`} className='min-w-0'>
-						<div className='truncate text-[3.75px] leading-[1.1] text-foreground/55'>{item.label}</div>
-						<div className='truncate text-[5px] leading-[1.05] font-semibold tabular-nums text-foreground'>
+					<div key={`${item.label}-${i}`} className={styles.kpiSilhouetteDiv10}>
+						<div className={styles.kpiSilhouetteDiv11}>{item.label}</div>
+						<div className={styles.kpiSilhouetteDiv12}>
 							{item.value}
 						</div>
 					</div>
@@ -448,11 +446,11 @@ function KpiSilhouette({
 	const cards = Math.min(Math.max(count, 1), 4);
 	if (variant === 'flat') {
 		return (
-			<div className='flex w-full flex-wrap justify-start'>
+			<div className={styles.kpiSilhouetteDiv}>
 				{Array.from({ length: cards }).map((_, i) => (
-					<div key={i} className='flex w-[104px] min-w-0 flex-col gap-2'>
+					<div key={i} className={styles.kpiSilhouetteDiv13}>
 						<div
-							className={cn('h-1 w-[72px] rounded-full', colors.length === 0 && KPI_COLOR)}
+							className={cn(styles.kpiSilhouetteDiv14, colors.length === 0 && KPI_COLOR)}
 							style={{ backgroundColor: colorAt(colors, i) }}
 						/>
 					</div>
@@ -462,11 +460,11 @@ function KpiSilhouette({
 	}
 
 	return (
-		<div className='flex gap-[9%]'>
+		<div className={styles.kpiSilhouetteDiv15}>
 			{Array.from({ length: cards }).map((_, i) => (
-				<div key={i} className='flex w-[18%] flex-col gap-[5px]'>
+				<div key={i} className={styles.kpiSilhouetteDiv16}>
 					<div
-						className={cn('h-[3px] w-full rounded-[2px]', colors.length === 0 && KPI_COLOR)}
+						className={cn(styles.kpiSilhouetteDiv17, colors.length === 0 && KPI_COLOR)}
 						style={{ backgroundColor: colorAt(colors, i) }}
 					/>
 				</div>
@@ -540,9 +538,9 @@ function getKpiPreviewValues({
 function PreviewBlock({ title, children, variant }: { title: string; children: ReactNode; variant: ThumbnailVariant }) {
 	return (
 		<div
-			className={cn('min-h-0 overflow-hidden border-solid bg-card', variant === 'flat' ? 'p-3' : 'p-[3px]')}
+			className={cn(styles.previewBlockDiv, variant === 'flat' ? styles.previewBlockDiv2 : styles.previewBlockDiv3)}
 			style={{
-				borderColor: 'var(--border)',
+				borderColor: 'var(--app-line)',
 				borderRadius: thumbnailBlockRadius(variant),
 				borderWidth: 'var(--story-block-border-width, 0px)',
 			}}
@@ -550,8 +548,8 @@ function PreviewBlock({ title, children, variant }: { title: string; children: R
 			{title && (
 				<span
 					className={cn(
-						'block truncate font-medium text-foreground/70',
-						variant === 'flat' ? 'mb-2 text-[12px]' : 'mb-0.5 text-[5px]',
+						styles.previewBlockSpan,
+						variant === 'flat' ? styles.previewBlockSpan2 : styles.previewBlockSpan3,
 					)}
 				>
 					{title}
@@ -564,7 +562,7 @@ function PreviewBlock({ title, children, variant }: { title: string; children: R
 
 function thumbnailBlockRadius(variant: ThumbnailVariant): string {
 	const scale = variant === 'flat' ? 0.5 : 0.25;
-	return `calc(var(--story-block-radius, var(--radius)) * ${scale})`;
+	return `calc(var(--story-block-radius, var(--app-radius)) * ${scale})`;
 }
 
 function colorAt(colors: string[], index: number): string {
@@ -597,14 +595,14 @@ function RechartsThumbnail({
 		showDataLabels: false,
 		animate: false,
 		margin: { top: 0, right: 0, bottom: 0, left: 0 },
-		backgroundColor: 'var(--background)',
+		backgroundColor: 'var(--app-surface)',
 	});
 
 	return (
 		<ChartContainer
 			config={config}
-			className='pointer-events-none'
-			contentClassName={cn('aspect-auto', variant === 'flat' ? 'h-[150px]' : 'h-[40px]')}
+			className={styles.rechartsThumbnailChartContainer}
+			contentClassName={cn(styles.rechartsThumbnailChartContainer2, variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.rechartsThumbnailChartContainer4)}
 		>
 			{chart}
 		</ChartContainer>
@@ -662,15 +660,15 @@ function TableSilhouette({ variant }: { variant: ThumbnailVariant }) {
 	const rows = variant === 'flat' ? [0, 1, 2, 3, 4, 5] : [0, 1, 2];
 
 	return (
-		<div className='overflow-hidden rounded-[4px] ring-1 ring-foreground/8'>
-			<div className={cn(variant === 'flat' ? 'h-6' : 'h-[5px]', 'bg-current opacity-50 text-primary')} />
+		<div className={styles.markdownTablePreviewDiv}>
+			<div className={cn(variant === 'flat' ? styles.tableSilhouetteDiv : styles.tableSilhouetteDiv2, styles.tableSilhouetteDiv3)} />
 			{rows.map((i) => (
-				<div key={i} className={cn('flex gap-px', i % 2 === 1 && 'bg-foreground/[0.025]')}>
-					<div className={cn('flex-1 bg-foreground/8', variant === 'flat' ? 'h-5' : 'h-[4px]')} />
-					<div className='w-px bg-foreground/6' />
-					<div className={cn('flex-1 bg-foreground/5', variant === 'flat' ? 'h-5' : 'h-[4px]')} />
-					<div className='w-px bg-foreground/6' />
-					<div className={cn('flex-1 bg-foreground/8', variant === 'flat' ? 'h-5' : 'h-[4px]')} />
+				<div key={i} className={cn(styles.tableSilhouetteDiv4, i % 2 === 1 && styles.markdownTablePreviewDiv6)}>
+					<div className={cn(styles.tableSilhouetteDiv5, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
+					<div className={styles.tableSilhouetteDiv8} />
+					<div className={cn(styles.tableSilhouetteDiv9, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
+					<div className={styles.tableSilhouetteDiv8} />
+					<div className={cn(styles.tableSilhouetteDiv5, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
 				</div>
 			))}
 		</div>
@@ -687,40 +685,40 @@ function MiniMap({ title, color, variant }: { title: string; color?: string; var
 
 function MapSilhouette({ color = 'var(--chart-1)', variant }: { color?: string; variant: ThumbnailVariant }) {
 	return (
-		<div className='overflow-hidden rounded-[4px]'>
+		<div className={styles.mapSilhouetteDiv}>
 			<svg
 				viewBox='0 0 60 36'
 				width='100%'
 				height='100%'
-				className={cn('block', variant === 'flat' ? 'h-[150px]' : 'h-[26px]')}
+				className={cn(styles.mapSilhouetteSvg, variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.mapSilhouetteSvg2)}
 				style={{ color }}
 			>
 				<rect x='0' y='0' width='60' height='36' rx='4px' fill='currentColor' opacity={0.06} />
 				<path
 					d='M0 11L16 6L30 11L44 5L60 10'
 					fill='none'
-					stroke='var(--foreground)'
+					stroke='var(--app-text)'
 					strokeOpacity={0.1}
 					strokeWidth='1'
 				/>
 				<path
 					d='M0 24L14 20L28 25L42 19L60 24'
 					fill='none'
-					stroke='var(--foreground)'
+					stroke='var(--app-text)'
 					strokeOpacity={0.1}
 					strokeWidth='1'
 				/>
 				<path
 					d='M20 0L24 12L18 22L23 36'
 					fill='none'
-					stroke='var(--foreground)'
+					stroke='var(--app-text)'
 					strokeOpacity={0.1}
 					strokeWidth='1'
 				/>
 				<path
 					d='M42 0L38 14L44 24L40 36'
 					fill='none'
-					stroke='var(--foreground)'
+					stroke='var(--app-text)'
 					strokeOpacity={0.1}
 					strokeWidth='1'
 				/>
@@ -760,7 +758,7 @@ function GridSilhouette({
 	const visibleChildren = widths !== null ? children.slice(0, widths.length * 2) : children.slice(0, gridCols * 2);
 
 	return (
-		<div className={cn('grid', variant === 'flat' ? 'gap-4' : 'gap-[5px]')} style={{ gridTemplateColumns }}>
+		<div className={cn(styles.kpiSilhouetteDiv6, variant === 'flat' ? styles.gridSilhouetteDiv : styles.gridSilhouetteDiv2)} style={{ gridTemplateColumns }}>
 			{visibleChildren.map((child, i) => (
 				<SegmentSilhouette key={i} segment={child} variant={variant} queryData={queryData} />
 			))}

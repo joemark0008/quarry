@@ -13,6 +13,7 @@ import { useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { getToolName } from '@/lib/ai';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './mcp.module.css';
 
 type McpContent = { type: string; text: string };
 type SqlData = Record<string, unknown>[];
@@ -69,18 +70,18 @@ const McpChartOutput = ({ chartBlock }: { chartBlock: string }) => {
 
 	if (!data || data.length === 0) {
 		return (
-			<div className='my-2 rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
+			<div className={styles.mcpChartOutputDiv}>
 				Chart data unavailable
 			</div>
 		);
 	}
 
 	return (
-		<div className='my-4 flex w-full flex-col gap-1.5'>
+		<div className={styles.mcpChartOutputDiv2}>
 			{chart.chartType !== 'kpi_card' && chart.title && (
-				<span className='text-sm font-medium text-foreground'>{chart.title}</span>
+				<span className={styles.mcpChartOutputSpan}>{chart.title}</span>
 			)}
-			<div className={`w-full ${chart.chartType !== 'kpi_card' ? 'aspect-3/2' : ''}`}>
+			<div className={`${styles.mcpChartOutputDiv3} ${chart.chartType !== 'kpi_card' ? styles.state100 : ''}`}>
 				<ChartDisplay
 					data={data}
 					chartType={chart.chartType as ChartType}
@@ -132,20 +133,20 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
 	typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const KeyValueView = ({ data }: { data: Record<string, unknown> }) => (
-	<div className='overflow-auto max-h-80 py-1'>
+	<div className={styles.keyValueViewDiv}>
 		{Object.entries(data).map(([key, value]) => (
-			<div key={key} className='flex items-start gap-3 px-3 py-1 text-xs hover:bg-background/50 rounded'>
-				<span className='text-foreground/50 shrink-0 min-w-24'>{key}</span>
-				<span className='font-mono text-foreground/80 break-all'>{String(value ?? '')}</span>
+			<div key={key} className={styles.keyValueViewDiv2}>
+				<span className={styles.keyValueViewSpan}>{key}</span>
+				<span className={styles.keyValueViewSpan2}>{String(value ?? '')}</span>
 			</div>
 		))}
 	</div>
 );
 
 const ListView = ({ data }: { data: unknown[] }) => (
-	<div className='overflow-auto max-h-80 py-1'>
+	<div className={styles.keyValueViewDiv}>
 		{data.map((item, i) => (
-			<div key={i} className='px-3 py-1 text-xs font-mono text-foreground/80 hover:bg-background/50 rounded'>
+			<div key={i} className={styles.listViewDiv}>
 				{typeof item === 'object' ? JSON.stringify(item) : String(item)}
 			</div>
 		))}
@@ -156,7 +157,7 @@ const McpOutputContent = ({ text }: { text: string }) => {
 	const parsed = tryParseJson(text);
 
 	if (isArrayOfObjects(parsed)) {
-		return <TableDisplay data={parsed} showRowCount={false} tableContainerClassName='max-h-80' />;
+		return <TableDisplay data={parsed} showRowCount={false} tableContainerClassName={styles.mcpOutputContentTableDisplay} />;
 	}
 	if (Array.isArray(parsed)) {
 		return <ListView data={parsed} />;
@@ -166,7 +167,7 @@ const McpOutputContent = ({ text }: { text: string }) => {
 	}
 
 	return (
-		<div className='px-3 py-2 overflow-auto max-h-80 markdown-small'>
+		<div className={styles.mcpOutputContentDiv}>
 			<Streamdown linkSafety={markdownLinkSafety} mode='static'>
 				{text}
 			</Streamdown>
@@ -211,8 +212,8 @@ export const McpToolCall = ({ toolPart }: ToolCallComponentProps) => {
 		if (authServer) {
 			return (
 				<ToolCallWrapper title={title}>
-					<div className='px-3 py-2 text-sm text-muted-foreground'>
-						Waiting for you to connect to <span className='font-medium text-foreground'>{authServer}</span>.
+					<div className={styles.mcpToolCallDiv}>
+						Waiting for you to connect to <span className={styles.mcpToolCallSpan}>{authServer}</span>.
 					</div>
 				</ToolCallWrapper>
 			);
@@ -222,7 +223,7 @@ export const McpToolCall = ({ toolPart }: ToolCallComponentProps) => {
 		if (connectedTools) {
 			return (
 				<ToolCallWrapper title={title}>
-					<div className='px-3 py-2 text-sm text-muted-foreground'>
+					<div className={styles.mcpToolCallDiv}>
 						{connectedTools.length > 0
 							? `${connectedTools.length} tools available: ${connectedTools.join(', ')}`
 							: 'No tool available on this server.'}

@@ -8,6 +8,7 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useAttachmentDownload } from '@/hooks/use-attachment-download';
 import { fileNameOf } from '@/lib/attachments';
 import { cn } from '@/lib/utils';
+import styles from './file-chip.module.css';
 
 interface FileChipProps {
 	/** Virtual path in permanent storage, e.g. `/home/exports/churn-2025.csv`. */
@@ -28,26 +29,26 @@ export function FileChip({ path, label, className }: FileChipProps) {
 
 	const name = (
 		<>
-			<AttachmentFileIcon fileName={path} className='size-3.5 shrink-0' />
-			<span className='truncate text-xs'>{fileName}</span>
+			<AttachmentFileIcon fileName={path} className={styles.nameAttachmentFileIcon} />
+			<span className={styles.nameSpan}>{fileName}</span>
 		</>
 	);
 
 	if (isReadonlyMode) {
 		return (
 			<SimpleTooltip content={path}>
-				<span className={cn(chipClassName, 'gap-1.5 px-2 py-1', className)}>{name}</span>
+				<span className={cn(chipClassName, styles.fileChipSpan, className)}>{name}</span>
 			</SimpleTooltip>
 		);
 	}
 
 	return (
-		<span className={cn(chipClassName, 'gap-1 py-0.5 pl-2 pr-0.5 transition-colors hover:bg-accent', className)}>
+		<span className={cn(chipClassName, styles.fileChipSpan2, className)}>
 			<SimpleTooltip content={path}>
 				<button
 					type='button'
 					onClick={() => open(<AttachmentViewer path={path} fileName={fileName} />)}
-					className='flex min-w-0 cursor-pointer items-center gap-1.5 py-0.5'
+					className={styles.fileChipButton}
 				>
 					{name}
 				</button>
@@ -56,12 +57,12 @@ export function FileChip({ path, label, className }: FileChipProps) {
 				<Button
 					variant='ghost-muted'
 					size='icon-xs'
-					className='hover:rounded-full'
+					className={styles.fileChipButton2}
 					aria-label={`Download ${fileName}`}
 					disabled={download.isPending}
 					onClick={() => download.mutate()}
 				>
-					{download.isPending ? <Loader2 className='animate-spin' /> : <Download />}
+					{download.isPending ? <Loader2 className={styles.fileChipLoader2} /> : <Download />}
 				</Button>
 			</SimpleTooltip>
 		</span>
@@ -69,4 +70,4 @@ export function FileChip({ path, label, className }: FileChipProps) {
 }
 
 const chipClassName =
-	'inline-flex max-w-56 items-center rounded-lg border border-border bg-background align-middle text-foreground';
+	styles.chipClassName;

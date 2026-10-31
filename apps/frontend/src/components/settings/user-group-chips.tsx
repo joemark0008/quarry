@@ -3,6 +3,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { calculateVisibleGroupChipCount } from '@/lib/user-group-chip-overflow';
 import { cn } from '@/lib/utils';
+import styles from './user-group-chips.module.css';
 
 type GroupChipSize = 'default' | 'compact';
 
@@ -66,8 +67,8 @@ export function ResponsiveGroupChips({
 		<span
 			ref={labelAreaRef}
 			className={cn(
-				'relative flex min-w-0 flex-1 items-center overflow-hidden',
-				size === 'compact' ? 'gap-0.5' : 'gap-1',
+				styles.responsiveGroupChipsSpan,
+				size === 'compact' ? styles.responsiveGroupChipsSpan2 : styles.responsiveGroupChipsSpan3,
 				className,
 			)}
 			title={names.join(', ')}
@@ -86,8 +87,8 @@ export function ResponsiveGroupChips({
 				ref={measurementRef}
 				aria-hidden
 				className={cn(
-					'pointer-events-none invisible absolute left-0 top-0 flex w-max items-center',
-					size === 'compact' ? 'gap-0.5' : 'gap-1',
+					styles.responsiveGroupChipsSpan4,
+					size === 'compact' ? styles.responsiveGroupChipsSpan2 : styles.responsiveGroupChipsSpan3,
 				)}
 			>
 				{names.map((name, index) => (
@@ -113,7 +114,7 @@ function GroupNameChip({ name, size, measure }: { name: string; size: GroupChipS
 	return (
 		<Badge
 			variant='secondary'
-			className={cn('py-0 font-normal', size === 'compact' ? 'h-4 px-1 text-[9px]' : 'h-5 px-1.5 text-[10px]')}
+			className={cn(styles.groupNameChipBadge, size === 'compact' ? styles.groupNameChipBadge2 : styles.groupNameChipBadge3)}
 			data-measure-group={measure === 'group' ? '' : undefined}
 			data-measure-overflow={typeof measure === 'number' ? measure : undefined}
 		>

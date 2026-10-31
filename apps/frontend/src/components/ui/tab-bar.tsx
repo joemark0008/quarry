@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
+import styles from './tab-bar.module.css';
 
 export interface TabBarItem<Id extends string> {
 	id: Id;
@@ -55,7 +56,7 @@ export function TabBar<Id extends string>({
 	};
 
 	return (
-		<div role='tablist' className={cn('flex', className)} onKeyDown={handleKeyDown}>
+		<div role='tablist' className={cn(styles.tabBarDiv, className)} onKeyDown={handleKeyDown}>
 			{tabs.map((tab, index) => {
 				const isActive = activeTab === tab.id;
 				return (
@@ -75,13 +76,13 @@ export function TabBar<Id extends string>({
 						title={tab.disabledReason}
 						onClick={() => onTabChange(tab.id)}
 						className={cn(
-							'-mb-px flex cursor-pointer items-center gap-1.5 border-b-2 px-3 py-2.5 text-sm font-medium transition-colors',
-							fitted ? 'w-full justify-center' : 'shrink-0 whitespace-nowrap',
+							styles.tabBarButton,
+							fitted ? styles.tabBarButton2 : styles.tabBarButton3,
 							tab.disabled
-								? 'cursor-not-allowed border-transparent text-muted-foreground/45'
+								? styles.tabBarButton4
 								: isActive
-									? 'border-primary text-foreground'
-									: 'border-transparent text-muted-foreground hover:text-foreground',
+									? styles.tabBarButton5
+									: styles.tabBarButton6,
 						)}
 					>
 						{tab.icon}
@@ -89,7 +90,7 @@ export function TabBar<Id extends string>({
 						{tab.count !== undefined && (
 							<span
 								aria-label={`${tab.count} items`}
-								className={isActive ? 'text-muted-foreground' : 'text-muted-foreground/60'}
+								className={isActive ? styles.tabBarSpan : styles.tabBarSpan2}
 							>
 								{tab.count}
 							</span>

@@ -1,6 +1,7 @@
 import { Lock } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import styles from './upgrade-to-enterprise.module.css';
 
 interface UpgradeToEnterpriseProps {
 	className?: string;
@@ -14,16 +15,16 @@ export function UpgradeToEnterprise({ className, iconOnly = false }: UpgradeToEn
 			aria-label='Upgrade to Enterprise'
 			title='Upgrade to Enterprise'
 			className={cn(
-				'inline-flex w-fit shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
-				iconOnly ? 'p-1' : 'h-4 gap-0.5 px-1.5 py-0 text-[10px] font-medium uppercase tracking-wide',
+				styles.upgradeToEnterpriseSpan,
+				iconOnly ? styles.upgradeToEnterpriseSpan2 : styles.upgradeToEnterpriseSpan3,
 				className,
 			)}
 		>
 			{iconOnly ? (
-				<Lock className='size-3' />
+				<Lock className={styles.upgradeToEnterpriseLock} />
 			) : (
 				<>
-					<Lock className='size-2.5 shrink-0' />
+					<Lock className={styles.upgradeToEnterpriseLock2} />
 					Enterprise
 				</>
 			)}

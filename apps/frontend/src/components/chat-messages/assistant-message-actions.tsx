@@ -23,6 +23,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { chatApi } from '@/lib/chat-api';
+import styles from './assistant-message-actions.module.css';
 
 export function AssistantMessageActions({
 	message,
@@ -115,7 +116,7 @@ export function AssistantMessageActions({
 
 	return (
 		<>
-			<div className={cn('flex items-center gap-1', className)}>
+			<div className={cn(styles.assistantMessageActionsDiv, className)}>
 				<FeedbackButton
 					vote='up'
 					isSelected={message.feedback?.vote === 'up'}
@@ -136,10 +137,10 @@ export function AssistantMessageActions({
 					variant='ghost'
 					size='icon-sm'
 					onClick={() => copy(getMessageMarkdown(message, exportOptions))}
-					className='opacity-50 hover:opacity-100 hover:rounded-full'
+					className={styles.assistantMessageActionsButton}
 					aria-label='Copy message'
 				>
-					{isCopied ? <Check className='size-4' /> : <Copy className='size-4' />}
+					{isCopied ? <Check className={styles.assistantMessageActionsCheck} /> : <Copy className={styles.assistantMessageActionsCheck} />}
 				</Button>
 
 				<DropdownMenu>
@@ -147,29 +148,29 @@ export function AssistantMessageActions({
 						<Button
 							variant='ghost'
 							size='icon-sm'
-							className='opacity-50 hover:opacity-100 hover:rounded-full'
+							className={styles.assistantMessageActionsButton}
 							aria-label='More actions'
 						>
-							<Ellipsis className='size-4' />
+							<Ellipsis className={styles.assistantMessageActionsCheck} />
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align='start' className='min-w-56'>
+					<DropdownMenuContent align='start' className={styles.assistantMessageActionsDropdownMenuContent}>
 						<label
-							className='flex items-center justify-between gap-4 px-2 py-1.5 text-xs font-medium cursor-pointer select-none'
+							className={styles.assistantMessageActionsLabel}
 							onClick={(e) => e.stopPropagation()}
 						>
 							<span>Include errors</span>
 							<Switch checked={includeErrors} onCheckedChange={setIncludeErrors} />
 						</label>
 						<label
-							className='flex items-center justify-between gap-4 px-2 py-1.5 text-xs font-medium cursor-pointer select-none'
+							className={styles.assistantMessageActionsLabel}
 							onClick={(e) => e.stopPropagation()}
 						>
 							<span>Include SQL</span>
 							<Switch checked={includeSql} onCheckedChange={setIncludeSql} />
 						</label>
 						<label
-							className='flex items-center justify-between gap-4 px-2 py-1.5 text-xs font-medium cursor-pointer select-none'
+							className={styles.assistantMessageActionsLabel}
 							onClick={(e) => e.stopPropagation()}
 						>
 							<span>Include Python</span>
@@ -191,14 +192,14 @@ export function AssistantMessageActions({
 								void handleExportPdf();
 							}}
 						>
-							{isExportingPdf ? <Loader2 className='animate-spin' /> : <FileDown />}
+							{isExportingPdf ? <Loader2 className={styles.assistantMessageActionsLoader2} /> : <FileDown />}
 							<span>{isExportingPdf ? 'Generating PDF…' : 'Export chat to PDF'}</span>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 
 				{exportError && (
-					<p className='text-xs text-destructive max-w-64 truncate' title={exportError}>
+					<p className={styles.assistantMessageActionsP} title={exportError}>
 						{exportError}
 					</p>
 				)}
@@ -238,12 +239,12 @@ function FeedbackButton({
 			onClick={onClick}
 			disabled={disabled}
 			className={cn(
-				'relative hover:rounded-full',
-				isSelected ? cn(selectedClassName, 'rounded-full transition-colors') : 'opacity-50 hover:opacity-100',
+				styles.feedbackButtonButton,
+				isSelected ? cn(selectedClassName, styles.feedbackButtonButton2) : styles.feedbackButtonButton3,
 			)}
 			aria-label={label}
 		>
-			<Icon key={`icon-${celebrationKey}`} className={cn('size-4', isCelebrating && iconAnimationClassName)} />
+			<Icon key={`icon-${celebrationKey}`} className={cn(styles.assistantMessageActionsCheck, isCelebrating && iconAnimationClassName)} />
 			{isCelebrating && (
 				<ConfettiBurst
 					key={`confetti-${celebrationKey}`}
@@ -251,7 +252,7 @@ function FeedbackButton({
 					distancePx={16}
 					distanceStepPx={5}
 					colors={confettiColors}
-					pieceClassName='-ml-0.5 -mt-0.5 size-1'
+					pieceClassName={styles.feedbackButtonConfettiBurst}
 				/>
 			)}
 		</Button>
@@ -262,14 +263,14 @@ const FEEDBACK_BUTTON_CONFIG = {
 	up: {
 		Icon: ThumbsUp,
 		label: 'Good response',
-		selectedClassName: 'text-green-500/80 hover:text-green-500 bg-green-500/10 hover:bg-green-500/20',
+		selectedClassName: styles.fEEDBACKBUTTONCONFIGSelectedClassName,
 		iconAnimationClassName: 'thumb-up-pop',
 		confettiColors: buildConfettiShades('var(--color-green-500)'),
 	},
 	down: {
 		Icon: ThumbsDown,
 		label: 'Bad response',
-		selectedClassName: 'text-red-500/80 hover:text-red-500 bg-red-500/10 hover:bg-red-500/20',
+		selectedClassName: styles.fEEDBACKBUTTONCONFIGSelectedClassName2,
 		iconAnimationClassName: 'thumb-down-pop',
 		confettiColors: buildConfettiShades('var(--color-red-500)'),
 	},
@@ -340,14 +341,14 @@ export function FeedbackDialog({
 			<DialogContent showCloseButton>
 				<DialogHeader>
 					<DialogTitle>{isPositive ? 'What went well?' : 'What went wrong?'}</DialogTitle>
-					<DialogDescription className='text-sm text-muted-foreground font-medium'>
+					<DialogDescription className={styles.feedbackDialogDialogDescription}>
 						{isPositive
 							? `Help us improve by explaining what worked well with this ${subject}.`
 							: `Help us improve by explaining what was wrong with this ${subject}.`}
 					</DialogDescription>
 				</DialogHeader>
 
-				<form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+				<form onSubmit={handleSubmit} className={styles.feedbackDialogForm}>
 					<Textarea
 						placeholder={
 							isPositive
@@ -358,10 +359,10 @@ export function FeedbackDialog({
 						onKeyDown={handleKeyDown}
 						onChange={(e) => setExplanation(e.target.value)}
 						rows={4}
-						className='resize-none bg-panel'
+						className={styles.feedbackDialogTextarea}
 					/>
 
-					<Button variant='primary-gradient' className='rounded-full' type='submit' disabled={isPending}>
+					<Button variant='primary-gradient' className={styles.feedbackDialogButton} type='submit' disabled={isPending}>
 						Submit
 					</Button>
 				</form>

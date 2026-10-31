@@ -24,6 +24,7 @@ import type { Node as PMNode } from '@tiptap/pm/model';
 import type { MutableRefObject } from 'react';
 import type { Editor as TiptapEditor } from '@tiptap/react';
 import { StoryEditorSelectionActionsProvider } from '@/contexts/story-editor-selection-actions';
+import styles from './story-tabbed-editor.module.css';
 
 interface StoryTabbedEditorProps {
 	code: string;
@@ -228,8 +229,8 @@ export function StoryTabbedEditor({
 
 	return (
 		<StoryEditorSelectionActionsProvider value={selectionActions}>
-			<div className='flex flex-col'>
-				<div className='sticky top-0 z-50 bg-background'>
+			<div className={styles.storyTabbedEditorDiv}>
+				<div className={styles.storyTabbedEditorDiv2}>
 					<StoryTabsBar
 						tabs={tabs.map((tab) => ({ title: tab.title }))}
 						activeIndex={active}

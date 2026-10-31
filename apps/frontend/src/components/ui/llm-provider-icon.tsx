@@ -18,6 +18,7 @@ import MetaIcon from '@/components/icons/meta.svg';
 
 import { Favicon } from '@/components/ui/favicon';
 import { cn } from '@/lib/utils';
+import styles from './llm-provider-icon.module.css';
 
 interface LlmProviderIconProps {
 	provider: string;
@@ -27,7 +28,7 @@ interface LlmProviderIconProps {
 }
 
 export function LlmProviderIcon({ provider, baseUrl, className: customClassName }: LlmProviderIconProps) {
-	const className = cn('text-foreground opacity-50', customClassName);
+	const className = cn(styles.className, customClassName);
 	switch (providerKind(provider as LlmProvider)) {
 		case 'anthropic':
 			return <ClaudeIcon className={className} />;
@@ -61,7 +62,7 @@ export function LlmProviderIcon({ provider, baseUrl, className: customClassName 
 			return (
 				<Favicon
 					url={baseUrl}
-					className={cn('shrink-0 rounded-[3px] grayscale', className)}
+					className={cn(styles.llmProviderIconFavicon, className)}
 					fallback={<Sun className={className} />}
 				/>
 			);

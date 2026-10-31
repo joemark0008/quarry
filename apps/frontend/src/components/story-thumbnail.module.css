@@ -1,0 +1,556 @@
+.paperSheetDiv {
+	position: absolute;
+	inset: 0px;
+}
+.flatStorySheetDiv {
+	position: absolute;
+	inset: 0px;
+	overflow: hidden;
+	background-color: var(--app-surface);
+}
+.paperSheetStoryThemeProvider {
+	position: relative;
+}
+.paperSheetDiv2 {
+	position: absolute;
+	left: 15%;
+	height: 200%;
+	width: 130%;
+	transform-origin: 0 0;
+	background-color: var(--app-fill);
+}
+.paperSheetDiv3 {
+	top: 23%;
+}
+.paperSheetDiv4 {
+	top: 27%;
+}
+.sHEETVISUAL {
+	border-radius: 2px;
+	--fx-shadow:
+		-20px 26px 52px -18px var(--fx-shadow-color, rgba(17, 17, 40, 0.13)),
+		-8px 8px 18px -10px var(--fx-shadow-color, rgba(17, 17, 40, 0.06));
+	box-shadow:
+		var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+		var(--fx-shadow);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		--fx-shadow:
+			-14px 18px 34px -22px var(--fx-shadow-color, rgba(255, 255, 255, 0.02)),
+			-6px 6px 14px -12px var(--fx-shadow-color, rgba(255, 255, 255, 0.012));
+		box-shadow:
+			var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+			var(--fx-shadow);
+	}
+}
+.paperSheetDiv5 {
+	position: absolute;
+	left: 16%;
+	height: 200%;
+	width: 130%;
+	transform-origin: 0 0;
+}
+.paperSheetDiv6 {
+	top: 22%;
+}
+.paperSheetDiv7 {
+	top: 26%;
+}
+.sHEETSURFACE {
+	--fx-gradient-position: to bottom in oklab;
+	background-image: linear-gradient(var(--fx-gradient-stops));
+	--fx-gradient-from: var(--app-surface);
+	--fx-gradient-stops: var(
+		--fx-gradient-via-stops,
+		var(--fx-gradient-position),
+		var(--fx-gradient-from) var(--fx-gradient-from-position),
+		var(--fx-gradient-to) var(--fx-gradient-to-position)
+	);
+	--fx-gradient-to: color-mix(in oklab, var(--app-surface) 90%, transparent);
+	--fx-gradient-stops: var(
+		--fx-gradient-via-stops,
+		var(--fx-gradient-position),
+		var(--fx-gradient-from) var(--fx-gradient-from-position),
+		var(--fx-gradient-to) var(--fx-gradient-to-position)
+	);
+}
+.paperSheetDiv8 {
+	border-radius: 2px;
+}
+.paperSheetDiv9 {
+	border-top-style: var(--fx-border-style);
+	border-top-width: 1px;
+	border-right-style: var(--fx-border-style);
+	border-right-width: 1px;
+}
+.paperSheetDiv10 {
+	padding-right: 1.25rem;
+}
+.paperSheetDiv11 {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4375rem;
+	padding: 7%;
+}
+.flatStorySheetStoryThemeProvider {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.flatStorySheetDiv2 {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: flex;
+	width: calc(100% / 0.42);
+	transform-origin: 0 0;
+	scale: 0.42;
+	flex-direction: column;
+	gap: 1rem;
+	background-color: var(--app-surface);
+	padding-inline: 1.5rem;
+	padding-block: 0.5rem;
+}
+.folderThumbnailDiv {
+	pointer-events: none;
+	position: absolute;
+	inset: 0px;
+	overflow: hidden;
+}
+.folderThumbnailStoryThemeProvider {
+	position: relative;
+	overflow: hidden;
+	color: var(--app-text);
+}
+.folderThumbnailDiv2 {
+	position: absolute;
+	top: 41%;
+	left: 11%;
+	height: 200%;
+	width: 130%;
+	transform-origin: 0 0;
+	background-color: var(--app-fill);
+}
+.folderThumbnailDiv3 {
+	position: absolute;
+	top: calc(5% * -1);
+	left: 5%;
+	height: 9%;
+	width: 32%;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	background-color: var(--app-fill);
+}
+.folderThumbnailDiv4 {
+	position: absolute;
+	top: 24%;
+	left: 12%;
+	height: 200%;
+	width: 140%;
+	transform-origin: 0 0;
+	background-color: var(--app-fill);
+	padding-right: 1.25rem;
+}
+.folderThumbnailDiv5 {
+	position: absolute;
+	top: 23%;
+	left: 13%;
+	height: 200%;
+	width: 140%;
+	transform-origin: 0 0;
+	padding-right: 1.25rem;
+}
+.folderThumbnailDiv6 {
+	position: absolute;
+	top: 40%;
+	left: 12%;
+	height: 200%;
+	width: 50%;
+	transform-origin: 0 0;
+	border-radius: 2px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	background-color: var(--app-nav-bg);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		background-color: var(--app-surface);
+	}
+}
+.folderThumbnailDiv7 {
+	pointer-events: none;
+	position: absolute;
+	inset: 0px;
+	border-radius: 2px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top-style: var(--fx-border-style);
+	border-top-width: 2px;
+	border-right-style: var(--fx-border-style);
+	border-right-width: 2px;
+	border-color: var(--app-primary-bg);
+}
+.folderThumbnailDiv8 {
+	position: absolute;
+	top: 35%;
+	left: 52.5%;
+	height: 200%;
+	width: 70%;
+	transform-origin: 0 0;
+	border-radius: 2px;
+	border-top-left-radius: 0;
+	background-color: var(--app-nav-bg);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		background-color: var(--app-surface);
+	}
+}
+.folderThumbnailDiv9 {
+	pointer-events: none;
+	position: absolute;
+	inset: 0px;
+	border-radius: 2px;
+	border-top-left-radius: 0;
+	border-top-style: var(--fx-border-style);
+	border-top-width: 2px;
+	border-color: var(--app-primary-bg);
+}
+.textBlockDiv {
+	min-height: 0px;
+	overflow: hidden;
+}
+.textBlockDiv2 {
+	display: flex;
+	min-height: 0px;
+	flex-direction: column;
+}
+.renderMarkdownLineSpan {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	--fx-leading: 1.25;
+	line-height: 1.25;
+	--fx-font-weight: 600;
+	font-weight: 600;
+	color: color-mix(in oklab, var(--app-text) 85%, transparent);
+}
+.renderMarkdownLineSpan2 {
+	margin-bottom: 0.25rem;
+	font-size: 0.9375rem;
+}
+.renderMarkdownLineSpan3 {
+	margin-bottom: 0.25rem;
+	font-size: 0.8125rem;
+}
+.renderMarkdownLineSpan4 {
+	font-size: 0.75rem;
+}
+.renderMarkdownLineSpan5 {
+	margin-bottom: 1px;
+	font-size: 0.3594rem;
+}
+.renderMarkdownLineSpan6 {
+	margin-bottom: 1px;
+	font-size: 0.3281rem;
+}
+.renderMarkdownLineSpan7 {
+	font-size: 0.2969rem;
+}
+.renderMarkdownLineDiv {
+	margin-block: 0.5rem;
+	height: 1px;
+	background-color: color-mix(in oklab, var(--app-text) 25%, transparent);
+}
+.renderMarkdownLineDiv2 {
+	margin-block: 0.5px;
+	height: 1px;
+	background-color: color-mix(in oklab, var(--app-text) 12%, transparent);
+}
+.renderMarkdownLineSpan8 {
+	display: flex;
+	min-width: 0px;
+	align-items: flex-start;
+	gap: 0.375rem;
+	color: color-mix(in oklab, var(--app-text) 65%, transparent);
+}
+.textSize {
+	font-size: 0.7188rem;
+	--fx-leading: 0.9375rem;
+	line-height: 0.9375rem;
+}
+.textSize2 {
+	font-size: 0.2969rem;
+	--fx-leading: 1.2;
+	line-height: 1.2;
+}
+.renderMarkdownLineSpan9 {
+	flex-shrink: 0;
+	border-radius: calc(infinity * 1px);
+	background-color: color-mix(in oklab, var(--app-text) 45%, transparent);
+}
+.renderMarkdownLineSpan10 {
+	margin-top: 0.375rem;
+	width: 0.1563rem;
+	height: 0.1563rem;
+}
+.renderMarkdownLineSpan11 {
+	margin-top: 0.1563rem;
+	width: 0.0781rem;
+	height: 0.0781rem;
+}
+.renderMarkdownLineSpan12 {
+	min-width: 0px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.renderMarkdownLineSpan13 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: color-mix(in oklab, var(--app-text) 65%, transparent);
+}
+.markdownTablePreviewDiv {
+	overflow: hidden;
+	border-radius: 4px;
+	--fx-ring-shadow: var(--fx-ring-inset,) 0 0 0 calc(1px + var(--fx-ring-offset-width))
+		var(--fx-ring-color, currentcolor);
+	box-shadow:
+		var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+		var(--fx-shadow);
+	--fx-ring-color: color-mix(in oklab, var(--app-text) 8%, transparent);
+}
+.markdownTablePreviewDiv2 {
+	margin-block: 0.5rem;
+}
+.markdownTablePreviewDiv3 {
+	margin-block: 1px;
+}
+.markdownTablePreviewDiv4 {
+	display: flex;
+	background-color: color-mix(in oklab, var(--app-text) 6%, transparent);
+}
+.markdownTablePreviewSpan {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-inline: 0.25rem;
+	--fx-font-weight: 500;
+	font-weight: 500;
+	color: color-mix(in oklab, var(--app-text) 75%, transparent);
+}
+.markdownTablePreviewDiv5 {
+	display: flex;
+}
+.markdownTablePreviewDiv6 {
+	background-color: color-mix(in oklab, var(--app-text) 2.5%, transparent);
+}
+.markdownTablePreviewSpan2 {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-inline: 0.25rem;
+	color: color-mix(in oklab, var(--app-text) 60%, transparent);
+}
+.inlineMarkdownStrong {
+	--fx-font-weight: 500;
+	font-weight: 500;
+	color: color-mix(in oklab, var(--app-text) 80%, transparent);
+}
+.kpiSilhouetteDiv {
+	display: flex;
+	width: 100%;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+.kpiSilhouetteDiv2 {
+	width: 6.5rem;
+	min-width: 0px;
+}
+.kpiSilhouetteDiv3 {
+	display: flex;
+	align-items: center;
+}
+.kpiSilhouetteDiv4 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.5rem;
+	--fx-leading: 0.5625rem;
+	line-height: 0.5625rem;
+	--fx-tracking: 0.025em;
+	letter-spacing: 0.025em;
+	color: color-mix(in oklab, var(--app-text) 70%, transparent);
+}
+.kpiSilhouetteDiv5 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	--fx-leading: 0.8125rem;
+	line-height: 0.8125rem;
+	--fx-font-weight: 600;
+	font-weight: 600;
+	color: var(--app-text);
+	--fx-numeric-spacing: tabular-nums;
+	font-variant-numeric: var(--fx-ordinal,) var(--fx-slashed-zero,) var(--fx-numeric-figure,)
+		var(--fx-numeric-spacing,) var(--fx-numeric-fraction,);
+}
+.kpiSilhouetteDiv6 {
+	display: grid;
+}
+.kpiSilhouetteDiv7 {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.kpiSilhouetteDiv8 {
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.kpiSilhouetteDiv9 {
+	gap: 0.125rem;
+}
+.kpiSilhouetteDiv10 {
+	min-width: 0px;
+}
+.kpiSilhouetteDiv11 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.2344rem;
+	--fx-leading: 1.1;
+	line-height: 1.1;
+	color: color-mix(in oklab, var(--app-text) 55%, transparent);
+}
+.kpiSilhouetteDiv12 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.3125rem;
+	--fx-leading: 1.05;
+	line-height: 1.05;
+	--fx-font-weight: 600;
+	font-weight: 600;
+	color: var(--app-text);
+	--fx-numeric-spacing: tabular-nums;
+	font-variant-numeric: var(--fx-ordinal,) var(--fx-slashed-zero,) var(--fx-numeric-figure,)
+		var(--fx-numeric-spacing,) var(--fx-numeric-fraction,);
+}
+.kpiSilhouetteDiv13 {
+	display: flex;
+	width: 6.5rem;
+	min-width: 0px;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.kpiSilhouetteDiv14 {
+	height: 0.25rem;
+	width: 4.5rem;
+	border-radius: calc(infinity * 1px);
+}
+.kPICOLOR {
+	background-color: color-mix(in oklab, var(--app-primary-bg) 50%, transparent);
+}
+.kpiSilhouetteDiv15 {
+	display: flex;
+	gap: 9%;
+}
+.kpiSilhouetteDiv16 {
+	display: flex;
+	width: 18%;
+	flex-direction: column;
+	gap: 0.3125rem;
+}
+.kpiSilhouetteDiv17 {
+	height: 0.1875rem;
+	width: 100%;
+	border-radius: 2px;
+}
+.previewBlockDiv {
+	min-height: 0px;
+	overflow: hidden;
+	--fx-border-style: solid;
+	border-style: solid;
+	background-color: var(--app-surface);
+}
+.previewBlockDiv2 {
+	padding: 0.75rem;
+}
+.previewBlockDiv3 {
+	padding: 0.1875rem;
+}
+.previewBlockSpan {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	--fx-font-weight: 500;
+	font-weight: 500;
+	color: color-mix(in oklab, var(--app-text) 70%, transparent);
+}
+.previewBlockSpan2 {
+	margin-bottom: 0.5rem;
+	font-size: 0.75rem;
+}
+.previewBlockSpan3 {
+	margin-bottom: 0.125rem;
+	font-size: 0.3125rem;
+}
+.rechartsThumbnailChartContainer {
+	pointer-events: none;
+}
+.rechartsThumbnailChartContainer2 {
+	aspect-ratio: auto;
+}
+.rechartsThumbnailChartContainer3 {
+	height: 9.375rem;
+}
+.rechartsThumbnailChartContainer4 {
+	height: 2.5rem;
+}
+.tableSilhouetteDiv {
+	height: 1.5rem;
+}
+.tableSilhouetteDiv2 {
+	height: 0.3125rem;
+}
+.tableSilhouetteDiv3 {
+	background-color: currentcolor;
+	color: var(--app-primary-bg);
+	opacity: 50%;
+}
+.tableSilhouetteDiv4 {
+	display: flex;
+	gap: 1px;
+}
+.tableSilhouetteDiv5 {
+	flex: 1;
+	background-color: color-mix(in oklab, var(--app-text) 8%, transparent);
+}
+.tableSilhouetteDiv6 {
+	height: 1.25rem;
+}
+.tableSilhouetteDiv7 {
+	height: 0.25rem;
+}
+.tableSilhouetteDiv8 {
+	width: 1px;
+	background-color: color-mix(in oklab, var(--app-text) 6%, transparent);
+}
+.tableSilhouetteDiv9 {
+	flex: 1;
+	background-color: color-mix(in oklab, var(--app-text) 5%, transparent);
+}
+.mapSilhouetteDiv {
+	overflow: hidden;
+	border-radius: 4px;
+}
+.mapSilhouetteSvg {
+	display: block;
+}
+.mapSilhouetteSvg2 {
+	height: 1.625rem;
+}
+.gridSilhouetteDiv {
+	gap: 1rem;
+}
+.gridSilhouetteDiv2 {
+	gap: 0.3125rem;
+}

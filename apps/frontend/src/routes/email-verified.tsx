@@ -5,6 +5,7 @@ import { AuthForm } from '@/components/auth-form';
 import { Button } from '@/components/ui/button';
 import { getEmailVerificationErrorMessage } from '@/lib/email-verification';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
+import styles from './email-verified.module.css';
 
 export const Route = createFileRoute('/email-verified')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -26,14 +27,14 @@ export function EmailVerified() {
 			<AuthForm
 				title='Email not verified'
 				content={
-					<div className='flex flex-col items-center text-center'>
-						<div className='mb-5 flex size-14 items-center justify-center rounded-2xl border border-destructive/20 bg-destructive/5'>
-							<CircleAlert className='size-6 text-destructive' aria-hidden='true' />
+					<div className={styles.emailVerifiedDiv}>
+						<div className={styles.emailVerifiedDiv2}>
+							<CircleAlert className={styles.emailVerifiedCircleAlert} aria-hidden='true' />
 						</div>
-						<p role='alert' className='text-sm leading-6 text-muted-foreground'>
+						<p role='alert' className={styles.emailVerifiedP}>
 							{errorMessage ?? 'We could not verify this email address. Log in to request a new link.'}
 						</p>
-						<Button asChild variant='outline' className='mt-6 h-11 w-full rounded-full'>
+						<Button asChild variant='outline' className={styles.emailVerifiedButton}>
 							<Link to='/login' search={{ error: undefined, redirect: safeRedirect ?? undefined }}>
 								Back to log in
 							</Link>
@@ -47,24 +48,24 @@ export function EmailVerified() {
 	return (
 		<AuthForm
 			title='Email verified'
-			titleClassName='text-emerald-600 dark:text-emerald-400'
+			titleClassName={styles.emailVerifiedAuthForm}
 			content={
-				<div className='flex flex-col items-center text-center'>
-					<div className='max-w-sm'>
-						<p className='text-sm text-muted-foreground'>Your email address has been verified.</p>
-						<p className='mt-3 text-sm leading-6 text-muted-foreground'>
+				<div className={styles.emailVerifiedDiv}>
+					<div className={styles.emailVerifiedDiv3}>
+						<p className={styles.emailVerifiedP2}>Your email address has been verified.</p>
+						<p className={styles.emailVerifiedP3}>
 							Return to your original tab, or continue here.
 						</p>
 					</div>
 					{isOAuthAuthorization ? (
-						<Button asChild variant='outline' className='mt-6 h-11 w-full rounded-full'>
+						<Button asChild variant='outline' className={styles.emailVerifiedButton}>
 							<a href={safeRedirect ?? '/'}>Continue to quarry</a>
 						</Button>
 					) : (
 						<Button
 							type='button'
 							variant='outline'
-							className='mt-6 h-11 w-full rounded-full'
+							className={styles.emailVerifiedButton}
 							onClick={() => router.history.push(safeRedirect ?? '/')}
 						>
 							Continue to quarry

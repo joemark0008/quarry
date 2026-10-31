@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import styles from './table-pagination-compact.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -28,19 +29,19 @@ export function TablePaginationCompact({
 	const canNext = pageIndex < pageCount - 1;
 
 	return (
-		<div className='flex shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-2 text-xs text-muted-foreground border-t'>
+		<div className={styles.tablePaginationCompactDiv}>
 			<span>{totalRows} rows</span>
 
-			<div className='flex flex-wrap items-center justify-end gap-2'>
-				<div className='flex items-center gap-1.5'>
+			<div className={styles.tablePaginationCompactDiv2}>
+				<div className={styles.tablePaginationCompactDiv3}>
 					<span>Rows per page</span>
 					<Select value={`${pageSize}`} onValueChange={(v) => onPageSizeChange(Number(v))}>
-						<SelectTrigger size='sm' variant='ghost' className='h-6 gap-1 px-1.5 text-xs'>
+						<SelectTrigger size='sm' variant='ghost' className={styles.tablePaginationCompactSelectTrigger}>
 							<SelectValue />
 						</SelectTrigger>
-						<SelectContent align='end' className='bg-background'>
+						<SelectContent align='end' className={styles.tablePaginationCompactSelectContent}>
 							{pageSizeOptions.map((size) => (
-								<SelectItem key={size} value={`${size}`} className='text-xs'>
+								<SelectItem key={size} value={`${size}`} className={styles.tablePaginationCompactSelectItem}>
 									{size}
 								</SelectItem>
 							))}
@@ -52,12 +53,12 @@ export function TablePaginationCompact({
 					Page {pageCount === 0 ? 0 : pageIndex + 1} of {pageCount}
 				</span>
 
-				<div className='flex items-center gap-0.5'>
+				<div className={styles.tablePaginationCompactDiv4}>
 					<Button
 						type='button'
 						variant='ghost-muted'
 						size='icon-xs'
-						className='transition-colors hover:rounded-full'
+						className={styles.tablePaginationCompactButton}
 						onClick={() => onPageChange(0)}
 						disabled={!canPrevious}
 						aria-label='Go to first page'
@@ -68,7 +69,7 @@ export function TablePaginationCompact({
 						type='button'
 						variant='ghost-muted'
 						size='icon-xs'
-						className='transition-colors hover:rounded-full'
+						className={styles.tablePaginationCompactButton}
 						onClick={() => onPageChange(pageIndex - 1)}
 						disabled={!canPrevious}
 						aria-label='Go to previous page'
@@ -79,7 +80,7 @@ export function TablePaginationCompact({
 						type='button'
 						variant='ghost-muted'
 						size='icon-xs'
-						className='transition-colors hover:rounded-full'
+						className={styles.tablePaginationCompactButton}
 						onClick={() => onPageChange(pageIndex + 1)}
 						disabled={!canNext}
 						aria-label='Go to next page'
@@ -90,7 +91,7 @@ export function TablePaginationCompact({
 						type='button'
 						variant='ghost-muted'
 						size='icon-xs'
-						className='transition-colors hover:rounded-full'
+						className={styles.tablePaginationCompactButton}
 						onClick={() => onPageChange(pageCount - 1)}
 						disabled={!canNext}
 						aria-label='Go to last page'

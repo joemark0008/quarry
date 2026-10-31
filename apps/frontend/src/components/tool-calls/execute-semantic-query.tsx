@@ -13,6 +13,7 @@ import { useLoadAllQueryRows, useQueryRowsSource } from '@/hooks/use-query-rows'
 import { useToolCallContext } from '@/contexts/tool-call';
 import { SidePanelContent } from '@/components/side-panel/sql-editor';
 import { semanticQueryAsSql } from '@/lib/execute-sql-messages';
+import styles from './execute-semantic-query.module.css';
 
 type ViewMode = 'results' | 'definition' | 'sql';
 
@@ -40,7 +41,7 @@ export const ExecuteSemanticQueryToolCall = ({
 	const actions: ActionButton[] = [
 		{
 			id: 'results',
-			label: <TableIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <TableIcon className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'results',
 			onClick: () => setViewMode('results'),
@@ -48,7 +49,7 @@ export const ExecuteSemanticQueryToolCall = ({
 		},
 		{
 			id: 'definition',
-			label: <Layers className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Layers className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'definition',
 			onClick: () => setViewMode('definition'),
@@ -56,7 +57,7 @@ export const ExecuteSemanticQueryToolCall = ({
 		},
 		{
 			id: 'sql',
-			label: <Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Code className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'sql',
 			onClick: () => setViewMode('sql'),
@@ -64,7 +65,7 @@ export const ExecuteSemanticQueryToolCall = ({
 		},
 		{
 			id: 'format',
-			label: <Palette className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Palette className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => {
 				if (!output) {
 					return;
@@ -76,7 +77,7 @@ export const ExecuteSemanticQueryToolCall = ({
 		},
 		{
 			id: 'copy',
-			label: <Copy className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Copy className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => {
 				navigator.clipboard.writeText(output?.compiled_sql ?? '');
 			},
@@ -86,7 +87,7 @@ export const ExecuteSemanticQueryToolCall = ({
 			? [
 					{
 						id: 'download',
-						label: <Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+						label: <Download className={styles.actionsTableIcon} strokeWidth={2.25} />,
 						title: 'Export results',
 						export: {
 							columns: output.columns,
@@ -99,7 +100,7 @@ export const ExecuteSemanticQueryToolCall = ({
 			: []),
 		{
 			id: 'open',
-			label: <PanelRight className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <PanelRight className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: openViewer,
 			title: 'Open in side panel',
 		},
@@ -110,9 +111,9 @@ export const ExecuteSemanticQueryToolCall = ({
 			defaultExpanded={false}
 			overrideError={viewMode === 'definition'}
 			title={
-				<span className='flex items-baseline gap-2.5'>
-					<span className='text-foreground'>Semantic query</span>
-					<span className='text-xs text-muted-foreground truncate'>
+				<span className={styles.executeSemanticQueryToolCallSpan}>
+					<span className={styles.executeSemanticQueryToolCallSpan2}>Semantic query</span>
+					<span className={styles.executeSemanticQueryToolCallSpan3}>
 						{input?.name ?? (input ? summarizeSemanticQuery(input) : undefined)}
 					</span>
 				</span>
@@ -159,15 +160,15 @@ function SemanticQueryDefinition({ query }: { query: PartialSemanticQuery }) {
 	];
 
 	return (
-		<dl className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 px-4 py-3 text-xs'>
+		<dl className={styles.semanticQueryDefinitionDl}>
 			{rows
 				.filter((row) => row.values.length > 0)
 				.map((row) => (
-					<div key={row.label} className='contents'>
-						<dt className='text-muted-foreground'>{row.label}</dt>
-						<dd className='flex flex-wrap gap-1'>
+					<div key={row.label} className={styles.semanticQueryDefinitionDiv}>
+						<dt className={styles.semanticQueryDefinitionDt}>{row.label}</dt>
+						<dd className={styles.semanticQueryDefinitionDd}>
 							{row.values.map((value) => (
-								<code key={value} className='rounded bg-muted px-1.5 py-0.5 font-mono'>
+								<code key={value} className={styles.semanticQueryDefinitionCode}>
 									{value}
 								</code>
 							))}

@@ -6,6 +6,7 @@ import { TextShimmer } from '../ui/text-shimmer';
 import type { CompactionPart } from '@quarry/api/agent/types/chat';
 import { Expandable } from '@/components/ui/expandable';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './assistant-compaction.module.css';
 
 export const AssistantCompaction = memo(({ part }: { part?: CompactionPart }) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -18,9 +19,9 @@ export const AssistantCompaction = memo(({ part }: { part?: CompactionPart }) =>
 
 	return (
 		<Expandable title={title} expanded={isExpanded} onExpandedChange={setIsExpanded}>
-			<div className='text-muted-foreground markdown-small'>
-				<Conversation className='p-0'>
-					<ConversationContent className='p-0' scrollClassName='max-h-[200px]'>
+			<div className={styles.assistantCompactionDiv}>
+				<Conversation className={styles.assistantCompactionConversation}>
+					<ConversationContent className={styles.assistantCompactionConversation} scrollClassName={styles.assistantCompactionConversationContent}>
 						{part.error ? (
 							<ErrorMessage message={part.error} />
 						) : (

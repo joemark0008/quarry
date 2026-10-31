@@ -10,6 +10,7 @@ import { isReasoningPart, isQueryToolPart } from '@/lib/ai';
 import { getLatestToolActivityLabel } from '@/lib/tool-activity';
 import { useThrottledValue } from '@/hooks/use-throttled-value';
 import { MIN_TITLE_DISPLAY_MS } from '@/hooks/use-tool-group-summary-title';
+import styles from './query-group.module.css';
 
 interface Props {
 	parts: GroupablePart[];
@@ -45,7 +46,7 @@ export const QueryGroup = memo(({ parts, isSettled }: Props) => {
 			isLoading={isLoading}
 			variant='inline'
 		>
-			<div className='flex flex-col gap-2 px-3'>
+			<div className={styles.queryGroupDiv}>
 				{parts.map((part, index) => {
 					if (isReasoningPart(part)) {
 						return (

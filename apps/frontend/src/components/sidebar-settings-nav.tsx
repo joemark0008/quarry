@@ -2,134 +2,13 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowUpRight, Search, X } from 'lucide-react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
-import { Badge } from '@/components/ui/badge';
+import { getVisibleSettingsNavGroups } from '@/lib/navigation';
+import type { NavContext } from '@/lib/navigation';
 import { useSettingsSearch } from '@/hooks/use-settings-search';
 import { cn, hideIf } from '@/lib/utils';
+import styles from './sidebar-settings-nav.module.css';
 
-export interface NavContext {
-	canSeeAdvancedSettings: boolean;
-	isAdmin: boolean;
-	isContextAdmin: boolean;
-	isCloud: boolean;
-	isViewer: boolean;
-}
-
-interface NavItem {
-	label: string;
-	to?: string;
-	search?: { admin?: boolean };
-	visible?: (ctx: NavContext) => boolean;
-	exact?: boolean;
-	badge?: string;
-	badgeVariant?: 'new' | 'enterprise';
-	leavesSettings?: boolean;
-	requiresProject?: boolean;
-}
-
-interface NavGroup {
-	label: string;
-	isAdvanced?: boolean;
-	items: NavItem[];
-}
-
-const settingsNavGroups: NavGroup[] = [
-	{
-		label: 'User',
-		items: [
-			{
-				label: 'Account',
-				to: '/settings/account',
-				visible: ({ isViewer }) => !isViewer,
-				exact: true,
-			},
-		],
-	},
-	{
-		label: 'Project',
-		isAdvanced: true,
-		items: [
-			{
-				label: 'Project Settings',
-				to: '/settings/project',
-				visible: ({ isViewer }) => !isViewer,
-				exact: true,
-			},
-			{
-				label: 'Warehouse',
-				to: '/settings/project/warehouse',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
-				label: 'Agent',
-				to: '/settings/project/agent',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
-				label: 'Query tools',
-				to: '/settings/project/query-tools',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-			{
-				label: 'Appearance',
-				to: '/settings/appearance',
-				visible: ({ isViewer }) => !isViewer,
-				requiresProject: true,
-			},
-		],
-	},
-	{
-		label: 'Context',
-		isAdvanced: true,
-		items: [
-			{
-				label: 'Git',
-				to: '/settings/git',
-				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,
-			},
-			{
-				label: 'Recommendations',
-				to: '/settings/recommendations',
-				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,
-			},
-			{
-				label: 'File Explorer',
-				to: '/settings/context-explorer',
-				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,
-			},
-		],
-	},
-	{
-		label: 'Observability',
-		isAdvanced: true,
-		items: [
-			{
-				label: 'Chat with quarry data',
-				to: '/',
-				search: { admin: true },
-				visible: ({ isAdmin, isContextAdmin }) => isAdmin || isContextAdmin,
-				exact: true,
-				leavesSettings: true,
-			},
-		],
-	},
-	{
-		label: 'Instance',
-		isAdvanced: true,
-		items: [
-			{
-				label: 'Storage',
-				to: '/settings/storage',
-				visible: ({ isViewer, isCloud }) => !isViewer && !isCloud,
-			},
-		],
-	},
-];
-
-const navRowClassName =
-	'flex items-center gap-2 rounded-md transition-colors whitespace-nowrap px-2 py-[5px] text-[13px] leading-5';
+const navRowClassName = styles.navRowClassName;
 
 interface SidebarSettingsNavProps {
 	isCollapsed: boolean;
@@ -204,11 +83,11 @@ export function SidebarSettingsNav({
 	};
 
 	return (
-		<div className={cn('flex flex-1 min-h-0 flex-col gap-1 overflow-y-auto', hideIf(isCollapsed))}>
+		<div className={cn(styles.sidebarSettingsNavDiv, hideIf(isCollapsed))}>
 			{!isViewer && (
-				<div className='px-2 pt-2'>
-					<div className='relative'>
-						<Search className='absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none' />
+				<div className={styles.sidebarSettingsNavDiv2}>
+					<div className={styles.sidebarSettingsNavDiv3}>
+						<Search className={styles.sidebarSettingsNavSearch} />
 						<input
 							ref={inputRef}
 							type='text'
@@ -223,9 +102,9 @@ export function SidebarSettingsNav({
 							onChange={(e) => setQuery(e.target.value)}
 							onKeyDown={handleKeyDown}
 							className={cn(
-								'w-full rounded-md border border-input bg-transparent py-1 pl-8 pr-8 text-[13px] leading-5',
-								'placeholder:text-muted-foreground',
-								'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+								styles.sidebarSettingsNavInput,
+								styles.sidebarSettingsNavInput2,
+								styles.sidebarSettingsNavInput3,
 							)}
 						/>
 						{query ? (
@@ -235,12 +114,12 @@ export function SidebarSettingsNav({
 									setQuery('');
 									inputRef.current?.focus();
 								}}
-								className='absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
+								className={styles.sidebarSettingsNavButton}
 							>
-								<X className='size-3.5' />
+								<X className={styles.sidebarSettingsNavX} />
 							</button>
 						) : (
-							<kbd className='absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[10px] font-mono text-muted-foreground border border-border rounded px-1'>
+							<kbd className={styles.sidebarSettingsNavKbd}>
 								/
 							</kbd>
 						)}
@@ -248,11 +127,11 @@ export function SidebarSettingsNav({
 				</div>
 			)}
 
-			<div className='flex-1 min-h-0 overflow-y-auto'>
+			<div className={styles.sidebarSettingsNavDiv4}>
 				{isSearching && !isViewer ? (
-					<div className='flex flex-col gap-px px-2 pt-1'>
+					<div className={styles.sidebarSettingsNavDiv5}>
 						{results.length === 0 ? (
-							<div className='px-2 py-4 text-xs text-muted-foreground text-center'>No results found</div>
+							<div className={styles.sidebarSettingsNavDiv6}>No results found</div>
 						) : (
 							results.map((result) => (
 								<Link
@@ -261,12 +140,12 @@ export function SidebarSettingsNav({
 									search={result.search}
 									onClick={() => setQuery('')}
 									className={cn(
-										'flex flex-col gap-px px-2 py-1 text-[13px] leading-5 rounded-md transition-colors',
-										'hover:bg-sidebar-accent hover:text-foreground',
+										styles.sidebarSettingsNavLink,
+										styles.sidebarSettingsNavLink2,
 									)}
 								>
-									<span className='font-medium truncate'>{result.title}</span>
-									<span className='text-[11px] leading-4 text-muted-foreground truncate'>
+									<span className={styles.sidebarSettingsNavSpan}>{result.title}</span>
+									<span className={styles.sidebarSettingsNavSpan2}>
 										{result.pageLabel}
 										{result.section ? ` · ${result.section}` : ''}
 									</span>
@@ -275,38 +154,25 @@ export function SidebarSettingsNav({
 						)}
 					</div>
 				) : (
-					<nav className='flex flex-col px-2 gap-1'>
+					<nav className={styles.sidebarSettingsNavNav}>
 						{navGroups.map((group) => (
 							<Fragment key={group.label}>
-								<div className='px-2 pt-4 pb-0.5 text-[11px] leading-4 font-medium uppercase tracking-wide text-muted-foreground'>
+								<div className={styles.sidebarSettingsNavDiv7}>
 									{group.label}
 								</div>
 								{group.items.map((item) => {
-									const badge = item.badge ? (
-										<Badge
-											variant='ghost'
-											className={cn(
-												'ml-auto h-4 px-1.5 py-0 text-[10px] font-medium uppercase tracking-wide',
-												item.badgeVariant === 'enterprise'
-													? 'bg-primary/10 text-primary'
-													: 'bg-secondary text-secondary-foreground',
-											)}
-										>
-											{item.badge}
-										</Badge>
-									) : null;
 									const leavesSettingsIndicator = item.leavesSettings ? (
 										<>
 											<ArrowUpRight
 												aria-hidden='true'
-												className={cn('size-3.5 text-muted-foreground', !badge && 'ml-auto')}
+												className={cn(styles.leavesSettingsIndicatorArrowUpRight, styles.leavesSettingsIndicatorArrowUpRight2)}
 											/>
 											<span className='sr-only'>Opens a chat outside settings</span>
 										</>
 									) : null;
 
 									return (
-										<div key={`${item.to}-${item.label}`} className='flex flex-col'>
+										<div key={`${item.to}-${item.label}`} className={styles.sidebarSettingsNavDiv8}>
 											{item.search ? (
 												<Link
 													to='/'
@@ -314,14 +180,14 @@ export function SidebarSettingsNav({
 													activeOptions={item.exact ? { exact: true } : undefined}
 													className={navRowClassName}
 													activeProps={{
-														className: cn('bg-sidebar-accent text-foreground font-medium'),
+														className: cn(styles.sidebarSettingsNavClassName),
 													}}
 													inactiveProps={{
-														className: cn('hover:bg-sidebar-accent hover:text-foreground'),
+														className: cn(styles.sidebarSettingsNavLink2),
 													}}
 												>
-													{item.label}
-													{badge}
+													<item.icon className={styles.navIcon} />
+<span>{item.label}</span>
 													{leavesSettingsIndicator}
 												</Link>
 											) : (
@@ -330,14 +196,14 @@ export function SidebarSettingsNav({
 													activeOptions={item.exact ? { exact: true } : undefined}
 													className={navRowClassName}
 													activeProps={{
-														className: cn('bg-sidebar-accent text-foreground font-medium'),
+														className: cn(styles.sidebarSettingsNavClassName),
 													}}
 													inactiveProps={{
-														className: cn('hover:bg-sidebar-accent hover:text-foreground'),
+														className: cn(styles.sidebarSettingsNavLink2),
 													}}
 												>
-													{item.label}
-													{badge}
+													<item.icon className={styles.navIcon} />
+<span>{item.label}</span>
 													{leavesSettingsIndicator}
 												</Link>
 											)}
@@ -351,16 +217,4 @@ export function SidebarSettingsNav({
 			</div>
 		</div>
 	);
-}
-
-export function getVisibleSettingsNavGroups(context: NavContext, hasProject = true): NavGroup[] {
-	return settingsNavGroups
-		.filter((group) => !group.isAdvanced || context.canSeeAdvancedSettings)
-		.map((group) => ({
-			...group,
-			items: group.items.filter(
-				(item) => (!item.requiresProject || hasProject) && (item.visible?.(context) ?? true),
-			),
-		}))
-		.filter((group) => group.items.length > 0);
 }

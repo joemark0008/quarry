@@ -1,0 +1,34 @@
+.chartEditorQueryPaneDiv {
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+}
+.chartEditorQueryPaneDiv2 {
+	display: flex;
+	height: 3rem;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	border-bottom-style: var(--fx-border-style);
+	border-bottom-width: 1px;
+	padding-inline: 1rem;
+}
+.chartEditorQueryPaneSpan {
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 600;
+	font-weight: 600;
+	color: var(--app-text);
+}
+.chartEditorQueryPaneButton {
+	height: 1.75rem;
+	border-radius: calc(infinity * 1px);
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+}
+.chartEditorQueryPaneArrowLeft {
+	width: 0.875rem;
+	height: 0.875rem;
+}

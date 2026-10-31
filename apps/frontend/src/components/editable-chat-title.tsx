@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
+import styles from './editable-chat-title.module.css';
 
 interface Props {
 	chatId: string;
@@ -81,11 +82,11 @@ export function EditableChatTitle({ chatId, title: currentTitle, className }: Pr
 			onBlur={submit}
 			disabled={renameChat.isPending}
 			className={cn(
-				'bg-transparent text-inherit outline-none truncate w-full',
-				'rounded-full border border-transparent px-2 py-1 -mx-2 -my-1',
-				'transition-colors cursor-default',
-				!isEditing && 'hover:border-border hover:cursor-text',
-				isEditing && 'border-border cursor-text',
+				styles.editableChatTitleInput,
+				styles.editableChatTitleInput2,
+				styles.editableChatTitleInput3,
+				!isEditing && styles.editableChatTitleInput4,
+				isEditing && styles.editableChatTitleInput5,
 				className,
 			)}
 		/>

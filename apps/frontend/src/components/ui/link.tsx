@@ -3,6 +3,7 @@ import { Link as RouterLink } from '@tanstack/react-router';
 import { forwardRef } from 'react';
 import { cn } from '../../lib/utils';
 import type { LinkProps } from '@tanstack/react-router';
+import styles from './link.module.css';
 
 interface CustomLinkProps extends LinkProps {
 	className?: string;
@@ -16,7 +17,7 @@ export const Link = forwardRef<HTMLAnchorElement, CustomLinkProps>(
 			<RouterLink
 				ref={ref}
 				{...props}
-				className={cn('text-foreground', className)}
+				className={cn(styles.linkRouterLink, className)}
 				onClick={onClick}
 				onDoubleClick={onDoubleClick}
 			/>

@@ -19,6 +19,7 @@ import { AssistantCompaction } from '@/components/chat-messages/assistant-compac
 import { AssistantMessageProvider } from '@/contexts/assistant-message';
 import { MessageParts } from '@/components/chat-messages/assistant-message';
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
+import styles from './chat-messages-readonly.module.css';
 
 export type FeedbackRecommendationMap = Record<string, { id: string; title: string; status: string }>;
 export type MessageModelMap = Record<string, MessageModel>;
@@ -67,10 +68,10 @@ export function ChatMessagesReadonly({
 	}, [messages, forkMetadata]);
 
 	return (
-		<div className={cn('h-full min-h-0 flex', className)}>
+		<div className={cn(styles.chatMessagesReadonlyDiv, className)}>
 			<Conversation contextRef={conversationContextRef}>
 				<ConversationContent
-					className={cn('max-w-3xl mx-auto gap-0', contentClassName)}
+					className={cn(styles.chatMessagesReadonlyConversationContent, contentClassName)}
 					data-selection-container
 				>
 					{messageGroups.length === 0 ? (
@@ -110,7 +111,7 @@ const MessageGroupReadonly = ({
 }) => {
 	const messages = userMessage ? [userMessage, ...assistantMessages] : assistantMessages;
 	return (
-		<div className='flex flex-col gap-4 last:mb-4'>
+		<div className={styles.messageGroupReadonlyDiv}>
 			{messages.map((message) => (
 				<MessageBlockReadonly
 					key={message.id}
@@ -154,7 +155,7 @@ const MessageBlockReadonly = ({
 
 const UserMessageReadonly = memo(({ message }: { message: UIMessage }) => {
 	return (
-		<div className='flex flex-col gap-2 items-end w-full p-2' data-replay-target-id={message.id}>
+		<div className={styles.userMessageReadonlyDiv} data-replay-target-id={message.id}>
 			<UserMessageBubble message={message} />
 		</div>
 	);
@@ -184,7 +185,7 @@ const AssistantMessageReadonly = memo(
 
 		return (
 			<AssistantMessageProvider isSettled={true}>
-				<div className={cn('group px-3 flex flex-col gap-2 bg-transparent')} data-replay-target-id={message.id}>
+				<div className={cn(`${styles.assistantMessageReadonlyDiv} group`)} data-replay-target-id={message.id}>
 					<MessageParts parts={messageParts} />
 
 					{model && <MessageModelLabel model={model} />}
@@ -194,16 +195,16 @@ const AssistantMessageReadonly = memo(
 							data-replay-nav='feedback'
 							data-replay-bordered='true'
 							data-replay-nav-vote={message.feedback.vote}
-							className='flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground mt-1 p-1'
+							className={styles.assistantMessageReadonlyDiv2}
 						>
 							{message.feedback.vote === 'up' ? (
-								<ThumbsUp className='size-3.5 text-green-600 dark:text-green-400' />
+								<ThumbsUp className={styles.assistantMessageReadonlyThumbsUp} />
 							) : (
-								<ThumbsDown className='size-3.5 text-red-500 dark:text-red-400' />
+								<ThumbsDown className={styles.assistantMessageReadonlyThumbsDown} />
 							)}
 							<span>Feedback</span>
 							{message.feedback.explanation != null && message.feedback.explanation.trim() !== '' && (
-								<span className='text-xs font-semibold'> : {message.feedback.explanation}</span>
+								<span className={styles.assistantMessageReadonlySpan}> : {message.feedback.explanation}</span>
 							)}
 							{message.feedback.vote === 'down' && linkedRecommendation && (
 								<Link
@@ -212,7 +213,7 @@ const AssistantMessageReadonly = memo(
 										openChats: linkedRecommendation.id,
 										tab: recommendationTabForStatus(linkedRecommendation.status),
 									}}
-									className='ml-1 text-primary underline-offset-4 hover:underline'
+									className={styles.assistantMessageReadonlyLink}
 								>
 									View recommendation
 								</Link>
@@ -220,7 +221,7 @@ const AssistantMessageReadonly = memo(
 						</div>
 					)}
 
-					{!hasContent && <div className='text-muted-foreground italic text-sm'>No response</div>}
+					{!hasContent && <div className={styles.assistantMessageReadonlyDiv3}>No response</div>}
 
 					{isCompacting && <AssistantCompaction />}
 				</div>
@@ -231,7 +232,7 @@ const AssistantMessageReadonly = memo(
 
 const CitationBlockReadonly = ({ citation }: { citation: { id: string; citation: string; text: string } }) => {
 	return (
-		<div className='px-4 py-3 border border-border bg-background shrink-0 rounded-xl'>
+		<div className={styles.citationBlockReadonlyDiv}>
 			<SelectionCitationExcerpt label={citation.citation} text={citation.text} maxLength={0} />
 		</div>
 	);

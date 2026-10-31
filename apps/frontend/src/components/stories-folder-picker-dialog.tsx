@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { FolderTreeSelect, getTargetVisibility } from '@/components/stories-folder-tree-select';
 import { invalidateStoryPlacementCaches } from '@/lib/stories-cache';
 import { storyApi } from '@/lib/story-api';
+import styles from './stories-folder-picker-dialog.module.css';
 
 type PickerTarget =
 	| { type: 'story'; storyId: string }
@@ -75,7 +76,7 @@ export function FolderPickerDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-sm'>
+			<DialogContent className={styles.folderPickerDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Move to…</DialogTitle>
 				</DialogHeader>
@@ -92,18 +93,18 @@ export function FolderPickerDialog({
 				/>
 
 				{visibilityWillChange && (
-					<p className='flex items-center gap-1.5 text-xs text-amber-600'>
-						<TriangleAlert className='size-3.5 shrink-0' />
+					<p className={styles.folderPickerDialogP}>
+						<TriangleAlert className={styles.folderPickerDialogTriangleAlert} />
 						{getVisibilityWarning(target, selectedVisibility)}
 					</p>
 				)}
 
-				{moveError && <p className='text-xs text-destructive'>{moveError.message}</p>}
+				{moveError && <p className={styles.folderPickerDialogP2}>{moveError.message}</p>}
 
 				<DialogFooter>
 					<Button
 						variant='ghost'
-						className='rounded-full border'
+						className={styles.folderPickerDialogButton}
 						onClick={() => onOpenChange(false)}
 						disabled={isPending}
 					>
@@ -111,7 +112,7 @@ export function FolderPickerDialog({
 					</Button>
 					<Button
 						variant='primary-gradient'
-						className='rounded-full'
+						className={styles.folderPickerDialogButton2}
 						onClick={handleMove}
 						disabled={isPending}
 					>

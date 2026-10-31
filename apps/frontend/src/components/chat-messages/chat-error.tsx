@@ -5,6 +5,7 @@ import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.prov
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getLastUserMessageIdx } from '@/lib/ai';
 import { cn } from '@/lib/utils';
+import styles from './chat-error.module.css';
 
 export interface Props {
 	className?: string;
@@ -61,16 +62,16 @@ export function ChatError({ className }: Props) {
 	};
 
 	return (
-		<div className={cn('flex items-start gap-2.5 px-4 py-3 text-red-500', className)}>
-			<AlertCircleIcon className='size-4 shrink-0 mt-1' />
+		<div className={cn(styles.chatErrorDiv, className)}>
+			<AlertCircleIcon className={styles.chatErrorAlertCircleIcon} />
 
-			<div className='flex-1 min-w-0 text-sm wrap-break-word'>
-				{parsed?.error && <span className='font-medium'>{parsed.error}</span>}
-				{parsed?.message && <p className='text-red-400 mt leading-relaxed'>{parsed.message}</p>}
+			<div className={styles.chatErrorDiv2}>
+				{parsed?.error && <span className={styles.chatErrorSpan}>{parsed.error}</span>}
+				{parsed?.message && <p className={`${styles.chatErrorP} mt`}>{parsed.message}</p>}
 				{requestId && (
-					<div className='mt-2 flex items-center gap-1 text-xs text-muted-foreground'>
+					<div className={styles.chatErrorDiv3}>
 						<span>Provider request ID:</span>
-						<code className='min-w-0 max-w-64 truncate' title={requestId}>
+						<code className={styles.chatErrorCode} title={requestId}>
 							{requestId}
 						</code>
 						<Button
@@ -89,7 +90,7 @@ export function ChatError({ className }: Props) {
 					<Button
 						variant='outline'
 						size='sm'
-						className='mt-3'
+						className={styles.chatErrorButton}
 						disabled={isRunning}
 						onClick={() => {
 							void retry();

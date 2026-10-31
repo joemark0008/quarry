@@ -34,6 +34,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, formatBytes } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-theme-inspiration.module.css';
 
 export type GenerateResult = ApiOutputs['storyTheme']['generate'];
 type FileSourceKind = 'image' | 'pdf' | 'zip';
@@ -54,7 +55,7 @@ const MAX_BYTES: Record<FileSourceKind, number> = {
 };
 const MAX_SOURCE_FILE_NAME_LENGTH = 200;
 const SOURCE_NAMES: Record<FileSourceKind, string> = { image: 'Image', pdf: 'PDF', zip: 'ZIP' };
-const TEXT_WELL_CLASS = cn(WELL_CLASS, 'border-solid transition-colors focus-within:border-foreground/30');
+const TEXT_WELL_CLASS = cn(WELL_CLASS, styles.tEXTWELLCLASS);
 
 export interface InspirationOutcome {
 	label: string;
@@ -160,12 +161,12 @@ export function StoryThemeInspiration({
 		<SettingsCard
 			title='Start from a brand'
 			description='Describe the theme you want, then optionally add a website, image, PDF or ZIP so quarry can ground it in brand assets.'
-			className={cn('gap-0', (outcome || viewedVersion) && 'overflow-hidden pb-0')}
+			className={cn(styles.storyThemeInspirationSettingsCard, (outcome || viewedVersion) && styles.storyThemeInspirationSettingsCard2)}
 		>
 			{viewedVersion ? (
 				<RecordedSources version={viewedVersion} onLeave={onLeaveVersion} />
 			) : (
-				<div className='flex flex-col gap-2'>
+				<div className={styles.storyThemeInspirationDiv}>
 					<InstructionSource value={instructions} onChange={setInstructions} disabled={sourceLocked} />
 					<UrlSource url={url} onUrlChange={setUrl} disabled={sourceLocked} onSubmit={generate} />
 					<FileSource
@@ -185,9 +186,9 @@ export function StoryThemeInspiration({
 							disabled={sourceLocked}
 						/>
 					)}
-					{error && <p className='text-xs text-destructive'>{error}</p>}
-					<div className='flex flex-wrap items-center justify-between gap-3'>
-						<p className='min-w-0 flex-1 text-xs text-muted-foreground'>
+					{error && <p className={styles.storyThemeInspirationP}>{error}</p>}
+					<div className={styles.storyThemeInspirationDiv2}>
+						<p className={styles.storyThemeInspirationP2}>
 							Assets are optional but help with exact colours, typography and shape language.
 						</p>
 						<GenerateButton
@@ -259,23 +260,23 @@ function UrlSource({
 	}, [disabled, onUrlChange]);
 
 	return (
-		<div className={cn(TEXT_WELL_CLASS, disabled && 'pointer-events-none opacity-50')}>
+		<div className={cn(TEXT_WELL_CLASS, disabled && styles.urlSourceDiv)}>
 			<div
-				className='flex min-w-0 flex-1 cursor-text items-center gap-3'
+				className={styles.urlSourceDiv2}
 				onClick={() => inputRef.current?.focus()}
 			>
-				<span className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded bg-transparent'>
+				<span className={styles.urlSourceSpan}>
 					{preview ? (
 						<Favicon
 							url={preview.href}
-							className='size-10 object-contain'
-							fallback={<Globe className='size-4 text-muted-foreground' />}
+							className={styles.urlSourceFavicon}
+							fallback={<Globe className={styles.urlSourceGlobe} />}
 						/>
 					) : (
-						<Globe className='size-4 text-muted-foreground' />
+						<Globe className={styles.urlSourceGlobe} />
 					)}
 				</span>
-				<div className='min-w-0 flex-1'>
+				<div className={styles.urlSourceDiv3}>
 					<NakedInput
 						ref={inputRef}
 						value={url}
@@ -288,9 +289,9 @@ function UrlSource({
 						placeholder='acme.com'
 						disabled={disabled}
 						aria-label='Website URL'
-						className='h-5 w-full text-sm placeholder:text-muted-foreground'
+						className={styles.urlSourceNakedInput}
 					/>
-					<p className='truncate text-xs text-muted-foreground/70'>{preview ? preview.host : 'Website'}</p>
+					<p className={styles.urlSourceP}>{preview ? preview.host : 'Website'}</p>
 				</div>
 			</div>
 			{url ? <ClearButton disabled={disabled} onClick={() => onUrlChange('')} label='Clear website' /> : null}
@@ -357,8 +358,8 @@ function FileSource({
 		<div
 			className={cn(
 				WELL_CLASS,
-				disabled && 'pointer-events-none opacity-50',
-				isDragging && 'border-foreground/40 bg-accent',
+				disabled && styles.urlSourceDiv,
+				isDragging && styles.fileSourceDiv,
 			)}
 			onDragEnter={(event) => {
 				event.preventDefault();
@@ -391,34 +392,34 @@ function FileSource({
 						inputRef.current?.click();
 					}
 				}}
-				className='flex min-w-0 flex-1 cursor-pointer items-center gap-3'
+				className={styles.fileSourceLabel}
 			>
 				{file ? (
 					<>
-						<span className='flex size-10 shrink-0 items-center justify-center rounded bg-background'>
+						<span className={styles.fileSourceSpan}>
 							{isImage ? (
 								<img
 									src={`data:${file.mediaType};base64,${file.data}`}
 									alt=''
-									className='size-10 shrink-0 rounded object-cover'
+									className={styles.fileSourceImg}
 								/>
 							) : (
 								<SourceIcon kind={kind} />
 							)}
 						</span>
-						<span className='min-w-0 truncate'>
+						<span className={styles.fileSourceSpan2}>
 							{file.name}
-							<span className='text-muted-foreground'> · {formatBytes(file.size)}</span>
+							<span className={styles.fileSourceSpan3}> · {formatBytes(file.size)}</span>
 						</span>
 					</>
 				) : (
 					<>
-						<div className='flex items-center px-3'>
+						<div className={styles.fileSourceDiv2}>
 							<SourceIcon kind={kind} />
 						</div>
-						<span className='min-w-0 flex-1'>
-							<span className='block text-muted-foreground'>{DROP_PROMPTS[kind]}</span>
-							<span className='block truncate text-xs text-muted-foreground/70'>
+						<span className={styles.urlSourceDiv3}>
+							<span className={styles.fileSourceSpan4}>{DROP_PROMPTS[kind]}</span>
+							<span className={styles.fileSourceSpan5}>
 								{acceptedFormatsHint(kind)}
 							</span>
 						</span>
@@ -428,7 +429,7 @@ function FileSource({
 					ref={inputRef}
 					type='file'
 					accept={ACCEPTED_TYPES[kind]}
-					className='hidden'
+					className={styles.fileSourceInput}
 					disabled={disabled}
 					onChange={(event) => {
 						const picked = event.target.files?.[0];
@@ -456,15 +457,15 @@ function InstructionSource({
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	return (
-		<div className={cn(TEXT_WELL_CLASS, 'items-start', disabled && 'pointer-events-none opacity-50')}>
+		<div className={cn(TEXT_WELL_CLASS, styles.instructionSourceDiv, disabled && styles.urlSourceDiv)}>
 			<div
-				className='flex min-w-0 flex-1 cursor-text items-start gap-3'
+				className={styles.instructionSourceDiv2}
 				onClick={() => textareaRef.current?.focus()}
 			>
-				<span className='mt-1 flex size-10 shrink-0 items-center justify-center'>
-					<PenLine className='size-4 text-muted-foreground' />
+				<span className={styles.instructionSourceSpan}>
+					<PenLine className={styles.urlSourceGlobe} />
 				</span>
-				<div className='min-w-0 flex-1 py-1'>
+				<div className={styles.instructionSourceDiv3}>
 					<Textarea
 						ref={textareaRef}
 						value={value}
@@ -473,16 +474,16 @@ function InstructionSource({
 						disabled={disabled}
 						maxLength={MAX_THEME_INSTRUCTIONS_LENGTH}
 						aria-label='Theme instructions'
-						className='resize-none rounded-none border-0 bg-transparent p-0 text-sm shadow-none placeholder:text-muted-foreground focus-visible:ring-0 dark:bg-transparent md:text-sm'
+						className={styles.instructionSourceTextarea}
 					/>
-					<p className='truncate text-xs text-muted-foreground/70'>
+					<p className={styles.urlSourceP}>
 						Instructions · take priority over the sources below
 					</p>
 				</div>
 			</div>
 			{value ? (
 				<ClearButton
-					className='mt-1'
+					className={styles.instructionSourceClearButton}
 					disabled={disabled}
 					onClick={() => onChange('')}
 					label='Clear instructions'
@@ -525,7 +526,7 @@ const ACCEPTED_TYPES: Record<FileSourceKind, string> = {
 
 function SourceIcon({ kind }: { kind: FileSourceKind }) {
 	const Icon = SOURCE_ICONS[kind];
-	return <Icon className='size-4 shrink-0 text-muted-foreground' />;
+	return <Icon className={styles.sourceIconIcon} />;
 }
 
 /** The browser renders PDF pages (the file itself and any PDF inside the ZIP) and sends them as images. */
@@ -583,12 +584,12 @@ function ClearButton({
 			type='button'
 			variant='ghost'
 			size='icon-xs'
-			className={cn('shrink-0', className)}
+			className={cn(styles.clearButtonButton, className)}
 			disabled={disabled}
 			onClick={onClick}
 			aria-label={label}
 		>
-			<X className='size-3.5' />
+			<X className={styles.clearButtonX} />
 		</Button>
 	);
 }
@@ -608,12 +609,12 @@ function GenerateButton({
 		<Button
 			type='button'
 			variant='primary-gradient'
-			className='rounded-full transition-colors'
+			className={styles.generateButtonButton}
 			onClick={onClick}
 			disabled={disabled || pending}
 			aria-busy={pending}
 		>
-			{pending ? <Loader2 className='size-3.5 animate-spin' /> : <Sparkles className='size-3.5' />}
+			{pending ? <Loader2 className={styles.generateButtonLoader2} /> : <Sparkles className={styles.clearButtonX} />}
 			{pending ? label : 'Generate theme'}
 		</Button>
 	);
@@ -665,19 +666,19 @@ function WhiteLabelSource({
 		.filter(Boolean)
 		.join(' · ');
 	return (
-		<div className={cn(WELL_CLASS, 'border-solid', disabled && 'pointer-events-none opacity-50')}>
-			<span className='flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md'>
+		<div className={cn(WELL_CLASS, styles.whiteLabelSourceDiv, disabled && styles.urlSourceDiv)}>
+			<span className={styles.whiteLabelSourceSpan}>
 				{source.logoUrl ? (
-					<img src={source.logoUrl} alt='' className='max-h-8 max-w-8 object-contain' />
+					<img src={source.logoUrl} alt='' className={styles.whiteLabelSourceImg} />
 				) : (
-					<BadgeCheck className='size-4 text-muted-foreground' />
+					<BadgeCheck className={styles.urlSourceGlobe} />
 				)}
 			</span>
-			<div className='min-w-0 flex-1'>
-				<p className='truncate'>{source.name}</p>
-				<p className='flex items-center gap-1.5 truncate text-xs text-muted-foreground'>
+			<div className={styles.urlSourceDiv3}>
+				<p className={styles.whiteLabelSourceP}>{source.name}</p>
+				<p className={styles.whiteLabelSourceP2}>
 					{source.brandColor && (
-						<span className='size-2.5 shrink-0 rounded-full' style={{ background: source.brandColor }} />
+						<span className={styles.whiteLabelSourceSpan2} style={{ background: source.brandColor }} />
 					)}
 					{details}
 				</p>

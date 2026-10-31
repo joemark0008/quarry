@@ -13,6 +13,7 @@ import { useStoryMapEdit } from '@/contexts/story-map-edit';
 import { useBreakoutStyle } from '@/hooks/use-breakout-width';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { cn } from '@/lib/utils';
+import styles from './story-map-embed.module.css';
 
 export const StoryMapEmbed = memo(function StoryMapEmbed({
 	map,
@@ -59,18 +60,18 @@ export function StoryMapEmbedShell({ map, dragHandle, allowExpand = false, child
 	const showHeader = Boolean(map.title || dragHandle || canEdit || canExpand);
 
 	return (
-		<div ref={slotRef} className='my-2'>
-			<div className='flex flex-col gap-2 transition-[margin,width] duration-200 ease-out' style={breakoutStyle}>
+		<div ref={slotRef} className={styles.storyMapEmbedShellDiv}>
+			<div className={styles.storyMapEmbedShellDiv2} style={breakoutStyle}>
 				{showHeader && (
-					<div className='flex items-center justify-between gap-2'>
+					<div className={styles.storyMapEmbedShellDiv3}>
 						{map.title ? (
-							<span className='text-sm font-medium text-foreground flex-1 min-w-0 truncate'>
+							<span className={styles.storyMapEmbedShellSpan}>
 								{map.title}
 							</span>
 						) : (
-							<div className='flex-1' />
+							<div className={styles.storyMapEmbedShellDiv4} />
 						)}
-						<div className='flex shrink-0 items-center gap-1'>
+						<div className={styles.storyMapEmbedShellDiv5}>
 							{dragHandle}
 							{canExpand && (
 								<Button
@@ -79,14 +80,14 @@ export function StoryMapEmbedShell({ map, dragHandle, allowExpand = false, child
 									onClick={() => setIsExpanded((value) => !value)}
 									title={isExpanded ? 'Collapse width' : 'Expand width'}
 									className={cn(
-										'shrink-0 hover:bg-accent hover:rounded-full',
-										isExpanded && 'bg-accent rounded-full',
+										styles.storyMapEmbedShellButton,
+										isExpanded && styles.storyMapEmbedShellButton2,
 									)}
 								>
 									{isExpanded ? (
-										<FoldHorizontal className='size-3.5' />
+										<FoldHorizontal className={styles.storyMapEmbedShellFoldHorizontal} />
 									) : (
-										<UnfoldHorizontal className='size-3.5' />
+										<UnfoldHorizontal className={styles.storyMapEmbedShellFoldHorizontal} />
 									)}
 								</Button>
 							)}
@@ -96,9 +97,9 @@ export function StoryMapEmbedShell({ map, dragHandle, allowExpand = false, child
 									size='icon-xs'
 									onClick={() => setIsEditOpen(true)}
 									title='Edit map'
-									className='shrink-0 hover:bg-accent hover:rounded-full'
+									className={styles.storyMapEmbedShellButton}
 								>
-									<Pencil className='size-3.5' />
+									<Pencil className={styles.storyMapEmbedShellFoldHorizontal} />
 								</Button>
 							)}
 						</div>

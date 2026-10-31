@@ -2,6 +2,7 @@ import { fileExtension } from '@quarry/shared/attachments';
 import { FileCode, FileJson, FileSpreadsheet, FileText, FileType } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import styles from './attachment-file-icon.module.css';
 
 const ICONS = {
 	csv: FileSpreadsheet,
@@ -21,21 +22,21 @@ const ICONS = {
 } as const;
 
 const COLORS = {
-	csv: 'text-emerald-500',
-	tsv: 'text-emerald-500',
-	xls: 'text-emerald-500',
-	xlsx: 'text-emerald-500',
-	parquet: 'text-emerald-500',
-	json: 'text-amber-500',
-	jsonl: 'text-amber-500',
-	pdf: 'text-red-500',
-	docx: 'text-blue-500',
+	csv: styles.cOLORSCsv,
+	tsv: styles.cOLORSCsv,
+	xls: styles.cOLORSCsv,
+	xlsx: styles.cOLORSCsv,
+	parquet: styles.cOLORSCsv,
+	json: styles.cOLORSJson,
+	jsonl: styles.cOLORSJson,
+	pdf: styles.cOLORSPdf,
+	docx: styles.cOLORSDocx,
 } as const;
 
 export function AttachmentFileIcon({ fileName, className }: { fileName: string; className?: string }) {
 	const extension = fileExtension(fileName) as keyof typeof ICONS;
 	const Icon = ICONS[extension] ?? FileText;
-	const color = COLORS[extension as keyof typeof COLORS] ?? 'text-muted-foreground';
+	const color = COLORS[extension as keyof typeof COLORS] ?? styles.color;
 
 	return <Icon className={cn(color, className)} />;
 }

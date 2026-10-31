@@ -1,0 +1,27 @@
+.storyEmbedPageDiv {
+	display: flex;
+	min-height: 14rem;
+	align-items: center;
+	justify-content: center;
+	padding-block: 2.5rem;
+}
+.storyEmbedPageDiv2 {
+	display: flex;
+	min-height: 10rem;
+	align-items: center;
+	justify-content: center;
+	padding-inline: 1rem;
+	padding-block: 2.5rem;
+	text-align: center;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	color: var(--app-muted);
+}
+.storyEmbedPageDiv3 {
+	display: flex;
+	min-height: 0px;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	background-color: var(--app-surface);
+}

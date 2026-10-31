@@ -1,14 +1,15 @@
 import { HistoryIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import styles from './remember-state-header.module.css';
 
 export function RememberStateHeader({ onRemember }: { onRemember: () => void }) {
 	return (
-		<div className='flex items-center justify-between gap-3 border-b px-4 py-1.5'>
-			<span className='truncate text-xs text-muted-foreground'>
+		<div className={styles.rememberStateHeaderDiv}>
+			<span className={styles.rememberStateHeaderSpan}>
 				Viewers start this story from scratch on every visit.
 			</span>
-			<Button variant='outline' size='sm' className='shrink-0 gap-1.5 rounded-full' onClick={onRemember}>
-				<HistoryIcon className='size-3.5' />
+			<Button variant='outline' size='sm' className={styles.rememberStateHeaderButton} onClick={onRemember}>
+				<HistoryIcon className={styles.rememberStateHeaderHistoryIcon} />
 				Remember state
 			</Button>
 		</div>

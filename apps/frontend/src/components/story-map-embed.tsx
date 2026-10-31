@@ -5,6 +5,7 @@ import type { MapPoint } from '@quarry/shared';
 import type { ParsedMapBlock } from '@quarry/shared/story-segments';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import styles from './story-map-embed.module.css';
 
 const MapView = lazy(() => import('@/components/tool-calls/display-map-view'));
 
@@ -24,12 +25,12 @@ export function StoryMapRender({ map, data }: { map: ParsedMapBlock; data: Recor
 	}
 
 	return (
-		<div className='flex flex-col gap-2'>
-			<Suspense fallback={<Skeleton className='w-full aspect-3/2 rounded-lg' />}>
+		<div className={styles.storyMapRenderDiv}>
+			<Suspense fallback={<Skeleton className={styles.storyMapRenderSkeleton} />}>
 				<MapView points={visiblePoints} rows={data} config={config} />
 			</Suspense>
 			{!isChoropleth && points.length > MAX_MAP_POINTS && (
-				<span className='text-xs text-foreground/50'>
+				<span className={styles.storyMapRenderSpan}>
 					Showing the first {MAX_MAP_POINTS.toLocaleString()} of {points.length.toLocaleString()} points.
 				</span>
 			)}
@@ -38,5 +39,5 @@ export function StoryMapRender({ map, data }: { map: ParsedMapBlock; data: Recor
 }
 
 function StoryMapFallback({ children }: { children: React.ReactNode }) {
-	return <div className='my-2 text-sm text-foreground/50'>{children}</div>;
+	return <div className={styles.storyMapFallbackDiv}>{children}</div>;
 }

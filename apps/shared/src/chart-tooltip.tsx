@@ -53,7 +53,7 @@ type TooltipContentProps = React.ComponentProps<typeof Tooltip> &
 		cn?: ClassNameMerger;
 	};
 
-/** `quarry-chart-tooltip__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-chart-tooltip__*` classes let sandboxed custom stories style the same markup. */
 export function ChartTooltipContent({
 	active,
 	payload,
@@ -86,7 +86,7 @@ export function ChartTooltipContent({
 		const itemConfig = getPayloadConfigFromPayload(config, item, key);
 		const isAxisValue = !labelKey && (typeof label === 'string' || typeof label === 'number');
 		const value = isAxisValue ? config[String(label)]?.label || label : itemConfig?.label;
-		const labelClasses = cn('quarry-chart-tooltip__label font-medium', labelClassName);
+		const labelClasses = cn('quarry-shared-labelclasses-2689f3 quarry-chart-tooltip__label', labelClassName);
 
 		if (labelFormatter) {
 			return <div className={labelClasses}>{labelFormatter(value, payload)}</div>;
@@ -128,12 +128,12 @@ export function ChartTooltipContent({
 	return (
 		<div
 			className={cn(
-				'quarry-chart-tooltip border-border/50 bg-background grid min-w-32 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl',
+				'quarry-shared-charttooltipcontentdiv-24a33e quarry-chart-tooltip',
 				className,
 			)}
 		>
 			{!nestLabel ? tooltipLabel : null}
-			<div className='quarry-chart-tooltip__items grid gap-1.5'>
+			<div className='quarry-shared-charttooltipcontentdiv-c7bd35 quarry-chart-tooltip__items'>
 				{visiblePayload.map((item, index) => {
 					const key = `${nameKey || item.name || item.dataKey || 'value'}`;
 					const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -143,8 +143,8 @@ export function ChartTooltipContent({
 						<div
 							key={item.dataKey}
 							className={cn(
-								'quarry-chart-tooltip__item [&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5',
-								indicator === 'dot' && 'items-center',
+								'quarry-shared-charttooltipcontentdiv-f0192d quarry-chart-tooltip__item',
+								indicator === 'dot' && 'quarry-shared-charttooltipcontentdiv-3960ff',
 							)}
 						>
 							{formatter && item?.value !== undefined && item.name ? (
@@ -157,13 +157,13 @@ export function ChartTooltipContent({
 										!hideIndicator && (
 											<div
 												className={cn(
-													`quarry-chart-tooltip__indicator quarry-chart-tooltip__indicator--${indicator} shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)`,
+													`quarry-chart-tooltip__indicator quarry-chart-tooltip__indicator--${indicator} quarry-chart-tooltip__indicator-layout`,
 													{
-														'h-2.5 w-2.5': indicator === 'dot',
-														'w-1': indicator === 'line',
-														'w-0 border-[1.5px] border-dashed bg-transparent':
+														'quarry-shared-charttooltipcontentdiv-315860': indicator === 'dot',
+														'quarry-shared-charttooltipcontentdiv-0b0057': indicator === 'line',
+														'quarry-shared-charttooltipcontentdiv-c4f2ae':
 															indicator === 'dashed',
-														'my-0.5': nestLabel && indicator === 'dashed',
+														'quarry-shared-charttooltipcontentdiv-7bd3b5': nestLabel && indicator === 'dashed',
 													},
 												)}
 												style={
@@ -177,18 +177,18 @@ export function ChartTooltipContent({
 									)}
 									<div
 										className={cn(
-											'quarry-chart-tooltip__row flex flex-1 justify-between leading-none gap-2',
-											nestLabel ? 'items-end' : 'items-center',
+											'quarry-shared-charttooltipcontentdiv-72d25d quarry-chart-tooltip__row',
+											nestLabel ? 'quarry-shared-charttooltipcontentdiv-6f27f4' : 'quarry-shared-charttooltipcontentdiv-3960ff',
 										)}
 									>
-										<div className='grid gap-1.5'>
+										<div className='quarry-shared-charttooltipcontentdiv-c7bd35'>
 											{nestLabel ? tooltipLabel : null}
-											<span className='quarry-chart-tooltip__name text-muted-foreground'>
+											<span className='quarry-shared-charttooltipcontentspan-bfa603 quarry-chart-tooltip__name'>
 												{itemConfig?.label || item.name}
 											</span>
 										</div>
 										{item.value !== undefined && item.value !== null && (
-											<span className='quarry-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
+											<span className='quarry-shared-charttooltipcontentspan-40f631 quarry-chart-tooltip__value'>
 												{formatTooltipValue(item.value, {
 													percent,
 													shareBase,
@@ -204,10 +204,10 @@ export function ChartTooltipContent({
 					);
 				})}
 				{showTotal && (
-					<div className='quarry-chart-tooltip__total flex w-full items-center gap-2 border-t border-border/50 pt-1.5 mt-0.5'>
-						<div className='quarry-chart-tooltip__row flex flex-1 justify-between leading-none gap-2 items-center'>
-							<span className='quarry-chart-tooltip__name text-muted-foreground font-medium'>Total</span>
-							<span className='quarry-chart-tooltip__value text-foreground font-mono font-medium tabular-nums'>
+					<div className='quarry-shared-charttooltipcontentdiv-1a8d63 quarry-chart-tooltip__total'>
+						<div className='quarry-shared-charttooltipcontentdiv-d70e83 quarry-chart-tooltip__row'>
+							<span className='quarry-shared-charttooltipcontentspan-5963c2 quarry-chart-tooltip__name'>Total</span>
+							<span className='quarry-shared-charttooltipcontentspan-40f631 quarry-chart-tooltip__value'>
 								{percent
 									? '100%'
 									: valueFormatter
@@ -231,7 +231,7 @@ type LegendContentProps = React.ComponentProps<'div'> &
 		cn?: ClassNameMerger;
 	};
 
-/** `quarry-chart-legend__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-chart-legend__*` classes let sandboxed custom stories style the same markup. */
 export function ChartLegendContent({
 	className,
 	hideIcon = false,
@@ -254,13 +254,13 @@ export function ChartLegendContent({
 	return (
 		<div
 			className={cn(
-				'quarry-chart-legend flex gap-4',
+				'quarry-shared-chartlegendcontentdiv-1b314c quarry-chart-legend',
 				isVertical
-					? 'flex-col items-start justify-center gap-2 pl-4'
+					? 'quarry-shared-chartlegendcontentdiv-446d83'
 					: cn(
-							'w-full items-center',
-							align === 'right' ? 'justify-end' : align === 'left' ? 'justify-start' : 'justify-center',
-							verticalAlign === 'top' ? 'pb-3' : 'pt-3',
+							'quarry-shared-chartlegendcontentdiv-bc3c5d',
+							align === 'right' ? 'quarry-shared-chartlegendcontentdiv-77c08e' : align === 'left' ? 'quarry-shared-chartlegendcontentdiv-4b5cc1' : 'quarry-shared-chartlegendcontentdiv-86843c',
+							verticalAlign === 'top' ? 'quarry-shared-chartlegendcontentdiv-7fcf91' : 'quarry-shared-chartlegendcontentdiv-ce335a',
 						),
 				className,
 			)}
@@ -276,10 +276,10 @@ export function ChartLegendContent({
 						<div
 							key={item.value}
 							className={cn(
-								'quarry-chart-legend__item [&>svg]:text-muted-foreground flex shrink-0 items-center gap-1.5 whitespace-nowrap [&>svg]:h-3 [&>svg]:w-3 text-muted-foreground select-none',
+								'quarry-shared-chartlegendcontentdiv-e898c8 quarry-chart-legend__item',
 								onItemClick &&
-									'quarry-chart-legend__item--clickable cursor-pointer hover:text-foreground',
-								item.isHidden && 'quarry-chart-legend__item--hidden opacity-40',
+									'quarry-shared-chartlegendcontentdiv-b18edd quarry-chart-legend__item--clickable',
+								item.isHidden && 'quarry-shared-chartlegendcontentdiv-2a2db4 quarry-chart-legend__item--hidden',
 							)}
 							onClick={() => onItemClick?.(dataKey)}
 						>
@@ -287,7 +287,7 @@ export function ChartLegendContent({
 								<itemConfig.icon />
 							) : (
 								<div
-									className='quarry-chart-legend__swatch h-2 w-2 shrink-0 rounded-[2px]'
+									className='quarry-shared-chartlegendcontentdiv-b72f31 quarry-chart-legend__swatch'
 									style={{ backgroundColor: item.color }}
 								/>
 							)}

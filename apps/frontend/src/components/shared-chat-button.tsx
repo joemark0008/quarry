@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { requestAsk } from '@/stores/ask-bar';
 import { chatApi } from '@/lib/chat-api';
+import styles from './shared-chat-button.module.css';
 
 /** Continues the shared chat, with the user's quick questions about it a chevron away. */
 export function SharedChatButton({
@@ -26,21 +27,21 @@ export function SharedChatButton({
 	const hasQuickQuestions = quickQuestions.isError || chats.length > 0;
 
 	return (
-		<div className='ml-auto flex h-7 shrink-0 items-center overflow-hidden rounded-full border bg-background'>
+		<div className={styles.sharedChatButtonDiv}>
 			<Button
 				variant='ghost'
 				size='sm'
 				className={cn(
-					'h-full gap-1.5 text-xs',
-					hasQuickQuestions ? 'rounded-l-full rounded-r-none pr-2' : 'rounded-full',
+					styles.sharedChatButtonButton,
+					hasQuickQuestions ? styles.sharedChatButtonButton2 : styles.sharedChatButtonButton3,
 				)}
 				onClick={onClick}
 				disabled={isPending}
 			>
 				{isPending ? (
-					<Spinner className='size-3.5' />
+					<Spinner className={styles.sharedChatButtonSpinner} />
 				) : (
-					<MessageCircle className='size-3.5 overflow-visible' strokeWidth={2.25} />
+					<MessageCircle className={styles.sharedChatButtonMessageCircle} strokeWidth={2.25} />
 				)}
 				<span>{label}</span>
 			</Button>
@@ -50,13 +51,13 @@ export function SharedChatButton({
 						<Button
 							variant='ghost'
 							size='sm'
-							className='h-full rounded-l-none rounded-r-full border-l px-1.5'
+							className={styles.sharedChatButtonButton4}
 							aria-label='Quick questions about this chat'
 						>
-							<ChevronDown className='size-3' strokeWidth={2.25} />
+							<ChevronDown className={styles.sharedChatButtonChevronDown} strokeWidth={2.25} />
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align='end' className='w-72'>
+					<DropdownMenuContent align='end' className={styles.sharedChatButtonDropdownMenuContent}>
 						<ChatListSection
 							title='Quick questions'
 							query={quickQuestions}

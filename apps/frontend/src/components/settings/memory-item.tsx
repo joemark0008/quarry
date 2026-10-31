@@ -3,6 +3,7 @@ import type { UserMemoryRecord } from '@quarry/api/agent/types/memory';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import styles from './memory-item.module.css';
 
 interface SettingsMemoryItemProps {
 	memory: UserMemoryRecord;
@@ -23,10 +24,10 @@ export function SettingsMemoryItem({ memory, onEdit, onDelete, className }: Sett
 	};
 
 	return (
-		<div className={cn('flex items-center gap-4 py-2 group', className)}>
-			<div className='flex-1 min-w-0 space-y-1 text-sm text-foreground line-clamp-2'>{memory.content}</div>
+		<div className={cn(`${styles.settingsMemoryItemDiv} group`, className)}>
+			<div className={styles.settingsMemoryItemDiv2}>{memory.content}</div>
 
-			<div className='flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+			<div className={styles.settingsMemoryItemDiv3}>
 				<Button variant='ghost-muted' size='icon-sm' onClick={handleEdit}>
 					<Pencil />
 				</Button>
@@ -40,10 +41,10 @@ export function SettingsMemoryItem({ memory, onEdit, onDelete, className }: Sett
 
 export function SettingsMemorySkeleton({ className }: { className?: string }) {
 	return (
-		<div className={cn('flex items-start gap-4 py-2', className)}>
-			<div className='flex-1 min-w-0 space-y-2'>
-				<Skeleton className='h-3 w-24' />
-				<Skeleton className='h-3 w-full max-w-xs' />
+		<div className={cn(styles.settingsMemorySkeletonDiv, className)}>
+			<div className={styles.settingsMemorySkeletonDiv2}>
+				<Skeleton className={styles.settingsMemorySkeletonSkeleton} />
+				<Skeleton className={styles.settingsMemorySkeletonSkeleton2} />
 			</div>
 		</div>
 	);

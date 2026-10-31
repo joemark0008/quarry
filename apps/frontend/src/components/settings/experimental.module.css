@@ -1,0 +1,28 @@
+.settingsExperimentalSpan {
+	color: var(--app-danger);
+}
+.settingsExperimentalInput {
+	width: 6rem;
+}
+.settingsExperimentalA {
+	--fx-font-weight: 500;
+	font-weight: 500;
+	color: var(--app-primary-bg);
+	text-decoration-line: underline;
+	@media (hover: hover) {
+		&:hover {
+			color: var(--app-primary-bg);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			color: color-mix(in oklab, var(--app-primary-bg) 80%, transparent);
+		}
+	}
+}
+.state100 {
+	border-color: var(--app-danger);
+	&:focus-visible {
+		--fx-ring-color: var(--app-danger);
+	}
+}

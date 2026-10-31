@@ -14,6 +14,7 @@ import { useMessageQueueStore } from '@/hooks/use-message-queue-store';
 import { useChatId } from '@/hooks/use-chat-id';
 import { cn } from '@/lib/utils';
 import { messageQueueStore } from '@/stores/chat-message-queue';
+import styles from './chat-input-message-queue.module.css';
 
 interface ChatInputMessageQueueProps {
 	onEditMessage?: (text: string) => void;
@@ -47,20 +48,20 @@ export const ChatInputMessageQueue = ({ onEditMessage, onSubmitNow }: ChatInputM
 	};
 
 	return (
-		<div className='relative flex flex-col w-full mx-auto border border-input/50 rounded-2xl rounded-b-none -mb-4 pb-4 bg-panel/50 overflow-hidden'>
+		<div className={styles.chatInputMessageQueueDiv}>
 			<button
 				type='button'
 				onClick={() => setIsExpanded(!isExpanded)}
-				className='flex items-center gap-1.5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer select-none'
+				className={styles.chatInputMessageQueueButton}
 			>
-				<ChevronDown className={cn('size-3 transition-transform duration-200', !isExpanded && '-rotate-90')} />
+				<ChevronDown className={cn(styles.chatInputMessageQueueChevronDown, !isExpanded && styles.chatInputMessageQueueChevronDown2)} />
 				<span>{queuedMessages.length} queued</span>
 			</button>
 
 			{isExpanded && (
 				<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 					<SortableContext items={queuedMessages.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-						<div className='flex flex-col px-3'>
+						<div className={styles.chatInputMessageQueueDiv2}>
 							{queuedMessages.map((qm, idx) => (
 								<SortableQueuedMessageRow
 									key={qm.id}
@@ -112,63 +113,63 @@ function SortableQueuedMessageRow({
 			ref={setNodeRef}
 			style={style}
 			className={cn(
-				'flex w-full items-center gap-1 text-sm group h-8 rounded-md',
-				!isFirst && 'text-muted-foreground/75',
-				isDragging && 'opacity-50',
+				`${styles.sortableQueuedMessageRowDiv} group`,
+				!isFirst && styles.sortableQueuedMessageRowDiv2,
+				isDragging && styles.sortableQueuedMessageRowDiv3,
 			)}
 		>
 			{isDraggable && (
 				<button
 					ref={setActivatorNodeRef}
 					type='button'
-					className='shrink-0 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground touch-none'
+					className={styles.sortableQueuedMessageRowButton}
 					{...attributes}
 					{...listeners}
 				>
-					<GripVertical className={cn('size-3.5', isFirst && 'text-primary')} />
+					<GripVertical className={cn(styles.sortableQueuedMessageRowGripVertical, isFirst && styles.sortableQueuedMessageRowGripVertical2)} />
 				</button>
 			)}
 
-			<span className='truncate flex-1 min-w-0'>{text}</span>
+			<span className={styles.sortableQueuedMessageRowSpan}>{text}</span>
 
-			<div className='flex items-center shrink-0'>
+			<div className={styles.sortableQueuedMessageRowDiv4}>
 				{isFirst && (
-					<span className='group-hover:hidden flex items-center gap-1 text-xs text-muted-foreground/50'>
-						<CornerDownLeft className='size-3' />
+					<span className={styles.sortableQueuedMessageRowSpan2}>
+						<CornerDownLeft className={styles.sortableQueuedMessageRowCornerDownLeft} />
 						<span>to submit</span>
 					</span>
 				)}
 
-				<div className='hidden group-hover:flex items-center'>
+				<div className={styles.sortableQueuedMessageRowDiv5}>
 					<Button
 						variant='ghost-muted'
 						size='icon-xs'
-						className='rounded-full'
+						className={styles.sortableQueuedMessageRowButton2}
 						type='button'
 						onClick={() => onSubmitNow?.(messageId)}
 					>
-						<CornerDownLeft className='size-3' />
+						<CornerDownLeft className={styles.sortableQueuedMessageRowCornerDownLeft} />
 					</Button>
 					<Button
 						variant='ghost-muted'
 						size='icon-xs'
-						className='rounded-full'
+						className={styles.sortableQueuedMessageRowButton2}
 						type='button'
 						onClick={() => {
 							messageQueueStore.remove(chatId, messageId);
 							onEdit?.(text);
 						}}
 					>
-						<Pencil className='size-3' />
+						<Pencil className={styles.sortableQueuedMessageRowCornerDownLeft} />
 					</Button>
 					<Button
 						variant='ghost-muted'
 						size='icon-xs'
-						className='hover:text-destructive rounded-full'
+						className={styles.sortableQueuedMessageRowButton3}
 						type='button'
 						onClick={() => messageQueueStore.remove(chatId, messageId)}
 					>
-						<Trash2 className='size-3' />
+						<Trash2 className={styles.sortableQueuedMessageRowCornerDownLeft} />
 					</Button>
 				</div>
 			</div>

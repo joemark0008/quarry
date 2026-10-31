@@ -15,8 +15,9 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import styles from './stories-filters-menu.module.css';
 
-export const TOOLBAR_BUTTON_CLASS = 'h-9 gap-1.5 rounded-full border px-3.5 font-normal';
+export const TOOLBAR_BUTTON_CLASS = styles.tOOLBARBUTTONCLASS;
 
 type ToggleFilterKey = 'certifiedOnly' | 'liveOnly' | 'favoritesOnly' | 'sharedOnly';
 
@@ -57,18 +58,18 @@ export function StoriesFiltersMenu({ filters, onFiltersChange, showArchived, onS
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='ghost' className={cn(TOOLBAR_BUTTON_CLASS, activeCount > 0 && 'bg-accent')}>
+				<Button variant='ghost' className={cn(TOOLBAR_BUTTON_CLASS, activeCount > 0 && styles.storiesFiltersMenuButton)}>
 					<ListFilter />
 					Filters
 					{activeCount > 0 && (
-						<span className='rounded-full bg-foreground px-1.5 text-[10px] font-medium leading-4 text-background tabular-nums'>
+						<span className={styles.storiesFiltersMenuSpan}>
 							{activeCount}
 						</span>
 					)}
-					<ChevronDown className='size-3.5 text-muted-foreground' />
+					<ChevronDown className={styles.storiesFiltersMenuChevronDown} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='end' className='w-56'>
+			<DropdownMenuContent align='end' className={styles.storiesFiltersMenuDropdownMenuContent}>
 				<DropdownMenuLabel>Show only</DropdownMenuLabel>
 				{TOGGLE_FILTERS.map(({ key, label, icon: Icon }) => (
 					<DropdownMenuCheckboxItem
@@ -126,7 +127,7 @@ export function StoriesFiltersMenu({ filters, onFiltersChange, showArchived, onS
 				{activeCount > 0 && (
 					<>
 						<DropdownMenuSeparator />
-						<DropdownMenuItem onSelect={clearAll} className='py-1 text-sm font-normal'>
+						<DropdownMenuItem onSelect={clearAll} className={styles.storiesFiltersMenuDropdownMenuItem}>
 							Clear all filters
 						</DropdownMenuItem>
 					</>
@@ -153,7 +154,7 @@ export function StoriesActiveFilters({ filters, onFiltersChange, showArchived, o
 	}
 
 	return (
-		<div className='flex flex-wrap items-center gap-2'>
+		<div className={styles.storiesActiveFiltersDiv}>
 			{showArchived && <FilterChip label='Archived' onRemove={() => onShowArchivedChange(false)} />}
 			{TOGGLE_FILTERS.filter(({ key }) => filters[key]).map(({ key, label }) => (
 				<FilterChip key={key} label={label} onRemove={() => onFiltersChange({ ...filters, [key]: false })} />
@@ -168,7 +169,7 @@ export function StoriesActiveFilters({ filters, onFiltersChange, showArchived, o
 				<button
 					type='button'
 					onClick={clearAll}
-					className='text-xs text-muted-foreground hover:text-foreground cursor-pointer'
+					className={styles.storiesActiveFiltersButton}
 				>
 					Clear all
 				</button>
@@ -179,15 +180,15 @@ export function StoriesActiveFilters({ filters, onFiltersChange, showArchived, o
 
 function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
 	return (
-		<span className='inline-flex h-6 items-center gap-1 rounded-full bg-accent pl-2.5 pr-1 text-xs'>
+		<span className={styles.filterChipSpan}>
 			{label}
 			<button
 				type='button'
 				onClick={onRemove}
 				aria-label={`Remove ${label} filter`}
-				className='inline-flex size-4 items-center justify-center rounded-full text-muted-foreground hover:text-foreground cursor-pointer'
+				className={styles.filterChipButton}
 			>
-				<X className='size-3' />
+				<X className={styles.filterChipX} />
 			</button>
 		</span>
 	);

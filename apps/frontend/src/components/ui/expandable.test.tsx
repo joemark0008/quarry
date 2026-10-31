@@ -4,6 +4,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { Expandable } from './expandable';
+import styles from './expandable.module.css';
 
 describe('Expandable', () => {
 	afterEach(cleanup);
@@ -26,11 +27,7 @@ describe('Expandable', () => {
 
 		const trigger = screen.getByRole('button', { name: title });
 
-		expect(trigger.className).toContain('min-w-0');
-		expect(trigger.className).toContain('flex-1');
-		expect(trigger.className).not.toContain('flex-none');
-		expect(trigger.parentElement?.className).toContain('w-auto');
-		expect(trigger.parentElement?.className).toContain('min-w-0');
-		expect(trigger.parentElement?.className).toContain('shrink');
+		expect(trigger.className).toContain(styles.expandableAccordionTrigger3);
+		expect(trigger.parentElement?.className).toContain(styles.expandableAccordionTrigger);
 	});
 });

@@ -7,6 +7,7 @@ import type { QueryDataMap } from '@/components/story-embeds';
 import { CustomStoryThumbnail } from '@/components/custom-story-thumbnail';
 import { StoryThumbnail } from '@/components/story-thumbnail';
 import { Button } from '@/components/ui/button';
+import styles from './story-card.module.css';
 
 const EMPTY_SUMMARY: StorySummary = { segments: [] };
 
@@ -41,9 +42,9 @@ export function StoryCard({
 			type='button'
 			onClick={onOpen}
 			disabled={!canOpen}
-			className='group my-2 -mx-3 flex items-center gap-3 pr-3 rounded-lg border bg-background text-left transition-colors hover:bg-accent/50 disabled:opacity-50 disabled:cursor-default cursor-pointer overflow-hidden'
+			className={`${styles.storyCardButton} group`}
 		>
-			<div className='items-end relative h-16 w-30 shrink-0'>
+			<div className={styles.storyCardDiv}>
 				{isCustomStory ? (
 					<CustomStoryThumbnail
 						storyId={storyId}
@@ -56,7 +57,7 @@ export function StoryCard({
 				) : (
 					<StoryThumbnail
 						summary={summary}
-						className='rounded-lg overflow-visible right-6'
+						className={styles.storyCardStoryThumbnail}
 						isToolPart={true}
 						theme={theme}
 						queryData={queryData}
@@ -64,15 +65,15 @@ export function StoryCard({
 				)}
 			</div>
 
-			<div className='flex flex-col gap-1 min-w-0 flex-1 pl-5 py-3'>
-				<span className='text-sm font-medium truncate'>{title}</span>
-				<div className='flex items-center gap-2'>{status}</div>
+			<div className={styles.storyCardDiv2}>
+				<span className={styles.storyCardSpan}>{title}</span>
+				<div className={styles.storyCardDiv3}>{status}</div>
 			</div>
 
 			{canOpen && (
-				<Button variant='ghost-muted' size='icon-xs' className='hover:bg-transparent' asChild>
+				<Button variant='ghost-muted' size='icon-xs' className={styles.storyCardButton2} asChild>
 					<span>
-						<ArrowUpRight className='size-3.5' />
+						<ArrowUpRight className={styles.storyCardArrowUpRight} />
 					</span>
 				</Button>
 			)}

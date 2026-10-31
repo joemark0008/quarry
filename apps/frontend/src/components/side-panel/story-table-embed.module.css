@@ -1,0 +1,22 @@
+.storyTableEditControlsButton {
+	@media (hover: hover) {
+		&:hover {
+			border-radius: calc(infinity * 1px);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-fill);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-fill) 70%, transparent);
+		}
+	}
+}
+.storyTableEditControlsPencil {
+	width: 0.75rem;
+	height: 0.75rem;
+	color: color-mix(in oklab, var(--app-muted) 70%, transparent);
+}

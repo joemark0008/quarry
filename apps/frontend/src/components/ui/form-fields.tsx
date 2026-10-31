@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import styles from './form-fields.module.css';
 
 type AnyForm = any;
 
@@ -24,10 +25,10 @@ export function TextField({ form, name, label, type = 'text', placeholder, hint,
 				handleChange: (v: string) => void;
 				handleBlur: () => void;
 			}) => (
-				<div className='grid gap-2'>
-					<label htmlFor={name} className='text-sm font-medium text-foreground'>
+				<div className={styles.textFieldDiv}>
+					<label htmlFor={name} className={styles.textFieldLabel}>
 						{label}
-						{hint && <span className='text-muted-foreground font-normal ml-1'>{hint}</span>}
+						{hint && <span className={styles.textFieldSpan}>{hint}</span>}
 					</label>
 					<Input
 						id={name}
@@ -40,7 +41,7 @@ export function TextField({ form, name, label, type = 'text', placeholder, hint,
 						required={required}
 					/>
 					{field.state.meta.errors.length > 0 && (
-						<p className='text-xs text-destructive'>{field.state.meta.errors[0]}</p>
+						<p className={styles.textFieldP}>{field.state.meta.errors[0]}</p>
 					)}
 				</div>
 			)}
@@ -104,10 +105,10 @@ export function TextareaField({
 				handleChange: (v: string) => void;
 				handleBlur: () => void;
 			}) => (
-				<div className='grid gap-2'>
-					<label htmlFor={name} className='text-sm font-medium text-foreground'>
+				<div className={styles.textFieldDiv}>
+					<label htmlFor={name} className={styles.textFieldLabel}>
 						{label}
-						{hint && <span className='text-muted-foreground font-normal ml-1'>{hint}</span>}
+						{hint && <span className={styles.textFieldSpan}>{hint}</span>}
 					</label>
 					<Textarea
 						id={name}
@@ -118,10 +119,10 @@ export function TextareaField({
 						onBlur={field.handleBlur}
 						required={required}
 						rows={rows}
-						className='font-mono text-xs'
+						className={styles.textareaFieldTextarea}
 					/>
 					{field.state.meta.errors.length > 0 && (
-						<p className='text-xs text-destructive'>{field.state.meta.errors[0]}</p>
+						<p className={styles.textFieldP}>{field.state.meta.errors[0]}</p>
 					)}
 				</div>
 			)}
@@ -148,7 +149,7 @@ export function FormError({ error, form }: FormErrorProps) {
 					if (!displayError) {
 						return null;
 					}
-					return <p className='text-red-500 text-center text-base'>{displayError}</p>;
+					return <p className={styles.formErrorP}>{displayError}</p>;
 				}}
 			</form.Subscribe>
 		);
@@ -158,7 +159,7 @@ export function FormError({ error, form }: FormErrorProps) {
 	if (!error) {
 		return null;
 	}
-	return <p className='text-red-500 text-center text-base'>{error}</p>;
+	return <p className={styles.formErrorP}>{error}</p>;
 }
 
 export function getSubmitErrorMessage(error: unknown, fallback: string): string {
@@ -185,12 +186,12 @@ export function FormActions({
 	return (
 		<form.Subscribe selector={(state: { canSubmit: boolean }) => state.canSubmit}>
 			{(canSubmit: boolean) => (
-				<div className='flex justify-end gap-2'>
+				<div className={styles.formActionsDiv}>
 					{showCancel && onCancel && (
 						<button
 							type='button'
 							onClick={onCancel}
-							className='px-3 py-1.5 text-sm font-medium rounded-md hover:bg-muted transition-colors'
+							className={styles.formActionsButton}
 						>
 							Cancel
 						</button>
@@ -198,7 +199,7 @@ export function FormActions({
 					<button
 						type='submit'
 						disabled={!canSubmit || isPending}
-						className='inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+						className={styles.formActionsButton2}
 					>
 						{submitIcon}
 						{submitText}

@@ -14,6 +14,7 @@ import { useShareAudience } from '@/hooks/use-share-dialog';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-delivery-section.module.css';
 
 export interface StoryDeliveryHandle {
 	save: () => Promise<void>;
@@ -311,15 +312,15 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 		);
 
 		return (
-			<section className='flex flex-col gap-4'>
-				<div className='flex items-center justify-between gap-4'>
-					<div className='flex items-center gap-2.5'>
-						<div className='flex size-8 shrink-0 items-center justify-center rounded-full'>
-							<Send className='size-4' />
+			<section className={styles.storyDeliverySectionSection}>
+				<div className={styles.storyDeliverySectionDiv}>
+					<div className={styles.storyDeliverySectionDiv2}>
+						<div className={styles.storyDeliverySectionDiv3}>
+							<Send className={styles.storyDeliverySectionSend} />
 						</div>
-						<div className='flex flex-col gap-1'>
-							<p className='text-sm font-semibold'>Scheduled delivery</p>
-							<p className='text-xs text-muted-foreground'>
+						<div className={styles.storyDeliverySectionDiv4}>
+							<p className={styles.storyDeliverySectionP}>Scheduled delivery</p>
+							<p className={styles.storyDeliverySectionP2}>
 								Automatically send the latest version of this story.
 							</p>
 						</div>
@@ -328,21 +329,21 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 				</div>
 
 				{enabled && (
-					<div className='flex flex-col gap-5 pl-10'>
-						<div className='flex flex-col gap-3'>
+					<div className={styles.storyDeliverySectionDiv5}>
+						<div className={styles.storyDeliverySectionDiv6}>
 							<TimingOption
 								active={timing === 'after-refresh'}
 								label='Whenever the story refreshes'
 								onClick={() => setTiming('after-refresh')}
 							/>
-							<div className='flex flex-col gap-2'>
+							<div className={styles.storyDeliverySectionDiv7}>
 								<TimingOption
 									active={timing === 'custom-schedule'}
 									label='On a schedule'
 									onClick={() => setTiming('custom-schedule')}
 								/>
 								{timing === 'custom-schedule' && (
-									<div className='pl-[26px]'>
+									<div className={styles.storyDeliverySectionDiv8}>
 										<DeliverySchedulePicker
 											preset={preset}
 											customCron={customCron}
@@ -366,32 +367,32 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 							</div>
 						</div>
 
-						<div className='flex flex-row gap-4 items-center'>
-							<label className='text-sm font-semibold'>Channels</label>
-							<div className='flex gap-2 flex-1'>
+						<div className={styles.storyDeliverySectionDiv9}>
+							<label className={styles.storyDeliverySectionP}>Channels</label>
+							<div className={styles.storyDeliverySectionDiv10}>
 								<ChannelCard
-									icon={<Mail className='size-4' />}
+									icon={<Mail className={styles.storyDeliverySectionSend} />}
 									label='Email'
 									active={emailEnabled}
 									onClick={() => setEmailEnabled((v) => !v)}
 								/>
 								{isSlackConfigured ? (
 									<ChannelCard
-										icon={<Slack className='size-4' />}
+										icon={<Slack className={styles.storyDeliverySectionSend} />}
 										label='Slack'
 										active={slackEnabled}
 										onClick={() => setSlackEnabled((v) => !v)}
 									/>
 								) : (
 									<SimpleTooltip content='Connect Slack in your project settings to deliver stories to Slack.'>
-										<span className='flex-1 cursor-not-allowed'>
+										<span className={styles.storyDeliverySectionSpan}>
 											<ChannelCard
-												icon={<Slack className='size-4' />}
+												icon={<Slack className={styles.storyDeliverySectionSend} />}
 												label='Slack'
 												active={false}
 												disabled
 												onClick={() => {}}
-												className='pointer-events-none w-full'
+												className={styles.storyDeliverySectionChannelCard}
 											/>
 										</span>
 									</SimpleTooltip>
@@ -400,24 +401,24 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 						</div>
 
 						{!isShared && (
-							<div className='rounded-md bg-muted/60 px-3 py-2 text-xs text-muted-foreground'>
+							<div className={styles.storyDeliverySectionDiv11}>
 								{audience.canShareToProject
 									? "This story isn't shared yet. Scheduling delivery will share it with your project so recipients can open it."
 									: "This story isn't shared yet. Scheduling delivery will share it with the selected recipients so they can open it."}
 							</div>
 						)}
 
-						<div className='flex flex-col gap-2'>
-							<div className='flex flex-row items-center gap-4'>
-								<label className='text-sm font-semibold'>Recipients</label>
+						<div className={styles.storyDeliverySectionDiv7}>
+							<div className={styles.storyDeliverySectionDiv9}>
+								<label className={styles.storyDeliverySectionP}>Recipients</label>
 								<Select
 									value={recipientMode}
 									onValueChange={(value) => setRecipientMode(value as RecipientMode)}
 								>
-									<SelectTrigger className='flex-1 bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+									<SelectTrigger className={styles.storyDeliverySectionSelectTrigger}>
 										<SelectValue />
 									</SelectTrigger>
-									<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+									<SelectContent className={styles.storyDeliverySectionSelectContent}>
 										{canDeliverToAll && (
 											<SelectItem value='all'>
 												{isShared ? 'Everyone with access' : 'All project members'}
@@ -451,17 +452,17 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 
 function TimingOption({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
 	return (
-		<button type='button' onClick={onClick} className='flex w-full items-start gap-2.5 text-left cursor-pointer'>
+		<button type='button' onClick={onClick} className={styles.timingOptionButton}>
 			<span
 				className={cn(
-					'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border',
-					active ? 'border-primary' : 'border-muted-foreground/40',
+					styles.timingOptionSpan,
+					active ? styles.timingOptionSpan2 : styles.timingOptionSpan3,
 				)}
 			>
-				{active && <span className='size-2 rounded-full bg-primary' />}
+				{active && <span className={styles.timingOptionSpan4} />}
 			</span>
-			<div className='flex flex-col gap-0.5'>
-				<span className='text-sm font-medium text-foreground'>{label}</span>
+			<div className={styles.timingOptionDiv}>
+				<span className={styles.timingOptionSpan5}>{label}</span>
 			</div>
 		</button>
 	);
@@ -493,12 +494,12 @@ function DeliverySchedulePicker({
 	const hasUnsavedDescriptionChanges = nlInput.trim() !== savedNlInput.trim();
 
 	return (
-		<div className='flex flex-col gap-2'>
+		<div className={styles.storyDeliverySectionDiv7}>
 			<Select value={preset} onValueChange={onPresetChange}>
-				<SelectTrigger className='w-full bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+				<SelectTrigger className={styles.deliverySchedulePickerSelectTrigger}>
 					<SelectValue />
 				</SelectTrigger>
-				<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+				<SelectContent className={styles.storyDeliverySectionSelectContent}>
 					{SCHEDULE_OPTIONS.map((option) => (
 						<SelectItem key={option.value} value={option.value}>
 							{option.label}
@@ -508,15 +509,15 @@ function DeliverySchedulePicker({
 			</Select>
 
 			{preset === CUSTOM_PRESET && (
-				<div className='flex flex-col gap-3'>
-					<div className='flex flex-col gap-1.5'>
-						<label className='text-sm font-medium text-muted-foreground'>Describe in plain English</label>
-						<div className='flex gap-2'>
+				<div className={styles.storyDeliverySectionDiv6}>
+					<div className={styles.deliverySchedulePickerDiv}>
+						<label className={styles.deliverySchedulePickerLabel}>Describe in plain English</label>
+						<div className={styles.deliverySchedulePickerDiv2}>
 							<Input
 								value={nlInput}
 								onChange={(e) => onNlInputChange(e.target.value)}
 								placeholder='e.g. every weekday at 9am'
-								className='h-8 text-sm flex-1 bg-panel'
+								className={styles.deliverySchedulePickerInput}
 								onKeyDown={(e) => {
 									if (e.key === 'Enter') {
 										onNlConvert();
@@ -526,25 +527,25 @@ function DeliverySchedulePicker({
 							<Button
 								variant='outline'
 								size='sm'
-								className='gap-1 shrink-0 h-8 rounded-full'
+								className={styles.deliverySchedulePickerButton}
 								onClick={onNlConvert}
 								disabled={!nlInput.trim() || nlConvertPending}
 							>
 								{nlConvertPending ? (
-									<Loader2 className='size-3 animate-spin' />
+									<Loader2 className={styles.deliverySchedulePickerLoader2} />
 								) : (
-									<Wand2 className='size-3' />
+									<Wand2 className={styles.deliverySchedulePickerWand2} />
 								)}
 								<span>Convert</span>
 							</Button>
 						</div>
 						{nlConvertError && (
-							<p className='text-[11px] text-destructive'>
+							<p className={styles.deliverySchedulePickerP}>
 								Could not convert to cron expression. Try a different description.
 							</p>
 						)}
 						{!nlConvertError && (
-							<p className='text-[11px] text-muted-foreground'>
+							<p className={styles.deliverySchedulePickerP2}>
 								{hasUnsavedDescriptionChanges
 									? 'Click Convert to update the cron expression.'
 									: 'This description is saved with the schedule.'}
@@ -552,15 +553,15 @@ function DeliverySchedulePicker({
 						)}
 					</div>
 
-					<div className='flex flex-col gap-1.5'>
-						<label className='text-sm font-medium text-muted-foreground'>Or enter a cron expression</label>
+					<div className={styles.deliverySchedulePickerDiv}>
+						<label className={styles.deliverySchedulePickerLabel}>Or enter a cron expression</label>
 						<Input
 							value={customCron}
 							onChange={(e) => onCustomCronChange(e.target.value)}
 							placeholder='0 8 * * *'
-							className='h-8 text-sm font-mono bg-panel'
+							className={styles.deliverySchedulePickerInput2}
 						/>
-						<p className='text-[11px] text-muted-foreground'>
+						<p className={styles.deliverySchedulePickerP2}>
 							Format: minute hour day-of-month month day-of-week
 						</p>
 					</div>
@@ -591,17 +592,17 @@ function ChannelCard({
 			onClick={onClick}
 			disabled={disabled}
 			className={cn(
-				'flex-1 flex flex-row items-center justify-center gap-2 rounded-full border py-1 px-2 transition-colors cursor-pointer',
+				styles.channelCardButton,
 				active
-					? 'border-primary'
+					? styles.timingOptionSpan2
 					: disabled
-						? 'border-border opacity-40 cursor-not-allowed'
-						: 'border-border hover:border-muted-foreground/30 hover:bg-muted/50',
+						? styles.channelCardButton2
+						: styles.channelCardButton3,
 				className,
 			)}
 		>
-			<div className={cn('text-foreground', active ? 'text-primary' : '')}>{icon}</div>
-			<span className='text-sm font-medium text-foreground'>{label}</span>
+			<div className={cn(styles.channelCardDiv, active ? styles.channelCardDiv2 : '')}>{icon}</div>
+			<span className={styles.timingOptionSpan5}>{label}</span>
 		</button>
 	);
 }

@@ -17,6 +17,7 @@ import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
+import styles from './default-models-section.module.css';
 
 interface DefaultModelsSectionProps {
 	isAdmin: boolean;
@@ -55,12 +56,12 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 			description='Pick which models quarry uses when nothing selects one explicitly. Every "quarry default" shows the model it currently resolves to, so you can see what changes when you pick another one.'
 		>
 			{!hasModels ? (
-				<p className='text-sm text-muted-foreground'>
+				<p className={styles.defaultModelsSectionP}>
 					No models are available yet. Configure an LLM provider in the{' '}
-					<span className='font-medium text-foreground'>LLM Configuration</span> section above.
+					<span className={styles.defaultModelsSectionSpan}>LLM Configuration</span> section above.
 				</p>
 			) : (
-				<div className='flex flex-col gap-8'>
+				<div className={styles.defaultModelsSectionDiv}>
 					<SettingsGroup title='Chat' description='The model that answers users in the chat.'>
 						<ModelSelectField
 							label='New chats'
@@ -98,7 +99,7 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 								)}
 							</>
 						) : (
-							<div className='flex flex-col gap-4'>
+							<div className={styles.defaultModelsSectionDiv2}>
 								{BACKGROUND_MODEL_CATEGORIES.map((category) => (
 									<ModelSelectField
 										key={category}
@@ -127,10 +128,10 @@ export function DefaultModelsSection({ isAdmin }: DefaultModelsSectionProps) {
 
 function SettingsGroup({ title, description, children }: { title: string; description: string; children: ReactNode }) {
 	return (
-		<section className='flex flex-col gap-4'>
-			<div className='grid gap-0.5'>
-				<h4 className='text-sm font-semibold text-foreground'>{title}</h4>
-				<p className='text-xs text-muted-foreground'>{description}</p>
+		<section className={styles.defaultModelsSectionDiv2}>
+			<div className={styles.settingsGroupDiv}>
+				<h4 className={styles.settingsGroupH4}>{title}</h4>
+				<p className={styles.settingsGroupP}>{description}</p>
 			</div>
 			{children}
 		</section>
@@ -152,7 +153,7 @@ function ModeToggle({
 	];
 
 	return (
-		<div className='inline-flex w-fit rounded-lg border border-border p-0.5'>
+		<div className={styles.modeToggleDiv}>
 			{options.map((option) => (
 				<button
 					key={option.value}
@@ -160,11 +161,11 @@ function ModeToggle({
 					disabled={disabled}
 					onClick={() => onChange(option.value)}
 					className={cn(
-						'px-3 py-1.5 text-sm font-medium rounded-md transition-colors',
+						styles.modeToggleButton,
 						mode === option.value
-							? 'bg-secondary text-foreground'
-							: 'text-muted-foreground hover:text-foreground',
-						disabled && 'cursor-not-allowed opacity-60',
+							? styles.modeToggleButton2
+							: styles.modeToggleButton3,
+						disabled && styles.modeToggleButton4,
 					)}
 				>
 					{option.label}
@@ -182,24 +183,24 @@ function BuiltInTaskModels({
 	availableModels: AvailableModel[];
 }) {
 	return (
-		<dl className='grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 rounded-md border border-border bg-muted/30 px-3 py-2.5 text-xs'>
+		<dl className={styles.builtInTaskModelsDl}>
 			{BACKGROUND_MODEL_CATEGORIES.map((category) => {
 				const model = categories[category];
 				return (
-					<div key={category} className='contents'>
-						<dt className='text-muted-foreground'>{BACKGROUND_MODEL_CATEGORY_LABELS[category]}</dt>
-						<dd className='flex items-center gap-1.5 text-foreground'>
+					<div key={category} className={styles.builtInTaskModelsDiv}>
+						<dt className={styles.builtInTaskModelsDt}>{BACKGROUND_MODEL_CATEGORY_LABELS[category]}</dt>
+						<dd className={styles.builtInTaskModelsDd}>
 							{model ? (
 								<>
 									<LlmProviderIcon
 										provider={model.provider}
 										baseUrl={findModel(availableModels, model)?.baseUrl ?? null}
-										className='size-3.5'
+										className={styles.builtInTaskModelsLlmProviderIcon}
 									/>
 									{model.name}
 								</>
 							) : (
-								<span className='text-muted-foreground'>No model available</span>
+								<span className={styles.builtInTaskModelsDt}>No model available</span>
 							)}
 						</dd>
 					</div>

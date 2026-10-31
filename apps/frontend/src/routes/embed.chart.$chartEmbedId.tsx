@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { isLikelyMcpAppPayloadToken, readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
+import styles from './embed.chart.$chartEmbedId.module.css';
 
 export const Route = createFileRoute('/embed/chart/$chartEmbedId')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -30,18 +31,18 @@ function ChartEmbedPage() {
 	let inner: ReactNode;
 	if (chartQuery.isLoading) {
 		inner = (
-			<div className='flex min-h-[14rem] items-center justify-center py-10'>
+			<div className={styles.chartEmbedPageDiv}>
 				<Spinner />
 			</div>
 		);
 	} else if (chartQuery.isError || !chart) {
 		inner = (
-			<div className='flex min-h-[10rem] flex-col items-center justify-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.chartEmbedPageDiv2}>
 				<p>Chart unavailable or link expired.</p>
 				{usedWrongTokenFormat ? (
-					<p className='max-w-md text-xs'>
-						Open the full <span className='font-medium'>embedUrl</span> link from{' '}
-						<code className='text-foreground'>display_chart</code> (or the &quot;Interactive app&quot;
+					<p className={styles.chartEmbedPageP}>
+						Open the full <span className={styles.chartEmbedPageSpan}>embedUrl</span> link from{' '}
+						<code className={styles.chartEmbedPageCode}>display_chart</code> (or the &quot;Interactive app&quot;
 						markdown link), not the JSON tool payload.
 					</p>
 				) : null}
@@ -58,7 +59,7 @@ function ChartEmbedPage() {
 	return (
 		<div
 			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className='flex min-h-0 min-w-0 flex-1 flex-col bg-background'
+			className={styles.chartEmbedPageDiv3}
 		>
 			{inner}
 		</div>

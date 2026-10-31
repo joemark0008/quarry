@@ -1,0 +1,15 @@
+.newChatDropTargetDiv {
+	border-radius: calc(var(--app-radius) - 2px);
+	transition-property: box-shadow;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+}
+.newChatDropTargetDiv2 {
+	background-color: var(--app-nav-hover);
+	--fx-ring-shadow: var(--fx-ring-inset,) 0 0 0 calc(2px + var(--fx-ring-offset-width))
+		var(--fx-ring-color, currentcolor);
+	box-shadow:
+		var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+		var(--fx-shadow);
+	--fx-ring-color: color-mix(in oklab, var(--app-primary-bg) 50%, transparent);
+}

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useRouter, useRouterState } from '@tanstack/react-router';
 
 import { useSession } from '@/lib/auth-client';
+import { invalidateSession } from '@/lib/session';
 import { useAuthRoute } from '@/hooks/use-auth-route';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { usePublicConfig } from '@/hooks/use-public-config';
@@ -27,6 +28,10 @@ export const useSessionOrNavigateToIndexPage = () => {
 		const canStayUnauthenticated =
 			PUBLIC_AUTH_ROUTES.includes(pathname) || (pathname === '/signup' && isUserSignupEnabled);
 
+		if (!session.data) {
+			invalidateSession();
+		}
+
 		if (!session.data && !canStayUnauthenticated) {
 			const redirect = getSafeRedirectPath(`${pathname}${searchStr ?? ''}`) ?? undefined;
 			if (pathname === '/signup') {
@@ -36,7 +41,8 @@ export const useSessionOrNavigateToIndexPage = () => {
 			}
 		}
 
-		if (session.data && (AUTH_ENTRY_ROUTES.includes(pathname) || pathname === '/signup')) {
+		// The _public guard handles login, signup and forgot-password, without racing a sign-out in progress.
+		if (session.data && pathname === '/reset-password') {
 			const redirect = getSafeRedirectPath(new URLSearchParams(searchStr ?? '').get('redirect'));
 			if (redirect) {
 				router.history.push(redirect);

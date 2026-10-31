@@ -4,6 +4,7 @@ import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 import { Kbd } from '@/components/ui/kbd';
 import { isTypingTarget } from '@/lib/keyboard-shortcuts';
 import { cn } from '@/lib/utils';
+import styles from './search-bar.module.css';
 
 export function SearchBar({
 	value,
@@ -38,12 +39,12 @@ export function SearchBar({
 	return (
 		<div
 			className={cn(
-				'group/search flex items-center gap-2 rounded-full border w-full focus-within:border-foreground/40 transition-colors',
-				size === 'lg' ? 'h-9 px-3.5' : 'h-8 px-3 max-w-sm',
+				`${styles.searchBarDiv} group/search`,
+				size === 'lg' ? styles.searchBarDiv2 : styles.searchBarDiv3,
 				className,
 			)}
 		>
-			<Search className='size-4 text-muted-foreground shrink-0' />
+			<Search className={styles.searchBarSearch} />
 			<input
 				ref={inputRef}
 				type='text'
@@ -52,20 +53,20 @@ export function SearchBar({
 				onKeyDown={handleKeyDown}
 				placeholder={placeholder}
 				aria-label={ariaLabel}
-				className='flex-1 min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground'
+				className={styles.searchBarInput}
 			/>
 			{value ? (
 				<button
 					type='button'
 					onClick={() => onChange('')}
 					aria-label='Clear search'
-					className='text-muted-foreground hover:text-foreground shrink-0'
+					className={styles.searchBarButton}
 				>
-					<X className='size-4' />
+					<X className={styles.searchBarX} />
 				</button>
 			) : (
 				focusShortcutKey && (
-					<Kbd keys={[focusShortcutKey]} className='shrink-0 group-focus-within/search:hidden' />
+					<Kbd keys={[focusShortcutKey]} className={styles.searchBarKbd} />
 				)
 			)}
 		</div>

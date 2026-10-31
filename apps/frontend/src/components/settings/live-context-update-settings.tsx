@@ -22,6 +22,7 @@ import {
 } from '@/lib/live-context-history';
 import { buildCommitUrl } from '@/lib/live-context-links';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
+import styles from './live-context-update-settings.module.css';
 
 interface LiveContextUpdateStatus {
 	enabled: boolean;
@@ -157,9 +158,9 @@ export function LiveContextUpdateSettings({ status, repository, isAdmin }: LiveC
 	return (
 		<SettingsCard
 			title='Update context files'
-			icon={<RefreshCw className='size-4' />}
+			icon={<RefreshCw className={styles.liveContextUpdateSettingsRefreshCw} />}
 			description={`Pull the latest changes from ${status.configuredBranch}`}
-			rootClassName='mt-5'
+			rootClassName={styles.liveContextUpdateSettingsSettingsCard}
 			action={
 				<Button
 					size='sm'
@@ -174,28 +175,28 @@ export function LiveContextUpdateSettings({ status, repository, isAdmin }: LiveC
 					Pull latest
 				</Button>
 			}
-			className='gap-4'
+			className={styles.liveContextUpdateSettingsSettingsCard2}
 		>
 			{!isAdmin && (
-				<p className='text-sm text-muted-foreground'>Only a project admin can update live context files.</p>
+				<p className={styles.liveContextUpdateSettingsP}>Only a project admin can update live context files.</p>
 			)}
 			{isAdmin && !status.available && status.unavailableReason && (
-				<p className='text-sm text-muted-foreground'>{status.unavailableReason}</p>
+				<p className={styles.liveContextUpdateSettingsP}>{status.unavailableReason}</p>
 			)}
 			{pullContext.error && latestRecordedError !== pullContext.error.message && (
 				<ErrorMessage message={pullContext.error.message} />
 			)}
 			{historicalDiffError && <ErrorMessage message={historicalDiffError} />}
 			{history.isLoading ? (
-				<p className='text-sm text-muted-foreground'>Loading pull history…</p>
+				<p className={styles.liveContextUpdateSettingsP}>Loading pull history…</p>
 			) : history.error ? (
 				<ErrorMessage message={history.error.message} />
 			) : history.data?.length === 0 ? (
-				<p className='text-sm text-muted-foreground'>
+				<p className={styles.liveContextUpdateSettingsP}>
 					No pulls yet. Pull the latest version to check for updates.
 				</p>
 			) : (
-				<div className='divide-y divide-border'>
+				<div className={styles.liveContextUpdateSettingsDiv}>
 					{history.data?.map((activity) => (
 						<HistoryEntry
 							key={activity.id}
@@ -260,25 +261,25 @@ function HistoryEntry({
 	const hasCompletedDiff = activity.status === 'completed' && activity.changed !== null;
 
 	return (
-		<div className='py-3 first:pt-0 last:pb-0'>
-			<div className='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1'>
-				<div className='flex min-w-0 items-center gap-1.5 text-sm font-medium'>
+		<div className={styles.historyEntryDiv}>
+			<div className={styles.historyEntryDiv2}>
+				<div className={styles.historyEntryDiv3}>
 					<span>{getStatusText(activity)}</span>
 					{hasCompletedDiff && activity.newCommit && (
 						<CommitReference repository={repository} commit={activity.newCommit} />
 					)}
 				</div>
-				<time dateTime={new Date(timestamp).toISOString()} className='text-xs text-muted-foreground'>
+				<time dateTime={new Date(timestamp).toISOString()} className={styles.historyEntryTime}>
 					{new Date(timestamp).toLocaleString()}
 				</time>
 			</div>
 			{hasCompletedDiff && activity.fileCount > 0 ? (
-				<p className='mt-2 text-xs text-muted-foreground'>{formatChangedFileCount(activity.fileCount)}</p>
+				<p className={styles.historyEntryP}>{formatChangedFileCount(activity.fileCount)}</p>
 			) : hasCompletedDiff ? (
-				<div className='mt-2 h-4' aria-hidden='true' />
+				<div className={styles.historyEntryDiv4} aria-hidden='true' />
 			) : null}
 			{activity.status === 'failed' && activity.errorMessage && (
-				<p className='mt-2 text-sm text-destructive'>{activity.errorMessage}</p>
+				<p className={styles.historyEntryP2}>{activity.errorMessage}</p>
 			)}
 			{hasCompletedDiff && activity.files.length > 0 && (
 				<PullFileList
@@ -314,7 +315,7 @@ function getStatusText(activity: PullHistoryEntry): string {
 function CommitReference({ repository, commit }: { repository: LiveContextRepository | null; commit: string }) {
 	const shortCommit = commit.slice(0, 7);
 	const url = repository ? buildCommitUrl(repository, commit) : null;
-	const className = 'rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] font-medium leading-none text-foreground';
+	const className = styles.className;
 	if (!url) {
 		return <span className={className}>{shortCommit}</span>;
 	}
@@ -323,7 +324,7 @@ function CommitReference({ repository, commit }: { repository: LiveContextReposi
 			href={url}
 			target='_blank'
 			rel='noreferrer'
-			className={`${className} hover:underline`}
+			className={`${className} ${styles.commitReferenceA}`}
 			aria-label={`View commit ${shortCommit}`}
 		>
 			{shortCommit}
@@ -352,14 +353,14 @@ function PullFileList({
 	const hiddenFileCount = getHiddenPullFileCount(files.length);
 
 	return (
-		<div className='mt-2'>
-			<ul className='space-y-1 text-sm'>
+		<div className={styles.pullFileListDiv}>
+			<ul className={styles.pullFileListUl}>
 				{visibleFiles.map((file) => (
-					<li key={file.path} className='flex min-w-0 items-center justify-between gap-4'>
+					<li key={file.path} className={styles.pullFileListLi}>
 						{hasHistoricalPullRange(from, to) && from && to ? (
 							<button
 								type='button'
-								className='min-w-0 truncate font-mono text-xs text-muted-foreground hover:text-foreground hover:underline'
+								className={styles.pullFileListButton}
 								aria-label={`Open ${file.path} in File Explorer`}
 								disabled={isOpeningHistoricalDiff}
 								onClick={() => {
@@ -369,17 +370,17 @@ function PullFileList({
 								{file.path}
 							</button>
 						) : (
-							<span className='min-w-0 truncate font-mono text-xs text-muted-foreground'>
+							<span className={styles.pullFileListSpan}>
 								{file.path}
 							</span>
 						)}
-						<span className='shrink-0 font-mono text-xs'>
+						<span className={styles.pullFileListSpan2}>
 							{file.additions === null || file.deletions === null ? (
-								<span className='text-muted-foreground'>binary</span>
+								<span className={styles.pullFileListSpan3}>binary</span>
 							) : (
 								<>
-									<span className='text-emerald-600'>+{file.additions}</span>{' '}
-									<span className='text-red-600'>−{file.deletions}</span>
+									<span className={styles.pullFileListSpan4}>+{file.additions}</span>{' '}
+									<span className={styles.pullFileListSpan5}>−{file.deletions}</span>
 								</>
 							)}
 						</span>
@@ -389,7 +390,7 @@ function PullFileList({
 			{hiddenFileCount > 0 && (
 				<button
 					type='button'
-					className='mt-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:underline'
+					className={styles.pullFileListButton2}
 					aria-expanded={isExpanded}
 					onClick={() => {
 						onExpandedChange(!isExpanded);

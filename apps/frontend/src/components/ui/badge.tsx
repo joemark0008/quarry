@@ -3,25 +3,26 @@ import { Slot } from '@/components/ui/slot';
 
 import { classVariants, cn } from '@/lib/utils';
 import type { VariantProps } from '@/lib/utils';
+import styles from './badge.module.css';
 
 const badgeVariants = classVariants(
-	'inline-flex items-center justify-center rounded-full border border-transparent px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
+	styles.badgeVariants,
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-				secondary: 'bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
+				default: styles.badgeVariantsDefault,
+				secondary: styles.badgeVariantsSecondary,
 				destructive:
-					'bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-				outline: 'border-border text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-				ghost: '[a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 [a&]:hover:underline',
-				admin: 'bg-primary/10 text-primary',
-				user: 'bg-blue-500/10 text-blue-500',
-				viewer: 'bg-muted text-muted-foreground',
-				context_admin: 'bg-amber-500/10 text-amber-600 dark:text-amber-500',
-				success: 'bg-green-500/10 text-green-600 dark:text-green-500',
-				error: 'bg-destructive/10 text-destructive',
+					styles.badgeVariantsDestructive,
+				outline: styles.badgeVariantsOutline,
+				ghost: styles.badgeVariantsGhost,
+				link: styles.badgeVariantsLink,
+				admin: styles.badgeVariantsAdmin,
+				user: styles.badgeVariantsUser,
+				viewer: styles.badgeVariantsViewer,
+				context_admin: styles.badgeVariantsContextAdmin,
+				success: styles.badgeVariantsSuccess,
+				error: styles.badgeVariantsError,
 			},
 		},
 		defaultVariants: {

@@ -8,6 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import styles from './story-version-nav.module.css';
 
 export interface StoryVersionNavProps {
 	currentVersion: number;
@@ -26,7 +27,7 @@ const VERSION_TIME_FORMAT: Intl.DateTimeFormatOptions = { hour: '2-digit', minut
 
 const VERSION_DAY_FORMAT: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
 
-const VERSION_LABEL_CLASS_NAME = 'h-6 shrink-0 gap-1 rounded-full px-2 text-xs font-normal tabular-nums';
+const VERSION_LABEL_CLASS_NAME = styles.vERSIONLABELCLASSNAME;
 
 export function StoryVersionNav({ currentVersion, versionDates, onSelectVersion }: StoryVersionNavProps) {
 	const totalVersions = versionDates.length;
@@ -36,7 +37,7 @@ export function StoryVersionNav({ currentVersion, versionDates, onSelectVersion 
 		return currentVersionDate ? (
 			<span
 				className={cn(
-					'inline-flex items-center whitespace-nowrap text-muted-foreground',
+					styles.storyVersionNavSpan,
 					VERSION_LABEL_CLASS_NAME,
 				)}
 				title={formatVersionDate(currentVersionDate)}
@@ -54,14 +55,14 @@ export function StoryVersionNav({ currentVersion, versionDates, onSelectVersion 
 				<Button
 					variant='ghost-muted'
 					size='sm'
-					className={cn('text-foreground', VERSION_LABEL_CLASS_NAME)}
+					className={cn(styles.storyVersionNavButton, VERSION_LABEL_CLASS_NAME)}
 					aria-label='Select version'
 					title={currentVersionDate ? formatVersionDate(currentVersionDate) : undefined}
 				>
-					<RotateCwFadingClock className='size-3.5' strokeWidth={2.25} />
+					<RotateCwFadingClock className={styles.storyVersionNavRotateCwFadingClock} strokeWidth={2.25} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='center' className='max-h-72 overflow-y-auto'>
+			<DropdownMenuContent align='center' className={styles.storyVersionNavDropdownMenuContent}>
 				<DropdownMenuRadioGroup
 					value={String(currentVersion)}
 					onValueChange={(value) => onSelectVersion(Number(value))}
@@ -72,7 +73,7 @@ export function StoryVersionNav({ currentVersion, versionDates, onSelectVersion 
 							value={String(version)}
 							indicator='check'
 							onSelect={(event) => event.preventDefault()}
-							className='pr-7 pl-2 text-xs tabular-nums [&>span:first-child]:right-2 [&>span:first-child]:left-auto'
+							className={styles.storyVersionNavDropdownMenuRadioItem}
 						>
 							{formatVersionDate(date)}
 						</DropdownMenuRadioItem>

@@ -19,6 +19,7 @@ import { useStoryIds } from '@/hooks/use-story-ids';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { chartsApi } from '@/lib/charts-api';
 import { storyApi } from '@/lib/story-api';
+import styles from './display-chart-table.module.css';
 
 const EMPTY_COLUMNS: string[] = [];
 const EMPTY_ROWS: Record<string, unknown>[] = [];
@@ -130,22 +131,22 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className='hover:rounded-full hover:bg-accent/70'
+							className={styles.headerActionsButton}
 							onClick={handleAddToStory}
 							disabled={isAddingToStory}
 							title='Add to story'
 						>
-							<FilePlus className='size-3 text-muted-foreground/70' />
+							<FilePlus className={styles.headerActionsFilePlus} />
 						</Button>
 					)}
 					<Button
 						variant='ghost-muted'
 						size='icon-xs'
-						className='hover:rounded-full hover:bg-accent/70'
+						className={styles.headerActionsButton}
 						onClick={() => setIsEditOpen(true)}
 						title='Edit formatting'
 					>
-						<Pencil className='size-3 text-muted-foreground/70' />
+						<Pencil className={styles.headerActionsFilePlus} />
 					</Button>
 				</>
 			) : null,
@@ -173,32 +174,32 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 	if (outputError) {
 		return (
 			<ToolCallWrapper defaultExpanded title='Could not display the table'>
-				<div className='p-4 text-red-400 text-sm'>{outputError}</div>
+				<div className={styles.displayChartTableDiv}>{outputError}</div>
 			</ToolCallWrapper>
 		);
 	}
 
 	if (!config || isLoadingRows) {
-		return <div className='my-2 text-foreground/50 text-sm'>Loading table...</div>;
+		return <div className={styles.displayChartTableDiv2}>Loading table...</div>;
 	}
 
 	if (!sourceData?.data || sourceData.data.length === 0) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayChartTableDiv2}>
 				Could not display the table because the data is missing.
 			</div>
 		);
 	}
 
 	return (
-		<div className='my-2'>
+		<div className={styles.displayChartTableDiv3}>
 			<DataTableCard
 				data={rows}
 				columns={columns}
 				title={config.title}
 				conditionalFormats={conditionalFormats}
 				headerActions={headerActions}
-				className='-mx-3'
+				className={styles.displayChartTableDataTableCard}
 			/>
 
 			{isEditable && (

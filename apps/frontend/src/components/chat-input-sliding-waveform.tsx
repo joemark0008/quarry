@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
+import styles from './chat-input-sliding-waveform.module.css';
 
 const SAMPLE_INTERVAL_MS = 50;
 const BAR_WIDTH = 2.5;
@@ -73,7 +74,7 @@ export function SlidingWaveform({ analyserRef }: { analyserRef: RefObject<Analys
 
 				ctx.beginPath();
 				ctx.roundRect(x, midY - barH / 2, barW, barH, barW / 2);
-				ctx.fillStyle = `hsl(var(--primary) / ${0.25 + value * 0.75})`;
+				ctx.fillStyle = `hsl(var(--app-primary-bg) / ${0.25 + value * 0.75})`;
 				ctx.fill();
 			}
 
@@ -88,5 +89,5 @@ export function SlidingWaveform({ analyserRef }: { analyserRef: RefObject<Analys
 		};
 	}, [analyserRef]);
 
-	return <canvas ref={canvasRef} className='flex-1 h-7 min-w-0' />;
+	return <canvas ref={canvasRef} className={styles.slidingWaveformCanvas} />;
 }

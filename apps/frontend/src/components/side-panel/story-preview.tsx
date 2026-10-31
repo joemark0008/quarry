@@ -18,6 +18,7 @@ import { StoryQuerySqlProvider } from '@/contexts/story-query-sql';
 import { useStoryFilters } from '@/hooks/use-story-filters';
 import { stabilizeStorySegments } from '@/lib/story-segment-stability';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-preview.module.css';
 
 interface StoryPreviewProps {
 	code: string;
@@ -162,8 +163,8 @@ export const StoryPreview = memo(function StoryPreview({
 
 	return (
 		<StoryQuerySqlProvider value={querySqlSource}>
-			<StoryThemeProvider theme={theme ?? null} className='h-auto min-h-full bg-background text-foreground'>
-				<div data-story-content className='p-6 flex flex-col gap-4'>
+			<StoryThemeProvider theme={theme ?? null} className={styles.storyPreviewStoryThemeProvider}>
+				<div data-story-content className={styles.storyPreviewDiv}>
 					<StoryFilterBar
 						filters={storyFilters.filters}
 						selections={storyFilters.selections}

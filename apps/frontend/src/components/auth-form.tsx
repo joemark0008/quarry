@@ -13,6 +13,7 @@ import { usePublicConfig } from '@/hooks/use-public-config';
 import { handleGithubSignIn, handleGitlabSignIn, handleGoogleSignIn } from '@/lib/auth-client';
 import { loadLastSignInMethod, rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { cn } from '@/lib/utils';
+import styles from './auth-form.module.css';
 
 /**
  * Shrinks the email/password fields when sign-in providers are on screen, so the
@@ -103,27 +104,27 @@ export function AuthForm({
 		!areSocialProvidersPending && displayEmailPasswordForm && (!showsProviders || isEmailFormExpanded);
 
 	return (
-		<div className='flex min-h-screen w-full'>
-			<div className='flex w-full items-center justify-center lg:w-1/2'>
-				<div className='mx-auto w-full max-w-md p-8 my-auto gap-4'>
+		<div className={styles.authFormDiv}>
+			<div className={styles.authFormDiv2}>
+				<div className={styles.authFormDiv3}>
 					<div
-						className={cn('flex flex-col items-center start pb-2', content ? 'mb-7 gap-6' : 'mb-10 gap-8')}
+						className={cn(`${styles.authFormDiv4} start`, content ? styles.authFormDiv5 : styles.authFormDiv6)}
 					>
-						<QuarryLogo className='w-20 h-auto text-foreground' />
-						<h1 className={cn('font-borna text-2xl font-medium text-center', titleClassName)}>{title}</h1>
+						<QuarryLogo className={styles.authFormQuarryLogo} />
+						<h1 className={cn(styles.authFormH1, titleClassName)}>{title}</h1>
 					</div>
 
 					{showsProviders && (
-						<div className='mb-6'>
-							<div className='grid grid-cols-1 gap-3 mb-6'>{socialProviders}</div>
+						<div className={styles.authFormDiv7}>
+							<div className={styles.authFormDiv8}>{socialProviders}</div>
 
 							{displayEmailPasswordForm && (
-								<div className='relative'>
-									<div className='absolute inset-0 flex items-center'>
-										<div className='w-full border-t' />
+								<div className={styles.authFormDiv9}>
+									<div className={styles.authFormDiv10}>
+										<div className={styles.authFormDiv11} />
 									</div>
-									<div className='relative flex justify-center text-xs uppercase'>
-										<span className='px-2 bg-background text-foreground font-medium'>Or</span>
+									<div className={styles.authFormDiv12}>
+										<span className={styles.authFormSpan}>Or</span>
 									</div>
 								</div>
 							)}
@@ -132,15 +133,15 @@ export function AuthForm({
 								<button
 									type='button'
 									onClick={() => setIsEmailFormExpanded(true)}
-									className='mt-6 flex w-full cursor-pointer items-center justify-center gap-2 text-sm font-medium text-foreground'
+									className={styles.authFormButton}
 								>
-									<span className='underline underline-offset-2'>Use email and password</span>
+									<span className={styles.authFormSpan2}>Use email and password</span>
 								</button>
 							)}
 						</div>
 					)}
 
-					{serverError && <p className='text-red-500 text-center text-sm mb-4'>{serverError}</p>}
+					{serverError && <p className={styles.authFormP}>{serverError}</p>}
 
 					{content ? (
 						content
@@ -165,9 +166,9 @@ export function AuthForm({
 											type='submit'
 											variant={canSubmit ? 'primary-gradient' : 'default'}
 											className={cn(
-												'w-full rounded-full',
-												showsProviders ? 'h-10 text-sm' : 'h-11',
-												!canSubmit && 'bg-muted-foreground/20 text-secondary-foreground',
+												styles.authFormButton2,
+												showsProviders ? styles.authFormButton3 : styles.authFormButton4,
+												!canSubmit && styles.authFormButton5,
 											)}
 											disabled={!canSubmit}
 										>
@@ -180,11 +181,11 @@ export function AuthForm({
 					) : (
 						!displayEmailPasswordForm &&
 						emailPasswordDisabledMessage && (
-							<p className='text-center text-sm text-muted-foreground'>{emailPasswordDisabledMessage}</p>
+							<p className={styles.authFormP2}>{emailPasswordDisabledMessage}</p>
 						)
 					)}
 
-					{footer && <div className='mt-6 text-center text-xs text-foreground font-medium'>{footer}</div>}
+					{footer && <div className={styles.authFormDiv13}>{footer}</div>}
 				</div>
 			</div>
 			<AuthSidePanel />
@@ -196,20 +197,20 @@ function AuthSidePanel() {
 	const [value, setValue] = useState('');
 
 	return (
-		<div className='relative flex flex-col items-center justify-center hidden overflow-hidden lg:flex lg:w-1/2 m-4 rounded-lg'>
-			<BrandGradientBackdrop color={DEFAULT_BRAND_COLOR} className='absolute inset-0 h-full w-full' />
-			<div className='relative w-full mx-auto max-w-md'>
+		<div className={styles.authSidePanelDiv}>
+			<BrandGradientBackdrop color={DEFAULT_BRAND_COLOR} className={styles.authSidePanelBrandGradientBackdrop} />
+			<div className={styles.authSidePanelDiv2}>
 				<InputGroup
 					htmlFor='chat-input'
 					className={cn(
-						'flex items-center gap-1.5 md:gap-4 ml-auto relative rounded-lg px-4 py-6 shadow-xs',
-						'dark:bg-muted ring-[6px] ring-secondary/50 dark:ring-secondary/50',
-						'before:pointer-events-none before:absolute before:-inset-[7px] before:rounded-[15px] before:p-[0.5px]',
-						'before:[background:linear-gradient(135deg,rgba(255,255,255,0.95),rgba(255,255,255,0)_40%,rgba(255,255,255,0)_60%,rgba(255,255,255,0.55))]',
-						'dark:before:[background:linear-gradient(135deg,color-mix(in_srgb,var(--primary-foreground)_90%,transparent),transparent_40%,transparent_60%,color-mix(in_srgb,var(--primary-foreground)_50%,transparent))]',
-						'before:[-webkit-mask-image:linear-gradient(#fff_0_0),linear-gradient(#fff_0_0)] before:[mask-image:linear-gradient(#fff_0_0),linear-gradient(#fff_0_0)]',
-						'before:[-webkit-mask-clip:content-box,border-box] before:[mask-clip:content-box,border-box]',
-						'before:[-webkit-mask-composite:xor] before:[mask-composite:exclude]',
+						styles.authSidePanelInputGroup,
+						styles.authSidePanelInputGroup2,
+						styles.authSidePanelInputGroup3,
+						styles.authSidePanelInputGroup4,
+						styles.authSidePanelInputGroup5,
+						styles.authSidePanelInputGroup6,
+						styles.authSidePanelInputGroup7,
+						styles.authSidePanelInputGroup8,
 					)}
 				>
 					<NakedInput
@@ -217,7 +218,7 @@ function AuthSidePanel() {
 						value={value}
 						onChange={(e) => setValue(e.target.value)}
 						placeholder='Ask anything about your data...'
-						className='flex-1 text-sm font-normal caret-primary placeholder:font-medium placeholder:text-muted-foreground'
+						className={styles.authSidePanelNakedInput}
 					/>
 					<ChatButton showStop={false} type='button' />
 				</InputGroup>
@@ -252,14 +253,14 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 			}}
 		>
 			{(field: { state: { value: string }; handleChange: (v: string) => void; handleBlur: () => void }) => (
-				<div className={cn('grid', compact ? 'gap-1.5' : 'gap-2', className)}>
+				<div className={cn(styles.formTextFieldDiv, compact ? styles.formTextFieldDiv2 : styles.formTextFieldDiv3, className)}>
 					<label
 						htmlFor={name}
-						className={cn('font-medium text-foreground', compact ? 'text-xs' : 'text-sm')}
+						className={cn(styles.formTextFieldLabel, compact ? styles.formTextFieldLabel2 : styles.formTextFieldLabel3)}
 					>
 						{title ?? name.charAt(0).toUpperCase() + name.slice(1)}
 					</label>
-					<div className='relative'>
+					<div className={styles.authFormDiv9}>
 						<NakedInput
 							name={name}
 							type={inputType}
@@ -268,19 +269,19 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 							onChange={(e) => field.handleChange(e.target.value)}
 							onBlur={field.handleBlur}
 							className={cn(
-								'bg-panel w-full rounded-lg',
-								compact ? 'h-10 text-sm px-3' : 'h-12 text-base p-4',
-								isPassword && (compact ? 'pr-10' : 'pr-12'),
+								styles.formTextFieldNakedInput,
+								compact ? styles.formTextFieldNakedInput2 : styles.formTextFieldNakedInput3,
+								isPassword && (compact ? styles.formTextFieldNakedInput4 : styles.formTextFieldNakedInput5),
 							)}
 						/>
-						{showLastUsed && <LastUsedPill className='absolute -top-2 right-3' />}
+						{showLastUsed && <LastUsedPill className={styles.formTextFieldLastUsedPill} />}
 						{isPassword && (
 							<button
 								type='button'
 								onClick={() => setShowPassword(!showPassword)}
 								className={cn(
-									'absolute top-1/2 -translate-y-1/2 text-foreground transition-colors',
-									compact ? 'right-3' : 'right-4',
+									styles.formTextFieldButton,
+									compact ? styles.formTextFieldButton2 : styles.formTextFieldButton3,
 								)}
 								tabIndex={-1}
 								aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -290,7 +291,7 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 								) : (
 									<Eye
 										size={eyeIconSize}
-										className='[&_circle]:fill-foreground [&_circle]:stroke-foreground'
+										className={styles.formTextFieldEye}
 									/>
 								)}
 							</button>

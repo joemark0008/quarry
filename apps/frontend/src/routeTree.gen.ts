@@ -9,45 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SidebarLayoutRouteImport } from './routes/_sidebar-layout'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as EmailVerifiedRouteImport } from './routes/email-verified'
 import { Route as EmbedRouteImport } from './routes/embed'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SidebarLayoutChatLayoutRouteImport } from './routes/_sidebar-layout._chat-layout'
-import { Route as SidebarLayoutSettingsRouteImport } from './routes/_sidebar-layout.settings'
-import { Route as SidebarLayoutChatLayoutIndexRouteImport } from './routes/_sidebar-layout._chat-layout.index'
-import { Route as SidebarLayoutChatLayoutChatIdRouteImport } from './routes/_sidebar-layout._chat-layout.$chatId'
-import { Route as SidebarLayoutSettingsIndexRouteImport } from './routes/_sidebar-layout.settings.index'
-import { Route as SidebarLayoutSettingsAccountRouteImport } from './routes/_sidebar-layout.settings.account'
-import { Route as SidebarLayoutSettingsAppearanceRouteImport } from './routes/_sidebar-layout.settings.appearance'
-import { Route as SidebarLayoutSettingsContextExplorerRouteImport } from './routes/_sidebar-layout.settings.context-explorer'
-import { Route as SidebarLayoutSettingsGitRouteImport } from './routes/_sidebar-layout.settings.git'
-import { Route as SidebarLayoutSettingsMemoryRouteImport } from './routes/_sidebar-layout.settings.memory'
-import { Route as SidebarLayoutSettingsProjectRouteImport } from './routes/_sidebar-layout.settings.project'
-import { Route as SidebarLayoutSettingsRecommendationsRouteImport } from './routes/_sidebar-layout.settings.recommendations'
-import { Route as SidebarLayoutSettingsStorageRouteImport } from './routes/_sidebar-layout.settings.storage'
-import { Route as SidebarLayoutSettingsWhiteLabelRouteImport } from './routes/_sidebar-layout.settings.white-label'
-import { Route as SidebarLayoutSharedChatShareIdRouteImport } from './routes/_sidebar-layout.shared-chat.$shareId'
-import { Route as SidebarLayoutStoriesIndexRouteImport } from './routes/_sidebar-layout.stories.index'
-import { Route as SidebarLayoutStoriesStoryIdRouteImport } from './routes/_sidebar-layout.stories.$storyId'
+import { Route as ProtectedChatLayoutRouteImport } from './routes/_protected/_chat-layout'
+import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
+import { Route as PublicForgotPasswordRouteImport } from './routes/_public/forgot-password'
+import { Route as PublicLoginRouteImport } from './routes/_public/login'
+import { Route as PublicSignupRouteImport } from './routes/_public/signup'
+import { Route as ProtectedChatLayoutIndexRouteImport } from './routes/_protected/_chat-layout.index'
+import { Route as ProtectedChatLayoutChatIdRouteImport } from './routes/_protected/_chat-layout.$chatId'
+import { Route as ProtectedSettingsIndexRouteImport } from './routes/_protected/settings.index'
+import { Route as ProtectedSettingsAccountRouteImport } from './routes/_protected/settings.account'
+import { Route as ProtectedSettingsAppearanceRouteImport } from './routes/_protected/settings.appearance'
+import { Route as ProtectedSettingsContextExplorerRouteImport } from './routes/_protected/settings.context-explorer'
+import { Route as ProtectedSettingsGitRouteImport } from './routes/_protected/settings.git'
+import { Route as ProtectedSettingsMemoryRouteImport } from './routes/_protected/settings.memory'
+import { Route as ProtectedSettingsProjectRouteImport } from './routes/_protected/settings.project'
+import { Route as ProtectedSettingsRecommendationsRouteImport } from './routes/_protected/settings.recommendations'
+import { Route as ProtectedSettingsStorageRouteImport } from './routes/_protected/settings.storage'
+import { Route as ProtectedSettingsWhiteLabelRouteImport } from './routes/_protected/settings.white-label'
+import { Route as ProtectedSharedChatShareIdRouteImport } from './routes/_protected/shared-chat.$shareId'
+import { Route as ProtectedStoriesIndexRouteImport } from './routes/_protected/stories.index'
+import { Route as ProtectedStoriesStoryIdRouteImport } from './routes/_protected/stories.$storyId'
 import { Route as EmbedChartChartEmbedIdRouteImport } from './routes/embed.chart.$chartEmbedId'
 import { Route as EmbedMapMapEmbedIdRouteImport } from './routes/embed.map.$mapEmbedId'
 import { Route as EmbedStoryStoryIdRouteImport } from './routes/embed.story.$storyId'
-import { Route as SidebarLayoutSettingsProjectIndexRouteImport } from './routes/_sidebar-layout.settings.project.index'
-import { Route as SidebarLayoutSettingsProjectAgentRouteImport } from './routes/_sidebar-layout.settings.project.agent'
-import { Route as SidebarLayoutSettingsProjectModelsRouteImport } from './routes/_sidebar-layout.settings.project.models'
-import { Route as SidebarLayoutSettingsProjectQueryToolsRouteImport } from './routes/_sidebar-layout.settings.project.query-tools'
-import { Route as SidebarLayoutSettingsProjectWarehouseRouteImport } from './routes/_sidebar-layout.settings.project.warehouse'
-import { Route as SidebarLayoutStoriesSharedShareIdRouteImport } from './routes/_sidebar-layout.stories.shared.$shareId'
-import { Route as SidebarLayoutStoriesStandaloneStoryIdRouteImport } from './routes/_sidebar-layout.stories.standalone.$storyId'
-import { Route as SidebarLayoutChatLayoutChatIdSubagentToolCallIdRouteImport } from './routes/_sidebar-layout._chat-layout.$chatId_.subagent.$toolCallId'
-import { Route as SidebarLayoutStoriesPreviewChatIdStorySlugRouteImport } from './routes/_sidebar-layout.stories.preview.$chatId.$storySlug'
+import { Route as ProtectedSettingsProjectIndexRouteImport } from './routes/_protected/settings.project.index'
+import { Route as ProtectedSettingsProjectAgentRouteImport } from './routes/_protected/settings.project.agent'
+import { Route as ProtectedSettingsProjectModelsRouteImport } from './routes/_protected/settings.project.models'
+import { Route as ProtectedSettingsProjectQueryToolsRouteImport } from './routes/_protected/settings.project.query-tools'
+import { Route as ProtectedSettingsProjectWarehouseRouteImport } from './routes/_protected/settings.project.warehouse'
+import { Route as ProtectedStoriesSharedShareIdRouteImport } from './routes/_protected/stories.shared.$shareId'
+import { Route as ProtectedStoriesStandaloneStoryIdRouteImport } from './routes/_protected/stories.standalone.$storyId'
+import { Route as ProtectedChatLayoutChatIdSubagentToolCallIdRouteImport } from './routes/_protected/_chat-layout.$chatId_.subagent.$toolCallId'
+import { Route as ProtectedStoriesPreviewChatIdStorySlugRouteImport } from './routes/_protected/stories.preview.$chatId.$storySlug'
 
-const SidebarLayoutRoute = SidebarLayoutRouteImport.update({
-  id: '/_sidebar-layout',
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EmailVerifiedRoute = EmailVerifiedRouteImport.update({
@@ -60,125 +65,120 @@ const EmbedRoute = EmbedRouteImport.update({
   path: '/embed',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SidebarLayoutChatLayoutRoute = SidebarLayoutChatLayoutRouteImport.update({
+const ProtectedChatLayoutRoute = ProtectedChatLayoutRouteImport.update({
   id: '/_chat-layout',
-  getParentRoute: () => SidebarLayoutRoute,
+  getParentRoute: () => ProtectedRoute,
 } as any)
-const SidebarLayoutSettingsRoute = SidebarLayoutSettingsRouteImport.update({
+const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => SidebarLayoutRoute,
+  getParentRoute: () => ProtectedRoute,
 } as any)
-const SidebarLayoutChatLayoutIndexRoute =
-  SidebarLayoutChatLayoutIndexRouteImport.update({
+const PublicForgotPasswordRoute = PublicForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicSignupRoute = PublicSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => PublicRoute,
+} as any)
+const ProtectedChatLayoutIndexRoute =
+  ProtectedChatLayoutIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => SidebarLayoutChatLayoutRoute,
+    getParentRoute: () => ProtectedChatLayoutRoute,
   } as any)
-const SidebarLayoutChatLayoutChatIdRoute =
-  SidebarLayoutChatLayoutChatIdRouteImport.update({
+const ProtectedChatLayoutChatIdRoute =
+  ProtectedChatLayoutChatIdRouteImport.update({
     id: '/$chatId',
     path: '/$chatId',
-    getParentRoute: () => SidebarLayoutChatLayoutRoute,
+    getParentRoute: () => ProtectedChatLayoutRoute,
   } as any)
-const SidebarLayoutSettingsIndexRoute =
-  SidebarLayoutSettingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
-  } as any)
-const SidebarLayoutSettingsAccountRoute =
-  SidebarLayoutSettingsAccountRouteImport.update({
+const ProtectedSettingsIndexRoute = ProtectedSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
+const ProtectedSettingsAccountRoute =
+  ProtectedSettingsAccountRouteImport.update({
     id: '/account',
     path: '/account',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsAppearanceRoute =
-  SidebarLayoutSettingsAppearanceRouteImport.update({
+const ProtectedSettingsAppearanceRoute =
+  ProtectedSettingsAppearanceRouteImport.update({
     id: '/appearance',
     path: '/appearance',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsContextExplorerRoute =
-  SidebarLayoutSettingsContextExplorerRouteImport.update({
+const ProtectedSettingsContextExplorerRoute =
+  ProtectedSettingsContextExplorerRouteImport.update({
     id: '/context-explorer',
     path: '/context-explorer',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsGitRoute =
-  SidebarLayoutSettingsGitRouteImport.update({
-    id: '/git',
-    path: '/git',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
-  } as any)
-const SidebarLayoutSettingsMemoryRoute =
-  SidebarLayoutSettingsMemoryRouteImport.update({
-    id: '/memory',
-    path: '/memory',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
-  } as any)
-const SidebarLayoutSettingsProjectRoute =
-  SidebarLayoutSettingsProjectRouteImport.update({
+const ProtectedSettingsGitRoute = ProtectedSettingsGitRouteImport.update({
+  id: '/git',
+  path: '/git',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
+const ProtectedSettingsMemoryRoute = ProtectedSettingsMemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
+const ProtectedSettingsProjectRoute =
+  ProtectedSettingsProjectRouteImport.update({
     id: '/project',
     path: '/project',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsRecommendationsRoute =
-  SidebarLayoutSettingsRecommendationsRouteImport.update({
+const ProtectedSettingsRecommendationsRoute =
+  ProtectedSettingsRecommendationsRouteImport.update({
     id: '/recommendations',
     path: '/recommendations',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsStorageRoute =
-  SidebarLayoutSettingsStorageRouteImport.update({
+const ProtectedSettingsStorageRoute =
+  ProtectedSettingsStorageRouteImport.update({
     id: '/storage',
     path: '/storage',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSettingsWhiteLabelRoute =
-  SidebarLayoutSettingsWhiteLabelRouteImport.update({
+const ProtectedSettingsWhiteLabelRoute =
+  ProtectedSettingsWhiteLabelRouteImport.update({
     id: '/white-label',
     path: '/white-label',
-    getParentRoute: () => SidebarLayoutSettingsRoute,
+    getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const SidebarLayoutSharedChatShareIdRoute =
-  SidebarLayoutSharedChatShareIdRouteImport.update({
+const ProtectedSharedChatShareIdRoute =
+  ProtectedSharedChatShareIdRouteImport.update({
     id: '/shared-chat/$shareId',
     path: '/shared-chat/$shareId',
-    getParentRoute: () => SidebarLayoutRoute,
+    getParentRoute: () => ProtectedRoute,
   } as any)
-const SidebarLayoutStoriesIndexRoute =
-  SidebarLayoutStoriesIndexRouteImport.update({
-    id: '/stories/',
-    path: '/stories/',
-    getParentRoute: () => SidebarLayoutRoute,
-  } as any)
-const SidebarLayoutStoriesStoryIdRoute =
-  SidebarLayoutStoriesStoryIdRouteImport.update({
-    id: '/stories/$storyId',
-    path: '/stories/$storyId',
-    getParentRoute: () => SidebarLayoutRoute,
-  } as any)
+const ProtectedStoriesIndexRoute = ProtectedStoriesIndexRouteImport.update({
+  id: '/stories/',
+  path: '/stories/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedStoriesStoryIdRoute = ProtectedStoriesStoryIdRouteImport.update({
+  id: '/stories/$storyId',
+  path: '/stories/$storyId',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const EmbedChartChartEmbedIdRoute = EmbedChartChartEmbedIdRouteImport.update({
   id: '/chart/$chartEmbedId',
   path: '/chart/$chartEmbedId',
@@ -194,169 +194,170 @@ const EmbedStoryStoryIdRoute = EmbedStoryStoryIdRouteImport.update({
   path: '/story/$storyId',
   getParentRoute: () => EmbedRoute,
 } as any)
-const SidebarLayoutSettingsProjectIndexRoute =
-  SidebarLayoutSettingsProjectIndexRouteImport.update({
+const ProtectedSettingsProjectIndexRoute =
+  ProtectedSettingsProjectIndexRouteImport.update({
     id: '/',
     path: '/',
-    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+    getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
-const SidebarLayoutSettingsProjectAgentRoute =
-  SidebarLayoutSettingsProjectAgentRouteImport.update({
+const ProtectedSettingsProjectAgentRoute =
+  ProtectedSettingsProjectAgentRouteImport.update({
     id: '/agent',
     path: '/agent',
-    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+    getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
-const SidebarLayoutSettingsProjectModelsRoute =
-  SidebarLayoutSettingsProjectModelsRouteImport.update({
+const ProtectedSettingsProjectModelsRoute =
+  ProtectedSettingsProjectModelsRouteImport.update({
     id: '/models',
     path: '/models',
-    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+    getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
-const SidebarLayoutSettingsProjectQueryToolsRoute =
-  SidebarLayoutSettingsProjectQueryToolsRouteImport.update({
+const ProtectedSettingsProjectQueryToolsRoute =
+  ProtectedSettingsProjectQueryToolsRouteImport.update({
     id: '/query-tools',
     path: '/query-tools',
-    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+    getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
-const SidebarLayoutSettingsProjectWarehouseRoute =
-  SidebarLayoutSettingsProjectWarehouseRouteImport.update({
+const ProtectedSettingsProjectWarehouseRoute =
+  ProtectedSettingsProjectWarehouseRouteImport.update({
     id: '/warehouse',
     path: '/warehouse',
-    getParentRoute: () => SidebarLayoutSettingsProjectRoute,
+    getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
-const SidebarLayoutStoriesSharedShareIdRoute =
-  SidebarLayoutStoriesSharedShareIdRouteImport.update({
+const ProtectedStoriesSharedShareIdRoute =
+  ProtectedStoriesSharedShareIdRouteImport.update({
     id: '/stories/shared/$shareId',
     path: '/stories/shared/$shareId',
-    getParentRoute: () => SidebarLayoutRoute,
+    getParentRoute: () => ProtectedRoute,
   } as any)
-const SidebarLayoutStoriesStandaloneStoryIdRoute =
-  SidebarLayoutStoriesStandaloneStoryIdRouteImport.update({
+const ProtectedStoriesStandaloneStoryIdRoute =
+  ProtectedStoriesStandaloneStoryIdRouteImport.update({
     id: '/stories/standalone/$storyId',
     path: '/stories/standalone/$storyId',
-    getParentRoute: () => SidebarLayoutRoute,
+    getParentRoute: () => ProtectedRoute,
   } as any)
-const SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute =
-  SidebarLayoutChatLayoutChatIdSubagentToolCallIdRouteImport.update({
+const ProtectedChatLayoutChatIdSubagentToolCallIdRoute =
+  ProtectedChatLayoutChatIdSubagentToolCallIdRouteImport.update({
     id: '/$chatId_/subagent/$toolCallId',
     path: '/$chatId/subagent/$toolCallId',
-    getParentRoute: () => SidebarLayoutChatLayoutRoute,
+    getParentRoute: () => ProtectedChatLayoutRoute,
   } as any)
-const SidebarLayoutStoriesPreviewChatIdStorySlugRoute =
-  SidebarLayoutStoriesPreviewChatIdStorySlugRouteImport.update({
+const ProtectedStoriesPreviewChatIdStorySlugRoute =
+  ProtectedStoriesPreviewChatIdStorySlugRouteImport.update({
     id: '/stories/preview/$chatId/$storySlug',
     path: '/stories/preview/$chatId/$storySlug',
-    getParentRoute: () => SidebarLayoutRoute,
+    getParentRoute: () => ProtectedRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof SidebarLayoutChatLayoutIndexRoute
+  '/': typeof ProtectedChatLayoutIndexRoute
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/signup': typeof SignupRoute
-  '/settings': typeof SidebarLayoutSettingsRouteWithChildren
-  '/$chatId': typeof SidebarLayoutChatLayoutChatIdRoute
-  '/settings/account': typeof SidebarLayoutSettingsAccountRoute
-  '/settings/appearance': typeof SidebarLayoutSettingsAppearanceRoute
-  '/settings/context-explorer': typeof SidebarLayoutSettingsContextExplorerRoute
-  '/settings/git': typeof SidebarLayoutSettingsGitRoute
-  '/settings/memory': typeof SidebarLayoutSettingsMemoryRoute
-  '/settings/project': typeof SidebarLayoutSettingsProjectRouteWithChildren
-  '/settings/recommendations': typeof SidebarLayoutSettingsRecommendationsRoute
-  '/settings/storage': typeof SidebarLayoutSettingsStorageRoute
-  '/settings/white-label': typeof SidebarLayoutSettingsWhiteLabelRoute
-  '/shared-chat/$shareId': typeof SidebarLayoutSharedChatShareIdRoute
-  '/stories/$storyId': typeof SidebarLayoutStoriesStoryIdRoute
+  '/settings': typeof ProtectedSettingsRouteWithChildren
+  '/forgot-password': typeof PublicForgotPasswordRoute
+  '/login': typeof PublicLoginRoute
+  '/signup': typeof PublicSignupRoute
+  '/$chatId': typeof ProtectedChatLayoutChatIdRoute
+  '/settings/account': typeof ProtectedSettingsAccountRoute
+  '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
+  '/settings/git': typeof ProtectedSettingsGitRoute
+  '/settings/memory': typeof ProtectedSettingsMemoryRoute
+  '/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
+  '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
+  '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
+  '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
+  '/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
   '/embed/chart/$chartEmbedId': typeof EmbedChartChartEmbedIdRoute
   '/embed/map/$mapEmbedId': typeof EmbedMapMapEmbedIdRoute
   '/embed/story/$storyId': typeof EmbedStoryStoryIdRoute
-  '/settings/': typeof SidebarLayoutSettingsIndexRoute
-  '/stories/': typeof SidebarLayoutStoriesIndexRoute
-  '/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
-  '/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
-  '/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
-  '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
-  '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
-  '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
-  '/settings/project/': typeof SidebarLayoutSettingsProjectIndexRoute
-  '/$chatId/subagent/$toolCallId': typeof SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute
-  '/stories/preview/$chatId/$storySlug': typeof SidebarLayoutStoriesPreviewChatIdStorySlugRoute
+  '/settings/': typeof ProtectedSettingsIndexRoute
+  '/stories/': typeof ProtectedStoriesIndexRoute
+  '/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
+  '/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
+  '/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
+  '/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
+  '/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
+  '/settings/project/': typeof ProtectedSettingsProjectIndexRoute
+  '/$chatId/subagent/$toolCallId': typeof ProtectedChatLayoutChatIdSubagentToolCallIdRoute
+  '/stories/preview/$chatId/$storySlug': typeof ProtectedStoriesPreviewChatIdStorySlugRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof SidebarLayoutChatLayoutIndexRoute
+  '/': typeof ProtectedChatLayoutIndexRoute
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/signup': typeof SignupRoute
-  '/$chatId': typeof SidebarLayoutChatLayoutChatIdRoute
-  '/settings/account': typeof SidebarLayoutSettingsAccountRoute
-  '/settings/appearance': typeof SidebarLayoutSettingsAppearanceRoute
-  '/settings/context-explorer': typeof SidebarLayoutSettingsContextExplorerRoute
-  '/settings/git': typeof SidebarLayoutSettingsGitRoute
-  '/settings/memory': typeof SidebarLayoutSettingsMemoryRoute
-  '/settings/recommendations': typeof SidebarLayoutSettingsRecommendationsRoute
-  '/settings/storage': typeof SidebarLayoutSettingsStorageRoute
-  '/settings/white-label': typeof SidebarLayoutSettingsWhiteLabelRoute
-  '/shared-chat/$shareId': typeof SidebarLayoutSharedChatShareIdRoute
-  '/stories/$storyId': typeof SidebarLayoutStoriesStoryIdRoute
+  '/forgot-password': typeof PublicForgotPasswordRoute
+  '/login': typeof PublicLoginRoute
+  '/signup': typeof PublicSignupRoute
+  '/$chatId': typeof ProtectedChatLayoutChatIdRoute
+  '/settings/account': typeof ProtectedSettingsAccountRoute
+  '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
+  '/settings/git': typeof ProtectedSettingsGitRoute
+  '/settings/memory': typeof ProtectedSettingsMemoryRoute
+  '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
+  '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
+  '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
+  '/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
   '/embed/chart/$chartEmbedId': typeof EmbedChartChartEmbedIdRoute
   '/embed/map/$mapEmbedId': typeof EmbedMapMapEmbedIdRoute
   '/embed/story/$storyId': typeof EmbedStoryStoryIdRoute
-  '/settings': typeof SidebarLayoutSettingsIndexRoute
-  '/stories': typeof SidebarLayoutStoriesIndexRoute
-  '/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
-  '/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
-  '/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
-  '/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
-  '/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
-  '/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
-  '/settings/project': typeof SidebarLayoutSettingsProjectIndexRoute
-  '/$chatId/subagent/$toolCallId': typeof SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute
-  '/stories/preview/$chatId/$storySlug': typeof SidebarLayoutStoriesPreviewChatIdStorySlugRoute
+  '/settings': typeof ProtectedSettingsIndexRoute
+  '/stories': typeof ProtectedStoriesIndexRoute
+  '/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
+  '/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
+  '/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
+  '/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
+  '/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
+  '/settings/project': typeof ProtectedSettingsProjectIndexRoute
+  '/$chatId/subagent/$toolCallId': typeof ProtectedChatLayoutChatIdSubagentToolCallIdRoute
+  '/stories/preview/$chatId/$storySlug': typeof ProtectedStoriesPreviewChatIdStorySlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_sidebar-layout': typeof SidebarLayoutRouteWithChildren
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
-  '/forgot-password': typeof ForgotPasswordRoute
-  '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/signup': typeof SignupRoute
-  '/_sidebar-layout/_chat-layout': typeof SidebarLayoutChatLayoutRouteWithChildren
-  '/_sidebar-layout/settings': typeof SidebarLayoutSettingsRouteWithChildren
-  '/_sidebar-layout/_chat-layout/$chatId': typeof SidebarLayoutChatLayoutChatIdRoute
-  '/_sidebar-layout/settings/account': typeof SidebarLayoutSettingsAccountRoute
-  '/_sidebar-layout/settings/appearance': typeof SidebarLayoutSettingsAppearanceRoute
-  '/_sidebar-layout/settings/context-explorer': typeof SidebarLayoutSettingsContextExplorerRoute
-  '/_sidebar-layout/settings/git': typeof SidebarLayoutSettingsGitRoute
-  '/_sidebar-layout/settings/memory': typeof SidebarLayoutSettingsMemoryRoute
-  '/_sidebar-layout/settings/project': typeof SidebarLayoutSettingsProjectRouteWithChildren
-  '/_sidebar-layout/settings/recommendations': typeof SidebarLayoutSettingsRecommendationsRoute
-  '/_sidebar-layout/settings/storage': typeof SidebarLayoutSettingsStorageRoute
-  '/_sidebar-layout/settings/white-label': typeof SidebarLayoutSettingsWhiteLabelRoute
-  '/_sidebar-layout/shared-chat/$shareId': typeof SidebarLayoutSharedChatShareIdRoute
-  '/_sidebar-layout/stories/$storyId': typeof SidebarLayoutStoriesStoryIdRoute
+  '/_protected/_chat-layout': typeof ProtectedChatLayoutRouteWithChildren
+  '/_protected/settings': typeof ProtectedSettingsRouteWithChildren
+  '/_public/forgot-password': typeof PublicForgotPasswordRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/signup': typeof PublicSignupRoute
+  '/_protected/_chat-layout/$chatId': typeof ProtectedChatLayoutChatIdRoute
+  '/_protected/settings/account': typeof ProtectedSettingsAccountRoute
+  '/_protected/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/_protected/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
+  '/_protected/settings/git': typeof ProtectedSettingsGitRoute
+  '/_protected/settings/memory': typeof ProtectedSettingsMemoryRoute
+  '/_protected/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
+  '/_protected/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
+  '/_protected/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/_protected/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
+  '/_protected/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
+  '/_protected/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
   '/embed/chart/$chartEmbedId': typeof EmbedChartChartEmbedIdRoute
   '/embed/map/$mapEmbedId': typeof EmbedMapMapEmbedIdRoute
   '/embed/story/$storyId': typeof EmbedStoryStoryIdRoute
-  '/_sidebar-layout/_chat-layout/': typeof SidebarLayoutChatLayoutIndexRoute
-  '/_sidebar-layout/settings/': typeof SidebarLayoutSettingsIndexRoute
-  '/_sidebar-layout/stories/': typeof SidebarLayoutStoriesIndexRoute
-  '/_sidebar-layout/settings/project/agent': typeof SidebarLayoutSettingsProjectAgentRoute
-  '/_sidebar-layout/settings/project/models': typeof SidebarLayoutSettingsProjectModelsRoute
-  '/_sidebar-layout/settings/project/query-tools': typeof SidebarLayoutSettingsProjectQueryToolsRoute
-  '/_sidebar-layout/settings/project/warehouse': typeof SidebarLayoutSettingsProjectWarehouseRoute
-  '/_sidebar-layout/stories/shared/$shareId': typeof SidebarLayoutStoriesSharedShareIdRoute
-  '/_sidebar-layout/stories/standalone/$storyId': typeof SidebarLayoutStoriesStandaloneStoryIdRoute
-  '/_sidebar-layout/settings/project/': typeof SidebarLayoutSettingsProjectIndexRoute
-  '/_sidebar-layout/_chat-layout/$chatId_/subagent/$toolCallId': typeof SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute
-  '/_sidebar-layout/stories/preview/$chatId/$storySlug': typeof SidebarLayoutStoriesPreviewChatIdStorySlugRoute
+  '/_protected/_chat-layout/': typeof ProtectedChatLayoutIndexRoute
+  '/_protected/settings/': typeof ProtectedSettingsIndexRoute
+  '/_protected/stories/': typeof ProtectedStoriesIndexRoute
+  '/_protected/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
+  '/_protected/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
+  '/_protected/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/_protected/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
+  '/_protected/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
+  '/_protected/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
+  '/_protected/settings/project/': typeof ProtectedSettingsProjectIndexRoute
+  '/_protected/_chat-layout/$chatId_/subagent/$toolCallId': typeof ProtectedChatLayoutChatIdSubagentToolCallIdRoute
+  '/_protected/stories/preview/$chatId/$storySlug': typeof ProtectedStoriesPreviewChatIdStorySlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -364,11 +365,11 @@ export interface FileRouteTypes {
     | '/'
     | '/email-verified'
     | '/embed'
+    | '/reset-password'
+    | '/settings'
     | '/forgot-password'
     | '/login'
-    | '/reset-password'
     | '/signup'
-    | '/settings'
     | '/$chatId'
     | '/settings/account'
     | '/settings/appearance'
@@ -400,9 +401,9 @@ export interface FileRouteTypes {
     | '/'
     | '/email-verified'
     | '/embed'
+    | '/reset-password'
     | '/forgot-password'
     | '/login'
-    | '/reset-password'
     | '/signup'
     | '/$chatId'
     | '/settings/account'
@@ -431,61 +432,67 @@ export interface FileRouteTypes {
     | '/stories/preview/$chatId/$storySlug'
   id:
     | '__root__'
-    | '/_sidebar-layout'
+    | '/_protected'
+    | '/_public'
     | '/email-verified'
     | '/embed'
-    | '/forgot-password'
-    | '/login'
     | '/reset-password'
-    | '/signup'
-    | '/_sidebar-layout/_chat-layout'
-    | '/_sidebar-layout/settings'
-    | '/_sidebar-layout/_chat-layout/$chatId'
-    | '/_sidebar-layout/settings/account'
-    | '/_sidebar-layout/settings/appearance'
-    | '/_sidebar-layout/settings/context-explorer'
-    | '/_sidebar-layout/settings/git'
-    | '/_sidebar-layout/settings/memory'
-    | '/_sidebar-layout/settings/project'
-    | '/_sidebar-layout/settings/recommendations'
-    | '/_sidebar-layout/settings/storage'
-    | '/_sidebar-layout/settings/white-label'
-    | '/_sidebar-layout/shared-chat/$shareId'
-    | '/_sidebar-layout/stories/$storyId'
+    | '/_protected/_chat-layout'
+    | '/_protected/settings'
+    | '/_public/forgot-password'
+    | '/_public/login'
+    | '/_public/signup'
+    | '/_protected/_chat-layout/$chatId'
+    | '/_protected/settings/account'
+    | '/_protected/settings/appearance'
+    | '/_protected/settings/context-explorer'
+    | '/_protected/settings/git'
+    | '/_protected/settings/memory'
+    | '/_protected/settings/project'
+    | '/_protected/settings/recommendations'
+    | '/_protected/settings/storage'
+    | '/_protected/settings/white-label'
+    | '/_protected/shared-chat/$shareId'
+    | '/_protected/stories/$storyId'
     | '/embed/chart/$chartEmbedId'
     | '/embed/map/$mapEmbedId'
     | '/embed/story/$storyId'
-    | '/_sidebar-layout/_chat-layout/'
-    | '/_sidebar-layout/settings/'
-    | '/_sidebar-layout/stories/'
-    | '/_sidebar-layout/settings/project/agent'
-    | '/_sidebar-layout/settings/project/models'
-    | '/_sidebar-layout/settings/project/query-tools'
-    | '/_sidebar-layout/settings/project/warehouse'
-    | '/_sidebar-layout/stories/shared/$shareId'
-    | '/_sidebar-layout/stories/standalone/$storyId'
-    | '/_sidebar-layout/settings/project/'
-    | '/_sidebar-layout/_chat-layout/$chatId_/subagent/$toolCallId'
-    | '/_sidebar-layout/stories/preview/$chatId/$storySlug'
+    | '/_protected/_chat-layout/'
+    | '/_protected/settings/'
+    | '/_protected/stories/'
+    | '/_protected/settings/project/agent'
+    | '/_protected/settings/project/models'
+    | '/_protected/settings/project/query-tools'
+    | '/_protected/settings/project/warehouse'
+    | '/_protected/stories/shared/$shareId'
+    | '/_protected/stories/standalone/$storyId'
+    | '/_protected/settings/project/'
+    | '/_protected/_chat-layout/$chatId_/subagent/$toolCallId'
+    | '/_protected/stories/preview/$chatId/$storySlug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  SidebarLayoutRoute: typeof SidebarLayoutRouteWithChildren
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   EmailVerifiedRoute: typeof EmailVerifiedRoute
   EmbedRoute: typeof EmbedRouteWithChildren
-  ForgotPasswordRoute: typeof ForgotPasswordRoute
-  LoginRoute: typeof LoginRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_sidebar-layout': {
-      id: '/_sidebar-layout'
+    '/_protected': {
+      id: '/_protected'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof SidebarLayoutRouteImport
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/email-verified': {
@@ -502,20 +509,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmbedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -523,131 +516,145 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_sidebar-layout/_chat-layout': {
-      id: '/_sidebar-layout/_chat-layout'
+    '/_protected/_chat-layout': {
+      id: '/_protected/_chat-layout'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof SidebarLayoutChatLayoutRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedChatLayoutRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/settings': {
-      id: '/_sidebar-layout/settings'
+    '/_protected/settings': {
+      id: '/_protected/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof SidebarLayoutSettingsRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/_chat-layout/': {
-      id: '/_sidebar-layout/_chat-layout/'
+    '/_public/forgot-password': {
+      id: '/_public/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof PublicForgotPasswordRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/signup': {
+      id: '/_public/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof PublicSignupRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_protected/_chat-layout/': {
+      id: '/_protected/_chat-layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof SidebarLayoutChatLayoutIndexRouteImport
-      parentRoute: typeof SidebarLayoutChatLayoutRoute
+      preLoaderRoute: typeof ProtectedChatLayoutIndexRouteImport
+      parentRoute: typeof ProtectedChatLayoutRoute
     }
-    '/_sidebar-layout/_chat-layout/$chatId': {
-      id: '/_sidebar-layout/_chat-layout/$chatId'
+    '/_protected/_chat-layout/$chatId': {
+      id: '/_protected/_chat-layout/$chatId'
       path: '/$chatId'
       fullPath: '/$chatId'
-      preLoaderRoute: typeof SidebarLayoutChatLayoutChatIdRouteImport
-      parentRoute: typeof SidebarLayoutChatLayoutRoute
+      preLoaderRoute: typeof ProtectedChatLayoutChatIdRouteImport
+      parentRoute: typeof ProtectedChatLayoutRoute
     }
-    '/_sidebar-layout/settings/': {
-      id: '/_sidebar-layout/settings/'
+    '/_protected/settings/': {
+      id: '/_protected/settings/'
       path: '/'
       fullPath: '/settings/'
-      preLoaderRoute: typeof SidebarLayoutSettingsIndexRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsIndexRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/account': {
-      id: '/_sidebar-layout/settings/account'
+    '/_protected/settings/account': {
+      id: '/_protected/settings/account'
       path: '/account'
       fullPath: '/settings/account'
-      preLoaderRoute: typeof SidebarLayoutSettingsAccountRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsAccountRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/appearance': {
-      id: '/_sidebar-layout/settings/appearance'
+    '/_protected/settings/appearance': {
+      id: '/_protected/settings/appearance'
       path: '/appearance'
       fullPath: '/settings/appearance'
-      preLoaderRoute: typeof SidebarLayoutSettingsAppearanceRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsAppearanceRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/context-explorer': {
-      id: '/_sidebar-layout/settings/context-explorer'
+    '/_protected/settings/context-explorer': {
+      id: '/_protected/settings/context-explorer'
       path: '/context-explorer'
       fullPath: '/settings/context-explorer'
-      preLoaderRoute: typeof SidebarLayoutSettingsContextExplorerRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsContextExplorerRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/git': {
-      id: '/_sidebar-layout/settings/git'
+    '/_protected/settings/git': {
+      id: '/_protected/settings/git'
       path: '/git'
       fullPath: '/settings/git'
-      preLoaderRoute: typeof SidebarLayoutSettingsGitRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsGitRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/memory': {
-      id: '/_sidebar-layout/settings/memory'
+    '/_protected/settings/memory': {
+      id: '/_protected/settings/memory'
       path: '/memory'
       fullPath: '/settings/memory'
-      preLoaderRoute: typeof SidebarLayoutSettingsMemoryRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsMemoryRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/project': {
-      id: '/_sidebar-layout/settings/project'
+    '/_protected/settings/project': {
+      id: '/_protected/settings/project'
       path: '/project'
       fullPath: '/settings/project'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/recommendations': {
-      id: '/_sidebar-layout/settings/recommendations'
+    '/_protected/settings/recommendations': {
+      id: '/_protected/settings/recommendations'
       path: '/recommendations'
       fullPath: '/settings/recommendations'
-      preLoaderRoute: typeof SidebarLayoutSettingsRecommendationsRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsRecommendationsRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/storage': {
-      id: '/_sidebar-layout/settings/storage'
+    '/_protected/settings/storage': {
+      id: '/_protected/settings/storage'
       path: '/storage'
       fullPath: '/settings/storage'
-      preLoaderRoute: typeof SidebarLayoutSettingsStorageRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsStorageRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/settings/white-label': {
-      id: '/_sidebar-layout/settings/white-label'
+    '/_protected/settings/white-label': {
+      id: '/_protected/settings/white-label'
       path: '/white-label'
       fullPath: '/settings/white-label'
-      preLoaderRoute: typeof SidebarLayoutSettingsWhiteLabelRouteImport
-      parentRoute: typeof SidebarLayoutSettingsRoute
+      preLoaderRoute: typeof ProtectedSettingsWhiteLabelRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
     }
-    '/_sidebar-layout/shared-chat/$shareId': {
-      id: '/_sidebar-layout/shared-chat/$shareId'
+    '/_protected/shared-chat/$shareId': {
+      id: '/_protected/shared-chat/$shareId'
       path: '/shared-chat/$shareId'
       fullPath: '/shared-chat/$shareId'
-      preLoaderRoute: typeof SidebarLayoutSharedChatShareIdRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedSharedChatShareIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/stories/': {
-      id: '/_sidebar-layout/stories/'
+    '/_protected/stories/': {
+      id: '/_protected/stories/'
       path: '/stories'
       fullPath: '/stories/'
-      preLoaderRoute: typeof SidebarLayoutStoriesIndexRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedStoriesIndexRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/stories/$storyId': {
-      id: '/_sidebar-layout/stories/$storyId'
+    '/_protected/stories/$storyId': {
+      id: '/_protected/stories/$storyId'
       path: '/stories/$storyId'
       fullPath: '/stories/$storyId'
-      preLoaderRoute: typeof SidebarLayoutStoriesStoryIdRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedStoriesStoryIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/embed/chart/$chartEmbedId': {
       id: '/embed/chart/$chartEmbedId'
@@ -670,180 +677,183 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmbedStoryStoryIdRouteImport
       parentRoute: typeof EmbedRoute
     }
-    '/_sidebar-layout/settings/project/': {
-      id: '/_sidebar-layout/settings/project/'
+    '/_protected/settings/project/': {
+      id: '/_protected/settings/project/'
       path: '/'
       fullPath: '/settings/project/'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectIndexRouteImport
-      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectIndexRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
     }
-    '/_sidebar-layout/settings/project/agent': {
-      id: '/_sidebar-layout/settings/project/agent'
+    '/_protected/settings/project/agent': {
+      id: '/_protected/settings/project/agent'
       path: '/agent'
       fullPath: '/settings/project/agent'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectAgentRouteImport
-      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectAgentRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
     }
-    '/_sidebar-layout/settings/project/models': {
-      id: '/_sidebar-layout/settings/project/models'
+    '/_protected/settings/project/models': {
+      id: '/_protected/settings/project/models'
       path: '/models'
       fullPath: '/settings/project/models'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectModelsRouteImport
-      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectModelsRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
     }
-    '/_sidebar-layout/settings/project/query-tools': {
-      id: '/_sidebar-layout/settings/project/query-tools'
+    '/_protected/settings/project/query-tools': {
+      id: '/_protected/settings/project/query-tools'
       path: '/query-tools'
       fullPath: '/settings/project/query-tools'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectQueryToolsRouteImport
-      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectQueryToolsRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
     }
-    '/_sidebar-layout/settings/project/warehouse': {
-      id: '/_sidebar-layout/settings/project/warehouse'
+    '/_protected/settings/project/warehouse': {
+      id: '/_protected/settings/project/warehouse'
       path: '/warehouse'
       fullPath: '/settings/project/warehouse'
-      preLoaderRoute: typeof SidebarLayoutSettingsProjectWarehouseRouteImport
-      parentRoute: typeof SidebarLayoutSettingsProjectRoute
+      preLoaderRoute: typeof ProtectedSettingsProjectWarehouseRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
     }
-    '/_sidebar-layout/stories/shared/$shareId': {
-      id: '/_sidebar-layout/stories/shared/$shareId'
+    '/_protected/stories/shared/$shareId': {
+      id: '/_protected/stories/shared/$shareId'
       path: '/stories/shared/$shareId'
       fullPath: '/stories/shared/$shareId'
-      preLoaderRoute: typeof SidebarLayoutStoriesSharedShareIdRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedStoriesSharedShareIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/stories/standalone/$storyId': {
-      id: '/_sidebar-layout/stories/standalone/$storyId'
+    '/_protected/stories/standalone/$storyId': {
+      id: '/_protected/stories/standalone/$storyId'
       path: '/stories/standalone/$storyId'
       fullPath: '/stories/standalone/$storyId'
-      preLoaderRoute: typeof SidebarLayoutStoriesStandaloneStoryIdRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedStoriesStandaloneStoryIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_sidebar-layout/_chat-layout/$chatId_/subagent/$toolCallId': {
-      id: '/_sidebar-layout/_chat-layout/$chatId_/subagent/$toolCallId'
+    '/_protected/_chat-layout/$chatId_/subagent/$toolCallId': {
+      id: '/_protected/_chat-layout/$chatId_/subagent/$toolCallId'
       path: '/$chatId/subagent/$toolCallId'
       fullPath: '/$chatId/subagent/$toolCallId'
-      preLoaderRoute: typeof SidebarLayoutChatLayoutChatIdSubagentToolCallIdRouteImport
-      parentRoute: typeof SidebarLayoutChatLayoutRoute
+      preLoaderRoute: typeof ProtectedChatLayoutChatIdSubagentToolCallIdRouteImport
+      parentRoute: typeof ProtectedChatLayoutRoute
     }
-    '/_sidebar-layout/stories/preview/$chatId/$storySlug': {
-      id: '/_sidebar-layout/stories/preview/$chatId/$storySlug'
+    '/_protected/stories/preview/$chatId/$storySlug': {
+      id: '/_protected/stories/preview/$chatId/$storySlug'
       path: '/stories/preview/$chatId/$storySlug'
       fullPath: '/stories/preview/$chatId/$storySlug'
-      preLoaderRoute: typeof SidebarLayoutStoriesPreviewChatIdStorySlugRouteImport
-      parentRoute: typeof SidebarLayoutRoute
+      preLoaderRoute: typeof ProtectedStoriesPreviewChatIdStorySlugRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
 
-interface SidebarLayoutChatLayoutRouteChildren {
-  SidebarLayoutChatLayoutChatIdRoute: typeof SidebarLayoutChatLayoutChatIdRoute
-  SidebarLayoutChatLayoutIndexRoute: typeof SidebarLayoutChatLayoutIndexRoute
-  SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute: typeof SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute
+interface ProtectedChatLayoutRouteChildren {
+  ProtectedChatLayoutChatIdRoute: typeof ProtectedChatLayoutChatIdRoute
+  ProtectedChatLayoutIndexRoute: typeof ProtectedChatLayoutIndexRoute
+  ProtectedChatLayoutChatIdSubagentToolCallIdRoute: typeof ProtectedChatLayoutChatIdSubagentToolCallIdRoute
 }
 
-const SidebarLayoutChatLayoutRouteChildren: SidebarLayoutChatLayoutRouteChildren =
+const ProtectedChatLayoutRouteChildren: ProtectedChatLayoutRouteChildren = {
+  ProtectedChatLayoutChatIdRoute: ProtectedChatLayoutChatIdRoute,
+  ProtectedChatLayoutIndexRoute: ProtectedChatLayoutIndexRoute,
+  ProtectedChatLayoutChatIdSubagentToolCallIdRoute:
+    ProtectedChatLayoutChatIdSubagentToolCallIdRoute,
+}
+
+const ProtectedChatLayoutRouteWithChildren =
+  ProtectedChatLayoutRoute._addFileChildren(ProtectedChatLayoutRouteChildren)
+
+interface ProtectedSettingsProjectRouteChildren {
+  ProtectedSettingsProjectAgentRoute: typeof ProtectedSettingsProjectAgentRoute
+  ProtectedSettingsProjectModelsRoute: typeof ProtectedSettingsProjectModelsRoute
+  ProtectedSettingsProjectQueryToolsRoute: typeof ProtectedSettingsProjectQueryToolsRoute
+  ProtectedSettingsProjectWarehouseRoute: typeof ProtectedSettingsProjectWarehouseRoute
+  ProtectedSettingsProjectIndexRoute: typeof ProtectedSettingsProjectIndexRoute
+}
+
+const ProtectedSettingsProjectRouteChildren: ProtectedSettingsProjectRouteChildren =
   {
-    SidebarLayoutChatLayoutChatIdRoute: SidebarLayoutChatLayoutChatIdRoute,
-    SidebarLayoutChatLayoutIndexRoute: SidebarLayoutChatLayoutIndexRoute,
-    SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute:
-      SidebarLayoutChatLayoutChatIdSubagentToolCallIdRoute,
+    ProtectedSettingsProjectAgentRoute: ProtectedSettingsProjectAgentRoute,
+    ProtectedSettingsProjectModelsRoute: ProtectedSettingsProjectModelsRoute,
+    ProtectedSettingsProjectQueryToolsRoute:
+      ProtectedSettingsProjectQueryToolsRoute,
+    ProtectedSettingsProjectWarehouseRoute:
+      ProtectedSettingsProjectWarehouseRoute,
+    ProtectedSettingsProjectIndexRoute: ProtectedSettingsProjectIndexRoute,
   }
 
-const SidebarLayoutChatLayoutRouteWithChildren =
-  SidebarLayoutChatLayoutRoute._addFileChildren(
-    SidebarLayoutChatLayoutRouteChildren,
+const ProtectedSettingsProjectRouteWithChildren =
+  ProtectedSettingsProjectRoute._addFileChildren(
+    ProtectedSettingsProjectRouteChildren,
   )
 
-interface SidebarLayoutSettingsProjectRouteChildren {
-  SidebarLayoutSettingsProjectAgentRoute: typeof SidebarLayoutSettingsProjectAgentRoute
-  SidebarLayoutSettingsProjectModelsRoute: typeof SidebarLayoutSettingsProjectModelsRoute
-  SidebarLayoutSettingsProjectQueryToolsRoute: typeof SidebarLayoutSettingsProjectQueryToolsRoute
-  SidebarLayoutSettingsProjectWarehouseRoute: typeof SidebarLayoutSettingsProjectWarehouseRoute
-  SidebarLayoutSettingsProjectIndexRoute: typeof SidebarLayoutSettingsProjectIndexRoute
+interface ProtectedSettingsRouteChildren {
+  ProtectedSettingsAccountRoute: typeof ProtectedSettingsAccountRoute
+  ProtectedSettingsAppearanceRoute: typeof ProtectedSettingsAppearanceRoute
+  ProtectedSettingsContextExplorerRoute: typeof ProtectedSettingsContextExplorerRoute
+  ProtectedSettingsGitRoute: typeof ProtectedSettingsGitRoute
+  ProtectedSettingsMemoryRoute: typeof ProtectedSettingsMemoryRoute
+  ProtectedSettingsProjectRoute: typeof ProtectedSettingsProjectRouteWithChildren
+  ProtectedSettingsRecommendationsRoute: typeof ProtectedSettingsRecommendationsRoute
+  ProtectedSettingsStorageRoute: typeof ProtectedSettingsStorageRoute
+  ProtectedSettingsWhiteLabelRoute: typeof ProtectedSettingsWhiteLabelRoute
+  ProtectedSettingsIndexRoute: typeof ProtectedSettingsIndexRoute
 }
 
-const SidebarLayoutSettingsProjectRouteChildren: SidebarLayoutSettingsProjectRouteChildren =
-  {
-    SidebarLayoutSettingsProjectAgentRoute:
-      SidebarLayoutSettingsProjectAgentRoute,
-    SidebarLayoutSettingsProjectModelsRoute:
-      SidebarLayoutSettingsProjectModelsRoute,
-    SidebarLayoutSettingsProjectQueryToolsRoute:
-      SidebarLayoutSettingsProjectQueryToolsRoute,
-    SidebarLayoutSettingsProjectWarehouseRoute:
-      SidebarLayoutSettingsProjectWarehouseRoute,
-    SidebarLayoutSettingsProjectIndexRoute:
-      SidebarLayoutSettingsProjectIndexRoute,
-  }
-
-const SidebarLayoutSettingsProjectRouteWithChildren =
-  SidebarLayoutSettingsProjectRoute._addFileChildren(
-    SidebarLayoutSettingsProjectRouteChildren,
-  )
-
-interface SidebarLayoutSettingsRouteChildren {
-  SidebarLayoutSettingsAccountRoute: typeof SidebarLayoutSettingsAccountRoute
-  SidebarLayoutSettingsAppearanceRoute: typeof SidebarLayoutSettingsAppearanceRoute
-  SidebarLayoutSettingsContextExplorerRoute: typeof SidebarLayoutSettingsContextExplorerRoute
-  SidebarLayoutSettingsGitRoute: typeof SidebarLayoutSettingsGitRoute
-  SidebarLayoutSettingsMemoryRoute: typeof SidebarLayoutSettingsMemoryRoute
-  SidebarLayoutSettingsProjectRoute: typeof SidebarLayoutSettingsProjectRouteWithChildren
-  SidebarLayoutSettingsRecommendationsRoute: typeof SidebarLayoutSettingsRecommendationsRoute
-  SidebarLayoutSettingsStorageRoute: typeof SidebarLayoutSettingsStorageRoute
-  SidebarLayoutSettingsWhiteLabelRoute: typeof SidebarLayoutSettingsWhiteLabelRoute
-  SidebarLayoutSettingsIndexRoute: typeof SidebarLayoutSettingsIndexRoute
+const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
+  ProtectedSettingsAccountRoute: ProtectedSettingsAccountRoute,
+  ProtectedSettingsAppearanceRoute: ProtectedSettingsAppearanceRoute,
+  ProtectedSettingsContextExplorerRoute: ProtectedSettingsContextExplorerRoute,
+  ProtectedSettingsGitRoute: ProtectedSettingsGitRoute,
+  ProtectedSettingsMemoryRoute: ProtectedSettingsMemoryRoute,
+  ProtectedSettingsProjectRoute: ProtectedSettingsProjectRouteWithChildren,
+  ProtectedSettingsRecommendationsRoute: ProtectedSettingsRecommendationsRoute,
+  ProtectedSettingsStorageRoute: ProtectedSettingsStorageRoute,
+  ProtectedSettingsWhiteLabelRoute: ProtectedSettingsWhiteLabelRoute,
+  ProtectedSettingsIndexRoute: ProtectedSettingsIndexRoute,
 }
 
-const SidebarLayoutSettingsRouteChildren: SidebarLayoutSettingsRouteChildren = {
-  SidebarLayoutSettingsAccountRoute: SidebarLayoutSettingsAccountRoute,
-  SidebarLayoutSettingsAppearanceRoute: SidebarLayoutSettingsAppearanceRoute,
-  SidebarLayoutSettingsContextExplorerRoute:
-    SidebarLayoutSettingsContextExplorerRoute,
-  SidebarLayoutSettingsGitRoute: SidebarLayoutSettingsGitRoute,
-  SidebarLayoutSettingsMemoryRoute: SidebarLayoutSettingsMemoryRoute,
-  SidebarLayoutSettingsProjectRoute:
-    SidebarLayoutSettingsProjectRouteWithChildren,
-  SidebarLayoutSettingsRecommendationsRoute:
-    SidebarLayoutSettingsRecommendationsRoute,
-  SidebarLayoutSettingsStorageRoute: SidebarLayoutSettingsStorageRoute,
-  SidebarLayoutSettingsWhiteLabelRoute: SidebarLayoutSettingsWhiteLabelRoute,
-  SidebarLayoutSettingsIndexRoute: SidebarLayoutSettingsIndexRoute,
+const ProtectedSettingsRouteWithChildren =
+  ProtectedSettingsRoute._addFileChildren(ProtectedSettingsRouteChildren)
+
+interface ProtectedRouteChildren {
+  ProtectedChatLayoutRoute: typeof ProtectedChatLayoutRouteWithChildren
+  ProtectedSettingsRoute: typeof ProtectedSettingsRouteWithChildren
+  ProtectedSharedChatShareIdRoute: typeof ProtectedSharedChatShareIdRoute
+  ProtectedStoriesStoryIdRoute: typeof ProtectedStoriesStoryIdRoute
+  ProtectedStoriesIndexRoute: typeof ProtectedStoriesIndexRoute
+  ProtectedStoriesSharedShareIdRoute: typeof ProtectedStoriesSharedShareIdRoute
+  ProtectedStoriesStandaloneStoryIdRoute: typeof ProtectedStoriesStandaloneStoryIdRoute
+  ProtectedStoriesPreviewChatIdStorySlugRoute: typeof ProtectedStoriesPreviewChatIdStorySlugRoute
 }
 
-const SidebarLayoutSettingsRouteWithChildren =
-  SidebarLayoutSettingsRoute._addFileChildren(
-    SidebarLayoutSettingsRouteChildren,
-  )
-
-interface SidebarLayoutRouteChildren {
-  SidebarLayoutChatLayoutRoute: typeof SidebarLayoutChatLayoutRouteWithChildren
-  SidebarLayoutSettingsRoute: typeof SidebarLayoutSettingsRouteWithChildren
-  SidebarLayoutSharedChatShareIdRoute: typeof SidebarLayoutSharedChatShareIdRoute
-  SidebarLayoutStoriesStoryIdRoute: typeof SidebarLayoutStoriesStoryIdRoute
-  SidebarLayoutStoriesIndexRoute: typeof SidebarLayoutStoriesIndexRoute
-  SidebarLayoutStoriesSharedShareIdRoute: typeof SidebarLayoutStoriesSharedShareIdRoute
-  SidebarLayoutStoriesStandaloneStoryIdRoute: typeof SidebarLayoutStoriesStandaloneStoryIdRoute
-  SidebarLayoutStoriesPreviewChatIdStorySlugRoute: typeof SidebarLayoutStoriesPreviewChatIdStorySlugRoute
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedChatLayoutRoute: ProtectedChatLayoutRouteWithChildren,
+  ProtectedSettingsRoute: ProtectedSettingsRouteWithChildren,
+  ProtectedSharedChatShareIdRoute: ProtectedSharedChatShareIdRoute,
+  ProtectedStoriesStoryIdRoute: ProtectedStoriesStoryIdRoute,
+  ProtectedStoriesIndexRoute: ProtectedStoriesIndexRoute,
+  ProtectedStoriesSharedShareIdRoute: ProtectedStoriesSharedShareIdRoute,
+  ProtectedStoriesStandaloneStoryIdRoute:
+    ProtectedStoriesStandaloneStoryIdRoute,
+  ProtectedStoriesPreviewChatIdStorySlugRoute:
+    ProtectedStoriesPreviewChatIdStorySlugRoute,
 }
 
-const SidebarLayoutRouteChildren: SidebarLayoutRouteChildren = {
-  SidebarLayoutChatLayoutRoute: SidebarLayoutChatLayoutRouteWithChildren,
-  SidebarLayoutSettingsRoute: SidebarLayoutSettingsRouteWithChildren,
-  SidebarLayoutSharedChatShareIdRoute: SidebarLayoutSharedChatShareIdRoute,
-  SidebarLayoutStoriesStoryIdRoute: SidebarLayoutStoriesStoryIdRoute,
-  SidebarLayoutStoriesIndexRoute: SidebarLayoutStoriesIndexRoute,
-  SidebarLayoutStoriesSharedShareIdRoute:
-    SidebarLayoutStoriesSharedShareIdRoute,
-  SidebarLayoutStoriesStandaloneStoryIdRoute:
-    SidebarLayoutStoriesStandaloneStoryIdRoute,
-  SidebarLayoutStoriesPreviewChatIdStorySlugRoute:
-    SidebarLayoutStoriesPreviewChatIdStorySlugRoute,
-}
-
-const SidebarLayoutRouteWithChildren = SidebarLayoutRoute._addFileChildren(
-  SidebarLayoutRouteChildren,
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
 )
+
+interface PublicRouteChildren {
+  PublicForgotPasswordRoute: typeof PublicForgotPasswordRoute
+  PublicLoginRoute: typeof PublicLoginRoute
+  PublicSignupRoute: typeof PublicSignupRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicForgotPasswordRoute: PublicForgotPasswordRoute,
+  PublicLoginRoute: PublicLoginRoute,
+  PublicSignupRoute: PublicSignupRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
 
 interface EmbedRouteChildren {
   EmbedChartChartEmbedIdRoute: typeof EmbedChartChartEmbedIdRoute
@@ -860,13 +870,11 @@ const EmbedRouteChildren: EmbedRouteChildren = {
 const EmbedRouteWithChildren = EmbedRoute._addFileChildren(EmbedRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  SidebarLayoutRoute: SidebarLayoutRouteWithChildren,
+  ProtectedRoute: ProtectedRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   EmailVerifiedRoute: EmailVerifiedRoute,
   EmbedRoute: EmbedRouteWithChildren,
-  ForgotPasswordRoute: ForgotPasswordRoute,
-  LoginRoute: LoginRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

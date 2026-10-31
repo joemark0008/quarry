@@ -36,6 +36,7 @@ import { hasAnyStoryReference, setStoryDragData } from '@/lib/story-reference';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { cn } from '@/lib/utils';
+import styles from './stories-folder-card.module.css';
 
 export type FolderDisplayMode = StoryPanelDisplayMode | 'grid-large';
 
@@ -139,16 +140,16 @@ export function FolderCard({
 				onDragStart={handleNativeDragStart}
 				className={cn(
 					LINES_CARD_CLASS,
-					'relative',
-					isOver && 'ring-2 ring-primary/50 bg-primary/5',
-					isDragging && 'opacity-0',
-					selected && 'bg-accent',
+					styles.folderCardDiv,
+					isOver && styles.folderCardDiv2,
+					isDragging && styles.folderCardDiv3,
+					selected && styles.folderCardDiv4,
 				)}
 				onClick={selectionActive && canSelect ? handleToggleSelect : undefined}
 			>
-				<div className='flex items-center flex-1 min-w-0'>
+				<div className={styles.folderCardDiv5}>
 					{canSelect && (
-						<div className='shrink-0' onPointerDown={(e) => e.stopPropagation()}>
+						<div className={styles.folderCardDiv6} onPointerDown={(e) => e.stopPropagation()}>
 							<FolderCheckbox
 								selected={selected}
 								visible={selected || selectionActive}
@@ -159,28 +160,28 @@ export function FolderCard({
 					<Link
 						to='/stories'
 						search={{ folderId: folder.id }}
-						className='flex items-center gap-3 flex-1 min-w-0'
+						className={styles.folderCardLink}
 						onClick={handleLinkClick}
 					>
-						<div className='flex items-center gap-2 flex-1 min-w-0 pl-1.5'>
+						<div className={styles.folderCardDiv7}>
 							<FolderIcon folder={folder} />
-							<span className='text-sm font-medium truncate'>{folder.name}</span>
+							<span className={styles.folderCardSpan}>{folder.name}</span>
 							<FolderStoryCount count={folder.storyCount} />
 						</div>
-						<div className='hidden md:block w-32 shrink-0 pl-1.5 text-xs text-muted-foreground truncate'>
+						<div className={styles.folderCardDiv8}>
 							{currentUserName}
 						</div>
-						<div className='hidden lg:block w-16 shrink-0' />
-						<div className='hidden sm:block w-24 shrink-0 pl-1.5 text-xs text-muted-foreground truncate'>
+						<div className={styles.folderCardDiv9} />
+						<div className={styles.folderCardDiv10}>
 							{formatRelativeDate(folder.updatedAt)}
 						</div>
 					</Link>
 				</div>
-				<div className='w-26 shrink-0 relative h-6 overflow-hidden'>
+				<div className={styles.folderCardDiv11}>
 					{!selectionActive && !isSystemFolder(folder) && (
 						<>
 							{!isViewer && (
-								<div className='absolute top-1/2 right-0 -translate-y-1/2'>
+								<div className={styles.folderCardDiv12}>
 									<FolderKebab
 										folder={folder}
 										canManage={canManage}
@@ -194,10 +195,10 @@ export function FolderCard({
 							)}
 							<div
 								className={cn(
-									'absolute top-1/2 right-0 -translate-y-1/2 z-10 transition-transform duration-150',
+									styles.folderCardDiv13,
 									!isViewer &&
 										canManage &&
-										'group-hover:-translate-x-5 group-has-data-[state=open]:-translate-x-5',
+										styles.folderCardDiv14,
 								)}
 								onPointerDown={(e) => e.stopPropagation()}
 							>
@@ -220,33 +221,33 @@ export function FolderCard({
 				onDragStart={handleNativeDragStart}
 				className={cn(
 					GRID_CARD_CLASS,
-					isOver && 'ring-2 ring-primary/50',
-					isDragging && 'opacity-0',
-					selected && 'ring-2 ring-primary',
+					isOver && styles.folderCardDiv15,
+					isDragging && styles.folderCardDiv3,
+					selected && styles.folderCardDiv16,
 				)}
 				onClick={selectionActive && canSelect ? handleToggleSelect : undefined}
 			>
-				<div className='absolute top-1 left-1 right-1 bottom-14 overflow-hidden rounded-md bg-sidebar dark:bg-background'>
+				<div className={styles.folderCardDiv17}>
 					<FolderThumbnail theme={storyTheme} />
 				</div>
 
 				<Link
 					to='/stories'
 					search={{ folderId: folder.id }}
-					className='absolute inset-0 flex flex-col justify-end p-2.5'
+					className={styles.folderCardLink2}
 					onClick={handleLinkClick}
 					aria-label={folder.name}
 				>
-					<div className='flex items-end gap-1.5'>
+					<div className={styles.folderCardDiv18}>
 						<GridCardFooter
 							title={folder.name}
 							subtitle={`${folder.storyCount} ${folder.storyCount <= 1 ? 'story' : 'stories'}`}
 						/>
-						<div className='flex items-center gap-2 shrink-0 mb-0.5'>
+						<div className={styles.folderCardDiv19}>
 							{folder.visibility === 'private' && (
 								<SimpleTooltip content='Private folder'>
-									<span className='inline-flex items-center text-muted-foreground shrink-0'>
-										<Lock className='size-3' />
+									<span className={styles.folderCardSpan2}>
+										<Lock className={styles.folderCardLock} />
 									</span>
 								</SimpleTooltip>
 							)}
@@ -256,7 +257,7 @@ export function FolderCard({
 
 				{!isSystemFolder(folder) && (
 					<>
-						<div className='absolute top-1.5 left-2 z-10' onPointerDown={(e) => e.stopPropagation()}>
+						<div className={styles.folderCardDiv20} onPointerDown={(e) => e.stopPropagation()}>
 							{canSelect && (
 								<FolderCheckbox
 									selected={selected}
@@ -268,7 +269,7 @@ export function FolderCard({
 						</div>
 						{!isViewer && !selectionActive && (
 							<div
-								className='absolute top-1.5 left-2 z-20 transition-transform duration-150 group-hover:translate-x-10 group-has-data-[state=open]:translate-x-10'
+								className={styles.folderCardDiv21}
 								onPointerDown={(e) => e.stopPropagation()}
 							>
 								<FolderKebab
@@ -288,11 +289,11 @@ export function FolderCard({
 		);
 	}
 
-	const contentLeftPadding = !canSelect ? 'pl-3' : selected || selectionActive ? 'pl-9' : 'pl-3 group-hover:pl-9';
+	const contentLeftPadding = !canSelect ? styles.contentLeftPadding : selected || selectionActive ? styles.contentLeftPadding2 : styles.contentLeftPadding3;
 	const contentRightPadding =
 		selectionActive || isSystemFolder(folder)
-			? 'pr-3'
-			: cn(isFolderFavorited ? 'pr-7.5' : 'pr-3', 'group-hover:pr-12.5 group-has-data-[state=open]:pr-12.5');
+			? styles.contentRightPadding2
+			: cn(isFolderFavorited ? styles.contentRightPadding : styles.contentRightPadding2, styles.contentRightPadding3);
 
 	return (
 		<div
@@ -302,17 +303,17 @@ export function FolderCard({
 			{...listeners}
 			onDragStart={handleNativeDragStart}
 			className={cn(
-				'group relative h-10 rounded-md border bg-background overflow-hidden',
-				isOver && 'ring-2 ring-primary/50',
-				isDragging && 'opacity-0',
-				selected && 'ring-2 ring-primary',
+				`${styles.folderCardDiv22} group`,
+				isOver && styles.folderCardDiv15,
+				isDragging && styles.folderCardDiv3,
+				selected && styles.folderCardDiv16,
 			)}
 			onClick={selectionActive && canSelect ? handleToggleSelect : undefined}
 		>
 			{selectionActive ? (
 				<div
 					className={cn(
-						'absolute inset-0 flex items-center gap-2.5 transition-[padding] duration-150',
+						styles.folderCardDiv23,
 						contentLeftPadding,
 						contentRightPadding,
 					)}
@@ -324,7 +325,7 @@ export function FolderCard({
 					to='/stories'
 					search={{ folderId: folder.id }}
 					className={cn(
-						'absolute inset-0 flex items-center gap-2.5 transition-[padding] duration-150',
+						styles.folderCardDiv23,
 						contentLeftPadding,
 						contentRightPadding,
 					)}
@@ -337,7 +338,7 @@ export function FolderCard({
 				<>
 					{canSelect && (
 						<div
-							className='absolute top-1/2 left-2 -translate-y-1/2 z-30'
+							className={styles.folderCardDiv24}
 							onPointerDown={(e) => e.stopPropagation()}
 						>
 							<FolderCheckbox
@@ -350,7 +351,7 @@ export function FolderCard({
 					{!selectionActive && (
 						<>
 							{!isViewer && (
-								<div className='absolute top-1/2 right-1.5 -translate-y-1/2 z-10'>
+								<div className={styles.folderCardDiv25}>
 									<FolderKebab
 										folder={folder}
 										canManage={canManage}
@@ -364,9 +365,9 @@ export function FolderCard({
 							)}
 							<div
 								className={cn(
-									'absolute top-1/2 right-1.5 -translate-y-1/2 z-20 transition-transform duration-150',
+									styles.folderCardDiv26,
 									!isViewer &&
-										'group-hover:-translate-x-5 group-has-data-[state=open]:-translate-x-5',
+										styles.folderCardDiv14,
 								)}
 								onPointerDown={(e) => e.stopPropagation()}
 							>
@@ -396,13 +397,13 @@ function FolderCheckbox({
 			aria-pressed={selected}
 			onClick={onClick}
 			className={cn(
-				'inline-flex items-center justify-center size-5 transition-all duration-150 cursor-pointer rounded shrink-0',
-				'text-muted-foreground hover:text-foreground',
-				visible ? 'opacity-100' : 'w-0 opacity-0 overflow-hidden group-hover:w-5 group-hover:opacity-100',
-				selected && 'text-primary',
+				styles.folderCheckboxButton,
+				styles.folderCheckboxButton2,
+				visible ? styles.folderCheckboxButton3 : styles.folderCheckboxButton4,
+				selected && styles.folderCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className='size-3' /> : <Circle className='size-3' />}
+			{selected ? <CircleCheck className={styles.folderCardLock} /> : <Circle className={styles.folderCardLock} />}
 		</button>
 	);
 }
@@ -427,13 +428,13 @@ function FolderFavoriteButton({ folder }: { folder: FolderItem }) {
 				onClick={handleClick}
 				disabled={favorite.isPending}
 				className={cn(
-					'inline-flex items-center justify-center size-5 transition-all duration-150 cursor-pointer disabled:cursor-default',
+					styles.folderFavoriteButtonButton,
 					isFavorited
-						? 'opacity-100 text-foreground [&_svg]:fill-current'
-						: 'opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-has-data-[state=open]:opacity-100 group-has-data-[state=open]:pointer-events-auto text-muted-foreground hover:text-foreground hover:[&_svg]:fill-current',
+						? styles.folderFavoriteButtonButton2
+						: styles.folderFavoriteButtonButton3,
 				)}
 			>
-				<Star className='size-3' />
+				<Star className={styles.folderCardLock} />
 			</button>
 		</SimpleTooltip>
 	);
@@ -443,7 +444,7 @@ function FolderCardLabel({ folder }: { folder: FolderItem }) {
 	return (
 		<>
 			<FolderIcon folder={folder} />
-			<span className='text-sm font-medium truncate flex-1 min-w-0'>{folder.name}</span>
+			<span className={styles.folderCardLabelSpan}>{folder.name}</span>
 			<FolderStoryCount count={folder.storyCount} />
 		</>
 	);
@@ -451,7 +452,7 @@ function FolderCardLabel({ folder }: { folder: FolderItem }) {
 
 function FolderStoryCount({ count }: { count: number }) {
 	return (
-		<span className='text-xs text-muted-foreground tabular-nums shrink-0'>
+		<span className={styles.folderStoryCountSpan}>
 			<span aria-hidden='true'>{count}</span>
 			<span className='sr-only'>{`${count} ${count === 1 ? 'story' : 'stories'}`}</span>
 		</span>
@@ -460,9 +461,9 @@ function FolderStoryCount({ count }: { count: number }) {
 
 function FolderIcon({ folder }: { folder: FolderItem }) {
 	if (folder.systemType === 'shared_with_me' || folder.visibility === 'private') {
-		return <FolderLock className='size-4 shrink-0 text-muted-foreground' />;
+		return <FolderLock className={styles.folderIconFolderLock} />;
 	}
-	return <Folder className='size-4 shrink-0 text-muted-foreground' />;
+	return <Folder className={styles.folderIconFolderLock} />;
 }
 
 function FolderKebab({
@@ -501,9 +502,9 @@ function FolderKebab({
 					onPointerDown={(e) => e.stopPropagation()}
 					onClick={stop}
 					aria-label='Folder options'
-					className='inline-flex items-center justify-center size-5 rounded transition-opacity duration-150 cursor-pointer opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto data-[state=open]:opacity-100 data-[state=open]:pointer-events-auto'
+					className={styles.folderKebabButton}
 				>
-					<MoreHorizontal className='size-3' />
+					<MoreHorizontal className={styles.folderCardLock} />
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end' onClick={stop}>

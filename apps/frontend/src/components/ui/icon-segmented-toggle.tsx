@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import styles from './icon-segmented-toggle.module.css';
 
 export interface IconSegmentedToggleOption<Value extends string> {
 	value: Value;
@@ -30,7 +31,7 @@ export function IconSegmentedToggle<Value extends string>({
 	showIcons = true,
 }: IconSegmentedToggleProps<Value>) {
 	return (
-		<div className={cn('flex items-center gap-1.5 rounded-full border p-0.5', className)}>
+		<div className={cn(styles.iconSegmentedToggleDiv, className)}>
 			{options.map(({ value: option, label, icon: Icon }) => {
 				const button = (
 					<Button
@@ -38,17 +39,17 @@ export function IconSegmentedToggle<Value extends string>({
 						type='button'
 						variant='ghost'
 						className={cn(
-							showLabels ? 'h-5.5 min-w-0 gap-1.5 px-2 text-xs font-medium' : 'size-5.5 px-2',
-							value === option && 'bg-accent rounded-full',
-							'hover:rounded-full',
+							showLabels ? styles.buttonButton : styles.buttonButton2,
+							value === option && styles.buttonButton3,
+							styles.buttonButton4,
 						)}
 						onClick={() => onValueChange(option)}
 						disabled={disabled}
 						aria-label={label}
 						aria-pressed={value === option}
 					>
-						{showIcons && Icon && <Icon className='size-3' strokeWidth={2.25} />}
-						{showLabels && <span className='truncate'>{label}</span>}
+						{showIcons && Icon && <Icon className={styles.buttonIcon} strokeWidth={2.25} />}
+						{showLabels && <span className={styles.buttonSpan}>{label}</span>}
 					</Button>
 				);
 				return showLabels ? (

@@ -1,0 +1,54 @@
+.titleContextCode {
+	border-radius: 0.25rem;
+	background-color: color-mix(in oklab, var(--app-fill) 70%, transparent) !important;
+	padding-inline: 0.25rem;
+	padding-block: 0.125rem;
+	font-family: Geist !important;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+}
+.readToolCallDiv {
+	border-radius: var(--app-radius);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+}
+.readToolCallDiv2 {
+	border-bottom-style: var(--fx-border-style);
+	border-bottom-width: 1px;
+	padding-inline: 0.75rem;
+	padding-block: 0.5rem;
+}
+.readToolCallDiv3 {
+	max-height: 50rem;
+	overflow: auto;
+	:is(& *) {
+		font-size: 0.875rem !important;
+		line-height: var(--fx-leading, calc(1.25 / 0.875)) !important;
+	}
+	:is(& *) {
+		&:is(code) {
+			font-size: 0.75rem !important;
+		}
+	}
+	:is(& *) {
+		&:is(pre) {
+			font-size: 0.75rem !important;
+		}
+	}
+	--spacing: 1px;
+}
+.readToolCallStreamdown {
+	padding-inline: 6rem;
+	padding-block: 2.5rem;
+}
+.filePathBreadcrumbSpan {
+	font-family: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	font-size: 0.6875rem;
+	--fx-leading: 1.625;
+	line-height: 1.625;
+	word-break: break-all;
+}
+.filePathBreadcrumbSpan2 {
+	margin-inline: 0.25rem;
+	color: color-mix(in oklab, var(--app-muted) 60%, transparent);
+}

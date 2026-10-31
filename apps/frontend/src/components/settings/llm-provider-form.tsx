@@ -16,6 +16,7 @@ import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PasswordField, TextField, TextareaField, FormError } from '@/components/ui/form-fields';
+import styles from './llm-provider-form.module.css';
 
 /** Where credentials already come from when the UI is only layering settings on top. */
 export type InheritedKeySource = 'env' | 'config';
@@ -201,9 +202,9 @@ export function LlmProviderForm({
 				const normalized = toProviderName(field.state.value);
 				const invalid = nameError(field.state.value);
 				return (
-					<div className='grid gap-2'>
-						<label htmlFor='provider-name' className='text-sm font-medium text-foreground'>
-							Name <span className='text-muted-foreground font-normal'>(required)</span>
+					<div className={styles.nameFieldDiv}>
+						<label htmlFor='provider-name' className={styles.nameFieldLabel}>
+							Name <span className={styles.nameFieldSpan}>(required)</span>
 						</label>
 						<Input
 							id='provider-name'
@@ -214,7 +215,7 @@ export function LlmProviderForm({
 							required
 							placeholder='e.g., my-vllm'
 						/>
-						<p className={`text-xs ${invalid ? 'text-destructive' : 'text-muted-foreground'}`}>
+						<p className={`${styles.nameFieldP} ${invalid ? styles.state100 : styles.state101}`}>
 							{invalid ??
 								(normalized
 									? `Models of this endpoint are listed under ${normalized}.`
@@ -230,11 +231,11 @@ export function LlmProviderForm({
 		<form.Field name='baseUrl'>
 			{(field) => (
 				<div
-					className={providerMeta.requiresBaseUrl ? 'grid gap-2' : 'grid gap-2 pl-4 border-l-2 border-border'}
+					className={providerMeta.requiresBaseUrl ? styles.nameFieldDiv : styles.baseUrlFieldDiv}
 				>
-					<label htmlFor='base-url' className='text-sm font-medium text-foreground'>
+					<label htmlFor='base-url' className={styles.nameFieldLabel}>
 						Base URL{' '}
-						<span className='text-muted-foreground font-normal'>
+						<span className={styles.nameFieldSpan}>
 							{providerMeta.requiresBaseUrl ? '(required)' : '(optional)'}
 						</span>
 					</label>
@@ -247,7 +248,7 @@ export function LlmProviderForm({
 						required={providerMeta.requiresBaseUrl}
 						placeholder={`e.g., ${providerMeta.defaultBaseUrl ?? 'http://localhost:8000/v1'}`}
 					/>
-					<p className='text-xs text-muted-foreground'>
+					<p className={styles.baseUrlFieldP}>
 						{providerMeta.requiresBaseUrl
 							? 'The OpenAI-compatible endpoint to call, up to and including its version segment.'
 							: 'Use a custom endpoint instead of the default provider URL.'}
@@ -264,30 +265,30 @@ export function LlmProviderForm({
 				addCustomModel();
 				form.handleSubmit();
 			}}
-			className='flex flex-col gap-3'
+			className={styles.contentForm}
 		>
 			{/* Header */}
-			<div className='flex items-center justify-between'>
-				<span className='text-sm font-medium text-foreground'>
+			<div className={styles.contentDiv}>
+				<span className={styles.nameFieldLabel}>
 					{title}
 					{inheritedKeyLabel && (
-						<span className='text-muted-foreground font-normal ml-1'>
+						<span className={styles.contentSpan}>
 							(using {inheritedKeyLabel} API key)
 						</span>
 					)}
 				</span>
 				<Button variant='ghost' size='icon-sm' onClick={onCancel} type='button'>
-					<X className='size-4' />
+					<X className={styles.contentX} />
 				</Button>
 			</div>
 
 			{inheritedKeySource === 'config' && (
-				<div className='flex items-start gap-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20'>
-					<TriangleAlert className='size-4 shrink-0 mt-0.5 text-amber-500' />
-					<p className='text-xs text-amber-700 dark:text-amber-400'>
-						This provider is defined in <span className='font-mono'>quarry_config.yaml</span>. Settings
+				<div className={styles.contentDiv2}>
+					<TriangleAlert className={styles.contentTriangleAlert} />
+					<p className={styles.contentP}>
+						This provider is defined in <span className={styles.contentSpan2}>quarry_config.yaml</span>. Settings
 						saved here are stored in the project and take precedence over the file, so later edits to{' '}
-						<span className='font-mono'>quarry_config.yaml</span> are ignored until you delete this provider
+						<span className={styles.contentSpan2}>quarry_config.yaml</span> are ignored until you delete this provider
 						here.
 					</p>
 				</div>
@@ -347,16 +348,16 @@ export function LlmProviderForm({
 					};
 
 					return (
-						<div className='grid gap-2'>
-							<label className='text-sm font-medium text-foreground'>
+						<div className={styles.nameFieldDiv}>
+							<label className={styles.nameFieldLabel}>
 								Enabled Models
-								<span className='text-muted-foreground font-normal ml-1'>
+								<span className={styles.contentSpan}>
 									{defaultModelId
 										? `(leave empty for default ${defaultModelId})`
 										: '(add the model IDs your endpoint serves)'}
 								</span>
 							</label>
-							<div className='flex flex-wrap gap-2'>
+							<div className={styles.contentDiv3}>
 								{currentModels.map((model) => {
 									const isExplicitlyEnabled = enabledModels.includes(model.id);
 									const isDefaultSelected = enabledModels.length === 0 && model.default;
@@ -366,23 +367,23 @@ export function LlmProviderForm({
 										return (
 											<div
 												key={model.id}
-												className='flex items-center gap-1.5 pl-3 pr-1 py-1 rounded-md text-sm bg-primary text-primary-foreground'
+												className={styles.contentDiv4}
 											>
 												<button
 													type='button'
 													onClick={() => toggleModel(model.id)}
-													className='flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity'
+													className={styles.contentButton}
 												>
-													<Check className='size-3' />
+													<Check className={styles.contentCheck} />
 													{model.name}
 												</button>
 												<button
 													type='button'
 													onClick={() => setEditingModelParamsId(model.id)}
-													className='ml-1 p-0.5 rounded hover:bg-primary-foreground/20 transition-colors cursor-pointer'
+													className={styles.contentButton2}
 													aria-label={`Edit ${model.name} parameters`}
 												>
-													<MoreHorizontal className='size-3.5' />
+													<MoreHorizontal className={styles.contentMoreHorizontal} />
 												</button>
 											</div>
 										);
@@ -393,12 +394,9 @@ export function LlmProviderForm({
 											key={model.id}
 											type='button'
 											onClick={() => toggleModel(model.id)}
-											className={`
-												flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-all cursor-pointer
-												${isEnabled ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-foreground'}
-											`}
+											className={`${styles.contentButton3} ${isEnabled ? styles.state102 : styles.state103} `}
 										>
-											{isEnabled && <Check className='size-3' />}
+											{isEnabled && <Check className={styles.contentCheck} />}
 											{model.name}
 										</button>
 									);
@@ -414,24 +412,24 @@ export function LlmProviderForm({
 													return (
 														<div
 															key={modelId}
-															className='flex items-center gap-1.5 pl-2 pr-1 py-1 rounded-md text-sm bg-primary text-primary-foreground'
+															className={styles.contentDiv5}
 														>
 															<button
 																type='button'
 																onClick={() => toggleModel(modelId)}
-																className='cursor-pointer hover:opacity-80 transition-opacity'
+																className={styles.contentButton4}
 																aria-label={`Remove ${modelId}`}
 															>
-																<X className='size-2.5' />
+																<X className={styles.contentX2} />
 															</button>
 															<span title={modelId}>{label}</span>
 															<button
 																type='button'
 																onClick={() => setEditingCustomModelId(modelId)}
-																className='ml-1 p-0.5 rounded hover:bg-primary-foreground/20 transition-colors cursor-pointer'
+																className={styles.contentButton2}
 																aria-label={`Edit ${modelId}`}
 															>
-																<MoreHorizontal className='size-3.5' />
+																<MoreHorizontal className={styles.contentMoreHorizontal} />
 															</button>
 														</div>
 													);
@@ -441,7 +439,7 @@ export function LlmProviderForm({
 									}}
 								</form.Field>
 							</div>
-							<div className='flex gap-2 mt-1'>
+							<div className={styles.contentDiv6}>
 								<Input
 									type='text'
 									value={customModelInput}
@@ -453,7 +451,7 @@ export function LlmProviderForm({
 										}
 									}}
 									placeholder='Add custom model ID...'
-									className='flex-1'
+									className={styles.contentInput}
 								/>
 								<Button
 									type='button'
@@ -462,7 +460,7 @@ export function LlmProviderForm({
 									onClick={addCustomModel}
 									disabled={!customModelInput.trim()}
 								>
-									<Plus className='size-4' />
+									<Plus className={styles.contentX} />
 								</Button>
 							</div>
 						</div>
@@ -476,9 +474,9 @@ export function LlmProviderForm({
 					<button
 						type='button'
 						onClick={() => setShowAdvanced(!showAdvanced)}
-						className='flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors'
+						className={styles.contentButton5}
 					>
-						<ChevronDown className={`size-3 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+						<ChevronDown className={`${styles.contentChevronDown} ${showAdvanced ? styles.state104 : ''}`} />
 						Advanced settings
 					</button>
 					{showAdvanced && baseUrlField}
@@ -489,14 +487,14 @@ export function LlmProviderForm({
 			{error && <FormError error={error.message} />}
 
 			{/* Action buttons */}
-			<div className='flex justify-end gap-2 pt-2'>
+			<div className={styles.contentDiv7}>
 				<Button variant='ghost' size='sm' onClick={onCancel} type='button'>
 					Cancel
 				</Button>
 				<form.Subscribe selector={(state: { canSubmit: boolean }) => state.canSubmit}>
 					{(canSubmit: boolean) => (
 						<Button size='sm' type='submit' disabled={!canSubmit || isPending}>
-							{showPlusIcon && <Plus className='size-4 mr-1' />}
+							{showPlusIcon && <Plus className={styles.contentPlus} />}
 							{isEditing ? 'Save Changes' : 'Save'}
 						</Button>
 					)}
@@ -598,7 +596,7 @@ export function LlmProviderForm({
 
 	return (
 		<>
-			<div ref={containerRef} className='flex flex-col gap-3 p-4 rounded-lg border border-primary/50 bg-muted/30'>
+			<div ref={containerRef} className={styles.llmProviderFormDiv}>
 				{content}
 			</div>
 			{customModelDialog}

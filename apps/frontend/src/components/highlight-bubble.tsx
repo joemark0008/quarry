@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 
 import { useSelection } from '@/contexts/text-selection';
 import { useTrackedBubbleRect } from '@/hooks/use-tracked-bubble-rect';
+import styles from './highlight-bubble.module.css';
 
 export interface SelectionData {
 	start: number;
@@ -58,9 +59,9 @@ function BubbleContent({ onAsk }: { onAsk: (data: SelectionData) => void }) {
 			<Button
 				type='button'
 				onClick={handleAsk}
-				className='inline-flex items-center gap-1.5 rounded-lg border border-border bg-popover px-3 py-1.5 text-xs font-medium text-popover-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground'
+				className={styles.bubbleContentButton}
 			>
-				<MessageCircle className='size-3.5' />
+				<MessageCircle className={styles.bubbleContentMessageCircle} />
 				Ask
 			</Button>
 		</div>

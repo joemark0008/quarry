@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { chatApi } from '@/lib/chat-api';
+import styles from './danger-zone.module.css';
 
 export function DangerZone() {
 	const [isOpen, setIsOpen] = useState(false);
@@ -32,10 +33,10 @@ export function DangerZone() {
 	return (
 		<>
 			<SettingsCard title='Danger Zone'>
-				<div className='flex items-center justify-between gap-4'>
-					<div className='space-y-0.5'>
-						<p className='text-sm font-medium'>Delete all chats</p>
-						<p className='text-xs text-muted-foreground'>
+				<div className={styles.dangerZoneDiv}>
+					<div className={styles.dangerZoneDiv2}>
+						<p className={styles.dangerZoneP}>Delete all chats</p>
+						<p className={styles.dangerZoneP2}>
 							Permanently delete all your non-starred conversations. Starred chats will be kept.
 						</p>
 					</div>

@@ -5,6 +5,7 @@ import type { KeyboardEvent, MouseEvent } from 'react';
 import { invalidateStoryTitleCaches } from '@/lib/stories-cache';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './editable-story-title.module.css';
 
 interface EditableStoryTitleProps {
 	storyId?: string | null;
@@ -117,7 +118,7 @@ export function EditableStoryTitle({
 				onDoubleClick={(event) => event.stopPropagation()}
 				disabled={renameStory.isPending}
 				className={cn(
-					'field-sizing-content w-auto min-w-20 max-w-full shrink rounded border border-border bg-transparent px-1 -mx-1 outline-none',
+					styles.editableStoryTitleInput,
 					inputClassName,
 				)}
 			/>
@@ -128,7 +129,7 @@ export function EditableStoryTitle({
 	return (
 		<Heading
 			onDoubleClick={startEditing}
-			className={cn(canEdit && storyId && !renameStory.isPending && 'cursor-text', className)}
+			className={cn(canEdit && storyId && !renameStory.isPending && styles.editableStoryTitleHeading, className)}
 		>
 			{displayTitle}
 		</Heading>

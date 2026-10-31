@@ -6,6 +6,7 @@ import { useSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { useSavedPromptsQuery } from '@/hooks/use-saved-prompts';
 import { pickUniqueFrom } from '@/lib/random';
 import { cn } from '@/lib/utils';
+import styles from './chat-saved-prompt-suggestions.module.css';
 
 const SHOW_DURATION = 8_000;
 const ANIMATION_DURATION = 600;
@@ -22,12 +23,12 @@ export function SavedPromptSuggestions({ projectId }: { projectId?: string }) {
 
 	return (
 		<div
-			className='flex flex-col max-w-3xl mx-auto w-full px-1'
+			className={styles.savedPromptSuggestionsDiv}
 			key={animationKey}
 			onMouseEnter={pause}
 			onMouseLeave={resume}
 		>
-			<span className='text-foreground font-medium px-3 mb-2'>Suggested ideas based on your data set</span>
+			<span className={styles.savedPromptSuggestionsSpan}>Suggested ideas based on your data set</span>
 			{displayedPrompts.map((prompt, index) => (
 				<Button
 					key={index}
@@ -38,12 +39,12 @@ export function SavedPromptSuggestions({ projectId }: { projectId?: string }) {
 						animationDuration: `${ANIMATION_DURATION}ms`,
 					}}
 					className={cn(
-						'group h-auto justify-start px-3 py-1 text-left rounded-lg hover:bg-transparent dark:hover:bg-transparent',
-						hidePrompts ? 'animate-fade-out' : 'animate-fade-in',
+						`${styles.savedPromptSuggestionsButton} group`,
+						hidePrompts ? styles.savedPromptSuggestionsButton2 : styles.savedPromptSuggestionsButton3,
 					)}
 				>
-					<CornerDownRight size={14} className='text-foreground' />
-					<span className='line-clamp-2 font-normal text-muted-foreground group-hover:text-foreground'>
+					<CornerDownRight size={14} className={styles.savedPromptSuggestionsCornerDownRight} />
+					<span className={styles.savedPromptSuggestionsSpan2}>
 						{prompt.title}
 					</span>
 				</Button>

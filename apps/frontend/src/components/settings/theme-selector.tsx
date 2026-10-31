@@ -2,6 +2,7 @@ import { Sun, Moon, Monitor } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useTheme } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
+import styles from './theme-selector.module.css';
 
 const themeOptions = [
 	{ value: 'light', label: 'Light', icon: Sun },
@@ -13,7 +14,7 @@ export const ThemeSelector = () => {
 	const { theme, setTheme } = useTheme();
 
 	return (
-		<div className='flex gap-1'>
+		<div className={styles.themeSelectorDiv}>
 			{themeOptions.map((option) => {
 				const Icon = option.icon;
 				const isSelected = theme === option.value;
@@ -27,13 +28,13 @@ export const ThemeSelector = () => {
 						variant={isSelected ? 'ghost' : 'ghost-muted'}
 						size='sm'
 						className={cn(
-							'rounded-full px-2.5',
+							styles.themeSelectorButton,
 							isSelected
-								? 'bg-accent text-foreground'
-								: 'text-muted-foreground hover:bg-accent/60 hover:text-foreground',
+								? styles.themeSelectorButton2
+								: styles.themeSelectorButton3,
 						)}
 					>
-						<Icon className='size-3.5' />
+						<Icon className={styles.themeSelectorIcon} />
 						{option.label}
 					</Button>
 				);

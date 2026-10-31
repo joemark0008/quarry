@@ -40,6 +40,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useSidebarSectionOpen } from '@/hooks/use-sidebar-section-open';
 import { cn } from '@/lib/utils';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
+import styles from './context-git-panel.module.css';
 
 interface ContextGitPanelProps {
 	selectedDiffPath: string | null;
@@ -326,11 +327,11 @@ export function ContextGitPanel({
 	};
 
 	return (
-		<div className='max-h-[65%] shrink-0 overflow-auto border-t'>
+		<div className={styles.contextGitPanelDiv}>
 			<Expandable
 				title={
-					<span className='flex items-center gap-2'>
-						<GitBranch className='size-3.5' />
+					<span className={styles.contextGitPanelSpan}>
+						<GitBranch className={styles.contextGitPanelGitBranch} />
 						Git
 					</span>
 				}
@@ -354,7 +355,7 @@ export function ContextGitPanel({
 					) : null
 				}
 				trailingContent={
-					<div className='flex min-w-0 max-w-[80%] shrink-0 items-center gap-2'>
+					<div className={styles.contextGitPanelDiv2}>
 						{isGitAvailable && branches && (
 							<BranchMenu
 								branches={branches.branches}
@@ -381,18 +382,18 @@ export function ContextGitPanel({
 				variant='plain'
 				isLoading={repositoryStatus.isLoading || changedFiles.isLoading}
 			>
-				<div className='flex max-h-[min(38rem,65vh)] min-h-0 flex-col gap-3 overflow-y-auto px-2 py-2'>
+				<div className={styles.contextGitPanelDiv3}>
 					{switchBranch.error && (
-						<div className='px-2'>
+						<div className={styles.contextGitPanelDiv4}>
 							<ErrorMessage message={switchBranch.error.message} />
 						</div>
 					)}
 					{repositoryStatus.isLoading ? (
-						<div className='flex items-center justify-center px-2 py-6'>
+						<div className={styles.contextGitPanelDiv5}>
 							<Spinner />
 						</div>
 					) : repositoryStatus.isError ? (
-						<div className='flex flex-col gap-2 px-2'>
+						<div className={styles.contextGitPanelDiv6}>
 							<ErrorMessage
 								message={repositoryStatus.error.message || 'Failed to load repository status'}
 							/>
@@ -401,7 +402,7 @@ export function ContextGitPanel({
 							</Button>
 						</div>
 					) : !isGitAvailable ? (
-						<div className='px-2'>
+						<div className={styles.contextGitPanelDiv4}>
 							<UnavailableGit
 								message={
 									status?.gitUnavailableMessage ?? 'Git actions are unavailable for this project.'
@@ -433,20 +434,20 @@ export function ContextGitPanel({
 							/>
 
 							{hasUncommittedChanges && (
-								<div className='-mx-2 space-y-3 border-t px-2 pt-3'>
-									<div className='space-y-1.5'>
-										<div className='flex min-w-0 items-center gap-2'>
+								<div className={styles.contextGitPanelDiv7}>
+									<div className={styles.contextGitPanelDiv8}>
+										<div className={styles.contextGitPanelDiv9}>
 											<Input
 												value={commitMessage}
 												onChange={(event) => setCommitMessage(event.target.value)}
 												placeholder='Describe the context change'
 												aria-label='Commit message'
 												disabled={commitPending}
-												className='h-7 min-w-0 flex-1 text-[11px] md:text-[11px]'
+												className={styles.contextGitPanelInput}
 											/>
 											<Button
 												size='sm'
-												className='h-7 px-2 text-[11px]'
+												className={styles.contextGitPanelButton}
 												disabled={!canCommit || commitPending}
 												isLoading={commitPending}
 												onClick={handleCommit}
@@ -455,17 +456,17 @@ export function ContextGitPanel({
 											</Button>
 										</div>
 										{currentBranch === defaultBranch && commitBranchName && (
-											<div className='flex min-w-0 items-center gap-1 pl-[13px]'>
+											<div className={styles.contextGitPanelDiv10}>
 												<p
-													className='min-w-0 truncate text-[11px] text-muted-foreground'
+													className={styles.contextGitPanelP}
 													title={commitBranchName}
 												>
-													Creates branch <span className='font-mono'>{commitBranchName}</span>
+													Creates branch <span className={styles.contextGitPanelSpan2}>{commitBranchName}</span>
 												</p>
 												<Button
 													variant='ghost-muted'
 													size='icon-sm'
-													className='shrink-0'
+													className={styles.contextGitPanelButton2}
 													aria-label='Edit branch name'
 													disabled={createBranch.isPending || commitPending}
 													onClick={() => {
@@ -474,64 +475,64 @@ export function ContextGitPanel({
 														setIsCreateBranchOpen(true);
 													}}
 												>
-													<Pencil className='size-3.5' />
+													<Pencil className={styles.contextGitPanelGitBranch} />
 												</Button>
 											</div>
 										)}
 									</div>
 									{commitError && <ErrorMessage message={commitError} />}
 									{fallbackBaseNotice && (
-										<p className='text-xs text-amber-700 dark:text-amber-400'>
+										<p className={styles.contextGitPanelP2}>
 											This branch started from the current version and may need updating before
 											review.
 										</p>
 									)}
 								</div>
 							)}
-							<div className='-mx-2 space-y-2 border-t px-2 pt-2'>
-								<div className='flex min-w-0 items-center justify-between gap-2'>
-									<span className='min-w-0 flex-1 truncate pl-[13px] text-[11px] text-muted-foreground'>
+							<div className={styles.contextGitPanelDiv11}>
+								<div className={styles.contextGitPanelDiv12}>
+									<span className={styles.contextGitPanelSpan3}>
 										{canPush
 											? 'Send committed changes'
 											: reviewRequestUrl
 												? 'Everything is pushed'
 												: 'Nothing to push'}
 									</span>
-									<div className='flex shrink-0 items-center gap-1'>
+									<div className={styles.contextGitPanelDiv13}>
 										{reviewRequestUrl && (
 											<Button
 												variant='ghost-muted'
 												size='sm'
-												className='h-6 gap-1 px-1.5 text-[11px]'
+												className={styles.contextGitPanelButton3}
 												aria-label={reviewRequestTitle}
 												onClick={handleOpenReviewRequest}
 											>
-												<GitPullRequest className='size-3' />
+												<GitPullRequest className={styles.contextGitPanelGitPullRequest} />
 												{reviewRequestLabel}
 											</Button>
 										)}
 										<Button
 											variant='secondary'
 											size='sm'
-											className='h-6 gap-1 px-1.5 text-[11px]'
+											className={styles.contextGitPanelButton3}
 											aria-label='Push commits'
 											disabled={!canPush || commitPending || pushBranch.isPending}
 											isLoading={pushBranch.isPending}
 											onClick={handlePush}
 										>
-											<ArrowUp className='size-3' />
+											<ArrowUp className={styles.contextGitPanelGitPullRequest} />
 											push
 										</Button>
 									</div>
 								</div>
 								{!hasUncommittedChanges && fallbackBaseNotice && (
-									<p className='text-xs text-amber-700 dark:text-amber-400'>
+									<p className={styles.contextGitPanelP2}>
 										This branch started from the current version and may need updating before
 										review.
 									</p>
 								)}
 								{reviewRequest?.kind === 'link' && reviewRequest.apiRefused && (
-									<p className='text-xs text-amber-700 dark:text-amber-400'>
+									<p className={styles.contextGitPanelP2}>
 										Branch pushed. The git provider could not create the {reviewRequestName}{' '}
 										automatically — click Open {reviewRequestAbbreviation} to finish.
 									</p>
@@ -652,26 +653,26 @@ function LineChangeSummary({
 		: 'Line counts unavailable';
 	return (
 		<span
-			className='flex shrink-0 items-center gap-1.5 font-mono text-xs'
+			className={styles.lineChangeSummarySpan}
 			aria-label={label}
 			title={hasUnknownCounts ? 'Some line counts are unavailable.' : undefined}
 		>
 			{hasKnownCounts ? (
 				<>
-					<span className='text-emerald-600 dark:text-emerald-400' aria-hidden='true'>
+					<span className={styles.lineChangeSummarySpan2} aria-hidden='true'>
 						+{additions}
 					</span>
-					<span className='text-red-600 dark:text-red-400' aria-hidden='true'>
+					<span className={styles.lineChangeSummarySpan3} aria-hidden='true'>
 						−{deletions}
 					</span>
 					{hasUnknownCounts && (
-						<span className='text-muted-foreground' aria-hidden='true'>
+						<span className={styles.lineChangeSummarySpan4} aria-hidden='true'>
 							?
 						</span>
 					)}
 				</>
 			) : (
-				<span className='text-muted-foreground' aria-hidden='true'>
+				<span className={styles.lineChangeSummarySpan4} aria-hidden='true'>
 					±?
 				</span>
 			)}
@@ -698,7 +699,7 @@ function BranchMenu({
 }) {
 	return (
 		<div
-			className='min-w-0 max-w-48 flex-[0_1_auto]'
+			className={styles.branchMenuDiv}
 			onClick={(event) => {
 				event.stopPropagation();
 			}}
@@ -708,14 +709,14 @@ function BranchMenu({
 					<Button
 						variant='ghost-muted'
 						size='sm'
-						className='min-w-0 max-w-full justify-start gap-1 px-2 text-xs font-normal'
+						className={styles.branchMenuButton}
 						aria-label='Current repository branch'
 					>
-						<span className='truncate'>{currentBranch ?? 'Choose branch'}</span>
-						<ChevronDown className='ml-auto size-3.5 shrink-0 text-muted-foreground' />
+						<span className={styles.branchMenuSpan}>{currentBranch ?? 'Choose branch'}</span>
+						<ChevronDown className={styles.branchMenuChevronDown} />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align='end' sideOffset={0} className='w-64 max-w-[calc(100vw-2rem)]'>
+				<DropdownMenuContent align='end' sideOffset={0} className={styles.branchMenuDropdownMenuContent}>
 					{branches.map((branch) => (
 						<DropdownMenuCheckboxItem
 							key={branch}
@@ -723,16 +724,16 @@ function BranchMenu({
 							disabled={disabled}
 							onSelect={() => onSwitch(branch)}
 						>
-							<span className='min-w-0 truncate'>{branch}</span>
+							<span className={styles.branchMenuSpan2}>{branch}</span>
 							{branch === defaultBranch && (
-								<span className='ml-auto shrink-0 text-muted-foreground'>(default)</span>
+								<span className={styles.branchMenuSpan3}>(default)</span>
 							)}
 						</DropdownMenuCheckboxItem>
 					))}
-					{reason && <div className='px-2 py-1.5 text-xs text-muted-foreground'>{reason}</div>}
+					{reason && <div className={styles.branchMenuDiv2}>{reason}</div>}
 					<DropdownMenuSeparator />
 					<DropdownMenuItem disabled={disabled} onSelect={onCreate}>
-						<Plus className='size-3.5' />
+						<Plus className={styles.contextGitPanelGitBranch} />
 						New branch…
 					</DropdownMenuItem>
 				</DropdownMenuContent>
@@ -771,21 +772,21 @@ function ChangedFiles({
 	const allSelected = files.length > 0 && files.every((file) => selectedPaths.has(file.path));
 
 	return (
-		<section aria-label='Changed files' className='space-y-1'>
+		<section aria-label='Changed files' className={styles.changedFilesSection}>
 			{files.length > 0 && (
-				<div className='flex min-w-0 items-center justify-between gap-1 px-2'>
+				<div className={styles.changedFilesDiv}>
 					<Button
 						variant='ghost-muted'
 						size='sm'
-						className='-ml-2 min-w-0 shrink px-2 text-xs font-normal focus-visible:ring-ring/50 focus-visible:ring-[3px]'
+						className={styles.changedFilesButton}
 						onClick={onToggleAll}
 					>
-						<span className='truncate'>{allSelected ? 'Select None' : 'Select All'}</span>
+						<span className={styles.branchMenuSpan}>{allSelected ? 'Select None' : 'Select All'}</span>
 					</Button>
 					<Button
 						variant='ghost-muted'
 						size='sm'
-						className='-mr-2 px-2 text-xs font-normal enabled:hover:text-destructive focus-visible:text-destructive focus-visible:ring-ring/50 focus-visible:ring-[3px]'
+						className={styles.changedFilesButton2}
 						disabled={actionsDisabledReason !== null}
 						onClick={onDiscardAll}
 					>
@@ -794,23 +795,23 @@ function ChangedFiles({
 				</div>
 			)}
 			{files.length > 0 && actionsDisabledReason && (
-				<p className='px-2 text-xs text-muted-foreground'>{actionsDisabledReason}</p>
+				<p className={styles.changedFilesP}>{actionsDisabledReason}</p>
 			)}
 			{isLoading ? (
-				<div className='flex items-center justify-center px-2 py-5'>
+				<div className={styles.changedFilesDiv2}>
 					<Spinner />
 				</div>
 			) : error ? (
-				<div className='flex flex-col gap-2 px-2'>
+				<div className={styles.contextGitPanelDiv6}>
 					<ErrorMessage message={error} />
 					<Button variant='outline' size='sm' onClick={onRetry}>
 						Retry
 					</Button>
 				</div>
 			) : files.length === 0 ? (
-				<p className='py-1 pr-2 pl-[13px] text-[11px] text-muted-foreground'>Nothing to commit</p>
+				<p className={styles.changedFilesP2}>Nothing to commit</p>
 			) : (
-				<div className='max-h-48 overflow-y-auto'>
+				<div className={styles.changedFilesDiv3}>
 					{files.map((file) => (
 						<ChangedFileRow
 							key={file.path}
@@ -853,12 +854,12 @@ function ChangedFileRow({
 	return (
 		<div
 			className={cn(
-				'flex min-w-0 items-center gap-1.5 rounded-md px-2 py-0.5 transition-colors hover:bg-muted/40',
-				isViewing && 'bg-muted/50',
+				styles.changedFileRowDiv,
+				isViewing && styles.changedFileRowDiv2,
 			)}
 		>
 			<Checkbox
-				className='cursor-pointer'
+				className={styles.changedFileRowCheckbox}
 				checked={isSelected}
 				onCheckedChange={onToggle}
 				aria-label={`${isSelected ? 'Exclude' : 'Include'} ${fileName} in commit`}
@@ -868,22 +869,22 @@ function ChangedFileRow({
 				onClick={onView}
 				aria-label={`View changes to ${fileName}`}
 				title={file.path}
-				className='flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-sm py-1 text-left outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px]'
+				className={styles.changedFileRowButton}
 			>
-				<ChangeIcon className={cn('size-3 shrink-0', change.color)} />
-				<span className='min-w-0 flex-1 truncate text-xs'>{fileName}</span>
+				<ChangeIcon className={cn(styles.changedFileRowChangeIcon, change.color)} />
+				<span className={styles.changedFileRowSpan}>{fileName}</span>
 				<LineChangeSummary additions={file.additions} deletions={file.deletions} />
 				<span className='sr-only'>{change.label}</span>
 			</button>
 			<Button
 				variant='ghost-no-hover'
 				size='icon-sm'
-				className='enabled:hover:[&_svg]:text-destructive focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:[&_svg]:text-destructive'
+				className={styles.changedFileRowButton2}
 				aria-label={`Discard changes to ${fileName}`}
 				disabled={discardDisabled}
 				onClick={onDiscard}
 			>
-				<X className='text-muted-foreground transition-colors' />
+				<X className={styles.changedFileRowX} />
 			</Button>
 		</div>
 	);
@@ -891,9 +892,9 @@ function ChangedFileRow({
 
 function UnavailableGit({ message, onSetup }: { message: string; onSetup: () => void }) {
 	return (
-		<div className='flex flex-col gap-3'>
-			<p className='text-xs text-muted-foreground'>{message}</p>
-			<Button variant='secondary' size='sm' className='w-fit' onClick={onSetup}>
+		<div className={styles.unavailableGitDiv}>
+			<p className={styles.unavailableGitP}>{message}</p>
+			<Button variant='secondary' size='sm' className={styles.unavailableGitButton} onClick={onSetup}>
 				Set up git
 			</Button>
 		</div>
@@ -925,7 +926,7 @@ function CreateBranchDialog({
 					<DialogDescription>The new branch starts from the repository's default branch.</DialogDescription>
 				</DialogHeader>
 				<form
-					className='flex flex-col gap-4'
+					className={styles.createBranchDialogForm}
 					onSubmit={(event) => {
 						event.preventDefault();
 						event.stopPropagation();
@@ -935,8 +936,8 @@ function CreateBranchDialog({
 						onCreate();
 					}}
 				>
-					<div className='flex flex-col gap-2'>
-						<label htmlFor='branch-name' className='text-sm font-medium'>
+					<div className={styles.createBranchDialogDiv}>
+						<label htmlFor='branch-name' className={styles.createBranchDialogLabel}>
 							Branch name
 						</label>
 						<Input
@@ -948,12 +949,12 @@ function CreateBranchDialog({
 							autoFocus
 						/>
 					</div>
-					{error && <p className='text-red-500 text-center text-sm'>{error}</p>}
-					<div className='flex justify-end gap-2'>
+					{error && <p className={styles.createBranchDialogP}>{error}</p>}
+					<div className={styles.createBranchDialogDiv2}>
 						<Button
 							type='button'
 							variant='outline'
-							className='rounded-full border'
+							className={styles.createBranchDialogButton}
 							disabled={isPending}
 							onClick={() => onOpenChange(false)}
 						>
@@ -962,7 +963,7 @@ function CreateBranchDialog({
 						<Button
 							type='submit'
 							variant='primary-gradient'
-							className='rounded-full'
+							className={styles.createBranchDialogButton2}
 							disabled={!branchName.trim() || isPending}
 							isLoading={isPending}
 						>
@@ -994,12 +995,12 @@ function getReviewRequestNumber(url: string): string | null {
 
 function getChangeDisplay(kind: ContextChangedFile['kind']) {
 	if (kind === 'untracked') {
-		return { icon: FilePlus, label: 'New', color: 'text-emerald-500' };
+		return { icon: FilePlus, label: 'New', color: styles.getChangeDisplayColor };
 	}
 	if (kind === 'deleted') {
-		return { icon: FileX, label: 'Removed', color: 'text-red-500' };
+		return { icon: FileX, label: 'Removed', color: styles.getChangeDisplayColor2 };
 	}
-	return { icon: FilePen, label: 'Edited', color: 'text-amber-500' };
+	return { icon: FilePen, label: 'Edited', color: styles.getChangeDisplayColor3 };
 }
 
 export async function invalidateExplorerQueries(queryClient: QueryClient): Promise<void> {

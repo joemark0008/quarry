@@ -128,7 +128,7 @@ function Tooltip({
 			label={content.props.children}
 			position={toFloatingPosition(content.props.side ?? 'top', content.props.align)}
 			offset={content.props.sideOffset ?? 4}
-			className={cn(styles.tooltip, content.props.className)}
+			classNames={{ tooltip: cn(styles.tooltip, content.props.className) }}
 			data-slot='tooltip-content'
 			data-side={content.props.side ?? 'top'}
 			data-align={content.props.align ?? 'center'}

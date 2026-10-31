@@ -12,6 +12,7 @@ import {
 } from './ui/dropdown-menu';
 import type { ChatFilterType, ChatGroupBy } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
+import styles from './sidebar-chat-filter-menu.module.css';
 
 interface ChatFilterMenuProps {
 	groupBy: ChatGroupBy;
@@ -68,20 +69,20 @@ export function ChatFilterMenu({ groupBy, filters, onGroupByChange, onFilterTogg
 					variant='ghost'
 					size='icon-md'
 					aria-label='Open chat filters'
-					className='shrink-0 text-muted-foreground hover:text-foreground'
+					className={styles.chatFilterMenuButton}
 				>
-					<ListFilter className='size-4' />
+					<ListFilter className={styles.chatFilterMenuListFilter} />
 				</Button>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
 				align='end'
 				side='top'
-				className='w-auto overflow-visible'
+				className={styles.chatFilterMenuDropdownMenuContent}
 				onMouseEnter={cancelClose}
 				onMouseLeave={scheduleClose}
 			>
-				<DropdownMenuLabel className='text-xs'>Group by</DropdownMenuLabel>
+				<DropdownMenuLabel className={styles.chatFilterMenuDropdownMenuLabel}>Group by</DropdownMenuLabel>
 
 				{GROUP_BY_OPTIONS.map((opt) => (
 					<DropdownMenuItem
@@ -93,8 +94,8 @@ export function ChatFilterMenu({ groupBy, filters, onGroupByChange, onFilterTogg
 					>
 						{opt.label}
 						{groupBy === opt.value && (
-							<span className='absolute right-2 flex items-center'>
-								<CircleIcon className='size-2 fill-current text-primary' />
+							<span className={styles.chatFilterMenuSpan}>
+								<CircleIcon className={styles.chatFilterMenuCircleIcon} />
 							</span>
 						)}
 					</DropdownMenuItem>
@@ -102,22 +103,22 @@ export function ChatFilterMenu({ groupBy, filters, onGroupByChange, onFilterTogg
 
 				<DropdownMenuSeparator />
 
-				<div className='relative' onMouseEnter={() => setSubOpen(true)} onMouseLeave={() => setSubOpen(false)}>
+				<div className={styles.chatFilterMenuDiv} onMouseEnter={() => setSubOpen(true)} onMouseLeave={() => setSubOpen(false)}>
 					<div
 						className={cn(
-							'flex w-full items-center gap-2 rounded-sm py-1 pr-2 pl-2 text-sm cursor-pointer select-none text-foreground text-xs font-medium',
+							styles.chatFilterMenuDiv2,
 							subOpen
-								? 'bg-accent text-accent-foreground'
-								: 'hover:bg-accent hover:text-accent-foreground',
+								? styles.chatFilterMenuDiv3
+								: styles.chatFilterMenuDiv4,
 						)}
 					>
 						Filter
-						<ChevronRight className='ml-auto size-4 text-foreground' />
+						<ChevronRight className={styles.chatFilterMenuChevronRight} />
 					</div>
 
 					{subOpen && (
-						<div className='absolute bottom-0 left-full pl-1.5 z-50'>
-							<div className='w-auto min-w-36 bg-background text-popover-foreground rounded-md border p-1 shadow-lg'>
+						<div className={styles.chatFilterMenuDiv5}>
+							<div className={styles.chatFilterMenuDiv6}>
 								{FILTER_OPTIONS.map((opt) => (
 									<DropdownMenuItem
 										key={opt.value}
@@ -128,8 +129,8 @@ export function ChatFilterMenu({ groupBy, filters, onGroupByChange, onFilterTogg
 									>
 										{opt.label}
 										{filters.includes(opt.value) && (
-											<span className='absolute right-2 flex items-center'>
-												<CheckIcon className='size-4' />
+											<span className={styles.chatFilterMenuSpan}>
+												<CheckIcon className={styles.chatFilterMenuListFilter} />
 											</span>
 										)}
 									</DropdownMenuItem>

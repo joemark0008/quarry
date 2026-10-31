@@ -14,6 +14,7 @@ import type { ApiOutputs } from '@/lib/api-types';
 import type { MentionOrigin, MentionOriginNode } from '@/components/mention-origin-preview';
 import { DatabaseIcon } from '@/components/ui/database-icon';
 import StoryIcon from '@/components/ui/story-icon';
+import styles from './reference-mention-menu.module.css';
 
 type RouterOutputs = ApiOutputs;
 export type ReferenceableStory = RouterOutputs['story']['listReferenceable'][number];
@@ -44,11 +45,11 @@ export const TABLES_ROOT_ID = '__tables__';
 export const QUICK_PICK_COUNT = 3;
 const DIVIDER: MentionOption = { id: '__divider__', label: '', type: 'divider' };
 
-const storyIcon = <StoryIcon className='size-4' />;
-const tableIcon = <Table className='size-4' />;
-const folderIcon = <Folder className='size-4' />;
-const tablesRootIcon = <Database className='size-4' />;
-const storiesRootIcon = <Home className='size-4' />;
+const storyIcon = <StoryIcon className={styles.storyIconStoryIcon} />;
+const tableIcon = <Table className={styles.storyIconStoryIcon} />;
+const folderIcon = <Folder className={styles.storyIconStoryIcon} />;
+const tablesRootIcon = <Database className={styles.storyIconStoryIcon} />;
+const storiesRootIcon = <Home className={styles.storyIconStoryIcon} />;
 
 export function buildReferenceMentionMenu(sources: ReferenceMentionSources): ReferenceMentionMenu {
 	const origins = new Map<string, MentionOrigin>();
@@ -167,7 +168,7 @@ function buildTableTree(objects: DatabaseObject[], origins: Map<string, MentionO
 
 function buildDatabase(tables: DatabaseObject[], origins: Map<string, MentionOrigin>): MentionOption {
 	const { type, database } = tables[0];
-	const databaseNode = { label: database, icon: <DatabaseIcon dialect={type} className='size-4' /> };
+	const databaseNode = { label: database, icon: <DatabaseIcon dialect={type} className={styles.storyIconStoryIcon} /> };
 	const schemas = [...groupBy(tables, (obj) => obj.schema).values()].map((schemaTables) =>
 		buildSchema(schemaTables, databaseNode, origins),
 	);

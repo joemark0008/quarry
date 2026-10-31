@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import styles from './empty.module.css';
 
 interface EmptyProps {
 	children: React.ReactNode;
@@ -7,6 +8,6 @@ interface EmptyProps {
 
 export function Empty({ children, className }: EmptyProps) {
 	return (
-		<div className={cn('text-sm text-muted-foreground text-center p-2 whitespace-pre', className)}>{children}</div>
+		<div className={cn(styles.emptyDiv, className)}>{children}</div>
 	);
 }

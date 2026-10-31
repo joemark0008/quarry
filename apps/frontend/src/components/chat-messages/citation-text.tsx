@@ -10,6 +10,7 @@ import { FileChip } from '@/components/file-chip';
 import { isStoredFilePath } from '@/lib/attachments';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './citation-text.module.css';
 
 type AssistantTextSegment =
 	{ type: 'markdown'; text: string } | { type: 'story-reference'; storyId: string; title: string };
@@ -231,7 +232,7 @@ function SavedFileRenderer({ path, children }: any) {
 		return <>{label || filePath}</>;
 	}
 
-	return <FileChip path={filePath} label={label || undefined} className='mx-0.5' />;
+	return <FileChip path={filePath} label={label || undefined} className={styles.savedFileRendererFileChip} />;
 }
 
 function StoryReferenceRenderer({ id, children }: any) {
@@ -250,7 +251,7 @@ function MarkdownTableRenderer({ node, className }: any) {
 
 function CitationNumberRenderer({ id, column, children }: any) {
 	return (
-		<span className='inline-block align-baseline mx-1'>
+		<span className={styles.citationNumberRendererSpan}>
 			<CitationPopover
 				value={String(children)}
 				queryId={stripClobberPrefix(String(id))}

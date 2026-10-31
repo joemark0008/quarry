@@ -2,6 +2,7 @@ import { FilePenLine } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './str-replace.module.css';
 
 export const StrReplaceToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'str_replace'>) => {
 	const { isSettled } = useToolCallContext();
@@ -13,17 +14,17 @@ export const StrReplaceToolCall = ({ toolPart: { output, input } }: ToolCallComp
 		<ToolCallWrapper
 			title={
 				<>
-					<FilePenLine size={13} className='inline-block mr-1.5 -mt-0.5 text-primary-muted' />
+					<FilePenLine size={13} className={styles.strReplaceToolCallFilePenLine} />
 					{isSettled ? 'Edited' : 'Editing...'}{' '}
-					<code className='text-xs font-[Geist]! bg-accent/70! px-1 py-0.5 rounded'>{fileName}</code>
+					<code className={styles.strReplaceToolCallCode}>{fileName}</code>
 				</>
 			}
 			badge={output && formatReplacements(output.replacements)}
 		>
 			{input?.old_string !== undefined && (
-				<div className='border rounded-lg overflow-hidden'>
+				<div className={styles.strReplaceToolCallDiv}>
 					{filePath && (
-						<div className='px-3 py-2 border-b text-[11px] font-mono break-all text-muted-foreground'>
+						<div className={styles.strReplaceToolCallDiv2}>
 							{filePath}
 						</div>
 					)}
@@ -39,14 +40,14 @@ const DiffLines = ({ text, kind }: { text: string; kind: 'removed' | 'added' }) 
 	const marker = kind === 'removed' ? '-' : '+';
 	const tone =
 		kind === 'removed'
-			? 'bg-red-500/10 text-red-700 dark:text-red-300'
-			: 'bg-green-500/10 text-green-700 dark:text-green-300';
+			? styles.state100
+			: styles.state101;
 
 	return (
-		<pre className={`overflow-auto max-h-80 m-0 p-3 text-xs whitespace-pre-wrap wrap-break-word ${tone}`}>
+		<pre className={`${styles.diffLinesPre} ${tone}`}>
 			{text.split('\n').map((line, index) => (
 				<div key={index}>
-					<span className='select-none opacity-60 mr-2'>{marker}</span>
+					<span className={styles.diffLinesSpan}>{marker}</span>
 					{line}
 				</div>
 			))}

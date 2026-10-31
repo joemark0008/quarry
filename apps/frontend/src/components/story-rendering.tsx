@@ -8,6 +8,7 @@ import { StoryTableFrame } from '@/components/story-block';
 import { StoryGridProvider } from '@/contexts/story-grid';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './story-rendering.module.css';
 
 const markdownComponents = {
 	table: ({ node, className }: any) => (
@@ -98,12 +99,12 @@ const StoryGrid = memo(function StoryGrid({
 	const blockOccurrences = new Map<string, number>();
 
 	return (
-		<div className='@container'>
+		<div className={styles.storyGridDiv}>
 			<div
 				className={
 					widths !== null
-						? 'grid grid-cols-1 gap-4 @lg:[grid-template-columns:var(--quarry-grid-cols)]'
-						: `grid ${getGridClass(cols)} gap-4`
+						? styles.storyGridDiv2
+						: `${styles.storyGridDiv3} ${getGridClass(cols)} ${styles.storyGridDiv4}`
 				}
 				{...(widths !== null
 					? { style: { ['--quarry-grid-cols' as string]: getGridTemplateColumns(widths) } }
@@ -111,7 +112,7 @@ const StoryGrid = memo(function StoryGrid({
 			>
 				{children.map((segment, i) => (
 					<StoryGridProvider key={getSegmentKey(segment, i, blockOccurrences)}>
-						<div className='min-w-0'>
+						<div className={styles.storyGridDiv5}>
 							{segment.type === 'markdown' ? (
 								<MarkdownSegment content={segment.content} />
 							) : segment.type === 'chart' ? (

@@ -4,6 +4,7 @@ import type { MentionOption } from 'prompt-mentions';
 import type { HighlightedMention } from '@/hooks/use-highlighted-mention';
 import { mentionOriginMarkerAttributes, useHighlightedMention } from '@/hooks/use-highlighted-mention';
 import { cn } from '@/lib/utils';
+import styles from './mention-origin-preview.module.css';
 
 export type MentionOriginNode = {
 	label: string;
@@ -34,7 +35,7 @@ export function MentionOriginPreview({ owner, origins }: MentionOriginPreviewPro
 
 	return createPortal(
 		<div
-			className='pointer-events-none fixed z-[201] rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg'
+			className={styles.mentionOriginPreviewDiv}
 			style={position}
 		>
 			{origin.map((node, depth) => (
@@ -53,7 +54,7 @@ export function withOriginMarker(option: MentionOption, owner: string): MentionO
 	return {
 		...option,
 		icon: (
-			<span className='contents' {...mentionOriginMarkerAttributes(owner, option.id)}>
+			<span className={styles.withOriginMarkerSpan} {...mentionOriginMarkerAttributes(owner, option.id)}>
 				{option.icon}
 			</span>
 		),
@@ -73,13 +74,13 @@ function MentionOriginRow({
 	return (
 		<div
 			className={cn(
-				'flex items-center gap-1.5 rounded-md py-1 pr-2 text-xs',
-				isMentioned ? 'text-foreground' : 'text-muted-foreground',
+				styles.mentionOriginRowDiv,
+				isMentioned ? styles.mentionOriginRowDiv2 : styles.mentionOriginRowDiv3,
 			)}
 			style={{ paddingLeft: `calc(var(--spacing) * ${2 + depth * 3.5})` }}
 		>
-			<span className='flex shrink-0 [&_svg]:size-3.5'>{node.icon}</span>
-			<span className='truncate'>{node.label}</span>
+			<span className={styles.mentionOriginRowSpan}>{node.icon}</span>
+			<span className={styles.mentionOriginRowSpan2}>{node.label}</span>
 		</div>
 	);
 }

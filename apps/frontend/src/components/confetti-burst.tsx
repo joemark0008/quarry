@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
+import styles from './confetti-burst.module.css';
 
 const DEFAULT_CONFETTI_COLORS = [
 	'var(--chart-1)',
@@ -27,11 +28,11 @@ export function ConfettiBurst({
 	distanceStepPx = 18,
 	delayMs = 0,
 	colors = DEFAULT_CONFETTI_COLORS,
-	pieceClassName = '-ml-1 -mt-1 size-2',
+	pieceClassName = styles.state100,
 	className,
 }: ConfettiBurstProps) {
 	return (
-		<div aria-hidden='true' className={cn('pointer-events-none absolute left-1/2 top-1/2', className)}>
+		<div aria-hidden='true' className={cn(styles.confettiBurstDiv, className)}>
 			{Array.from({ length: count }, (_, index) => {
 				const style = {
 					'--angle': `${(360 / count) * index}deg`,
@@ -44,9 +45,9 @@ export function ConfettiBurst({
 						key={index}
 						style={style}
 						className={cn(
-							'confetti-piece absolute',
+							`${styles.confettiBurstSpan} confetti-piece`,
 							pieceClassName,
-							index % 2 ? 'rounded-full' : 'rounded-xs',
+							index % 2 ? styles.confettiBurstSpan2 : styles.confettiBurstSpan3,
 						)}
 					/>
 				);

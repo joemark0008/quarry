@@ -40,18 +40,19 @@ import { computeLineDiff } from '@/lib/line-diff';
 import { RecommendationText } from '@/lib/recommendation-text';
 import { cn } from '@/lib/utils';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
+import styles from './recommendation-card.module.css';
 
 type RouterOutputs = ApiOutputs;
 type Recommendation = RouterOutputs['contextRecommendation']['list'][number];
 type RecommendationStatus = 'applied' | 'dismissed';
 
 const CONTEXT_RECOMMENDATION_CATEGORY_BADGE_VARIANT = {
-	tool_error: 'bg-red-500/10 text-red-600 dark:text-red-400',
-	hallucination: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-	semantic_missing: 'bg-green-500/10 text-green-600 dark:text-green-400',
-	context_bloat: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-	skills: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
-	other: 'bg-gray-500/10 text-gray-600 dark:text-gray-400',
+	tool_error: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTToolError,
+	hallucination: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTHallucination,
+	semantic_missing: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTSemanticMissing,
+	context_bloat: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTContextBloat,
+	skills: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTSkills,
+	other: styles.cONTEXTRECOMMENDATIONCATEGORYBADGEVARIANTOther,
 } as const;
 
 /** What a trigger chat's replay would highlight; the replay itself comes back with Phase 6. */
@@ -285,17 +286,17 @@ export function RecommendationCard({
 			ref={cardRef}
 			onClick={selectable ? handleCardClick : undefined}
 			className={cn(
-				'group gap-0 rounded-lg border py-0 bg-background shadow-none',
-				selectable && 'cursor-pointer',
-				isSelected && 'ring-2 ring-primary',
+				`${styles.recommendationCardCard} group`,
+				selectable && styles.recommendationCardCard2,
+				isSelected && styles.recommendationCardCard3,
 			)}
 		>
-			<div className='flex items-top gap-2 px-3 py-3'>
+			<div className={`${styles.recommendationCardDiv} items-top`}>
 				{onSelect && !readOnly && (
 					<span
 						className={cn(
-							'flex h-[1lh] shrink-0 items-center pt-0.5 transition-[margin] duration-150 -mr-2 group-hover:-mr-1',
-							selectionActive && '-mr-1',
+							styles.recommendationCardSpan,
+							selectionActive && styles.recommendationCardSpan2,
 						)}
 					>
 						<RecommendationCheckbox
@@ -308,29 +309,29 @@ export function RecommendationCard({
 						/>
 					</span>
 				)}
-				<span className='flex h-[1lh] shrink-0 items-center'>
+				<span className={styles.recommendationCardSpan3}>
 					<button
 						type='button'
 						onClick={() => setCollapsed((value) => !value)}
-						className='flex items-center rounded-full text-muted-foreground hover:text-foreground pl-0.5'
+						className={styles.recommendationCardButton}
 						aria-expanded={!collapsed}
 						aria-label={collapsed ? 'Expand recommendation' : 'Collapse recommendation'}
 					>
-						<ChevronRight className={cn('size-3.5 transition-transform', !collapsed && 'rotate-90')} />
+						<ChevronRight className={cn(styles.recommendationCardChevronRight, !collapsed && styles.recommendationCardChevronRight2)} />
 					</button>
 				</span>
-				<div className='flex min-w-0 flex-1 items-start gap-2'>
-					<span className='min-w-0 flex-1 text-md font-bold flex items-start gap-2'>{rec.title}</span>
-					<div className='py-1'>
+				<div className={styles.recommendationCardDiv2}>
+					<span className={`${styles.recommendationCardSpan4} text-md`}>{rec.title}</span>
+					<div className={styles.recommendationCardDiv3}>
 						{collapsed && diffTotals && (
-							<span className='flex h-[1lh] shrink-0 items-center gap-1 font-mono text-[11px]'>
-								<span className='text-emerald-600 dark:text-emerald-400'>+{diffTotals.additions}</span>
-								<span className='text-red-600 dark:text-red-400'>−{diffTotals.deletions}</span>
+							<span className={styles.recommendationCardSpan5}>
+								<span className={styles.recommendationCardSpan6}>+{diffTotals.additions}</span>
+								<span className={styles.recommendationCardSpan7}>−{diffTotals.deletions}</span>
 							</span>
 						)}
 					</div>
 				</div>
-				<div className='flex h-[1lh] shrink-0 items-center gap-1'>
+				<div className={styles.recommendationCardDiv4}>
 					<TooltipProvider delayDuration={150}>
 						<Tooltip>
 							<TooltipTrigger asChild>
@@ -338,18 +339,18 @@ export function RecommendationCard({
 									size='icon'
 									variant='ghost'
 									className={cn(
-										'size-6 rounded-full text-muted-foreground hover:text-foreground',
-										isFetchingPrompt && 'bg-accent disabled:opacity-100 dark:bg-accent/50',
+										styles.recommendationCardButton2,
+										isFetchingPrompt && styles.recommendationCardButton3,
 									)}
 									onClick={handleCopyPrompt}
 									disabled={isFetchingPrompt}
 								>
 									{isCopied ? (
-										<Check className='size-3.5' />
+										<Check className={styles.recommendationCardCheck} />
 									) : isFetchingPrompt ? (
-										<Loader2 className='size-3.5 animate-spin' />
+										<Loader2 className={styles.recommendationCardLoader2} />
 									) : (
-										<Copy className='size-3.5' />
+										<Copy className={styles.recommendationCardCheck} />
 									)}
 									<span className='sr-only'>Copy prompt</span>
 								</Button>
@@ -367,7 +368,7 @@ export function RecommendationCard({
 						{CONTEXT_RECOMMENDATION_CATEGORY_LABELS[normalizeContextRecommendationCategory(rec.category)]}
 					</Badge>
 				</div>
-				<div className='flex shrink-0 items-top gap-0.5'>
+				<div className={`${styles.recommendationCardDiv5} items-top`}>
 					{!readOnly && (
 						<TooltipProvider delayDuration={150}>
 							<Tooltip>
@@ -375,11 +376,11 @@ export function RecommendationCard({
 									<Button
 										size='icon'
 										variant='ghost'
-										className='size-6 text-muted-foreground hover:text-destructive rounded-full'
+										className={styles.recommendationCardButton4}
 										onClick={() => onChangeStatus(rec.id, 'dismissed')}
 										disabled={isPending || rec.status === 'dismissed'}
 									>
-										<X className='size-3.5' />
+										<X className={styles.recommendationCardCheck} />
 										<span className='sr-only'>Dismiss</span>
 									</Button>
 								</TooltipTrigger>
@@ -390,11 +391,11 @@ export function RecommendationCard({
 									<Button
 										size='icon'
 										variant='ghost'
-										className='size-6 text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 rounded-full'
+										className={styles.recommendationCardButton5}
 										onClick={() => onChangeStatus(rec.id, 'applied')}
 										disabled={isPending || rec.status === 'applied'}
 									>
-										<Check className='size-3.5' />
+										<Check className={styles.recommendationCardCheck} />
 										<span className='sr-only'>Mark applied</span>
 									</Button>
 								</TooltipTrigger>
@@ -404,16 +405,16 @@ export function RecommendationCard({
 					)}
 				</div>
 			</div>
-			{promptError && <div className='px-3 pb-2 text-xs text-destructive'>{promptError}</div>}
+			{promptError && <div className={styles.recommendationCardDiv6}>{promptError}</div>}
 			<div
 				className={cn(
-					'grid transition-[grid-template-rows] duration-300 ease-in-out px-3',
-					collapsed ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]',
+					styles.recommendationCardDiv7,
+					collapsed ? styles.recommendationCardDiv8 : styles.recommendationCardDiv9,
 				)}
 			>
-				<div className='overflow-hidden'>
-					<div className='flex flex-col gap-3 px-6 pt-1 pb-3 text-sm'>
-						<div className='flex flex-col gap-1.5 leading-relaxed text-foreground'>
+				<div className={styles.recommendationCardDiv10}>
+					<div className={styles.recommendationCardDiv11}>
+						<div className={styles.recommendationCardDiv12}>
 							<p>
 								<RecommendationText text={rec.summary} />
 								{rec.rootCause && (
@@ -425,24 +426,24 @@ export function RecommendationCard({
 							</p>
 						</div>
 						{rows.length > 0 && (
-							<div className='overflow-hidden'>
-								<div className='flex items-center gap-1.5 py-1 text-sm text-muted-foreground'>
+							<div className={styles.recommendationCardDiv10}>
+								<div className={styles.recommendationCardDiv13}>
 									<button
 										type='button'
 										onClick={() => setChatsExpanded((value) => !value)}
 										aria-expanded={chatsExpanded}
 										className={cn(
-											'flex items-center px-2 py-1 gap-1 rounded-md cursor-pointer border border-transparent',
-											!chatsExpanded && 'border-border',
+											styles.recommendationCardButton6,
+											!chatsExpanded && styles.recommendationCardButton7,
 										)}
 									>
-										<MessageCircleX className='size-3 shrink-0' />
+										<MessageCircleX className={styles.recommendationCardMessageCircleX} />
 										{totalChatCount}
-										<Users className='size-3 shrink-0' />
+										<Users className={styles.recommendationCardMessageCircleX} />
 										{distinctUserCount}
 										{feedbacks.length > 0 && (
 											<>
-												<ThumbsDown className='size-3 shrink-0 text-red-500 dark:text-red-400' />
+												<ThumbsDown className={styles.recommendationCardThumbsDown} />
 												{feedbacks.length}
 											</>
 										)}
@@ -450,12 +451,12 @@ export function RecommendationCard({
 								</div>
 								<div
 									className={cn(
-										'grid transition-[grid-template-rows] duration-300 ease-in-out',
-										chatsExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+										styles.recommendationCardDiv14,
+										chatsExpanded ? styles.recommendationCardDiv9 : styles.recommendationCardDiv8,
 									)}
 								>
-									<div className='overflow-hidden'>
-										<div className='divide-y divide-border/50 border-t'>
+									<div className={styles.recommendationCardDiv10}>
+										<div className={styles.recommendationCardDiv15}>
 											{visibleRows.map((row) => {
 												const meta = chatMetadata.data?.find((m) => m.chatId === row.chatId);
 												const title = meta?.title || row.chatId.slice(0, 8);
@@ -463,31 +464,31 @@ export function RecommendationCard({
 												return (
 													<div
 														key={row.key}
-														className='flex items-center gap-2 px-2 py-1 text-sm'
+														className={styles.recommendationCardDiv16}
 													>
-														<span className='flex size-4 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-medium text-primary'>
+														<span className={styles.recommendationCardSpan8}>
 															{meta?.userName ? initials(meta.userName) : '?'}
 														</span>
-														<span className='w-20 shrink-0 truncate text-muted-foreground'>
+														<span className={styles.recommendationCardSpan9}>
 															{userName}
 														</span>
-														<span className='flex-1 truncate text-foreground'>{title}</span>
+														<span className={styles.recommendationCardSpan10}>{title}</span>
 														{row.kind === 'feedback' && (
 															<>
-																<ThumbsDown className='size-3.5 shrink-0 text-red-500 dark:text-red-400' />
+																<ThumbsDown className={styles.recommendationCardThumbsDown2} />
 																{row.explanation && (
-																	<span className='min-w-0 flex-1 truncate italic text-muted-foreground'>
+																	<span className={styles.recommendationCardSpan11}>
 																		&ldquo;{row.explanation}&rdquo;
 																	</span>
 																)}
 															</>
 														)}
-														<ExternalLink className='size-3 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover/link:opacity-100' />
+														<ExternalLink className={styles.recommendationCardExternalLink} />
 													</div>
 												);
 											})}
 											{hiddenCount > 0 && (
-												<div className='px-2 py-1 text-[11px] text-muted-foreground'>
+												<div className={styles.recommendationCardDiv17}>
 													+{hiddenCount} more
 												</div>
 											)}
@@ -500,18 +501,18 @@ export function RecommendationCard({
 				</div>
 			</div>
 			{!collapsed && (
-				<div className='flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 border-t bg-muted/30'>
+				<div className={styles.recommendationCardDiv18}>
 					<div
 						className={cn(
-							'flex text-[11px] text-muted-foreground',
-							sidePanel.isVisible ? 'flex-col items-start gap-y-0.5' : 'flex-wrap items-center gap-x-1.5',
-							!hasManualFix && !hasPatch && 'py-1.5',
+							styles.recommendationCardDiv19,
+							sidePanel.isVisible ? styles.recommendationCardDiv20 : styles.recommendationCardDiv21,
+							!hasManualFix && !hasPatch && styles.recommendationCardDiv22,
 						)}
 					>
 						<TooltipProvider delayDuration={150}>
 							<Tooltip>
 								<TooltipTrigger asChild>
-									<span className='cursor-default'>Detected {createdAgo.humanReadable}</span>
+									<span className={styles.recommendationCardSpan12}>Detected {createdAgo.humanReadable}</span>
 								</TooltipTrigger>
 								<TooltipContent>
 									{new Date(rec.createdAt).toLocaleString()}
@@ -521,7 +522,7 @@ export function RecommendationCard({
 						</TooltipProvider>
 					</div>
 					{(hasPatch || hasManualFix) && (
-						<div className='flex flex-wrap items-center gap-1.5 sm:ml-auto'>
+						<div className={styles.recommendationCardDiv23}>
 							{hasPatch && (
 								<>
 									<Button
@@ -531,14 +532,14 @@ export function RecommendationCard({
 											sidePanel.open(<RecommendationDiffPanel title={rec.title} edits={edits} />)
 										}
 									>
-										<ScrollText className='size-3.5' />
+										<ScrollText className={styles.recommendationCardCheck} />
 										{edits.length} suggested change{edits.length === 1 ? '' : 's'}
 										{diffTotals && (
-											<span className='ml-1 font-mono text-[11px]'>
-												<span className='text-emerald-600 dark:text-emerald-400'>
+											<span className={styles.recommendationCardSpan13}>
+												<span className={styles.recommendationCardSpan6}>
 													+{diffTotals.additions}
 												</span>{' '}
-												<span className='text-red-600 dark:text-red-400'>
+												<span className={styles.recommendationCardSpan7}>
 													−{diffTotals.deletions}
 												</span>
 											</span>
@@ -559,9 +560,9 @@ export function RecommendationCard({
 											variant='outline'
 										>
 											{createPr.isPending ? (
-												<Loader2 className='size-3.5 animate-spin' />
+												<Loader2 className={styles.recommendationCardLoader2} />
 											) : (
-												<GitPullRequest className='size-3.5' />
+												<GitPullRequest className={styles.recommendationCardCheck} />
 											)}
 											Create PR
 										</Button>
@@ -582,14 +583,14 @@ export function RecommendationCard({
 										)
 									}
 								>
-									<Wand2 className='size-3.5' />
+									<Wand2 className={styles.recommendationCardCheck} />
 									How to fix
 								</Button>
 							)}
 						</div>
 					)}
 					{createPr.error && (
-						<span className='basis-full text-xs text-destructive'>{createPr.error.message}</span>
+						<span className={styles.recommendationCardSpan14}>{createPr.error.message}</span>
 					)}
 				</div>
 			)}
@@ -613,13 +614,13 @@ function RecommendationCheckbox({
 			aria-pressed={selected}
 			onClick={onClick}
 			className={cn(
-				'inline-flex items-center justify-center size-5 transition-all duration-150 cursor-pointer rounded shrink-0',
-				'text-muted-foreground hover:text-foreground',
-				visible ? 'opacity-100' : 'w-0 opacity-0 overflow-hidden group-hover:w-5 group-hover:opacity-100',
-				selected && 'text-primary',
+				styles.recommendationCheckboxButton,
+				styles.recommendationCheckboxButton2,
+				visible ? styles.recommendationCheckboxButton3 : styles.recommendationCheckboxButton4,
+				selected && styles.recommendationCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className='size-3.5' /> : <Circle className='size-3.5' />}
+			{selected ? <CircleCheck className={styles.recommendationCardCheck} /> : <Circle className={styles.recommendationCardCheck} />}
 		</button>
 	);
 }
@@ -634,10 +635,10 @@ const PR_STATUS_LABEL: Record<PrState, string> = {
 
 function PrStatusIcon({ state }: { state: PrState | undefined }) {
 	if (state === 'merged') {
-		return <GitMerge className='size-3.5' />;
+		return <GitMerge className={styles.recommendationCardCheck} />;
 	}
 	if (state === 'closed') {
-		return <GitPullRequestClosed className='size-3.5' />;
+		return <GitPullRequestClosed className={styles.recommendationCardCheck} />;
 	}
-	return <ExternalLink className='size-3.5' />;
+	return <ExternalLink className={styles.recommendationCardCheck} />;
 }

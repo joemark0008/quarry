@@ -1,0 +1,19 @@
+.customStoryViewLayersDiv {
+	position: relative;
+	min-height: 0px;
+	flex: 1;
+}
+.customStoryViewLayersDiv2 {
+	position: absolute;
+	inset: 0px;
+	display: flex;
+	flex-direction: column;
+}
+.customStoryViewLayersDiv3 {
+	visibility: hidden;
+}
+.customStoryViewLayersDiv4 {
+	position: absolute;
+	inset: 0px;
+	background-color: var(--app-surface);
+}

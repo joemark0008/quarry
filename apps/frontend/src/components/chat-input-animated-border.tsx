@@ -1,4 +1,5 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import styles from './chat-input-animated-border.module.css';
 
 const CHAT_INPUT_BORDER_STROKE = 1;
 
@@ -51,17 +52,17 @@ export function ChatInputAnimatedBorder({ isStatic = false }: { isStatic?: boole
 	const inset = CHAT_INPUT_BORDER_STROKE / 2;
 	const strokeRadius = Math.max(Math.min(radius, width / 2, height / 2) - inset, 0);
 	const isHighlighted = isStatic || isFocused;
-	const strokeColor = isHighlighted ? 'var(--primary)' : 'var(--muted-foreground)';
+	const strokeColor = isHighlighted ? 'var(--app-primary-bg)' : 'var(--app-muted)';
 
 	return (
-		<span ref={containerRef} aria-hidden='true' className='pointer-events-none absolute inset-0 z-10'>
+		<span ref={containerRef} aria-hidden='true' className={styles.chatInputAnimatedBorderSpan}>
 			{hasSize && (
 				<svg
 					width={width}
 					height={height}
 					viewBox={`0 0 ${width} ${height}`}
 					fill='none'
-					className='block overflow-visible'
+					className={styles.chatInputAnimatedBorderSvg}
 				>
 					<defs>
 						<linearGradient id={gradientId} x1='0%' y1='0%' x2='0%' y2='100%'>

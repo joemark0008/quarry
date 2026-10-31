@@ -4,6 +4,7 @@ import type { ModelInferenceSettings } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import styles from './model-parameters-dialog.module.css';
 
 interface ModelParametersDialogProps {
 	open: boolean;
@@ -39,15 +40,15 @@ export function ModelParametersDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.modelParametersDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Model parameters</DialogTitle>
-					<DialogDescription className='font-mono text-xs break-all'>{model.name}</DialogDescription>
+					<DialogDescription className={styles.modelParametersDialogDialogDescription}>{model.name}</DialogDescription>
 				</DialogHeader>
 
 				<ModelParametersFields controls={controls} values={values} errors={errors} onValueChange={setValue} />
 
-				<div className='flex justify-end gap-2 pt-2'>
+				<div className={styles.modelParametersDialogDiv}>
 					<Button variant='ghost' size='sm' onClick={() => onOpenChange(false)} type='button'>
 						Cancel
 					</Button>

@@ -11,6 +11,7 @@ import { useAssistantMessage } from '@/contexts/assistant-message';
 import { isReasoningPart, isQueryToolPart, isStoryStatusPart } from '@/lib/ai';
 import { getStoryStatusDisplay } from '@/lib/story-status';
 import { getStoryToolPartSlug } from '@/lib/story.utils';
+import styles from './story-query-group.module.css';
 
 interface Props {
 	parts: StoryQueryGroupItem[];
@@ -58,10 +59,10 @@ export const StoryQueryGroup = memo(({ parts, isSettled }: Props) => {
 			expanded={isExpanded}
 			onExpandedChange={setIsExpanded}
 			isLoading={isLoading}
-			triggerClassName='text-foreground'
+			triggerClassName={styles.storyQueryGroupExpandable}
 			variant='inline'
 		>
-			<div className='flex flex-col gap-2 px-3'>
+			<div className={styles.storyQueryGroupDiv}>
 				{parts.map((part, index) => {
 					if (isStoryStatusPart(part)) {
 						return <StoryStatus key={part.part.toolCallId} toolPart={part.part} />;

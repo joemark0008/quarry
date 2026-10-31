@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { projectApi } from '@/lib/project-api';
+import styles from './date-format-section.module.css';
 
 interface DateFormatSectionProps {
 	isAdmin: boolean;
@@ -121,20 +122,20 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 			title='Date format'
 			description='Choose how dates are displayed in charts, tooltips and query result tables for this project.'
 		>
-			<div className='grid gap-2'>
-				<label htmlFor={PRESET_SELECT_ID} className='text-sm font-medium text-foreground'>
+			<div className={styles.dateFormatSectionDiv}>
+				<label htmlFor={PRESET_SELECT_ID} className={styles.dateFormatSectionLabel}>
 					Format
 				</label>
 				<Select value={preset} onValueChange={handlePresetChange} disabled={isDisabled}>
-					<SelectTrigger id={PRESET_SELECT_ID} className='w-full'>
+					<SelectTrigger id={PRESET_SELECT_ID} className={styles.dateFormatSectionSelectTrigger}>
 						<SelectValue>{presetLabel}</SelectValue>
 					</SelectTrigger>
 					<SelectContent>
 						{PRESET_OPTIONS.map((option) => (
-							<SelectItem key={option.value} value={option.value} className='h-auto items-start py-1.5'>
-								<div className='flex flex-col gap-0.5'>
+							<SelectItem key={option.value} value={option.value} className={styles.dateFormatSectionSelectItem}>
+								<div className={styles.dateFormatSectionDiv2}>
 									<span>{option.label}</span>
-									<span className='text-xs text-muted-foreground'>{option.description}</span>
+									<span className={styles.dateFormatSectionSpan}>{option.description}</span>
 								</div>
 							</SelectItem>
 						))}
@@ -143,8 +144,8 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 			</div>
 
 			{preset === 'custom' && (
-				<div className='grid gap-2'>
-					<label htmlFor='date-format-custom' className='text-sm font-medium text-foreground'>
+				<div className={styles.dateFormatSectionDiv}>
+					<label htmlFor='date-format-custom' className={styles.dateFormatSectionLabel}>
 						Custom pattern
 					</label>
 					<Input
@@ -160,17 +161,17 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 							}
 						}}
 						disabled={isDisabled}
-						className='font-mono'
+						className={styles.dateFormatSectionInput}
 					/>
-					<div className='space-y-1 text-xs text-muted-foreground'>
+					<div className={styles.dateFormatSectionDiv3}>
 						<p>
 							Wrap literal text in square brackets (e.g.{' '}
-							<code className='font-mono'>[on] DD/MM/YYYY</code>). Supported tokens:
+							<code className={styles.dateFormatSectionInput}>[on] DD/MM/YYYY</code>). Supported tokens:
 						</p>
-						<ul className='grid grid-cols-1 gap-x-3 gap-y-0.5 sm:grid-cols-2'>
+						<ul className={styles.dateFormatSectionUl}>
 							{SUPPORTED_DATE_FORMAT_TOKENS.map((token) => (
 								<li key={token.token}>
-									<code className='font-mono text-foreground'>{token.token}</code>{' '}
+									<code className={styles.dateFormatSectionCode}>{token.token}</code>{' '}
 									<span>{token.description}</span>
 								</li>
 							))}
@@ -179,11 +180,11 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 				</div>
 			)}
 
-			<div className='flex items-center justify-between rounded-md border bg-muted/40 px-3 py-2'>
-				<span className='text-xs text-muted-foreground'>
-					Preview for <code className='font-mono'>{SAMPLE_DATE}</code>
+			<div className={styles.dateFormatSectionDiv4}>
+				<span className={styles.dateFormatSectionSpan}>
+					Preview for <code className={styles.dateFormatSectionInput}>{SAMPLE_DATE}</code>
 				</span>
-				<span className='font-mono text-sm font-medium'>{preview}</span>
+				<span className={styles.dateFormatSectionSpan2}>{preview}</span>
 			</div>
 		</SettingsCard>
 	);

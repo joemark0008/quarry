@@ -17,10 +17,11 @@ import { useSession } from '@/lib/auth-client';
 import { storyApi } from '@/lib/story-api';
 import { useGroupPicker, useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
+import styles from './share-dialog.story.module.css';
 
 export type ShareStoryIntent = 'share' | 'pin';
 
-const SHARE_STORY_DIALOG_WIDTH = 'sm:max-w-lg';
+const SHARE_STORY_DIALOG_WIDTH = styles.sHARESTORYDIALOGWIDTH;
 
 interface ShareStoryDialogProps {
 	open: boolean;
@@ -167,21 +168,21 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 	const description = isPinIntent
 		? "Pinning surfaces a story on the project's homepage. Choose who should see it — pinning requires sharing first."
 		: 'Share a link to this story. Recipients will always see the latest version.';
-	const confirmIdleIcon = isPinIntent ? <Pin className='size-3.5 fill-current' /> : <LinkIcon className='size-3.5' />;
+	const confirmIdleIcon = isPinIntent ? <Pin className={styles.confirmIdleIconPin} /> : <LinkIcon className={styles.confirmIdleIconLinkIcon} />;
 	const confirmIdleLabel = isPinIntent ? 'Share & pin' : 'Share & copy link';
 	const confirmDoneLabel = isPinIntent ? 'Pinned!' : 'Link copied!';
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className={SHARE_STORY_DIALOG_WIDTH}>
-				<DialogHeader className='gap-4'>
+				<DialogHeader className={styles.createShareDialogDialogHeader}>
 					<DialogTitle>{title}</DialogTitle>
-					<DialogDescription className='font-medium'>{description}</DialogDescription>
+					<DialogDescription className={styles.createShareDialogDialogDescription}>{description}</DialogDescription>
 				</DialogHeader>
 
-				<div className='flex flex-col gap-4'>
+				<div className={styles.createShareDialogDiv}>
 					{isPinIntent && (
-						<div className='rounded-md bg-muted/60 px-3 py-2 text-xs text-muted-foreground'>
+						<div className={styles.createShareDialogDiv2}>
 							Once shared, this story will be pinned for the selected audience.
 						</div>
 					)}
@@ -210,20 +211,20 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 					)}
 				</div>
 
-				<div className='flex justify-end gap-2'>
-					<Button variant='outline' className='rounded-full' onClick={() => onOpenChange(false)}>
+				<div className={styles.createShareDialogDiv3}>
+					<Button variant='outline' className={styles.createShareDialogButton} onClick={() => onOpenChange(false)}>
 						Cancel
 					</Button>
 					<Button
 						variant='primary-gradient'
-						className='gap-1.5 rounded-full'
+						className={styles.createShareDialogButton2}
 						onClick={handleConfirm}
 						disabled={!canConfirm || shareMutation.isPending}
 					>
 						{shareMutation.isPending ? (
-							<Loader2 className='size-3.5 animate-spin' />
+							<Loader2 className={styles.createShareDialogLoader2} />
 						) : isConfirmed ? (
-							<Check className='size-3.5' />
+							<Check className={styles.confirmIdleIconLinkIcon} />
 						) : (
 							confirmIdleIcon
 						)}
@@ -330,14 +331,14 @@ function ManageShareDialog({
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className={SHARE_STORY_DIALOG_WIDTH}>
-				<DialogHeader className='gap-4'>
+				<DialogHeader className={styles.createShareDialogDialogHeader}>
 					<DialogTitle>Sharing Settings</DialogTitle>
-					<DialogDescription className='font-medium'>
+					<DialogDescription className={styles.createShareDialogDialogDescription}>
 						This story is currently shared. Recipients always see the latest version.
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className='flex flex-col gap-4'>
+				<div className={styles.createShareDialogDiv}>
 					<VisibilitySummary
 						visibility={visibility}
 						selectedUserIds={selectedUserIds}

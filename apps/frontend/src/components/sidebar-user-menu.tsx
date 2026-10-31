@@ -3,6 +3,7 @@ import { SlidersVertical } from 'lucide-react';
 import { Avatar } from './ui/avatar';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { cn, hideIf } from '@/lib/utils';
+import styles from './sidebar-user-menu.module.css';
 
 interface SidebarUserMenuProps {
 	isCollapsed: boolean;
@@ -19,40 +20,40 @@ export function SidebarUserMenu({ isCollapsed, isInSettings }: SidebarUserMenuPr
 	}
 
 	return (
-		<div className='flex flex-col gap-3'>
+		<div className={styles.sidebarUserMenuDiv}>
 			<div
 				className={cn(
-					'group/user flex items-center rounded-lg border-sidebar-border',
-					'hover:bg-sidebar-accent transition-[background-color,padding] duration-300',
-					isCollapsed ? 'p-1.5' : 'p-2',
+					`${styles.sidebarUserMenuDiv2} group/user`,
+					styles.sidebarUserMenuDiv3,
+					isCollapsed ? styles.sidebarUserMenuDiv4 : styles.sidebarUserMenuDiv5,
 				)}
 			>
 				<Link
 					to='/settings'
-					inactiveProps={{ className: 'text-foreground' }}
-					activeProps={{ className: 'text-foreground' }}
-					className='flex-1 min-w-0 flex items-center cursor-pointer'
+					inactiveProps={{ className: styles.sidebarUserMenuClassName }}
+					activeProps={{ className: styles.sidebarUserMenuClassName }}
+					className={styles.sidebarUserMenuLink}
 				>
-					<div className={cn('flex items-center gap-2 min-w-0', hideIf(isCollapsed))}>
-						{!isCollapsed && username && <Avatar username={username} className='shrink-0' />}
+					<div className={cn(styles.sidebarUserMenuDiv6, hideIf(isCollapsed))}>
+						{!isCollapsed && username && <Avatar username={username} className={styles.sidebarUserMenuAvatar} />}
 						<span
 							className={cn(
-								'flex flex-col justify-center text-left transition-[opacity,visibility] h-8 duration-300 min-w-0',
+								styles.sidebarUserMenuSpan,
 								hideIf(isCollapsed),
 							)}
 						>
-							<span className='text-sm leading-4 font-medium truncate'>{username}</span>
-							<span className='text-xs text-muted-foreground truncate'>{email}</span>
+							<span className={styles.sidebarUserMenuSpan2}>{username}</span>
+							<span className={styles.sidebarUserMenuSpan3}>{email}</span>
 						</span>
 					</div>
 				</Link>
 				{!isInSettings && (
-					<div className={cn('flex items-center gap-2', isCollapsed ? 'p-2' : 'p-0.5')}>
+					<div className={cn(styles.sidebarUserMenuDiv7, isCollapsed ? styles.sidebarUserMenuDiv5 : styles.sidebarUserMenuDiv8)}>
 						<Link
 							to='/settings'
-							className='text-muted-foreground group-hover/user:text-foreground hover:text-foreground'
+							className={styles.sidebarUserMenuLink2}
 						>
-							<SlidersVertical className='size-4' />
+							<SlidersVertical className={styles.sidebarUserMenuSlidersVertical} />
 						</Link>
 					</div>
 				)}

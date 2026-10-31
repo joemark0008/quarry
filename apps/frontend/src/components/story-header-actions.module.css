@@ -1,0 +1,41 @@
+.shareButtonButton {
+	@media (hover: hover) {
+		&:hover {
+			border-radius: calc(infinity * 1px);
+		}
+	}
+}
+.shareButtonGlobe {
+	width: 0.875rem;
+	height: 0.875rem;
+	color: var(--app-primary-bg);
+}
+.shareButtonUpload {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.storyFavoriteMenuItemStar {
+	fill: var(--app-text);
+}
+.storyCertifyMenuItemShieldCheck {
+	fill: color-mix(in oklab, var(--app-text) 20%, transparent);
+}
+.storyFavoritedButtonStar {
+	width: 0.875rem;
+	height: 0.875rem;
+	fill: var(--app-text);
+}
+.storyFeedbackButtonsDiv {
+	display: flex;
+	align-items: center;
+}
+.storyFeedbackButtonsStoryFeedbackButton {
+	color: var(--app-primary-bg);
+}
+.storyFeedbackButtonsStoryFeedbackButton2 {
+	color: var(--app-danger);
+}
+.storyFeedbackButtonIcon {
+	width: 1rem;
+	height: 1rem;
+}

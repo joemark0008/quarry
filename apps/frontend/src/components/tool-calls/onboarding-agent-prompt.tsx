@@ -1,5 +1,6 @@
 import type { ToolCallComponentProps } from '.';
 import { AgentPromptCard } from '@/components/agent-prompt-card';
+import styles from './onboarding-agent-prompt.module.css';
 
 export function OnboardingAgentPromptToolCall({ toolPart }: ToolCallComponentProps<'onboarding_agent_prompt'>) {
 	const prompt = toolPart.input?.prompt;
@@ -9,7 +10,7 @@ export function OnboardingAgentPromptToolCall({ toolPart }: ToolCallComponentPro
 	}
 
 	return (
-		<div className='-mx-3'>
+		<div className={styles.onboardingAgentPromptToolCallDiv}>
 			<AgentPromptCard prompt={prompt} />
 		</div>
 	);

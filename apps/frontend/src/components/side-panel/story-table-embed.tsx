@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useStoryEmbedData } from '@/contexts/story-embed-data';
 import { useStoryTableEdit } from '@/contexts/story-table-edit';
 import { useSourceQuery } from '@/hooks/use-source-query';
+import styles from './story-table-embed.module.css';
 
 export const StoryTableEmbed = memo(function StoryTableEmbed({
 	table,
@@ -82,11 +83,11 @@ export function StoryTableEditControls({
 			<Button
 				variant='ghost-muted'
 				size='icon-xs'
-				className='hover:rounded-full hover:bg-accent/70'
+				className={styles.storyTableEditControlsButton}
 				onClick={() => setIsEditOpen(true)}
 				title='Edit formatting'
 			>
-				<Pencil className='size-3 text-muted-foreground/70' />
+				<Pencil className={styles.storyTableEditControlsPencil} />
 			</Button>
 			<TableFormatEditDialog
 				open={isEditOpen}

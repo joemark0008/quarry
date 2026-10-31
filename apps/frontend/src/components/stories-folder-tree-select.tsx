@@ -2,6 +2,7 @@ import { ChevronRight, Folder, FolderLock, Globe, Home, Lock } from 'lucide-reac
 
 import type { FolderItem } from '@/lib/stories-page';
 import { cn } from '@/lib/utils';
+import styles from './stories-folder-tree-select.module.css';
 
 export type FolderTreeSelectProps = {
 	tree: FolderItem[];
@@ -14,10 +15,10 @@ export function FolderTreeSelect({ tree, selectedId, onSelect, isDisabled }: Fol
 	const rootSelected = selectedId === null;
 
 	return (
-		<div className='flex flex-col gap-0.5 max-h-64 overflow-y-auto rounded-md border p-1'>
+		<div className={styles.folderTreeSelectDiv}>
 			<FolderTreeItem
 				label='Root'
-				icon={<Home className='size-3.5' />}
+				icon={<Home className={styles.folderTreeSelectHome} />}
 				visibility='public'
 				selected={rootSelected}
 				disabled={false}
@@ -72,9 +73,9 @@ function FolderTreeNode({
 				label={folder.name}
 				icon={
 					folder.visibility === 'private' ? (
-						<FolderLock className='size-3.5' />
+						<FolderLock className={styles.folderTreeSelectHome} />
 					) : (
-						<Folder className='size-3.5' />
+						<Folder className={styles.folderTreeSelectHome} />
 					)
 				}
 				visibility={folder.visibility ?? 'public'}
@@ -122,19 +123,19 @@ function FolderTreeItem({
 			onClick={onSelect}
 			style={{ paddingLeft: `${Math.max(0, depth - 1) * 16 + 8}px` }}
 			className={cn(
-				'flex items-center gap-2 rounded px-2 py-1.5 text-sm w-full text-left transition-colors',
-				selected && 'bg-accent text-accent-foreground',
-				!selected && !disabled && 'hover:bg-accent/50',
-				disabled && 'opacity-30 cursor-not-allowed',
+				styles.folderTreeItemButton,
+				selected && styles.folderTreeItemButton2,
+				!selected && !disabled && styles.folderTreeItemButton3,
+				disabled && styles.folderTreeItemButton4,
 			)}
 		>
-			{depth > 1 && <ChevronRight className='size-3 text-muted-foreground/50 shrink-0' />}
-			<span className='text-muted-foreground shrink-0'>{icon}</span>
-			<span className='truncate flex-1'>{label}</span>
+			{depth > 1 && <ChevronRight className={styles.folderTreeItemChevronRight} />}
+			<span className={styles.folderTreeItemSpan}>{icon}</span>
+			<span className={styles.folderTreeItemSpan2}>{label}</span>
 			{visibility === 'private' ? (
-				<Lock className='size-3 shrink-0 text-muted-foreground/60' />
+				<Lock className={styles.folderTreeItemLock} />
 			) : (
-				<Globe className='size-3 shrink-0 text-muted-foreground/30' />
+				<Globe className={styles.folderTreeItemGlobe} />
 			)}
 		</button>
 	);

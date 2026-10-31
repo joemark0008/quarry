@@ -1,0 +1,21 @@
+.actionsTableIcon {
+	width: 0.75rem;
+	height: 0.75rem;
+	color: color-mix(in oklab, var(--app-muted) 70%, transparent);
+}
+.sqlToolCallViewSpan {
+	display: flex;
+	align-items: baseline;
+	gap: 0.625rem;
+}
+.sqlToolCallViewSpan2 {
+	color: var(--app-text);
+}
+.sqlToolCallViewSpan3 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}

@@ -1,0 +1,21 @@
+.storyMapRenderDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.storyMapRenderSkeleton {
+	aspect-ratio: 3/2;
+	width: 100%;
+	border-radius: var(--app-radius);
+}
+.storyMapRenderSpan {
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: color-mix(in oklab, var(--app-text) 50%, transparent);
+}
+.storyMapFallbackDiv {
+	margin-block: 0.5rem;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	color: color-mix(in oklab, var(--app-text) 50%, transparent);
+}

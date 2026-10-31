@@ -7,6 +7,7 @@ import { FileDiffBody } from '@/components/settings/file-diff';
 import { SidePanelHeader } from '@/components/side-panel/side-panel-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { computeLineDiff } from '@/lib/line-diff';
+import styles from './recommendation-diff-panel.module.css';
 
 interface ProposedEdit {
 	path: string;
@@ -39,15 +40,15 @@ export function RecommendationDiffPanel({ title, edits }: RecommendationDiffPane
 	};
 
 	return (
-		<div className='flex h-full min-h-0 flex-col bg-background'>
+		<div className={styles.recommendationDiffPanelDiv}>
 			<SidePanelHeader label='Proposed changes' title={title} />
 
-			<div className='min-h-0 flex-1 overflow-auto p-4'>
+			<div className={styles.recommendationDiffPanelDiv2}>
 				<Accordion
 					type='multiple'
 					value={openPaths}
 					onValueChange={setOpenPaths}
-					className='flex flex-col gap-2'
+					className={styles.recommendationDiffPanelAccordion}
 				>
 					{diffs.map(({ edit, diff }) => (
 						<FileDiff key={edit.path} edit={edit} diff={diff} onTriggerClick={handleTriggerClick} />
@@ -68,26 +69,26 @@ function FileDiff({
 	onTriggerClick: (event: MouseEvent, path: string) => void;
 }) {
 	return (
-		<AccordionItem value={edit.path} className='overflow-hidden rounded-lg border last:border-b'>
+		<AccordionItem value={edit.path} className={styles.fileDiffAccordionItem}>
 			<AccordionTrigger
 				onClick={(event) => onTriggerClick(event, edit.path)}
-				className='group items-center gap-2 px-3 py-2 hover:no-underline data-[state=open]:border-b data-[state=open]:rounded-b-none'
+				className={`${styles.fileDiffAccordionTrigger} group`}
 			>
-				<ChevronRight className='size-3.5 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-90' />
+				<ChevronRight className={styles.fileDiffChevronRight} />
 				{edit.kind === 'create' ? (
-					<FilePlus className='size-3.5 shrink-0 text-emerald-500' />
+					<FilePlus className={styles.fileDiffFilePlus} />
 				) : (
-					<FilePen className='size-3.5 shrink-0 text-amber-500' />
+					<FilePen className={styles.fileDiffFilePen} />
 				)}
-				<span className='min-w-0 flex-1 truncate font-mono text-xs' title={edit.path}>
+				<span className={styles.fileDiffSpan} title={edit.path}>
 					{edit.path}
 				</span>
-				<span className='shrink-0 font-mono text-[11px] text-emerald-600 dark:text-emerald-400'>
+				<span className={styles.fileDiffSpan2}>
 					+{diff.additions}
 				</span>
-				<span className='shrink-0 font-mono text-[11px] text-red-600 dark:text-red-400'>-{diff.deletions}</span>
+				<span className={styles.fileDiffSpan3}>-{diff.deletions}</span>
 			</AccordionTrigger>
-			<AccordionContent className='p-0'>
+			<AccordionContent className={styles.fileDiffAccordionContent}>
 				<FileDiffBody lines={diff.lines} />
 			</AccordionContent>
 		</AccordionItem>

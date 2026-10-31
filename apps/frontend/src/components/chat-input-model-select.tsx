@@ -12,6 +12,7 @@ import QuarryIcon from '@/components/icons/quarry-logo-greyscale.svg';
 import { isSameModel, useModelSelection } from '@/hooks/use-model-selection';
 import { usePermissions } from '@/hooks/use-permissions';
 import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
+import styles from './chat-input-model-select.module.css';
 
 /** Listed as an option rather than a link, so that the keyboard reaches it like any other. */
 const MANAGE_MODELS_VALUE = 'manage-models';
@@ -90,9 +91,9 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 		return (
 			<Link
 				to='/settings/project/models'
-				className='flex items-center gap-1.5 text-sm text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300 transition-colors'
+				className={styles.chatInputModelSelectLink}
 			>
-				<TriangleAlert className='size-3.5' />
+				<TriangleAlert className={styles.chatInputModelSelectTriangleAlert} />
 				<span>Configure a model</span>
 			</Link>
 		);
@@ -104,7 +105,7 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 				<LlmProviderIcon
 					provider={selectedModel.provider}
 					baseUrl={selectedAvailableModel?.baseUrl}
-					className='size-4'
+					className={styles.singleModelLlmProviderIcon}
 				/>
 			)}
 			<span>{selectedModelName}</span>
@@ -115,14 +116,14 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 	if (!canCycleModels) {
 		if (!isAdmin) {
 			return (
-				<div className='flex items-center gap-2 text-sm font-normal text-muted-foreground'>{singleModel}</div>
+				<div className={styles.chatInputModelSelectDiv}>{singleModel}</div>
 			);
 		}
 
 		return (
 			<Link
 				to='/settings/project/models'
-				className='flex items-center gap-2 text-sm font-normal text-muted-foreground hover:text-foreground transition-colors'
+				className={styles.chatInputModelSelectLink2}
 			>
 				{singleModel}
 			</Link>
@@ -133,20 +134,20 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 		<Select value={selectValue} onValueChange={handleModelValueChange} onOpenChange={onSelectOpenChange}>
 			<Tooltip open={isTooltipOpen} onOpenChange={onTooltipOpenChange}>
 				<TooltipTrigger asChild>
-					<SelectTrigger variant='ghost' className='p-0 gap-1 text-sm' size='sm'>
+					<SelectTrigger variant='ghost' className={styles.chatInputModelSelectSelectTrigger} size='sm'>
 						<SelectValue>
-							<div className='flex items-center gap-2'>
+							<div className={styles.chatInputModelSelectDiv2}>
 								{selectedModel && (
 									<LlmProviderIcon
 										provider={selectedModel.provider}
 										baseUrl={selectedAvailableModel?.baseUrl}
-										className='size-4'
+										className={styles.singleModelLlmProviderIcon}
 									/>
 								)}
-								<span className='leading-none'>{selectedModelName}</span>
+								<span className={styles.chatInputModelSelectSpan}>{selectedModelName}</span>
 								{usesDefaultModel
 									? resolvedModelName && (
-											<span className='text-muted-foreground'>{resolvedModelName}</span>
+											<span className={styles.chatInputModelSelectSpan2}>{resolvedModelName}</span>
 										)
 									: selectedModel && <NamedProviderHint provider={selectedModel.provider} />}
 							</div>
@@ -162,12 +163,12 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 						<LlmProviderIcon
 							provider={defaultModel.provider}
 							baseUrl={defaultAvailableModel?.baseUrl}
-							className='size-4 opacity-100'
+							className={styles.chatInputModelSelectLlmProviderIcon}
 						/>
 					)}
 					{QUARRY_DEFAULT_LABEL}
 					{defaultAvailableModel && (
-						<span className='text-muted-foreground'>{defaultAvailableModel.name}</span>
+						<span className={styles.chatInputModelSelectSpan2}>{defaultAvailableModel.name}</span>
 					)}
 				</SelectItem>
 				<SelectSeparator />
@@ -177,7 +178,7 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 						<LlmProviderIcon
 							provider={model.provider}
 							baseUrl={model.baseUrl}
-							className='size-4 opacity-100'
+							className={styles.chatInputModelSelectLlmProviderIcon}
 						/>
 						{model.name}
 						<NamedProviderHint provider={model.provider} />
@@ -187,8 +188,8 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 				{isAdmin && (
 					<>
 						<SelectSeparator />
-						<SelectItem value={MANAGE_MODELS_VALUE} className='text-muted-foreground'>
-							<Settings className='size-4' />
+						<SelectItem value={MANAGE_MODELS_VALUE} className={styles.chatInputModelSelectSpan2}>
+							<Settings className={styles.singleModelLlmProviderIcon} />
 							Manage models
 						</SelectItem>
 					</>
@@ -201,22 +202,22 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 function ExampleModel() {
 	return (
 		<Select value={EXAMPLE_MODEL_VALUE}>
-			<SelectTrigger variant='ghost' className='p-0 gap-1 text-sm' size='sm' aria-label='Model'>
+			<SelectTrigger variant='ghost' className={styles.chatInputModelSelectSelectTrigger} size='sm' aria-label='Model'>
 				<SelectValue>
-					<div className='flex items-center gap-2'>
-						<QuarryIcon className='size-4 text-foreground opacity-50' />
-						<span className='leading-none'>{EXAMPLE_MODEL_NAME}</span>
+					<div className={styles.chatInputModelSelectDiv2}>
+						<QuarryIcon className={styles.exampleModelQuarryIcon} />
+						<span className={styles.chatInputModelSelectSpan}>{EXAMPLE_MODEL_NAME}</span>
 					</div>
 				</SelectValue>
 			</SelectTrigger>
 			<SelectContent align='center' position='popper' side='top' collisionPadding={12}>
 				<SelectItem value={EXAMPLE_MODEL_VALUE}>
-					<QuarryIcon className='size-4 text-foreground' />
+					<QuarryIcon className={styles.exampleModelQuarryIcon2} />
 					{EXAMPLE_MODEL_NAME}
 				</SelectItem>
 				<SelectSeparator />
-				<SelectItem value={PROJECT_SETUP_VALUE} disabled className='text-muted-foreground'>
-					<Settings className='size-4' />
+				<SelectItem value={PROJECT_SETUP_VALUE} disabled className={styles.chatInputModelSelectSpan2}>
+					<Settings className={styles.singleModelLlmProviderIcon} />
 					Set up a project to switch models
 				</SelectItem>
 			</SelectContent>
@@ -257,5 +258,5 @@ function NamedProviderHint({ provider }: { provider: LlmProvider }) {
 	if (!name) {
 		return null;
 	}
-	return <span className='text-muted-foreground'>{providerLabel(provider)}</span>;
+	return <span className={styles.chatInputModelSelectSpan2}>{providerLabel(provider)}</span>;
 }

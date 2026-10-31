@@ -19,9 +19,10 @@ import {
 	selectDay,
 } from '@/lib/date-range';
 import { cn } from '@/lib/utils';
+import styles from './date-range-picker.module.css';
 
 const TODAY_CLASS_NAME =
-	'[&>button]:font-semibold [&>button]:text-primary [&>button]:underline [&>button]:underline-offset-4 [&>button[data-range-end=true]]:text-primary-foreground [&>button[data-range-start=true]]:text-primary-foreground';
+	styles.tODAYCLASSNAME;
 
 export function DateRangePicker({
 	value,
@@ -85,17 +86,17 @@ export function DateRangePicker({
 				<Button
 					variant='outline'
 					size='sm'
-					className={cn('h-8 min-w-56 justify-start bg-background font-normal', className)}
+					className={cn(styles.dateRangePickerButton, className)}
 				>
-					<CalendarIcon className='size-3.5 text-muted-foreground' />
+					<CalendarIcon className={styles.dateRangePickerCalendarIcon} />
 					<DateRangeTriggerLabel value={value} placeholder={placeholder} />
-					<ChevronDown className='ml-auto size-3.5 text-muted-foreground' />
+					<ChevronDown className={styles.dateRangePickerChevronDown} />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className='w-auto overflow-hidden p-0' align='start'>
-				<div className='flex flex-col md:flex-row'>
+			<PopoverContent className={styles.dateRangePickerPopoverContent} align='start'>
+				<div className={styles.dateRangePickerDiv}>
 					<DateRangePresetList selection={selection} onSelect={handlePresetSelect} />
-					<div className='flex flex-col'>
+					<div className={styles.dateRangePickerDiv2}>
 						<DateRangeFields
 							range={draftRange}
 							activeField={selection.activeField}
@@ -113,17 +114,17 @@ export function DateRangePicker({
 							showOutsideDays={false}
 							classNames={{ today: TODAY_CLASS_NAME }}
 							modifiers={{ preview: previewRange ?? [] }}
-							modifiersClassNames={{ preview: 'bg-accent/70 [&>button]:rounded-none' }}
+							modifiersClassNames={{ preview: styles.dateRangePickerPreview }}
 						/>
 					</div>
 				</div>
-				<div className='flex items-center justify-between gap-6 border-t px-4 py-3'>
+				<div className={styles.dateRangePickerDiv3}>
 					<DateRangeHint selection={selection} />
-					<div className='flex items-center gap-2'>
-						<Button variant='ghost' size='sm' className='h-8' onClick={() => setIsOpen(false)}>
+					<div className={styles.dateRangePickerDiv4}>
+						<Button variant='ghost' size='sm' className={styles.dateRangePickerButton2} onClick={() => setIsOpen(false)}>
 							Cancel
 						</Button>
-						<Button size='sm' className='h-8 px-4' disabled={!isDraftComplete} onClick={handleApply}>
+						<Button size='sm' className={styles.dateRangePickerButton3} disabled={!isDraftComplete} onClick={handleApply}>
 							Apply
 						</Button>
 					</div>
@@ -135,7 +136,7 @@ export function DateRangePicker({
 
 function DateRangeTriggerLabel({ value, placeholder }: { value: DateRange | undefined; placeholder: string }) {
 	if (!value?.from || !value.to) {
-		return <span className='text-muted-foreground'>{placeholder}</span>;
+		return <span className={styles.dateRangeTriggerLabelSpan}>{placeholder}</span>;
 	}
 
 	const preset = findMatchingPreset(value);
@@ -144,9 +145,9 @@ function DateRangeTriggerLabel({ value, placeholder }: { value: DateRange | unde
 	}
 
 	return (
-		<span className='flex items-center gap-1.5'>
-			<span className='font-medium'>{preset.label}</span>
-			<span className='text-muted-foreground'>{formatShortRange(value)}</span>
+		<span className={styles.dateRangeTriggerLabelSpan2}>
+			<span className={styles.dateRangeTriggerLabelSpan3}>{preset.label}</span>
+			<span className={styles.dateRangeTriggerLabelSpan}>{formatShortRange(value)}</span>
 		</span>
 	);
 }
@@ -161,8 +162,8 @@ function DateRangePresetList({
 	const selectedPresetId = selection.presetId ?? findMatchingPreset(selection.range)?.id;
 
 	return (
-		<div className='grid grid-cols-2 gap-0.5 border-b bg-muted/30 p-2 md:flex md:w-44 md:flex-col md:border-r md:border-b-0'>
-			<span className='col-span-2 px-2 pt-1 pb-1.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase'>
+		<div className={styles.dateRangePresetListDiv}>
+			<span className={styles.dateRangePresetListSpan}>
 				Quick select
 			</span>
 			{DATE_RANGE_PRESETS.map((preset) => {
@@ -173,12 +174,12 @@ function DateRangePresetList({
 						type='button'
 						onClick={() => onSelect(preset)}
 						className={cn(
-							'flex items-center justify-between rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent',
-							isSelected && 'bg-accent font-medium text-foreground',
+							styles.dateRangePresetListButton,
+							isSelected && styles.dateRangePresetListButton2,
 						)}
 					>
 						{preset.label}
-						{isSelected && <Check className='size-3.5 text-primary' />}
+						{isSelected && <Check className={styles.dateRangePresetListCheck} />}
 					</button>
 				);
 			})}
@@ -196,14 +197,14 @@ function DateRangeFields({
 	onFieldFocus: (field: DateRangeField) => void;
 }) {
 	return (
-		<div className='flex items-end gap-2 border-b px-3 pt-3 pb-3'>
+		<div className={styles.dateRangeFieldsDiv}>
 			<DateRangeFieldButton
 				label='Start date'
 				date={range?.from}
 				isActive={activeField === 'start'}
 				onClick={() => onFieldFocus('start')}
 			/>
-			<ArrowRight className='mb-2.5 size-4 shrink-0 text-muted-foreground' />
+			<ArrowRight className={styles.dateRangeFieldsArrowRight} />
 			<DateRangeFieldButton
 				label='End date'
 				date={range?.to}
@@ -231,8 +232,8 @@ function DateRangeFieldButton({
 	const dateLabel = date ? formatRangeDate(date) : 'Select date';
 
 	return (
-		<div className='flex flex-1 flex-col gap-1'>
-			<span className='text-xs font-medium text-muted-foreground'>{label}</span>
+		<div className={styles.dateRangeFieldButtonDiv}>
+			<span className={styles.dateRangeFieldButtonSpan}>{label}</span>
 			<button
 				type='button'
 				disabled={isDisabled}
@@ -240,9 +241,9 @@ function DateRangeFieldButton({
 				aria-label={`${label}: ${dateLabel}`}
 				aria-pressed={isActive}
 				className={cn(
-					'flex h-9 items-center rounded-md border bg-background px-3 text-left text-sm transition-colors hover:border-ring disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border',
-					isActive && 'border-primary ring-[3px] ring-primary/15 hover:border-primary',
-					!date && 'text-muted-foreground',
+					styles.dateRangeFieldButtonButton,
+					isActive && styles.dateRangeFieldButtonButton2,
+					!date && styles.dateRangeTriggerLabelSpan,
 				)}
 			>
 				{dateLabel}
@@ -262,8 +263,8 @@ function DateRangeHint({ selection }: { selection: DateRangeSelection }) {
 		return <DateRangeStep step={2} message='Now click a day to set the end date' />;
 	}
 	return (
-		<span className='text-xs text-muted-foreground'>
-			<span className='font-medium text-foreground'>
+		<span className={styles.dateRangeHintSpan}>
+			<span className={styles.dateRangeHintSpan2}>
 				{dayCount} {dayCount === 1 ? 'day' : 'days'}
 			</span>{' '}
 			selected · click a day to start over
@@ -273,8 +274,8 @@ function DateRangeHint({ selection }: { selection: DateRangeSelection }) {
 
 function DateRangeStep({ step, message }: { step: 1 | 2; message: string }) {
 	return (
-		<span className='flex items-center gap-2 text-xs text-muted-foreground'>
-			<span className='flex size-5 items-center justify-center rounded-full bg-primary/10 text-[11px] font-semibold text-primary'>
+		<span className={styles.dateRangeStepSpan}>
+			<span className={styles.dateRangeStepSpan2}>
 				{step}
 			</span>
 			{message}

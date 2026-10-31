@@ -19,6 +19,7 @@ import { PaperSheet, StoryThumbnail } from '@/components/story-thumbnail';
 import StoryIcon from '@/components/ui/story-icon';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
+import styles from './viewer-shared-items.module.css';
 
 export function ViewerGroups({ groups, displayMode }: { groups: SharedGroup[]; displayMode: StoryPanelDisplayMode }) {
 	return (
@@ -27,7 +28,7 @@ export function ViewerGroups({ groups, displayMode }: { groups: SharedGroup[]; d
 				<CardsSection
 					key={group.label}
 					title={group.label}
-					className={index < groups.length - 1 ? 'mb-10' : undefined}
+					className={index < groups.length - 1 ? styles.viewerGroupsCardsSection : undefined}
 				>
 					<CardsGrid displayMode={displayMode}>
 						{group.items.map((item) =>
@@ -46,10 +47,10 @@ export function ViewerGroups({ groups, displayMode }: { groups: SharedGroup[]; d
 
 export function ViewerEmptyState() {
 	return (
-		<div className='flex flex-col items-center justify-center flex-1 py-24 text-center'>
-			<StoryIcon className='size-10 text-muted-foreground/40 mb-4' />
-			<p className='text-muted-foreground text-sm'>No shared content yet.</p>
-			<p className='text-muted-foreground/60 text-sm mt-1'>Stories and chats shared with you will appear here.</p>
+		<div className={styles.viewerEmptyStateDiv}>
+			<StoryIcon className={styles.viewerEmptyStateStoryIcon} />
+			<p className={styles.viewerEmptyStateP}>No shared content yet.</p>
+			<p className={styles.viewerEmptyStateP2}>Stories and chats shared with you will appear here.</p>
 		</div>
 	);
 }
@@ -58,7 +59,7 @@ function SharedStoryCard({ item, displayMode }: { item: SharedItem; displayMode:
 	if (displayMode === 'lines') {
 		return (
 			<Link to='/stories/$storyId' params={{ storyId: item.id }} className={LINES_CARD_CLASS}>
-				<SharedItemLine item={item} icon={<StoryIcon className='size-3.5 text-muted-foreground shrink-0' />} />
+				<SharedItemLine item={item} icon={<StoryIcon className={styles.sharedStoryCardStoryIcon} />} />
 			</Link>
 		);
 	}
@@ -89,7 +90,7 @@ function SharedChatCard({ item, displayMode }: { item: SharedItem; displayMode: 
 			<Link to='/shared-chat/$shareId' params={{ shareId: item.id }} className={LINES_CARD_CLASS}>
 				<SharedItemLine
 					item={item}
-					icon={<MessageSquare className='size-3.5 text-muted-foreground shrink-0' />}
+					icon={<MessageSquare className={styles.sharedStoryCardStoryIcon} />}
 				/>
 			</Link>
 		);
@@ -108,9 +109,9 @@ function SharedItemLine({ item, icon }: { item: SharedItem; icon: ReactNode }) {
 	return (
 		<>
 			{icon}
-			<span className='text-sm font-medium truncate'>{item.title}</span>
+			<span className={styles.sharedItemLineSpan}>{item.title}</span>
 			<SharedItemBadges item={item} mode='lines' />
-			<span className='ml-auto text-xs text-muted-foreground whitespace-nowrap'>
+			<span className={styles.sharedItemLineSpan2}>
 				{`${item.authorName} · ${formatRelativeDate(item.createdAt)}`}
 			</span>
 		</>
@@ -121,8 +122,8 @@ function SharedItemGrid({ item, thumbnail }: { item: SharedItem; thumbnail: Reac
 	return (
 		<>
 			<div className={GRID_THUMBNAIL_CLASS}>{thumbnail}</div>
-			<div className='absolute inset-0 flex flex-col justify-end p-2.5'>
-				<div className='flex items-end gap-1.5'>
+			<div className={styles.sharedItemGridDiv}>
+				<div className={styles.sharedItemGridDiv2}>
 					<GridCardFooter
 						title={item.title}
 						subtitle={<AuthorDateLabel author={item.authorName} createdAt={item.createdAt} />}
@@ -141,7 +142,7 @@ function SharedItemBadges({ item, mode }: { item: SharedItem; mode: 'grid' | 'li
 	}
 
 	return (
-		<div className='flex items-center gap-2 shrink-0'>
+		<div className={styles.sharedItemBadgesDiv}>
 			{item.isLive && <LiveBadge iconOnly={mode === 'grid'} />}
 			{showSharing && item.visibility && (
 				<SharingBadge
@@ -158,8 +159,8 @@ function ChatThumbnail({ bubbles, className }: { bubbles?: MessageBubble[]; clas
 	return (
 		<PaperSheet className={className}>
 			{!bubbles || bubbles.length === 0 ? (
-				<div className='flex items-center justify-center pt-[30%]'>
-					<MessageSquare className='size-8 text-foreground/20' strokeWidth={1} />
+				<div className={styles.chatThumbnailDiv}>
+					<MessageSquare className={styles.chatThumbnailMessageSquare} strokeWidth={1} />
 				</div>
 			) : (
 				<ChatBubbles bubbles={bubbles} />
@@ -184,9 +185,9 @@ function ChatBubbles({ bubbles }: { bubbles: MessageBubble[] }) {
 	);
 }
 
-const USER_BUBBLE_BORDER = 'border-primary/40';
-const USER_BUBBLE_LINE = 'bg-primary/40';
-const USER_BUBBLE_LINE_WIDTHS = ['w-full', 'w-4/5', 'w-3/5'];
+const USER_BUBBLE_BORDER = styles.uSERBUBBLEBORDER;
+const USER_BUBBLE_LINE = styles.uSERBUBBLELINE;
+const USER_BUBBLE_LINE_WIDTHS = [styles.uSERBUBBLELINEWIDTHS, styles.uSERBUBBLELINEWIDTHS2, styles.uSERBUBBLELINEWIDTHS3];
 
 function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: number }) {
 	const ratio = Math.max(charCount / maxChars, 0.15);
@@ -196,7 +197,7 @@ function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: numb
 	return (
 		<div
 			className={cn(
-				'self-end shrink-0 flex flex-col gap-[3px] rounded-md border px-[6px] py-[5px]',
+				styles.userBubbleDiv,
 				USER_BUBBLE_BORDER,
 			)}
 			style={{ width: `${Math.round(widthPercent)}%` }}
@@ -205,7 +206,7 @@ function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: numb
 				<div
 					key={i}
 					className={cn(
-						'h-[1px] rounded-full',
+						styles.userBubbleDiv2,
 						USER_BUBBLE_LINE,
 						USER_BUBBLE_LINE_WIDTHS[i % USER_BUBBLE_LINE_WIDTHS.length],
 					)}
@@ -215,18 +216,18 @@ function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: numb
 	);
 }
 
-const ASSISTANT_LINE_WIDTHS = ['w-3/4', 'w-5/6', 'w-2/3', 'w-1/2', 'w-4/5', 'w-3/5'];
+const ASSISTANT_LINE_WIDTHS = [styles.aSSISTANTLINEWIDTHS, styles.aSSISTANTLINEWIDTHS2, styles.aSSISTANTLINEWIDTHS3, styles.aSSISTANTLINEWIDTHS4, styles.uSERBUBBLELINEWIDTHS2, styles.uSERBUBBLELINEWIDTHS3];
 
 function AssistantResponseLines({ charCount }: { charCount: number }) {
 	const lineCount = Math.max(2, Math.min(Math.round(charCount / 80), 6));
 
 	return (
-		<div className='self-stretch flex flex-col gap-[3px] py-1'>
+		<div className={styles.assistantResponseLinesDiv}>
 			{Array.from({ length: lineCount }, (_, i) => (
 				<div
 					key={i}
 					className={cn(
-						'h-[1px] rounded-full bg-foreground/15',
+						styles.assistantResponseLinesDiv2,
 						ASSISTANT_LINE_WIDTHS[i % ASSISTANT_LINE_WIDTHS.length],
 					)}
 				/>

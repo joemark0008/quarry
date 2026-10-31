@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
+import styles from './story-header-actions.module.css';
 
 interface ShareButtonProps {
 	isShared: boolean;
@@ -31,15 +32,15 @@ export function ShareButton({ isShared, onShare, disabled = false }: ShareButton
 				<Button
 					variant='ghost'
 					size='icon-sm'
-					className='hover:rounded-full'
+					className={styles.shareButtonButton}
 					onClick={onShare}
 					disabled={disabled}
 					aria-label='Share'
 				>
 					{isShared ? (
-						<Globe className='size-3.5 text-primary' strokeWidth={2.25} />
+						<Globe className={styles.shareButtonGlobe} strokeWidth={2.25} />
 					) : (
-						<Upload className='size-3.5' strokeWidth={2.25} />
+						<Upload className={styles.shareButtonUpload} strokeWidth={2.25} />
 					)}
 				</Button>
 			</TooltipTrigger>
@@ -83,7 +84,7 @@ export function StoryFavoriteMenuItem({ storyId }: { storyId: string }) {
 
 	return (
 		<DropdownMenuItem onSelect={toggle} disabled={isPending}>
-			<Star className={cn(isFavorited && 'fill-foreground')} strokeWidth={2.25} />
+			<Star className={cn(isFavorited && styles.storyFavoriteMenuItemStar)} strokeWidth={2.25} />
 			<span>{isFavorited ? 'Unfavorite' : 'Favorite'}</span>
 		</DropdownMenuItem>
 	);
@@ -111,7 +112,7 @@ export function StoryCertifyMenuItem({ storyId }: { storyId: string }) {
 			disabled={isPending}
 			title={isCertified && certifiedByName ? `Certified by ${certifiedByName}` : undefined}
 		>
-			<ShieldCheck className={cn(isCertified && 'fill-foreground/20')} strokeWidth={2.25} />
+			<ShieldCheck className={cn(isCertified && styles.storyCertifyMenuItemShieldCheck)} strokeWidth={2.25} />
 			<span>{isCertified ? 'Remove certification' : 'Certify'}</span>
 		</DropdownMenuItem>
 	);
@@ -130,12 +131,12 @@ export function StoryFavoritedButton({ storyId }: { storyId: string }) {
 				<Button
 					variant='ghost'
 					size='icon-sm'
-					className='hover:rounded-full'
+					className={styles.shareButtonButton}
 					onClick={toggle}
 					disabled={isPending}
 					aria-label='Unfavorite'
 				>
-					<Star className='size-3.5 fill-foreground' strokeWidth={2.25} />
+					<Star className={styles.storyFavoritedButtonStar} strokeWidth={2.25} />
 				</Button>
 			</TooltipTrigger>
 			<TooltipContent>Unfavorite</TooltipContent>
@@ -167,12 +168,12 @@ export function StoryFeedbackButtons({ storyId }: { storyId: string }) {
 
 	return (
 		<>
-			<div className='flex items-center'>
+			<div className={styles.storyFeedbackButtonsDiv}>
 				<StoryFeedbackButton
 					Icon={ThumbsUp}
 					label='Good story'
 					isActive={feedback?.vote === 'up'}
-					activeClassName='text-primary'
+					activeClassName={styles.storyFeedbackButtonsStoryFeedbackButton}
 					disabled={submitFeedback.isPending}
 					onClick={() => openDialog('up')}
 				/>
@@ -180,7 +181,7 @@ export function StoryFeedbackButtons({ storyId }: { storyId: string }) {
 					Icon={ThumbsDown}
 					label='Bad story'
 					isActive={feedback?.vote === 'down'}
-					activeClassName='text-destructive'
+					activeClassName={styles.storyFeedbackButtonsStoryFeedbackButton2}
 					disabled={submitFeedback.isPending}
 					onClick={() => openDialog('down')}
 				/>
@@ -214,13 +215,13 @@ function StoryFeedbackButton({ Icon, label, isActive, activeClassName, disabled,
 				<Button
 					variant='ghost'
 					size='icon-sm'
-					className={cn('hover:rounded-full', isActive && activeClassName)}
+					className={cn(styles.shareButtonButton, isActive && activeClassName)}
 					onClick={onClick}
 					disabled={disabled}
 					aria-label={label}
 					aria-pressed={isActive}
 				>
-					<Icon className='size-4' strokeWidth={1.75} />
+					<Icon className={styles.storyFeedbackButtonIcon} strokeWidth={1.75} />
 				</Button>
 			</TooltipTrigger>
 			<TooltipContent>{label}</TooltipContent>

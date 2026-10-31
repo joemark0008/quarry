@@ -1,0 +1,15 @@
+.readQueryResultToolCallCode {
+	border-radius: 0.25rem;
+	background-color: color-mix(in oklab, var(--app-surface) 50%, transparent);
+	padding-inline: 0.25rem;
+	padding-block: 0.125rem;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+}
+.readQueryResultToolCallTableDisplay {
+	max-height: 20rem;
+	border-radius: var(--app-radius);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	background-color: transparent;
+}

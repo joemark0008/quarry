@@ -1,0 +1,37 @@
+.storyTabbedContentStoryThemeProvider {
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.storyTabbedContentStoryTabsBar {
+	margin-inline: auto;
+	width: 100%;
+	max-width: 64rem;
+	padding-inline: 1rem;
+	@media (width >= 48rem) {
+		padding-inline: 2rem;
+	}
+}
+.storyTabbedContentDiv {
+	flex: 1;
+	overflow: auto;
+}
+.storyTabbedContentDiv2 {
+	height: var(--story-bottom-inset, 0px);
+	flex-shrink: 0;
+}
+.defaultContent {
+	display: flex;
+	max-width: 64rem;
+	flex-direction: column;
+	gap: 1rem;
+	margin-inline: auto;
+	padding: 1rem;
+
+	@media (width >= 48rem) {
+		padding: 2rem;
+	}
+}

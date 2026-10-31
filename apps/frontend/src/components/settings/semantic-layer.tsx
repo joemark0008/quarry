@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { projectApi } from '@/lib/project-api';
+import styles from './semantic-layer.module.css';
 
 interface SettingsSemanticLayerProps {
 	isAdmin: boolean;
@@ -76,7 +77,7 @@ export function SettingsSemanticLayer({ isAdmin }: SettingsSemanticLayerProps) {
 						onValueChange={handleModeChange}
 						disabled={!isAdmin || !isConfigured || updateAgentSettings.isPending}
 					>
-						<SelectTrigger id={MODE_SELECT_ID} className='w-48'>
+						<SelectTrigger id={MODE_SELECT_ID} className={styles.settingsSemanticLayerSelectTrigger}>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>

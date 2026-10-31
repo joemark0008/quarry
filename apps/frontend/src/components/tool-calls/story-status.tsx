@@ -4,6 +4,7 @@ import StoryIcon from '@/components/ui/story-icon';
 import { Expandable } from '@/components/ui/expandable';
 import { getStoryStatusDisplay } from '@/lib/story-status';
 import { useAssistantMessage } from '@/contexts/assistant-message';
+import styles from './story-status.module.css';
 
 /** An intermediate story action, superseded by a later one on the same story, shown as a one-line status. */
 export const StoryStatus = ({ toolPart }: { toolPart: UIToolPart<'story'> }) => {
@@ -12,7 +13,7 @@ export const StoryStatus = ({ toolPart }: { toolPart: UIToolPart<'story'> }) => 
 	const { isSettled: isMessageSettled } = useAssistantMessage();
 	const { title, version, error, isPending } = getStoryStatusDisplay(toolPart, isMessageSettled);
 	const showChevron = !!error && (isHovering || isExpanded);
-	const statusIcon = error ? <div className='size-2 rounded-full bg-red-500' /> : <StoryIcon className='size-3' />;
+	const statusIcon = error ? <div className={styles.statusIconDiv} /> : <StoryIcon className={styles.statusIconStoryIcon} />;
 
 	return (
 		<div
@@ -28,12 +29,12 @@ export const StoryStatus = ({ toolPart }: { toolPart: UIToolPart<'story'> }) => 
 				onExpandedChange={setIsExpanded}
 				disabled={!error}
 				isLoading={isPending}
-				triggerClassName='text-foreground disabled:!opacity-100'
+				triggerClassName={styles.storyStatusExpandable}
 				leadingIcon={showChevron ? undefined : statusIcon}
 				variant='inline'
 			>
 				{error && (
-					<pre className='p-2 overflow-auto max-h-80 m-0 whitespace-pre-wrap wrap-break-word'>{error}</pre>
+					<pre className={styles.storyStatusPre}>{error}</pre>
 				)}
 			</Expandable>
 		</div>

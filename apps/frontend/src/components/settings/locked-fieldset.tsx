@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import styles from './locked-fieldset.module.css';
 
 interface LockedFieldsetProps {
 	disabled: boolean;
@@ -11,9 +12,9 @@ export function LockedFieldset({ disabled, children, className }: LockedFieldset
 		<fieldset
 			disabled={disabled}
 			className={cn(
-				'flex min-w-0 flex-col gap-4 border-0 p-0',
+				styles.lockedFieldsetFieldset,
 				className,
-				disabled && 'pointer-events-none opacity-60',
+				disabled && styles.lockedFieldsetFieldset2,
 			)}
 			aria-disabled={disabled}
 		>

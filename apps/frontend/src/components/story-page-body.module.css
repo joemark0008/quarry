@@ -1,0 +1,43 @@
+.storyPageBodyStoryThemeProvider {
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.storyPageBodyDiv {
+	min-height: 0px;
+	flex: 1;
+	overflow: auto;
+}
+.storyPageBodyStoryTabbedEditor {
+	margin-inline: auto;
+	width: 100%;
+	max-width: 64rem;
+	padding-inline: 1rem;
+	@media (width >= 48rem) {
+		padding-inline: 2rem;
+	}
+}
+.storyPageBodyStoryTabbedEditor2 {
+	margin-inline: auto;
+	width: 100%;
+	max-width: 64rem;
+	padding: 1rem;
+	@media (width >= 48rem) {
+		padding: 2rem;
+	}
+}
+.storyPageBodyDiv2 {
+	margin-inline: auto;
+	max-width: 64rem;
+	padding: 1rem;
+	@media (width >= 48rem) {
+		padding: 2rem;
+	}
+}
+.storyPageBodyDiv3 {
+	min-height: 0px;
+	flex: 1;
+}

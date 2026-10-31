@@ -1,0 +1,11 @@
+.embedLayoutDiv {
+	display: flex;
+	min-height: 0px;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

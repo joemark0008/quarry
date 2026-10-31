@@ -1,0 +1,80 @@
+.folderTreeSelectDiv {
+	display: flex;
+	max-height: 16rem;
+	flex-direction: column;
+	gap: 0.125rem;
+	overflow-y: auto;
+	border-radius: calc(var(--app-radius) - 2px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	padding: 0.25rem;
+}
+.folderTreeSelectHome {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.folderTreeItemButton {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	gap: 0.5rem;
+	border-radius: 0.25rem;
+	padding-inline: 0.5rem;
+	padding-block: 0.375rem;
+	text-align: left;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	transition-property:
+		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
+		--fx-gradient-via, --fx-gradient-to;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+}
+.folderTreeItemButton2 {
+	background-color: var(--app-fill);
+	color: var(--app-text);
+}
+.folderTreeItemButton3 {
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-fill);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-fill) 50%, transparent);
+		}
+	}
+}
+.folderTreeItemButton4 {
+	cursor: not-allowed;
+	opacity: 30%;
+}
+.folderTreeItemChevronRight {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex-shrink: 0;
+	color: color-mix(in oklab, var(--app-muted) 50%, transparent);
+}
+.folderTreeItemSpan {
+	flex-shrink: 0;
+	color: var(--app-muted);
+}
+.folderTreeItemSpan2 {
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.folderTreeItemLock {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex-shrink: 0;
+	color: color-mix(in oklab, var(--app-muted) 60%, transparent);
+}
+.folderTreeItemGlobe {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex-shrink: 0;
+	color: color-mix(in oklab, var(--app-muted) 30%, transparent);
+}

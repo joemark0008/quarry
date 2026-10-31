@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import styles from './recommendation-text.module.css';
 
 const MENTION_LABELS: Record<string, string> = {
 	__story__: 'Story mode',
@@ -34,7 +35,7 @@ export function RecommendationText({ text }: { text: string }): ReactNode {
 			nodes.push(cleaned.slice(lastIndex, index));
 		}
 		nodes.push(
-			<code key={key++} className='rounded bg-muted px-1 py-0.5 font-mono text-[0.85em]'>
+			<code key={key++} className={styles.recommendationTextCode}>
 				{match[1]}
 			</code>,
 		);

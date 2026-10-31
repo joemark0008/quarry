@@ -24,6 +24,7 @@ import { useToggleStarred } from '@/hooks/use-toggle-starred';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
+import styles from './sidebar-chat-list-item.module.css';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {
 	chat: GroupedChatItem;
@@ -112,14 +113,14 @@ export function ChatListItem({ chat }: Props) {
 				params={{ chatId: chat.id }}
 				to={`/$chatId`}
 				className={cn(
-					'group relative w-full rounded-md px-2 py-2 transition-[background-color,padding,opacity] min-w-0 flex-1 flex gap-2 items-center',
-					!isRenaming && 'hover:pr-9 has-data-[state=open]:pr-9',
+					`${styles.chatListItemLink} group`,
+					!isRenaming && styles.chatListItemLink2,
 				)}
 				inactiveProps={{
-					className: 'text-sidebar-foreground hover:bg-sidebar-accent opacity-75',
+					className: styles.chatListItemClassName,
 				}}
 				activeProps={{
-					className: 'text-foreground bg-sidebar-accent font-medium',
+					className: styles.chatListItemClassName2,
 				}}
 				onDoubleClick={handleDoubleClick}
 			>
@@ -133,14 +134,14 @@ export function ChatListItem({ chat }: Props) {
 					/>
 				) : (
 					<>
-						{activity.unread && <span className='size-1.5 shrink-0 rounded-full bg-primary' />}
-						<div className='truncate text-sm mr-auto'>
+						{activity.unread && <span className={styles.chatListItemSpan} />}
+						<div className={styles.chatListItemDiv}>
 							{chat.isOnboarding ? 'Project setup' : chat.title}
 						</div>
 						{activity.running ? (
-							<Spinner className='size-3.5 shrink-0' />
+							<Spinner className={styles.chatListItemSpinner} />
 						) : (
-							<div className='text-xs text-muted-foreground whitespace-nowrap'>
+							<div className={styles.chatListItemDiv2}>
 								{timeAgo.humanReadable}
 							</div>
 						)}
@@ -150,14 +151,14 @@ export function ChatListItem({ chat }: Props) {
 								<Button
 									variant='ghost'
 									size='icon-xs'
-									className='absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100'
+									className={styles.chatListItemButton}
 									onClick={(event) => event.stopPropagation()}
 								>
 									<EllipsisVertical />
 								</Button>
 							</DropdownMenuTrigger>
 
-							<DropdownMenuContent className='w-auto min-w-0' onClick={(e) => e.stopPropagation()}>
+							<DropdownMenuContent className={styles.chatListItemDropdownMenuContent} onClick={(e) => e.stopPropagation()}>
 								<DropdownMenuGroup>
 									<DropdownMenuItem onSelect={handleStarSelect}>
 										{chat.isStarred ? <StarOffIcon /> : <StarIcon />}

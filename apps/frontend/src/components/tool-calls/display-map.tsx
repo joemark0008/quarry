@@ -53,6 +53,7 @@ import { useAgentMessagesGetter, useOptionalAgentContext } from '@/contexts/agen
 import { useSidePanel } from '@/contexts/side-panel';
 import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { storyApi } from '@/lib/story-api';
+import styles from './display-map.module.css';
 
 const MapView = lazy(() => import('./display-map-view'));
 
@@ -197,7 +198,7 @@ export const DisplayMapToolCall = ({
 	if (output && output.error) {
 		return (
 			<ToolCallWrapper defaultExpanded title='Could not display the map'>
-				<div className='p-4 text-red-400 text-sm'>{output.error}</div>
+				<div className={styles.displayMapToolCallDiv}>{output.error}</div>
 			</ToolCallWrapper>
 		);
 	}
@@ -212,7 +213,7 @@ export const DisplayMapToolCall = ({
 
 	if (!sourceData) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayMapToolCallDiv2}>
 				Could not display the map because the data is missing.
 			</div>
 		);
@@ -224,7 +225,7 @@ export const DisplayMapToolCall = ({
 
 	if (!isChoropleth && mapConfig.latitude_key === mapConfig.longitude_key) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayMapToolCallDiv2}>
 				Could not display the map because the latitude and longitude keys resolve to the same column.
 			</div>
 		);
@@ -232,39 +233,39 @@ export const DisplayMapToolCall = ({
 
 	if (!isChoropleth && points.length === 0) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayMapToolCallDiv2}>
 				Could not display the map because no rows contain valid coordinates.
 			</div>
 		);
 	}
 
 	return (
-		<div ref={slotRef} className='-mx-3 my-4'>
+		<div ref={slotRef} className={styles.displayMapToolCallDiv3}>
 			<div
-				className='group flex flex-col gap-2 transition-[margin,width] duration-200 ease-out'
+				className={`${styles.displayMapToolCallDiv4} group`}
 				style={breakoutStyle}
 			>
 				<div
 					className={cn(
-						'overflow-hidden rounded-lg border transition-colors',
-						viewMode === 'map' ? 'border-transparent group-hover:border-border' : 'border-border',
+						styles.displayMapToolCallDiv5,
+						viewMode === 'map' ? styles.displayMapToolCallDiv6 : styles.displayMapToolCallDiv7,
 					)}
 				>
-					<div className='flex items-center justify-between gap-2 px-3 pt-2 pb-1'>
-						<span className='text-sm font-medium text-foreground flex-1 truncate'>{config.title}</span>
-						<div className='flex items-center gap-1'>
+					<div className={styles.displayMapToolCallDiv8}>
+						<span className={styles.displayMapToolCallSpan}>{config.title}</span>
+						<div className={styles.displayMapToolCallDiv9}>
 							{viewMode === 'map' && (
 								<>
 									<ViewToggleButton
 										icon={
 											isExpanded ? (
 												<FoldHorizontal
-													className='size-3 text-muted-foreground/70'
+													className={styles.displayMapToolCallFoldHorizontal}
 													strokeWidth={2.25}
 												/>
 											) : (
 												<UnfoldHorizontal
-													className='size-3 text-muted-foreground/70'
+													className={styles.displayMapToolCallFoldHorizontal}
 													strokeWidth={2.25}
 												/>
 											)
@@ -277,20 +278,20 @@ export const DisplayMapToolCall = ({
 								</>
 							)}
 							<ViewToggleButton
-								icon={<MapIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+								icon={<MapIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 								title='View map'
 								isActive={viewMode === 'map'}
 								onClick={() => setViewMode('map')}
 							/>
 							<ViewToggleButton
-								icon={<TableIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+								icon={<TableIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 								title='View data table'
 								isActive={viewMode === 'table'}
 								onClick={() => setViewMode('table')}
 							/>
 							{sourceQuery?.input && (
 								<ViewToggleButton
-									icon={<Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+									icon={<Code className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 									title='View SQL query'
 									isActive={viewMode === 'query'}
 									onClick={() => setViewMode('query')}
@@ -298,7 +299,7 @@ export const DisplayMapToolCall = ({
 							)}
 							{storyIds.length > 0 && (
 								<ViewToggleButton
-									icon={<FilePlus className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+									icon={<FilePlus className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 									title='Add to story'
 									isActive={false}
 									onClick={handleAddToStory}
@@ -306,7 +307,7 @@ export const DisplayMapToolCall = ({
 							)}
 							{viewMode === 'map' ? (
 								<ViewToggleButton
-									icon={<Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+									icon={<Download className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 									title='Download as PNG'
 									isActive={false}
 									onClick={handleDownloadPng}
@@ -320,16 +321,16 @@ export const DisplayMapToolCall = ({
 									<Button
 										variant='ghost-muted'
 										size='icon-xs'
-										className='hover:rounded-full hover:bg-accent/70'
+										className={styles.displayMapToolCallButton}
 										title='Export data'
 									>
-										<Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+										<Download className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
 									</Button>
 								</ExportDataMenu>
 							)}
 							{isEditable && (
 								<ViewToggleButton
-									icon={<Pencil className='size-3 text-muted-foreground/70' strokeWidth={2.25} />}
+									icon={<Pencil className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
 									title='Edit map'
 									isActive={false}
 									onClick={() => setIsEditOpen(true)}
@@ -350,9 +351,9 @@ export const DisplayMapToolCall = ({
 						/>
 					)}
 
-					<div className={cn('px-3 pb-3', viewMode !== 'map' && 'hidden')}>
+					<div className={cn(styles.displayMapToolCallDiv10, viewMode !== 'map' && styles.displayMapToolCallDiv11)}>
 						{(viewMode === 'map' || hasShownMap) && (
-							<Suspense fallback={<Skeleton className='w-full aspect-3/2 rounded-lg' />}>
+							<Suspense fallback={<Skeleton className={styles.displayMapToolCallSkeleton} />}>
 								<MapView
 									ref={mapViewRef}
 									points={visiblePoints}
@@ -367,7 +368,7 @@ export const DisplayMapToolCall = ({
 						<TableDisplay
 							data={sourceData.data as Record<string, unknown>[]}
 							columns={sourceData.columns}
-							tableContainerClassName='max-h-[28rem]'
+							tableContainerClassName={styles.displayMapToolCallTableDisplay}
 							maxRowsBeforePagination={10}
 							compactFooter
 							humanizeColumnLabels
@@ -375,14 +376,14 @@ export const DisplayMapToolCall = ({
 					)}
 
 					{viewMode === 'query' && sourceQuery?.input && (
-						<div className='border-t'>
+						<div className={styles.displayMapToolCallDiv12}>
 							<SqlQueryDisplay query={sourceQuery.input.sql_query} />
 						</div>
 					)}
 				</div>
 
 				{viewMode === 'map' && !isChoropleth && points.length > MAX_MAP_POINTS && (
-					<span className='px-3 text-xs text-foreground/50'>
+					<span className={styles.displayMapToolCallSpan2}>
 						Showing the first {MAX_MAP_POINTS.toLocaleString()} of {points.length.toLocaleString()} points.
 					</span>
 				)}
@@ -417,13 +418,13 @@ function MapStyleSelect() {
 				<Button
 					variant='ghost-muted'
 					size='icon-xs'
-					className='hover:rounded-full hover:bg-accent/70'
+					className={styles.displayMapToolCallButton}
 					title='Map style'
 				>
-					<Palette className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+					<Palette className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='start' className='w-36'>
+			<DropdownMenuContent align='start' className={styles.mapStyleSelectDropdownMenuContent}>
 				<DropdownMenuRadioGroup value={styleId} onValueChange={(value) => setStyleId(value as MapStyleId)}>
 					{MAP_STYLE_OPTIONS.map((option) => (
 						<DropdownMenuRadioItem key={option.id} value={option.id}>
@@ -448,7 +449,7 @@ function ViewToggleButton({ icon, title, isActive, onClick }: ViewToggleButtonPr
 		<Button
 			variant='ghost-muted'
 			size='icon-xs'
-			className={cn('hover:rounded-full hover:bg-accent/70', isActive && 'rounded-full bg-accent/70')}
+			className={cn(styles.displayMapToolCallButton, isActive && styles.viewToggleButtonButton)}
 			onClick={onClick}
 			title={title}
 		>

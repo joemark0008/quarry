@@ -1,0 +1,20 @@
+.storyGridDiv {
+	container-type: inline-size;
+}
+.storyGridDiv2 {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1rem;
+	@container (width >= 32rem) {
+		grid-template-columns: var(--quarry-grid-cols);
+	}
+}
+.storyGridDiv3 {
+	display: grid;
+}
+.storyGridDiv4 {
+	gap: 1rem;
+}
+.storyGridDiv5 {
+	min-width: 0px;
+}

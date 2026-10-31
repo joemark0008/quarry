@@ -15,12 +15,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
+import styles from './share-dialog.module.css';
 
 export function ShareLoadingDialog({
 	open,
 	onOpenChange,
 	title,
-	className = 'sm:max-w-md',
+	className = styles.state100,
 }: {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -34,8 +35,8 @@ export function ShareLoadingDialog({
 					<DialogTitle>{title}</DialogTitle>
 					<DialogDescription>Loading sharing settings...</DialogDescription>
 				</DialogHeader>
-				<div className='flex items-center justify-center py-6'>
-					<Loader2 className='size-4 animate-spin text-muted-foreground' />
+				<div className={styles.shareLoadingDialogDiv}>
+					<Loader2 className={styles.shareLoadingDialogLoader2} />
 				</div>
 			</DialogContent>
 		</Dialog>
@@ -55,10 +56,10 @@ export function ShareErrorDialog({
 }) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.shareErrorDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
-					<DialogDescription className='text-destructive'>
+					<DialogDescription className={styles.shareErrorDialogDialogDescription}>
 						Failed to load sharing settings. Please try again.
 					</DialogDescription>
 				</DialogHeader>
@@ -88,17 +89,17 @@ export function VisibilityPicker({
 		return null;
 	}
 	return (
-		<div className='flex gap-3'>
+		<div className={styles.visibilityPickerDiv}>
 			<VisibilityOption
 				active={visibility === 'project'}
-				icon={<Globe className='size-5' />}
+				icon={<Globe className={styles.visibilityPickerGlobe} />}
 				label='Entire project'
 				description='All project members'
 				onClick={() => onChange('project')}
 			/>
 			<VisibilityOption
 				active={visibility === 'specific'}
-				icon={<Users className='size-5' />}
+				icon={<Users className={styles.visibilityPickerGlobe} />}
 				label={specificLabel}
 				description='Choose who can view'
 				onClick={() => onChange('specific')}
@@ -117,12 +118,12 @@ export function NotifyPeopleToggle({
 	itemLabel: string;
 }) {
 	return (
-		<div className='flex items-center justify-between gap-3 rounded-lg border p-3'>
-			<div className='flex flex-col'>
-				<label htmlFor='notify-people' className='text-md font-medium'>
+		<div className={styles.notifyPeopleToggleDiv}>
+			<div className={styles.notifyPeopleToggleDiv2}>
+				<label htmlFor='notify-people' className={`${styles.notifyPeopleToggleLabel} text-md`}>
 					Notify people
 				</label>
-				<p className='text-xs text-muted-foreground'>Send an email letting them know about this {itemLabel}</p>
+				<p className={styles.notifyPeopleToggleP}>Send an email letting them know about this {itemLabel}</p>
 			</div>
 			<Switch id='notify-people' checked={checked} onCheckedChange={onCheckedChange} />
 		</div>
@@ -141,27 +142,27 @@ export function VisibilitySummary({
 	itemLabel: string;
 }) {
 	return (
-		<div className='flex items-center gap-3 rounded-lg border p-3'>
+		<div className={styles.visibilitySummaryDiv}>
 			{visibility === 'project' ? (
 				<>
-					<div className='flex size-8 items-center justify-center rounded-full'>
-						<Globe className='size-4' />
+					<div className={styles.visibilitySummaryDiv2}>
+						<Globe className={styles.visibilitySummaryGlobe} />
 					</div>
-					<div className='flex-1 min-w-0'>
-						<p className='text-md font-medium'>Shared with entire project</p>
-						<p className='text-xs text-muted-foreground'>All project members can view this {itemLabel}</p>
+					<div className={styles.visibilitySummaryDiv3}>
+						<p className={`${styles.notifyPeopleToggleLabel} text-md`}>Shared with entire project</p>
+						<p className={styles.notifyPeopleToggleP}>All project members can view this {itemLabel}</p>
 					</div>
 				</>
 			) : (
 				<>
-					<div className='flex size-8 items-center justify-center rounded-full'>
-						<Users className='size-4' />
+					<div className={styles.visibilitySummaryDiv2}>
+						<Users className={styles.visibilitySummaryGlobe} />
 					</div>
-					<div className='flex-1 min-w-0'>
-						<p className='text-md font-medium'>
+					<div className={styles.visibilitySummaryDiv3}>
+						<p className={`${styles.notifyPeopleToggleLabel} text-md`}>
 							Shared with {formatRecipientCount(selectedUserIds.size, selectedGroupIds?.size ?? 0)}
 						</p>
-						<p className='text-xs text-muted-foreground'>Only selected members can view this {itemLabel}</p>
+						<p className={styles.notifyPeopleToggleP}>Only selected members can view this {itemLabel}</p>
 					</div>
 				</>
 			)}
@@ -191,29 +192,29 @@ export function ManageShareFooter({
 	onCopyLink: () => void;
 }) {
 	return (
-		<DialogFooter className='flex-row sm:justify-between'>
+		<DialogFooter className={styles.manageShareFooterDialogFooter}>
 			<Button
 				variant='outline'
 				onClick={onUnshare}
 				disabled={isBusy}
-				className='gap-1.5 text-destructive hover:text-destructive rounded-full'
+				className={styles.manageShareFooterButton}
 			>
-				{isDeletePending ? <Loader2 className='size-3.5 animate-spin' /> : <Unlink className='size-3.5' />}
+				{isDeletePending ? <Loader2 className={styles.manageShareFooterLoader2} /> : <Unlink className={styles.manageShareFooterUnlink} />}
 				<span>Unshare</span>
 			</Button>
-			<div className='flex items-center gap-2'>
+			<div className={styles.manageShareFooterDiv}>
 				{hasChanges && (
-					<Button onClick={onSaveAccess} disabled={isBusy || !canSave} className='gap-1.5 rounded-full'>
+					<Button onClick={onSaveAccess} disabled={isBusy || !canSave} className={styles.manageShareFooterButton2}>
 						{isUpdatePending ? (
-							<Loader2 className='size-3.5 animate-spin' />
+							<Loader2 className={styles.manageShareFooterLoader2} />
 						) : (
-							<Check className='size-3.5' />
+							<Check className={styles.manageShareFooterUnlink} />
 						)}
 						<span>Save</span>
 					</Button>
 				)}
-				<Button variant='outline' onClick={onCopyLink} className='gap-1.5 rounded-full'>
-					{isCopied ? <Check className='size-3.5' /> : <LinkIcon className='size-3.5' />}
+				<Button variant='outline' onClick={onCopyLink} className={styles.manageShareFooterButton2}>
+					{isCopied ? <Check className={styles.manageShareFooterUnlink} /> : <LinkIcon className={styles.manageShareFooterUnlink} />}
 					<span>{isCopied ? 'Copied!' : 'Copy link'}</span>
 				</Button>
 			</div>
@@ -239,13 +240,13 @@ export function VisibilityOption({
 			type='button'
 			onClick={onClick}
 			className={cn(
-				'flex-1 flex flex-col items-center gap-1.5 rounded-lg border pt-3 pb-3 shadow-xs transition-colors cursor-pointer',
-				active ? 'border-primary' : 'border-border hover:border-muted-foreground/30 hover:bg-muted/50',
+				styles.visibilityOptionButton,
+				active ? styles.visibilityOptionButton2 : styles.visibilityOptionButton3,
 			)}
 		>
-			<div className='text-foreground'>{icon}</div>
-			<span className='text-md font-medium text-foreground'>{label}</span>
-			<span className='text-xs text-muted-foreground'>{description}</span>
+			<div className={styles.visibilityOptionDiv}>{icon}</div>
+			<span className={`${styles.visibilityOptionSpan} text-md`}>{label}</span>
+			<span className={styles.notifyPeopleToggleP}>{description}</span>
 		</button>
 	);
 }
@@ -284,22 +285,22 @@ export function MemberPicker({
 	const selectedCount = selectedUserIds.size + selectedGroupIds.size;
 
 	return (
-		<div className='flex flex-col gap-2 relative'>
-			<SearchIcon className='absolute translate-x-2 translate-y-2 size-4' />
+		<div className={styles.memberPickerDiv}>
+			<SearchIcon className={styles.memberPickerSearchIcon} />
 			<Input
 				type='search'
 				placeholder={onToggleGroup ? 'Search members or groups...' : 'Search members...'}
 				value={search}
 				onChange={(e) => onSearchChange(e.target.value)}
-				className='h-8 text-sm bg-panel pl-8'
+				className={styles.memberPickerInput}
 			/>
-			<div className='max-h-48 overflow-y-auto'>
+			<div className={styles.memberPickerDiv2}>
 				{isLoading ? (
-					<div className='flex items-center justify-center py-6'>
-						<Loader2 className='size-4 animate-spin text-muted-foreground' />
+					<div className={styles.shareLoadingDialogDiv}>
+						<Loader2 className={styles.shareLoadingDialogLoader2} />
 					</div>
 				) : !hasResults ? (
-					<div className='py-6 text-center text-sm text-muted-foreground'>
+					<div className={styles.memberPickerDiv3}>
 						{search ? 'No members found' : emptyMessage}
 					</div>
 				) : (
@@ -332,7 +333,7 @@ export function MemberPicker({
 				)}
 			</div>
 			{selectedCount > 0 && (
-				<p className='text-xs text-muted-foreground'>
+				<p className={styles.notifyPeopleToggleP}>
 					{formatRecipientCount(selectedUserIds.size, selectedGroupIds.size)} selected
 				</p>
 			)}
@@ -354,9 +355,9 @@ export function MemberRow({
 	return (
 		<PickerRow selected={selected} onClick={onClick}>
 			<Avatar username={name} size='sm' />
-			<div className='min-w-0 flex-1'>
-				<div className='text-sm font-medium truncate'>{name}</div>
-				<div className='text-xs text-muted-foreground truncate'>{email}</div>
+			<div className={styles.visibilitySummaryDiv3}>
+				<div className={styles.memberRowDiv}>{name}</div>
+				<div className={styles.memberRowDiv2}>{email}</div>
 			</div>
 		</PickerRow>
 	);
@@ -375,12 +376,12 @@ function GroupRow({
 }) {
 	return (
 		<PickerRow selected={selected} onClick={onClick}>
-			<div className='flex size-6 shrink-0 items-center justify-center rounded-full bg-muted'>
-				<Users className='size-3.5' />
+			<div className={styles.groupRowDiv}>
+				<Users className={styles.manageShareFooterUnlink} />
 			</div>
-			<div className='min-w-0 flex-1'>
-				<div className='text-sm font-medium truncate'>{name}</div>
-				<div className='text-xs text-muted-foreground truncate'>
+			<div className={styles.visibilitySummaryDiv3}>
+				<div className={styles.memberRowDiv}>{name}</div>
+				<div className={styles.memberRowDiv2}>
 					{memberCount} {memberCount === 1 ? 'member' : 'members'}
 				</div>
 			</div>
@@ -403,25 +404,25 @@ function PickerRow({
 			onClick={onClick}
 			aria-pressed={selected}
 			className={cn(
-				'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors cursor-pointer',
-				'hover:bg-muted/50',
+				styles.pickerRowButton,
+				styles.pickerRowButton2,
 			)}
 		>
 			{children}
 			<div
 				className={cn(
-					'flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors',
-					selected ? 'border-primary bg-primary text-white' : 'border-muted-foreground/30',
+					styles.pickerRowDiv,
+					selected ? styles.pickerRowDiv2 : styles.pickerRowDiv3,
 				)}
 			>
-				{selected && <Check className='size-3' />}
+				{selected && <Check className={styles.pickerRowCheck} />}
 			</div>
 		</button>
 	);
 }
 
 function PickerSectionLabel({ children }: { children: React.ReactNode }) {
-	return <div className='px-3 pt-2 pb-1 text-xs font-medium text-muted-foreground'>{children}</div>;
+	return <div className={styles.pickerSectionLabelDiv}>{children}</div>;
 }
 
 export function hasAccessChanges(

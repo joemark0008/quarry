@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import styles from './mcp-app-header.module.css';
 
 interface MCPAppHeaderProps {
 	title: string;
@@ -7,9 +8,9 @@ interface MCPAppHeaderProps {
 
 export function McpAppHeader({ title, children }: MCPAppHeaderProps) {
 	return (
-		<header className='flex shrink-0 items-center gap-3 border-b bg-background px-4 py-3 md:px-6 md:py-4 min-w-0'>
-			<h1 className='min-w-0 flex-1 truncate text-base font-medium'>{title}</h1>
-			{children ? <div className='ml-auto flex shrink-0 items-center gap-1.5'>{children}</div> : null}
+		<header className={styles.mcpAppHeaderHeader}>
+			<h1 className={styles.mcpAppHeaderH1}>{title}</h1>
+			{children ? <div className={styles.mcpAppHeaderDiv}>{children}</div> : null}
 		</header>
 	);
 }

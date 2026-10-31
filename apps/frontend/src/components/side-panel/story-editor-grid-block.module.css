@@ -1,0 +1,102 @@
+.renderColumnContentDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+.renderColumnContentDiv2 {
+	min-width: 0px;
+}
+.gridBlockViewDiv {
+	container-type: inline-size;
+	position: relative;
+	margin-block: 0.5rem;
+}
+.gridBlockViewDiv2 {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1rem;
+	@container (width >= 32rem) {
+		grid-template-columns: var(--quarry-grid-cols);
+	}
+}
+.gridBlockViewDiv3 {
+	display: grid;
+}
+.gridBlockViewDiv4 {
+	gap: 1rem;
+}
+.gridBlockViewDiv5 {
+	position: relative;
+	min-width: 0px;
+}
+.gridBlockViewDiv6 {
+	position: absolute;
+	top: 0.5rem;
+	left: -2.5rem;
+	z-index: 20;
+}
+.gridBlockViewDiv7 {
+	position: absolute;
+	inset-block: 0px;
+	left: -0.75rem;
+	z-index: 40;
+	width: 2rem;
+}
+.gridBlockViewDiv8 {
+	position: absolute;
+	inset-block: 0px;
+	right: -0.75rem;
+	z-index: 40;
+	width: 2rem;
+}
+.gridBlockViewDiv9 {
+	pointer-events: none;
+	position: absolute;
+	inset-block: 0px;
+	z-index: 20;
+	width: 0.125rem;
+	--fx-translate-x: calc(calc(1 / 2 * 100%) * -1);
+	translate: var(--fx-translate-x) var(--fx-translate-y);
+	border-radius: calc(infinity * 1px);
+	background-color: var(--app-primary-muted);
+}
+.gridBlockViewButton {
+	position: absolute;
+	inset-block: 0px;
+	z-index: 10;
+	display: none;
+	width: 1rem;
+	--fx-translate-x: calc(calc(1 / 2 * 100%) * -1);
+	translate: var(--fx-translate-x) var(--fx-translate-y);
+	cursor: col-resize;
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
+	@container (width >= 32rem) {
+		display: block;
+	}
+}
+.gridBlockViewDiv10 {
+	margin-inline: auto;
+	height: 100%;
+	width: 0.125rem;
+	transition-property:
+		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
+		--fx-gradient-via, --fx-gradient-to;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+}
+.state100 {
+	background-color: var(--app-primary-bg);
+}
+.state101 {
+	background-color: color-mix(in oklab, var(--app-line) 50%, transparent);
+	@media (hover: hover) {
+		&:is(:where([class~='group']):hover *) {
+			background-color: var(--app-primary-bg);
+		}
+	}
+	&:is(:where([class~='group']):focus-visible *) {
+		background-color: var(--app-primary-bg);
+	}
+}

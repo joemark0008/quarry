@@ -3,6 +3,7 @@ import { TableDisplay } from './display-table';
 import type { readQueryResult } from '@quarry/shared/tools';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './read-query-result.module.css';
 
 export const ReadQueryResultToolCall = ({
 	toolPart: { output, input },
@@ -17,7 +18,7 @@ export const ReadQueryResultToolCall = ({
 				title={
 					<>
 						Reading rows from{' '}
-						<code className='text-xs bg-background/50 px-1 py-0.5 rounded'>{queryId}</code>...
+						<code className={styles.readQueryResultToolCallCode}>{queryId}</code>...
 					</>
 				}
 			/>
@@ -30,7 +31,7 @@ export const ReadQueryResultToolCall = ({
 		<ToolCallWrapper
 			title={
 				<>
-					Read rows from <code className='text-xs bg-background/50 px-1 py-0.5 rounded'>{queryId}</code>
+					Read rows from <code className={styles.readQueryResultToolCallCode}>{queryId}</code>
 				</>
 			}
 			badge={rangeLabel}
@@ -39,7 +40,7 @@ export const ReadQueryResultToolCall = ({
 				<TableDisplay
 					data={output.data as Record<string, unknown>[]}
 					columns={output.columns}
-					tableContainerClassName='max-h-80 rounded-lg border bg-transparent'
+					tableContainerClassName={styles.readQueryResultToolCallTableDisplay}
 					showRowCount={false}
 				/>
 			)}

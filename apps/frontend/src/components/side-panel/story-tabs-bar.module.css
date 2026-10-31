@@ -1,0 +1,218 @@
+.storyTabsBarDiv4 {
+	display: flex;
+	min-height: 2.5rem;
+	scrollbar-width: none;
+	align-items: flex-end;
+	gap: 0.25rem;
+	overflow-x: auto;
+	padding-top: 0.25rem;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+.storyTabsBarDiv {
+	position: relative;
+	width: 100%;
+}
+.storyTabsBarDiv2 {
+	background-color: color-mix(in oklab, var(--app-fill) 30%, transparent);
+}
+.storyTabsBarDiv3 {
+	pointer-events: none;
+	position: absolute;
+	inset-inline: 0px;
+	bottom: 0px;
+	height: 1px;
+	background-color: var(--app-line);
+}
+.storyTabsBarDiv5 {
+	pointer-events: none;
+	height: 2.25rem;
+	width: 0.1875rem;
+	flex-shrink: 0;
+	align-self: center;
+	border-radius: calc(infinity * 1px);
+	background-color: var(--app-primary-bg);
+	--fx-shadow: 0 0 6px var(--fx-shadow-color, currentcolor);
+	box-shadow:
+		var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+		var(--fx-shadow);
+	--fx-shadow-color: color-mix(
+		in oklab,
+		color-mix(in oklab, var(--app-primary-bg) 40%, transparent) var(--fx-shadow-alpha),
+		transparent
+	);
+}
+.storyTabsBarDiv6 {
+	display: flex;
+	height: 2.25rem;
+	flex-shrink: 0;
+	cursor: pointer;
+	align-items: center;
+	border-top-left-radius: calc(var(--app-radius) - 2px);
+	border-top-right-radius: calc(var(--app-radius) - 2px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	border-color: transparent;
+	transition-property: color, background-color, transform, opacity;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+}
+.storyTabsBarDiv7 {
+	position: relative;
+	z-index: 10;
+	border-bottom-style: var(--fx-border-style);
+	border-bottom-width: 0px;
+	border-color: var(--app-line);
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.storyTabsBarDiv8 {
+	color: var(--app-muted);
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-surface);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-surface) 50%, transparent);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			color: var(--app-text);
+		}
+	}
+}
+.storyTabsBarDiv9 {
+	--fx-scale-x: 95%;
+	--fx-scale-y: 95%;
+	--fx-scale-z: 95%;
+	scale: var(--fx-scale-x) var(--fx-scale-y);
+	opacity: 40%;
+}
+.storyTabsBarDiv10 {
+	border-color: var(--app-primary-bg);
+	background-color: color-mix(in oklab, var(--app-primary-bg) 10%, transparent);
+	color: var(--app-text);
+	--fx-ring-shadow: var(--fx-ring-inset,) 0 0 0 calc(2px + var(--fx-ring-offset-width))
+		var(--fx-ring-color, currentcolor);
+	box-shadow:
+		var(--fx-inset-shadow), var(--fx-inset-ring-shadow), var(--fx-ring-offset-shadow), var(--fx-ring-shadow),
+		var(--fx-shadow);
+	--fx-ring-color: color-mix(in oklab, var(--app-primary-bg) 30%, transparent);
+}
+.storyTabsBarInput {
+	margin-inline: 0.25rem;
+	height: 1.75rem;
+	width: 8rem;
+	padding-inline: 0.5rem;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+}
+.storyTabsBarButton {
+	height: 100%;
+	max-width: 12rem;
+	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-left: 0.75rem;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 500;
+	font-weight: 500;
+	--fx-outline-style: none;
+	outline-style: none;
+}
+.storyTabsBarButton2 {
+	padding-right: 0.25rem;
+}
+.storyTabsBarButton3 {
+	padding-right: 0.75rem;
+}
+.storyTabsBarDiv11 {
+	margin-right: 0.25rem;
+	display: flex;
+	align-items: center;
+	opacity: 0%;
+	transition-property: opacity;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+	&:is(:where([class~='group/tab']):focus-within *) {
+		opacity: 100%;
+	}
+	@media (hover: hover) {
+		&:is(:where([class~='group/tab']):hover *) {
+			opacity: 100%;
+		}
+	}
+}
+.storyTabsBarP {
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	color: var(--app-muted);
+}
+.storyTabsBarDiv12 {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+.storyTabsBarButton4 {
+	border-radius: calc(infinity * 1px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+}
+.storyTabsBarButton5 {
+	border-radius: calc(infinity * 1px);
+}
+.storyTabsBarButton6 {
+	display: flex;
+	height: 2.25rem;
+	flex-shrink: 0;
+	align-items: center;
+	border-top-left-radius: calc(var(--app-radius) - 2px);
+	border-top-right-radius: calc(var(--app-radius) - 2px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	border-color: transparent;
+	padding-inline: 0.625rem;
+	color: var(--app-muted);
+	transition-property: color, background-color;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+	--fx-outline-style: none;
+	outline-style: none;
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-surface);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-surface) 50%, transparent);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			color: var(--app-text);
+		}
+	}
+	&:focus-visible {
+		background-color: color-mix(in oklab, var(--app-surface) 50%, transparent);
+	}
+	&:focus-visible {
+		color: var(--app-text);
+	}
+}
+.storyTabsBarButton7 {
+	cursor: pointer;
+}
+.storyTabsBarButton8 {
+	cursor: default;
+}
+.storyTabsBarPlus {
+	width: 1rem;
+	height: 1rem;
+}

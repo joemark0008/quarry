@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@mantine/hooks';
 import { createContext, useContext, useCallback, useState } from 'react';
 import { useMemoObject } from '@/hooks/useMemoObject';
 import { useLocalStorage } from '@/hooks/use-local-storage';
@@ -25,11 +26,14 @@ export const useSidebar = () => {
 	return context;
 };
 
-const storage = createLocalStorage<'true' | 'false'>('sidebar-collapsed', 'false');
+/** No stored choice means the window decides: a rail below 80em, expanded above it. */
+const storage = createLocalStorage<'true' | 'false'>('sidebar-collapsed');
 
 export const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
 	const isMobile = useIsMobile();
-	const [isCollapsed, setIsCollapsed] = useLocalStorage(storage);
+	const [chosen, setChosen] = useLocalStorage(storage);
+	const isWide = useMediaQuery('(min-width: 80em)', true) !== false;
+	const isCollapsed = !isMobile && (chosen === null ? !isWide : chosen === 'true');
 	const [isMobileOpen, setIsMobileOpen] = useState(false);
 
 	const toggle: SidebarContextValue['toggle'] = useCallback(
@@ -38,23 +42,23 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
 				setIsMobileOpen((prev) => !prev);
 				return;
 			}
-			setIsCollapsed((prev) => (prev === 'true' ? 'false' : 'true'), opts);
+			setChosen(isCollapsed ? 'false' : 'true', opts);
 		},
-		[setIsCollapsed, isMobile],
+		[setChosen, isMobile, isCollapsed],
 	);
 
 	const collapse: SidebarContextValue['collapse'] = useCallback(
 		(opts) => {
-			setIsCollapsed('true', opts);
+			setChosen('true', opts);
 		},
-		[setIsCollapsed],
+		[setChosen],
 	);
 
 	const expand: SidebarContextValue['expand'] = useCallback(
 		(opts) => {
-			setIsCollapsed('false', opts);
+			setChosen('false', opts);
 		},
-		[setIsCollapsed],
+		[setChosen],
 	);
 
 	const openMobile = useCallback(() => setIsMobileOpen(true), []);
@@ -64,7 +68,7 @@ export const SidebarProvider = ({ children }: { children: React.ReactNode }) => 
 		<SidebarContext.Provider
 			value={useMemoObject({
 				isMobile,
-				isCollapsed: isCollapsed === 'true',
+				isCollapsed,
 				isMobileOpen,
 				toggle,
 				collapse,

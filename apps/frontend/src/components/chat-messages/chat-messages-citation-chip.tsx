@@ -6,6 +6,7 @@ import { useChatId } from '@/hooks/use-chat-id';
 import { SelectionCitationExcerpt } from '@/components/selection-citation-excerpt';
 import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { createRangeFromOffsets, findTextRange } from '@/lib/selection-dom.utils';
+import styles from './chat-messages-citation-chip.module.css';
 
 interface ChatMessagesCitationChipProps {
 	start: number;
@@ -58,7 +59,7 @@ export const ChatMessagesCitationChip = ({ start, end, text, storySlug, block }:
 			ref={buttonRef}
 			type='button'
 			onClick={handleClick}
-			className='mb-2 w-full text-left px-3 py-2 border border-border/50 bg-background/50 rounded-lg cursor-pointer hover:bg-accent/50 transition-colors'
+			className={styles.chatMessagesCitationChipButton}
 		>
 			<SelectionCitationExcerpt start={start} end={end} block={block} text={text} maxLength={80} lineClamp={2} />
 		</button>

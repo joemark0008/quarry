@@ -503,7 +503,7 @@ function buildKpiCard(props: ResolvedProps, leadingSlot?: React.ReactNode) {
 }
 
 function KpiCardContainer({ children }: { children: React.ReactNode }) {
-	return <div className='flex w-full flex-wrap justify-start gap-4'>{children}</div>;
+	return <div className='quarry-shared-kpicardcontainerdiv-c3b7da'>{children}</div>;
 }
 
 export interface KpiCardProps {
@@ -515,7 +515,7 @@ export interface KpiCardProps {
 	leadingSlot?: React.ReactNode;
 }
 
-/** `quarry-kpi-card__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-kpi-card__*` classes let sandboxed custom stories style the same markup. */
 export function KpiCard({ value, displayName, comparison, valueFormat, leadingSlot }: KpiCardProps) {
 	let formattedValue = '';
 
@@ -529,28 +529,28 @@ export function KpiCard({ value, displayName, comparison, valueFormat, leadingSl
 	const trend = showArrowAndColor ? comparison.direction : 'neutral';
 	const pillColorClass = showArrowAndColor
 		? comparison.direction === 'up'
-			? 'text-green-600'
-			: 'text-red-600'
-		: 'text-muted-foreground';
+			? 'quarry-shared-pillcolorclass-b0a7de'
+			: 'quarry-shared-pillcolorclass-421d45'
+		: 'quarry-shared-pillcolorclass-bfa603';
 
 	return (
-		<div className='quarry-kpi-card min-w-[160px]'>
+		<div className='quarry-shared-kpicarddiv-a58241 quarry-kpi-card'>
 			{(displayName || leadingSlot) && (
-				<div className='quarry-kpi-card__header flex items-center gap-1'>
+				<div className='quarry-shared-kpicarddiv-986e63 quarry-kpi-card__header'>
 					{leadingSlot}
-					{displayName && <div className='quarry-kpi-card__name text-lg tracking-wide'>{displayName}</div>}
+					{displayName && <div className='quarry-shared-kpicarddiv-efaca3 quarry-kpi-card__name'>{displayName}</div>}
 				</div>
 			)}
-			<div className='quarry-kpi-card__value text-3xl font-medium tabular-nums'>{formattedValue}</div>
+			<div className='quarry-shared-kpicarddiv-bbdaca quarry-kpi-card__value'>{formattedValue}</div>
 			{comparison && (
 				<div
-					className={`quarry-kpi-card__comparison quarry-kpi-card__comparison--${trend} mt-1.5 flex items-center gap-1.5 whitespace-nowrap text-sm ${pillColorClass}`}
+					className={`quarry-kpi-card__comparison quarry-kpi-card__comparison--${trend} quarry-kpi-card__comparison-layout ${pillColorClass}`}
 				>
 					{showArrowAndColor && <KpiTrendArrow direction={comparison.direction} />}
-					<span className='quarry-kpi-card__comparison-value font-medium tabular-nums'>
+					<span className='quarry-shared-kpicardspan-3a48a8 quarry-kpi-card__comparison-value'>
 						{comparison.valueText}
 					</span>
-					<span className='font-normal'>vs. {comparison.periodLabel}</span>
+					<span className='quarry-shared-kpicardspan-8ecebc'>vs. {comparison.periodLabel}</span>
 				</div>
 			)}
 		</div>
@@ -568,7 +568,7 @@ function KpiTrendArrow({ direction }: { direction: KpiComparisonDirection }) {
 			strokeWidth='1.6'
 			strokeLinejoin='round'
 			aria-hidden='true'
-			className='shrink-0'
+			className='quarry-shared-kpitrendarrowsvg-012fbd'
 		>
 			<path d={direction === 'up' ? 'M7 2.5 12 10 2 10Z' : 'M2 2.5 12 2.5 7 10Z'} />
 		</svg>

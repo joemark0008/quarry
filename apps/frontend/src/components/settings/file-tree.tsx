@@ -7,6 +7,7 @@ import { SimpleTooltip } from '@/components/ui/tooltip';
 import { matchesOrderedTerms } from '@/lib/path-search';
 import { getAutoExpandKeys, getTreeNodePadding, removeExpandedSubtree } from '@/lib/tree-expansion';
 import { cn } from '@/lib/utils';
+import styles from './file-tree.module.css';
 
 export type ContentMatch = {
 	count: number;
@@ -81,24 +82,24 @@ export function FileTree({
 	};
 
 	return (
-		<div className='flex flex-col h-full'>
-			<div className='px-2 py-2 border-b border-border shrink-0'>
-				<div className='relative'>
+		<div className={styles.fileTreeDiv}>
+			<div className={styles.fileTreeDiv2}>
+				<div className={styles.fileTreeDiv3}>
 					{isContentSearchPending ? (
-						<Spinner className='absolute left-2 top-1/2 -translate-y-1/2 size-3' />
+						<Spinner className={styles.fileTreeSpinner} />
 					) : (
-						<Search className='absolute left-2 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none' />
+						<Search className={styles.fileTreeSearch} />
 					)}
 					<input
 						type='text'
 						value={search}
 						onChange={(e) => onSearchChange(e.target.value)}
 						placeholder='Search files...'
-						className='w-full h-7 pl-7 pr-8 text-xs bg-muted/50 border border-border rounded-md outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-1 focus:ring-ring/50'
+						className={styles.fileTreeInput}
 					/>
 					<SimpleTooltip
 						content={
-							<div className='flex flex-col'>
+							<div className={styles.fileTreeDiv4}>
 								<span>{isContentSearchEnabled ? 'Searching inside files' : 'Search inside files'}</span>
 								<span>Turn off if your project is very large.</span>
 							</div>
@@ -110,13 +111,13 @@ export function FileTree({
 							aria-pressed={isContentSearchEnabled}
 							aria-label='Search inside files'
 							className={cn(
-								'absolute right-1 top-1/2 -translate-y-1/2 size-5 flex items-center justify-center rounded cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+								styles.fileTreeButton,
 								isContentSearchEnabled
-									? 'bg-primary/15 text-primary ring-1 ring-primary/30'
-									: 'text-muted-foreground/60 hover:text-muted-foreground hover:bg-muted',
+									? styles.fileTreeButton2
+									: styles.fileTreeButton3,
 							)}
 						>
-							<TextSearch className='size-3.5' />
+							<TextSearch className={styles.fileTreeTextSearch} />
 						</button>
 					</SimpleTooltip>
 				</div>
@@ -125,7 +126,7 @@ export function FileTree({
 					contentSearchTruncated={contentSearchTruncated}
 				/>
 			</div>
-			<div className='flex-1 overflow-auto py-1'>
+			<div className={styles.fileTreeDiv5}>
 				{filteredEntries.length === 0 ? (
 					<TreeEmptyState
 						contentSearchFailed={contentSearchFailed}
@@ -165,7 +166,7 @@ function TreeEmptyState({
 	}
 
 	return (
-		<div className='px-3 py-4 text-xs text-muted-foreground text-center'>
+		<div className={styles.treeEmptyStateDiv}>
 			{isContentSearchPending ? 'Searching…' : 'No files found'}
 		</div>
 	);
@@ -181,7 +182,7 @@ function SearchStatusNote({
 			? 'Showing partial results.'
 			: null;
 
-	return message ? <div className='px-1 pt-2 text-xs text-muted-foreground'>{message}</div> : null;
+	return message ? <div className={styles.searchStatusNoteDiv}>{message}</div> : null;
 }
 
 interface FileTreeNodeProps {
@@ -222,9 +223,9 @@ function FileTreeNode({
 				onClick={handleClick}
 				title={contentMatch ? `Line ${contentMatch.line}: ${contentMatch.text}` : undefined}
 				className={cn(
-					'flex items-center gap-1.5 w-full py-1 pr-2 text-sm cursor-pointer',
-					'hover:bg-muted/50 rounded-sm transition-colors text-left',
-					isSelected && 'bg-muted text-foreground font-medium',
+					styles.fileTreeNodeButton,
+					styles.fileTreeNodeButton2,
+					isSelected && styles.fileTreeNodeButton3,
 				)}
 				style={{ paddingLeft: `${getTreeNodePadding(depth)}px` }}
 			>
@@ -232,26 +233,26 @@ function FileTreeNode({
 					<>
 						<ChevronRight
 							className={cn(
-								'size-3.5 shrink-0 text-muted-foreground transition-transform',
-								isExpanded && 'rotate-90',
+								styles.fileTreeNodeChevronRight,
+								isExpanded && styles.fileTreeNodeChevronRight2,
 							)}
 						/>
 						<FileExplorerIcon name={entry.name} type='directory' />
 					</>
 				) : (
 					<>
-						<span className='size-3.5 shrink-0' />
+						<span className={styles.fileTreeNodeSpan} />
 						<FileExplorerIcon name={entry.name} type='file' />
 					</>
 				)}
-				<span className='truncate'>{entry.name}</span>
+				<span className={styles.fileTreeNodeSpan2}>{entry.name}</span>
 				{entry.readOnly && (
 					<SimpleTooltip content='Read-only'>
-						<Lock className='size-3 shrink-0 text-muted-foreground/70' aria-label='Read-only' />
+						<Lock className={styles.fileTreeNodeLock} aria-label='Read-only' />
 					</SimpleTooltip>
 				)}
 				{contentMatch && (
-					<span className='ml-auto shrink-0 rounded bg-muted px-1 text-[10px] leading-4 text-muted-foreground'>
+					<span className={styles.fileTreeNodeSpan3}>
 						{contentMatch.count}
 					</span>
 				)}

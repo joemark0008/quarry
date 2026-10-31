@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';
 import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
 import { cn } from '@/lib/utils';
+import styles from './custom-story-view-mode.module.css';
 
 export type CustomStoryViewMode = 'app' | 'files';
 
@@ -38,16 +39,16 @@ export function CustomStoryViewLayers({ viewMode, app, files }: CustomStoryViewL
 		setHasOpenedFiles(true);
 	}
 	return (
-		<div className='relative min-h-0 flex-1'>
+		<div className={styles.customStoryViewLayersDiv}>
 			<div
-				className={cn('absolute inset-0 flex flex-col', viewMode === 'files' && 'invisible')}
+				className={cn(styles.customStoryViewLayersDiv2, viewMode === 'files' && styles.customStoryViewLayersDiv3)}
 				aria-hidden={viewMode === 'files'}
 			>
 				{app}
 			</div>
 			{hasOpenedFiles && (
 				<div
-					className={cn('absolute inset-0 bg-background', viewMode !== 'files' && 'invisible')}
+					className={cn(styles.customStoryViewLayersDiv4, viewMode !== 'files' && styles.customStoryViewLayersDiv3)}
 					aria-hidden={viewMode !== 'files'}
 				>
 					{files}

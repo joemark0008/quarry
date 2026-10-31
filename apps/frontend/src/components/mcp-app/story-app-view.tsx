@@ -17,6 +17,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import styles from './story-app-view.module.css';
 
 interface StoryAppViewProps {
 	title: string;
@@ -31,7 +32,7 @@ export function StoryAppView({ title, code, queryData, theme, quarryUrl, onDownl
 	const storyTheme = useStoryThemeForCurrentMode(theme);
 
 	return (
-		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
+		<div className={styles.storyAppViewDiv}>
 			<McpAppHeader title={title}>
 				{onDownload ? <StoryDownloadButton onDownload={onDownload} /> : null}
 				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
@@ -139,9 +140,9 @@ function StoryDownloadButton({ onDownload }: { onDownload: (format: DownloadForm
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className='gap-1.5' disabled={isDownloading}>
-					{isDownloading ? <Loader2 className='size-3.5 animate-spin' /> : <Download className='size-3.5' />}
-					<span className='hidden sm:inline'>Download</span>
+				<Button variant='outline' size='sm' className={styles.storyDownloadButtonButton} disabled={isDownloading}>
+					{isDownloading ? <Loader2 className={styles.storyDownloadButtonLoader2} /> : <Download className={styles.storyDownloadButtonDownload} />}
+					<span className={styles.storyDownloadButtonSpan}>Download</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end'>

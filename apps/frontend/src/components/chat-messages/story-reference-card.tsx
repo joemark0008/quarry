@@ -4,6 +4,7 @@ import type { ResolvedStory } from '@/hooks/use-mentioned-stories';
 import { useOpenStoryInSidePanel } from '@/components/side-panel/open-story-in-side-panel';
 import { StoryCard } from '@/components/story-card';
 import { useOpenMentionedStory, useResolvedStory } from '@/hooks/use-mentioned-stories';
+import styles from './story-reference-card.module.css';
 
 /** An existing story the agent hands over in its answer. */
 export function StoryReferenceCard({ storyId, title }: { storyId: string; title: string }) {
@@ -18,7 +19,7 @@ export function StoryReferenceCard({ storyId, title }: { storyId: string; title:
 			summary={story?.summary}
 			canOpen={Boolean(story)}
 			onOpen={() => story && openStory(story)}
-			status={<span className='text-xs text-muted-foreground'>{describeStatus(story, isError)}</span>}
+			status={<span className={styles.storyReferenceCardSpan}>{describeStatus(story, isError)}</span>}
 		/>
 	);
 }
@@ -34,7 +35,7 @@ export function StoryReferenceLink({ storyId, children }: { storyId: string; chi
 	return (
 		<button
 			type='button'
-			className='cursor-pointer font-medium text-primary hover:underline'
+			className={styles.storyReferenceLinkButton}
 			onClick={() => openStory(story)}
 		>
 			{children}

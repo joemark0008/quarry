@@ -7,6 +7,7 @@ import type { Monaco } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { FixInChatButton } from '@/components/fix-in-chat-button';
 import { useEditorTheme } from '@/hooks/use-editor-theme';
+import styles from './story-code-view.module.css';
 
 const MONACO_OPTIONS = {
 	minimap: { enabled: false },
@@ -149,9 +150,9 @@ export const StoryCodeView = memo(function StoryCodeView({
 	);
 
 	return (
-		<div className='flex h-full flex-col'>
+		<div className={styles.storyCodeViewDiv}>
 			{!readOnly && errors.length > 0 && <ValidationErrorBanner errors={errors} />}
-			<div className='flex-1 min-h-0'>
+			<div className={styles.storyCodeViewDiv2}>
 				<Editor
 					value={draft}
 					language='markdown'
@@ -175,24 +176,24 @@ function ValidationErrorBanner({ errors }: { errors: StoryValidationError[] }) {
 	].join('\n');
 
 	return (
-		<div className='flex shrink-0 items-start justify-between gap-3 border-b border-red-200 bg-red-50 px-4 py-2 text-xs text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200'>
-			<div className='min-w-0 flex-1'>
-				<div className='flex items-center gap-1.5 font-medium'>
-					<AlertTriangle className='size-3.5' />
+		<div className={styles.validationErrorBannerDiv}>
+			<div className={styles.validationErrorBannerDiv2}>
+				<div className={styles.validationErrorBannerDiv3}>
+					<AlertTriangle className={styles.validationErrorBannerAlertTriangle} />
 					<span>
 						{errors.length} validation {errors.length === 1 ? 'error' : 'errors'}
 					</span>
 				</div>
-				<ul className='mt-1 flex flex-col gap-0.5'>
+				<ul className={styles.validationErrorBannerUl}>
 					{errors.slice(0, 5).map((error, i) => (
-						<li key={i} className='truncate'>
-							<span className='font-mono opacity-70'>L{error.line}:</span> {error.message}
+						<li key={i} className={styles.validationErrorBannerLi}>
+							<span className={styles.validationErrorBannerSpan}>L{error.line}:</span> {error.message}
 						</li>
 					))}
-					{errors.length > 5 && <li className='opacity-70'>and {errors.length - 5} more...</li>}
+					{errors.length > 5 && <li className={styles.validationErrorBannerLi2}>and {errors.length - 5} more...</li>}
 				</ul>
 			</div>
-			<FixInChatButton message={fixMessage} className='shrink-0 gap-1.5' />
+			<FixInChatButton message={fixMessage} className={styles.validationErrorBannerFixInChatButton} />
 		</div>
 	);
 }

@@ -3,6 +3,7 @@ import type { SavedPrompt } from '@/lib/api-types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import styles from './saved-prompt.module.css';
 
 interface SavedPromptProps {
 	prompt: SavedPrompt;
@@ -24,17 +25,17 @@ export function SavedPromptItem({ prompt, onEdit, onDelete, className }: SavedPr
 
 	return (
 		<div
-			className={cn('flex items-center gap-4 group cursor-pointer', className)}
+			className={cn(`${styles.savedPromptItemDiv} group`, className)}
 			onClick={() => onEdit(prompt.id)}
 		>
-			<div className='flex-1 min-w-0'>
-				<div className='flex items-center gap-2'>
-					<span className='text-sm font-medium text-foreground'>{prompt.title || 'Untitled Prompt'}</span>
+			<div className={styles.savedPromptItemDiv2}>
+				<div className={styles.savedPromptItemDiv3}>
+					<span className={styles.savedPromptItemSpan}>{prompt.title || 'Untitled Prompt'}</span>
 				</div>
-				<div className='text-sm text-muted-foreground line-clamp-2'>{prompt.prompt}</div>
+				<div className={styles.savedPromptItemDiv4}>{prompt.prompt}</div>
 			</div>
 
-			<div className='flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+			<div className={styles.savedPromptItemDiv5}>
 				<Button variant='ghost-muted' size='icon-sm' onClick={handleEdit}>
 					<Pencil />
 				</Button>
@@ -48,10 +49,10 @@ export function SavedPromptItem({ prompt, onEdit, onDelete, className }: SavedPr
 
 export function SavedPromptSkeleton({ className }: { className?: string }) {
 	return (
-		<div className={cn('flex items-start gap-4', className)}>
-			<div className='flex-1 min-w-0 space-y-2'>
-				<Skeleton className='h-3 w-32' />
-				<Skeleton className='h-3 w-full max-w-xs' />
+		<div className={cn(styles.savedPromptSkeletonDiv, className)}>
+			<div className={styles.savedPromptSkeletonDiv2}>
+				<Skeleton className={styles.savedPromptSkeletonSkeleton} />
+				<Skeleton className={styles.savedPromptSkeletonSkeleton2} />
 			</div>
 		</div>
 	);

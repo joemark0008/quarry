@@ -1,0 +1,15 @@
+.storiesSortMenuSpan {
+	display: none;
+	color: var(--app-muted);
+	@media (width >= 48rem) {
+		display: inline;
+	}
+}
+.storiesSortMenuChevronDown {
+	width: 0.875rem;
+	height: 0.875rem;
+	color: var(--app-muted);
+}
+.storiesSortMenuDropdownMenuContent {
+	width: 12rem;
+}

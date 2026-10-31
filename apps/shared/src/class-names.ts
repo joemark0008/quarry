@@ -1,6 +1,6 @@
 export type ClassValue = string | false | null | undefined | Record<string, boolean | undefined>;
 
-/** Surfaces with Tailwind pass `tailwind-merge`; sandboxed stories keep the plain join and stay light. */
+/** Surfaces can pass their own joiner; sandboxed stories keep the plain join and stay light. */
 export type ClassNameMerger = (...values: ClassValue[]) => string;
 
 export const joinClassNames: ClassNameMerger = (...values) => values.flatMap(toClassNames).join(' ');

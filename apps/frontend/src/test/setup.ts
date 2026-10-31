@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 
 /** Mantine reads these on mount; jsdom has neither. */
 if (typeof window !== 'undefined') {
-	window.matchMedia = window.matchMedia?.call ? window.matchMedia : ((query: string) => ({
+	window.matchMedia ??= ((query: string) => ({
 		matches: false,
 		media: query,
 		onchange: null,

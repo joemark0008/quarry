@@ -18,6 +18,7 @@ import { useSession } from '@/lib/auth-client';
 import { useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
 import { chatApi } from '@/lib/chat-api';
+import styles from './share-dialog.chat.module.css';
 
 interface ShareChatDialogProps {
 	open: boolean;
@@ -140,13 +141,13 @@ function CreateShareDialog({ open, onOpenChange, chatId }: ShareChatDialogProps)
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.createShareDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Share Chat</DialogTitle>
 					<DialogDescription>Share a link to this chat with your team.</DialogDescription>
 				</DialogHeader>
 
-				<div className='flex flex-col gap-4'>
+				<div className={styles.createShareDialogDiv}>
 					<VisibilityPicker
 						visibility={effectiveVisibility}
 						onChange={setVisibility}
@@ -168,22 +169,22 @@ function CreateShareDialog({ open, onOpenChange, chatId }: ShareChatDialogProps)
 					)}
 				</div>
 
-				<div className='flex justify-end gap-2'>
-					<Button variant='outline' className='rounded-full border' onClick={() => onOpenChange(false)}>
+				<div className={styles.createShareDialogDiv2}>
+					<Button variant='outline' className={styles.createShareDialogButton} onClick={() => onOpenChange(false)}>
 						Cancel
 					</Button>
 					<Button
 						variant='primary-gradient'
-						className='rounded-full gap-1.5'
+						className={styles.createShareDialogButton2}
 						onClick={handleShare}
 						disabled={!canShare || shareMutation.isPending}
 					>
 						{shareMutation.isPending ? (
-							<Loader2 className='size-3.5 animate-spin' />
+							<Loader2 className={styles.createShareDialogLoader2} />
 						) : isCopied ? (
-							<Check className='size-3.5' />
+							<Check className={styles.createShareDialogCheck} />
 						) : (
-							<LinkIcon className='size-3.5' />
+							<LinkIcon className={styles.createShareDialogCheck} />
 						)}
 						<span>{isCopied ? 'Link copied!' : 'Share & copy link'}</span>
 					</Button>
@@ -271,13 +272,13 @@ function ManageShareDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.createShareDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Sharing Settings</DialogTitle>
 					<DialogDescription>This chat is currently shared with your team.</DialogDescription>
 				</DialogHeader>
 
-				<div className='flex flex-col gap-4'>
+				<div className={styles.createShareDialogDiv}>
 					<VisibilitySummary visibility={visibility} selectedUserIds={selectedUserIds} itemLabel='chat' />
 					{visibility === 'specific' && (
 						<MemberPicker

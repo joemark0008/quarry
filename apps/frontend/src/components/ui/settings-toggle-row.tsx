@@ -1,5 +1,6 @@
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
+import styles from './settings-toggle-row.module.css';
 
 interface SettingsControlRowProps {
 	label: string;
@@ -11,16 +12,16 @@ interface SettingsControlRowProps {
 
 export function SettingsControlRow({ id, label, description, control, className }: SettingsControlRowProps) {
 	return (
-		<div className={cn('flex items-center justify-between', className)}>
-			<div className='flex flex-col gap-0.5'>
+		<div className={cn(styles.settingsControlRowDiv, className)}>
+			<div className={styles.settingsControlRowDiv2}>
 				{id ? (
-					<label htmlFor={id} className='text-sm font-medium text-foreground cursor-pointer h-5'>
+					<label htmlFor={id} className={styles.settingsControlRowLabel}>
 						{label}
 					</label>
 				) : (
-					<p className='text-sm font-medium text-foreground h-5'>{label}</p>
+					<p className={styles.settingsControlRowP}>{label}</p>
 				)}
-				<div className='text-xs text-muted-foreground'>{description}</div>
+				<div className={styles.settingsControlRowDiv3}>{description}</div>
 			</div>
 			{control}
 		</div>

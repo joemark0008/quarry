@@ -1,0 +1,24 @@
+.statusIconDiv {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: calc(infinity * 1px);
+	background-color: var(--app-red-500);
+}
+.statusIconStoryIcon {
+	width: 0.75rem;
+	height: 0.75rem;
+}
+.storyStatusExpandable {
+	color: var(--app-text);
+	&:disabled {
+		opacity: 100% !important;
+	}
+}
+.storyStatusPre {
+	margin: 0px;
+	max-height: 20rem;
+	overflow: auto;
+	padding: 0.5rem;
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+}

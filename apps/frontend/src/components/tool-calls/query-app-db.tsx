@@ -6,6 +6,7 @@ import { ToolOutputFallback } from './tool-output-fallback';
 import { TableDisplay } from './display-table';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './query-app-db.module.css';
 
 type ViewMode = 'results' | 'query';
 
@@ -29,7 +30,7 @@ export const QueryAppDbToolCall = ({ toolPart }: ToolCallComponentProps) => {
 	const actions = [
 		{
 			id: 'results',
-			label: <TableIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <TableIcon className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'results',
 			onClick: () => setViewMode('results'),
@@ -37,7 +38,7 @@ export const QueryAppDbToolCall = ({ toolPart }: ToolCallComponentProps) => {
 		},
 		{
 			id: 'query',
-			label: <Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Code className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'query',
 			onClick: () => setViewMode('query'),
@@ -45,7 +46,7 @@ export const QueryAppDbToolCall = ({ toolPart }: ToolCallComponentProps) => {
 		},
 		{
 			id: 'copy',
-			label: <Copy className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Copy className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => {
 				navigator.clipboard.writeText(input?.sql ?? '');
 			},
@@ -59,14 +60,14 @@ export const QueryAppDbToolCall = ({ toolPart }: ToolCallComponentProps) => {
 			overrideError={viewMode === 'query'}
 			title={
 				<span>
-					SQL <span className='text-xs font-normal truncate'>{input?.sql}</span>
+					SQL <span className={styles.queryAppDbToolCallSpan}>{input?.sql}</span>
 				</span>
 			}
 			badge={output ? `${output.rowCount} rows` : undefined}
 			actions={isSettled ? actions : []}
 		>
 			{viewMode === 'query' && input?.sql ? (
-				<div className='overflow-auto max-h-80 hide-code-header'>
+				<div className={`${styles.queryAppDbToolCallDiv} hide-code-header`}>
 					<Streamdown mode='static' controls={{ code: false }}>
 						{`\`\`\`sql\n${input.sql}\n\`\`\``}
 					</Streamdown>
@@ -75,7 +76,7 @@ export const QueryAppDbToolCall = ({ toolPart }: ToolCallComponentProps) => {
 				<TableDisplay
 					data={output.rows}
 					columns={output.columns}
-					tableContainerClassName='max-h-80 rounded-none border-0 bg-transparent'
+					tableContainerClassName={styles.queryAppDbToolCallTableDisplay}
 					showRowCount={false}
 				/>
 			) : (

@@ -1,0 +1,82 @@
+.storyCardButton {
+	margin-inline: -0.75rem;
+	margin-block: 0.5rem;
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	gap: 0.75rem;
+	overflow: hidden;
+	border-radius: var(--app-radius);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	background-color: var(--app-surface);
+	padding-right: 0.75rem;
+	text-align: left;
+	transition-property:
+		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
+		--fx-gradient-via, --fx-gradient-to;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-fill);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-fill) 50%, transparent);
+		}
+	}
+	&:disabled {
+		cursor: default;
+	}
+	&:disabled {
+		opacity: 50%;
+	}
+}
+.storyCardDiv {
+	position: relative;
+	height: 4rem;
+	width: 7.5rem;
+	flex-shrink: 0;
+	align-items: flex-end;
+}
+.storyCardStoryThumbnail {
+	right: 1.5rem;
+	overflow: visible;
+	border-radius: var(--app-radius);
+}
+.storyCardDiv2 {
+	display: flex;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding-block: 0.75rem;
+	padding-left: 1.25rem;
+}
+.storyCardSpan {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 500;
+	font-weight: 500;
+}
+.storyCardDiv3 {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.storyCardButton2 {
+	@media (hover: hover) {
+		&:hover {
+			background-color: transparent;
+		}
+	}
+}
+.storyCardArrowUpRight {
+	width: 0.875rem;
+	height: 0.875rem;
+}

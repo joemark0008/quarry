@@ -3,6 +3,7 @@ import { ChevronDown, RotateCw } from 'lucide-react';
 
 import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getTimeAgo } from '@/lib/time-ago';
+import styles from './chat-list-menu-section.module.css';
 
 const MAX_COLLAPSED_CHATS = 5;
 
@@ -31,9 +32,9 @@ export function ChatListSection({
 	return (
 		<>
 			{hasSeparator && <DropdownMenuSeparator />}
-			<DropdownMenuLabel className='flex items-center justify-between pt-1.5 text-[11px] uppercase tracking-wide'>
+			<DropdownMenuLabel className={styles.chatListSectionDropdownMenuLabel}>
 				<span>{title}</span>
-				<span className='tabular-nums'>{chats.length}</span>
+				<span className={styles.chatListSectionSpan}>{chats.length}</span>
 			</DropdownMenuLabel>
 			{query.isError && (
 				<DropdownMenuItem
@@ -47,9 +48,9 @@ export function ChatListSection({
 				</DropdownMenuItem>
 			)}
 			{listedChats.map((chat) => (
-				<DropdownMenuItem key={chat.chatId} onSelect={() => onOpen(chat.chatId)} className='gap-3 pr-2'>
-					<span className='min-w-0 flex-1 truncate font-normal'>{chat.title}</span>
-					<span className='shrink-0 font-normal text-muted-foreground tabular-nums'>
+				<DropdownMenuItem key={chat.chatId} onSelect={() => onOpen(chat.chatId)} className={styles.chatListSectionDropdownMenuItem}>
+					<span className={styles.chatListSectionSpan2}>{chat.title}</span>
+					<span className={styles.chatListSectionSpan3}>
 						{getTimeAgo(new Date(chat.updatedAt).getTime()).humanReadable}
 					</span>
 				</DropdownMenuItem>
@@ -60,7 +61,7 @@ export function ChatListSection({
 						event.preventDefault();
 						setIsExpanded(true);
 					}}
-					className='font-normal text-muted-foreground'
+					className={styles.chatListSectionDropdownMenuItem2}
 				>
 					<ChevronDown strokeWidth={2.25} />
 					<span>Show {hiddenCount} older</span>

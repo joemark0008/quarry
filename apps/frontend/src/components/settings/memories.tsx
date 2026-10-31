@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { SettingsMemoryItem, SettingsMemorySkeleton } from '@/components/settings/memory-item';
 import { useMemoriesQuery, useMemoryMutations, useMemorySettingsQuery } from '@/queries/use-memories';
 import { memoryApi } from '@/lib/memory-api';
+import styles from './memories.module.css';
 
 export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
 	const projectMemorySettings = useQuery(memoryApi.project.getMemorySettings.queryOptions());
@@ -116,24 +117,24 @@ export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
 				}
 			/>
 			{memoryStatusMessage ? (
-				<div className='space-y-1'>
+				<div className={styles.settingsMemoriesDiv}>
 					<Empty>{memoryStatusMessage.empty}</Empty>
 				</div>
 			) : isMemoriesLoading ? (
-				<div className='flex flex-col divide-y'>
-					<SettingsMemorySkeleton className='pt-0' />
+				<div className={styles.settingsMemoriesDiv2}>
+					<SettingsMemorySkeleton className={styles.settingsMemoriesSettingsMemorySkeleton} />
 					<SettingsMemorySkeleton />
-					<SettingsMemorySkeleton className='pb-0' />
+					<SettingsMemorySkeleton className={styles.settingsMemoriesSettingsMemorySkeleton2} />
 				</div>
 			) : !memories?.length ? (
 				<Empty>No memories saved yet.</Empty>
 			) : (
-				<div className='flex flex-col divide-y'>
+				<div className={styles.settingsMemoriesDiv2}>
 					{memories.map((memory) => (
 						<SettingsMemoryItem
 							key={memory.id}
 							memory={memory}
-							className='last:pb-0 first:pt-0'
+							className={styles.settingsMemoriesSettingsMemoryItem}
 							onEdit={handleEditMemory}
 							onDelete={handleDeleteMemory}
 						/>
@@ -142,11 +143,11 @@ export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
 			)}
 
 			<Dialog open={!!editMemory} onOpenChange={() => setEditMemory(null)}>
-				<DialogContent className='p-6' showCloseButton={false}>
+				<DialogContent className={styles.settingsMemoriesDialogContent} showCloseButton={false}>
 					<DialogHeader>
 						<DialogTitle>Edit memory</DialogTitle>
 					</DialogHeader>
-					<div className='space-y-4'>
+					<div className={styles.settingsMemoriesDiv3}>
 						<Textarea
 							value={editContent}
 							onChange={(event) => setEditContent(event.target.value)}

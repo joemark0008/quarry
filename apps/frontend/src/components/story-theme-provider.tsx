@@ -9,6 +9,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { PortalContainerContext } from '@/contexts/portal-container';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
+import localStyles from './story-theme-provider.module.css';
 
 interface StoryThemeProviderProps {
 	theme: StoryTheme | null;
@@ -29,7 +30,7 @@ export function StoryThemeProvider({ theme, children, className }: StoryThemePro
 		<ChartStyleContext.Provider value={chartStyle}>
 			<div
 				ref={setContainer}
-				className={cn('h-full min-h-0', className)}
+				className={cn(localStyles.storyThemeProviderDiv, className)}
 				style={style}
 				data-story-themed={theme ? 'true' : undefined}
 				data-story-table-striped={theme?.table.stripedRows ? 'true' : undefined}

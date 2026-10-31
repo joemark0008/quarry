@@ -8,6 +8,7 @@ import type { CSSProperties } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import styles from './story-theme-typography-editor.module.css';
 
 const FONT_OPTIONS = [
 	{ value: 'heading', label: 'Heading' },
@@ -21,7 +22,7 @@ const CASE_OPTIONS = [
 	{ value: 'lowercase', label: 'lowercase' },
 ] as const;
 const SAMPLE_FONT_SIZE = 15;
-const GRID_CLASS = 'grid grid-cols-[minmax(0,1fr)_6.5rem_5rem_7.5rem_2.25rem_4.5rem_4.5rem] items-center gap-2';
+const GRID_CLASS = styles.gRIDCLASS;
 
 interface StoryThemeTypographyEditorProps {
 	theme: StoryTheme;
@@ -35,8 +36,8 @@ export function StoryThemeTypographyEditor({ theme, onChange }: StoryThemeTypogr
 		onChange({ ...typography, [role]: { ...typography[role], ...patch } });
 
 	return (
-		<div className='flex flex-col gap-2 overflow-x-auto'>
-			<div className={cn(GRID_CLASS, 'min-w-[44rem] text-xs text-muted-foreground')}>
+		<div className={styles.storyThemeTypographyEditorDiv}>
+			<div className={cn(GRID_CLASS, styles.storyThemeTypographyEditorDiv2)}>
 				<span>Role</span>
 				<span>Font</span>
 				<span>Weight</span>
@@ -68,12 +69,12 @@ interface TypographyRowProps {
 function TypographyRow({ role, style, theme, onChange }: TypographyRowProps) {
 	const { label, description, sample } = STORY_TEXT_ROLE_LABELS[role];
 	return (
-		<div className={cn(GRID_CLASS, 'min-w-[44rem] border-t pt-2')}>
-			<div className='min-w-0'>
-				<p className='truncate leading-tight' style={sampleStyle(style, theme)} title={description}>
+		<div className={cn(GRID_CLASS, styles.typographyRowDiv)}>
+			<div className={styles.typographyRowDiv2}>
+				<p className={styles.typographyRowP} style={sampleStyle(style, theme)} title={description}>
 					{sample}
 				</p>
-				<p className='truncate text-xs text-muted-foreground'>{label}</p>
+				<p className={styles.typographyRowP2}>{label}</p>
 			</div>
 			<CompactSelect
 				label={`${label} font`}
@@ -99,11 +100,11 @@ function TypographyRow({ role, style, theme, onChange }: TypographyRowProps) {
 				aria-pressed={style.italic}
 				onClick={() => onChange({ italic: !style.italic })}
 				className={cn(
-					'flex size-9 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:text-foreground',
-					style.italic && 'border-foreground/40 bg-muted text-foreground',
+					styles.typographyRowButton,
+					style.italic && styles.typographyRowButton2,
 				)}
 			>
-				<Italic className='size-3.5' />
+				<Italic className={styles.typographyRowItalic} />
 			</button>
 			<CompactNumber
 				label={`${label} letter spacing (em)`}
@@ -152,7 +153,7 @@ function CompactSelect<Value extends string | number>({ label, value, options, o
 				}
 			}}
 		>
-			<SelectTrigger className='w-full' aria-label={label}>
+			<SelectTrigger className={styles.compactSelectSelectTrigger} aria-label={label}>
 				<SelectValue />
 			</SelectTrigger>
 			<SelectContent>
@@ -196,7 +197,7 @@ function CompactNumber({ label, value, onChange, min, max, step }: CompactNumber
 			onFocus={() => setDraft(String(value))}
 			onChange={(event) => commit(event.target.value)}
 			onBlur={() => setDraft(null)}
-			className='w-full px-2'
+			className={styles.compactNumberInput}
 			aria-label={label}
 		/>
 	);

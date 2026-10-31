@@ -1,0 +1,29 @@
+.sharedClassicStoryPageDiv {
+	display: flex;
+	height: 100%;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: var(--app-surface);
+}
+.sharedClassicStoryPageDiv2 {
+	display: flex;
+	min-height: 0px;
+	min-width: 0px;
+	flex: 1;
+}
+.sharedClassicStoryPageDiv3 {
+	position: relative;
+	display: flex;
+	min-height: 0px;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+}
+.sharedStoryContentDiv {
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+}

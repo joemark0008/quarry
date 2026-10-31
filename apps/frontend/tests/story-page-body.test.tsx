@@ -7,6 +7,7 @@ import type { Editor } from '@tiptap/react';
 
 import type { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { StoryPageBody } from '@/components/story-page-body';
+import styles from '@/components/story-page-body.module.css';
 
 vi.hoisted(() => {
 	Object.defineProperty(window.URL, 'createObjectURL', {
@@ -57,6 +58,6 @@ describe('expanded story page editor layout', () => {
 
 		render(<StoryPageBody editor={editor} preview={null} />);
 
-		expect(screen.getByTestId('tabbed-editor-content').className).toBe('mx-auto w-full max-w-5xl p-4 md:p-8');
+		expect(screen.getByTestId('tabbed-editor-content').className).toBe(styles.storyPageBodyStoryTabbedEditor2);
 	});
 });

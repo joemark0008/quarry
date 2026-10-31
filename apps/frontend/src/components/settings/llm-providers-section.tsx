@@ -4,6 +4,7 @@ import { ProviderCard } from './llm-provider-card';
 import { LlmProviderForm } from './llm-provider-form';
 import type { LlmProvider } from '@quarry/shared/types';
 import { useLlmProviders } from '@/hooks/use-llm-providers';
+import styles from './llm-providers-section.module.css';
 
 export type ProviderToEdit = { provider: LlmProvider; modelId?: string };
 
@@ -64,7 +65,7 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 	};
 
 	return (
-		<div className='grid gap-4'>
+		<div className={styles.llmProvidersSectionDiv}>
 			{/* Unconfigured env providers */}
 			{unconfiguredEnvProviders.map((provider) => {
 				if (editingState?.isEditing && editingState.provider === provider) {
@@ -178,17 +179,17 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 
 			{/* Add new config form */}
 			{isAdmin && !editingState?.isEditing && (availableProvidersToAdd.length > 0 || editingState) && (
-				<div className='flex flex-col gap-3 p-4 rounded-lg border border-dashed border-border'>
+				<div className={styles.llmProvidersSectionDiv2}>
 					{!editingState && availableProvidersToAdd.length > 0 && (
-						<div className='grid gap-2'>
-							<label className='text-sm font-medium text-foreground'>Add Provider</label>
-							<div className='flex flex-wrap gap-2'>
+						<div className={styles.llmProvidersSectionDiv3}>
+							<label className={styles.llmProvidersSectionLabel}>Add Provider</label>
+							<div className={styles.llmProvidersSectionDiv4}>
 								{availableProvidersToAdd.map((provider) => (
 									<button
 										key={provider}
 										type='button'
 										onClick={() => handleSelectProvider(provider)}
-										className='px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer bg-secondary text-muted-foreground hover:text-foreground'
+										className={styles.llmProvidersSectionButton}
 									>
 										{providerLabels[provider]}
 									</button>
@@ -220,7 +221,7 @@ export function LlmProvidersSection({ isAdmin, providerToEdit, onProviderToEditO
 				unconfiguredEnvProviders.length === 0 &&
 				unconfiguredConfigProviders.length === 0 &&
 				availableProvidersToAdd.length === 0 && (
-					<p className='text-sm text-muted-foreground'>
+					<p className={styles.llmProvidersSectionP}>
 						{isAdmin
 							? 'No providers configured. Add an API key above.'
 							: 'No providers configured. Contact an admin to set up LLM providers.'}

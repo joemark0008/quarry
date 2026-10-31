@@ -67,7 +67,7 @@ interface TablePaging {
 	toggleSort: (column: string) => void;
 }
 
-/** `quarry-table-display__*` classes let surfaces without Tailwind (sandboxed custom stories) style the same markup. */
+/** `quarry-table-display__*` classes let sandboxed custom stories style the same markup. */
 export const TableDisplay = memo(function TableDisplay({
 	data,
 	serverPagination,
@@ -109,19 +109,19 @@ export const TableDisplay = memo(function TableDisplay({
 	}
 
 	return (
-		<div className={cn('quarry-table-display flex min-h-0 flex-col', className)}>
-			{title ? <span className='quarry-table-display__title text-sm font-medium'>{title}</span> : null}
+		<div className={cn('quarry-shared-tabledisplaydiv-555def quarry-table-display', className)}>
+			{title ? <span className='quarry-shared-tabledisplayspan-acadca quarry-table-display__title'>{title}</span> : null}
 
 			<div
 				className={cn(
-					'quarry-table-display__scroll overflow-auto border-t bg-background min-h-0',
+					'quarry-shared-tabledisplaydiv-2aa2d0 quarry-table-display__scroll',
 					tableContainerClassName,
 				)}
 			>
-				<table className='w-full min-w-max border-collapse text-xs'>
-					<thead className='sticky top-0 z-10 border-b bg-panel'>
+				<table className='quarry-shared-tabledisplaytable-3c8cbd'>
+					<thead className='quarry-shared-tabledisplaythead-532791'>
 						<tr>
-							<th className='quarry-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-2 text-center font-medium whitespace-nowrap text-foreground w-4' />
+							<th className='quarry-shared-tabledisplayth-3513f5 quarry-table-display__index' />
 							{resolvedColumns.map((column) => {
 								const alignRight = numericColumns.has(column);
 								const sortDirection = activeSort?.column === column ? activeSort.direction : null;
@@ -138,16 +138,16 @@ export const TableDisplay = memo(function TableDisplay({
 												: 'none'
 										}
 										className={cn(
-											'shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-2 font-medium whitespace-nowrap text-foreground',
-											alignRight && 'quarry-table-display__numeric text-right tabular-nums',
+											'quarry-shared-tabledisplayth-df8127',
+											alignRight && 'quarry-shared-tabledisplayth-a01bce quarry-table-display__numeric',
 										)}
 									>
 										<button
 											type='button'
 											onClick={() => paging.toggleSort(column)}
-											className='group flex w-full cursor-pointer items-center justify-between gap-3'
+											className='quarry-shared-tabledisplaybutton-9f278e group'
 										>
-											<span className={cn(alignRight && 'ml-auto')}>{columnLabel(column)}</span>
+											<span className={cn(alignRight && 'quarry-shared-tabledisplayspan-fb56d9')}>{columnLabel(column)}</span>
 											<SortIndicator direction={sortDirection} cn={cn} />
 										</button>
 									</th>
@@ -161,10 +161,10 @@ export const TableDisplay = memo(function TableDisplay({
 							pageData.map((row, rowIndex) => (
 								<tr
 									key={rowIndex}
-									className='border-b last:border-b-0 border-border/50 bg-background  hover:bg-accent/30'
+									className='quarry-shared-tabledisplaytr-b7b16d'
 								>
-									<td className='quarry-table-display__index shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap text-center w-4 bg-panel'>
-										<span className='px-1 py-2 font-[Geist] font-medium text-foreground'>
+									<td className='quarry-shared-tabledisplaytd-ecce13 quarry-table-display__index'>
+										<span className='quarry-shared-tabledisplayspan-a04514'>
 											{pageIndex * pageSize + rowIndex + 1}
 										</span>
 									</td>
@@ -180,13 +180,13 @@ export const TableDisplay = memo(function TableDisplay({
 													...(background ? { backgroundColor: background } : {}),
 												}}
 												className={cn(
-													'quarry-table-display__cell shadow-[inset_-1px_0_0_0_var(--border)] last:shadow-none px-3 py-1 align-top font-mono text-[11px] leading-5 whitespace-nowrap',
+													'quarry-shared-tabledisplaytd-0e23ef quarry-table-display__cell',
 													numericColumns.has(column) &&
-														'quarry-table-display__numeric text-right tabular-nums',
+														'quarry-shared-tabledisplaytd-a01bce quarry-table-display__numeric',
 												)}
 											>
 												{isNull ? (
-													<span className='quarry-table-display__null italic text-muted-foreground/60'>
+													<span className='quarry-shared-tabledisplayspan-eb2299 quarry-table-display__null'>
 														NULL
 													</span>
 												) : (
@@ -201,7 +201,7 @@ export const TableDisplay = memo(function TableDisplay({
 							<tr>
 								<td
 									colSpan={resolvedColumns.length + 1}
-									className='quarry-table-display__empty px-3 py-6 text-center text-sm text-muted-foreground'
+									className='quarry-shared-tabledisplaytd-5a87e7 quarry-table-display__empty'
 								>
 									{emptyLabel}
 								</td>
@@ -224,11 +224,11 @@ export const TableDisplay = memo(function TableDisplay({
 			) : showRowCount ? (
 				<div
 					className={cn(
-						'quarry-table-display__row-count flex px-4 py-2 border-t',
-						compactFooter ? 'justify-start' : 'justify-end',
+						'quarry-shared-tabledisplaydiv-469660 quarry-table-display__row-count',
+						compactFooter ? 'quarry-shared-tabledisplaydiv-4b5cc1' : 'quarry-shared-tabledisplaydiv-77c08e',
 					)}
 				>
-					<span className={cn('text-muted-foreground', compactFooter ? 'text-xs' : 'text-sm')}>
+					<span className={cn('quarry-shared-tabledisplayspan-bfa603', compactFooter ? 'quarry-shared-tabledisplayspan-359090' : 'quarry-shared-tabledisplayspan-fc7473')}>
 						{paging.totalRows} rows
 					</span>
 				</div>
@@ -310,23 +310,23 @@ function useLocalTablePaging(data: TableRow[], columns: string[], maxRowsBeforeP
 
 function SortIndicator({ direction, cn }: { direction: SortDirection | null; cn: ClassNameMerger }) {
 	return (
-		<span className='quarry-table-display__sort inline-flex shrink-0 flex-col -space-y-1'>
+		<span className='quarry-shared-sortindicatorspan-0eb978 quarry-table-display__sort'>
 			<ChevronIcon
 				path='m18 15-6-6-6 6'
 				className={cn(
-					'size-3',
+					'quarry-shared-sortindicatorchevronicon-ef2d6f',
 					direction === 'asc'
-						? 'quarry-table-display__sort--active text-foreground'
-						: 'text-muted-foreground/50',
+						? 'quarry-shared-sortindicatorchevronicon-d4108a quarry-table-display__sort--active'
+						: 'quarry-shared-sortindicatorchevronicon-3a33f1',
 				)}
 			/>
 			<ChevronIcon
 				path='m6 9 6 6 6-6'
 				className={cn(
-					'size-3',
+					'quarry-shared-sortindicatorchevronicon-ef2d6f',
 					direction === 'desc'
-						? 'quarry-table-display__sort--active text-foreground'
-						: 'text-muted-foreground/50',
+						? 'quarry-shared-sortindicatorchevronicon-d4108a quarry-table-display__sort--active'
+						: 'quarry-shared-sortindicatorchevronicon-3a33f1',
 				)}
 			/>
 		</span>

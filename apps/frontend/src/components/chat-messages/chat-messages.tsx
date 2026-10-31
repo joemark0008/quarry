@@ -30,6 +30,7 @@ import { useScrollToBottomOnNewUserMessage } from '@/hooks/use-scroll-to-bottom-
 import { useChatId } from '@/hooks/use-chat-id';
 import { useChatQuery } from '@/queries/use-chat-query';
 import { chatApi } from '@/lib/chat-api';
+import styles from './chat-messages.module.css';
 
 const DEBUG_MESSAGES = false;
 
@@ -40,14 +41,14 @@ export function ChatMessages() {
 	const fromMessageSend = useRouterState({ select: (state) => state.location.state.fromMessageSend });
 
 	return (
-		<div className={cn('mt-6 h-full min-h-0 flex', !fromMessageSend && 'animate-fade-in')} key={chatId}>
+		<div className={cn(styles.chatMessagesDiv, !fromMessageSend && styles.chatMessagesDiv2)} key={chatId}>
 			<Conversation>
-				<ConversationContent className='max-w-3xl mx-auto gap-0 pt-15 pb-0 md:pb-0 max-md:pt-0'>
+				<ConversationContent className={styles.chatMessagesConversationContent}>
 					<ChatMessagesContent />
-					<div className='shrink-0' style={{ height: 'var(--chat-input-height, 0px)' }} aria-hidden />
+					<div className={styles.chatMessagesDiv3} style={{ height: 'var(--chat-input-height, 0px)' }} aria-hidden />
 				</ConversationContent>
 
-				<ConversationScrollButton className='bottom-[calc(var(--chat-input-height,0px)+1rem)]' />
+				<ConversationScrollButton className={styles.chatMessagesConversationScrollButton} />
 			</Conversation>
 		</div>
 	);
@@ -86,8 +87,8 @@ export const ChatMessagesContent = memo(function ChatMessagesContent() {
 	useScrollToBottomOnNewUserMessage(messages);
 
 	return (
-		<div className='flex flex-col'>
-			<div className='flex flex-col gap-8 max-md:gap-0'>
+		<div className={styles.chatMessagesContentDiv}>
+			<div className={styles.chatMessagesContentDiv2}>
 				{messageGroups.length === 0 ? (
 					<ConversationEmptyState />
 				) : (
@@ -105,10 +106,10 @@ export const ChatMessagesContent = memo(function ChatMessagesContent() {
 				)}
 			</div>
 
-			<div className='flex flex-col gap-4 pt-4 pb-6' data-selection-ignore>
+			<div className={styles.chatMessagesContentDiv3} data-selection-ignore>
 				{followUpSuggestionsToolCall && <FollowUpSuggestions toolPart={followUpSuggestionsToolCall} />}
 
-				<ChatError className='mt-4' />
+				<ChatError className={styles.chatMessagesContentChatError} />
 			</div>
 		</div>
 	);
@@ -149,7 +150,7 @@ const MessageGroup = memo(
 	}: MessageGroupProps) => {
 		const messages = userMessage ? [userMessage, ...assistantMessages] : assistantMessages;
 		return (
-			<div className='flex flex-col gap-4 group/message'>
+			<div className={`${styles.messageGroupDiv} group/message`}>
 				{messages.map((message) => (
 					<MessageBlock
 						key={message.id}
@@ -161,7 +162,7 @@ const MessageGroup = memo(
 					/>
 				))}
 
-				{showLoader && !assistantMessages.length && <TextShimmer showLogo className='px-3' />}
+				{showLoader && !assistantMessages.length && <TextShimmer showLogo className={styles.messageGroupTextShimmer} />}
 			</div>
 		);
 	},
@@ -188,8 +189,8 @@ const MessageBlock = memo(
 			return (
 				<div
 					className={cn(
-						'flex gap-3 text-xs',
-						isUser ? 'justify-end bg-primary text-primary-foreground w-min ml-auto' : 'justify-start',
+						styles.messageBlockDiv,
+						isUser ? styles.messageBlockDiv2 : styles.messageBlockDiv3,
 					)}
 				>
 					<pre>{JSON.stringify(message, null, 2)}</pre>

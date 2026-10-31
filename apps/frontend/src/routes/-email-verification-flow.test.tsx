@@ -4,8 +4,8 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { EmailVerified } from './email-verified';
-import { Login } from './login';
-import { SignUp } from './signup';
+import { Login } from './_public/login';
+import { SignUp } from './_public/signup';
 import type { ReactNode } from 'react';
 
 const mocks = vi.hoisted(() => ({
@@ -117,7 +117,7 @@ describe('email verification auth routes', () => {
 	afterEach(cleanup);
 
 	it('replaces successful cloud sign-up with a check-inbox state', async () => {
-		mocks.searchByPath['/signup'] = { redirect: '/settings' };
+		mocks.searchByPath['/_public/signup'] = { redirect: '/settings' };
 		mocks.formValues = {
 			name: 'New User',
 			email: 'new@example.com',
@@ -146,7 +146,7 @@ describe('email verification auth routes', () => {
 
 	it('continues after cloud sign-up when email verification is disabled', async () => {
 		mocks.publicConfig.emailVerificationEnabled = false;
-		mocks.searchByPath['/signup'] = { redirect: '/settings' };
+		mocks.searchByPath['/_public/signup'] = { redirect: '/settings' };
 		mocks.formValues = {
 			name: 'New User',
 			email: 'new@example.com',
@@ -164,7 +164,7 @@ describe('email verification auth routes', () => {
 	});
 
 	it('requests a verification email and shows check-inbox for an unverified login', async () => {
-		mocks.searchByPath['/login'] = { redirect: '/settings' };
+		mocks.searchByPath['/_public/login'] = { redirect: '/settings' };
 		mocks.formValues = { email: 'new@example.com', password: 'password123' };
 		mocks.signInEmail.mockResolvedValue({
 			error: { code: 'EMAIL_NOT_VERIFIED', message: 'Email not verified' },

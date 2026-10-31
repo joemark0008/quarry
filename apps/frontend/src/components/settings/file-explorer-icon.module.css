@@ -1,0 +1,80 @@
+.fileExplorerIconIcon {
+	width: 1rem;
+	height: 1rem;
+	flex-shrink: 0;
+}
+.fOLDERICONColor {
+	color: var(--app-blue-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-blue-400);
+	}
+}
+.tABLEICONColor {
+	color: var(--app-emerald-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-emerald-400);
+	}
+}
+.fILENAMEICONSColor {
+	color: var(--app-orange-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-orange-400);
+	}
+}
+.fILENAMEICONSColor2 {
+	color: var(--app-violet-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-violet-400);
+	}
+}
+.fILENAMEICONSColor3 {
+	color: var(--app-sky-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-sky-400);
+	}
+}
+.getNamedFileIconColor {
+	color: var(--app-amber-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-amber-400);
+	}
+}
+.eXTENSIONICONSColor {
+	color: var(--app-yellow-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-yellow-400);
+	}
+}
+.eXTENSIONICONSColor2 {
+	color: var(--app-indigo-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-indigo-400);
+	}
+}
+.eXTENSIONICONSColor3 {
+	color: var(--app-cyan-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-cyan-400);
+	}
+}
+.eXTENSIONICONSColor4 {
+	color: var(--app-slate-500);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-slate-400);
+	}
+}
+.eXTENSIONICONSColor5 {
+	color: var(--app-teal-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-teal-400);
+	}
+}
+.eXTENSIONICONSColor6 {
+	color: var(--app-muted);
+}
+.getFileIconDefinitionColor {
+	color: var(--app-slate-600);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		color: var(--app-slate-400);
+	}
+}

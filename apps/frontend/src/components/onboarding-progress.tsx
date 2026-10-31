@@ -6,6 +6,7 @@ import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import { useAgentMessages } from '@/contexts/agent.provider';
 import { cn } from '@/lib/utils';
+import styles from './onboarding-progress.module.css';
 
 const ONBOARDING_STEPS = {
 	new: ['Install', 'Initialize', 'Verify & sync', 'Deploy'],
@@ -47,22 +48,22 @@ export function OnboardingProgress({
 			aria-valuemax={steps.length}
 			aria-valuenow={completedSteps}
 		>
-			<div className='mb-2 flex items-center justify-between gap-4'>
-				<span className='text-sm font-medium'>Onboarding progress</span>
-				<span className='text-xs text-muted-foreground'>
+			<div className={styles.onboardingProgressDiv}>
+				<span className={styles.onboardingProgressSpan}>Onboarding progress</span>
+				<span className={styles.onboardingProgressSpan2}>
 					{progress ? `${completedSteps} of ${steps.length} complete` : 'Choose your setup path'}
 				</span>
 			</div>
-			<div className='flex gap-2'>
+			<div className={styles.onboardingProgressDiv2}>
 				{steps.map((label, index) => (
-					<div key={label} className='min-w-0 flex-1'>
+					<div key={label} className={styles.onboardingProgressDiv3}>
 						<div
 							className={cn(
-								'h-1.5 rounded-full transition-colors',
-								index < completedSteps ? 'bg-violet' : 'bg-muted',
+								styles.onboardingProgressDiv4,
+								index < completedSteps ? styles.onboardingProgressDiv5 : styles.onboardingProgressDiv6,
 							)}
 						/>
-						<span className='mt-1 block truncate text-xs text-muted-foreground'>{label}</span>
+						<span className={styles.onboardingProgressSpan3}>{label}</span>
 					</div>
 				))}
 			</div>
@@ -95,19 +96,19 @@ export function WarehouseCommandProgress({
 	const showLogs = Boolean(logs?.trim());
 
 	return (
-		<div className='rounded-xl border border-violet/20 bg-background/95 px-4 py-3 shadow-sm backdrop-blur'>
-			<div className='flex items-center justify-between gap-3'>
-				<div className='flex min-w-0 items-center gap-2'>
+		<div className={styles.warehouseCommandProgressDiv}>
+			<div className={styles.warehouseCommandProgressDiv2}>
+				<div className={styles.warehouseCommandProgressDiv3}>
 					{isReady ? (
-						<CheckCircle2 className='size-3.5 shrink-0 text-emerald-600 dark:text-emerald-400' />
+						<CheckCircle2 className={styles.warehouseCommandProgressCheckCircle2} />
 					) : isStopped ? (
-						<CircleAlert className='size-3.5 shrink-0 text-destructive' />
+						<CircleAlert className={styles.warehouseCommandProgressCircleAlert} />
 					) : (
-						<Loader2 className='size-3.5 shrink-0 animate-spin text-violet' />
+						<Loader2 className={styles.warehouseCommandProgressLoader2} />
 					)}
-					<span className='truncate text-xs font-medium'>{label}</span>
+					<span className={styles.warehouseCommandProgressSpan}>{label}</span>
 				</div>
-				<span className='shrink-0 text-[11px] text-muted-foreground'>
+				<span className={styles.warehouseCommandProgressSpan2}>
 					{isReady
 						? 'Complete'
 						: isStopped
@@ -125,24 +126,24 @@ export function WarehouseCommandProgress({
 				aria-valuenow={
 					status === 'debugging' || (status === 'syncing' && syncProgress === null) ? undefined : progress
 				}
-				className='mt-2 h-1.5 overflow-hidden rounded-full bg-muted'
+				className={styles.warehouseCommandProgressDiv4}
 			>
 				<div
 					className={cn(
-						'h-full rounded-full bg-violet transition-[width] duration-300',
-						isStopped && 'bg-destructive',
-						!isReady && !isStopped && !syncProgress && 'animate-pulse',
+						styles.warehouseCommandProgressDiv5,
+						isStopped && styles.warehouseCommandProgressDiv6,
+						!isReady && !isStopped && !syncProgress && styles.warehouseCommandProgressDiv7,
 					)}
 					style={{ width: `${progress}%` }}
 				/>
 			</div>
 			{showLogs && (
-				<details className='group mt-2'>
-					<summary className='flex cursor-pointer list-none items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground'>
-						<Terminal className='size-3' />
+				<details className={`${styles.warehouseCommandProgressDetails} group`}>
+					<summary className={styles.warehouseCommandProgressSummary}>
+						<Terminal className={styles.warehouseCommandProgressTerminal} />
 						View quarry {isSyncing ? 'sync' : 'debug'} logs
 					</summary>
-					<pre className='mt-2 max-h-40 overflow-auto whitespace-pre-wrap rounded-md bg-muted/50 p-2 font-mono text-[10px] leading-relaxed text-muted-foreground'>
+					<pre className={styles.warehouseCommandProgressPre}>
 						{logs}
 					</pre>
 				</details>

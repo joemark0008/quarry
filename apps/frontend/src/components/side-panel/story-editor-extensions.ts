@@ -78,7 +78,7 @@ const TableDeleteShortcuts = Extension.create({
 
 export const EDITOR_EXTENSIONS = [
 	StarterKit.configure({
-		dropcursor: { width: 2, color: 'var(--primary-muted)', class: 'drop-cursor' },
+		dropcursor: { width: 2, color: 'var(--app-primary-muted)', class: 'drop-cursor' },
 	}),
 	TableKit,
 	TableDeleteShortcuts,

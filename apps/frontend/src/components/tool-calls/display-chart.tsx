@@ -62,6 +62,7 @@ import { cn } from '@/lib/utils';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { storyApi } from '@/lib/story-api';
+import styles from './display-chart.module.css';
 
 const LEGEND_SCROLL_OFFSET = 120;
 const HORIZONTAL_LABEL_GAP = 12;
@@ -168,7 +169,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 	if (output && output.error) {
 		return (
 			<ToolCallWrapper defaultExpanded title='Could not display the chart'>
-				<div className='p-4 text-red-400 text-sm'>{output.error}</div>
+				<div className={styles.displayChartToolCallDiv}>{output.error}</div>
 			</ToolCallWrapper>
 		);
 	}
@@ -185,7 +186,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 
 	if (chartConfig.series.length === 0) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayChartToolCallDiv2}>
 				Could not display the chart because no series are configured.
 			</div>
 		);
@@ -197,7 +198,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 
 	if (!sourceData) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayChartToolCallDiv2}>
 				Could not display the chart because the data is missing.
 			</div>
 		);
@@ -205,7 +206,7 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 
 	if (!sourceData.data || sourceData.data.length === 0) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.displayChartToolCallDiv2}>
 				Could not display the chart because the data is empty.
 			</div>
 		);
@@ -256,30 +257,30 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 	return (
 		<div
 			className={cn(
-				'group/chart relative flex flex-col items-stretch my-4 -mx-3',
-				'border transition-colors duration-150 rounded-lg overflow-hidden bg-backgroundSecondary/30',
-				viewMode === 'chart' ? 'border-transparent hover:border-border' : 'border-border',
-				viewMode === 'chart' ? 'gap-2 px-3' : 'gap-0',
-				isKpiChartView ? 'py-3' : '',
-				viewMode === 'chart' && chartConfig.chart_type !== 'kpi_card' && !normalSize ? 'aspect-3/2' : '',
+				`${styles.displayChartToolCallDiv3} group/chart`,
+				`${styles.displayChartToolCallDiv4} bg-backgroundSecondary/30`,
+				viewMode === 'chart' ? styles.displayChartToolCallDiv5 : styles.displayChartToolCallDiv6,
+				viewMode === 'chart' ? styles.displayChartToolCallDiv7 : styles.displayChartToolCallDiv8,
+				isKpiChartView ? styles.displayChartToolCallDiv9 : '',
+				viewMode === 'chart' && chartConfig.chart_type !== 'kpi_card' && !normalSize ? styles.displayChartToolCallDiv10 : '',
 			)}
 		>
 			<div
 				className={cn(
-					'flex items-center py-2',
+					styles.displayChartToolCallDiv11,
 					isKpiChartView
-						? 'absolute top-0 right-0 z-10 gap-1 px-3'
+						? styles.displayChartToolCallDiv12
 						: isPieChartView
-							? 'absolute inset-x-0 top-0 z-10 w-full justify-between gap-2 px-3'
-							: 'w-full justify-between',
+							? styles.displayChartToolCallDiv13
+							: styles.displayChartToolCallDiv14,
 					!isKpiChartView &&
 						!isPieChartView &&
-						(viewMode === 'chart' ? 'gap-2' : 'gap-0 px-3 border-b border-border'),
+						(viewMode === 'chart' ? styles.displayChartToolCallDiv15 : styles.displayChartToolCallDiv16),
 				)}
 			>
 				{chartConfig.chart_type != 'kpi_card' ? (
-					<div className='flex items-center gap-1'>
-						<span className='quarry-chart-title text-sm font-medium text-foreground flex-1'>
+					<div className={styles.displayChartToolCallDiv17}>
+						<span className={`${styles.displayChartToolCallSpan} quarry-chart-title`}>
 							{chartConfig.title}
 						</span>
 						{viewMode === 'chart' &&
@@ -295,52 +296,52 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 				) : (
 					<div></div>
 				)}
-				<div className='flex items-center gap-1 shrink-0'>
-					<div className='flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover/chart:opacity-100 focus-within:opacity-100'>
+				<div className={styles.displayChartToolCallDiv18}>
+					<div className={styles.displayChartToolCallDiv19}>
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
 							className={cn(
-								'rounded-full hover:bg-accent/70',
-								viewMode === 'chart' ? 'bg-accent/70' : '',
+								styles.displayChartToolCallButton,
+								viewMode === 'chart' ? styles.displayChartToolCallButton2 : '',
 							)}
 							onClick={() => setViewMode('chart')}
 							title='View chart'
 						>
-							<ChartNoAxesColumn className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+							<ChartNoAxesColumn className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 						</Button>
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className={cn('rounded-full hover:bg-accent/70', viewMode === 'data' ? 'bg-accent/70' : '')}
+							className={cn(styles.displayChartToolCallButton, viewMode === 'data' ? styles.displayChartToolCallButton2 : '')}
 							onClick={() => setViewMode('data')}
 							title='View data'
 						>
-							<TableIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+							<TableIcon className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 						</Button>
 						{sqlQuery && (
 							<Button
 								variant='ghost-muted'
 								size='icon-xs'
 								className={cn(
-									'rounded-full hover:bg-accent/70',
-									viewMode === 'query' ? 'bg-accent/70' : '',
+									styles.displayChartToolCallButton,
+									viewMode === 'query' ? styles.displayChartToolCallButton2 : '',
 								)}
 								onClick={() => setViewMode('query')}
 								title='View SQL query'
 							>
-								<Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+								<Code className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 							</Button>
 						)}
 						{storyIds.length > 0 && isBuiltinChart && (
 							<Button
 								variant='ghost-muted'
 								size='icon-xs'
-								className='rounded-full hover:bg-accent/70'
+								className={styles.displayChartToolCallButton}
 								onClick={handleAddToStory}
 								title='Add to story'
 							>
-								<FilePlus className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+								<FilePlus className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 							</Button>
 						)}
 
@@ -350,12 +351,12 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 								<Button
 									variant='ghost-muted'
 									size='icon-xs'
-									className='rounded-full hover:bg-accent/70'
+									className={styles.displayChartToolCallButton}
 									onClick={handleDownloadPng}
 									disabled={isDownloading}
 									title='Download as PNG'
 								>
-									<Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+									<Download className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 								</Button>
 							)
 						) : (
@@ -367,10 +368,10 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 								<Button
 									variant='ghost-muted'
 									size='icon-xs'
-									className='rounded-full hover:bg-accent/70'
+									className={styles.displayChartToolCallButton}
 									title='Export data'
 								>
-									<Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+									<Download className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 								</Button>
 							</ExportDataMenu>
 						)}
@@ -379,11 +380,11 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className='rounded-full hover:bg-accent/70'
+							className={styles.displayChartToolCallButton}
 							onClick={() => setIsEditOpen(true)}
 							title='Edit chart'
 						>
-							<Pencil className='size-3 text-muted-foreground/70' strokeWidth={2.25} />
+							<Pencil className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
 						</Button>
 					)}
 				</div>
@@ -425,8 +426,8 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 					showDataLabels={chartConfig.show_data_labels}
 					comparisonMode={'comparison_mode' in chartConfig ? chartConfig.comparison_mode : undefined}
 					hideTotal={chartConfig.hide_total}
-					className={isPieChart(chartConfig.chart_type) ? 'flex-1 justify-center' : undefined}
-					chartContentClassName={isPieChart(chartConfig.chart_type) ? 'aspect-4/3' : undefined}
+					className={isPieChart(chartConfig.chart_type) ? styles.displayChartToolCallChartDisplay : undefined}
+					chartContentClassName={isPieChart(chartConfig.chart_type) ? styles.displayChartToolCallChartDisplay2 : undefined}
 				/>
 			)}
 		</div>
@@ -518,7 +519,7 @@ export const ChartDisplay = memo(function ChartDisplay({
 	const isPercentStacked = isPercentStackedChartType(chartType);
 
 	const isPie = isPieChart(chartType);
-	const pieCenteringClass = isPie ? 'mx-auto max-w-[480px]' : '';
+	const pieCenteringClass = isPie ? styles.pieCenteringClass : '';
 	const pieValueKey = series[0]?.data_key ?? '';
 	const pieData = useMemo(
 		() => (isPie ? bucketPieData(data, xAxisKey, pieValueKey) : data),
@@ -687,7 +688,7 @@ export const ChartDisplay = memo(function ChartDisplay({
 							verticalAlign='bottom'
 							content={
 								<ChartLegendContent
-									className={isPie ? 'flex-wrap' : undefined}
+									className={isPie ? styles.chartElementChartLegendContent : undefined}
 									onItemClick={isPie ? undefined : handleToggleSeriesVisibility}
 								/>
 							}
@@ -741,9 +742,9 @@ export const ChartDisplay = memo(function ChartDisplay({
 	);
 
 	const inlineHeader = useInlineHeader ? (
-		<div className='mb-6 flex w-full min-w-0 items-center gap-3'>
-			<div className={showInlineLegend ? 'min-h-11 shrink-0' : 'shrink-0'}>
-				<span className='quarry-chart-title block text-[15px] font-semibold'>{title}</span>
+		<div className={styles.inlineHeaderDiv}>
+			<div className={showInlineLegend ? styles.inlineHeaderDiv2 : styles.inlineHeaderDiv3}>
+				<span className={`${styles.inlineHeaderSpan} quarry-chart-title`}>{title}</span>
 				{titleAccessory}
 			</div>
 			{showInlineLegend && canScrollLeft && (
@@ -752,21 +753,21 @@ export const ChartDisplay = memo(function ChartDisplay({
 					size='icon-xs'
 					onClick={() => scrollLegend('left')}
 					aria-label='Scroll legend left'
-					className='shrink-0'
+					className={styles.inlineHeaderDiv3}
 				>
-					<ChevronLeft className='size-3.5' />
+					<ChevronLeft className={styles.inlineHeaderChevronLeft} />
 				</Button>
 			)}
 			{showInlineLegend && (
 				<div
 					ref={scrollRef}
-					className='min-w-0 flex-1 overflow-x-auto pl-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+					className={styles.inlineHeaderDiv4}
 				>
 					<ChartLegendContent
 						payload={legendPayload}
 						align='right'
 						onItemClick={handleToggleSeriesVisibility}
-						className='w-max min-w-full gap-3 p-0 text-[10px] [&>*]:shrink-0'
+						className={styles.inlineHeaderChartLegendContent}
 					/>
 				</div>
 			)}
@@ -776,9 +777,9 @@ export const ChartDisplay = memo(function ChartDisplay({
 					size='icon-xs'
 					onClick={() => scrollLegend('right')}
 					aria-label='Scroll legend right'
-					className='shrink-0'
+					className={styles.inlineHeaderDiv3}
 				>
-					<ChevronRight className='size-3.5' />
+					<ChevronRight className={styles.inlineHeaderChevronLeft} />
 				</Button>
 			)}
 		</div>
@@ -788,8 +789,8 @@ export const ChartDisplay = memo(function ChartDisplay({
 		<div
 			ref={containerRef}
 			className={cn(
-				'flex flex-col items-stretch gap-2 w-full',
-				chartType !== 'kpi_card' && normalSize ? 'h-full' : '',
+				styles.chartDisplayDiv,
+				chartType !== 'kpi_card' && normalSize ? styles.chartDisplayDiv2 : '',
 				className,
 			)}
 		>
@@ -801,8 +802,8 @@ export const ChartDisplay = memo(function ChartDisplay({
 			) : (
 				<ChartContainer
 					config={chartConfig}
-					className={cn(normalSize ? 'h-full w-full' : 'w-full', pieCenteringClass, chartContainerClassName)}
-					contentClassName={cn(normalSize ? 'aspect-auto flex-1 min-h-0' : undefined, chartContentClassName)}
+					className={cn(normalSize ? styles.chartDisplayChartContainer : styles.chartDisplayChartContainer2, pieCenteringClass, chartContainerClassName)}
+					contentClassName={cn(normalSize ? styles.chartDisplayChartContainer3 : undefined, chartContentClassName)}
 					header={inlineHeader}
 				>
 					{chartElement}

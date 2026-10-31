@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import styles from './brand-gradient-backdrop.module.css';
 
 type BrandGradientBackdropProps = {
 	color: string;
@@ -15,7 +16,7 @@ export function BrandGradientBackdrop({ color, className, style }: BrandGradient
 			aria-hidden='true'
 		>
 			<div
-				className='absolute inset-0'
+				className={styles.brandGradientBackdropDiv}
 				style={{
 					backgroundImage:
 						'radial-gradient(120% 90% at 85% 100%, rgba(255,255,255,0.45), transparent 60%), radial-gradient(80% 70% at 30% 10%, rgba(255,255,255,0.18), transparent 70%)',

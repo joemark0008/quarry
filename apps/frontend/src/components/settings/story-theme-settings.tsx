@@ -42,6 +42,7 @@ import { Switch } from '@/components/ui/switch';
 import { useSidePanel } from '@/contexts/side-panel';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-theme-settings.module.css';
 
 const BORDER_WIDTHS = [0, 1, 2, 3, 4];
 const HEADER_LAYOUTS = {
@@ -71,7 +72,7 @@ export function StoryThemeSettings({ isAdmin }: StoryThemeSettingsProps) {
 	const systemConfig = usePublicConfig();
 	if (!systemConfig.data) {
 		return (
-			<div className='flex justify-center py-12'>
+			<div className={styles.storyThemeSettingsDiv}>
 				<Spinner />
 			</div>
 		);
@@ -79,9 +80,9 @@ export function StoryThemeSettings({ isAdmin }: StoryThemeSettingsProps) {
 	if (!systemConfig.data.betaCustomStoriesEnabled) {
 		return (
 			<SettingsCard>
-				<Empty className='whitespace-normal'>
+				<Empty className={styles.storyThemeSettingsEmpty}>
 					This feature is currently in beta. To enable it, set the environment variable{' '}
-					<code className='rounded bg-muted px-1 py-0.5 font-mono text-xs'>
+					<code className={styles.storyThemeSettingsCode}>
 						BETA_CUSTOM_STORIES_ENABLED=true
 					</code>{' '}
 					on your quarry instance and restart it.
@@ -150,8 +151,8 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 
 	if (!theme) {
 		return (
-			<div className='flex justify-center py-12'>
-				<Spinner className='size-5' />
+			<div className={styles.storyThemeSettingsDiv}>
+				<Spinner className={styles.storyThemeEditorSpinner} />
 			</div>
 		);
 	}
@@ -262,7 +263,7 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 						control={
 							<Button
 								variant='outline'
-								className='rounded-full'
+								className={styles.storyThemeEditorButton}
 								onClick={deriveFromOther}
 								disabled={controlsDisabled || viewedTheme !== null}
 							>
@@ -541,16 +542,16 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 				</SettingsCard>
 			</LockedFieldset>
 
-			<div className='sticky bottom-0 -mx-4 -mb-6 flex flex-wrap items-center justify-between gap-2 border-t bg-background/95 px-4 py-3 backdrop-blur md:-mx-8 md:-mb-8 md:px-8'>
-				<div className='flex items-center gap-2'>
+			<div className={styles.storyThemeEditorDiv}>
+				<div className={styles.storyThemeEditorDiv2}>
 					{openPreview.button}
-					{error && <p className='text-xs text-destructive'>{error}</p>}
+					{error && <p className={styles.storyThemeEditorP}>{error}</p>}
 				</div>
 				{isAdmin && (
-					<div className='flex items-center gap-2'>
+					<div className={styles.storyThemeEditorDiv2}>
 						<Button
 							variant='outline'
-							className='rounded-full text-destructive hover:text-destructive'
+							className={styles.storyThemeEditorButton2}
 							onClick={() => {
 								setTheme(DEFAULT_STORY_THEME_PAIR);
 								setInspiration(null);
@@ -561,13 +562,13 @@ function StoryThemeEditor({ isAdmin }: { isAdmin: boolean }) {
 							Reset to quarry defaults
 						</Button>
 						{isDirty && (
-							<Button variant='outline' className='rounded-full' onClick={revertPending}>
+							<Button variant='outline' className={styles.storyThemeEditorButton} onClick={revertPending}>
 								Revert
 							</Button>
 						)}
 						<Button
 							variant='primary-gradient'
-							className='rounded-full'
+							className={styles.storyThemeEditorButton}
 							onClick={() => {
 								const valid = validate();
 								if (valid) {
@@ -685,8 +686,8 @@ function usePreviewPanel() {
 
 	const show = () => open(<StoryThemePreviewPanel />);
 	const button = isVisible ? null : (
-		<Button variant='outline' className='rounded-full' onClick={show}>
-			<Eye className='size-4' />
+		<Button variant='outline' className={styles.storyThemeEditorButton} onClick={show}>
+			<Eye className={styles.buttonEye} />
 			Show preview
 		</Button>
 	);
@@ -720,13 +721,13 @@ function ColorRow({ label, description, value, onChange }: RowProps<string>) {
 			label={label}
 			description={description}
 			control={
-				<div className='flex items-center gap-2'>
+				<div className={styles.storyThemeEditorDiv2}>
 					<ColorSwatchInput label={label} value={value} onChange={onChange} />
 					<Input
 						value={draft}
 						onChange={(event) => commit(event.target.value)}
 						onBlur={() => setDraft(value)}
-						className='w-28 font-mono'
+						className={styles.colorRowInput}
 						spellCheck={false}
 						aria-label={`${label} hex value`}
 					/>
@@ -751,7 +752,7 @@ function ColorSwatchInput({
 			aria-label={label}
 			value={value}
 			onChange={(event) => onChange(event.target.value)}
-			className='h-9 w-9 shrink-0 cursor-pointer overflow-hidden rounded-md bg-transparent p-0 shadow-xs disabled:pointer-events-none disabled:opacity-50 [&::-moz-color-swatch]:rounded-md [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none'
+			className={styles.colorSwatchInputInput}
 		/>
 	);
 }
@@ -762,9 +763,9 @@ function ChartSeriesControl({ value, onChange }: { value: string[]; onChange: (s
 	const add = () => onChange([...value, value[value.length - 1] ?? DEFAULT_STORY_THEME.charts.series[0]]);
 
 	return (
-		<div className='flex max-w-md flex-wrap items-center justify-end gap-2'>
+		<div className={styles.chartSeriesControlDiv}>
 			{value.map((color, index) => (
-				<div key={index} className='flex relative'>
+				<div key={index} className={styles.chartSeriesControlDiv2}>
 					<ColorSwatchInput
 						label={`Series colour ${index + 1}`}
 						value={color}
@@ -775,16 +776,16 @@ function ChartSeriesControl({ value, onChange }: { value: string[]; onChange: (s
 							type='button'
 							aria-label={`Remove series colour ${index + 1}`}
 							onClick={() => remove(index)}
-							className='absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full border bg-background text-muted-foreground hover:text-foreground'
+							className={styles.chartSeriesControlButton}
 						>
-							<X className='size-2.5' />
+							<X className={styles.chartSeriesControlX} />
 						</button>
 					)}
 				</div>
 			))}
 			{value.length < MAX_CHART_SERIES_COLORS && (
 				<Button variant='outline' size='icon-md' onClick={add} aria-label='Add series colour'>
-					<Plus className='size-4' />
+					<Plus className={styles.buttonEye} />
 				</Button>
 			)}
 		</div>
@@ -806,7 +807,7 @@ function BorderWidthRow({
 			description={description}
 			control={
 				<Select value={String(value)} onValueChange={(next) => onChange(Number(next))}>
-					<SelectTrigger className='w-28'>
+					<SelectTrigger className={styles.borderWidthRowSelectTrigger}>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -850,7 +851,7 @@ function SelectRow<const Value extends string>({
 						}
 					}}
 				>
-					<SelectTrigger className='w-44'>
+					<SelectTrigger className={styles.selectRowSelectTrigger}>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -901,22 +902,22 @@ function LogoRow({
 			label='Logo'
 			description='PNG, JPEG, WebP or SVG, up to 512KB. Shown in every story header, kept when a theme is generated, and read by the generation as a brand source.'
 			control={
-				<div className='flex items-center gap-2'>
+				<div className={styles.storyThemeEditorDiv2}>
 					{value && (
-						<div className='relative flex h-9 max-w-40 items-center rounded-md border bg-muted/30 px-2'>
-							<img src={value} alt='Story logo' className='h-6 max-w-36 object-contain' />
+						<div className={styles.logoRowDiv}>
+							<img src={value} alt='Story logo' className={styles.logoRowImg} />
 							<button
 								type='button'
 								aria-label='Remove logo'
 								onClick={() => onChange(null)}
-								className='absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full border bg-background text-muted-foreground hover:text-foreground'
+								className={styles.chartSeriesControlButton}
 							>
-								<X className='size-2.5' />
+								<X className={styles.chartSeriesControlX} />
 							</button>
 						</div>
 					)}
-					<Button variant='outline' className='rounded-full' asChild>
-						<label className='cursor-pointer'>
+					<Button variant='outline' className={styles.storyThemeEditorButton} asChild>
+						<label className={styles.logoRowLabel}>
 							{value ? 'Replace' : 'Upload'}
 							<input
 								type='file'
@@ -954,7 +955,7 @@ function TextRow({ label, description, value, onChange, placeholder }: RowProps<
 					value={value}
 					onChange={(event) => onChange(event.target.value)}
 					placeholder={placeholder}
-					className='w-72'
+					className={styles.textRowInput}
 					aria-label={label}
 				/>
 			}
@@ -1007,7 +1008,7 @@ function NumberRow({
 					step={step}
 					onChange={(event) => commit(event.target.value)}
 					onBlur={clampOnBlur}
-					className='w-28'
+					className={styles.borderWidthRowSelectTrigger}
 					aria-label={label}
 				/>
 			}

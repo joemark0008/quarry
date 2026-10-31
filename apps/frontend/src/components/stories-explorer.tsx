@@ -12,8 +12,9 @@ import {
 } from '@/components/stories-groups';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
+import styles from './stories-explorer.module.css';
 
-const GRID_CLASS = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3';
+const GRID_CLASS = `${styles.gRIDCLASS} 2xl:grid-cols-6`;
 
 export function StoriesExplorer({
 	entries,
@@ -94,7 +95,7 @@ export function StoriesExplorer({
 			-1,
 		);
 		return (
-			<div className='flex flex-col gap-1'>
+			<div className={styles.storiesExplorerDiv}>
 				{canCreateFolder && lastSystemFolderIndex === -1 && <NewFolderRow onClick={onNewFolder} />}
 				{entries.map((entry, index) => {
 					const newFolderRow = canCreateFolder && index === lastSystemFolderIndex && (
@@ -140,7 +141,7 @@ export function StoriesExplorer({
 	}
 
 	return (
-		<div className='flex flex-col gap-8'>
+		<div className={styles.storiesExplorerDiv2}>
 			{(folders.length > 0 || canCreateFolder) && (
 				<section>
 					<SectionLabel label='Folders' count={folders.length} />
@@ -190,9 +191,9 @@ export function StoriesExplorer({
 
 function SectionLabel({ label, count }: { label: string; count: number }) {
 	return (
-		<h2 className='flex items-baseline gap-1.5 mb-3 text-sm font-medium text-muted-foreground'>
+		<h2 className={styles.sectionLabelH2}>
 			{label}
-			{count > 0 && <span className='text-xs text-muted-foreground/60 tabular-nums'>{count}</span>}
+			{count > 0 && <span className={styles.sectionLabelSpan}>{count}</span>}
 		</h2>
 	);
 }
@@ -203,13 +204,13 @@ function NewFolderCard({ onClick }: { onClick: () => void }) {
 			type='button'
 			onClick={onClick}
 			className={cn(
-				'h-10 rounded-md border border-dashed border-muted-foreground/20 px-3',
-				'flex items-center gap-2 text-muted-foreground/50',
-				'hover:border-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-pointer',
+				styles.newFolderCardButton,
+				styles.newFolderCardButton2,
+				styles.newFolderCardButton3,
 			)}
 		>
-			<FolderPlus className='size-4 shrink-0' />
-			<span className='text-sm truncate'>New folder</span>
+			<FolderPlus className={styles.newFolderCardFolderPlus} />
+			<span className={styles.newFolderCardSpan}>New folder</span>
 		</button>
 	);
 }
@@ -219,11 +220,11 @@ function NewFolderRow({ onClick }: { onClick: () => void }) {
 		<button
 			type='button'
 			onClick={onClick}
-			className='flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground/50 hover:text-muted-foreground hover:bg-sidebar-accent transition-colors cursor-pointer'
+			className={styles.newFolderRowButton}
 		>
-			<div className='flex items-center gap-2 flex-1 min-w-0 pl-1.5'>
-				<FolderPlus className='size-4 shrink-0' />
-				<span className='truncate'>New folder</span>
+			<div className={styles.newFolderRowDiv}>
+				<FolderPlus className={styles.newFolderCardFolderPlus} />
+				<span className={styles.newFolderRowSpan}>New folder</span>
 			</div>
 		</button>
 	);
@@ -249,13 +250,13 @@ function FolderEmptyState({
 				<NewFolderCard onClick={onNewFolder} />
 			</div>
 		) : (
-			<div className='flex flex-col gap-1 text-muted-foreground/50'>
+			<div className={styles.actionDiv}>
 				<NewFolderRow onClick={onNewFolder} />
 			</div>
 		);
 	if (isRoot) {
 		return (
-			<div className='flex flex-col gap-4'>
+			<div className={styles.folderEmptyStateDiv}>
 				<StoriesEmptyState />
 				{action}
 			</div>

@@ -1,0 +1,63 @@
+.storyMapEmbedShellDiv {
+	margin-block: 0.5rem;
+}
+.storyMapEmbedShellDiv2 {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	transition-property: margin, width;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+	--fx-duration: 200ms;
+	transition-duration: 200ms;
+	--fx-ease: cubic-bezier(0, 0, 0.2, 1);
+	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+.storyMapEmbedShellDiv3 {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+.storyMapEmbedShellSpan {
+	min-width: 0px;
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 500;
+	font-weight: 500;
+	color: var(--app-text);
+}
+.storyMapEmbedShellDiv4 {
+	flex: 1;
+}
+.storyMapEmbedShellDiv5 {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	gap: 0.25rem;
+}
+.storyMapEmbedShellButton {
+	flex-shrink: 0;
+	@media (hover: hover) {
+		&:hover {
+			border-radius: calc(infinity * 1px);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-fill);
+		}
+	}
+}
+.storyMapEmbedShellButton2 {
+	border-radius: calc(infinity * 1px);
+	background-color: var(--app-fill);
+}
+.storyMapEmbedShellFoldHorizontal {
+	width: 0.875rem;
+	height: 0.875rem;
+}

@@ -28,6 +28,7 @@ import { useIsCancellingMessage } from '@/hooks/use-is-cancelling-message-store'
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { AssistantMessageProvider, useAssistantMessage } from '@/contexts/assistant-message';
 import { useAgentContext } from '@/contexts/agent.provider';
+import styles from './assistant-message.module.css';
 
 export const AssistantMessage = memo(
 	({
@@ -68,11 +69,11 @@ export const AssistantMessage = memo(
 
 		return (
 			<AssistantMessageProvider isSettled={isSettled}>
-				<div className={cn('group px-3 flex flex-col gap-2 bg-transparent')}>
+				<div className={cn(`${styles.assistantMessageDiv} group`)}>
 					<MessageParts parts={messageParts} />
 
 					{isSettled && !hasContent && !(isLastMessage && error) && (
-						<div className='text-muted-foreground italic text-sm'>No response</div>
+						<div className={styles.assistantMessageDiv2}>No response</div>
 					)}
 
 					{isCompacting ? <AssistantCompaction /> : showLoader && <TextShimmer showLogo />}
@@ -82,14 +83,14 @@ export const AssistantMessage = memo(
 							message={message}
 							chatId={chatId}
 							className={cn(
-								'transition-opacity duration-200',
+								styles.assistantMessageAssistantMessageActions,
 								isLastMessage
 									? isRunning
-										? 'hidden'
-										: 'opacity-100'
+										? styles.assistantMessageAssistantMessageActions2
+										: styles.assistantMessageAssistantMessageActions3
 									: hasFeedback
-										? 'opacity-100'
-										: 'opacity-0 group-hover:opacity-100',
+										? styles.assistantMessageAssistantMessageActions3
+										: styles.assistantMessageAssistantMessageActions4,
 							)}
 						/>
 					)}

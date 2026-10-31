@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { DataTableCard } from '@/components/data-table-card';
 import { cn } from '@/lib/utils';
+import styles from './markdown-table.module.css';
 
 interface HastNode {
 	type?: string;
@@ -16,7 +17,7 @@ export function MarkdownTable({ node, className }: { node?: HastNode; className?
 		[columns, rows],
 	);
 
-	return <DataTableCard columns={columns} data={data} className={cn('-mx-3 my-4', className)} />;
+	return <DataTableCard columns={columns} data={data} className={cn(styles.markdownTableDataTableCard, className)} />;
 }
 
 function extractTable(node?: HastNode): { columns: string[]; rows: string[][] } {

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { cn } from '@/lib/utils';
+import styles from './text-shimmer.module.css';
 
 const DEFAULT_WORDS = ['Crunching', 'Analyzing', 'Thinking'];
 
@@ -18,9 +19,9 @@ export const TextShimmer = ({
 	const label = text ?? randomWord;
 
 	return (
-		<div className={cn('flex items-center gap-2', className)}>
+		<div className={cn(styles.textShimmerDiv, className)}>
 			{showLogo && <QuarryLogoAnimated height={12} width={12} durationSeconds={2.2} title='' />}
-			<span className='text-sm text-foreground font-medium'>{label}</span>
+			<span className={styles.textShimmerSpan}>{label}</span>
 		</div>
 	);
 };

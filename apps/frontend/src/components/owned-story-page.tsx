@@ -25,6 +25,7 @@ import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh
 import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { storyApi } from '@/lib/story-api';
+import styles from './owned-story-page.module.css';
 
 export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlug: string }) {
 	const { data: story } = useSuspenseQuery(storyApi.story.getLatest.queryOptions({ chatId, storySlug }));
@@ -86,7 +87,7 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 
 	return (
 		<div
-			className='relative flex flex-col flex-1 h-full overflow-hidden bg-background min-w-0'
+			className={styles.ownedStoryPageDiv}
 			style={showAskBar && !isAskInputHidden ? STORY_ASK_BAR_INSET_STYLE : undefined}
 		>
 			<StoryPageHeader
@@ -129,22 +130,22 @@ export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlu
 			/>
 
 			{story.archivedAt && (
-				<div className='flex items-center justify-between gap-3 border-b bg-muted/50 px-4 py-2 md:px-6'>
-					<span className='text-xs text-muted-foreground'>This story has been archived.</span>
+				<div className={styles.ownedStoryPageDiv2}>
+					<span className={styles.ownedStoryPageSpan}>This story has been archived.</span>
 					<Button
 						variant='outline'
 						size='sm'
-						className='gap-1.5 shrink-0 rounded-full'
+						className={styles.ownedStoryPageButton}
 						onClick={() => unarchiveMutation.mutate({ chatId, storySlug })}
 						disabled={unarchiveMutation.isPending}
 					>
-						<ArchiveRestoreIcon className='size-3' />
+						<ArchiveRestoreIcon className={styles.ownedStoryPageArchiveRestoreIcon} />
 						<span>Unarchive</span>
 					</Button>
 				</div>
 			)}
 
-			<div className='relative flex min-h-0 flex-1 flex-col'>
+			<div className={styles.ownedStoryPageDiv3}>
 				<StoryPageBody
 					editor={editor}
 					queryData={queryData}

@@ -4,6 +4,7 @@ import { Lock, SearchX, TriangleAlert } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { isForbiddenError, isNotFoundError } from '@/lib/api-error';
+import styles from './story-access-error.module.css';
 
 export function StoryRouteError({ error }: { error?: unknown }) {
 	const router = useRouter();
@@ -26,7 +27,7 @@ export function StoryAccessError({ error, onRetry }: { error?: unknown; onRetry?
 	if (!forbidden && !notFound) {
 		return (
 			<StoryErrorLayout
-				icon={<TriangleAlert className='size-4' aria-hidden />}
+				icon={<TriangleAlert className={styles.storyAccessErrorTriangleAlert} aria-hidden />}
 				title='Something went wrong'
 				description="We couldn't load this story. This is likely a temporary problem, so please try again."
 			>
@@ -45,7 +46,7 @@ export function StoryAccessError({ error, onRetry }: { error?: unknown; onRetry?
 
 	return (
 		<StoryErrorLayout
-			icon={forbidden ? <Lock className='size-4' aria-hidden /> : <SearchX className='size-4' aria-hidden />}
+			icon={forbidden ? <Lock className={styles.storyAccessErrorTriangleAlert} aria-hidden /> : <SearchX className={styles.storyAccessErrorTriangleAlert} aria-hidden />}
 			title={title}
 			description={description}
 		>
@@ -68,17 +69,17 @@ function StoryErrorLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className='flex h-full flex-1 flex-col min-w-0 overflow-hidden justify-center bg-background'>
-			<div className='flex flex-1 items-center justify-center p-6'>
-				<div className='flex max-w-sm flex-col items-center gap-4 text-center'>
-					<div className='flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground'>
+		<div className={styles.storyErrorLayoutDiv}>
+			<div className={styles.storyErrorLayoutDiv2}>
+				<div className={styles.storyErrorLayoutDiv3}>
+					<div className={styles.storyErrorLayoutDiv4}>
 						{icon}
 					</div>
-					<div className='space-y-2'>
-						<h1 className='text-lg font-medium tracking-tight'>{title}</h1>
-						<p className='text-sm text-muted-foreground'>{description}</p>
+					<div className={styles.storyErrorLayoutDiv5}>
+						<h1 className={styles.storyErrorLayoutH1}>{title}</h1>
+						<p className={styles.storyErrorLayoutP}>{description}</p>
 					</div>
-					<div className='flex items-center gap-2'>{children}</div>
+					<div className={styles.storyErrorLayoutDiv6}>{children}</div>
 				</div>
 			</div>
 		</div>

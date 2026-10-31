@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+import styles from './agent-prompt-card.module.css';
 
 export function AgentPromptCard({ prompt }: { prompt: string }) {
 	const { isCopied, copy } = useCopyToClipboard();
@@ -19,12 +20,12 @@ export function AgentPromptCard({ prompt }: { prompt: string }) {
 	};
 
 	return (
-		<div className='rounded-xl border border-border bg-background px-4 py-3'>
-			<div className='flex items-start gap-2'>
-				<ScrollText className='size-4 shrink-0' />
-				<div className='flex min-w-0 flex-1 flex-col gap-0.5'>
-					<span className='text-xs font-medium uppercase tracking-wide'>Local agent prompt</span>
-					<p className='text-xs text-muted-foreground leading-relaxed'>
+		<div className={styles.agentPromptCardDiv}>
+			<div className={styles.agentPromptCardDiv2}>
+				<ScrollText className={styles.agentPromptCardScrollText} />
+				<div className={styles.agentPromptCardDiv3}>
+					<span className={styles.agentPromptCardSpan}>Local agent prompt</span>
+					<p className={styles.agentPromptCardP}>
 						Open your coding agent in the project folder, then paste this prompt.
 					</p>
 				</div>
@@ -36,14 +37,14 @@ export function AgentPromptCard({ prompt }: { prompt: string }) {
 					title={copyLabel}
 					onClick={() => void handleCopy()}
 				>
-					{isCopied && !copyFailed ? <Check className='text-emerald-500' /> : <Copy />}
+					{isCopied && !copyFailed ? <Check className={styles.agentPromptCardCheck} /> : <Copy />}
 				</Button>
 			</div>
-			<div className='mt-3 border-t border-border pt-3 pl-6'>
+			<div className={styles.agentPromptCardDiv4}>
 				<PromptText prompt={prompt} />
 			</div>
 			{copyFailed && (
-				<p role='status' className='mt-2 text-xs text-destructive'>
+				<p role='status' className={styles.agentPromptCardP2}>
 					Prompt was not copied
 				</p>
 			)}
@@ -53,17 +54,17 @@ export function AgentPromptCard({ prompt }: { prompt: string }) {
 
 function PromptText({ prompt }: { prompt: string }) {
 	return (
-		<div className='max-h-80 overflow-y-auto pr-2'>
+		<div className={styles.promptTextDiv}>
 			{prompt.split('\n').map((line, index) => {
 				const text = line.trim();
 
 				if (!text) {
-					return <div key={index} aria-hidden className='h-2' />;
+					return <div key={index} aria-hidden className={styles.promptTextDiv2} />;
 				}
 
 				if (/^[A-Z][A-Z\s]+$/.test(text)) {
 					return (
-						<p key={index} className='text-sm font-medium leading-5'>
+						<p key={index} className={styles.promptTextP}>
 							{text}
 						</p>
 					);
@@ -71,14 +72,14 @@ function PromptText({ prompt }: { prompt: string }) {
 
 				if (/^(?:npx|uv|pip|unset|quarry)\b/.test(text)) {
 					return (
-						<code key={index} className='block break-words font-mono text-xs leading-5'>
+						<code key={index} className={styles.promptTextCode}>
 							{text}
 						</code>
 					);
 				}
 
 				return (
-					<p key={index} className='text-sm leading-5'>
+					<p key={index} className={styles.promptTextP2}>
 						{text}
 					</p>
 				);

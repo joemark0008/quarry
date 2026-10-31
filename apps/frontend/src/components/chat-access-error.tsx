@@ -5,6 +5,7 @@ import { MobileHeader } from '@/components/mobile-header';
 import { Button } from '@/components/ui/button';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { isForbiddenError, isInternalServerError, isNotFoundError, isUnauthorizedError } from '@/lib/api-error';
+import styles from './chat-access-error.module.css';
 
 export function ChatAccessError({
 	error,
@@ -18,7 +19,7 @@ export function ChatAccessError({
 	if (isNotFoundError(error)) {
 		return (
 			<ChatErrorLayout
-				icon={<SearchX className='size-4' aria-hidden />}
+				icon={<SearchX className={styles.chatAccessErrorSearchX} aria-hidden />}
 				title='Chat not found'
 				description='This chat may have been deleted, moved, or you may not have access to it.'
 			>
@@ -33,7 +34,7 @@ export function ChatAccessError({
 		const redirect = getSafeRedirectPath(chatId ? `/${chatId}` : undefined) ?? undefined;
 		return (
 			<ChatErrorLayout
-				icon={<Lock className='size-4' aria-hidden />}
+				icon={<Lock className={styles.chatAccessErrorSearchX} aria-hidden />}
 				title='Session expired'
 				description='Sign in again to continue where you left off.'
 			>
@@ -49,7 +50,7 @@ export function ChatAccessError({
 	if (isForbiddenError(error)) {
 		return (
 			<ChatErrorLayout
-				icon={<Lock className='size-4' aria-hidden />}
+				icon={<Lock className={styles.chatAccessErrorSearchX} aria-hidden />}
 				title="You don't have access to this chat"
 				description='Ask the owner to share it with you if you need access.'
 			>
@@ -63,7 +64,7 @@ export function ChatAccessError({
 	if (isInternalServerError(error)) {
 		return (
 			<ChatErrorLayout
-				icon={<TriangleAlert className='size-4' aria-hidden />}
+				icon={<TriangleAlert className={styles.chatAccessErrorSearchX} aria-hidden />}
 				title='Something went wrong'
 				description="We couldn't load this chat. This is likely a temporary problem, so please try again."
 			>
@@ -74,7 +75,7 @@ export function ChatAccessError({
 
 	return (
 		<ChatErrorLayout
-			icon={<WifiOff className='size-4' aria-hidden />}
+			icon={<WifiOff className={styles.chatAccessErrorSearchX} aria-hidden />}
 			title="Can't reach quarry"
 			description='Check your connection and try again.'
 		>
@@ -95,18 +96,18 @@ function ChatErrorLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className='flex h-full flex-1 flex-col min-w-0 overflow-hidden justify-center bg-panel'>
+		<div className={styles.chatErrorLayoutDiv}>
 			<MobileHeader />
-			<div className='flex flex-1 items-center justify-center p-6'>
-				<div className='flex max-w-sm flex-col items-center gap-4 text-center'>
-					<div className='flex size-10 items-center justify-center rounded-full bg-muted text-muted-foreground'>
+			<div className={styles.chatErrorLayoutDiv2}>
+				<div className={styles.chatErrorLayoutDiv3}>
+					<div className={styles.chatErrorLayoutDiv4}>
 						{icon}
 					</div>
-					<div className='space-y-2'>
-						<h1 className='text-lg font-medium tracking-tight'>{title}</h1>
-						<p className='text-sm text-muted-foreground'>{description}</p>
+					<div className={styles.chatErrorLayoutDiv5}>
+						<h1 className={styles.chatErrorLayoutH1}>{title}</h1>
+						<p className={styles.chatErrorLayoutP}>{description}</p>
 					</div>
-					<div className='flex items-center gap-2'>{children}</div>
+					<div className={styles.chatErrorLayoutDiv6}>{children}</div>
 				</div>
 			</div>
 		</div>

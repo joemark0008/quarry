@@ -1,6 +1,7 @@
 import { Slider } from '@mantine/core';
 import type { ToolCallDensity } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
+import styles from './tool-call-density-slider.module.css';
 
 const densityOptions: { value: ToolCallDensity; label: string }[] = [
 	{ value: 'compact', label: 'Compact' },
@@ -19,7 +20,7 @@ export const ToolCallDensitySlider = ({
 	const selectedIndex = densityOptions.findIndex((option) => option.value === value);
 
 	return (
-		<div className='flex w-44 flex-col gap-1.5'>
+		<div className={styles.toolCallDensitySliderDiv}>
 			<Slider
 				value={selectedIndex}
 				onChange={(index) => onValueChange(densityOptions[index].value)}
@@ -31,7 +32,7 @@ export const ToolCallDensitySlider = ({
 				size='sm'
 				thumbLabel='Tool call density'
 			/>
-			<div className='flex justify-between text-xs'>
+			<div className={styles.toolCallDensitySliderDiv2}>
 				{densityOptions.map((option) => (
 					<button
 						key={option.value}
@@ -39,9 +40,9 @@ export const ToolCallDensitySlider = ({
 						onClick={() => onValueChange(option.value)}
 						disabled={disabled}
 						className={cn(
-							'transition-colors',
-							disabled ? 'cursor-default opacity-60' : 'cursor-pointer hover:text-foreground',
-							option.value === value ? 'font-medium text-foreground' : 'text-muted-foreground',
+							styles.toolCallDensitySliderButton,
+							disabled ? styles.toolCallDensitySliderButton2 : styles.toolCallDensitySliderButton3,
+							option.value === value ? styles.toolCallDensitySliderButton4 : styles.toolCallDensitySliderButton5,
 						)}
 					>
 						{option.label}

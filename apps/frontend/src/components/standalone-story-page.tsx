@@ -16,6 +16,7 @@ import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
+import styles from './standalone-story-page.module.css';
 
 export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	const navigate = useNavigate();
@@ -37,7 +38,7 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	);
 	if (storyQuery.isLoading) {
 		return (
-			<div className='flex flex-1 items-center justify-center'>
+			<div className={styles.standaloneStoryPageDiv}>
 				<Spinner />
 			</div>
 		);
@@ -51,7 +52,7 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 
 	return (
 		<div
-			className='relative flex flex-col flex-1 h-full overflow-hidden bg-background min-w-0'
+			className={styles.standaloneStoryPageDiv2}
 			style={isArchived ? undefined : STORY_ASK_BAR_INSET_STYLE}
 		>
 			<StoryPageHeader
@@ -77,7 +78,7 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 						: undefined
 				}
 			/>
-			<div className='relative flex min-h-0 flex-1 flex-col'>
+			<div className={styles.standaloneStoryPageDiv3}>
 				<SelectionProvider key={storyId}>
 					<HighlightBubble onAsk={requestAskAboutSelection} disabled={isArchived} />
 					<StandaloneStoryContent

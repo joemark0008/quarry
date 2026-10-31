@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-filter-bar.module.css';
 
 const CLEAR_SELECT_VALUE = '__quarry_clear_filter__';
 const SELECT_VALUE_PREFIX = '__quarry_filter_value__:';
@@ -73,8 +74,8 @@ export function StoryFilterBar({
 	);
 
 	return (
-		<div className='flex flex-col gap-2'>
-			<div className='quarry-filter-bar flex flex-wrap items-end gap-3 rounded-lg border bg-muted/20 p-3'>
+		<div className={styles.storyFilterBarDiv}>
+			<div className={`${styles.storyFilterBarDiv2} quarry-filter-bar`}>
 				{filters.map((filter) => (
 					<StoryFilterControl
 						key={filter.id}
@@ -86,8 +87,8 @@ export function StoryFilterBar({
 					/>
 				))}
 				{hasActiveFilters && (
-					<Button variant='ghost' size='sm' className='quarry-filter__clear h-8 gap-1.5' onClick={onClear}>
-						<FilterX className='size-3.5' />
+					<Button variant='ghost' size='sm' className={`${styles.storyFilterBarButton} quarry-filter__clear`} onClick={onClear}>
+						<FilterX className={styles.storyFilterBarFilterX} />
 						Clear
 					</Button>
 				)}
@@ -119,17 +120,17 @@ function StoryFilterControl({
 	const isActive = isFilterSelectionActive(filter.filterType, selection);
 
 	return (
-		<div className='quarry-filter flex min-w-36 flex-col gap-1' data-active={isActive || undefined}>
-			<div className='flex items-center justify-between gap-1'>
-				<span className='quarry-label text-xs font-medium text-muted-foreground'>{filter.label}</span>
+		<div className={`${styles.storyFilterControlDiv} quarry-filter`} data-active={isActive || undefined}>
+			<div className={styles.storyFilterControlDiv2}>
+				<span className={`${styles.storyFilterControlSpan} quarry-label`}>{filter.label}</span>
 				{isActive && (
 					<button
 						type='button'
-						className='rounded-sm p-0.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+						className={styles.storyFilterControlButton}
 						aria-label={`Clear ${filter.label}`}
 						onClick={() => onChange(emptySelection(filter.filterType))}
 					>
-						<X className='size-3' />
+						<X className={styles.storyFilterControlX} />
 					</button>
 				)}
 			</div>
@@ -147,7 +148,7 @@ function StoryFilterControl({
 							onChange(value === CLEAR_SELECT_VALUE ? '' : value.slice(SELECT_VALUE_PREFIX.length))
 						}
 					>
-						<SelectTrigger className='quarry-filter__control h-8 min-w-36 bg-background'>
+						<SelectTrigger className={`${styles.storyFilterControlSelectTrigger} quarry-filter__control`}>
 							<SelectValue placeholder='All' />
 						</SelectTrigger>
 						<SelectContent>
@@ -175,7 +176,7 @@ function StoryFilterControl({
 			) : (
 				<Input
 					type='search'
-					className='quarry-filter__control h-8 min-w-44 bg-background'
+					className={`${styles.storyFilterControlInput} quarry-filter__control`}
 					placeholder='Search'
 					value={typeof selection === 'string' ? selection : ''}
 					onChange={(event) => onChange(event.target.value)}
@@ -191,8 +192,8 @@ function emptySelection(filterType: ParsedFilterBlock['filterType']): StoryFilte
 
 function FilterOptionsLoading() {
 	return (
-		<div className='quarry-filter__control flex h-8 min-w-36 items-center gap-2 rounded-md border bg-background px-3 text-xs text-muted-foreground'>
-			<Loader2 className='size-3.5 animate-spin' />
+		<div className={`${styles.filterOptionsLoadingDiv} quarry-filter__control`}>
+			<Loader2 className={styles.filterOptionsLoadingLoader2} />
 			Loading…
 		</div>
 	);
@@ -213,12 +214,12 @@ function MultiSelectFilter({
 				<Button
 					variant='outline'
 					size='sm'
-					className='quarry-filter__control h-8 min-w-36 justify-between bg-background font-normal'
+					className={`${styles.multiSelectFilterButton} quarry-filter__control`}
 				>
 					{value.length > 0 ? `${value.length} selected` : 'All'}
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className='max-h-64 min-w-48'>
+			<DropdownMenuContent className={styles.multiSelectFilterDropdownMenuContent}>
 				{options.map((option) => (
 					<DropdownMenuCheckboxItem
 						key={option}
@@ -299,21 +300,21 @@ function FilterOptionsErrorBanner({
 	].join('\n');
 
 	return (
-		<div className='flex items-start justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200'>
-			<div className='min-w-0 flex-1'>
-				<div className='flex items-center gap-1.5 font-medium'>
-					<AlertTriangle className='size-3.5 shrink-0' />
+		<div className={styles.filterOptionsErrorBannerDiv}>
+			<div className={styles.filterOptionsErrorBannerDiv2}>
+				<div className={styles.filterOptionsErrorBannerDiv3}>
+					<AlertTriangle className={styles.filterOptionsErrorBannerAlertTriangle} />
 					<span>Failed to load filter options</span>
 				</div>
-				<ul className='mt-1 flex flex-col gap-0.5'>
+				<ul className={styles.filterOptionsErrorBannerUl}>
 					{errorItems.map((error) => (
-						<li key={error.id} className='truncate'>
-							<span className='font-medium'>{error.label}:</span> {error.message}
+						<li key={error.id} className={styles.filterOptionsErrorBannerLi}>
+							<span className={styles.filterOptionsErrorBannerSpan}>{error.label}:</span> {error.message}
 						</li>
 					))}
 				</ul>
 			</div>
-			<FixInChatButton message={fixMessage} className='shrink-0 gap-1.5' />
+			<FixInChatButton message={fixMessage} className={styles.filterOptionsErrorBannerFixInChatButton} />
 		</div>
 	);
 }

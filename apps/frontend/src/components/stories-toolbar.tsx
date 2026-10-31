@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
+import styles from './stories-toolbar.module.css';
 
 export function StoriesToolbar({
 	searchQuery,
@@ -45,8 +46,8 @@ export function StoriesToolbar({
 	const filterProps = { filters, onFiltersChange, showArchived, onShowArchivedChange };
 
 	return (
-		<div className={cn('flex flex-col gap-3', className)}>
-			<div className='flex flex-wrap items-center gap-2'>
+		<div className={cn(styles.storiesToolbarDiv, className)}>
+			<div className={styles.storiesToolbarDiv2}>
 				<SearchBar
 					value={searchQuery}
 					onChange={onSearchChange}
@@ -54,7 +55,7 @@ export function StoriesToolbar({
 					ariaLabel='Search stories'
 					size='lg'
 					focusShortcutKey='/'
-					className='basis-full sm:basis-0 sm:flex-1'
+					className={styles.storiesToolbarSearchBar}
 				/>
 				<StoriesFiltersMenu {...filterProps} />
 				<StoriesSortMenu value={sort} onChange={onSortChange} />
@@ -68,7 +69,7 @@ export function StoriesToolbar({
 
 function SelectionToggle({ active, onToggle }: { active: boolean; onToggle: () => void }) {
 	return (
-		<Button variant='ghost' onClick={onToggle} className={cn(TOOLBAR_BUTTON_CLASS, active && 'bg-accent')}>
+		<Button variant='ghost' onClick={onToggle} className={cn(TOOLBAR_BUTTON_CLASS, active && styles.selectionToggleButton)}>
 			{active ? <X /> : <ListChecks />}
 			{active ? 'Cancel' : 'Select'}
 		</Button>
@@ -83,7 +84,7 @@ function DisplayModeToggle({
 	onChange: (value: StoryPanelDisplayMode) => void;
 }) {
 	return (
-		<div className='flex h-9 items-center gap-0.5 rounded-full border p-0.5'>
+		<div className={styles.displayModeToggleDiv}>
 			<DisplayModeButton
 				label='Grid view'
 				active={value === 'grid'}
@@ -119,7 +120,7 @@ function DisplayModeButton({
 				onClick={onClick}
 				aria-label={label}
 				aria-pressed={active}
-				className={cn('rounded-full hover:rounded-full', active && 'bg-accent')}
+				className={cn(styles.displayModeButtonButton, active && styles.selectionToggleButton)}
 			>
 				{icon}
 			</Button>

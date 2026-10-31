@@ -10,6 +10,7 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
 import { projectApi } from '@/lib/project-api';
+import styles from './experimental.module.css';
 
 interface SettingsExperimentalProps {
 	isAdmin: boolean;
@@ -107,7 +108,7 @@ export function SettingsExperimental({ isAdmin }: SettingsExperimentalProps) {
 				label='Python execution duration'
 				description={
 					pythonExecutionDurationError ? (
-						<span className='text-destructive'>{pythonExecutionDurationError}</span>
+						<span className={styles.settingsExperimentalSpan}>{pythonExecutionDurationError}</span>
 					) : (
 						`Stop Python code that runs longer than ${MIN_PYTHON_EXECUTION_DURATION_SECS}-${MAX_PYTHON_EXECUTION_DURATION_SECS} seconds.`
 					)
@@ -129,7 +130,7 @@ export function SettingsExperimental({ isAdmin }: SettingsExperimentalProps) {
 							}
 						}}
 						aria-invalid={!!pythonExecutionDurationError}
-						className={`w-24 ${pythonExecutionDurationError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
+						className={`${styles.settingsExperimentalInput} ${pythonExecutionDurationError ? styles.state100 : ''}`}
 						disabled={!isAdmin || !pythonAvailable || updateAgentSettings.isPending}
 					/>
 				}
@@ -144,7 +145,7 @@ export function SettingsExperimental({ isAdmin }: SettingsExperimentalProps) {
 							href='https://github.com/boxlite-ai/boxlite'
 							target='_blank'
 							rel='noopener noreferrer'
-							className='text-primary hover:text-primary/80 underline font-medium'
+							className={styles.settingsExperimentalA}
 						>
 							Boxlite
 						</a>

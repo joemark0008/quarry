@@ -29,6 +29,7 @@ import { getTimeAgo } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import { useSandboxSecretMutations, useSandboxSecretsQuery } from '@/queries/use-sandbox-secrets';
 import { projectApi } from '@/lib/project-api';
+import styles from './sandbox-secrets.module.css';
 
 type SandboxSecret = NonNullable<ReturnType<typeof useSandboxSecretsQuery>['data']>[number];
 
@@ -80,28 +81,28 @@ export function SettingsSandboxSecrets() {
 			divide
 		>
 			{sandboxesDisabled && (
-				<p className='text-xs text-muted-foreground'>
+				<p className={styles.settingsSandboxSecretsP}>
 					Sandboxes are off for this project, so these secrets are not used yet. Turn on{' '}
-					<span className='font-medium text-foreground'>Sandboxes</span> in Experimental above to let the
+					<span className={styles.settingsSandboxSecretsSpan}>Sandboxes</span> in Experimental above to let the
 					agent run code that reads them.
 				</p>
 			)}
 			{secrets.isLoading ? (
-				<div className='flex flex-col divide-y'>
-					<SandboxSecretSkeleton className='pt-0' />
-					<SandboxSecretSkeleton className='pb-0' />
+				<div className={styles.settingsSandboxSecretsDiv}>
+					<SandboxSecretSkeleton className={styles.settingsSandboxSecretsSandboxSecretSkeleton} />
+					<SandboxSecretSkeleton className={styles.settingsSandboxSecretsSandboxSecretSkeleton2} />
 				</div>
 			) : secrets.isError ? (
 				<ErrorMessage message={secrets.error.message} />
 			) : !secrets.data?.length ? (
 				<Empty>No secrets yet. Add one to make it available to the agent's sandboxes.</Empty>
 			) : (
-				<div className='flex flex-col divide-y'>
+				<div className={styles.settingsSandboxSecretsDiv}>
 					{secrets.data.map((secret) => (
 						<SandboxSecretItem
 							key={secret.id}
 							secret={secret}
-							className='first:pt-0 last:pb-0'
+							className={styles.settingsSandboxSecretsSandboxSecretItem}
 							onEdit={() => openDialog({ mode: 'edit', secret })}
 							onDelete={() => openDeleteDialog(secret)}
 						/>
@@ -150,20 +151,20 @@ function SandboxSecretItem({
 	className?: string;
 }) {
 	return (
-		<div className={cn('flex items-center gap-4 py-2 group', className)}>
-			<div className='flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground'>
-				<KeyRound className='size-4' />
+		<div className={cn(`${styles.sandboxSecretItemDiv} group`, className)}>
+			<div className={styles.sandboxSecretItemDiv2}>
+				<KeyRound className={styles.sandboxSecretItemKeyRound} />
 			</div>
-			<div className='flex-1 min-w-0'>
-				<div className='flex items-baseline gap-2 min-w-0'>
-					<span className='text-sm font-medium font-mono text-foreground truncate'>{secret.name}</span>
-					<span className='text-xs text-muted-foreground shrink-0'>
+			<div className={styles.sandboxSecretItemDiv3}>
+				<div className={styles.sandboxSecretItemDiv4}>
+					<span className={styles.sandboxSecretItemSpan}>{secret.name}</span>
+					<span className={styles.sandboxSecretItemSpan2}>
 						Updated {getTimeAgo(new Date(secret.updatedAt).getTime()).humanReadable}
 					</span>
 				</div>
-				{secret.description && <p className='text-xs text-muted-foreground truncate'>{secret.description}</p>}
+				{secret.description && <p className={styles.sandboxSecretItemP}>{secret.description}</p>}
 			</div>
-			<div className='flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity'>
+			<div className={styles.sandboxSecretItemDiv5}>
 				<Button variant='ghost-muted' size='icon-sm' onClick={onEdit} aria-label={`Edit ${secret.name}`}>
 					<Pencil />
 				</Button>
@@ -177,11 +178,11 @@ function SandboxSecretItem({
 
 function SandboxSecretSkeleton({ className }: { className?: string }) {
 	return (
-		<div className={cn('flex items-center gap-4 py-2', className)}>
-			<Skeleton className='size-8 rounded-md' />
-			<div className='flex-1 min-w-0 space-y-2'>
-				<Skeleton className='h-3 w-32' />
-				<Skeleton className='h-3 w-full max-w-xs' />
+		<div className={cn(styles.sandboxSecretItemDiv, className)}>
+			<Skeleton className={styles.sandboxSecretSkeletonSkeleton} />
+			<div className={styles.sandboxSecretSkeletonDiv}>
+				<Skeleton className={styles.sandboxSecretSkeletonSkeleton2} />
+				<Skeleton className={styles.sandboxSecretSkeletonSkeleton3} />
 			</div>
 		</div>
 	);
@@ -211,7 +212,7 @@ function SandboxSecretDialog({
 
 	return (
 		<Dialog open={state !== null} onOpenChange={(open) => !open && onClose()}>
-			<DialogContent className='p-6' showCloseButton={false}>
+			<DialogContent className={styles.sandboxSecretDialogDialogContent} showCloseButton={false}>
 				{state && (
 					<SandboxSecretForm
 						key={editedSecret?.id ?? 'create'}
@@ -262,7 +263,7 @@ function SandboxSecretForm({
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+		<form onSubmit={handleSubmit} className={styles.sandboxSecretFormForm}>
 			<DialogHeader>
 				<DialogTitle>{isEdit ? `Edit ${initialValues.name}` : 'Add secret'}</DialogTitle>
 				<DialogDescription>
@@ -272,10 +273,10 @@ function SandboxSecretForm({
 				</DialogDescription>
 			</DialogHeader>
 
-			<div className='flex flex-col gap-4'>
+			<div className={styles.sandboxSecretFormDiv}>
 				{!isEdit && (
-					<div className='grid gap-1.5'>
-						<label htmlFor='sandbox-secret-name' className='text-sm font-medium text-foreground'>
+					<div className={styles.sandboxSecretFormDiv2}>
+						<label htmlFor='sandbox-secret-name' className={styles.sandboxSecretFormLabel}>
 							Name
 						</label>
 						<Input
@@ -285,14 +286,14 @@ function SandboxSecretForm({
 							spellCheck={false}
 							maxLength={SANDBOX_SECRET_NAME_MAX_LENGTH}
 							placeholder='OPENWEATHER_API_KEY'
-							className='font-mono uppercase'
+							className={styles.sandboxSecretFormInput}
 							value={values.name}
 							onChange={(event) => setValues((prev) => ({ ...prev, name: event.target.value }))}
 						/>
 						<p
 							className={cn(
-								'text-xs',
-								nameError && values.name ? 'text-destructive' : 'text-muted-foreground',
+								styles.sandboxSecretFormP,
+								nameError && values.name ? styles.sandboxSecretFormP2 : styles.sandboxSecretFormP3,
 							)}
 						>
 							{nameError && values.name
@@ -302,10 +303,10 @@ function SandboxSecretForm({
 					</div>
 				)}
 
-				<div className='grid gap-1.5'>
-					<label htmlFor='sandbox-secret-value' className='text-sm font-medium text-foreground'>
+				<div className={styles.sandboxSecretFormDiv2}>
+					<label htmlFor='sandbox-secret-value' className={styles.sandboxSecretFormLabel}>
 						Value
-						{isEdit && <span className='text-muted-foreground font-normal ml-1'>(optional)</span>}
+						{isEdit && <span className={styles.sandboxSecretFormSpan}>(optional)</span>}
 					</label>
 					<Input
 						id='sandbox-secret-value'
@@ -314,17 +315,17 @@ function SandboxSecretForm({
 						autoComplete='new-password'
 						maxLength={SANDBOX_SECRET_VALUE_MAX_LENGTH}
 						placeholder={isEdit ? 'Leave empty to keep the current value' : 'Paste the secret value'}
-						className='font-mono'
+						className={styles.sandboxSecretFormInput2}
 						value={values.value}
 						onChange={(event) => setValues((prev) => ({ ...prev, value: event.target.value }))}
 					/>
-					{valueError && values.value && <p className='text-xs text-destructive'>{valueError}</p>}
+					{valueError && values.value && <p className={styles.sandboxSecretFormP4}>{valueError}</p>}
 				</div>
 
-				<div className='grid gap-1.5'>
-					<label htmlFor='sandbox-secret-description' className='text-sm font-medium text-foreground'>
+				<div className={styles.sandboxSecretFormDiv2}>
+					<label htmlFor='sandbox-secret-description' className={styles.sandboxSecretFormLabel}>
 						Description
-						<span className='text-muted-foreground font-normal ml-1'>(optional)</span>
+						<span className={styles.sandboxSecretFormSpan}>(optional)</span>
 					</label>
 					<Input
 						id='sandbox-secret-description'
@@ -333,7 +334,7 @@ function SandboxSecretForm({
 						value={values.description}
 						onChange={(event) => setValues((prev) => ({ ...prev, description: event.target.value }))}
 					/>
-					<p className='text-xs text-muted-foreground'>
+					<p className={styles.settingsSandboxSecretsP}>
 						Shown to the agent so it knows what the secret is for. Never put the value here.
 					</p>
 				</div>

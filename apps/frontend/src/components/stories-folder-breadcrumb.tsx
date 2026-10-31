@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import styles from './stories-folder-breadcrumb.module.css';
 
 export type BreadcrumbNode = { id: string | null; name: string; isPrivate?: boolean };
 
@@ -12,20 +13,20 @@ export function FolderBreadcrumb({ path, rootIcon }: { path: BreadcrumbNode[]; r
 	const rootIsLast = rest.length === 0;
 
 	return (
-		<nav aria-label='Folder navigation' className='flex items-center gap-0.5 min-w-0'>
-			<span className='shrink-0 flex items-center gap-0.5'>
+		<nav aria-label='Folder navigation' className={styles.folderBreadcrumbNav}>
+			<span className={styles.folderBreadcrumbSpan}>
 				<DroppableCrumb node={root} isLast={rootIsLast} rootIcon={rootIcon} />
-				{!rootIsLast && <ChevronRight className='size-3.5 text-muted-foreground/50 shrink-0' />}
+				{!rootIsLast && <ChevronRight className={styles.folderBreadcrumbChevronRight} />}
 			</span>
 
 			{rest.length > 0 && (
-				<span className='flex items-center gap-0.5 min-w-0 overflow-hidden'>
+				<span className={styles.folderBreadcrumbSpan2}>
 					{rest.map((node, index) => {
 						const isLast = index === rest.length - 1;
 						return (
-							<span key={node.id} className='flex items-center gap-0.5 min-w-0'>
-								{index > 0 && <ChevronRight className='size-3.5 text-muted-foreground/50 shrink-0' />}
-								<span className={cn(!isLast && 'truncate')}>
+							<span key={node.id} className={styles.folderBreadcrumbNav}>
+								{index > 0 && <ChevronRight className={styles.folderBreadcrumbChevronRight} />}
+								<span className={cn(!isLast && styles.folderBreadcrumbSpan3)}>
 									<DroppableCrumb node={node} isLast={isLast} rootIcon={rootIcon} />
 								</span>
 							</span>
@@ -56,14 +57,14 @@ function DroppableCrumb({
 		<span
 			ref={setNodeRef}
 			className={cn(
-				'flex items-center gap-1 rounded transition-colors',
-				isOver && 'bg-primary/10 text-primary',
-				isLast ? 'text-foreground' : 'text-muted-foreground hover:text-foreground cursor-pointer',
-				node.id === null ? 'p-0.5' : '',
+				styles.innerSpan,
+				isOver && styles.innerSpan2,
+				isLast ? styles.innerSpan3 : styles.innerSpan4,
+				node.id === null ? styles.innerSpan5 : '',
 			)}
 		>
-			{node.id === null ? <RootIcon className='size-4' /> : node.name}
-			{node.isPrivate && <Lock className='size-2.5 shrink-0 text-muted-foreground' />}
+			{node.id === null ? <RootIcon className={styles.innerRootIcon} /> : node.name}
+			{node.isPrivate && <Lock className={styles.innerLock} />}
 		</span>
 	);
 

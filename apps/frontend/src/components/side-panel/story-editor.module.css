@@ -1,0 +1,13 @@
+.storyEditorDiv {
+	position: relative;
+}
+.storyEditorDragHandle {
+	pointer-events: none !important;
+}
+.storyEditorStoryBlockActionGrip {
+	width: 1rem;
+	height: 1rem;
+}
+.storyEditorStoryBlockActionGrip2 {
+	visibility: hidden;
+}

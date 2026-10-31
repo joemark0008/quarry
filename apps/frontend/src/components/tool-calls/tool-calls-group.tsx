@@ -9,6 +9,7 @@ import { ToolGroupProvider } from '@/contexts/tool-group';
 import { isReasoningPart } from '@/lib/ai';
 import { groupMcpToolCalls } from '@/lib/mcp';
 import { useToolGroupSummaryTitle } from '@/hooks/use-tool-group-summary-title';
+import styles from './tool-calls-group.module.css';
 
 interface Props {
 	parts: GroupablePart[];
@@ -39,7 +40,7 @@ export const ToolCallsGroup = memo(({ parts, isSettled }: Props) => {
 			variant='inline'
 		>
 			<ToolGroupProvider>
-				<div className='flex flex-col gap-2'>
+				<div className={styles.toolCallsGroupDiv}>
 					{groupedParts.map((part, index) => {
 						if (part.type === 'mcp-sub-group') {
 							return <McpToolCallsSubGroup key={part.id} group={part} isSettled={isSettled} />;

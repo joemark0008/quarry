@@ -17,6 +17,7 @@ import { useOpenMentionedStory, useMentionedStories } from '@/hooks/use-mentione
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { areChatArtifactsEqual, collectChatArtifacts, countChatArtifacts } from '@/lib/chat-artifacts';
 import { cn } from '@/lib/utils';
+import styles from './chat-artifacts-menu.module.css';
 
 /** Mirrors `max-w-3xl` on the conversation column. */
 const CHAT_COLUMN_MAX_WIDTH = 768;
@@ -85,26 +86,26 @@ export function ChatArtifactsMenu({ chatId, chatColumnRef, panelClassName }: Cha
 	};
 
 	return (
-		<div ref={rootRef} className='contents'>
+		<div ref={rootRef} className={styles.chatArtifactsMenuDiv}>
 			{!isDocked && (
 				<Button
 					variant='outline'
 					size='icon-sm'
-					className='w-auto gap-1.5 rounded-full border px-2 hover:rounded-full'
+					className={styles.chatArtifactsMenuButton}
 					onClick={toggle}
 					aria-expanded={isOpen}
 					aria-label={`Library (${count})`}
 				>
-					<Layers className='size-3' strokeWidth={2.25} />
-					<span className='text-xs'>Library</span>
-					<span className='rounded-full bg-muted px-1.5 text-[10px] font-medium tabular-nums'>{count}</span>
-					<ChevronDown className={cn('size-3 transition-transform', isOpen && 'rotate-180')} />
+					<Layers className={styles.chatArtifactsMenuLayers} strokeWidth={2.25} />
+					<span className={styles.chatArtifactsMenuSpan}>Library</span>
+					<span className={styles.chatArtifactsMenuSpan2}>{count}</span>
+					<ChevronDown className={cn(styles.chatArtifactsMenuChevronDown, isOpen && styles.chatArtifactsMenuChevronDown2)} />
 				</Button>
 			)}
 			{isOpen && (
 				<div
 					className={cn(
-						'absolute top-full z-20 w-72 rounded-lg border bg-popover p-2 text-popover-foreground animate-fade-in',
+						styles.chatArtifactsMenuDiv2,
 						panelClassName,
 					)}
 				>
@@ -126,10 +127,10 @@ export function ChatArtifactsMenu({ chatId, chatColumnRef, panelClassName }: Cha
 
 function ArtifactsPanelHeading({ count }: { count: number }) {
 	return (
-		<div className='mb-2 flex items-center gap-1.5 px-2 pt-1 text-xs font-medium'>
-			<Layers className='size-3.5' strokeWidth={2.25} />
+		<div className={styles.artifactsPanelHeadingDiv}>
+			<Layers className={styles.artifactsPanelHeadingLayers} strokeWidth={2.25} />
 			<span>Library</span>
-			<span className='rounded-full bg-muted px-1.5 text-[10px] font-medium tabular-nums'>{count}</span>
+			<span className={styles.chatArtifactsMenuSpan2}>{count}</span>
 		</div>
 	);
 }
@@ -156,13 +157,13 @@ export function ChatArtifactsList({
 	const storyCount = artifacts.stories.length + mentionedStories.length;
 
 	return (
-		<div className='flex max-h-96 flex-col gap-3 overflow-y-auto'>
+		<div className={styles.chatArtifactsListDiv}>
 			{storyCount > 0 && (
 				<ArtifactSection title='Stories' count={storyCount}>
 					{artifacts.stories.map((story) => (
 						<ArtifactItem
 							key={story.id}
-							icon={<StoryIcon className='size-3.5 text-foreground' strokeWidth={2.25} />}
+							icon={<StoryIcon className={styles.chatArtifactsListStoryIcon} strokeWidth={2.25} />}
 							label={story.title || story.id}
 							onClick={() => onOpenStory(story)}
 						/>
@@ -183,7 +184,7 @@ export function ChatArtifactsList({
 					{artifacts.files.map((file) => (
 						<ArtifactItem
 							key={file.path}
-							icon={<AttachmentFileIcon fileName={file.path} className='size-3.5' />}
+							icon={<AttachmentFileIcon fileName={file.path} className={styles.artifactsPanelHeadingLayers} />}
 							label={file.filename}
 							title={file.path}
 							onClick={() => onOpenFile(file)}
@@ -196,7 +197,7 @@ export function ChatArtifactsList({
 					{artifacts.queries.map((query) => (
 						<ArtifactItem
 							key={query.id}
-							icon={<Table2 className='size-3.5 text-muted-foreground' strokeWidth={2.25} />}
+							icon={<Table2 className={styles.chatArtifactsListTable2} strokeWidth={2.25} />}
 							label={query.title || query.id}
 							detail={describeQuery(query)}
 							title={query.id}
@@ -220,16 +221,16 @@ function ArtifactSection({ title, count, defaultCollapsed = false, children }: A
 	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
 	return (
-		<section className='flex flex-col gap-0.5'>
+		<section className={styles.artifactSectionSection}>
 			<button
 				type='button'
 				onClick={() => setIsCollapsed((value) => !value)}
 				aria-expanded={!isCollapsed}
-				className='flex w-full cursor-pointer items-center gap-1 rounded-md px-2 pb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground hover:text-foreground'
+				className={styles.artifactSectionButton}
 			>
-				<span className='flex-1 text-left'>{title}</span>
-				<span className='tabular-nums'>{count}</span>
-				<ChevronDown className={cn('size-3 transition-transform', isCollapsed && '-rotate-90')} />
+				<span className={styles.artifactSectionSpan}>{title}</span>
+				<span className={styles.artifactSectionSpan2}>{count}</span>
+				<ChevronDown className={cn(styles.chatArtifactsMenuChevronDown, isCollapsed && styles.artifactSectionChevronDown)} />
 			</button>
 			{!isCollapsed && children}
 		</section>
@@ -250,21 +251,21 @@ function ArtifactItem({ icon, label, detail, title, onClick }: ArtifactItemProps
 			type='button'
 			onClick={onClick}
 			title={title}
-			className='group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent'
+			className={`${styles.artifactItemButton} group`}
 		>
-			<span className='shrink-0'>{icon}</span>
-			<span className='min-w-0 flex-1 truncate'>{label}</span>
-			{detail && <span className='shrink-0 text-xs text-muted-foreground'>{detail}</span>}
+			<span className={styles.artifactItemSpan}>{icon}</span>
+			<span className={styles.artifactItemSpan2}>{label}</span>
+			{detail && <span className={styles.artifactItemSpan3}>{detail}</span>}
 		</button>
 	);
 }
 
 function MentionedStoryIcon() {
 	return (
-		<span className='relative flex'>
-			<StoryIcon className='size-3.5 text-foreground' strokeWidth={2.25} />
-			<span className='absolute -top-1 -right-1 flex size-2.5 items-center justify-center rounded-full text-foreground bg-background group-hover:bg-accent'>
-				<AtSign className='size-2' strokeWidth={3} />
+		<span className={styles.mentionedStoryIconSpan}>
+			<StoryIcon className={styles.chatArtifactsListStoryIcon} strokeWidth={2.25} />
+			<span className={styles.mentionedStoryIconSpan2}>
+				<AtSign className={styles.mentionedStoryIconAtSign} strokeWidth={3} />
 			</span>
 		</span>
 	);

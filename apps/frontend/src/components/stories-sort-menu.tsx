@@ -14,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SimpleTooltip } from '@/components/ui/tooltip';
+import styles from './stories-sort-menu.module.css';
 
 const SORT_FIELD_LABELS: Record<SortField, string> = {
 	updated: 'Last updated',
@@ -51,13 +52,13 @@ export function StoriesSortMenu({ value, onChange }: { value: SortState; onChang
 						aria-label={`Sort: ${SORT_FIELD_LABELS[value.field]}, ${directionLabel?.toLowerCase()}`}
 					>
 						<DirectionIcon />
-						<span className='hidden md:inline text-muted-foreground'>Sort:</span>
+						<span className={styles.storiesSortMenuSpan}>Sort:</span>
 						{SORT_FIELD_LABELS[value.field]}
-						<ChevronDown className='size-3.5 text-muted-foreground' />
+						<ChevronDown className={styles.storiesSortMenuChevronDown} />
 					</Button>
 				</DropdownMenuTrigger>
 			</SimpleTooltip>
-			<DropdownMenuContent align='end' className='w-48'>
+			<DropdownMenuContent align='end' className={styles.storiesSortMenuDropdownMenuContent}>
 				<DropdownMenuLabel>Sort by</DropdownMenuLabel>
 				<DropdownMenuRadioGroup
 					value={value.field}

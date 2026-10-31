@@ -1,0 +1,8 @@
+.recommendationTextCode {
+	border-radius: 0.25rem;
+	background-color: var(--app-fill);
+	padding-inline: 0.25rem;
+	padding-block: 0.125rem;
+	font-family: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	font-size: 0.85em;
+}

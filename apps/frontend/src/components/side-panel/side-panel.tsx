@@ -5,6 +5,7 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useSidePanelResize } from '@/hooks/use-side-panel-resize';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { cn } from '@/lib/utils';
+import styles from './side-panel.module.css';
 
 type SidePanelProps = {
 	containerRef: React.RefObject<HTMLDivElement | null>;
@@ -20,8 +21,8 @@ type SidePanelProps = {
 type SidePanelVariant = 'floating' | 'docked';
 
 const PANEL_VARIANT_CLASS_NAMES: Record<SidePanelVariant, string> = {
-	floating: 'bg-panel shadow-lg border rounded-l-3xl',
-	docked: 'border-l',
+	floating: styles.pANELVARIANTCLASSNAMESFloating,
+	docked: styles.pANELVARIANTCLASSNAMESDocked,
 };
 
 export const SidePanel = memo(function SidePanel({
@@ -51,24 +52,24 @@ export const SidePanel = memo(function SidePanel({
 
 	if (isMobile) {
 		return (
-			<div ref={sidePanelRef} className='fixed inset-0 z-40 bg-background flex flex-col'>
-				<div className='flex-1 min-h-0 overflow-hidden'>{children}</div>
+			<div ref={sidePanelRef} className={styles.sidePanelDiv}>
+				<div className={styles.sidePanelDiv2}>{children}</div>
 			</div>
 		);
 	}
 
 	return (
-		<div ref={sidePanelRef} className={cn('h-full bg-background', className)}>
-			<div className='h-full min-w-72 relative flex'>
+		<div ref={sidePanelRef} className={cn(styles.sidePanelDiv3, className)}>
+			<div className={styles.sidePanelDiv4}>
 				<div
-					className='h-full relative flex items-center justify-center z-20 w-px cursor-ew-resize'
+					className={styles.sidePanelDiv5}
 					ref={resizeHandleRef}
 				>
-					<ResizableHandle aria-orientation='vertical' className='absolute' />
+					<ResizableHandle aria-orientation='vertical' className={styles.sidePanelResizableHandle} />
 				</div>
 
-				<div className={cn('h-full overflow-hidden w-full', PANEL_VARIANT_CLASS_NAMES[variant])}>
-					<div className='bg-background overflow-hidden h-full'>{children}</div>
+				<div className={cn(styles.sidePanelDiv6, PANEL_VARIANT_CLASS_NAMES[variant])}>
+					<div className={styles.sidePanelDiv7}>{children}</div>
 				</div>
 			</div>
 		</div>

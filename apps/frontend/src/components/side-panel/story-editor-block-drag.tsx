@@ -27,11 +27,12 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useStoryEditorSelectionActions } from '@/contexts/story-editor-selection-actions';
 import { cn } from '@/lib/utils';
+import styles from './story-editor-block-drag.module.css';
 
 const STORY_ACTION_SUBMENU_SIDE_OFFSET = 5;
 const STORY_ACTION_SUBMENU_ALIGN_OFFSET = -4;
-const STORY_ACTION_SUBMENU_CLASS_NAME = 'border-border/50 shadow-xl';
-const STORY_ACTION_DESTINATION_CLASS_NAME = 'py-0.5 pr-2 pl-2 text-sm font-normal leading-5';
+const STORY_ACTION_SUBMENU_CLASS_NAME = styles.storyActionSubmenu;
+const STORY_ACTION_DESTINATION_CLASS_NAME = styles.storyActionDestination;
 
 export function useStoryBlockDrag({ node, editor, getPos }: Pick<ReactNodeViewProps, 'node' | 'editor' | 'getPos'>) {
 	const dragContext = useContext(StoryBlockDragContext);
@@ -110,7 +111,7 @@ export function StoryBlockActionGrip({
 	draggable,
 	onDragStart,
 	onDragEnd,
-	iconClassName = 'size-3.5',
+	iconClassName = styles.state100,
 	lockHandleWhileOpen = false,
 	wrapperClassName,
 }: {
@@ -218,14 +219,14 @@ export function StoryBlockActionGrip({
 				>
 					<TooltipTrigger asChild>
 						<span
-							className={cn('relative inline-flex', wrapperClassName)}
+							className={cn(styles.storyBlockActionGripSpan, wrapperClassName)}
 							onPointerLeave={dragContext?.releaseHandleTooltipSuppression}
 						>
 							<DropdownMenuTrigger
 								aria-hidden
 								disabled
 								tabIndex={-1}
-								className='pointer-events-none absolute inset-0 opacity-0'
+								className={styles.storyBlockActionGripDropdownMenuTrigger}
 							/>
 							<button
 								ref={gripRef}
@@ -235,7 +236,7 @@ export function StoryBlockActionGrip({
 								aria-expanded={open}
 								data-block-drag-grip=''
 								contentEditable={false}
-								className='cursor-grab rounded p-1 text-muted-foreground hover:bg-accent hover:text-foreground active:cursor-grabbing'
+								className={styles.storyBlockActionGripButton}
 								draggable={draggable}
 								onClick={(event) => {
 									event.stopPropagation();
@@ -266,14 +267,14 @@ export function StoryBlockActionGrip({
 							</button>
 						</span>
 					</TooltipTrigger>
-					<TooltipContent side='bottom' align='center' className='space-y-0.5'>
+					<TooltipContent side='bottom' align='center' className={styles.storyBlockActionGripTooltipContent}>
 						<div>
-							<span className='font-medium text-foreground'>Click</span>{' '}
-							<span className='text-muted-foreground'>to open menu</span>
+							<span className={styles.storyBlockActionGripSpan2}>Click</span>{' '}
+							<span className={styles.storyBlockActionGripSpan3}>to open menu</span>
 						</div>
 						<div>
-							<span className='font-medium text-foreground'>Drag</span>{' '}
-							<span className='text-muted-foreground'>to move</span>
+							<span className={styles.storyBlockActionGripSpan2}>Drag</span>{' '}
+							<span className={styles.storyBlockActionGripSpan3}>to move</span>
 						</div>
 					</TooltipContent>
 				</Tooltip>
@@ -400,7 +401,7 @@ export function StoryBlockDropZones({ node, editor, getPos }: Pick<ReactNodeView
 					key={side}
 					contentEditable={false}
 					data-story-block-drop-zone={zoneId}
-					className={`absolute inset-y-0 z-30 w-1/2 ${side === 'left' ? 'left-0' : 'right-0'}`}
+					className={`${styles.storyBlockDropZonesDiv} ${side === 'left' ? styles.state101 : styles.state102}`}
 					onDragOver={(event) => {
 						event.preventDefault();
 						event.stopPropagation();
@@ -416,9 +417,7 @@ export function StoryBlockDropZones({ node, editor, getPos }: Pick<ReactNodeView
 				>
 					{dragContext?.activeDropZone === zoneId && (
 						<div
-							className={`pointer-events-none absolute inset-y-0 w-0.5 rounded-full bg-primary-muted ${
-								side === 'left' ? 'left-0' : 'right-0'
-							}`}
+							className={`${styles.storyBlockDropZonesDiv2} ${side === 'left' ? styles.state101 : styles.state102}`}
 						/>
 					)}
 				</div>

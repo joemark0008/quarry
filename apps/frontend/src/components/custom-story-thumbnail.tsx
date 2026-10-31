@@ -10,6 +10,7 @@ import { StoryThemeProvider } from '@/components/story-theme-provider';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './custom-story-thumbnail.module.css';
 
 const ANIMATED = 'app-preview-animated';
 
@@ -23,7 +24,7 @@ const SPARKLINE_PATH = 'M2 20L9 15L16 17L23 9L30 12L37 5L44 7';
 const POINTER_PATH = 'M4 3l6.5 17 2.4-7.1L20 10.5z';
 
 const BLOCKS_SHIFT_ON_SCREEN = 'translate(-8.2px, 1.7px)';
-const FLAT_THUMBNAIL_FRAME = 'overflow-hidden bg-background';
+const FLAT_THUMBNAIL_FRAME = styles.fLATTHUMBNAILFRAME;
 
 const CLICKS = [
 	{ x: 112.9, y: 24.2, atSeconds: 0.6 },
@@ -129,7 +130,7 @@ function ThumbnailFallback({
 				queryData={queryData}
 				isToolPart={isToolPart}
 				theme={theme}
-				className={isToolPart ? 'rounded-lg overflow-visible right-6' : undefined}
+				className={isToolPart ? styles.thumbnailFallbackStoryThumbnail : undefined}
 			/>
 		);
 	}
@@ -171,15 +172,15 @@ function ScreenshotSheet({
 		return (
 			<div
 				className={cn(
-					'pointer-events-none absolute inset-0 transition-opacity duration-300',
-					isVisible ? 'opacity-100' : 'opacity-0',
+					styles.screenshotSheetDiv,
+					isVisible ? styles.screenshotSheetDiv2 : styles.screenshotSheetDiv3,
 				)}
 			>
-				<StoryThemeProvider theme={theme} className='relative'>
-					<div className='absolute top-0 -left-[9px] h-[88px] w-[210px] origin-top-left scale-[0.73]'>
+				<StoryThemeProvider theme={theme} className={styles.screenshotSheetStoryThemeProvider}>
+					<div className={styles.screenshotSheetDiv4}>
 						<div
 							className={cn(
-								'absolute top-[27%] left-[15%] h-auto w-[196px] max-w-none origin-top-left aspect-[8/5] bg-secondary',
+								styles.screenshotSheetDiv5,
 								SHEET_VISUAL,
 							)}
 							style={{ transform: SHEET_TRANSFORM }}
@@ -193,9 +194,9 @@ function ScreenshotSheet({
 							onLoad={onLoad}
 							onError={onError}
 							className={cn(
-								'absolute top-[26%] left-[16%] h-auto w-[196px] max-w-none origin-top-left aspect-[8/5] object-cover object-top-left bg-background',
+								styles.screenshotSheetImg,
 								SHEET_VISUAL,
-								'border-t border-r border-border/40',
+								styles.screenshotSheetImg2,
 							)}
 							style={{ transform: SHEET_TRANSFORM }}
 						/>
@@ -208,13 +209,13 @@ function ScreenshotSheet({
 	return (
 		<div
 			className={cn(
-				'pointer-events-none absolute inset-0 transition-opacity duration-300',
-				isVisible ? 'opacity-100' : 'opacity-0',
-				'overflow-hidden',
+				styles.screenshotSheetDiv,
+				isVisible ? styles.screenshotSheetDiv2 : styles.screenshotSheetDiv3,
+				styles.screenshotSheetDiv6,
 			)}
 		>
-			<StoryThemeProvider theme={theme} className={cn('relative', FLAT_THUMBNAIL_FRAME)}>
-				<div className='absolute inset-0 overflow-hidden bg-background'>
+			<StoryThemeProvider theme={theme} className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}>
+				<div className={styles.screenshotSheetDiv7}>
 					<img
 						src={src}
 						alt=''
@@ -223,7 +224,7 @@ function ScreenshotSheet({
 						fetchPriority='low'
 						onLoad={onLoad}
 						onError={onError}
-						className='size-full max-w-none object-cover object-top-left bg-background'
+						className={styles.screenshotSheetImg3}
 					/>
 				</div>
 			</StoryThemeProvider>
@@ -234,11 +235,11 @@ function ScreenshotSheet({
 function AppIllustration({ isToolPart, theme }: { isToolPart: boolean; theme: StoryTheme | null }) {
 	if (isToolPart) {
 		return (
-			<div className='custom-story-thumbnail pointer-events-none absolute inset-0'>
-				<StoryThemeProvider theme={theme} className='relative overflow-hidden'>
-					<div className='absolute top-0 -left-[9px] h-[88px] w-[210px] origin-top-left scale-[0.73]'>
+			<div className={`${styles.appIllustrationDiv} custom-story-thumbnail`}>
+				<StoryThemeProvider theme={theme} className={styles.appIllustrationStoryThemeProvider}>
+					<div className={styles.screenshotSheetDiv4}>
 						<AppSheet isToolPart={isToolPart} />
-						<div className='absolute inset-0' style={{ transform: BLOCKS_SHIFT_ON_SCREEN }}>
+						<div className={styles.appIllustrationDiv2} style={{ transform: BLOCKS_SHIFT_ON_SCREEN }}>
 							<BarTooltip />
 							{CLICKS.map((click) => (
 								<ClickRipple key={click.atSeconds} {...click} />
@@ -252,10 +253,10 @@ function AppIllustration({ isToolPart, theme }: { isToolPart: boolean; theme: St
 	}
 
 	return (
-		<div className='custom-story-thumbnail pointer-events-none absolute inset-0 overflow-hidden'>
-			<StoryThemeProvider theme={theme} className={cn('relative', FLAT_THUMBNAIL_FRAME)}>
+		<div className={`${styles.appIllustrationDiv3} custom-story-thumbnail`}>
+			<StoryThemeProvider theme={theme} className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}>
 				<AppSheet isToolPart={isToolPart} />
-				<div className='absolute inset-0'>
+				<div className={styles.appIllustrationDiv2}>
 					<BarTooltip />
 					{CLICKS.map((click) => (
 						<ClickRipple key={click.atSeconds} {...click} />
@@ -268,14 +269,14 @@ function AppIllustration({ isToolPart, theme }: { isToolPart: boolean; theme: St
 }
 
 function AppSheet({ isToolPart }: { isToolPart: boolean }) {
-	const sheetSize = isToolPart ? 'h-[150px] w-[196px]' : 'h-[400px] w-[480px]';
+	const sheetSize = isToolPart ? styles.sheetSize : styles.sheetSize2;
 
 	if (isToolPart) {
 		return (
 			<>
 				<div
 					className={cn(
-						'absolute top-[27%] left-[15%] origin-top-left bg-secondary',
+						styles.appSheetDiv,
 						sheetSize,
 						SHEET_VISUAL,
 					)}
@@ -283,11 +284,11 @@ function AppSheet({ isToolPart }: { isToolPart: boolean }) {
 				/>
 				<div
 					className={cn(
-						'absolute top-[26%] left-[16%] origin-top-left overflow-hidden',
+						styles.appSheetDiv2,
 						sheetSize,
-						'bg-background',
+						styles.appSheetDiv3,
 						SHEET_VISUAL,
-						'border-t border-r',
+						styles.appSheetDiv4,
 					)}
 					style={{ transform: SHEET_TRANSFORM }}
 				>
@@ -303,8 +304,8 @@ function AppSheet({ isToolPart }: { isToolPart: boolean }) {
 	}
 
 	return (
-		<div className='absolute inset-0 overflow-hidden bg-background'>
-			<div className='absolute inset-0 overflow-hidden'>
+		<div className={styles.screenshotSheetDiv7}>
+			<div className={styles.appSheetDiv5}>
 				<BlockEditPanel isToolPart={isToolPart} />
 				<StoryTitle isToolPart={isToolPart} />
 				<StoryTabs isToolPart={isToolPart} />
@@ -321,51 +322,51 @@ function BlockEditPanel({ isToolPart }: { isToolPart: boolean }) {
 	return (
 		<div
 			className={cn(
-				'absolute top-0 left-0 h-full border-r border-foreground/6 bg-card',
-				isToolPart ? 'w-[52px]' : 'w-16',
+				styles.blockEditPanelDiv,
+				isToolPart ? styles.blockEditPanelDiv2 : styles.blockEditPanelDiv3,
 			)}
 		>
 			<div
 				className={cn(
-					'absolute top-0 left-0 h-full w-16',
-					isToolPart && 'origin-top-left scale-[0.8]',
+					styles.blockEditPanelDiv4,
+					isToolPart && styles.blockEditPanelDiv5,
 					ANIMATED,
 				)}
 				style={animation('app-preview-edit-panel')}
 			>
-				<div className='absolute top-1.5 left-1.5 h-[3px] w-[26px] rounded-[1px] bg-foreground/55' />
+				<div className={styles.blockEditPanelDiv6} />
 				<div
-					className={cn('absolute top-1.5 left-1.5 h-[3px] w-[26px] rounded-[1px] bg-primary', ANIMATED)}
+					className={cn(styles.blockEditPanelDiv7, ANIMATED)}
 					style={animation('app-preview-editing')}
 				/>
-				<div className='absolute top-3 left-1.5 h-[1.5px] w-11 rounded-[1px] bg-foreground/12' />
+				<div className={styles.blockEditPanelDiv8} />
 				<ChartTypeTile left={6} top={adjustedTop} icon={ChartColumn} selectedAnimation='app-preview-tile-bar' />
 				<ChartTypeTile left={23} top={adjustedTop} icon={ChartLine} selectedAnimation='app-preview-tile-line' />
 				<ChartTypeTile left={40} top={adjustedTop} icon={ChartPie} />
 				<div
 					className={cn(
-						'absolute left-1.5 flex h-2 w-12 items-center rounded-[2px] border border-foreground/12 px-[3px]',
-						isToolPart ? 'top-[38px]' : 'top-[32px]',
+						styles.blockEditPanelDiv9,
+						isToolPart ? styles.blockEditPanelDiv10 : styles.blockEditPanelDiv11,
 					)}
 				>
-					<div className='h-[1.5px] w-5 bg-foreground/12' />
+					<div className={styles.blockEditPanelDiv12} />
 				</div>
 				<ColorSwatches isToolPart={isToolPart} />
 				<div
 					className={cn(
-						'absolute flex left-1.5 h-[9px] w-[22px] items-center justify-center rounded-[3px] border border-foreground/12',
-						isToolPart ? 'top-[70px]' : 'top-[57px]',
+						styles.blockEditPanelDiv13,
+						isToolPart ? styles.blockEditPanelDiv14 : styles.blockEditPanelDiv15,
 					)}
 				>
-					<div className='h-[1.5px] w-2.5 bg-foreground/12' />
+					<div className={styles.blockEditPanelDiv16} />
 				</div>
 				<div
 					className={cn(
-						'absolute flex left-8 h-[9px] w-[26px] items-center justify-center rounded-[3px] bg-primary',
-						isToolPart ? 'top-[70px]' : 'top-[57px]',
+						styles.blockEditPanelDiv17,
+						isToolPart ? styles.blockEditPanelDiv14 : styles.blockEditPanelDiv15,
 					)}
 				>
-					<div className='h-[1.5px] w-3 bg-primary-foreground/90' />
+					<div className={styles.blockEditPanelDiv18} />
 				</div>
 			</div>
 		</div>
@@ -385,19 +386,19 @@ function ChartTypeTile({
 }) {
 	return (
 		<div
-			className='absolute flex h-2.5 w-3.5 items-center justify-center rounded-[2px] border border-foreground/12'
+			className={styles.chartTypeTileDiv}
 			style={{ left, top: top + 18 }}
 		>
-			<Icon className='size-[7px] text-foreground/25' strokeWidth={3} />
+			<Icon className={styles.chartTypeTileIcon} strokeWidth={3} />
 			{selectedAnimation && (
 				<div
 					className={cn(
-						'absolute -inset-px flex items-center justify-center rounded-[2px] border border-primary bg-primary/10',
+						styles.chartTypeTileDiv2,
 						ANIMATED,
 					)}
 					style={animation(selectedAnimation)}
 				>
-					<Icon className='size-[7px] text-primary' strokeWidth={3} />
+					<Icon className={styles.chartTypeTileIcon2} strokeWidth={3} />
 				</div>
 			)}
 		</div>
@@ -406,11 +407,11 @@ function ChartTypeTile({
 
 function ColorSwatches({ isToolPart }: { isToolPart: boolean }) {
 	return (
-		<div className={cn('absolute left-3.5 flex gap-[3px]', isToolPart ? 'top-[54px]' : 'top-[45px]')}>
-			<div className='size-1.5 rounded-full bg-primary ring-1 ring-primary ring-offset-1 ring-offset-card' />
-			<div className='size-1.5 rounded-full bg-primary/55' />
-			<div className='size-1.5 rounded-full bg-primary/35' />
-			<div className='size-1.5 rounded-full bg-primary/18' />
+		<div className={cn(styles.colorSwatchesDiv, isToolPart ? styles.colorSwatchesDiv2 : styles.colorSwatchesDiv3)}>
+			<div className={styles.colorSwatchesDiv4} />
+			<div className={styles.colorSwatchesDiv5} />
+			<div className={styles.colorSwatchesDiv6} />
+			<div className={styles.colorSwatchesDiv7} />
 		</div>
 	);
 }
@@ -419,8 +420,8 @@ function StoryTitle({ isToolPart }: { isToolPart: boolean }) {
 	return (
 		<div
 			className={cn(
-				'absolute top-[3px] h-[3px] w-[52px] rounded-[1px] bg-foreground/55',
-				isToolPart ? 'left-16' : 'left-[76px]',
+				styles.storyTitleDiv,
+				isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3,
 			)}
 		/>
 	);
@@ -434,18 +435,18 @@ function StoryTabs({ isToolPart }: { isToolPart: boolean }) {
 			{[1, 2, 3].map((tab) => (
 				<div
 					key={tab}
-					className='absolute top-2.5 flex h-[9px] w-7 items-center justify-center rounded-[4px] border border-foreground/12'
+					className={styles.storyTabsDiv}
 					style={{ left: firstTabLeft + 34 * tab }}
 				>
-					<div className='h-[1.5px] w-3.5 rounded-[1px] bg-foreground/12' />
+					<div className={styles.storyTabsDiv2} />
 					<div
 						className={cn(
-							'absolute -inset-px flex items-center justify-center rounded-[4px] border border-primary bg-primary/18',
+							styles.storyTabsDiv3,
 							ANIMATED,
 						)}
 						style={animation(`app-preview-tab-${tab}`)}
 					>
-						<div className='h-[1.5px] w-3.5 rounded-[1px] bg-primary' />
+						<div className={styles.storyTabsDiv4} />
 					</div>
 				</div>
 			))}
@@ -455,19 +456,19 @@ function StoryTabs({ isToolPart }: { isToolPart: boolean }) {
 
 function TextBlock({ isToolPart }: { isToolPart: boolean }) {
 	return (
-		<StoryBlock tab={1} isToolPart={isToolPart} className='w-[114px]'>
-			<div className='flex flex-col gap-[5px] pt-0.5 pr-2.5'>
-				<TypedLine className='h-[3px] w-[45%] bg-primary' delaySeconds={0} />
+		<StoryBlock tab={1} isToolPart={isToolPart} className={styles.textBlockStoryBlock}>
+			<div className={styles.textBlockDiv}>
+				<TypedLine className={styles.textBlockTypedLine} delaySeconds={0} />
 				{TEXT_LINE_WIDTHS.map((width, index) => (
 					<TypedLine
 						key={width}
-						className='h-[1.5px] bg-foreground/12'
+						className={styles.textBlockTypedLine2}
 						style={{ width }}
 						delaySeconds={0.12 * (index + 1)}
 					/>
 				))}
 			</div>
-			<BlockPencil className='-top-1 left-[110px]' />
+			<BlockPencil className={styles.textBlockBlockPencil} />
 		</StoryBlock>
 	);
 }
@@ -483,7 +484,7 @@ function TypedLine({
 }) {
 	return (
 		<div
-			className={cn('origin-left rounded-[1px]', className, ANIMATED)}
+			className={cn(styles.typedLineDiv, className, ANIMATED)}
 			style={{ ...style, ...animation('app-preview-type', delaySeconds) }}
 		/>
 	);
@@ -491,9 +492,9 @@ function TypedLine({
 
 function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 	return (
-		<StoryBlock tab={2} isToolPart={isToolPart} className='w-28'>
+		<StoryBlock tab={2} isToolPart={isToolPart} className={styles.chartBlockStoryBlock}>
 			<div
-				className={cn('absolute inset-0 flex items-end gap-[2px]', ANIMATED)}
+				className={cn(styles.chartBlockDiv, ANIMATED)}
 				style={animation('app-preview-chart-bars')}
 			>
 				{BAR_HEIGHTS.map((height, index) => (
@@ -507,15 +508,15 @@ function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 			</div>
 			<svg
 				viewBox='0 0 112 34'
-				className={cn('absolute inset-0 size-full overflow-visible', ANIMATED)}
+				className={cn(styles.chartBlockSvg, ANIMATED)}
 				style={animation('app-preview-chart-line')}
 			>
-				<path d={`${LINE_CHART_PATH}L107.5 34L2.5 34Z`} className='fill-primary/10' />
+				<path d={`${LINE_CHART_PATH}L107.5 34L2.5 34Z`} className={styles.chartBlockPath} />
 				<path
 					d={LINE_CHART_PATH}
 					pathLength={100}
 					strokeDasharray={100}
-					className={cn('fill-none stroke-primary', ANIMATED)}
+					className={cn(styles.chartBlockPath2, ANIMATED)}
 					strokeWidth={1.6}
 					strokeLinejoin='round'
 					strokeLinecap='round'
@@ -524,12 +525,12 @@ function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 			</svg>
 			<div
 				className={cn(
-					'absolute -inset-[3px] rounded-[3px] border border-primary shadow-[0_0_0_2px] shadow-primary/10',
+					styles.chartBlockDiv2,
 					ANIMATED,
 				)}
 				style={animation('app-preview-editing')}
 			/>
-			<BlockPencil className='-top-1 left-[108px]' />
+			<BlockPencil className={styles.chartBlockBlockPencil} />
 		</StoryBlock>
 	);
 }
@@ -537,12 +538,12 @@ function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 function ChartBar({ height, delaySeconds, isHovered }: { height: number; delaySeconds: number; isHovered: boolean }) {
 	return (
 		<div
-			className={cn('relative w-[5px] shrink-0 origin-bottom rounded-[1px] bg-primary/35', ANIMATED)}
+			className={cn(styles.chartBarDiv, ANIMATED)}
 			style={{ height: `${height * 100}%`, ...animation('app-preview-grow', delaySeconds) }}
 		>
 			{isHovered && (
 				<div
-					className={cn('absolute inset-0 rounded-[1px] bg-primary', ANIMATED)}
+					className={cn(styles.chartBarDiv2, ANIMATED)}
 					style={animation('app-preview-hover')}
 				/>
 			)}
@@ -552,23 +553,23 @@ function ChartBar({ height, delaySeconds, isHovered }: { height: number; delaySe
 
 function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 	return (
-		<StoryBlock tab={3} isToolPart={isToolPart} className='w-[140px]'>
+		<StoryBlock tab={3} isToolPart={isToolPart} className={styles.insightsBlockStoryBlock}>
 			<div
-				className={cn('absolute top-[3px] left-0', isToolPart ? 'h-6 w-8' : 'h-7 w-11', ANIMATED)}
+				className={cn(styles.insightsBlockDiv, isToolPart ? styles.insightsBlockDiv2 : styles.insightsBlockDiv3, ANIMATED)}
 				style={animation('app-preview-insight-pop')}
 			>
-				<div className='flex size-full flex-col gap-1 rounded-[3px] bg-primary/10 p-[5px]'>
+				<div className={styles.insightsBlockDiv4}>
 					<div
-						className={cn('h-[5px] w-[62%] origin-left rounded-[1px] bg-primary/80', ANIMATED)}
+						className={cn(styles.insightsBlockDiv5, ANIMATED)}
 						style={animation('app-preview-kpi-fill')}
 					/>
-					<div className='h-[1.5px] w-4/5 bg-foreground/12' />
+					<div className={styles.insightsBlockDiv6} />
 				</div>
-				<BlockPencil className={cn('-top-1', isToolPart ? 'left-7' : 'left-10')} />
+				<BlockPencil className={cn(styles.insightsBlockBlockPencil, isToolPart ? styles.insightsBlockBlockPencil2 : styles.insightsBlockBlockPencil3)} />
 			</div>
-			<div className={cn('absolute top-[3px] size-7', isToolPart ? 'left-[38px]' : 'left-[52px]')}>
-				<svg viewBox='0 0 36 36' className='block size-7'>
-					<circle cx='18' cy='18' r='12' className='fill-none stroke-foreground/6' strokeWidth={6} />
+			<div className={cn(styles.insightsBlockDiv7, isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockDiv9)}>
+				<svg viewBox='0 0 36 36' className={styles.insightsBlockSvg}>
+					<circle cx='18' cy='18' r='12' className={styles.insightsBlockCircle} strokeWidth={6} />
 					<circle
 						cx='18'
 						cy='18'
@@ -576,15 +577,15 @@ function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 						transform='rotate(-90 18 18)'
 						strokeDasharray={75.4}
 						strokeWidth={6}
-						className={cn('fill-none stroke-primary/90', ANIMATED)}
+						className={cn(styles.insightsBlockCircle2, ANIMATED)}
 						style={animation('app-preview-pie-fill')}
 					/>
 				</svg>
-				<BlockPencil className='-top-1 left-6' />
+				<BlockPencil className={styles.insightsBlockBlockPencil4} />
 			</div>
-			<div className={cn('absolute top-[5px] h-6 w-[46px]', isToolPart ? 'left-[72px]' : 'left-[88px]')}>
-				<svg viewBox='0 0 46 24' className='block h-6 w-[46px] overflow-visible'>
-					<path d='M2 22H44' className='fill-none stroke-foreground/6' strokeWidth={1} />
+			<div className={cn(styles.insightsBlockDiv10, isToolPart ? styles.insightsBlockDiv11 : styles.insightsBlockDiv12)}>
+				<svg viewBox='0 0 46 24' className={styles.insightsBlockSvg2}>
+					<path d='M2 22H44' className={styles.insightsBlockCircle} strokeWidth={1} />
 					<path
 						d={SPARKLINE_PATH}
 						pathLength={100}
@@ -592,11 +593,11 @@ function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 						strokeWidth={1.8}
 						strokeLinecap='round'
 						strokeLinejoin='round'
-						className={cn('fill-none stroke-primary', ANIMATED)}
+						className={cn(styles.chartBlockPath2, ANIMATED)}
 						style={animation('app-preview-spark-draw')}
 					/>
 				</svg>
-				<BlockPencil className={cn('-top-1.5', isToolPart ? 'left-[38px]' : 'left-[42px]')} />
+				<BlockPencil className={cn(styles.insightsBlockBlockPencil5, isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockBlockPencil6)} />
 			</div>
 		</StoryBlock>
 	);
@@ -615,7 +616,7 @@ function StoryBlock({
 }) {
 	return (
 		<div
-			className={cn('absolute top-7 h-[34px]', isToolPart ? 'left-16' : 'left-[76px]', className, ANIMATED)}
+			className={cn(styles.storyBlockDiv, isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3, className, ANIMATED)}
 			style={animation(`app-preview-tab-${tab}`)}
 		>
 			{children}
@@ -627,11 +628,11 @@ function BlockPencil({ className }: { className: string }) {
 	return (
 		<div
 			className={cn(
-				'absolute z-10 flex size-2 items-center justify-center rounded-full border bg-card',
+				styles.blockPencilDiv,
 				className,
 			)}
 		>
-			<Pencil className='size-[5px] text-primary' strokeWidth={3} />
+			<Pencil className={styles.blockPencilPencil} strokeWidth={3} />
 		</div>
 	);
 }
@@ -639,14 +640,14 @@ function BlockPencil({ className }: { className: string }) {
 function BarTooltip() {
 	return (
 		<div
-			className={cn('absolute top-[17.2px] left-[145.6px] h-[18px] w-[30px]', ANIMATED)}
+			className={cn(styles.barTooltipDiv, ANIMATED)}
 			style={animation('app-preview-hover')}
 		>
-			<div className='flex h-3.5 w-[30px] flex-col justify-center gap-0.5 rounded-[4px] border bg-card px-[5px] shadow-[0_4px_10px_-4px_rgba(17,17,40,0.25)]'>
-				<div className='h-[3px] w-3.5 rounded-[1px] bg-primary' />
-				<div className='h-[1.5px] w-[18px] rounded-[1px] bg-foreground/12' />
+			<div className={styles.barTooltipDiv2}>
+				<div className={styles.barTooltipDiv3} />
+				<div className={styles.barTooltipDiv4} />
 			</div>
-			<div className='absolute top-[10.5px] left-[12.5px] size-[5px] rotate-45 border-r border-b bg-card' />
+			<div className={styles.barTooltipDiv5} />
 		</div>
 	);
 }
@@ -654,7 +655,7 @@ function BarTooltip() {
 function ClickRipple({ x, y, atSeconds }: { x: number; y: number; atSeconds: number }) {
 	return (
 		<div
-			className={cn('absolute size-[18px] rounded-full border-[1.5px] border-primary/60 opacity-0', ANIMATED)}
+			className={cn(styles.clickRippleDiv, ANIMATED)}
 			style={{ left: x - 9, top: y - 9, ...animation('app-preview-ripple', atSeconds) }}
 		/>
 	);
@@ -665,7 +666,7 @@ function Pointer() {
 		<svg
 			viewBox='0 0 24 24'
 			className={cn(
-				'absolute top-[22.3px] left-[110.4px] z-20 size-[15px] origin-[2.5px_1.9px] fill-card stroke-foreground drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.25)]',
+				styles.pointerSvg,
 				ANIMATED,
 			)}
 			strokeWidth={1.6}

@@ -17,6 +17,7 @@ import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
 import { requestAsk } from '@/stores/ask-bar';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-chat-button.module.css';
 
 export type StoryChatMode = 'edit' | 'ask' | 'mention';
 
@@ -58,18 +59,18 @@ export function StoryChatButton({
 	const { label, icon: Icon } = MODES[mode];
 
 	return (
-		<div className='flex h-7 items-center overflow-hidden rounded-full border bg-background'>
+		<div className={styles.storyChatButtonDiv}>
 			<Button
 				variant='ghost'
 				size='sm'
-				className='h-full gap-1.5 rounded-l-full rounded-r-none pr-2 text-xs'
+				className={styles.storyChatButtonButton}
 				disabled={isDisabled}
 				onClick={() => actions.run(mode)}
 			>
 				{isOpeningInChat ? (
-					<Loader2 className='size-3.5 animate-spin' strokeWidth={2.25} />
+					<Loader2 className={styles.storyChatButtonLoader2} strokeWidth={2.25} />
 				) : (
-					<Icon className='size-3.5 overflow-visible' strokeWidth={2.25} />
+					<Icon className={styles.storyChatButtonIcon} strokeWidth={2.25} />
 				)}
 				<span>{label}</span>
 			</Button>
@@ -78,14 +79,14 @@ export function StoryChatButton({
 					<Button
 						variant='ghost'
 						size='sm'
-						className='h-full rounded-l-none rounded-r-full border-l px-1.5'
+						className={styles.storyChatButtonButton2}
 						disabled={isDisabled}
 						aria-label='More ways to talk to this story'
 					>
-						<ChevronDown className='size-3' strokeWidth={2.25} />
+						<ChevronDown className={styles.storyChatButtonChevronDown} strokeWidth={2.25} />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align='end' className='w-72'>
+				<DropdownMenuContent align='end' className={styles.storyChatButtonDropdownMenuContent}>
 					<MentionItem onSelect={() => actions.run('mention')} />
 					<StoryChatLists
 						lists={lists}
@@ -102,12 +103,12 @@ function MentionItem({ onSelect }: { onSelect: () => void }) {
 	const { label, icon: Icon } = MODES.mention;
 	return (
 		<DropdownMenuItem onSelect={onSelect}>
-			<span className='flex size-7 shrink-0 items-center justify-center rounded-md'>
+			<span className={styles.mentionItemSpan}>
 				<Icon strokeWidth={2.25} />
 			</span>
-			<span className='flex min-w-0 flex-col items-start! gap-0.5!'>
+			<span className={styles.mentionItemSpan2}>
 				<span>{label}</span>
-				<span className='font-normal text-muted-foreground'>Start a new chat about this story</span>
+				<span className={styles.mentionItemSpan3}>Start a new chat about this story</span>
 			</span>
 		</DropdownMenuItem>
 	);

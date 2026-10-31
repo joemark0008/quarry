@@ -18,6 +18,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMultiProject } from '@/hooks/use-multi-project';
 import { cn } from '@/lib/utils';
+import styles from './project-selector.module.css';
 
 export type ProjectOption = {
 	id: string;
@@ -106,9 +107,9 @@ function SidebarProjectSwitcher({
 
 	if (mode === 'static') {
 		return (
-			<div className={cn('w-full', className)}>
+			<div className={cn(styles.sidebarProjectSwitcherDiv, className)}>
 				<div className={getTriggerClassName('sidebar')}>
-					<span className='truncate text-sm font-semibold'>{currentProject.name}</span>
+					<span className={styles.sidebarProjectSwitcherSpan}>{currentProject.name}</span>
 				</div>
 			</div>
 		);
@@ -140,7 +141,7 @@ function ProjectDropdown({
 }) {
 	const [open, setOpen] = useState(false);
 	const [isCreating, setIsCreating] = useState(false);
-	const wrapperClassName = variant === 'sidebar' ? 'w-full' : 'inline-flex max-w-full';
+	const wrapperClassName = variant === 'sidebar' ? styles.sidebarProjectSwitcherDiv : styles.wrapperClassName;
 
 	return (
 		<div className={cn(wrapperClassName, className)}>
@@ -154,19 +155,19 @@ function ProjectDropdown({
 								: `Switch project. Current project: ${currentProject.name}`
 						}
 						aria-expanded={open}
-						className={cn(getTriggerClassName(variant), 'cursor-pointer hover:bg-sidebar-accent')}
+						className={cn(getTriggerClassName(variant), styles.projectDropdownButton)}
 					>
-						<span className='truncate text-sm font-semibold'>{currentProject.name}</span>
-						<ChevronsUpDown className='ml-auto size-3.5 shrink-0 text-muted-foreground' />
+						<span className={styles.sidebarProjectSwitcherSpan}>{currentProject.name}</span>
+						<ChevronsUpDown className={styles.projectDropdownChevronsUpDown} />
 					</button>
 				</PopoverTrigger>
 				<PopoverContent
 					align='start'
-					className={cn('p-0', variant === 'sidebar' && 'w-[var(--popover-trigger-width)]')}
+					className={cn(styles.projectDropdownPopoverContent, variant === 'sidebar' && styles.projectDropdownPopoverContent2)}
 				>
 					<Command loop={mode !== 'upgrade'}>
 						{mode !== 'upgrade' && projects.length > 5 && <CommandInput placeholder='Search projects...' />}
-						<CommandList className='max-h-72'>
+						<CommandList className={styles.projectDropdownCommandList}>
 							{mode === 'upgrade' ? (
 								<CommandGroup>
 									<ProjectUpgradeNudge />
@@ -185,14 +186,14 @@ function ProjectDropdown({
 													void onChange(project.id);
 												}}
 											>
-												<span className='min-w-0 flex-1 truncate font-semibold'>
+												<span className={styles.projectDropdownSpan}>
 													{project.name}
 												</span>
-												<span className='ml-auto shrink-0 text-xs text-muted-foreground'>
+												<span className={styles.projectDropdownSpan2}>
 													{USER_ROLE_LABELS[project.userRole]}
 												</span>
 												{project.id === currentProject.id && (
-													<Check className='size-4 text-foreground' />
+													<Check className={styles.projectDropdownCheck} />
 												)}
 											</CommandItem>
 										))}
@@ -207,7 +208,7 @@ function ProjectDropdown({
 												setIsCreating(true);
 											}}
 										>
-											<Plus className='size-4' />
+											<Plus className={styles.projectDropdownPlus} />
 											<span>New project</span>
 										</CommandItem>
 									</CommandGroup>
@@ -224,12 +225,12 @@ function ProjectDropdown({
 
 function ProjectUpgradeNudge() {
 	return (
-		<div className='relative rounded-md px-2 py-1.5'>
-			<div className='flex items-center gap-2'>
-				<span className='text-sm text-foreground'>Add more projects</span>
-				<UpgradeToEnterprise className='ml-auto' />
+		<div className={styles.projectUpgradeNudgeDiv}>
+			<div className={styles.projectUpgradeNudgeDiv2}>
+				<span className={styles.projectUpgradeNudgeSpan}>Add more projects</span>
+				<UpgradeToEnterprise className={styles.projectUpgradeNudgeUpgradeToEnterprise} />
 			</div>
-			<p className='mt-0.5 break-words text-xs text-muted-foreground'>
+			<p className={styles.projectUpgradeNudgeP}>
 				Keep separate data contexts for different teams and use cases.
 			</p>
 		</div>
@@ -238,7 +239,7 @@ function ProjectUpgradeNudge() {
 
 function getTriggerClassName(variant: 'sidebar' | 'inline') {
 	return cn(
-		'flex min-w-0 items-center gap-1.5 text-foreground transition-colors',
-		variant === 'sidebar' ? 'h-[30px] w-full rounded-md px-2' : 'h-8 w-auto max-w-full rounded-lg px-1.5',
+		styles.getTriggerClassName,
+		variant === 'sidebar' ? styles.getTriggerClassName2 : styles.getTriggerClassName3,
 	);
 }

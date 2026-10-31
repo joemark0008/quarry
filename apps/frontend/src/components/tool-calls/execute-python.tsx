@@ -5,6 +5,7 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import { ToolOutputFallback } from './tool-output-fallback';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './execute-python.module.css';
 
 type ViewMode = 'output' | 'code';
 
@@ -28,21 +29,21 @@ export const ExecutePythonToolCall = ({ toolPart: { output, input } }: ToolCallC
 	const actions = [
 		{
 			id: 'output',
-			label: <Terminal className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Terminal className={styles.actionsTerminal} strokeWidth={2.25} />,
 			isActive: viewMode === 'output',
 			onClick: () => setViewMode('output'),
 			title: 'View output',
 		},
 		{
 			id: 'code',
-			label: <Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Code className={styles.actionsTerminal} strokeWidth={2.25} />,
 			isActive: viewMode === 'code',
 			onClick: () => setViewMode('code'),
 			title: 'View code',
 		},
 		{
 			id: 'copy',
-			label: <Copy className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Copy className={styles.actionsTerminal} strokeWidth={2.25} />,
 			onClick: () => {
 				navigator.clipboard.writeText(input?.code ?? '');
 			},
@@ -59,22 +60,22 @@ export const ExecutePythonToolCall = ({ toolPart: { output, input } }: ToolCallC
 			title={
 				<span>
 					{isSettled ? 'Ran Python' : 'Running Python'}{' '}
-					<span className='text-xs font-normal truncate'>{codePreview.replace(/\n/g, ' ')}</span>
+					<span className={styles.executePythonToolCallSpan}>{codePreview.replace(/\n/g, ' ')}</span>
 				</span>
 			}
 			actions={isSettled ? actions : []}
 		>
 			{viewMode === 'code' && input?.code ? (
-				<div className='overflow-auto max-h-80 hide-code-header'>
+				<div className={`${styles.executePythonToolCallDiv} hide-code-header`}>
 					<Streamdown mode='static' controls={{ code: false }}>
 						{`\`\`\`python\n${input.code}\n\`\`\``}
 					</Streamdown>
 				</div>
 			) : output ? (
-				<div className='overflow-auto max-h-80'>
+				<div className={styles.executePythonToolCallDiv}>
 					{/* Output value */}
 					<div>
-						<pre className='font-mono text-sm rounded overflow-auto hide-code-header'>
+						<pre className={`${styles.executePythonToolCallPre} hide-code-header`}>
 							<Streamdown mode='static' controls={{ code: false }}>
 								{formatOutput(output.output)}
 							</Streamdown>

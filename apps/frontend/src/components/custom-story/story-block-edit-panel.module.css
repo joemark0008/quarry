@@ -1,0 +1,63 @@
+.storyBlockEditPanelDiv {
+	display: flex;
+	flex-direction: column;
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	background-color: var(--app-surface);
+}
+.storyBlockEditPanelDiv2 {
+	position: fixed;
+	inset: 0px;
+	z-index: 50;
+}
+.storyBlockEditPanelDiv3 {
+	position: absolute;
+	inset-inline: 0px;
+	top: 0px;
+	z-index: 20;
+	margin-inline: 0.75rem;
+	margin-block: 0.75rem;
+	border-radius: calc(var(--app-radius) + 8px);
+}
+.storyBlockEditPanelDiv4 {
+	display: flex;
+	flex-shrink: 0;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding-inline: 1.5rem;
+	padding-top: 1rem;
+	padding-bottom: 0.5rem;
+}
+.storyBlockEditPanelDiv5 {
+	min-width: 0px;
+}
+.storyBlockEditPanelDiv6 {
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 600;
+	font-weight: 600;
+}
+.storyBlockEditPanelDiv7 {
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}
+.storyBlockEditPanelButton {
+	@media (hover: hover) {
+		&:hover {
+			border-radius: calc(infinity * 1px);
+		}
+	}
+}
+.storyBlockEditPanelX {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.storyBlockEditPanelDiv8 {
+	min-height: 0px;
+	flex: 1;
+	overflow-y: auto;
+	padding-inline: 1.5rem;
+	padding-bottom: 1rem;
+}

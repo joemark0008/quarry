@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import styles from './context-worktree-update-dialog.module.css';
 
 export const DIRTY_WORKTREE_CONFLICT_MESSAGE = 'Commit or discard changes before switching branches.';
 
@@ -42,21 +43,21 @@ export function ContextWorktreeUpdateDialog({
 				<DialogHeader>
 					<DialogTitle>Update File Explorer?</DialogTitle>
 				</DialogHeader>
-				<DialogDescription className='text-sm text-muted-foreground'>
+				<DialogDescription className={styles.contextWorktreeUpdateDialogDialogDescription}>
 					{`This will switch File Explorer to ${branch} and load the latest live context. Your branches and commits stay unchanged.`}
 				</DialogDescription>
 				{isBlocked ? (
-					<p className='text-sm font-semibold text-muted-foreground'>
+					<p className={styles.contextWorktreeUpdateDialogP}>
 						File Explorer has uncommitted changes. Commit or discard them before updating.
 					</p>
 				) : (
-					error && <p className='text-red-500 text-center text-sm'>{error}</p>
+					error && <p className={styles.contextWorktreeUpdateDialogP2}>{error}</p>
 				)}
-				<div className='flex justify-end gap-2'>
+				<div className={styles.contextWorktreeUpdateDialogDiv}>
 					{isBlocked ? (
 						<Button
 							variant='primary-gradient'
-							className='rounded-full'
+							className={styles.contextWorktreeUpdateDialogButton}
 							onClick={() => void handleBlockedAction()}
 						>
 							Finish your changes
@@ -65,7 +66,7 @@ export function ContextWorktreeUpdateDialog({
 						<>
 							<Button
 								variant='outline'
-								className='rounded-full border'
+								className={styles.contextWorktreeUpdateDialogButton2}
 								disabled={isPending}
 								onClick={() => handleOpenChange(false)}
 							>
@@ -73,7 +74,7 @@ export function ContextWorktreeUpdateDialog({
 							</Button>
 							<Button
 								variant='primary-gradient'
-								className='rounded-full'
+								className={styles.contextWorktreeUpdateDialogButton}
 								disabled={isPending}
 								isLoading={isPending}
 								onClick={onConfirm}

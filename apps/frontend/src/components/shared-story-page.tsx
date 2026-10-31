@@ -24,6 +24,7 @@ import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { useSession } from '@/lib/auth-client';
 import { storyApi } from '@/lib/story-api';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
+import styles from './shared-story-page.module.css';
 
 export function SharedStoryPage({ storyId }: { storyId: string }) {
 	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));
@@ -115,7 +116,7 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 			open={sidePanel.open}
 			close={sidePanel.close}
 		>
-			<div className='flex flex-col flex-1 h-full overflow-hidden bg-background min-w-0' ref={containerRef}>
+			<div className={styles.sharedClassicStoryPageDiv} ref={containerRef}>
 				<SharedStoryHeader
 					title={story.title}
 					authorName={story.authorName}
@@ -132,9 +133,9 @@ function SharedClassicStoryPage({ storyId }: { storyId: string }) {
 
 				<SelectionProvider key={storyId}>
 					{canAsk && <HighlightBubble onAsk={requestAskAboutSelection} />}
-					<div className='flex flex-1 min-h-0 min-w-0'>
+					<div className={styles.sharedClassicStoryPageDiv2}>
 						<div
-							className='relative flex flex-col flex-1 min-w-0 min-h-0'
+							className={styles.sharedClassicStoryPageDiv3}
 							style={canAsk ? STORY_ASK_BAR_INSET_STYLE : undefined}
 						>
 							<StoryPageBody
@@ -271,7 +272,7 @@ function SharedStoryContent({
 	);
 
 	return (
-		<div className='flex flex-1 min-h-0 flex-col' data-selection-container>
+		<div className={styles.sharedStoryContentDiv} data-selection-container>
 			<StoryTabbedContent
 				code={code}
 				baselineQueryData={queryData}

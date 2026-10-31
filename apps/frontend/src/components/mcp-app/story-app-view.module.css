@@ -1,0 +1,29 @@
+.storyAppViewDiv {
+	display: flex;
+	min-height: 0px;
+	width: 100%;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.storyDownloadButtonButton {
+	gap: 0.375rem;
+}
+.storyDownloadButtonLoader2 {
+	width: 0.875rem;
+	height: 0.875rem;
+	animation: var(--animate-spin);
+}
+.storyDownloadButtonDownload {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.storyDownloadButtonSpan {
+	display: none;
+	@media (width >= 40rem) {
+		display: inline;
+	}
+}

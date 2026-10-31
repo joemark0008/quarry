@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useAgentContext, useAgentMessages } from '@/contexts/agent.provider';
 import { useAssistantMessage } from '@/contexts/assistant-message';
 import { isOnboardingContextRequestMessage } from '@/lib/ai';
+import styles from './onboarding-command.module.css';
 
 export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'onboarding_command'>) {
 	const command = toolPart.input?.command;
@@ -43,20 +44,20 @@ export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'
 	}
 
 	return (
-		<div className='-mx-3 flex flex-col gap-3'>
+		<div className={styles.onboardingCommandToolCallDiv}>
 			<CommandBlock command={command} />
 			{isSettled && needsConfirmation && (
-				<div className='flex flex-col gap-3 rounded-xl border border-border bg-muted/30 px-4 py-3'>
-					<div className='flex items-start gap-2'>
-						<HelpCircle className='mt-0.5 size-4 shrink-0 text-muted-foreground' />
-						<div className='flex flex-col gap-0.5'>
-							<span className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>
+				<div className={styles.onboardingCommandToolCallDiv2}>
+					<div className={styles.onboardingCommandToolCallDiv3}>
+						<HelpCircle className={styles.onboardingCommandToolCallHelpCircle} />
+						<div className={styles.onboardingCommandToolCallDiv4}>
+							<span className={styles.onboardingCommandToolCallSpan}>
 								Quick question
 							</span>
-							<p className='text-sm leading-relaxed'>Did this step complete successfully?</p>
+							<p className={styles.onboardingCommandToolCallP}>Did this step complete successfully?</p>
 						</div>
 					</div>
-					<div className='flex flex-wrap gap-2 pl-6'>
+					<div className={styles.onboardingCommandToolCallDiv5}>
 						<Button
 							variant='outline'
 							size='sm'
@@ -66,7 +67,7 @@ export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'
 									console.error,
 								)
 							}
-							className='h-auto min-h-7 rounded-2xl py-1'
+							className={styles.onboardingCommandToolCallButton}
 						>
 							Yes, it worked
 						</Button>
@@ -79,7 +80,7 @@ export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'
 									console.error,
 								)
 							}
-							className='h-auto min-h-7 rounded-2xl py-1'
+							className={styles.onboardingCommandToolCallButton}
 						>
 							I ran into an error
 						</Button>

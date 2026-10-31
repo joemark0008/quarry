@@ -8,6 +8,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { isLikelyMcpAppPayloadToken, readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
+import styles from './embed.map.$mapEmbedId.module.css';
 
 export const Route = createFileRoute('/embed/map/$mapEmbedId')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -38,18 +39,18 @@ function MapEmbedPage() {
 	let inner: ReactNode;
 	if (mapQuery.isLoading) {
 		inner = (
-			<div className='flex min-h-[14rem] items-center justify-center py-10'>
+			<div className={styles.mapEmbedPageDiv}>
 				<Spinner />
 			</div>
 		);
 	} else if (mapQuery.isError || !map) {
 		inner = (
-			<div className='flex min-h-[10rem] flex-col items-center justify-center gap-2 px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.mapEmbedPageDiv2}>
 				<p>Map unavailable or link expired.</p>
 				{usedWrongTokenFormat ? (
-					<p className='max-w-md text-xs'>
-						Open the full <span className='font-medium'>embedUrl</span> link from{' '}
-						<code className='text-foreground'>display_map</code> (or the &quot;Interactive app&quot;
+					<p className={styles.mapEmbedPageP}>
+						Open the full <span className={styles.mapEmbedPageSpan}>embedUrl</span> link from{' '}
+						<code className={styles.mapEmbedPageCode}>display_map</code> (or the &quot;Interactive app&quot;
 						markdown link), not the JSON tool payload.
 					</p>
 				) : null}
@@ -75,7 +76,7 @@ function MapEmbedPage() {
 	return (
 		<div
 			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className='flex min-h-0 min-w-0 flex-1 flex-col bg-background'
+			className={styles.mapEmbedPageDiv3}
 		>
 			{inner}
 		</div>

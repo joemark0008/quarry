@@ -45,12 +45,13 @@ import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './stories-groups.module.css';
 
 const VIEW_COUNT_FORMAT = new Intl.NumberFormat(undefined, { notation: 'compact', maximumFractionDigits: 1 });
 
 export function StoriesNoResults({ query }: { query: string }) {
 	return (
-		<p className='text-muted-foreground text-sm py-12 text-center'>
+		<p className={styles.storiesNoResultsP}>
 			{query.trim() ? <>No stories matching &ldquo;{query.trim()}&rdquo;</> : 'No stories match these filters'}
 		</p>
 	);
@@ -59,10 +60,10 @@ export function StoriesNoResults({ query }: { query: string }) {
 export function CertifiedStoriesEmptyState() {
 	const { isAdmin } = usePermissions();
 	return (
-		<div className='flex flex-col items-center justify-center py-24 text-center'>
-			<ShieldCheck className='size-10 text-muted-foreground/40 mb-4' />
-			<p className='text-muted-foreground text-sm'>No certified stories yet.</p>
-			<p className='text-muted-foreground/60 text-sm mt-1'>
+		<div className={styles.certifiedStoriesEmptyStateDiv}>
+			<ShieldCheck className={styles.certifiedStoriesEmptyStateShieldCheck} />
+			<p className={styles.certifiedStoriesEmptyStateP}>No certified stories yet.</p>
+			<p className={styles.certifiedStoriesEmptyStateP2}>
 				{isAdmin
 					? 'Certify a story from its card to highlight it as a trusted source.'
 					: 'Admins can certify stories to mark them as trusted sources.'}
@@ -74,10 +75,10 @@ export function CertifiedStoriesEmptyState() {
 export function StoriesEmptyState() {
 	const { isViewer } = usePermissions();
 	return (
-		<div className='flex flex-col items-center justify-center py-24 text-center'>
-			<StoryIcon className='size-10 text-muted-foreground/40 mb-4' />
-			<p className='text-muted-foreground text-sm'>No stories yet.</p>
-			<p className='text-muted-foreground/60 text-sm mt-1'>
+		<div className={styles.certifiedStoriesEmptyStateDiv}>
+			<StoryIcon className={styles.certifiedStoriesEmptyStateShieldCheck} />
+			<p className={styles.certifiedStoriesEmptyStateP}>No stories yet.</p>
+			<p className={styles.certifiedStoriesEmptyStateP2}>
 				{isViewer
 					? 'Wait for someone to share a story with you.'
 					: 'Stories will appear here as they are created in your chats.'}
@@ -175,7 +176,7 @@ export function StoryCard({
 
 	if (displayMode === 'grid') {
 		const certifiedBadge = item.isCertified && (
-			<div className='absolute top-1.5 right-2 flex h-5 items-center'>
+			<div className={styles.certifiedBadgeDiv}>
 				<CertifiedBadge certifiedByName={item.certifiedByName} />
 			</div>
 		);
@@ -188,7 +189,7 @@ export function StoryCard({
 					style={style}
 					{...attributes}
 					{...listeners}
-					className={cn(GRID_CARD_CLASS, isDragging && 'opacity-0', selected && 'ring-2 ring-primary')}
+					className={cn(GRID_CARD_CLASS, isDragging && styles.storyCardDiv, selected && styles.storyCardDiv2)}
 					onClick={handleCardClick}
 					draggable={selectionActive && isMoveDragDisabled}
 					onDragStart={handleNativeDragStart}
@@ -206,21 +207,21 @@ export function StoryCard({
 							<StoryThumbnail summary={item.summary} theme={storyTheme} queryData={item.kpiPreviewData} />
 						)}
 					</div>
-					<div className={cn(GRID_HOVER_ACTION_GRADIENT_CLASS, hasPersistentTopIcons && 'opacity-100')} />
+					<div className={cn(GRID_HOVER_ACTION_GRADIENT_CLASS, hasPersistentTopIcons && styles.storyCardDiv3)} />
 
 					{!selectionActive && (
 						<Link
 							{...item.link}
 							onClick={handleLinkClick}
-							className='absolute inset-0 z-[2] flex flex-col justify-end p-2.5'
+							className={styles.storyCardLink}
 						>
 							{certifiedBadge}
-							<div className='flex items-end gap-1.5'>
+							<div className={styles.storyCardDiv4}>
 								<GridCardFooter
 									title={item.title}
 									subtitle={<AuthorDateLabel author={item.author} createdAt={item.createdAt} />}
 								/>
-								<div className='shrink-0'>
+								<div className={styles.storyCardDiv5}>
 									<StoryBadges item={item} mode='grid' />
 								</div>
 							</div>
@@ -228,14 +229,14 @@ export function StoryCard({
 					)}
 
 					{selectionActive && (
-						<div className='absolute inset-0 flex flex-col justify-end p-2.5 pointer-events-none'>
+						<div className={styles.storyCardDiv6}>
 							{certifiedBadge}
-							<div className='flex items-end gap-1.5'>
+							<div className={styles.storyCardDiv4}>
 								<GridCardFooter
 									title={item.title}
 									subtitle={<AuthorDateLabel author={item.author} createdAt={item.createdAt} />}
 								/>
-								<div className='shrink-0'>
+								<div className={styles.storyCardDiv5}>
 									<StoryBadges item={item} mode='grid' />
 								</div>
 							</div>
@@ -243,7 +244,7 @@ export function StoryCard({
 					)}
 
 					<div
-						className='absolute top-1.5 left-2 flex items-center z-10'
+						className={styles.storyCardDiv7}
 						onPointerDown={(e) => e.stopPropagation()}
 					>
 						{canSelect && (
@@ -256,7 +257,7 @@ export function StoryCard({
 						{!selectionActive && (
 							<>
 								<StoryQuickActions item={item} onRequestPinShare={() => setPinShareDialogOpen(true)} />
-								<div className='flex items-center max-w-0 overflow-hidden group-hover:max-w-[60px] transition-[max-width] duration-200 ease-out'>
+								<div className={styles.storyCardDiv8}>
 									{!showArchived && moveHandler && (
 										<StoryMoveToFolderButton item={item} onMoveToFolder={moveHandler} />
 									)}
@@ -286,13 +287,13 @@ export function StoryCard({
 				style={style}
 				{...attributes}
 				{...listeners}
-				className={cn(LINES_CARD_CLASS, isDragging && 'opacity-0', selected && 'bg-accent')}
+				className={cn(LINES_CARD_CLASS, isDragging && styles.storyCardDiv, selected && styles.storyCardDiv9)}
 				onClick={handleCardClick}
 				onDragStart={handleNativeDragStart}
 			>
-				<div className='flex items-center flex-1 min-w-0'>
+				<div className={styles.storyCardDiv10}>
 					{canSelect && (
-						<div className='shrink-0' onPointerDown={(e) => e.stopPropagation()}>
+						<div className={styles.storyCardDiv5} onPointerDown={(e) => e.stopPropagation()}>
 							<StoryCheckbox
 								selected={selected}
 								visible={selected || selectionActive}
@@ -300,26 +301,26 @@ export function StoryCard({
 							/>
 						</div>
 					)}
-					<Link {...item.link} onClick={handleLinkClick} className='flex items-center gap-3 flex-1 min-w-0'>
-						<div className='flex items-center gap-2 flex-1 min-w-0 pl-1.5'>
-							<span className='text-sm font-medium truncate'>{item.title}</span>
-							<div className='flex items-center gap-1.5 shrink-0'>
+					<Link {...item.link} onClick={handleLinkClick} className={styles.storyCardLink2}>
+						<div className={styles.storyCardDiv11}>
+							<span className={styles.storyCardSpan}>{item.title}</span>
+							<div className={styles.storyCardDiv12}>
 								<StoryBadges item={item} mode='lines' />
 							</div>
 						</div>
-						<div className='hidden md:block w-32 shrink-0 pl-1.5 text-xs text-muted-foreground truncate'>
+						<div className={styles.storyCardDiv13}>
 							{item.author}
 						</div>
-						<div className='hidden lg:block w-16 shrink-0 pl-1.5 text-xs text-muted-foreground tabular-nums truncate'>
+						<div className={styles.storyCardDiv14}>
 							{item.viewCount === null ? '—' : VIEW_COUNT_FORMAT.format(item.viewCount)}
 						</div>
-						<div className='hidden sm:block w-24 shrink-0 pl-1.5 text-xs text-muted-foreground truncate'>
+						<div className={styles.storyCardDiv15}>
 							{formatRelativeDate(item.createdAt)}
 						</div>
 					</Link>
 				</div>
 				<div
-					className='w-26 shrink-0 flex items-center justify-end overflow-hidden'
+					className={styles.storyCardDiv16}
 					onPointerDown={(e) => e.stopPropagation()}
 				>
 					{!selectionActive && (
@@ -361,13 +362,13 @@ function StoryCheckbox({
 			aria-pressed={selected}
 			onClick={onClick}
 			className={cn(
-				'inline-flex items-center justify-center size-5 transition-all duration-150 cursor-pointer rounded shrink-0',
-				'text-muted-foreground hover:text-foreground',
-				visible ? 'w-5 opacity-100' : 'w-0 opacity-0 overflow-hidden group-hover:w-5 group-hover:opacity-100',
-				selected && 'text-primary',
+				styles.storyCheckboxButton,
+				styles.storyCheckboxButton2,
+				visible ? styles.storyCheckboxButton3 : styles.storyCheckboxButton4,
+				selected && styles.storyCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className='size-3' /> : <Circle className='size-3' />}
+			{selected ? <CircleCheck className={styles.storyCheckboxCircleCheck} /> : <Circle className={styles.storyCheckboxCircleCheck} />}
 		</button>
 	);
 }
@@ -384,9 +385,9 @@ function StoryActions({
 	onMoveToFolder?: (item: StoryItem) => void;
 }) {
 	return (
-		<div className='flex items-center' onPointerDown={(e) => e.stopPropagation()}>
+		<div className={styles.storyActionsDiv} onPointerDown={(e) => e.stopPropagation()}>
 			<StoryQuickActions item={item} onRequestPinShare={onRequestPinShare} />
-			<div className='flex items-center gap-0.5 max-w-0 overflow-hidden group-hover:max-w-[80px] transition-[max-width] duration-200 ease-out'>
+			<div className={styles.storyActionsDiv2}>
 				{!showArchived && onMoveToFolder && (
 					<StoryMoveToFolderButton item={item} onMoveToFolder={onMoveToFolder} />
 				)}
@@ -418,7 +419,7 @@ function StoryMoveToFolderButton({
 			tooltip='Move to folder'
 			fillOnHover={false}
 		>
-			<FolderInput className='size-3' />
+			<FolderInput className={styles.storyCheckboxCircleCheck} />
 		</QuickActionButton>
 	);
 }
@@ -483,7 +484,7 @@ function StoryQuickActions({ item, onRequestPinShare }: { item: StoryItem; onReq
 							: 'Certify story'
 					}
 				>
-					<ShieldCheck className='size-3' />
+					<ShieldCheck className={styles.storyCheckboxCircleCheck} />
 				</QuickActionButton>
 			)}
 			{showPinSlot && (
@@ -500,7 +501,7 @@ function StoryQuickActions({ item, onRequestPinShare }: { item: StoryItem; onReq
 							: 'Only admins can un.pin stories'
 					}
 				>
-					<Pin className='size-3' />
+					<Pin className={styles.storyCheckboxCircleCheck} />
 				</QuickActionButton>
 			)}
 			<QuickActionButton
@@ -510,7 +511,7 @@ function StoryQuickActions({ item, onRequestPinShare }: { item: StoryItem; onReq
 				onClick={handleFavorite}
 				tooltip={item.isFavorited ? 'Remove from favorites' : 'Add to favorites'}
 			>
-				<Star className='size-3' />
+				<Star className={styles.storyCheckboxCircleCheck} />
 			</QuickActionButton>
 		</>
 	);
@@ -546,13 +547,13 @@ function QuickActionButton({
 				onClick={onClick}
 				disabled={pending || !interactive}
 				className={cn(
-					'inline-flex items-center justify-center h-5 transition-all duration-150 cursor-pointer disabled:cursor-default overflow-hidden',
+					styles.quickActionButtonButton,
 					active
-						? 'w-5 opacity-100 text-foreground [&_svg]:fill-current'
-						: 'w-0 opacity-0 group-hover:w-5 group-hover:opacity-100 text-muted-foreground',
-					interactive && active && 'hover:text-muted-foreground hover:[&_svg]:fill-none',
-					interactive && !active && 'hover:text-foreground',
-					interactive && !active && fillOnHover && 'hover:[&_svg]:fill-current',
+						? styles.quickActionButtonButton2
+						: styles.quickActionButtonButton3,
+					interactive && active && styles.quickActionButtonButton4,
+					interactive && !active && styles.quickActionButtonButton5,
+					interactive && !active && fillOnHover && styles.quickActionButtonButton6,
 				)}
 			>
 				{children}
@@ -645,7 +646,7 @@ function StoryArchiveButton({ item, showArchived }: { item: StoryItem; showArchi
 			tooltip={showArchived ? 'Unarchive' : 'Archive'}
 			fillOnHover={false}
 		>
-			{showArchived ? <ArchiveRestoreIcon className='size-3' /> : <ArchiveIcon className='size-3' />}
+			{showArchived ? <ArchiveRestoreIcon className={styles.storyCheckboxCircleCheck} /> : <ArchiveIcon className={styles.storyCheckboxCircleCheck} />}
 		</QuickActionButton>
 	);
 }
@@ -667,7 +668,7 @@ function StoryBadges({ item, mode }: { item: StoryItem; mode: 'grid' | 'lines' }
 			return null;
 		}
 		return (
-			<div className='flex items-center gap-2 shrink-0'>
+			<div className={styles.storyBadgesDiv}>
 				{live}
 				{isSharedWithSpecific && sharing}
 			</div>

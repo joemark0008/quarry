@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
+import styles from './display-map.module.css';
 
 interface SettingsDisplayMapProps {
 	isAdmin: boolean;
@@ -103,14 +104,14 @@ function MapBoundariesLibrary({ isAdmin }: { isAdmin: boolean }) {
 	};
 
 	return (
-		<div className='flex flex-col gap-3'>
+		<div className={styles.mapBoundariesLibraryDiv}>
 			<SettingsControlRow
 				label='GeoJSON Boundary Library'
 				description='Custom boundary sets the agent can use for choropleth maps.'
 				control={
 					isAdmin ? (
 						<Button variant='secondary' size='sm' onClick={() => toggleExpanded('__new__')}>
-							<Plus className='size-4' />
+							<Plus className={styles.mapBoundariesLibraryPlus} />
 							Add
 						</Button>
 					) : null
@@ -118,9 +119,9 @@ function MapBoundariesLibrary({ isAdmin }: { isAdmin: boolean }) {
 			/>
 
 			{isLoading ? (
-				<div className='text-sm text-muted-foreground py-1'>Loading…</div>
+				<div className={styles.mapBoundariesLibraryDiv2}>Loading…</div>
 			) : (
-				<div className='flex flex-col gap-1'>
+				<div className={styles.mapBoundariesLibraryDiv3}>
 					{boundaries.length === 0 && expandedKey !== '__new__' && (
 						<Empty>No custom boundary sets yet.</Empty>
 					)}
@@ -157,7 +158,7 @@ function MapBoundariesLibrary({ isAdmin }: { isAdmin: boolean }) {
 					<AlertDialogFooter>
 						<AlertDialogCancel>Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+							className={`${styles.mapBoundariesLibraryAlertDialogAction} text-destructive-foreground`}
 							onClick={confirmDelete}
 						>
 							Delete
@@ -186,11 +187,11 @@ function BoundarySetItem({
 }) {
 	if (!isAdmin) {
 		return (
-			<div className='flex items-center gap-3 min-w-0 px-1 py-1.5'>
-				<span className='min-w-0'>
-					<span className='block text-sm font-medium truncate'>{set.label}</span>
+			<div className={styles.boundarySetItemDiv}>
+				<span className={styles.boundarySetItemSpan}>
+					<span className={styles.boundarySetItemSpan2}>{set.label}</span>
 					{set.featureCount != null && (
-						<span className='block text-xs text-muted-foreground'>{set.featureCount} features</span>
+						<span className={styles.boundarySetItemSpan3}>{set.featureCount} features</span>
 					)}
 				</span>
 			</div>
@@ -198,30 +199,30 @@ function BoundarySetItem({
 	}
 
 	return (
-		<div className='rounded-md'>
-			<div className='flex items-center justify-between gap-2 pr-1'>
+		<div className={styles.boundarySetItemDiv2}>
+			<div className={styles.boundarySetItemDiv3}>
 				<button
 					type='button'
 					onClick={onToggle}
-					className='flex flex-1 items-center gap-3 min-w-0 rounded-md px-1 py-1.5 text-left cursor-pointer'
+					className={styles.boundarySetItemButton}
 				>
-					<span className='flex size-7 items-center justify-center shrink-0 text-muted-foreground'>
-						{isExpanded ? <ChevronUp className='size-3.5' /> : <ChevronDown className='size-3.5' />}
+					<span className={styles.boundarySetItemSpan4}>
+						{isExpanded ? <ChevronUp className={styles.boundarySetItemChevronUp} /> : <ChevronDown className={styles.boundarySetItemChevronUp} />}
 					</span>
-					<span className='min-w-0'>
-						<span className='block text-sm font-medium truncate'>{set.label}</span>
+					<span className={styles.boundarySetItemSpan}>
+						<span className={styles.boundarySetItemSpan2}>{set.label}</span>
 						{set.featureCount != null && (
-							<span className='block text-xs text-muted-foreground'>{set.featureCount} features</span>
+							<span className={styles.boundarySetItemSpan3}>{set.featureCount} features</span>
 						)}
 					</span>
 				</button>
 				<Button
 					variant='ghost'
 					size='icon'
-					className='size-7 shrink-0 text-destructive hover:text-destructive'
+					className={styles.boundarySetItemButton2}
 					onClick={onDelete}
 				>
-					<Trash2 className='size-3.5' />
+					<Trash2 className={styles.boundarySetItemChevronUp} />
 				</Button>
 			</div>
 			{isExpanded && <BoundaryEditPanel editTarget={set} onClose={onToggle} onSaved={onSaved} />}
@@ -341,8 +342,8 @@ function BoundaryEditPanel({
 	return (
 		<div
 			className={cn(
-				'px-4 pb-4 pt-2 flex flex-col gap-4 border rounded-md',
-				editTarget ? 'bg-muted/30' : 'border-dashed',
+				styles.boundaryEditPanelDiv,
+				editTarget ? styles.boundaryEditPanelDiv2 : styles.boundaryEditPanelDiv3,
 			)}
 		>
 			<Field label='GeoJSON URL'>
@@ -353,10 +354,10 @@ function BoundaryEditPanel({
 					placeholder='https://example.com/regions.geojson'
 					disabled={validateMutation.isPending}
 				/>
-				{loadError && <p className='text-xs text-destructive'>{loadError}</p>}
-				{validateMutation.isPending && <p className='text-xs text-muted-foreground'>Loading…</p>}
+				{loadError && <p className={styles.boundaryEditPanelP}>{loadError}</p>}
+				{validateMutation.isPending && <p className={styles.boundaryEditPanelP2}>Loading…</p>}
 				{featureCount != null && propertyKeys.length > 1 && (
-					<p className='text-xs text-muted-foreground'>
+					<p className={styles.boundaryEditPanelP2}>
 						{featureCount} features · {propertyKeys.length} properties
 					</p>
 				)}
@@ -377,7 +378,7 @@ function BoundaryEditPanel({
 				hint={
 					<>
 						Lowercase letters, digits and underscores only. This is the value the agent passes in{' '}
-						<code className='font-mono'>region_boundaries</code>.
+						<code className={styles.boundaryEditPanelCode}>region_boundaries</code>.
 					</>
 				}
 			>
@@ -385,7 +386,7 @@ function BoundaryEditPanel({
 					value={key}
 					onChange={(e) => setKey(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '_'))}
 					placeholder='french_postal_codes'
-					className='font-mono'
+					className={styles.boundaryEditPanelCode}
 				/>
 			</Field>
 
@@ -394,7 +395,7 @@ function BoundaryEditPanel({
 				hint={
 					<>
 						The GeoJSON feature property whose value must match the SQL{' '}
-						<code className='font-mono'>region_key</code> column.
+						<code className={styles.boundaryEditPanelCode}>region_key</code> column.
 					</>
 				}
 			>
@@ -417,7 +418,7 @@ function BoundaryEditPanel({
 				hint={
 					<>
 						Explains to the agent what values to produce in the{' '}
-						<code className='font-mono'>region_key</code> column, so it writes the right SQL.
+						<code className={styles.boundaryEditPanelCode}>region_key</code> column, so it writes the right SQL.
 					</>
 				}
 			>
@@ -429,7 +430,7 @@ function BoundaryEditPanel({
 				/>
 			</Field>
 
-			<div className='flex justify-end gap-2'>
+			<div className={styles.boundaryEditPanelDiv4}>
 				<Button variant='ghost' size='sm' onClick={onClose} disabled={isSaving}>
 					Cancel
 				</Button>
@@ -443,10 +444,10 @@ function BoundaryEditPanel({
 
 function Field({ label, hint, children }: { label: string; hint?: React.ReactNode; children: React.ReactNode }) {
 	return (
-		<div className='flex flex-col gap-1.5'>
-			<p className='text-sm font-medium'>{label}</p>
+		<div className={styles.fieldDiv}>
+			<p className={styles.fieldP}>{label}</p>
 			{children}
-			{hint && <p className='text-xs text-muted-foreground'>{hint}</p>}
+			{hint && <p className={styles.boundaryEditPanelP2}>{hint}</p>}
 		</div>
 	);
 }
@@ -514,5 +515,5 @@ function BoundaryPreviewMap({ geojson }: { geojson: FeatureCollection }) {
 		};
 	}, [geojson, styleUrl]);
 
-	return <div ref={containerRef} className='h-48 w-full rounded-md border overflow-hidden' />;
+	return <div ref={containerRef} className={styles.boundaryPreviewMapDiv} />;
 }

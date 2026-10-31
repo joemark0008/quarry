@@ -2,6 +2,7 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import { Badge } from '@/components/ui/badge';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './record-recommendation.module.css';
 
 interface RecommendationInsight {
 	signalType: string;
@@ -32,37 +33,37 @@ export const RecordRecommendationToolCall = ({ toolPart }: ToolCallComponentProp
 			title={
 				<span>
 					Recommendation{' '}
-					<span className='text-xs font-normal truncate'>{input?.title ?? input?.subjectKey}</span>
+					<span className={styles.recordRecommendationToolCallSpan}>{input?.title ?? input?.subjectKey}</span>
 				</span>
 			}
 		>
 			{isSettled && input ? (
-				<div className='flex flex-col gap-2 p-3 text-sm'>
-					{input.summary && <p className='text-foreground/70'>{input.summary}</p>}
+				<div className={styles.recordRecommendationToolCallDiv}>
+					{input.summary && <p className={styles.recordRecommendationToolCallP}>{input.summary}</p>}
 					{input.suggestedAction && (
 						<p>
-							<span className='font-medium'>Fix:</span> {input.suggestedAction}
+							<span className={styles.recordRecommendationToolCallSpan2}>Fix:</span> {input.suggestedAction}
 						</p>
 					)}
 					{input.suggestedFile && (
-						<p className='text-xs text-foreground/50'>
-							File: <code className='bg-background/50 px-1 py-0.5 rounded'>{input.suggestedFile}</code>
+						<p className={styles.recordRecommendationToolCallP2}>
+							File: <code className={styles.recordRecommendationToolCallCode}>{input.suggestedFile}</code>
 						</p>
 					)}
 					{insights.length > 0 && (
-						<div className='flex flex-col gap-1'>
+						<div className={styles.recordRecommendationToolCallDiv2}>
 							{insights.map((insight, index) => (
-								<div key={index} className='flex items-center gap-2 text-xs text-foreground/60'>
+								<div key={index} className={styles.recordRecommendationToolCallDiv3}>
 									<Badge variant='outline'>{insight.signalType}</Badge>
-									<span className='truncate'>{insight.metric}</span>
-									<span className='text-foreground/40'>×{insight.count}</span>
+									<span className={styles.recordRecommendationToolCallSpan3}>{insight.metric}</span>
+									<span className={styles.recordRecommendationToolCallSpan4}>×{insight.count}</span>
 								</div>
 							))}
 						</div>
 					)}
 				</div>
 			) : (
-				<div className='p-4 text-center text-foreground/50 text-sm'>Recording recommendation...</div>
+				<div className={styles.recordRecommendationToolCallDiv4}>Recording recommendation...</div>
 			)}
 		</ToolCallWrapper>
 	);

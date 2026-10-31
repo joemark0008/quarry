@@ -2,6 +2,7 @@ import McpIcon from '@/components/icons/model-context-protocol.svg';
 import { Favicon } from '@/components/ui/favicon';
 import { useMcpContext } from '@/contexts/mcp';
 import { cn } from '@/lib/utils';
+import styles from './mcp-server-icon.module.css';
 
 export const McpServerIcon = ({ server, className }: { server?: string | null; className?: string }) => {
 	const { servers } = useMcpContext();
@@ -10,8 +11,8 @@ export const McpServerIcon = ({ server, className }: { server?: string | null; c
 	return (
 		<Favicon
 			url={url}
-			className={cn('shrink-0 rounded-[3px]', className)}
-			fallback={<McpIcon className={cn('shrink-0', className)} />}
+			className={cn(styles.mcpServerIconFavicon, className)}
+			fallback={<McpIcon className={cn(styles.mcpServerIconMcpIcon, className)} />}
 		/>
 	);
 };

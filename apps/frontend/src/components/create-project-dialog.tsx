@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { CreateProjectDocument } from '@/graphql/generated/graphql';
 import { setActiveProjectId } from '@/lib/active-project';
 import { apolloClient } from '@/lib/apollo-client';
+import styles from './create-project-dialog.module.css';
 
 interface CreateProjectDialogProps {
 	open: boolean;
@@ -55,7 +56,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogContent>
-				<form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+				<form onSubmit={handleSubmit} className={styles.createProjectDialogForm}>
 					<DialogHeader>
 						<DialogTitle>New project</DialogTitle>
 						<DialogDescription>
@@ -70,7 +71,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
 						onChange={(event) => setName(event.target.value)}
 						aria-label='Project name'
 					/>
-					{error && <p className='text-sm text-destructive'>{error.message}</p>}
+					{error && <p className={styles.createProjectDialogP}>{error.message}</p>}
 					<DialogFooter>
 						<Button type='button' variant='ghost' onClick={() => handleOpenChange(false)}>
 							Cancel

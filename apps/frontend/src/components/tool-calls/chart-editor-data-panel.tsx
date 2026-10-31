@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input';
 import { startColumnDrag } from '@/hooks/use-column-drag';
 import { profileColumn } from '@/lib/chart-selection-summary';
 import { cn } from '@/lib/utils';
+import styles from './chart-editor-data-panel.module.css';
 
-const X_AXIS_USAGE_COLOR = 'var(--muted-foreground)';
+const X_AXIS_USAGE_COLOR = 'var(--app-muted)';
 
 const KIND_ICONS: Record<ColumnValueKind, LucideIcon> = {
 	number: Hash,
@@ -49,50 +50,50 @@ export function ChartEditorDataPanel({
 	const visibleProfiles = filterProfiles(profiles, search);
 
 	return (
-		<aside className={cn('min-h-0 flex-col select-none', className)}>
+		<aside className={cn(styles.chartEditorDataPanelAside, className)}>
 			{onEditQuery && (
-				<div className='flex h-12 shrink-0 items-center border-b px-3'>
+				<div className={styles.chartEditorDataPanelDiv}>
 					<Button
 						type='button'
 						variant='outline'
 						size='sm'
-						className='w-full rounded-full text-xs'
+						className={styles.chartEditorDataPanelButton}
 						onClick={onEditQuery}
 						disabled={isEditingQuery}
 					>
-						<DatabaseIcon dialect={dialect} className='size-3.5' />
+						<DatabaseIcon dialect={dialect} className={styles.chartEditorDataPanelDatabaseIcon} />
 						{isEditingQuery ? 'Editing SQL' : 'Edit SQL'}
 					</Button>
 				</div>
 			)}
-			<div className='flex shrink-0 flex-col gap-2 px-4 pt-4 pb-2'>
-				<div className='flex items-center gap-2'>
-					<h3 className='text-sm font-semibold text-foreground'>Data</h3>
-					<span className='ml-auto text-xs text-muted-foreground'>{formatCount(data.length, 'row')}</span>
+			<div className={styles.chartEditorDataPanelDiv2}>
+				<div className={styles.chartEditorDataPanelDiv3}>
+					<h3 className={styles.chartEditorDataPanelH3}>Data</h3>
+					<span className={styles.chartEditorDataPanelSpan}>{formatCount(data.length, 'row')}</span>
 					<Button
 						type='button'
 						variant='ghost-muted'
 						size='icon-xs'
-						className='-mr-1.5'
+						className={styles.chartEditorDataPanelButton2}
 						onClick={onCollapse}
 						aria-label='Collapse data panel'
 						title='Collapse data panel'
 					>
-						<PanelLeftClose className='size-3.5' />
+						<PanelLeftClose className={styles.chartEditorDataPanelDatabaseIcon} />
 					</Button>
 				</div>
-				<div className='relative'>
-					<Search className='pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground' />
+				<div className={styles.chartEditorDataPanelDiv4}>
+					<Search className={styles.chartEditorDataPanelSearch} />
 					<Input
 						value={search}
 						onChange={(event) => setSearch(event.target.value)}
 						placeholder='Search columns'
 						aria-label='Search columns'
-						className='h-8 bg-panel pl-8 text-sm'
+						className={styles.chartEditorDataPanelInput}
 					/>
 				</div>
 			</div>
-			<ul className='min-h-0 flex-1 overflow-y-auto px-2 pb-2'>
+			<ul className={styles.chartEditorDataPanelUl}>
 				{visibleProfiles.map((profile) => (
 					<ColumnRow
 						key={profile.column}
@@ -101,7 +102,7 @@ export function ChartEditorDataPanel({
 					/>
 				))}
 				{visibleProfiles.length === 0 && (
-					<li className='px-2 py-1.5 text-xs text-muted-foreground'>No matching columns.</li>
+					<li className={styles.chartEditorDataPanelLi}>No matching columns.</li>
 				)}
 			</ul>
 		</aside>
@@ -123,7 +124,7 @@ export function ChartEditorDataRail({
 	dialect,
 }: ChartEditorDataRailProps) {
 	return (
-		<div className='flex h-full flex-col items-center gap-1 py-3'>
+		<div className={styles.chartEditorDataRailDiv}>
 			<Button
 				type='button'
 				variant='ghost-muted'
@@ -132,7 +133,7 @@ export function ChartEditorDataRail({
 				aria-label='Expand data panel'
 				title='Expand data panel'
 			>
-				<PanelLeftOpen className='size-4' />
+				<PanelLeftOpen className={styles.chartEditorDataRailPanelLeftOpen} />
 			</Button>
 			{onEditQuery && (
 				<Button
@@ -144,7 +145,7 @@ export function ChartEditorDataRail({
 					aria-label='Edit SQL'
 					title='Edit SQL'
 				>
-					<DatabaseIcon dialect={dialect} className='size-4' />
+					<DatabaseIcon dialect={dialect} className={styles.chartEditorDataRailPanelLeftOpen} />
 				</Button>
 			)}
 		</div>
@@ -157,15 +158,15 @@ function ColumnRow({ profile, usageColors }: { profile: ColumnProfile; usageColo
 		<li
 			draggable
 			onDragStart={(event) => startColumnDrag(event, profile.column, profile.kind)}
-			className='flex h-7 cursor-grab items-center gap-2 rounded-md px-2 text-xs text-foreground hover:bg-accent/60 active:cursor-grabbing'
+			className={styles.columnRowLi}
 			title={`${profile.column} · ${profile.kind} · drag onto a chart field`}
 		>
-			<Icon className='size-3.5 shrink-0 text-muted-foreground' />
-			<span className='min-w-0 flex-1 truncate font-mono'>{profile.column}</span>
+			<Icon className={styles.columnRowIcon} />
+			<span className={styles.columnRowSpan}>{profile.column}</span>
 			{usageColors?.map((color, index) => (
 				<span
 					key={`${color}-${index}`}
-					className='size-2 shrink-0 rounded-full'
+					className={styles.columnRowSpan2}
 					style={{ backgroundColor: color }}
 					aria-hidden
 				/>

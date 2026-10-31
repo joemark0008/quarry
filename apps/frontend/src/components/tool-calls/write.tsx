@@ -3,6 +3,7 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import { formatBytes } from '@/lib/utils';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './write.module.css';
 
 export const WriteToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'write'>) => {
 	const { isSettled } = useToolCallContext();
@@ -14,22 +15,22 @@ export const WriteToolCall = ({ toolPart: { output, input } }: ToolCallComponent
 		<ToolCallWrapper
 			title={
 				<>
-					<HardDriveDownload size={13} className='inline-block mr-1.5 -mt-0.5 text-primary-muted' />
+					<HardDriveDownload size={13} className={styles.writeToolCallHardDriveDownload} />
 					{isSettled ? 'Saved' : 'Saving...'}{' '}
-					<code className='text-xs font-[Geist]! bg-accent/70! px-1 py-0.5 rounded'>{fileName}</code>
+					<code className={styles.writeToolCallCode}>{fileName}</code>
 					{' to your files'}
 				</>
 			}
 			badge={output && formatBytes(output.size)}
 		>
 			{input?.content !== undefined && (
-				<div className='border rounded-lg overflow-hidden'>
+				<div className={styles.writeToolCallDiv}>
 					{filePath && (
-						<div className='px-3 py-2 border-b text-[11px] font-mono break-all text-muted-foreground'>
+						<div className={styles.writeToolCallDiv2}>
 							{filePath}
 						</div>
 					)}
-					<pre className='overflow-auto max-h-80 m-0 p-3 text-xs whitespace-pre-wrap wrap-break-word'>
+					<pre className={styles.writeToolCallPre}>
 						{input.content}
 					</pre>
 				</div>

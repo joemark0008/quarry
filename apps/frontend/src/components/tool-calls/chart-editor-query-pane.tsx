@@ -4,6 +4,7 @@ import type { executeSql } from '@quarry/shared/tools';
 import { SqlQueryEditor } from '@/components/side-panel/sql-editor';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import styles from './chart-editor-query-pane.module.css';
 
 interface ChartEditorQueryPaneProps {
 	input: executeSql.Input;
@@ -24,11 +25,11 @@ export function ChartEditorQueryPane({
 	className,
 }: ChartEditorQueryPaneProps) {
 	return (
-		<div className={cn('flex min-h-0 flex-1 flex-col', className)}>
-			<div className='flex h-12 shrink-0 items-center justify-between gap-2 border-b px-4'>
-				<span className='text-sm font-semibold text-foreground'>Query editor</span>
-				<Button type='button' variant='ghost' size='sm' className='h-7 rounded-full text-xs' onClick={onClose}>
-					<ArrowLeft className='size-3.5' /> Back to chart
+		<div className={cn(styles.chartEditorQueryPaneDiv, className)}>
+			<div className={styles.chartEditorQueryPaneDiv2}>
+				<span className={styles.chartEditorQueryPaneSpan}>Query editor</span>
+				<Button type='button' variant='ghost' size='sm' className={styles.chartEditorQueryPaneButton} onClick={onClose}>
+					<ArrowLeft className={styles.chartEditorQueryPaneArrowLeft} /> Back to chart
 				</Button>
 			</div>
 			<SqlQueryEditor

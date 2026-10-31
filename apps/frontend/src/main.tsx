@@ -1,9 +1,15 @@
+import './theme/reset.css';
 import '@mantine/core/styles.layer.css';
 import '@mantine/notifications/styles.layer.css';
-import './styles.css';
 import './theme/tokens.css';
+import './theme/palette.css';
+import './theme/animations.css';
+import './theme/global.css';
+import './theme/shared-surfaces.css';
+import './theme/streamdown.css';
 import 'katex/dist/katex.min.css';
 import { StrictMode } from 'react';
+import type { ReactNode } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
@@ -11,7 +17,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from './contexts/theme.provider';
+import { ThemeProvider, useIsDarkMode } from './contexts/theme.provider';
 import { McpProvider } from './contexts/mcp';
 import { TooltipProvider } from './components/ui/tooltip';
 import { subscribeToExternalActiveProjectChanges } from './lib/active-project';
@@ -57,16 +63,30 @@ subscribeToExternalActiveProjectChanges(() => {
 	void router.invalidate();
 });
 
+/** The saved theme setting is the one source of the color scheme. */
+function AppMantineProvider({ children }: { children: ReactNode }) {
+	const isDark = useIsDarkMode();
+	return (
+		<MantineProvider
+			theme={theme}
+			cssVariablesResolver={cssVariablesResolver}
+			forceColorScheme={isDark ? 'dark' : 'light'}
+		>
+			{children}
+		</MantineProvider>
+	);
+}
+
 // Render the app
 const rootElement = document.getElementById('app')!;
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme='auto'>
-				<ModalsProvider>
-					<Notifications position='top-right' />
-					<ThemeProvider>
+			<ThemeProvider>
+				<AppMantineProvider>
+					<ModalsProvider>
+						<Notifications position='top-right' />
 						<ApolloProvider client={apolloClient}>
 							<QueryClientProvider client={queryClient}>
 								<McpProvider>
@@ -76,9 +96,9 @@ if (!rootElement.innerHTML) {
 								</McpProvider>
 							</QueryClientProvider>
 						</ApolloProvider>
-					</ThemeProvider>
-				</ModalsProvider>
-			</MantineProvider>
+					</ModalsProvider>
+				</AppMantineProvider>
+			</ThemeProvider>
 		</StrictMode>,
 	);
 }

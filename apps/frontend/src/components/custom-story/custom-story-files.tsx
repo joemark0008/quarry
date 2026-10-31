@@ -22,6 +22,7 @@ import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/compo
 import { Spinner } from '@/components/ui/spinner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { storyApi } from '@/lib/story-api';
+import styles from './custom-story-files.module.css';
 
 interface CustomStoryFilesProps {
 	source: CustomStoryFileSource;
@@ -78,18 +79,18 @@ export function CustomStoryFiles({ source, versionNumber, files, editable = fals
 	}, [debouncedSearch, searchedFiles, shouldSearchContent]);
 
 	return (
-		<div className='flex h-full flex-col'>
+		<div className={styles.customStoryFilesDiv}>
 			{edits.hasChanges || edits.buildErrors.length > 0 ? (
 				<StoryFileEditBar edits={edits} canSave={editable && edits.isSavable} storySlug={source.storySlug} />
 			) : null}
 			<ResizablePanelGroup
 				orientation='horizontal'
-				className='min-h-0 flex-1'
+				className={styles.customStoryFilesResizablePanelGroup}
 				defaultLayout={defaultLayout ?? { tree: 1.2, viewer: 3 }}
 				onLayoutChanged={onLayoutChanged}
 			>
 				<ResizablePanel id='tree' minSize={140}>
-					<div className='h-full overflow-hidden bg-card'>
+					<div className={styles.customStoryFilesDiv2}>
 						<FileTree
 							entries={entries}
 							selectedPath={selectedPath}
@@ -107,7 +108,7 @@ export function CustomStoryFiles({ source, versionNumber, files, editable = fals
 				</ResizablePanel>
 				<ResizableSeparator />
 				<ResizablePanel id='viewer' minSize={220}>
-					<div className='h-full bg-background'>
+					<div className={styles.customStoryFilesDiv3}>
 						<StoryFileContent
 							path={selectedPath}
 							file={selectedFile.data}
@@ -148,22 +149,22 @@ function StoryFileContent({
 }: StoryFileContentProps) {
 	if (!path) {
 		return (
-			<div className='flex h-full flex-col items-center justify-center gap-2 text-muted-foreground'>
-				<File className='size-10 opacity-20' />
-				<p className='text-sm'>Select a file to view its contents</p>
+			<div className={styles.storyFileContentDiv}>
+				<File className={styles.storyFileContentFile} />
+				<p className={styles.storyFileContentP}>Select a file to view its contents</p>
 			</div>
 		);
 	}
 	if (isLoading) {
 		return (
-			<div className='flex h-full items-center justify-center'>
+			<div className={styles.storyFileContentDiv2}>
 				<Spinner />
 			</div>
 		);
 	}
 	if (error || !file) {
 		return (
-			<div className='flex h-full items-center justify-center text-sm text-muted-foreground'>
+			<div className={styles.storyFileContentDiv3}>
 				{error?.message ?? 'Failed to load file'}
 			</div>
 		);
@@ -172,27 +173,27 @@ function StoryFileContent({
 	const fileName = file.path.split('/').pop() ?? file.path;
 	const isKitFile = isStoryKitPath(file.path);
 	return (
-		<div className='flex h-full flex-col'>
-			<div className='flex shrink-0 items-start gap-2 border-b border-border bg-muted/30 px-4 py-1.5 text-sm text-muted-foreground'>
+		<div className={styles.customStoryFilesDiv}>
+			<div className={styles.storyFileContentDiv4}>
 				<FileExplorerIcon name={fileName} type='file' />
-				<div className='min-w-0 flex-1'>
-					<div className='flex min-w-0 items-baseline gap-2'>
-						<span className='min-w-0 truncate font-mono leading-4'>{fileName}</span>
-						<span className='shrink-0 whitespace-nowrap text-xs tabular-nums'>
+				<div className={styles.storyFileContentDiv5}>
+					<div className={styles.storyFileContentDiv6}>
+						<span className={styles.storyFileContentSpan}>{fileName}</span>
+						<span className={styles.storyFileContentSpan2}>
 							{formatFileSize(file.size)}
 						</span>
 						{isKitFile && <ReadOnlyBadge />}
 					</div>
-					<span className='block truncate text-xs leading-4 opacity-60'>{file.path}</span>
+					<span className={styles.storyFileContentSpan3}>{file.path}</span>
 				</div>
 			</div>
 			{isKitFile && (
-				<p className='shrink-0 border-b bg-muted/20 px-4 py-2 text-xs text-muted-foreground'>
+				<p className={styles.storyFileContentP2}>
 					The story kit is shared by every custom story, so its files can't be edited here. To change how a
 					block looks or behaves, ask the agent, or build your own component in the story's files.
 				</p>
 			)}
-			<div className='min-h-0 flex-1'>
+			<div className={styles.customStoryFilesResizablePanelGroup}>
 				<FileSourceEditor
 					key={file.path}
 					filePath={file.path}
@@ -208,8 +209,8 @@ function StoryFileContent({
 
 function ReadOnlyBadge() {
 	return (
-		<span className='flex shrink-0 items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium'>
-			<Lock className='size-2.5' />
+		<span className={styles.readOnlyBadgeSpan}>
+			<Lock className={styles.readOnlyBadgeLock} />
 			Read-only
 		</span>
 	);
@@ -308,16 +309,16 @@ interface StoryFileEditBarProps {
 /** Publishing builds the files first: a build error keeps the edits and shows where it failed, nothing is published. */
 function StoryFileEditBar({ edits, canSave, storySlug }: StoryFileEditBarProps) {
 	return (
-		<div className='shrink-0 border-b bg-muted/30 px-4 py-2 text-xs'>
-			<div className='flex items-center gap-2'>
-				<span className='flex min-w-0 flex-1 items-center gap-1.5 text-amber-600 dark:text-amber-400'>
-					<span className='size-1.5 shrink-0 rounded-full bg-current' />
+		<div className={styles.storyFileEditBarDiv}>
+			<div className={styles.storyFileEditBarDiv2}>
+				<span className={styles.storyFileEditBarSpan}>
+					<span className={styles.storyFileEditBarSpan2} />
 					{edits.changedCount} unsaved {edits.changedCount === 1 ? 'file' : 'files'}
 				</span>
 				<Button
 					variant='ghost'
 					size='sm'
-					className='h-7 rounded-full'
+					className={styles.storyFileEditBarButton}
 					onClick={edits.discard}
 					disabled={edits.isSaving}
 				>
@@ -326,16 +327,16 @@ function StoryFileEditBar({ edits, canSave, storySlug }: StoryFileEditBarProps) 
 				<Button
 					variant='primary-gradient'
 					size='sm'
-					className='h-7 gap-1.5 rounded-full'
+					className={styles.storyFileEditBarButton2}
 					onClick={() => void edits.save()}
 					disabled={!canSave || !edits.hasChanges || edits.isSaving}
 					isLoading={edits.isSaving}
 				>
-					<Save className='size-3.5' />
+					<Save className={styles.storyFileEditBarSave} />
 					Save & publish
 				</Button>
 			</div>
-			{edits.saveError && <p className='mt-2 text-destructive'>{edits.saveError.message}</p>}
+			{edits.saveError && <p className={styles.storyFileEditBarP}>{edits.saveError.message}</p>}
 			{edits.buildErrors.length > 0 && (
 				<StoryBuildErrors
 					errors={edits.buildErrors}
@@ -348,17 +349,17 @@ function StoryFileEditBar({ edits, canSave, storySlug }: StoryFileEditBarProps) 
 
 function StoryBuildErrors({ errors, fixMessage }: { errors: string[]; fixMessage: string }) {
 	return (
-		<div className='mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200'>
-			<div className='flex items-center justify-between gap-3'>
-				<div className='flex min-w-0 items-center gap-1.5 font-medium'>
-					<AlertTriangle className='size-3.5 shrink-0' />
-					<span className='truncate'>
+		<div className={styles.storyBuildErrorsDiv}>
+			<div className={styles.storyBuildErrorsDiv2}>
+				<div className={styles.storyBuildErrorsDiv3}>
+					<AlertTriangle className={styles.storyBuildErrorsAlertTriangle} />
+					<span className={styles.storyBuildErrorsSpan}>
 						{errors.length} build {errors.length === 1 ? 'error' : 'errors'} — nothing was published
 					</span>
 				</div>
-				<FixInChatButton message={fixMessage} className='h-7 shrink-0 gap-1.5 rounded-full' />
+				<FixInChatButton message={fixMessage} className={styles.storyBuildErrorsFixInChatButton} />
 			</div>
-			<ul className='mt-2 flex max-h-40 flex-col gap-2 overflow-auto'>
+			<ul className={styles.storyBuildErrorsUl}>
 				{errors.map((error) => (
 					<StoryBuildErrorItem key={error} error={error} />
 				))}
@@ -375,13 +376,13 @@ function StoryBuildErrorItem({ error }: { error: string }) {
 	const excerpt = excerptLines.join('\n').trim();
 
 	return (
-		<li className='flex flex-col gap-1'>
-			<p className='break-words'>
-				{location && <span className='mr-1.5 font-mono opacity-70'>{location}</span>}
+		<li className={styles.storyBuildErrorItemLi}>
+			<p className={styles.storyBuildErrorItemP}>
+				{location && <span className={styles.storyBuildErrorItemSpan}>{location}</span>}
 				{message}
 			</p>
 			{excerpt && (
-				<pre className='overflow-x-auto rounded bg-red-100/70 px-2 py-1 font-mono text-[11px] dark:bg-red-900/30'>
+				<pre className={styles.storyBuildErrorItemPre}>
 					{excerpt}
 				</pre>
 			)}

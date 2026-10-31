@@ -1,0 +1,47 @@
+.promotedSectionsSection {
+	display: grid;
+	gap: 0.75rem;
+}
+.promotedSectionsPromotedGroup {
+	margin-bottom: 1.5rem;
+}
+.gRIDCLASS {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+	@media (width >= 40rem) {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+	@media (width >= 64rem) {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+	@media (width >= 80rem) {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+}
+.sectionHeaderButton {
+	margin-bottom: 0.75rem;
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	gap: 0.375rem;
+	color: var(--app-muted);
+}
+.sectionHeaderSpan {
+	display: inline-flex;
+	width: 1rem;
+	height: 1rem;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+}
+.sectionHeaderChevronRight {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.sectionHeaderSpan2 {
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	--fx-font-weight: 500;
+	font-weight: 500;
+}

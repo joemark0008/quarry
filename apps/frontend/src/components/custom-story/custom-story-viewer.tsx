@@ -24,6 +24,7 @@ import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { storyBlockEditStore } from '@/stores/story-block-edit';
+import styles from './custom-story-viewer.module.css';
 
 interface CustomStoryViewerProps {
 	chatId: string;
@@ -111,7 +112,7 @@ export function CustomStoryViewer({ chatId, storySlug }: CustomStoryViewerProps)
 	}, [canEditBlocks]);
 
 	return (
-		<div className='flex h-full w-full min-w-0 flex-1 flex-col'>
+		<div className={styles.customStoryViewerDiv}>
 			<StoryHeader
 				title={content?.title ?? story.versionsQuery.data?.title ?? storySlug}
 				chatId={chatId}

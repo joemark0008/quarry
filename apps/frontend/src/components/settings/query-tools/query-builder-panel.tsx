@@ -27,6 +27,7 @@ import {
 	outputName,
 } from '@/lib/query-builder';
 import { queryToolApi } from '@/lib/query-tool-api';
+import styles from './query-builder-panel.module.css';
 
 type DatabaseObject = { type: string; database: string; schema: string; table: string; fqdn: string };
 
@@ -96,23 +97,23 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 	};
 
 	return (
-		<div className='flex flex-col gap-4' data-testid='query-builder'>
+		<div className={styles.queryBuilderPanelDiv} data-testid='query-builder'>
 			<Section label='Table'>
 				<Select value={tableFqdn} onValueChange={selectTable}>
-					<SelectTrigger className='h-8 w-full max-w-md text-xs' aria-label='Table'>
+					<SelectTrigger className={styles.queryBuilderPanelSelectTrigger} aria-label='Table'>
 						<SelectValue placeholder={objects.isLoading ? 'Loading tables…' : 'Pick a synced table'} />
 					</SelectTrigger>
 					<SelectContent>
 						{(objects.data ?? []).map((object) => (
 							<SelectItem key={object.fqdn} value={object.fqdn}>
 								{object.schema}.{object.table}
-								<span className='text-muted-foreground'> · {object.database}</span>
+								<span className={styles.queryBuilderPanelSpan}> · {object.database}</span>
 							</SelectItem>
 						))}
 					</SelectContent>
 				</Select>
 				{objects.data?.length === 0 && (
-					<p className='text-xs text-muted-foreground'>
+					<p className={styles.queryBuilderPanelP}>
 						No synced tables. Connect a warehouse and press Sync in Settings → Warehouse.
 					</p>
 				)}
@@ -131,7 +132,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										)
 									}
 								>
-									<SelectTrigger className='h-8 w-36 text-xs' aria-label='Aggregate'>
+									<SelectTrigger className={styles.queryBuilderPanelSelectTrigger2} aria-label='Aggregate'>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -155,7 +156,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										setColumns(replaceAt(columns, index, { ...column, alias: event.target.value }))
 									}
 									placeholder={outputName({ ...column, alias: undefined }) || 'alias'}
-									className='h-8 w-40 text-xs font-mono'
+									className={styles.queryBuilderPanelInput}
 									aria-label='Alias'
 								/>
 							</Row>
@@ -195,7 +196,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 					</Section>
 
 					<Section label='Group by'>
-						<p className='text-xs text-muted-foreground'>
+						<p className={styles.queryBuilderPanelP}>
 							{groupBy.length > 0
 								? `Grouped by ${groupBy.join(', ')} (the columns that are not aggregated).`
 								: 'Aggregate a column (count, sum…) to group by the other selected columns.'}
@@ -223,7 +224,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										)
 									}
 								>
-									<SelectTrigger className='h-8 w-32 text-xs' aria-label='Direction'>
+									<SelectTrigger className={styles.queryBuilderPanelSelectTrigger3} aria-label='Direction'>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -245,7 +246,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 					</Section>
 
 					<Section label='Limit'>
-						<div className='flex items-center gap-2'>
+						<div className={styles.queryBuilderPanelDiv2}>
 							<Select
 								value={limit.kind}
 								onValueChange={(kind) =>
@@ -258,7 +259,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 									)
 								}
 							>
-								<SelectTrigger className='h-8 w-40 text-xs' aria-label='Limit'>
+								<SelectTrigger className={styles.queryBuilderPanelSelectTrigger4} aria-label='Limit'>
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -273,7 +274,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 									min={0}
 									value={limit.value}
 									onChange={(event) => setLimit({ kind: 'value', value: Number(event.target.value) })}
-									className='h-8 w-28 text-xs'
+									className={styles.queryBuilderPanelInput2}
 									aria-label='Row limit'
 								/>
 							)}
@@ -282,10 +283,10 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 									<Input
 										value={limit.name}
 										onChange={(event) => setLimit({ ...limit, name: event.target.value })}
-										className='h-8 w-36 text-xs font-mono'
+										className={styles.queryBuilderPanelInput3}
 										aria-label='Limit parameter name'
 									/>
-									<span className='text-xs text-muted-foreground'>default</span>
+									<span className={styles.queryBuilderPanelP}>default</span>
 									<Input
 										type='number'
 										min={0}
@@ -293,7 +294,7 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										onChange={(event) =>
 											setLimit({ ...limit, default: Number(event.target.value) })
 										}
-										className='h-8 w-24 text-xs'
+										className={styles.queryBuilderPanelInput4}
 										aria-label='Limit default'
 									/>
 								</>
@@ -339,7 +340,7 @@ function FilterRow({
 				value={filter.operator}
 				onValueChange={(operator) => onChange({ ...filter, operator: operator as FilterOperator })}
 			>
-				<SelectTrigger className='h-8 w-40 text-xs' aria-label='Operator'>
+				<SelectTrigger className={styles.queryBuilderPanelSelectTrigger4} aria-label='Operator'>
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
@@ -368,7 +369,7 @@ function FilterRow({
 						})
 					}
 				>
-					<SelectTrigger className='h-8 w-32 text-xs' aria-label='Value kind'>
+					<SelectTrigger className={styles.queryBuilderPanelSelectTrigger3} aria-label='Value kind'>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -382,7 +383,7 @@ function FilterRow({
 					value={filter.value.value}
 					onChange={(event) => onChange({ ...filter, value: { kind: 'value', value: event.target.value } })}
 					placeholder={filter.operator === 'in' ? 'a, b, c' : 'value'}
-					className='h-8 w-40 text-xs'
+					className={styles.queryBuilderPanelSelectTrigger4}
 					aria-label='Filter value'
 				/>
 			)}
@@ -394,7 +395,7 @@ function FilterRow({
 							filter.value.kind === 'parameter' &&
 							onChange({ ...filter, value: { ...filter.value, name: event.target.value } })
 						}
-						className='h-8 w-36 text-xs font-mono'
+						className={styles.queryBuilderPanelInput3}
 						aria-label='Parameter name'
 					/>
 					<Select
@@ -404,7 +405,7 @@ function FilterRow({
 							onChange({ ...filter, value: { ...filter.value, type: type as QueryToolParameterType } })
 						}
 					>
-						<SelectTrigger className='h-8 w-28 text-xs' aria-label='Parameter type'>
+						<SelectTrigger className={styles.queryBuilderPanelInput2} aria-label='Parameter type'>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
@@ -432,12 +433,12 @@ function ColumnSelect({
 }) {
 	return (
 		<Select value={value} onValueChange={onChange}>
-			<SelectTrigger className='h-8 w-44 text-xs font-mono' aria-label='Column'>
+			<SelectTrigger className={styles.columnSelectSelectTrigger} aria-label='Column'>
 				<SelectValue placeholder='column' />
 			</SelectTrigger>
 			<SelectContent>
 				{columns.map((column) => (
-					<SelectItem key={column} value={column} className='font-mono'>
+					<SelectItem key={column} value={column} className={styles.columnSelectSelectItem}>
 						{column}
 					</SelectItem>
 				))}
@@ -448,10 +449,10 @@ function ColumnSelect({
 
 function Section({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
 	return (
-		<div className='flex flex-col gap-2'>
-			<div className='flex items-baseline gap-2'>
-				<span className='text-xs font-medium text-foreground'>{label}</span>
-				{hint && <span className='text-xs text-muted-foreground'>{hint}</span>}
+		<div className={styles.sectionDiv}>
+			<div className={styles.sectionDiv2}>
+				<span className={styles.sectionSpan}>{label}</span>
+				{hint && <span className={styles.queryBuilderPanelP}>{hint}</span>}
 			</div>
 			{children}
 		</div>
@@ -460,7 +461,7 @@ function Section({ label, hint, children }: { label: string; hint?: string; chil
 
 function Row({ children, onRemove }: { children: ReactNode; onRemove: () => void }) {
 	return (
-		<div className='flex flex-wrap items-center gap-2'>
+		<div className={styles.rowDiv}>
 			{children}
 			<Button variant='ghost-muted' size='icon-sm' onClick={onRemove} aria-label='Remove'>
 				<Trash2 />

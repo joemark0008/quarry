@@ -32,6 +32,7 @@ import { useSettingsSearch, useSettingsSuggestions } from '@/hooks/use-settings-
 import { TextShimmer } from '@/components/ui/text-shimmer';
 import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
 import { invalidateStoriesCaches } from '@/lib/stories-cache';
+import styles from './command-menu.module.css';
 
 type CommandConfig = {
 	id: string;
@@ -226,10 +227,10 @@ export function CommandMenu({ onOpenKeyboardShortcuts }: { onOpenKeyboardShortcu
 								onSelect={() => runCommand(() => openChat(chat.id))}
 							>
 								<MessageSquareIcon />
-								<div className='flex flex-col gap-0.5 overflow-hidden'>
-									<span className='truncate'>{highlightMatch(chat.title, debouncedSearch)}</span>
+								<div className={styles.commandMenuDiv}>
+									<span className={styles.commandMenuSpan}>{highlightMatch(chat.title, debouncedSearch)}</span>
 									{chat.matchedText && (
-										<span className='text-muted-foreground truncate text-xs'>
+										<span className={styles.commandMenuSpan2}>
 											...
 											{highlightMatch(
 												truncateMatchedText(chat.matchedText, debouncedSearch),
@@ -243,7 +244,7 @@ export function CommandMenu({ onOpenKeyboardShortcuts }: { onOpenKeyboardShortcu
 						))}
 					</CommandGroup>
 				) : isPendingSearch ? (
-					<div className='px-4 py-3'>
+					<div className={styles.commandMenuDiv2}>
 						<TextShimmer text='Searching deeper...' />
 					</div>
 				) : null}
@@ -283,10 +284,10 @@ function SettingsCommandItem({
 			onSelect={onSelect}
 		>
 			<SettingsIcon />
-			<div className='flex flex-col gap-0.5 overflow-hidden'>
-				<span className='truncate'>{isSuggestion ? entry.pageLabel : entry.title}</span>
+			<div className={styles.commandMenuDiv}>
+				<span className={styles.commandMenuSpan}>{isSuggestion ? entry.pageLabel : entry.title}</span>
 				{!isSuggestion && (
-					<span className='text-muted-foreground truncate text-xs'>
+					<span className={styles.commandMenuSpan2}>
 						{entry.pageLabel}
 						{entry.section ? ` · ${entry.section}` : ''}
 					</span>
@@ -325,7 +326,7 @@ function highlightMatch(text: string, query: string) {
 	return (
 		<>
 			{before}
-			<span className='font-semibold text-foreground'>{match}</span>
+			<span className={styles.highlightMatchSpan}>{match}</span>
 			{after}
 		</>
 	);

@@ -24,6 +24,7 @@ import { TabBar } from '@/components/ui/tab-bar';
 import { Textarea } from '@/components/ui/textarea';
 import { WarehouseConnectionsDocument } from '@/graphql/generated/graphql';
 import { useQueryToolMutations } from '@/queries/use-query-tools';
+import styles from './query-tool-editor.module.css';
 
 type EditorTab = 'sql' | 'builder';
 
@@ -99,23 +100,23 @@ export function QueryToolEditor({
 			description='The agent sees the name, the description and the parameters, and calls the tool when a question matches it.'
 			divide
 		>
-			<div className='flex flex-col gap-4'>
-				<div className='grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]'>
-					<label className='flex flex-col gap-1.5'>
-						<span className='text-xs font-medium'>Name</span>
+			<div className={styles.queryToolEditorDiv}>
+				<div className={styles.queryToolEditorDiv2}>
+					<label className={styles.queryToolEditorLabel}>
+						<span className={styles.queryToolEditorSpan}>Name</span>
 						<Input
 							value={name}
 							onChange={(event) => setName(event.target.value)}
 							placeholder='orders_by_status'
-							className='font-mono'
+							className={styles.queryToolEditorInput}
 							aria-invalid={Boolean(nameError)}
 						/>
-						<span className='text-xs text-muted-foreground'>
+						<span className={styles.queryToolEditorSpan2}>
 							{nameError ?? `The agent calls it as qt_${name || '<name>'}.`}
 						</span>
 					</label>
-					<label className='flex flex-col gap-1.5'>
-						<span className='text-xs font-medium'>Description</span>
+					<label className={styles.queryToolEditorLabel}>
+						<span className={styles.queryToolEditorSpan}>Description</span>
 						<Textarea
 							value={description}
 							onChange={(event) => setDescription(event.target.value)}
@@ -125,15 +126,15 @@ export function QueryToolEditor({
 					</label>
 				</div>
 
-				<div className='flex flex-wrap items-center gap-4'>
+				<div className={styles.queryToolEditorDiv3}>
 					{connectionNames.length > 1 && (
-						<label className='flex items-center gap-2 text-xs'>
-							<span className='font-medium'>Warehouse</span>
+						<label className={styles.queryToolEditorLabel2}>
+							<span className={styles.queryToolEditorSpan3}>Warehouse</span>
 							<Select
 								value={databaseId ?? DEFAULT_CONNECTION}
 								onValueChange={(value) => setDatabaseId(value === DEFAULT_CONNECTION ? null : value)}
 							>
-								<SelectTrigger className='h-8 w-48 text-xs'>
+								<SelectTrigger className={styles.queryToolEditorSelectTrigger}>
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -147,7 +148,7 @@ export function QueryToolEditor({
 							</Select>
 						</label>
 					)}
-					<label className='flex items-center gap-2 text-xs'>
+					<label className={styles.queryToolEditorLabel2}>
 						<Switch checked={enabled} onCheckedChange={setEnabled} aria-label='Enabled' />
 						<span>Available to the agent</span>
 					</label>
@@ -158,8 +159,8 @@ export function QueryToolEditor({
 					activeTab={tab}
 					onTabChange={setTab}
 					tabs={[
-						{ id: 'builder', label: 'Builder', icon: <Wand2 className='size-3.5' /> },
-						{ id: 'sql', label: 'SQL', icon: <Code className='size-3.5' /> },
+						{ id: 'builder', label: 'Builder', icon: <Wand2 className={styles.queryToolEditorWand2} /> },
+						{ id: 'sql', label: 'SQL', icon: <Code className={styles.queryToolEditorWand2} /> },
 					]}
 				/>
 				{tab === 'builder' ? (
@@ -168,8 +169,8 @@ export function QueryToolEditor({
 					<QueryToolSqlEditor value={sql} onChange={setSql} onRun={runPreview} />
 				)}
 
-				<div className='flex flex-col gap-2'>
-					<span className='text-xs font-medium'>Parameters</span>
+				<div className={styles.queryToolEditorDiv4}>
+					<span className={styles.queryToolEditorSpan}>Parameters</span>
 					<QueryToolParameters
 						parameters={parameters}
 						values={values}
@@ -179,7 +180,7 @@ export function QueryToolEditor({
 					/>
 				</div>
 
-				<div className='flex flex-wrap items-center gap-2'>
+				<div className={styles.queryToolEditorDiv5}>
 					<Button
 						variant='outline'
 						size='sm'
@@ -207,15 +208,15 @@ export function QueryToolEditor({
 				{previewMutation.error && <ErrorMessage message={previewMutation.error.message} />}
 				{saveMutation.error && <ErrorMessage message={saveMutation.error.message} />}
 				{preview && (
-					<div className='flex flex-col gap-2' data-testid='query-tool-preview'>
-						<span className='text-xs text-muted-foreground'>
+					<div className={styles.queryToolEditorDiv4} data-testid='query-tool-preview'>
+						<span className={styles.queryToolEditorSpan2}>
 							{preview.rowCount} {preview.rowCount === 1 ? 'row' : 'rows'}
 							{preview.truncated ? ' (first rows only)' : ''}
 						</span>
 						<TableDisplay
 							data={preview.rows}
 							columns={preview.columns}
-							tableContainerClassName='max-h-80'
+							tableContainerClassName={styles.queryToolEditorTableDisplay}
 							emptyLabel='No rows returned'
 							maxRowsBeforePagination={50}
 						/>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { X } from 'lucide-react';
+import styles from './image-lightbox.module.css';
 
 interface ImageLightboxProps {
 	src: string;
@@ -23,7 +24,7 @@ export function ImageLightbox({ src, onClose }: ImageLightboxProps) {
 
 	return (
 		<div
-			className='fixed inset-0 z-50 flex items-center justify-center bg-black/80 animate-in fade-in duration-150'
+			className={styles.imageLightboxDiv}
 			onClick={onClose}
 		>
 			<button
@@ -32,14 +33,14 @@ export function ImageLightbox({ src, onClose }: ImageLightboxProps) {
 					e.stopPropagation();
 					onClose();
 				}}
-				className='absolute top-4 right-4 size-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer z-10'
+				className={styles.imageLightboxButton}
 			>
-				<X className='size-5' />
+				<X className={styles.imageLightboxX} />
 			</button>
 			<img
 				src={src}
 				alt=''
-				className='max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl'
+				className={styles.imageLightboxImg}
 				onClick={(e) => e.stopPropagation()}
 			/>
 		</div>

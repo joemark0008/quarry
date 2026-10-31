@@ -14,6 +14,7 @@ import { VIEWER_DISPLAY_KEY, VIEWER_GROUP_KEY, filterItems, getStoredSetting, gr
 import { storyApi } from '@/lib/story-api';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
+import styles from './viewer-home.module.css';
 
 export function ViewerHome() {
 	const project = useCurrentProject();
@@ -80,7 +81,7 @@ export function ViewerHome() {
 	const isEmpty = allItems.length === 0 && !isLoading;
 
 	const projectSelector = multiProjectMode === 'switch' && project.data && (projects.data?.length ?? 0) > 1 && (
-		<div className='max-md:hidden'>
+		<div className={styles.projectSelectorDiv}>
 			<ProjectSwitcher
 				projects={projects.data ?? []}
 				currentProjectId={project.data.id}
@@ -91,15 +92,15 @@ export function ViewerHome() {
 	);
 
 	const standaloneProjectSelector = projectSelector && (
-		<div className='-ml-2 px-4 pt-3 md:px-8 md:pt-4 max-md:hidden'>{projectSelector}</div>
+		<div className={styles.standaloneProjectSelectorDiv}>{projectSelector}</div>
 	);
 
 	if (isLoading) {
 		return (
-			<div className='flex flex-col flex-1 min-w-72 overflow-hidden'>
+			<div className={styles.viewerHomeDiv}>
 				<MobileHeader />
 				{standaloneProjectSelector}
-				<div className='flex flex-1 items-center justify-center'>
+				<div className={styles.viewerHomeDiv2}>
 					<Spinner />
 				</div>
 			</div>
@@ -108,7 +109,7 @@ export function ViewerHome() {
 
 	if (isEmpty) {
 		return (
-			<div className='flex flex-col flex-1 min-w-72 overflow-hidden'>
+			<div className={styles.viewerHomeDiv}>
 				<MobileHeader />
 				{standaloneProjectSelector}
 				<ViewerEmptyState />
@@ -117,12 +118,12 @@ export function ViewerHome() {
 	}
 
 	return (
-		<div className='flex flex-col flex-1 h-full overflow-auto min-w-72'>
+		<div className={styles.viewerHomeDiv3}>
 			<MobileHeader />
-			<div className='w-full px-4 py-6 md:px-8 md:py-10'>
-				<div className='flex items-center justify-between mb-6 md:mb-8 gap-3 flex-wrap'>
-					<h1 className='text-xl font-semibold tracking-tight'>Shared with me</h1>
-					<div className='flex items-center gap-3 min-w-0'>
+			<div className={styles.viewerHomeDiv4}>
+				<div className={styles.viewerHomeDiv5}>
+					<h1 className={styles.viewerHomeH1}>Shared with me</h1>
+					<div className={styles.viewerHomeDiv6}>
 						{projectSelector}
 						<ViewerToolbarControls
 							searchQuery={searchQuery}

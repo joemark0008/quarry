@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { refetchProjectQueries } from '@/hooks/use-current-project';
 import { RenameProjectDocument } from '@/graphql/generated/graphql';
+import styles from './editable-project-name.module.css';
 
 interface EditableProjectNameProps {
 	projectId: string;
@@ -66,14 +67,14 @@ export function EditableProjectName({ projectId, name, canEdit }: EditableProjec
 				onBlur={submit}
 				onKeyDown={handleKeyDown}
 				disabled={rename.isPending}
-				className='h-8 w-64 max-w-full text-right'
+				className={styles.editableProjectNameInput}
 			/>
 		);
 	}
 
 	return (
-		<div className='flex flex-col items-end gap-1'>
-			<div className='flex items-center gap-1'>
+		<div className={styles.editableProjectNameDiv}>
+			<div className={styles.editableProjectNameDiv2}>
 				<span>{rename.isPending ? rename.variables.name : name}</span>
 				{canEdit && (
 					<Button
@@ -83,11 +84,11 @@ export function EditableProjectName({ projectId, name, canEdit }: EditableProjec
 						onClick={startEditing}
 						disabled={rename.isPending}
 					>
-						<Pencil className='size-3.5' />
+						<Pencil className={styles.editableProjectNamePencil} />
 					</Button>
 				)}
 			</div>
-			{rename.isError && <span className='text-xs text-destructive'>{rename.error.message}</span>}
+			{rename.isError && <span className={styles.editableProjectNameSpan}>{rename.error.message}</span>}
 		</div>
 	);
 }

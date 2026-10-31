@@ -2,12 +2,13 @@ import { providerLabel } from '@quarry/shared/types';
 import type { MessageModel } from '@quarry/api/agent/types/chat';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
+import styles from './message-model-label.module.css';
 
 export function MessageModelLabel({ model }: { model: MessageModel }) {
 	return (
 		<SimpleTooltip content={<MessageModelDetails model={model} />} side='bottom' align='start'>
-			<span className='flex w-fit items-center gap-1.5 text-xs text-muted-foreground'>
-				<LlmProviderIcon provider={model.provider} className='size-3' />
+			<span className={styles.messageModelLabelSpan}>
+				<LlmProviderIcon provider={model.provider} className={styles.messageModelLabelLlmProviderIcon} />
 				{model.name}
 			</span>
 		</SimpleTooltip>
@@ -17,7 +18,7 @@ export function MessageModelLabel({ model }: { model: MessageModel }) {
 export function MessageModelDetails({ model }: { model: MessageModel }) {
 	return (
 		<span>
-			{providerLabel(model.provider)} · <span className='font-mono'>{model.modelId}</span>
+			{providerLabel(model.provider)} · <span className={styles.messageModelDetailsSpan}>{model.modelId}</span>
 		</span>
 	);
 }

@@ -1,0 +1,17 @@
+.customStoryPreviewPageDiv {
+	position: relative;
+	display: flex;
+	height: 100%;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: var(--app-surface);
+}
+.customStoryPreviewPageDiv2 {
+	position: relative;
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+}

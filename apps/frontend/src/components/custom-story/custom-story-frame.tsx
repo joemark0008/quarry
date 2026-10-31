@@ -30,6 +30,7 @@ import { useDateFormat } from '@/hooks/use-date-format';
 import { getAppWideShortcuts, isTypingTarget } from '@/lib/keyboard-shortcuts';
 import { downloadCsv, downloadXlsx, tableToCsv, tableToTsv } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
+import localStyles from './custom-story-frame.module.css';
 
 export interface CustomStoryRuntimeError {
 	message: string;
@@ -293,14 +294,14 @@ export function CustomStoryFrame({
 	}
 	if (navigatedAway) {
 		return (
-			<div className={cn('flex h-full items-center justify-center p-6 text-sm text-muted-foreground', className)}>
+			<div className={cn(localStyles.customStoryFrameDiv, className)}>
 				{NAVIGATED_AWAY_MESSAGE}
 			</div>
 		);
 	}
 
 	return (
-		<div className='flex h-full flex-col'>
+		<div className={localStyles.customStoryFrameDiv2}>
 			{!usesState && stateControls?.hasLocalState && onRememberState && (
 				<RememberStateHeader onRemember={onRememberState} />
 			)}
@@ -312,7 +313,7 @@ export function CustomStoryFrame({
 				referrerPolicy='no-referrer'
 				srcDoc={srcDoc}
 				onLoad={handleLoad}
-				className={cn('block min-h-0 w-full flex-1 border-0 bg-transparent', className)}
+				className={cn(localStyles.customStoryFrameIframe, className)}
 			/>
 		</div>
 	);

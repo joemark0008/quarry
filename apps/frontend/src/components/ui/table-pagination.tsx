@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import styles from './table-pagination.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -28,13 +29,13 @@ export function TablePagination({
 	const canNext = pageIndex < pageCount - 1;
 
 	return (
-		<div className='shrink-0 border-t border-border px-4 py-2'>
-			<div className='flex shrink-0 items-center justify-between'>
-				<span className='text-sm text-muted-foreground'>{totalRows} rows</span>
+		<div className={styles.tablePaginationDiv}>
+			<div className={styles.tablePaginationDiv2}>
+				<span className={styles.tablePaginationSpan}>{totalRows} rows</span>
 
-				<div className='flex flex-wrap items-center gap-2 justify-end'>
-					<div className='flex items-center gap-2'>
-						<span className='text-sm text-muted-foreground'>Rows per page</span>
+				<div className={styles.tablePaginationDiv3}>
+					<div className={styles.tablePaginationDiv4}>
+						<span className={styles.tablePaginationSpan}>Rows per page</span>
 						<Select value={`${pageSize}`} onValueChange={(v) => onPageSizeChange(Number(v))}>
 							<SelectTrigger size='sm' variant='default'>
 								<SelectValue />
@@ -49,11 +50,11 @@ export function TablePagination({
 						</Select>
 					</div>
 
-					<span className='text-sm text-muted-foreground'>
+					<span className={styles.tablePaginationSpan}>
 						Page {pageCount === 0 ? 0 : pageIndex + 1} of {pageCount}
 					</span>
 
-					<div className='flex items-center gap-1'>
+					<div className={styles.tablePaginationDiv5}>
 						<Button
 							type='button'
 							variant='outline'

@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import styles from './confirmation-dialog.module.css';
 
 interface ConfirmationDialogProps {
 	open: boolean;
@@ -41,12 +42,12 @@ export function ConfirmationDialog({
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
-				<DialogDescription className='text-sm text-muted-foreground'>{description}</DialogDescription>
-				{error && <p className='text-red-500 text-center text-sm'>{error}</p>}
-				<div className='flex justify-end gap-2'>
+				<DialogDescription className={styles.confirmationDialogDialogDescription}>{description}</DialogDescription>
+				{error && <p className={styles.confirmationDialogP}>{error}</p>}
+				<div className={styles.confirmationDialogDiv}>
 					<Button
 						variant='outline'
-						className='rounded-full border'
+						className={styles.confirmationDialogButton}
 						disabled={isPending}
 						onClick={() => handleOpenChange(false)}
 					>
@@ -54,7 +55,7 @@ export function ConfirmationDialog({
 					</Button>
 					<Button
 						variant={confirmVariant}
-						className='rounded-full'
+						className={styles.confirmationDialogButton2}
 						disabled={isPending}
 						isLoading={isPending}
 						onClick={onConfirm}

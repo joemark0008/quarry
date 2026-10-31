@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { FolderTreeSelect, getTargetVisibility } from '@/components/stories-folder-tree-select';
 import { storyApi } from '@/lib/story-api';
+import styles from './stories-folder-create-dialog.module.css';
 
 type Mode = 'create' | 'modify';
 
@@ -89,7 +90,7 @@ export function FolderCreateDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-sm'>
+			<DialogContent className={styles.folderCreateDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>{mode === 'create' ? 'New folder' : 'Rename folder'}</DialogTitle>
 				</DialogHeader>
@@ -103,8 +104,8 @@ export function FolderCreateDialog({
 					/>
 				)}
 
-				<div className='flex items-center gap-2.5 rounded-md border bg-background px-3 py-2'>
-					<FolderIconComponent className='size-4 shrink-0 text-muted-foreground' />
+				<div className={styles.folderCreateDialogDiv}>
+					<FolderIconComponent className={styles.folderCreateDialogFolderIconComponent} />
 					<input
 						ref={inputRef}
 						type='text'
@@ -113,19 +114,19 @@ export function FolderCreateDialog({
 						onKeyDown={handleKeyDown}
 						placeholder='Folder name'
 						maxLength={100}
-						className='flex-1 bg-transparent text-sm outline-none'
+						className={styles.folderCreateDialogInput}
 					/>
 				</div>
 				{mode === 'create' && (
-					<p className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+					<p className={styles.folderCreateDialogP}>
 						{willBePrivate ? (
 							<>
-								<Lock className='size-3 shrink-0' />
+								<Lock className={styles.folderCreateDialogLock} />
 								This folder will be <strong>private</strong>
 							</>
 						) : (
 							<>
-								<Globe className='size-3 shrink-0' />
+								<Globe className={styles.folderCreateDialogLock} />
 								This folder will be <strong>public</strong>
 							</>
 						)}
@@ -134,7 +135,7 @@ export function FolderCreateDialog({
 				<DialogFooter>
 					<Button
 						variant='ghost'
-						className='rounded-full border'
+						className={styles.folderCreateDialogButton}
 						onClick={() => onOpenChange(false)}
 						disabled={isPending}
 					>
@@ -142,7 +143,7 @@ export function FolderCreateDialog({
 					</Button>
 					<Button
 						variant='primary-gradient'
-						className='rounded-full'
+						className={styles.folderCreateDialogButton2}
 						onClick={handleSubmit}
 						disabled={!trimmed || isPending}
 					>

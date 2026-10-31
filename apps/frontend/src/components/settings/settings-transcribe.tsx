@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { capitalize } from '@/lib/utils';
 import { transcribeAudio } from '@/lib/transcribe';
 import { projectApi } from '@/lib/project-api';
+import styles from './settings-transcribe.module.css';
 
 const TEST_DURATION_MS = 5000;
 
@@ -74,27 +75,27 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 			action={<Switch checked={isEnabled} onCheckedChange={handleToggle} disabled={!isAdmin} />}
 		>
 			{isEnabled && (
-				<div className='space-y-4'>
-					<p className='text-sm text-muted-foreground'>
+				<div className={styles.settingsTranscribeDiv}>
+					<p className={styles.settingsTranscribeP}>
 						Configure the speech-to-text provider and model used for voice input in the chat.
 					</p>
 
 					{hasNoProviders ? (
-						<p className='text-sm text-muted-foreground'>
+						<p className={styles.settingsTranscribeP}>
 							Transcription compatible provider API key (
 							{allProviders.map(([name]) => capitalize(name)).join(', ')}) must be configured in the{' '}
-							<span className='font-medium text-foreground'>LLM Configuration</span> section above.
+							<span className={styles.settingsTranscribeSpan}>LLM Configuration</span> section above.
 						</p>
 					) : (
 						<>
-							<div className='grid gap-2'>
-								<label className='text-sm font-medium text-foreground'>Provider</label>
+							<div className={styles.settingsTranscribeDiv2}>
+								<label className={styles.settingsTranscribeLabel}>Provider</label>
 								<Select
 									value={currentProvider}
 									onValueChange={handleProviderChange}
 									disabled={!isAdmin || isMutating || isTesting || providerNames.length <= 1}
 								>
-									<SelectTrigger className='w-full'>
+									<SelectTrigger className={styles.settingsTranscribeSelectTrigger}>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -107,14 +108,14 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 								</Select>
 							</div>
 
-							<div className='grid gap-2'>
-								<label className='text-sm font-medium text-foreground'>Model</label>
+							<div className={styles.settingsTranscribeDiv2}>
+								<label className={styles.settingsTranscribeLabel}>Model</label>
 								<Select
 									value={currentModelId}
 									onValueChange={handleModelChange}
 									disabled={!isAdmin || isMutating || isTesting || providerModels.length === 0}
 								>
-									<SelectTrigger className='w-full'>
+									<SelectTrigger className={styles.settingsTranscribeSelectTrigger}>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -122,7 +123,7 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 											<SelectItem key={model.id} value={model.id}>
 												{model.name}
 												{model.pricePerMinute != null && (
-													<span className='text-muted-foreground'>
+													<span className={styles.settingsTranscribeSpan2}>
 														${model.pricePerMinute}/min
 													</span>
 												)}
@@ -132,8 +133,8 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 								</Select>
 							</div>
 
-							<div className='space-y-2'>
-								<div className='flex items-center gap-3'>
+							<div className={styles.settingsTranscribeDiv3}>
+								<div className={styles.settingsTranscribeDiv4}>
 									<Button
 										variant='outline'
 										size='sm'
@@ -142,23 +143,23 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 									>
 										{testState === 'recording' ? (
 											<>
-												<Mic className='size-3.5 text-red-500 animate-pulse' />
+												<Mic className={styles.settingsTranscribeMic} />
 												Recording… {countdown}s
 											</>
 										) : testState === 'transcribing' ? (
 											<>
-												<Loader2 className='size-3.5 animate-spin' />
+												<Loader2 className={styles.settingsTranscribeLoader2} />
 												Transcribing…
 											</>
 										) : (
 											<>
-												<Mic className='size-3.5' />
+												<Mic className={styles.settingsTranscribeMic2} />
 												Test
 											</>
 										)}
 									</Button>
 									{testState === 'idle' && testResult === null && (
-										<span className='text-xs text-muted-foreground'>
+										<span className={styles.settingsTranscribeSpan3}>
 											Records 5s of audio to verify transcription
 										</span>
 									)}
@@ -166,24 +167,22 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 
 								{testResult && (
 									<div
-										className={`rounded-md border px-3 py-2 text-sm ${
-											testResult.success
-												? 'border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200'
-												: 'border-destructive/30 bg-destructive/10 text-destructive'
-										}`}
+										className={`${styles.settingsTranscribeDiv5} ${testResult.success
+												? styles.state100
+												: styles.state101}`}
 									>
 										{testResult.success ? (
 											<p>
-												<span className='font-medium'>Transcript: </span>
+												<span className={styles.settingsTranscribeSpan4}>Transcript: </span>
 												{testResult.text || (
-													<span className='italic text-muted-foreground'>
+													<span className={styles.settingsTranscribeSpan5}>
 														(no speech detected)
 													</span>
 												)}
 											</p>
 										) : (
-											<p className='flex items-center gap-1.5'>
-												<X className='size-3.5 shrink-0' />
+											<p className={styles.settingsTranscribeP2}>
+												<X className={styles.settingsTranscribeX} />
 												{testResult.error}
 											</p>
 										)}
@@ -196,8 +195,8 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 			)}
 
 			{!isEnabled && (
-				<div className='space-y-2'>
-					<p className='text-sm text-muted-foreground'>
+				<div className={styles.settingsTranscribeDiv3}>
+					<p className={styles.settingsTranscribeP}>
 						Transcription is disabled. Enable it to use voice input in the chat.
 					</p>
 				</div>

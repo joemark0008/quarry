@@ -1,6 +1,7 @@
 import type { ModelInferenceSettings, ParamControl, ParamKey, ReasoningEffort } from '@quarry/api/agent/types/llm';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import styles from './model-parameters-fields.module.css';
 
 export type ParamValues = Partial<Record<ParamKey, string>>;
 export type ParamErrors = Partial<Record<ParamKey, string>>;
@@ -27,13 +28,13 @@ export function ModelParametersFields({ controls, values, onValueChange, errors 
 	const hidesSamplingWhileThinking = controls.some((c) => isSamplingHiddenByThinking(c, thinkingActive));
 
 	return (
-		<div className='grid gap-4'>
+		<div className={styles.modelParametersFieldsDiv}>
 			{effortControls.map((control) => {
 				const current = values.reasoningEffort ?? 'off';
 				return (
-					<div key={control.key} className='grid gap-1.5'>
-						<span className='text-sm font-medium text-foreground'>{control.label}</span>
-						<div className='flex flex-wrap gap-1.5'>
+					<div key={control.key} className={styles.modelParametersFieldsDiv2}>
+						<span className={styles.modelParametersFieldsSpan}>{control.label}</span>
+						<div className={styles.modelParametersFieldsDiv3}>
 							{control.options.map((option) => {
 								const isActive = current === option;
 								return (
@@ -41,10 +42,7 @@ export function ModelParametersFields({ controls, values, onValueChange, errors 
 										key={option}
 										type='button'
 										onClick={() => onValueChange('reasoningEffort', option)}
-										className={`
-											px-3 py-1.5 rounded-md text-sm capitalize transition-all cursor-pointer
-											${isActive ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-foreground'}
-										`}
+										className={`${styles.modelParametersFieldsButton} ${isActive ? styles.state100 : styles.state101} `}
 									>
 										{option === 'off' ? 'Default' : option}
 									</button>
@@ -56,7 +54,7 @@ export function ModelParametersFields({ controls, values, onValueChange, errors 
 			})}
 
 			{fieldControls.length > 0 && (
-				<div className='grid grid-cols-2 items-start gap-3'>
+				<div className={styles.modelParametersFieldsDiv4}>
 					{fieldControls.map((control) => {
 						if (control.kind === 'select' || control.kind === 'boolean') {
 							return (
@@ -81,7 +79,7 @@ export function ModelParametersFields({ controls, values, onValueChange, errors 
 				</div>
 			)}
 
-			<p className='text-xs text-muted-foreground'>
+			<p className={styles.modelParametersFieldsP}>
 				{hidesSamplingWhileThinking
 					? 'Temperature, Top P and Top K are hidden because this model ignores them while thinking is on.'
 					: 'Leave a field empty to use the model default.'}
@@ -108,15 +106,15 @@ function SelectField({
 			: control.options.map((option) => ({ value: option, label: option }));
 
 	return (
-		<div className='grid gap-1'>
-			<label htmlFor={`model-param-${control.key}`} className='text-xs font-medium text-muted-foreground'>
+		<div className={styles.selectFieldDiv}>
+			<label htmlFor={`model-param-${control.key}`} className={styles.selectFieldLabel}>
 				{control.label}
 			</label>
 			<Select
 				value={value || DEFAULT_SENTINEL}
 				onValueChange={(next) => onValueChange(control.key, next === DEFAULT_SENTINEL ? '' : next)}
 			>
-				<SelectTrigger id={`model-param-${control.key}`} className='w-full'>
+				<SelectTrigger id={`model-param-${control.key}`} className={styles.selectFieldSelectTrigger}>
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>
@@ -145,8 +143,8 @@ function NumberField({
 }) {
 	const exclusiveActive = control.exclusiveWith !== undefined && (values[control.exclusiveWith] ?? '').trim() !== '';
 	return (
-		<div className='grid gap-1'>
-			<label htmlFor={`model-param-${control.key}`} className='text-xs font-medium text-muted-foreground'>
+		<div className={styles.selectFieldDiv}>
+			<label htmlFor={`model-param-${control.key}`} className={styles.selectFieldLabel}>
 				{control.label}
 			</label>
 			<Input
@@ -158,15 +156,15 @@ function NumberField({
 				max={control.max}
 				disabled={exclusiveActive}
 				aria-invalid={!!error}
-				className={error ? 'border-destructive focus-visible:ring-destructive' : undefined}
+				className={error ? styles.numberFieldInput : undefined}
 				placeholder={control.placeholder}
 				value={values[control.key] ?? ''}
 				onChange={(e) => onValueChange(control.key, e.target.value)}
 			/>
 			{error ? (
-				<span className='text-xs text-destructive'>{error}</span>
+				<span className={styles.numberFieldSpan}>{error}</span>
 			) : exclusiveActive ? (
-				<span className='text-xs text-muted-foreground'>Ignored while Temperature is set.</span>
+				<span className={styles.modelParametersFieldsP}>Ignored while Temperature is set.</span>
 			) : null}
 		</div>
 	);

@@ -333,10 +333,10 @@ export function injectTableFormatting(
 }
 
 export const GRID_CLASSES: Record<number, string> = {
-	1: 'grid-cols-1',
-	2: 'grid-cols-1 @lg:grid-cols-2',
-	3: 'grid-cols-1 @lg:grid-cols-2 @xl:grid-cols-3',
-	4: 'grid-cols-1 @lg:grid-cols-2 @xl:grid-cols-3 @2xl:grid-cols-4',
+	1: 'quarry-shared-gridclasses1-d7c833',
+	2: 'quarry-shared-gridclasses2-ab5e5a',
+	3: 'quarry-shared-gridclasses3-6c2750',
+	4: 'quarry-shared-gridclasses4-fc833b',
 };
 
 export function getGridClass(cols: number): string {

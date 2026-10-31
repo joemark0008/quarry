@@ -8,6 +8,7 @@ import { getFileName, getReadContextLabel } from '@/lib/file-path';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './read.module.css';
 
 export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'read'>) => {
 	const { isSettled } = useToolCallContext();
@@ -19,7 +20,7 @@ export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 	const titleContext = contextLabel ? (
 		<>
 			{' '}
-			from <code className='text-xs font-[Geist]! bg-accent/70! px-1 py-0.5 rounded'>{contextLabel}</code>
+			from <code className={styles.titleContextCode}>{contextLabel}</code>
 		</>
 	) : null;
 
@@ -32,7 +33,7 @@ export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 					) : (
 						<>
 							Reading...{' '}
-							<code className='text-xs font-[Geist]! bg-accent/70! px-1 py-0.5 rounded'>{fileName}</code>
+							<code className={styles.titleContextCode}>{fileName}</code>
 							{titleContext}
 						</>
 					)
@@ -48,7 +49,7 @@ export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 					<McpReadTitle target={mcpTarget} isSettled={true} />
 				) : (
 					<>
-						Read <code className='text-xs font-[Geist]! bg-accent/70! px-1 py-0.5 rounded'>{fileName}</code>
+						Read <code className={styles.titleContextCode}>{fileName}</code>
 						{titleContext}
 					</>
 				)
@@ -56,19 +57,19 @@ export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 			badge={output && `${output.numberOfTotalLines} lines`}
 		>
 			{output && (
-				<div className='border rounded-lg'>
+				<div className={styles.readToolCallDiv}>
 					{input?.file_path && (
-						<div className='px-3 py-2 border-b'>
+						<div className={styles.readToolCallDiv2}>
 							<FilePathBreadcrumb filePath={input.file_path} />
 						</div>
 					)}
-					<div className='overflow-auto max-h-200 hide-code-header markdown-small'>
+					<div className={`${styles.readToolCallDiv3} hide-code-header`}>
 						<Streamdown
 							linkSafety={markdownLinkSafety}
 							mode='static'
 							controls={false}
 							plugins={markdownPlugins}
-							className='py-10 px-24'
+							className={styles.readToolCallStreamdown}
 						>
 							{toMarkdown(output.content, filePath)}
 						</Streamdown>
@@ -175,10 +176,10 @@ const FilePathBreadcrumb = ({ filePath }: { filePath: string }) => {
 	const segments = filePath.split('/').filter(Boolean);
 
 	return (
-		<span className='text-[11px] font-mono break-all leading-relaxed'>
+		<span className={styles.filePathBreadcrumbSpan}>
 			{segments.map((segment, i) => (
 				<span key={i}>
-					{i > 0 && <span className='text-muted-foreground/60 mx-1'>›</span>}
+					{i > 0 && <span className={styles.filePathBreadcrumbSpan2}>›</span>}
 					{segment}
 				</span>
 			))}

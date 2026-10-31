@@ -5,6 +5,7 @@ import { OpenInQuarryButton } from './open-in-quarry-button';
 import type { CustomBoundarySet, MapPoint, McpMapEmbedStoredConfig } from '@quarry/shared';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import styles from './map-app-view.module.css';
 
 const MapView = lazy(() => import('@/components/tool-calls/display-map-view'));
 
@@ -33,16 +34,16 @@ export const MapAppView = memo(function MapAppView({
 	const isTruncated = !isChoropleth && points.length > MAX_MAP_POINTS;
 
 	return (
-		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
+		<div className={styles.mapAppViewDiv}>
 			<McpAppHeader title={config.title}>
 				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
 			</McpAppHeader>
-			<div className='min-h-0 flex-1 overflow-auto'>
-				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>
+			<div className={styles.mapAppViewDiv2}>
+				<div className={styles.mapAppViewDiv3}>
 					{errorMessage ? (
-						<div className='my-2 text-foreground/50 text-sm'>{errorMessage}</div>
+						<div className={styles.mapAppViewDiv4}>{errorMessage}</div>
 					) : (
-						<Suspense fallback={<Skeleton className='w-full aspect-3/2 rounded-lg' />}>
+						<Suspense fallback={<Skeleton className={styles.mapAppViewSkeleton} />}>
 							<MapView
 								points={visiblePoints}
 								rows={data}
@@ -53,7 +54,7 @@ export const MapAppView = memo(function MapAppView({
 						</Suspense>
 					)}
 					{isTruncated && (
-						<span className='mt-2 px-1 text-xs text-foreground/50'>
+						<span className={styles.mapAppViewSpan}>
 							Showing the first {MAX_MAP_POINTS.toLocaleString()} of {points.length.toLocaleString()}{' '}
 							points.
 						</span>

@@ -2,25 +2,26 @@
 import { classVariants, cn } from '@/lib/utils';
 import type { VariantProps } from '@/lib/utils';
 import { hashValue } from '@/lib/hash';
+import styles from './avatar.module.css';
 
 const avatarColors = [
-	'bg-red-500',
-	'bg-orange-500',
-	'bg-amber-500',
-	'bg-yellow-500',
-	'bg-lime-500',
-	'bg-green-500',
-	'bg-emerald-500',
-	'bg-teal-500',
-	'bg-cyan-500',
-	'bg-sky-500',
-	'bg-blue-500',
-	'bg-indigo-500',
-	'bg-violet-500',
-	'bg-purple-500',
-	'bg-fuchsia-500',
-	'bg-pink-500',
-	'bg-rose-500',
+	styles.avatarColors,
+	styles.avatarColors2,
+	styles.avatarColors3,
+	styles.avatarColors4,
+	styles.avatarColors5,
+	styles.avatarColors6,
+	styles.avatarColors7,
+	styles.avatarColors8,
+	styles.avatarColors9,
+	styles.avatarColors10,
+	styles.avatarColors11,
+	styles.avatarColors12,
+	styles.avatarColors13,
+	styles.avatarColors14,
+	styles.avatarColors15,
+	styles.avatarColors16,
+	styles.avatarColors17,
 ];
 
 function getInitials(username: string): string {
@@ -36,13 +37,13 @@ function getColorClass(username: string): string {
 	return avatarColors[hash % avatarColors.length];
 }
 
-const avatarVariants = classVariants('inline-flex items-center justify-center rounded-full font-medium text-white select-none', {
+const avatarVariants = classVariants(styles.avatarVariants, {
 	variants: {
 		size: {
-			sm: 'size-6 text-xs',
-			default: 'size-8 text-sm',
-			lg: 'size-10 text-base',
-			xl: 'size-12 text-lg',
+			sm: styles.avatarVariantsSm,
+			default: styles.avatarVariantsDefault,
+			lg: styles.avatarVariantsLg,
+			xl: styles.avatarVariantsXl,
 		},
 	},
 	defaultVariants: {

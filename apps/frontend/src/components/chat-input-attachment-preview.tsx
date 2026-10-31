@@ -3,6 +3,7 @@ import { AlertTriangle, Loader2, X } from 'lucide-react';
 import type { Attachment } from '@/hooks/use-attachment-upload';
 import { AttachmentFileIcon } from '@/components/attachment-file-icon';
 import { cn, formatBytes } from '@/lib/utils';
+import styles from './chat-input-attachment-preview.module.css';
 
 interface ChatInputAttachmentPreviewProps {
 	attachments: Attachment[];
@@ -15,11 +16,11 @@ export function ChatInputAttachmentPreview({ attachments, rejection, onRemove }:
 
 	return (
 		<div
-			className='grid w-full transition-[grid-template-rows] duration-200 ease-out'
+			className={styles.chatInputAttachmentPreviewDiv}
 			style={{ gridTemplateRows: isVisible ? '1fr' : '0fr' }}
 		>
-			<div className='overflow-hidden'>
-				<div className='flex gap-2 px-3 pt-3 pb-1 flex-wrap justify-start items-start'>
+			<div className={styles.chatInputAttachmentPreviewDiv2}>
+				<div className={styles.chatInputAttachmentPreviewDiv3}>
 					{attachments.map((attachment) =>
 						attachment.kind === 'image' ? (
 							<ImagePreview key={attachment.id} attachment={attachment} onRemove={onRemove} />
@@ -29,8 +30,8 @@ export function ChatInputAttachmentPreview({ attachments, rejection, onRemove }:
 					)}
 				</div>
 				{rejection && (
-					<p className='flex items-start gap-1.5 px-3 pb-1 text-xs text-muted-foreground'>
-						<AlertTriangle className='size-3.5 shrink-0 mt-px text-amber-500' />
+					<p className={styles.chatInputAttachmentPreviewP}>
+						<AlertTriangle className={styles.chatInputAttachmentPreviewAlertTriangle} />
 						{rejection}
 					</p>
 				)}
@@ -43,15 +44,15 @@ function ImagePreview({ attachment, onRemove }: { attachment: Attachment; onRemo
 	return (
 		<PreviewShell attachment={attachment} onRemove={onRemove}>
 			{attachment.error ? (
-				<div className='size-16 rounded-lg border border-destructive/50 flex flex-col gap-1 items-center justify-center px-1 text-center'>
-					<AlertTriangle className='size-4 text-destructive' />
-					<span className='line-clamp-2 text-[10px] leading-tight text-destructive'>{attachment.error}</span>
+				<div className={styles.imagePreviewDiv}>
+					<AlertTriangle className={styles.imagePreviewAlertTriangle} />
+					<span className={styles.imagePreviewSpan}>{attachment.error}</span>
 				</div>
 			) : attachment.dataUrl ? (
-				<img src={attachment.dataUrl} alt='' className='size-16 rounded-lg object-cover border border-border' />
+				<img src={attachment.dataUrl} alt='' className={styles.imagePreviewImg} />
 			) : (
-				<div className='size-16 rounded-lg border border-border flex items-center justify-center'>
-					<Loader2 className='size-4 animate-spin text-muted-foreground' />
+				<div className={styles.imagePreviewDiv2}>
+					<Loader2 className={styles.imagePreviewLoader2} />
 				</div>
 			)}
 		</PreviewShell>
@@ -65,21 +66,21 @@ function DocumentPreview({ attachment, onRemove }: { attachment: Attachment; onR
 		<PreviewShell attachment={attachment} onRemove={onRemove}>
 			<div
 				className={cn(
-					'flex h-16 max-w-56 items-center gap-2 rounded-lg border border-border px-2.5',
-					attachment.error && 'border-destructive/50',
+					styles.documentPreviewDiv,
+					attachment.error && styles.documentPreviewDiv2,
 				)}
 			>
 				{isUploading ? (
-					<Loader2 className='size-4 shrink-0 animate-spin text-muted-foreground' />
+					<Loader2 className={styles.documentPreviewLoader2} />
 				) : (
-					<AttachmentFileIcon fileName={attachment.name} className='size-4 shrink-0' />
+					<AttachmentFileIcon fileName={attachment.name} className={styles.documentPreviewAttachmentFileIcon} />
 				)}
-				<div className='min-w-0'>
-					<p className='truncate text-xs font-medium'>{attachment.name}</p>
+				<div className={styles.documentPreviewDiv3}>
+					<p className={styles.documentPreviewP}>{attachment.name}</p>
 					<p
 						className={cn(
-							'truncate text-[11px]',
-							attachment.error ? 'text-destructive' : 'text-muted-foreground',
+							styles.documentPreviewP2,
+							attachment.error ? styles.documentPreviewP3 : styles.documentPreviewP4,
 						)}
 					>
 						{attachment.error ??
@@ -105,15 +106,15 @@ function PreviewShell({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className='relative group/preview animate-in fade-in zoom-in-75 duration-200'>
+		<div className={`${styles.previewShellDiv} group/preview`}>
 			{children}
 			<button
 				type='button'
 				aria-label={`Remove ${attachment.name}`}
 				onClick={() => onRemove(attachment.id)}
-				className='absolute -top-1.5 -right-1.5 size-5 rounded-full bg-foreground text-background flex items-center justify-center opacity-0 group-hover/preview:opacity-100 transition-opacity cursor-pointer'
+				className={styles.previewShellButton}
 			>
-				<X className='size-3' />
+				<X className={styles.previewShellX} />
 			</button>
 		</div>
 	);

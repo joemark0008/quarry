@@ -1,0 +1,142 @@
+.taskToolCallDiv {
+	margin-inline: -0.75rem;
+}
+.taskToolCallSubagentLink {
+	display: block;
+}
+.cardDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	border-radius: var(--app-radius);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	border-color: var(--app-line);
+	padding-inline: 0.75rem;
+	padding-block: 0.625rem;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	transition-property:
+		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
+		--fx-gradient-via, --fx-gradient-to;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+}
+.cardDiv2 {
+	cursor: pointer;
+	@media (hover: hover) {
+		&:hover {
+			background-color: var(--app-fill);
+		}
+	}
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--app-fill) 40%, transparent);
+		}
+	}
+}
+.cardDiv3 {
+	display: flex;
+	min-width: 0px;
+	align-items: center;
+	gap: 0.5rem;
+}
+.cardSpan {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	--fx-font-weight: 500;
+	font-weight: 500;
+}
+.cardSpan2 {
+	color: transparent;
+	background-clip: text !important;
+	animation: shimmer 1.5s linear infinite;
+	background:
+		radial-gradient(circle at center, rgba(255, 255, 255, 0.8), transparent) -200% 50% / 200% 100% no-repeat,
+		var(--app-muted);
+	&:is(:root[data-mantine-color-scheme='dark'] *) {
+		background:
+			radial-gradient(circle at center, rgb(0 0 0 / 80), transparent) -200% 50% / 200% 100% no-repeat,
+			var(--app-muted);
+	}
+}
+.cardSpan3 {
+	margin-left: auto;
+	flex-shrink: 0;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}
+.cardArrowUpRight {
+	width: 0.875rem;
+	height: 0.875rem;
+	flex-shrink: 0;
+	color: var(--app-muted);
+}
+.cardP {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	color: color-mix(in oklab, var(--app-text) 70%, transparent);
+	font-style: italic;
+}
+.cardP2 {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-red-500);
+}
+.compactRowDiv {
+	display: flex;
+	min-width: 0px;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+}
+.compactRowDiv2 {
+	cursor: pointer;
+}
+.compactRowDiv3 {
+	display: flex;
+	width: 0.75rem;
+	height: 0.75rem;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+}
+.compactRowSpan {
+	display: flex;
+	min-width: 0px;
+	align-items: baseline;
+	gap: 0.625rem;
+}
+.compactRowSpan2 {
+	flex-shrink: 0;
+	color: var(--app-text);
+}
+.compactRowSpan3 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}
+.statusIconSpinner {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex-shrink: 0;
+}
+.statusIconDiv {
+	width: 0.5rem;
+	height: 0.5rem;
+	flex-shrink: 0;
+	border-radius: calc(infinity * 1px);
+	background-color: var(--app-red-500);
+}

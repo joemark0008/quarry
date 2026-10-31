@@ -9,6 +9,7 @@ import { decodeFromAttr } from './story-editor-utils';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import { StoryBlock } from '@/components/story-block';
 import { EditorStoryChartEditProvider } from '@/contexts/story-chart-edit';
+import styles from './story-editor-chart-block.module.css';
 
 function ChartBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewProps) {
 	const rawTag = node.attrs.rawTag as string;
@@ -34,7 +35,7 @@ function ChartBlockView({ node, editor, getPos, updateAttributes }: ReactNodeVie
 	if (!chart) {
 		return (
 			<NodeViewWrapper draggable data-type='chart-block'>
-				<div className='my-2 rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
+				<div className={styles.chartBlockViewDiv}>
 					Invalid chart block
 				</div>
 			</NodeViewWrapper>
@@ -43,9 +44,9 @@ function ChartBlockView({ node, editor, getPos, updateAttributes }: ReactNodeVie
 
 	return (
 		<NodeViewWrapper draggable data-type='chart-block'>
-			<div className='group relative my-2' draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+			<div className={`${styles.chartBlockViewDiv2} group`} draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
 				<StoryBlockDropZones node={node} editor={editor} getPos={getPos} />
-				<div contentEditable={false} className='absolute -left-10 top-2 z-20'>
+				<div contentEditable={false} className={styles.chartBlockViewDiv3}>
 					<StoryBlockDragGrip node={node} editor={editor} getPos={getPos} />
 				</div>
 				<EditorStoryChartEditProvider onReplaceTag={handleReplaceTag}>

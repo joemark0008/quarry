@@ -2,23 +2,24 @@ import { ChevronDown } from 'lucide-react';
 import type { SortField, SortState } from '@/lib/stories-page';
 import { defaultSortDirection } from '@/lib/stories-page';
 import { cn } from '@/lib/utils';
+import styles from './stories-sort-header.module.css';
 
 export function SortHeader({ value, onChange }: { value: SortState; onChange: (next: SortState) => void }) {
 	return (
-		<div className='flex items-center gap-3 px-3 pb-2 mb-1'>
-			<div className='flex-1 min-w-0 flex items-center'>
+		<div className={styles.sortHeaderDiv}>
+			<div className={styles.sortHeaderDiv2}>
 				<SortPill label='Name' field='name' value={value} onChange={onChange} />
 			</div>
-			<div className='hidden md:flex w-32 shrink-0 items-center'>
+			<div className={styles.sortHeaderDiv3}>
 				<SortPill label='Owner' field='owner' value={value} onChange={onChange} />
 			</div>
-			<div className='hidden lg:flex w-16 shrink-0 items-center'>
+			<div className={styles.sortHeaderDiv4}>
 				<SortPill label='Views' field='views' value={value} onChange={onChange} />
 			</div>
-			<div className='hidden sm:flex w-24 shrink-0 items-center'>
+			<div className={styles.sortHeaderDiv5}>
 				<SortPill label='Updated' field='updated' value={value} onChange={onChange} />
 			</div>
-			<div className='w-26 shrink-0' />
+			<div className={styles.sortHeaderDiv6} />
 		</div>
 	);
 }
@@ -50,12 +51,12 @@ function SortPill({
 			type='button'
 			onClick={handleClick}
 			className={cn(
-				'flex items-center gap-0.5 px-1.5 py-1 rounded text-xs transition-colors cursor-pointer select-none',
-				isActive ? 'text-muted-foreground' : 'text-muted-foreground/40 hover:text-muted-foreground/70',
+				styles.sortPillButton,
+				isActive ? styles.sortPillButton2 : styles.sortPillButton3,
 			)}
 		>
 			<span>{label}</span>
-			<ChevronDown size={12} className={cn('transition-transform', showsAscending && 'rotate-180')} />
+			<ChevronDown size={12} className={cn(styles.sortPillChevronDown, showsAscending && styles.sortPillChevronDown2)} />
 		</button>
 	);
 }

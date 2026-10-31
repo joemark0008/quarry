@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
 import { SHORTCUTS } from '@/lib/keyboard-shortcuts';
+import styles from './keyboard-shortcuts-dialog.module.css';
 
 type KeyboardShortcutsDialogProps = {
 	open: boolean;
@@ -12,32 +13,32 @@ export function KeyboardShortcutsDialog({ open, onOpenChange }: KeyboardShortcut
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.keyboardShortcutsDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Keyboard shortcuts</DialogTitle>
 					<DialogDescription className='sr-only'>
 						List of available keyboard shortcuts and their key combinations.
 					</DialogDescription>
 				</DialogHeader>
-				<div className='space-y-5'>
+				<div className={styles.keyboardShortcutsDialogDiv}>
 					{groups.map((group) => (
-						<section key={group} className='space-y-2'>
-							<h3 className='text-xs font-medium text-muted-foreground'>{group}</h3>
-							<div className='space-y-1'>
+						<section key={group} className={styles.keyboardShortcutsDialogSection}>
+							<h3 className={styles.keyboardShortcutsDialogH3}>{group}</h3>
+							<div className={styles.keyboardShortcutsDialogDiv2}>
 								{SHORTCUTS.filter((entry) => entry.group === group).map((entry) => (
 									<div
 										key={entry.id}
-										className='flex items-center justify-between gap-4 py-1 text-sm'
+										className={styles.keyboardShortcutsDialogDiv3}
 									>
 										<span>{entry.label}</span>
-										<div className='flex items-center gap-1.5'>
+										<div className={styles.keyboardShortcutsDialogDiv4}>
 											<Kbd shortcut={entry.shortcut} />
 											{entry.alternateShortcuts?.map((shortcut, index) => (
 												<span
 													key={`${entry.id}-alternate-${index}`}
-													className='flex items-center gap-1.5'
+													className={styles.keyboardShortcutsDialogDiv4}
 												>
-													<span className='text-muted-foreground'>·</span>
+													<span className={styles.keyboardShortcutsDialogSpan}>·</span>
 													<Kbd shortcut={shortcut} />
 												</span>
 											))}

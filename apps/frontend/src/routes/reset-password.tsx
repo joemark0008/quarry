@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { resetPassword } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/components/auth-form';
 import { useRedirectIfSmtpNotSetup } from '@/hooks/useRedirectIfSmtpNotSetup';
+import styles from './reset-password.module.css';
 
 export const Route = createFileRoute('/reset-password')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -42,14 +43,14 @@ function ResetPassword() {
 
 	if (tokenError === 'INVALID_TOKEN' || !token) {
 		return (
-			<div className='mx-auto w-full max-w-md p-8 my-auto text-center'>
-				<h1 className='text-2xl font-semibold mb-4'>Invalid or expired link</h1>
-				<p className='text-muted-foreground mb-6'>
+			<div className={styles.resetPasswordDiv}>
+				<h1 className={styles.resetPasswordH1}>Invalid or expired link</h1>
+				<p className={styles.resetPasswordP}>
 					This password reset link is no longer valid. Please request a new one.
 				</p>
 				<Link
 					to='/forgot-password'
-					className='text-xs text-foreground font-medium underline underline-offset-2'
+					className={styles.resetPasswordLink}
 				>
 					Request a new link
 				</Link>
@@ -59,13 +60,13 @@ function ResetPassword() {
 
 	return (
 		<AuthForm form={form} title='Reset password' submitText='Set new password' serverError={serverError}>
-			<FormTextField form={form} name='newPassword' type='password' title='New password' className='mb-6' />
+			<FormTextField form={form} name='newPassword' type='password' title='New password' className={styles.resetPasswordFormTextField} />
 			<FormTextField
 				form={form}
 				name='confirmPassword'
 				type='password'
 				title='Confirm new password'
-				className='mb-10'
+				className={styles.resetPasswordFormTextField2}
 			/>
 		</AuthForm>
 	);

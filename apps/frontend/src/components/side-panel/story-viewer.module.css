@@ -1,0 +1,37 @@
+.classicStoryViewerDiv {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+.classicStoryViewerDiv2 {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	color: var(--app-muted);
+}
+.contentDiv {
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+}
+.contentStoryTabsBar {
+	padding-inline: 1.5rem;
+}
+.contentDiv2 {
+	min-height: 0px;
+	flex: 1;
+	overflow: auto;
+}
+.contentStoryThemeProvider {
+	height: auto;
+	min-height: 100%;
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+.contentStoryTabbedEditor {
+	padding: 1.5rem;
+}

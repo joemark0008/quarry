@@ -1,0 +1,25 @@
+.actionsTerminal {
+	width: 0.75rem;
+	height: 0.75rem;
+	color: color-mix(in oklab, var(--app-muted) 70%, transparent);
+}
+.executePythonToolCallSpan {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	--fx-font-weight: 400;
+	font-weight: 400;
+}
+.executePythonToolCallDiv {
+	max-height: 20rem;
+	overflow: auto;
+}
+.executePythonToolCallPre {
+	overflow: auto;
+	border-radius: 0.25rem;
+	font-family: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+}

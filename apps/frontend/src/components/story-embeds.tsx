@@ -13,6 +13,7 @@ import { ChartDisplay } from '@/components/tool-calls/display-chart';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
+import styles from './story-embeds.module.css';
 
 export type QueryDataMap = Record<string, { data: Record<string, unknown>[]; columns: string[] }>;
 type EmbedData = QueryDataMap[string];
@@ -23,7 +24,7 @@ export interface LiveQueryConfig {
 
 function EmbedPlaceholder({ children }: { children: React.ReactNode }) {
 	return (
-		<div className='my-2 rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
+		<div className={styles.embedPlaceholderDiv}>
 			{children}
 		</div>
 	);
@@ -32,8 +33,8 @@ function EmbedPlaceholder({ children }: { children: React.ReactNode }) {
 function EmbedLoading({ label = 'Loading live data...' }: { label?: string }) {
 	return (
 		<EmbedPlaceholder>
-			<span className='flex items-center justify-center'>
-				<Loader2 className='size-4 animate-spin mr-2' />
+			<span className={styles.embedLoadingSpan}>
+				<Loader2 className={styles.embedLoadingLoader2} />
 				{label}
 			</span>
 		</EmbedPlaceholder>
@@ -42,11 +43,11 @@ function EmbedLoading({ label = 'Loading live data...' }: { label?: string }) {
 
 function EmbedRefreshing({ children, isRefreshing }: { children: React.ReactNode; isRefreshing: boolean }) {
 	return (
-		<div className='relative h-full'>
-			<div className={cn('h-full transition-opacity duration-150', isRefreshing && 'opacity-50')}>{children}</div>
+		<div className={styles.embedRefreshingDiv}>
+			<div className={cn(styles.embedRefreshingDiv2, isRefreshing && styles.embedRefreshingDiv3)}>{children}</div>
 			{isRefreshing && (
-				<div className='pointer-events-none absolute inset-0 flex items-center justify-center'>
-					<Loader2 className='size-5 animate-spin text-muted-foreground' />
+				<div className={styles.embedRefreshingDiv4}>
+					<Loader2 className={styles.embedRefreshingLoader2} />
 				</div>
 			)}
 		</div>

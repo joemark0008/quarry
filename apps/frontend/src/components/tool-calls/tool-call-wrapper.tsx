@@ -10,6 +10,7 @@ import { useIsInToolGroup } from '@/contexts/tool-group';
 import { ToolCallActionsProvider } from '@/contexts/tool-call-actions';
 import { useMemoObject } from '@/hooks/useMemoObject';
 import { ExportDataMenu } from '@/components/export-data-menu';
+import styles from './tool-call-wrapper.module.css';
 
 interface ExportAction {
 	columns: string[];
@@ -79,14 +80,14 @@ export const ToolCallWrapper = ({
 	const showChevron = isSettled && (!hasError || isHovering);
 
 	const statusIcon = showChevron ? undefined : hasError ? (
-		<div className='size-2 rounded-full bg-red-500' />
+		<div className={styles.statusIconDiv} />
 	) : (
-		<Spinner className='size-3 opacity-50' />
+		<Spinner className={styles.statusIconSpinner} />
 	);
 
 	const actionsContent =
 		(isHovering || isExpanded || isMenuOpen) && actions && actions.length > 0 ? (
-			<div className={cn('flex items-center gap-1 shrink-0 -my-1')}>
+			<div className={cn(styles.actionsContentDiv)}>
 				{actions.map((action) => {
 					if ('export' in action) {
 						return (
@@ -96,7 +97,7 @@ export const ToolCallWrapper = ({
 										variant='ghost-muted'
 										size='icon-xs'
 										title={action.title}
-										className='rounded-full hover:bg-accent/70'
+										className={styles.actionsContentButton}
 									>
 										{action.label}
 									</Button>
@@ -118,7 +119,7 @@ export const ToolCallWrapper = ({
 								action.onClick();
 							}}
 							title={action.title}
-							className={cn('rounded-full hover:bg-accent/70', action.isActive ? 'bg-accent/70' : '')}
+							className={cn(styles.actionsContentButton, action.isActive ? styles.actionsContentButton2 : '')}
 						>
 							{action.label}
 						</Button>
@@ -128,11 +129,11 @@ export const ToolCallWrapper = ({
 		) : undefined;
 
 	const errorContent = isBordered ? (
-		<pre className='p-3 overflow-auto max-h-80 m-0 text-red-400 whitespace-pre-wrap wrap-break-word'>
+		<pre className={styles.errorContentPre}>
 			{toolPart.errorText}
 		</pre>
 	) : (
-		<pre className='p-2 overflow-auto max-h-80 m-0'>{toolPart.errorText}</pre>
+		<pre className={styles.errorContentPre2}>{toolPart.errorText}</pre>
 	);
 
 	const contentToShow = toolPart.errorText && !overrideError ? errorContent : children;
@@ -142,7 +143,7 @@ export const ToolCallWrapper = ({
 			<div
 				onMouseEnter={() => setIsHovering(true)}
 				onMouseLeave={() => setIsHovering(false)}
-				className={cn(isBordered && '-mx-3')}
+				className={cn(isBordered && styles.toolCallWrapperDiv)}
 				data-replay-target-id={toolPart.toolCallId}
 				{...(hasError && {
 					'data-replay-nav': 'tool-error',

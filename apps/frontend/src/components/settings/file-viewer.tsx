@@ -36,6 +36,7 @@ import { isForbiddenError } from '@/lib/api-error';
 import { cn } from '@/lib/utils';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './file-viewer.module.css';
 
 export { isRootRulesPath } from '@quarry/shared/rules-template';
 
@@ -93,16 +94,16 @@ export function FileViewer({
 }: FileViewerProps) {
 	if (!filePath) {
 		return (
-			<div className='flex flex-col items-center justify-center h-full text-muted-foreground gap-2'>
-				<File className='size-10 opacity-20' />
-				<p className='text-sm'>Select a file to view its contents</p>
+			<div className={styles.fileViewerDiv}>
+				<File className={styles.fileViewerFile} />
+				<p className={styles.fileViewerP}>Select a file to view its contents</p>
 			</div>
 		);
 	}
 
 	if (isLoading) {
 		return (
-			<div className='flex items-center justify-center h-full'>
+			<div className={styles.fileViewerDiv2}>
 				<Spinner />
 			</div>
 		);
@@ -110,8 +111,8 @@ export function FileViewer({
 
 	if (isError || content === undefined || hash === undefined) {
 		return (
-			<div className='flex flex-col items-center justify-center h-full text-muted-foreground gap-2'>
-				<p className='text-sm'>Failed to load file</p>
+			<div className={styles.fileViewerDiv}>
+				<p className={styles.fileViewerP}>Failed to load file</p>
 			</div>
 		);
 	}
@@ -323,45 +324,45 @@ function EditableFileViewer({
 		isRootRules && rulesPreviewGroups.status !== 'ready' ? rulesPreviewGroups.status : undefined;
 
 	return (
-		<div className='flex flex-col h-full'>
-			<div className='flex shrink-0 items-center gap-2 border-b border-border bg-muted/30 px-4 py-1.5 text-sm text-muted-foreground'>
-				<div className='flex min-w-0 flex-1 items-start gap-2 overflow-hidden'>
-					<FileExplorerIcon name={fileName} type='file' className='mt-px' />
-					<div className='min-w-0 flex-1'>
-						<div className='flex min-w-0 items-center gap-2'>
-							<span className='min-w-0 truncate font-mono leading-4'>{fileName}</span>
+		<div className={styles.editableFileViewerDiv}>
+			<div className={styles.editableFileViewerDiv2}>
+				<div className={styles.editableFileViewerDiv3}>
+					<FileExplorerIcon name={fileName} type='file' className={styles.editableFileViewerFileExplorerIcon} />
+					<div className={styles.editableFileViewerDiv4}>
+						<div className={styles.editableFileViewerDiv5}>
+							<span className={styles.editableFileViewerSpan}>{fileName}</span>
 							{rulesPreviewStatus === undefined && <TokenEstimate count={estimatedTokenCount} />}
 						</div>
-						<span className='block truncate text-xs leading-4 opacity-60'>{filePath}</span>
+						<span className={styles.editableFileViewerSpan2}>{filePath}</span>
 					</div>
 				</div>
 				{(isEditable || isMarkdown) && (
-					<div className='flex shrink-0 items-center gap-2'>
+					<div className={styles.editableFileViewerDiv6}>
 						{isEditable && isDirty && (
-							<span className='flex shrink-0 items-center gap-1 text-xs text-amber-600 dark:text-amber-400'>
-								<span className='size-1.5 rounded-full bg-current' />
+							<span className={styles.editableFileViewerSpan3}>
+								<span className={styles.editableFileViewerSpan4} />
 								Unsaved
 							</span>
 						)}
 						{isMarkdown && parsedMarkdownDraft.label !== null && (
-							<span className='shrink-0 text-xs text-muted-foreground'>{parsedMarkdownDraft.label}</span>
+							<span className={styles.editableFileViewerSpan5}>{parsedMarkdownDraft.label}</span>
 						)}
 						{isMarkdown && <SourceToggle isOpen={isSourceOpen} onChange={handleSourceToggle} />}
 						{isEditable && (
 							<Button
 								type='button'
 								size='sm'
-								className='h-7 gap-1.5'
+								className={styles.editableFileViewerButton}
 								onClick={handleSave}
 								disabled={!isDirty || saveMutation.isPending}
 							>
 								{saveMutation.isPending ? (
-									<Loader2 className='size-3.5 animate-spin' />
+									<Loader2 className={styles.editableFileViewerLoader2} />
 								) : (
-									<Save className='size-3.5' />
+									<Save className={styles.editableFileViewerSave} />
 								)}
 								Save
-								<kbd className='font-sans text-[10px] opacity-60'>{isMac ? '⌘S' : 'Ctrl+S'}</kbd>
+								<kbd className={styles.editableFileViewerKbd}>{isMac ? '⌘S' : 'Ctrl+S'}</kbd>
 							</Button>
 						)}
 					</div>
@@ -378,8 +379,8 @@ function EditableFileViewer({
 				<ReadOnlyNote guidance={editabilityGuidance} onOpenPath={onOpenGuidancePath} />
 			)}
 			{isEditable && saveError && (
-				<div className='flex shrink-0 items-center gap-2 border-b px-3 py-2'>
-					<div className='min-w-0 flex-1'>
+				<div className={styles.editableFileViewerDiv7}>
+					<div className={styles.editableFileViewerDiv4}>
 						<ErrorMessage message={saveError.message} />
 					</div>
 					{saveError.isConflict && (
@@ -389,7 +390,7 @@ function EditableFileViewer({
 					)}
 				</div>
 			)}
-			<div className='flex-1 min-h-0'>
+			<div className={styles.editableFileViewerDiv8}>
 				{isMarkdown ? (
 					isSourceOpen ? (
 						<ResizablePanelGroup
@@ -482,13 +483,13 @@ function ReadOnlyNote({
 	};
 
 	return (
-		<div className='shrink-0 border-b bg-muted/20 px-4 py-2 text-xs text-muted-foreground'>
+		<div className={styles.readOnlyNoteDiv}>
 			<span>{guidance.message}</span>
 			{guidance.actionPath && (
 				<button
 					type='button'
 					role='link'
-					className='ml-1 text-primary underline-offset-4 hover:underline'
+					className={styles.readOnlyNoteButton}
 					onClick={handleOpenPath}
 				>
 					{guidance.actionLabel ?? 'Open file'}
@@ -516,11 +517,11 @@ function MarkdownPreview({
 	usePreviewHighlights({ containerRef, content: parsedMarkdown.body, filePath, searchQuery });
 
 	return (
-		<section aria-label='Markdown preview' className='flex h-full min-h-0 flex-col'>
-			<div ref={containerRef} className='min-h-0 flex-1 overflow-auto'>
-				<div className='max-w-3xl mx-auto px-8 py-6'>
+		<section aria-label='Markdown preview' className={styles.markdownPreviewSection}>
+			<div ref={containerRef} className={styles.markdownPreviewDiv}>
+				<div className={styles.markdownPreviewDiv2}>
 					{status === 'loading' ? (
-						<p className='text-sm text-muted-foreground'>Loading RULES.md preview access...</p>
+						<p className={styles.markdownPreviewP}>Loading RULES.md preview access...</p>
 					) : status === 'error' ? (
 						<ErrorMessage message='Failed to load RULES.md preview access.' />
 					) : error ? (
@@ -554,9 +555,9 @@ function RulesPreviewToolbar({
 		<div
 			role='toolbar'
 			aria-label='Rules preview options'
-			className='flex w-full shrink-0 items-center gap-2 border-b border-border bg-muted/20 px-4 py-1'
+			className={styles.rulesPreviewToolbarDiv}
 		>
-			<span className='shrink-0 text-xs font-medium text-muted-foreground'>Preview as</span>
+			<span className={styles.rulesPreviewToolbarSpan}>Preview as</span>
 			<UserGroupPicker
 				groups={groups}
 				selectedGroupIds={selectedGroupIds}
@@ -574,12 +575,12 @@ function SourceToggle({ isOpen, onChange }: { isOpen: boolean; onChange: () => v
 				type='button'
 				variant='outline'
 				size='sm'
-				className={cn('h-7 gap-1.5', isOpen && 'bg-accent text-accent-foreground dark:bg-accent/50')}
+				className={cn(styles.editableFileViewerButton, isOpen && styles.sourceToggleButton)}
 				onClick={onChange}
 				aria-pressed={isOpen}
 				aria-label={isOpen ? 'Hide markdown source' : 'Show markdown source'}
 			>
-				<Code className='size-3.5' />
+				<Code className={styles.editableFileViewerSave} />
 				Source
 			</Button>
 		</SimpleTooltip>
@@ -589,7 +590,7 @@ function SourceToggle({ isOpen, onChange }: { isOpen: boolean; onChange: () => v
 function TokenEstimate({ count }: { count: number }) {
 	return (
 		<SimpleTooltip content="Estimated tokens this file uses in the agent's context. It is approximated from the character count, not counted exactly.">
-			<span className='shrink-0 whitespace-nowrap text-xs text-muted-foreground tabular-nums'>
+			<span className={styles.tokenEstimateSpan}>
 				{formatTokenCount(count)} tokens
 			</span>
 		</SimpleTooltip>

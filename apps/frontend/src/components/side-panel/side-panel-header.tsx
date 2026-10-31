@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 
 import { useSidePanel } from '@/contexts/side-panel';
 import { Button } from '@/components/ui/button';
+import styles from './side-panel-header.module.css';
 
 interface SidePanelHeaderProps {
 	title: string;
@@ -13,19 +14,19 @@ export function SidePanelHeader({ title, label, actions }: SidePanelHeaderProps)
 	const { close } = useSidePanel();
 
 	return (
-		<div className='flex shrink-0 items-center gap-2 border-b px-4 py-2'>
+		<div className={styles.sidePanelHeaderDiv}>
 			<Button
 				variant='ghost'
 				size='icon-sm'
-				className='mr-2 hover:rounded-full'
+				className={styles.sidePanelHeaderButton}
 				onClick={close}
 				aria-label='Close'
 			>
-				<X className='size-3.5' strokeWidth={2.25} />
+				<X className={styles.sidePanelHeaderX} strokeWidth={2.25} />
 			</Button>
-			<div className='min-w-0 flex-1'>
-				{label && <div className='truncate text-xs font-medium text-muted-foreground'>{label}</div>}
-				<div className='truncate text-sm font-semibold' title={title}>
+			<div className={styles.sidePanelHeaderDiv2}>
+				{label && <div className={styles.sidePanelHeaderDiv3}>{label}</div>}
+				<div className={styles.sidePanelHeaderDiv4} title={title}>
 					{title}
 				</div>
 			</div>

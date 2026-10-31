@@ -8,6 +8,7 @@ import type { ReactNode } from 'react';
 import type { McpChartEmbedStoredConfig } from '@quarry/shared';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { ChartDisplay } from '@/components/tool-calls/display-chart';
+import styles from './chart-app-view.module.css';
 
 interface ChartAppViewProps {
 	config: McpChartEmbedStoredConfig;
@@ -39,25 +40,25 @@ export const ChartAppView = memo(function ChartAppView({ config, data, quarryUrl
 	let body: ReactNode;
 	if (!chartData.length) {
 		body = (
-			<div className='flex min-h-[10rem] items-center justify-center px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.chartAppViewDiv}>
 				Chart data unavailable.
 			</div>
 		);
 	} else if (series.length === 0) {
 		body = (
-			<div className='flex min-h-[10rem] items-center justify-center px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.chartAppViewDiv}>
 				No series configured for this chart.
 			</div>
 		);
 	} else if (!isBuiltinChartType(config.chartType)) {
 		body = (
-			<div className='flex min-h-[10rem] items-center justify-center px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.chartAppViewDiv}>
 				Custom charts are available in web chats only.
 			</div>
 		);
 	} else {
 		body = (
-			<div className={`min-h-[14rem] w-full ${config.chartType !== 'kpi_card' ? 'aspect-3/2' : ''}`}>
+			<div className={`${styles.chartAppViewDiv2} ${config.chartType !== 'kpi_card' ? styles.state100 : ''}`}>
 				<ChartDisplay
 					data={chartData}
 					chartType={config.chartType}
@@ -78,12 +79,12 @@ export const ChartAppView = memo(function ChartAppView({ config, data, quarryUrl
 	}
 
 	return (
-		<div className='flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground'>
+		<div className={styles.chartAppViewDiv3}>
 			<McpAppHeader title={config.title}>
 				{quarryUrl ? <OpenInQuarryButton url={quarryUrl} /> : null}
 			</McpAppHeader>
-			<div className='min-h-0 flex-1 overflow-auto'>
-				<div className='mx-auto flex w-full min-w-0 max-w-5xl flex-col p-4 md:p-8'>{body}</div>
+			<div className={styles.chartAppViewDiv4}>
+				<div className={styles.chartAppViewDiv5}>{body}</div>
 			</div>
 		</div>
 	);

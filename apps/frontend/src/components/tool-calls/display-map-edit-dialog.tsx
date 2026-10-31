@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from '../ui/input';
 import type { BoundarySource } from '@quarry/shared';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
+import styles from './display-map-edit-dialog.module.css';
 
 interface MapConfigEditDialogProps {
 	open: boolean;
@@ -69,22 +70,22 @@ export function MapConfigEditDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent className={styles.mapConfigEditDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Edit map</DialogTitle>
-					<DialogDescription className='text-sm text-muted-foreground font-medium'>
+					<DialogDescription className={styles.mapConfigEditDialogDialogDescription}>
 						{description}
 					</DialogDescription>
 				</DialogHeader>
 
-				<form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-					<div className='grid gap-2'>
-						<label htmlFor='map-title' className='text-sm font-semibold text-foreground'>
+				<form onSubmit={handleSubmit} className={styles.mapConfigEditDialogForm}>
+					<div className={styles.mapConfigEditDialogDiv}>
+						<label htmlFor='map-title' className={styles.mapConfigEditDialogLabel}>
 							Title
 						</label>
 						<Input
 							id='map-title'
-							className='h-8 bg-panel'
+							className={styles.mapConfigEditDialogInput}
 							value={draft.title}
 							onChange={(e) => setDraft((prev) => ({ ...prev, title: e.target.value }))}
 							placeholder='Map title'
@@ -92,11 +93,11 @@ export function MapConfigEditDialog({
 					</div>
 
 					{boundarySource && (
-						<div className='grid gap-2'>
-							<span className='text-sm font-semibold text-foreground'>GeoJSON boundaries</span>
+						<div className={styles.mapConfigEditDialogDiv}>
+							<span className={styles.mapConfigEditDialogLabel}>GeoJSON boundaries</span>
 							{boundarySource.kind === 'url' ? (
 								<Input
-									className='h-8 bg-panel font-mono text-xs'
+									className={styles.mapConfigEditDialogInput2}
 									value={draft.boundaries_url ?? ''}
 									onChange={(e) =>
 										setDraft((prev) => ({ ...prev, boundaries_url: e.target.value || undefined }))
@@ -104,8 +105,8 @@ export function MapConfigEditDialog({
 									placeholder='https://example.com/regions.geojson'
 								/>
 							) : (
-								<div className='flex items-center gap-2'>
-									<span className='min-w-0 flex-1 truncate text-sm text-muted-foreground font-medium'>
+								<div className={styles.mapConfigEditDialogDiv2}>
+									<span className={styles.mapConfigEditDialogSpan}>
 										{boundarySource.label}
 									</span>
 									<Badge variant='secondary'>{BOUNDARY_KIND_LABELS[boundarySource.kind]}</Badge>
@@ -114,15 +115,15 @@ export function MapConfigEditDialog({
 						</div>
 					)}
 
-					<div className='grid gap-2'>
-						<span className='text-sm font-semibold text-foreground'>{colorLabel}</span>
-						<div className='flex items-center gap-3'>
+					<div className={styles.mapConfigEditDialogDiv}>
+						<span className={styles.mapConfigEditDialogLabel}>{colorLabel}</span>
+						<div className={styles.mapConfigEditDialogDiv3}>
 							<input
 								type='color'
 								aria-label={`${colorLabel} color`}
 								value={draft.color ?? primaryHex}
 								onChange={(e) => setDraft((prev) => ({ ...prev, color: e.target.value }))}
-								className='h-9 w-9 shrink-0 cursor-pointer overflow-hidden rounded-md bg-transparent p-0 shadow-xs [&::-moz-color-swatch]:rounded-md [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-md [&::-webkit-color-swatch]:border-none'
+								className={styles.mapConfigEditDialogInput3}
 							/>
 							{showRadius ? (
 								<>
@@ -133,22 +134,22 @@ export function MapConfigEditDialog({
 										max={30}
 										value={draft.radius ?? DEFAULT_MARKER_RADIUS}
 										onChange={(e) => updateRadius(e.target.value)}
-										className='min-w-0 flex-1 cursor-pointer accent-primary'
+										className={styles.mapConfigEditDialogInput4}
 									/>
-									<ArrowRight className='size-4 shrink-0 text-muted-foreground' />
+									<ArrowRight className={styles.mapConfigEditDialogArrowRight} />
 									<MarkerPreview
 										color={draft.color ?? primaryHex}
 										radius={draft.radius ?? DEFAULT_MARKER_RADIUS}
 									/>
 								</>
 							) : (
-								<div className='min-w-0 flex-1' />
+								<div className={styles.mapConfigEditDialogDiv4} />
 							)}
 							<Button
 								type='button'
 								variant='ghost'
 								size='sm'
-								className='h-8 shrink-0 rounded-full'
+								className={styles.mapConfigEditDialogButton}
 								onClick={() =>
 									setDraft((prev) => ({
 										...prev,
@@ -163,13 +164,13 @@ export function MapConfigEditDialog({
 						</div>
 					</div>
 
-					{error && <p className='text-xs text-destructive'>{error}</p>}
+					{error && <p className={styles.mapConfigEditDialogP}>{error}</p>}
 
 					<DialogFooter>
 						<Button
 							type='button'
 							variant='ghost'
-							className='rounded-full border'
+							className={styles.mapConfigEditDialogButton2}
 							onClick={() => onOpenChange(false)}
 						>
 							Cancel
@@ -177,7 +178,7 @@ export function MapConfigEditDialog({
 						<Button
 							variant='primary-gradient'
 							type='submit'
-							className='rounded-full'
+							className={styles.mapConfigEditDialogButton3}
 							isLoading={isSaving}
 							disabled={isSaving}
 						>
@@ -202,15 +203,15 @@ const MARKER_STROKE_WIDTH = 2;
 function MarkerPreview({ color, radius }: { color: string; radius: number }) {
 	const diameter = radius * 2 + MARKER_STROKE_WIDTH * 2;
 	return (
-		<div className='flex size-18 shrink-0 items-center justify-center overflow-hidden rounded-md border bg-panel'>
+		<div className={styles.markerPreviewDiv}>
 			<span
-				className='rounded-full shadow-sm'
+				className={styles.markerPreviewSpan}
 				style={{
 					width: diameter,
 					height: diameter,
 					backgroundColor: color,
 					opacity: 0.9,
-					border: `${MARKER_STROKE_WIDTH}px solid var(--background)`,
+					border: `${MARKER_STROKE_WIDTH}px solid var(--app-surface)`,
 					boxSizing: 'border-box',
 				}}
 			/>

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import styles from './story-embed-fallback.module.css';
 
 export function StoryEmbedFallback({
 	dragHandle,
@@ -10,13 +11,13 @@ export function StoryEmbedFallback({
 	children: ReactNode;
 }) {
 	return (
-		<div className='my-2 flex flex-col gap-1'>
+		<div className={styles.storyEmbedFallbackDiv}>
 			{dragHandle != null && (
-				<div className={`flex ${dragHandlePlacement === 'leading' ? 'justify-start' : 'justify-end'}`}>
+				<div className={`${styles.storyEmbedFallbackDiv2} ${dragHandlePlacement === 'leading' ? styles.state100 : styles.state101}`}>
 					{dragHandle}
 				</div>
 			)}
-			<div className='rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
+			<div className={styles.storyEmbedFallbackDiv3}>
 				{children}
 			</div>
 		</div>

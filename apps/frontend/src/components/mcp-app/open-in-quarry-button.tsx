@@ -2,6 +2,7 @@ import { ExternalLink } from 'lucide-react';
 import type { MouseEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
+import styles from './open-in-quarry-button.module.css';
 
 interface OpenInQuarryButtonProps {
 	url: string;
@@ -9,10 +10,10 @@ interface OpenInQuarryButtonProps {
 
 export function OpenInQuarryButton({ url }: OpenInQuarryButtonProps) {
 	return (
-		<Button variant='outline' size='sm' className='gap-1.5' asChild title='Open in quarry'>
+		<Button variant='outline' size='sm' className={styles.openInQuarryButtonButton} asChild title='Open in quarry'>
 			<a href={url} target='_blank' rel='noopener noreferrer' onClick={(e) => openLinkViaHost(e, url)}>
-				<ExternalLink className='size-3.5' />
-				<span className='hidden sm:inline'>Open in quarry</span>
+				<ExternalLink className={styles.openInQuarryButtonExternalLink} />
+				<span className={styles.openInQuarryButtonSpan}>Open in quarry</span>
 			</a>
 		</Button>
 	);

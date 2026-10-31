@@ -13,6 +13,9 @@ import {
 	topLevelBlockPositions,
 } from '@/components/side-panel/story-block-selection';
 import { StoryTabbedEditor } from '@/components/side-panel/story-tabbed-editor';
+import editorStyles from '@/components/side-panel/story-editor.module.css';
+import dragStyles from '@/components/side-panel/story-editor-block-drag.module.css';
+import tabsBarStyles from '@/components/side-panel/story-tabs-bar.module.css';
 
 vi.hoisted(() => {
 	Object.defineProperty(window.URL, 'createObjectURL', {
@@ -224,7 +227,7 @@ describe('edit-mode chart actions', () => {
 		});
 		try {
 			fireEvent.mouseMove(editorDom, { clientX: 100, clientY: 20 });
-			await waitFor(() => expect(fixedGrip?.classList.contains('invisible')).toBe(true));
+			await waitFor(() => expect(fixedGrip?.classList.contains(editorStyles.storyEditorStoryBlockActionGrip2)).toBe(true));
 		} finally {
 			Object.defineProperty(document, 'elementsFromPoint', {
 				configurable: true,
@@ -264,11 +267,10 @@ describe('edit-mode chart actions', () => {
 			const lines = Array.from(tooltip?.children ?? []).slice(0, 2);
 			expect(lines.map((line) => line.textContent)).toEqual(['Click to open menu', 'Drag to move']);
 
-			const actionWords = lines.map((line) => line.querySelector('.text-foreground'));
+			const actionWords = lines.map((line) => line.querySelector(`.${dragStyles.storyBlockActionGripSpan2}`));
 			expect(actionWords.map((word) => word?.textContent)).toEqual(['Click', 'Drag']);
-			expect(actionWords.every((word) => word?.classList.contains('font-medium'))).toBe(true);
 
-			const descriptions = lines.map((line) => line.querySelector('.text-muted-foreground'));
+			const descriptions = lines.map((line) => line.querySelector(`.${dragStyles.storyBlockActionGripSpan3}`));
 			expect(descriptions.map((description) => description?.textContent)).toEqual(['to open menu', 'to move']);
 		});
 
@@ -372,7 +374,7 @@ describe('edit-mode chart actions', () => {
 			expect(floatingHandle?.children.length).toBe(1);
 			expect(fixedGrip).toBe(grip.parentElement);
 			expect(fixedGrip?.classList.contains('drag-handle-button')).toBe(true);
-			expect(menuAnchor?.classList.contains('absolute')).toBe(true);
+			expect(menuAnchor?.getAttribute('aria-hidden')).toBe('true');
 			expect(grip.hasAttribute('data-slot')).toBe(false);
 			expect(fireEvent.pointerDown(grip, { button: 0, ctrlKey: false })).toBe(true);
 			expect(screen.queryByRole('menuitem', { name: 'Delete' })).toBeNull();
@@ -503,15 +505,9 @@ describe('edit-mode chart actions', () => {
 		expect(submenu?.getAttribute('data-align')).toBe('start');
 		expect(submenu?.getAttribute('data-story-block-action-submenu-offset')).toBe('5');
 		expect(submenu?.getAttribute('data-story-block-action-submenu-align-offset')).toBe('-4');
-		expect(submenu?.classList.contains('border-border/50')).toBe(true);
-		expect(submenu?.classList.contains('shadow-xl')).toBe(true);
+		expect(submenu?.classList.contains(dragStyles.storyActionSubmenu)).toBe(true);
 		expect(destinationItem.getAttribute('role')).toBe('menuitem');
-		for (const className of ['rounded-sm', 'py-0.5', 'pr-2', 'pl-2', 'text-sm', 'font-normal', 'leading-5']) {
-			expect(destinationItem.classList.contains(className)).toBe(true);
-		}
-		for (const className of ['py-1', 'py-2', 'pr-8', 'text-xs', 'font-medium', 'leading-none']) {
-			expect(destinationItem.classList.contains(className)).toBe(false);
-		}
+		expect(destinationItem.classList.contains(dragStyles.storyActionDestination)).toBe(true);
 		fireEvent.click(destinationItem);
 
 		await waitFor(() => {
@@ -546,7 +542,7 @@ describe('edit-mode chart actions', () => {
 		const destinationButton = screen.getByRole('button', { name: 'Destination' });
 		await waitFor(() => {
 			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
-			expect(destinationButton.parentElement?.classList.contains('bg-background')).toBe(true);
+			expect(destinationButton.parentElement?.classList.contains(tabsBarStyles.storyTabsBarDiv7)).toBe(true);
 		});
 		const selectedBlocks = document.querySelectorAll('.ProseMirror > .quarry-block-selected');
 		const trailingParagraph = document.querySelector('.ProseMirror > p:last-child');
@@ -622,7 +618,7 @@ describe('edit-mode chart actions', () => {
 		});
 		fireEvent.dragOver(editorDropZone, { dataTransfer });
 		expect(document.querySelector('.story-editor')?.classList.contains('drop-indicator-active')).toBe(true);
-		expect(editorDropZone.firstElementChild?.classList.contains('bg-primary-muted')).toBe(true);
+		expect(editorDropZone.firstElementChild?.classList.contains(dragStyles.storyBlockDropZonesDiv2)).toBe(true);
 
 		const destinationButton = screen.getByRole('button', { name: 'Destination' });
 		const destinationTab = destinationButton.parentElement as HTMLElement;
@@ -637,7 +633,7 @@ describe('edit-mode chart actions', () => {
 
 		await waitFor(() => {
 			expect(screen.getByText('Chart q1').closest('.quarry-block-selected')).not.toBeNull();
-			expect(destinationButton.parentElement?.classList.contains('bg-background')).toBe(true);
+			expect(destinationButton.parentElement?.classList.contains(tabsBarStyles.storyTabsBarDiv7)).toBe(true);
 		});
 		expect(document.querySelector('[data-story-block-drop-target]')).toBeNull();
 		expect(document.querySelector('.story-editor')?.classList.contains('drop-indicator-active')).toBe(false);

@@ -16,6 +16,7 @@ import { StoryViewer } from '@/components/side-panel/story-viewer';
 import { useSidePanel } from '@/contexts/side-panel';
 import { isNotFoundError } from '@/lib/api-error';
 import { storyApi } from '@/lib/story-api';
+import styles from './readonly-custom-story-viewer.module.css';
 
 interface ReadonlyCustomStoryViewerProps {
 	chatId: string;
@@ -51,7 +52,7 @@ export function ReadonlyCustomStoryViewer({ chatId, storySlug, access }: Readonl
 	}, [setCurrentStorySlug, storySlug]);
 
 	return (
-		<div className='flex h-full w-full min-w-0 flex-1 flex-col'>
+		<div className={styles.readonlyCustomStoryViewerDiv}>
 			<StoryHeader
 				title={content?.title ?? storySlug}
 				chatId={chatId}

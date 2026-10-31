@@ -28,6 +28,7 @@ import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { storyApi } from '@/lib/story-api';
 import { requestAsk } from '@/stores/ask-bar';
+import styles from './custom-story-page.module.css';
 
 interface CustomStoryPreviewPageProps {
 	chatId: string;
@@ -79,7 +80,7 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 	const isAskInputHidden = viewMode !== 'app';
 
 	return (
-		<div className='relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-background'>
+		<div className={styles.customStoryPreviewPageDiv}>
 			<StoryPageHeader
 				title={content?.title ?? story.versionsQuery.data?.title ?? storySlug}
 				authorName={authorName}
@@ -113,7 +114,7 @@ export function CustomStoryPreviewPage({ chatId, storySlug, authorName }: Custom
 			{story.isArchived && <ArchivedBanner chatId={chatId} storySlug={storySlug} />}
 			{story.restoreError && <ActionErrorBanner message={story.restoreError.message} />}
 
-			<div className='relative flex min-h-0 flex-1 flex-col'>
+			<div className={styles.customStoryPreviewPageDiv2}>
 				<CustomStoryViewLayers
 					viewMode={viewMode}
 					app={
@@ -228,7 +229,7 @@ export function SharedCustomStoryPage({
 	const download = useCustomStoryDownload(content, dataSource, renderExport);
 
 	return (
-		<div className='relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-background'>
+		<div className={styles.customStoryPreviewPageDiv}>
 			<SharedStoryHeader
 				title={content?.title ?? title}
 				authorName={authorName}
@@ -242,7 +243,7 @@ export function SharedCustomStoryPage({
 				storyId={isSignedIn ? storyId : null}
 				download={{ shareSource: { type: 'story', storyId }, isOwner: false, onDownload: download }}
 			/>
-			<div className='relative flex min-h-0 flex-1 flex-col'>
+			<div className={styles.customStoryPreviewPageDiv2}>
 				<CustomStoryBody
 					bottomInset={storyChatHeader?.storyChat?.canChat ? STORY_ASK_BAR_INSET : undefined}
 					dataSource={dataSource}

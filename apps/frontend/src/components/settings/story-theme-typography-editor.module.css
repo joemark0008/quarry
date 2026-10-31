@@ -1,0 +1,79 @@
+.gRIDCLASS {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 6.5rem 5rem 7.5rem 2.25rem 4.5rem 4.5rem;
+	align-items: center;
+	gap: 0.5rem;
+}
+.storyThemeTypographyEditorDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	overflow-x: auto;
+}
+.storyThemeTypographyEditorDiv2 {
+	min-width: 44rem;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}
+.typographyRowDiv {
+	min-width: 44rem;
+	border-top-style: var(--fx-border-style);
+	border-top-width: 1px;
+	padding-top: 0.5rem;
+}
+.typographyRowDiv2 {
+	min-width: 0px;
+}
+.typographyRowP {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	--fx-leading: 1.25;
+	line-height: 1.25;
+}
+.typographyRowP2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	color: var(--app-muted);
+}
+.typographyRowButton {
+	display: flex;
+	width: 2.25rem;
+	height: 2.25rem;
+	align-items: center;
+	justify-content: center;
+	border-radius: calc(var(--app-radius) - 2px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	color: var(--app-muted);
+	transition-property:
+		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
+		--fx-gradient-via, --fx-gradient-to;
+	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
+	transition-duration: var(--fx-duration, 150ms);
+	@media (hover: hover) {
+		&:hover {
+			color: var(--app-text);
+		}
+	}
+}
+.typographyRowButton2 {
+	border-color: color-mix(in oklab, var(--app-text) 40%, transparent);
+	background-color: var(--app-fill);
+	color: var(--app-text);
+}
+.typographyRowItalic {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.compactSelectSelectTrigger {
+	width: 100%;
+}
+.compactNumberInput {
+	width: 100%;
+	padding-inline: 0.5rem;
+}

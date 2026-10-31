@@ -4,6 +4,7 @@ import { useForm } from '@tanstack/react-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import styles from './edit-profile-dialog.module.css';
 
 interface EditProfileDialogProps {
 	open: boolean;
@@ -48,12 +49,12 @@ export function EditProfileDialog({ open, onOpenChange, name, onSubmit }: EditPr
 						e.stopPropagation();
 						form.handleSubmit();
 					}}
-					className='flex flex-col gap-4'
+					className={styles.editProfileDialogForm}
 				>
 					<form.Field name='name'>
 						{(field) => (
-							<div className='flex flex-col gap-2'>
-								<label htmlFor='edit-profile-name' className='text-sm font-medium'>
+							<div className={styles.editProfileDialogDiv}>
+								<label htmlFor='edit-profile-name' className={styles.editProfileDialogLabel}>
 									Name
 								</label>
 								<Input
@@ -67,9 +68,9 @@ export function EditProfileDialog({ open, onOpenChange, name, onSubmit }: EditPr
 						)}
 					</form.Field>
 
-					{error && <p className='text-red-500 text-center text-sm'>{error}</p>}
-					<div className='flex justify-end'>
-						<Button type='submit' variant='primary-gradient' className='rounded-full'>
+					{error && <p className={styles.editProfileDialogP}>{error}</p>}
+					<div className={styles.editProfileDialogDiv2}>
+						<Button type='submit' variant='primary-gradient' className={styles.editProfileDialogButton}>
 							Validate changes
 						</Button>
 					</div>

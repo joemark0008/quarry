@@ -1,0 +1,24 @@
+.projectPageDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+.projectPageH1 {
+	font-size: 1.125rem;
+	line-height: var(--fx-leading, calc(1.75 / 1.125));
+	--fx-font-weight: 600;
+	font-weight: 600;
+	color: var(--app-text);
+}
+.projectPageP {
+	font-size: 0.875rem;
+	line-height: var(--fx-leading, calc(1.25 / 0.875));
+	color: var(--app-muted);
+}
+.projectPageDiv2 {
+	margin-bottom: 1rem;
+	display: flex;
+	min-width: 0px;
+	flex-direction: column;
+	gap: 3rem;
+}

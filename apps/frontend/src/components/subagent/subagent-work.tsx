@@ -4,6 +4,7 @@ import type { task } from '@quarry/shared/tools';
 import { Expandable } from '@/components/ui/expandable';
 import { Spinner } from '@/components/ui/spinner';
 import { useSubagentDuration } from '@/components/subagent/use-subagent-duration';
+import styles from './subagent-work.module.css';
 
 /** The tool calls a subagent made, folded behind a one-line "Worked for …" summary. */
 export function SubagentWork({ output, isSettled }: { output: task.Output | undefined; isSettled: boolean }) {
@@ -21,12 +22,12 @@ export function SubagentWork({ output, isSettled }: { output: task.Output | unde
 			isLoading={!isSettled}
 			variant='inline'
 		>
-			<ol className='flex flex-col gap-1 py-1'>
+			<ol className={styles.subagentWorkOl}>
 				{steps.map((step, index) => (
-					<li key={index} className='flex items-center gap-2 min-w-0 text-xs'>
+					<li key={index} className={styles.subagentWorkLi}>
 						<StepStatusIcon status={stepDisplayStatus(step, isSettled)} />
-						<span className='font-mono text-foreground/60 shrink-0'>{step.tool}</span>
-						<span className='text-foreground/80 truncate'>{step.summary}</span>
+						<span className={styles.subagentWorkSpan}>{step.tool}</span>
+						<span className={styles.subagentWorkSpan2}>{step.summary}</span>
 					</li>
 				))}
 			</ol>
@@ -44,12 +45,12 @@ function stepDisplayStatus(step: task.Step, isSettled: boolean): StepDisplayStat
 const StepStatusIcon = ({ status }: { status: StepDisplayStatus }) => {
 	switch (status) {
 		case 'running':
-			return <Spinner className='size-3 shrink-0' />;
+			return <Spinner className={styles.stepStatusIconSpinner} />;
 		case 'interrupted':
-			return <Minus size={12} className='shrink-0 text-foreground/40' />;
+			return <Minus size={12} className={styles.stepStatusIconMinus} />;
 		case 'done':
-			return <Check size={12} className='shrink-0 text-foreground/40' />;
+			return <Check size={12} className={styles.stepStatusIconMinus} />;
 		case 'error':
-			return <X size={12} className='shrink-0 text-red-500' />;
+			return <X size={12} className={styles.stepStatusIconX} />;
 	}
 };

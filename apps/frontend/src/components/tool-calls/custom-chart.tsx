@@ -9,6 +9,7 @@ import type { displayChart } from '@quarry/shared/tools';
 
 import { useTheme } from '@/contexts/theme.provider';
 import { chartsApi } from '@/lib/charts-api';
+import styles from './custom-chart.module.css';
 
 const PLUGIN_REFRESH_INTERVAL_MS = 2_000;
 
@@ -133,11 +134,11 @@ export const CustomChart = React.memo(function CustomChart({
 		return <ChartPluginMessage>Loading custom chart...</ChartPluginMessage>;
 	}
 
-	return <div ref={containerRef} className='h-full min-h-64 w-full' />;
+	return <div ref={containerRef} className={styles.customChartDiv} />;
 });
 
 function ChartPluginMessage({ children }: { children: React.ReactNode }) {
-	return <div className='flex min-h-64 items-center justify-center text-sm text-muted-foreground'>{children}</div>;
+	return <div className={styles.chartPluginMessageDiv}>{children}</div>;
 }
 
 function isChartPluginModule(value: unknown): value is ChartPluginModule {

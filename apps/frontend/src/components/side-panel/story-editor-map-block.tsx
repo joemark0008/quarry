@@ -8,6 +8,7 @@ import { decodeFromAttr } from './story-editor-utils';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import { StoryMapFrame } from '@/components/story-block';
 import { EditorStoryMapEditProvider } from '@/contexts/story-map-edit';
+import styles from './story-editor-map-block.module.css';
 
 function MapBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewProps) {
 	const rawTag = node.attrs.rawTag as string;
@@ -29,7 +30,7 @@ function MapBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewP
 	if (!map) {
 		return (
 			<NodeViewWrapper draggable data-type='map-block'>
-				<div className='my-2 rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
+				<div className={styles.mapBlockViewDiv}>
 					Invalid map block
 				</div>
 			</NodeViewWrapper>
@@ -38,7 +39,7 @@ function MapBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewP
 
 	return (
 		<NodeViewWrapper draggable data-type='map-block'>
-			<div className='group relative my-2'>
+			<div className={`${styles.mapBlockViewDiv2} group`}>
 				<StoryBlockDropZones node={node} editor={editor} getPos={getPos} />
 				<EditorStoryMapEditProvider onReplaceTag={handleReplaceTag}>
 					<StoryMapFrame>

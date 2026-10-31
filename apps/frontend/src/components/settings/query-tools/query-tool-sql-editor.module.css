@@ -1,0 +1,10 @@
+.queryToolSqlEditorDiv {
+	height: 16rem;
+	overflow: hidden;
+	border-radius: calc(var(--app-radius) - 2px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	& span {
+		font-family: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+	}
+}

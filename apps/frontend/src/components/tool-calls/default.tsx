@@ -4,6 +4,7 @@ import { getToolName } from '@/lib/ai';
 import { Spinner } from '@/components/ui/spinner';
 import { Expandable } from '@/components/ui/expandable';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './default.module.css';
 
 export const DefaultToolCall = ({ toolPart }: ToolCallComponentProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);
@@ -12,7 +13,7 @@ export const DefaultToolCall = ({ toolPart }: ToolCallComponentProps) => {
 	const toolName = getToolName(toolPart);
 	const title = toolName;
 
-	const statusIcon = isSettled ? undefined : <Spinner className='size-3 opacity-50' />;
+	const statusIcon = isSettled ? undefined : <Spinner className={styles.statusIconSpinner} />;
 
 	return (
 		<Expandable
@@ -24,9 +25,9 @@ export const DefaultToolCall = ({ toolPart }: ToolCallComponentProps) => {
 			leadingIcon={statusIcon}
 		>
 			{toolPart.errorText ? (
-				<pre className='p-2 overflow-auto max-h-80 m-0 bg-red-950'>{toolPart.errorText}</pre>
+				<pre className={styles.defaultToolCallPre}>{toolPart.errorText}</pre>
 			) : toolPart.output ? (
-				<pre className='overflow-auto max-h-80 m-0'>{JSON.stringify(toolPart.output, null, 2)}</pre>
+				<pre className={styles.defaultToolCallPre2}>{JSON.stringify(toolPart.output, null, 2)}</pre>
 			) : null}
 		</Expandable>
 	);

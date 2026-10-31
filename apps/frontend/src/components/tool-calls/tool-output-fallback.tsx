@@ -1,6 +1,7 @@
 import { RotateCw } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './tool-output-fallback.module.css';
 
 interface Props {
 	/** What to show while the call is genuinely in flight, e.g. "Executing query...". */
@@ -25,25 +26,25 @@ export const ToolOutputFallback = ({ runningLabel }: Props) => {
 	const { isSettled } = useToolCallContext();
 
 	if (!isSettled) {
-		return <div className='p-4 text-center text-foreground/50 text-sm'>{runningLabel}</div>;
+		return <div className={styles.toolOutputFallbackDiv}>{runningLabel}</div>;
 	}
 
 	return (
-		<div className='p-4 text-center'>
-			<p className='text-sm text-foreground/70'>No result reached this tab.</p>
-			<p className='mt-1 text-xs text-muted-foreground'>
+		<div className={styles.toolOutputFallbackDiv2}>
+			<p className={styles.toolOutputFallbackP}>No result reached this tab.</p>
+			<p className={styles.toolOutputFallbackP2}>
 				The connection dropped before the result arrived. It may have completed on the server — reload to load
 				the stored result.
 			</p>
 			<Button
 				variant='outline'
 				size='sm'
-				className='mt-3 h-7 text-xs gap-1.5'
+				className={styles.toolOutputFallbackButton}
 				onClick={() => {
 					window.location.reload();
 				}}
 			>
-				<RotateCw className='size-3' />
+				<RotateCw className={styles.toolOutputFallbackRotateCw} />
 				Reload page
 			</Button>
 		</div>

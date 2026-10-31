@@ -16,6 +16,7 @@ import { SetChatInputCallbackProvider, useRegisterSetChatInputCallback } from '@
 import { ChatIdContext, useChatId } from '@/hooks/use-chat-id';
 import { cn } from '@/lib/utils';
 import { useAskRequest } from '@/stores/ask-bar';
+import styles from './ask-bar.module.css';
 
 type AskSession = {
 	chatId: string | null;
@@ -129,11 +130,11 @@ function FloatingBar({ isHidden, children }: { isHidden: boolean; children: Reac
 		<div
 			data-selection-ignore
 			className={cn(
-				'pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-4',
-				isHidden && 'hidden',
+				styles.floatingBarDiv,
+				isHidden && styles.floatingBarDiv2,
 			)}
 		>
-			<div className='pointer-events-auto flex w-full max-w-2xl flex-col items-center gap-2'>{children}</div>
+			<div className={styles.floatingBarDiv3}>{children}</div>
 		</div>
 	);
 }
@@ -165,22 +166,22 @@ function AskStatus({ onOpen, onClose }: { onOpen: () => void; onClose: () => voi
 	}
 
 	return (
-		<div className='flex items-center gap-1 rounded-full border bg-background py-0.5 pl-3 pr-1 text-xs text-muted-foreground'>
-			<button type='button' onClick={onOpen} className='flex items-center gap-1.5 hover:text-foreground'>
+		<div className={styles.askStatusDiv}>
+			<button type='button' onClick={onOpen} className={styles.askStatusButton}>
 				{isRunning ? (
 					<TextShimmer showLogo />
 				) : (
 					<>
-						<MessageCircle className='size-3.5 overflow-visible' strokeWidth={2.25} />
+						<MessageCircle className={styles.askStatusMessageCircle} strokeWidth={2.25} />
 						<span>{questionCount === 1 ? 'Answer ready · Show' : `${questionCount} answers · Show`}</span>
-						<ChevronUp className='size-3.5' strokeWidth={2.25} />
+						<ChevronUp className={styles.askStatusChevronUp} strokeWidth={2.25} />
 					</>
 				)}
 			</button>
 			<Button
 				variant='ghost'
 				size='icon-xs'
-				className='rounded-full'
+				className={styles.askStatusButton2}
 				onClick={onClose}
 				aria-label='End this question'
 			>
@@ -229,13 +230,13 @@ function AskPanel({
 
 	return (
 		<AskPanelFrame selection={selection} onCollapse={onCollapse} onClose={onClose}>
-			<Conversation className='min-h-0'>
-				<ConversationContent className='gap-0 px-4 py-3 md:px-4 md:py-3'>
+			<Conversation className={styles.askPanelConversation}>
+				<ConversationContent className={styles.askPanelConversationContent}>
 					<ChatMessagesContent />
 				</ConversationContent>
 				<ConversationScrollButton />
 			</Conversation>
-			<div className='border-t p-3'>
+			<div className={styles.askPanelDiv}>
 				<AskInput
 					inputRef={panelInputRef}
 					placeholder={placeholder}
@@ -263,11 +264,11 @@ function AskPanelFrame({
 	return (
 		<aside
 			data-selection-ignore
-			className='absolute inset-y-3 right-3 z-30 flex w-[min(420px,calc(100%-1.5rem))] flex-col overflow-hidden rounded-2xl border bg-background shadow-xl'
+			className={styles.askPanelFrameAside}
 		>
 			<AskPanelHeader onCollapse={onCollapse} onClose={onClose} />
 			{selection && (
-				<div className='mt-3 px-4'>
+				<div className={styles.askPanelFrameDiv}>
 					<SelectionCard selection={selection} />
 				</div>
 			)}
@@ -282,15 +283,15 @@ function AskPanelHeader({ onCollapse, onClose }: { onCollapse?: () => void; onCl
 	const navigate = useNavigate();
 
 	return (
-		<div className='flex items-center gap-2 border-b px-4 py-2.5'>
-			<MessageCircle className='size-4 text-muted-foreground' strokeWidth={2.25} />
-			<span className='text-sm font-medium'>Quick question</span>
-			<div className='ml-auto flex items-center gap-0.5'>
+		<div className={styles.askPanelHeaderDiv}>
+			<MessageCircle className={styles.askPanelHeaderMessageCircle} strokeWidth={2.25} />
+			<span className={styles.askPanelHeaderSpan}>Quick question</span>
+			<div className={styles.askPanelHeaderDiv2}>
 				{chatId && (
 					<Button
 						variant='ghost'
 						size='icon-xs'
-						className='rounded-full'
+						className={styles.askStatusButton2}
 						onClick={() => navigate({ to: '/$chatId', params: { chatId } })}
 						aria-label='Open as a chat'
 					>
@@ -301,7 +302,7 @@ function AskPanelHeader({ onCollapse, onClose }: { onCollapse?: () => void; onCl
 					<Button
 						variant='ghost'
 						size='icon-xs'
-						className='rounded-full'
+						className={styles.askStatusButton2}
 						onClick={onCollapse}
 						aria-label='Fold the answers'
 					>
@@ -311,7 +312,7 @@ function AskPanelHeader({ onCollapse, onClose }: { onCollapse?: () => void; onCl
 				<Button
 					variant='ghost'
 					size='icon-xs'
-					className='rounded-full'
+					className={styles.askStatusButton2}
 					onClick={onClose}
 					aria-label='End this question'
 				>
@@ -360,14 +361,14 @@ function AskInput({
 		<form
 			onSubmit={submit}
 			className={cn(
-				'relative flex w-full flex-col gap-1.5 bg-background p-3 shadow-lg',
-				selection ? 'rounded-2xl' : 'rounded-full',
+				styles.askInputForm,
+				selection ? styles.askInputForm2 : styles.askStatusButton2,
 			)}
 		>
 			<ChatInputAnimatedBorder isStatic />
 			{fillsFromFollowUps && <FollowUpFiller onFill={setText} />}
 			{selection && <SelectionCard selection={selection} onClear={onClearSelection} />}
-			<div className='flex items-center gap-2'>
+			<div className={styles.askInputDiv}>
 				<textarea
 					ref={inputRef}
 					value={text}
@@ -379,20 +380,20 @@ function AskInput({
 							submit(event);
 						}
 					}}
-					className='max-h-32 min-h-8 flex-1 resize-none bg-transparent px-2 py-1.5 text-sm outline-none placeholder:text-muted-foreground'
+					className={styles.askInputTextarea}
 				/>
 				<Button
 					type='submit'
 					size='icon-sm'
-					className={cn('shrink-0 rounded-full', !text.trim() && 'opacity-50')}
+					className={cn(styles.askInputButton, !text.trim() && styles.askInputButton2)}
 					disabled={!text.trim() || isSending}
 					aria-label='Send'
 				>
-					{isSending ? <Loader2 className='animate-spin' /> : <ArrowUp />}
+					{isSending ? <Loader2 className={styles.askInputLoader2} /> : <ArrowUp />}
 				</Button>
 			</div>
 			{error && (
-				<p role='alert' className='px-2 text-xs text-destructive'>
+				<p role='alert' className={styles.askInputP}>
 					{error}
 				</p>
 			)}
@@ -403,7 +404,7 @@ function AskInput({
 /** The part of the page the question is about, quoted like a selection asked about in a chat. */
 function SelectionCard({ selection, onClear }: { selection: AskSelection; onClear?: () => void }) {
 	return (
-		<div className='relative rounded-xl border bg-sidebar px-4 py-3'>
+		<div className={styles.selectionCardDiv}>
 			<SelectionCitationExcerpt
 				text={selection.text}
 				start={selection.start}
@@ -415,7 +416,7 @@ function SelectionCard({ selection, onClear }: { selection: AskSelection; onClea
 					type='button'
 					variant='ghost'
 					size='icon-xs'
-					className='absolute right-2 top-2 rounded-full'
+					className={styles.selectionCardButton}
 					onClick={onClear}
 					aria-label='Remove the selection'
 				>

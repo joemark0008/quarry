@@ -10,6 +10,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
+import styles from './embed.story.$storyId.module.css';
 
 export const Route = createFileRoute('/embed/story/$storyId')({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -31,13 +32,13 @@ function StoryEmbedPage() {
 	let inner: ReactNode;
 	if (storyQuery.isLoading) {
 		inner = (
-			<div className='flex min-h-[14rem] items-center justify-center py-10'>
+			<div className={styles.storyEmbedPageDiv}>
 				<Spinner />
 			</div>
 		);
 	} else if (storyQuery.isError || !story) {
 		inner = (
-			<div className='flex min-h-[10rem] items-center justify-center px-4 py-10 text-center text-sm text-muted-foreground'>
+			<div className={styles.storyEmbedPageDiv2}>
 				Story unavailable or link expired.
 			</div>
 		);
@@ -58,7 +59,7 @@ function StoryEmbedPage() {
 	return (
 		<div
 			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className='flex min-h-0 min-w-0 flex-1 flex-col bg-background'
+			className={styles.storyEmbedPageDiv3}
 		>
 			{inner}
 		</div>

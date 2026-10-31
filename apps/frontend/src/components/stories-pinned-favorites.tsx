@@ -5,11 +5,12 @@ import type { FavoriteEntry, FolderItem, StoryItem } from '@/lib/stories-page';
 import { FolderCard } from '@/components/stories-folder-card';
 import { StoryCard } from '@/components/stories-groups';
 import { cn } from '@/lib/utils';
+import styles from './stories-pinned-favorites.module.css';
 
 const PINNED_COLLAPSED_KEY = 'stories-pinned-collapsed';
 const FAVORITES_COLLAPSED_KEY = 'stories-favorites-collapsed';
 
-const GRID_CLASS = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3';
+const GRID_CLASS = `${styles.gRIDCLASS} 2xl:grid-cols-6`;
 
 const COLUMN_BREAKPOINTS = [
 	{ query: '(min-width: 1536px)', columns: 6 },
@@ -93,7 +94,7 @@ export function PromotedSections({
 	if (sideBySide) {
 		return (
 			<section
-				className={cn('grid gap-3', className)}
+				className={cn(styles.promotedSectionsSection, className)}
 				style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
 			>
 				{groups.map((g) => (
@@ -104,7 +105,7 @@ export function PromotedSections({
 						folderHandlers={folderHandlers}
 						selectionHandlers={selectionHandlers}
 						style={{ gridColumn: `span ${g.items.length}` }}
-						gridClassName='grid gap-3'
+						gridClassName={styles.promotedSectionsSection}
 						gridStyle={{ gridTemplateColumns: `repeat(${g.items.length}, minmax(0, 1fr))` }}
 					/>
 				))}
@@ -121,7 +122,7 @@ export function PromotedSections({
 					currentUserName={currentUserName}
 					folderHandlers={folderHandlers}
 					selectionHandlers={selectionHandlers}
-					className={cn('mb-6', className)}
+					className={cn(styles.promotedSectionsPromotedGroup, className)}
 				/>
 			))}
 		</>
@@ -247,13 +248,13 @@ function SectionHeader({ label, collapsed, onToggle }: { label: string; collapse
 	return (
 		<button
 			type='button'
-			className='flex items-center gap-1.5 mb-3 cursor-pointer text-muted-foreground'
+			className={styles.sectionHeaderButton}
 			onClick={onToggle}
 		>
-			<span className='inline-flex size-4 items-center justify-center shrink-0'>
-				{collapsed ? <ChevronRight className='size-3.5' /> : <ChevronDown className='size-3.5' />}
+			<span className={styles.sectionHeaderSpan}>
+				{collapsed ? <ChevronRight className={styles.sectionHeaderChevronRight} /> : <ChevronDown className={styles.sectionHeaderChevronRight} />}
 			</span>
-			<span className='text-sm font-medium'>{label}</span>
+			<span className={styles.sectionHeaderSpan2}>{label}</span>
 		</button>
 	);
 }

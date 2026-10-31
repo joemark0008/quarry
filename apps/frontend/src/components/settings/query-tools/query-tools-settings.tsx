@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
 import { useQueryToolMutations, useQueryToolsQuery } from '@/queries/use-query-tools';
+import styles from './query-tools-settings.module.css';
 
 type EditorState = { mode: 'create'; sql?: string } | { mode: 'edit'; tool: ProjectQueryTool } | null;
 
@@ -61,33 +62,33 @@ export function QueryToolsSettings({
 			divide
 		>
 			{tools.isLoading ? (
-				<div className='flex flex-col gap-3'>
-					<Skeleton className='h-8 w-full' />
-					<Skeleton className='h-8 w-full' />
+				<div className={styles.queryToolsSettingsDiv}>
+					<Skeleton className={styles.queryToolsSettingsSkeleton} />
+					<Skeleton className={styles.queryToolsSettingsSkeleton} />
 				</div>
 			) : tools.isError ? (
 				<ErrorMessage message={tools.error.message} />
 			) : !tools.data?.length ? (
 				<Empty>No query tools yet. Build a query and save it as a tool the agent can call.</Empty>
 			) : (
-				<div className='flex flex-col divide-y'>
+				<div className={styles.queryToolsSettingsDiv2}>
 					{tools.data.map((tool) => (
-						<div key={tool.id} className='flex items-center gap-4 py-2 group first:pt-0 last:pb-0'>
-							<div className='flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground'>
-								<TerminalSquare className='size-4' />
+						<div key={tool.id} className={`${styles.queryToolsSettingsDiv3} group`}>
+							<div className={styles.queryToolsSettingsDiv4}>
+								<TerminalSquare className={styles.queryToolsSettingsTerminalSquare} />
 							</div>
-							<div className='flex-1 min-w-0'>
-								<div className='flex items-baseline gap-2 min-w-0'>
-									<span className='text-sm font-medium font-mono text-foreground truncate'>
+							<div className={styles.queryToolsSettingsDiv5}>
+								<div className={styles.queryToolsSettingsDiv6}>
+									<span className={styles.queryToolsSettingsSpan}>
 										{tool.agentToolName}
 									</span>
 									{tool.parameters.length > 0 && (
-										<span className='text-xs text-muted-foreground truncate'>
+										<span className={styles.queryToolsSettingsSpan2}>
 											({tool.parameters.map((parameter) => parameter.name).join(', ')})
 										</span>
 									)}
 								</div>
-								<p className='text-xs text-muted-foreground truncate'>{tool.description}</p>
+								<p className={styles.queryToolsSettingsSpan2}>{tool.description}</p>
 							</div>
 							<Switch
 								checked={tool.enabled}
@@ -97,8 +98,8 @@ export function QueryToolsSettings({
 							/>
 							<div
 								className={cn(
-									'flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity',
-									!tool.canEdit && 'invisible',
+									styles.queryToolsSettingsDiv7,
+									!tool.canEdit && styles.queryToolsSettingsDiv8,
 								)}
 							>
 								<Button

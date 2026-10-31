@@ -47,6 +47,7 @@ import { useRegisterStoryBeforeAgentSend } from '@/contexts/story-before-agent-s
 import { StoryThemeProvider, useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
 import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-viewer.module.css';
 
 interface StoryViewerProps {
 	chatId: string;
@@ -345,13 +346,13 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 	if (!storyCode) {
 		if (chatQuery.isLoading) {
 			return (
-				<div className='flex h-full items-center justify-center'>
+				<div className={styles.classicStoryViewerDiv}>
 					<Spinner />
 				</div>
 			);
 		}
 		return (
-			<div className='flex h-full items-center justify-center text-muted-foreground text-sm'>
+			<div className={styles.classicStoryViewerDiv2}>
 				{isAgentRunning ? 'Waiting for story stream...' : 'No Story content available.'}
 			</div>
 		);
@@ -372,7 +373,7 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 		isSaving,
 	});
 	const content = (
-		<div className='flex h-full flex-col'>
+		<div className={styles.contentDiv}>
 			<StoryHeader
 				title={storyTitle}
 				chatId={chatId}
@@ -419,11 +420,11 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 					tabs={tabs.map((tab) => ({ title: tab.title }))}
 					activeIndex={activeTab}
 					onSelect={setActiveTabIndex}
-					contentClassName='px-6'
+					contentClassName={styles.contentStoryTabsBar}
 				/>
 			)}
 
-			<div ref={scrollContainerRef} className='flex-1 min-h-0 overflow-auto'>
+			<div ref={scrollContainerRef} className={styles.contentDiv2}>
 				{renderWithEditProvider(
 					!isReadonlyMode && isViewingLatest && !archivedAt && !isAgentRunning && viewMode !== 'edit',
 					{
@@ -457,7 +458,7 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 						<StoryEmbedDataProvider value={versionQueryData}>
 							<StoryThemeProvider
 								theme={storyTheme}
-								className='h-auto min-h-full bg-background text-foreground'
+								className={styles.contentStoryThemeProvider}
 							>
 								{isEditTabbedStory ? (
 									<StoryTabbedEditor
@@ -466,8 +467,8 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 										onSave={handleSave}
 										onChange={storyBuffer.handleCodeChange}
 										getCodeRef={tabbedEditCodeRef}
-										barContentClassName='px-6'
-										contentClassName='p-6'
+										barContentClassName={styles.contentStoryTabsBar}
+										contentClassName={styles.contentStoryTabbedEditor}
 									/>
 								) : (
 									<StoryEditor

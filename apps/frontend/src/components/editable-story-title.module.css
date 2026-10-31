@@ -1,0 +1,19 @@
+.editableStoryTitleInput {
+	margin-inline: -0.25rem;
+	field-sizing: content;
+	width: auto;
+	max-width: 100%;
+	min-width: 5rem;
+	flex-shrink: 1;
+	border-radius: 0.25rem;
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	border-color: var(--app-line);
+	background-color: transparent;
+	padding-inline: 0.25rem;
+	--fx-outline-style: none;
+	outline-style: none;
+}
+.editableStoryTitleHeading {
+	cursor: text;
+}

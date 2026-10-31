@@ -9,6 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import styles from './user-group-picker.module.css';
 
 export interface UserGroupPickerOption {
 	id: string;
@@ -50,17 +51,17 @@ export function UserGroupPicker({
 					variant='outline'
 					size={compact ? 'sm' : 'default'}
 					className={cn(
-						'min-w-0 justify-between overflow-hidden bg-background font-normal',
-						compact ? 'h-7 w-56 gap-1 px-1.5 py-0 text-xs' : 'w-full',
+						styles.pickerButton,
+						compact ? styles.pickerButton2 : styles.pickerButton3,
 					)}
 					aria-label={`Select user groups. Current groups: ${chipNames.join(', ')}`}
 					disabled={loading}
 				>
 					<ResponsiveGroupChips names={chipNames} size={compact ? 'compact' : 'default'} />
-					<ChevronDown className={cn('shrink-0', compact && 'size-3')} />
+					<ChevronDown className={cn(styles.pickerChevronDown, compact && styles.pickerChevronDown2)} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='start' className='max-h-64 min-w-56'>
+			<DropdownMenuContent align='start' className={styles.pickerDropdownMenuContent}>
 				<DropdownMenuCheckboxItem checked disabled>
 					{defaultGroup?.name ?? 'All Users'} (automatic)
 				</DropdownMenuCheckboxItem>
@@ -83,10 +84,10 @@ export function UserGroupPicker({
 	}
 
 	return (
-		<div className='flex flex-col gap-2'>
-			<label className='text-sm font-medium'>Groups</label>
+		<div className={styles.userGroupPickerDiv}>
+			<label className={styles.userGroupPickerLabel}>Groups</label>
 			{picker}
-			<p className='px-4 text-xs text-muted-foreground'>
+			<p className={styles.userGroupPickerP}>
 				{loading ? 'Loading groups...' : `${defaultGroup?.name ?? 'All Users'} is added automatically.`}
 			</p>
 		</div>

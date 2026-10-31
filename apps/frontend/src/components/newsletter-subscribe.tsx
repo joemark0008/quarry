@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { QUARRY_NEWSLETTER_SUBSCRIBE_URL } from '@/lib/quarry-links';
+import styles from './newsletter-subscribe.module.css';
 
 interface NewsletterSubscribeDialogProps {
 	open: boolean;
@@ -44,7 +45,7 @@ export function NewsletterSubscribeInlineForm({ initialEmail }: NewsletterSubscr
 
 function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: NewsletterSubscribeFormProps) {
 	const inputId = useId();
-	const isInline = variant === 'inline';
+	const isInline = variant === styles.isInline;
 	const [email, setEmail] = useState(initialEmail);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [message, setMessage] = useState<string | null>(null);
@@ -72,9 +73,9 @@ function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: News
 	};
 
 	return (
-		<div className={cn('flex flex-col gap-2', isInline && 'items-end gap-1')}>
+		<div className={cn(styles.newsletterSubscribeFormDiv, isInline && styles.newsletterSubscribeFormDiv2)}>
 			<form
-				className={cn('flex gap-2', isInline ? 'items-center' : 'flex-col sm:flex-row')}
+				className={cn(styles.newsletterSubscribeFormForm, isInline ? styles.newsletterSubscribeFormForm2 : styles.newsletterSubscribeFormForm3)}
 				onSubmit={handleSubmit}
 			>
 				<label htmlFor={inputId} className='sr-only'>
@@ -87,7 +88,7 @@ function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: News
 					onChange={(event) => setEmail(event.target.value)}
 					placeholder='you@example.com'
 					required
-					className={cn(isInline ? 'h-8 w-52' : 'sm:flex-1')}
+					className={cn(isInline ? styles.newsletterSubscribeFormInput : styles.newsletterSubscribeFormInput2)}
 					disabled={isSubmitting}
 				/>
 				<Button
@@ -101,7 +102,7 @@ function NewsletterSubscribeForm({ initialEmail = '', variant = 'dialog' }: News
 			</form>
 			{message && (
 				<p
-					className={cn('text-xs', hasError ? 'text-destructive' : 'text-muted-foreground')}
+					className={cn(styles.newsletterSubscribeFormP, hasError ? styles.newsletterSubscribeFormP2 : styles.newsletterSubscribeFormP3)}
 					role='status'
 					aria-live='polite'
 				>

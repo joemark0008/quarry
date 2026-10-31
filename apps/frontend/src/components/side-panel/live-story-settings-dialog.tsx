@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { storyApi } from '@/lib/story-api';
+import styles from './live-story-settings-dialog.module.css';
 
 interface LiveStorySettingsDialogProps {
 	open: boolean;
@@ -191,42 +192,42 @@ export function LiveStorySettingsDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className='sm:max-w-md max-h-[85vh] overflow-y-auto'>
-				<DialogHeader className='gap-4'>
+			<DialogContent className={styles.liveStorySettingsDialogDialogContent}>
+				<DialogHeader className={styles.liveStorySettingsDialogDialogHeader}>
 					<DialogTitle>Live Story Settings</DialogTitle>
-					<DialogDescription className='text-sm text-muted-foreground font-medium'>
+					<DialogDescription className={styles.liveStorySettingsDialogDialogDescription}>
 						Automatically keep this story up to date and optionally send the latest version to your team.
 					</DialogDescription>
 				</DialogHeader>
 
-				<fieldset disabled={isBusy} className='flex flex-col gap-5 border-0 m-0 p-0 min-w-0'>
-					<section className='flex flex-col gap-4'>
-						<div className='flex items-center justify-between gap-4'>
-							<div className='flex items-center gap-2.5'>
-								<div className='flex size-8 items-center justify-center rounded-full'>
-									<Activity className='size-4' />
+				<fieldset disabled={isBusy} className={styles.liveStorySettingsDialogFieldset}>
+					<section className={styles.liveStorySettingsDialogSection}>
+						<div className={styles.liveStorySettingsDialogDiv}>
+							<div className={styles.liveStorySettingsDialogDiv2}>
+								<div className={styles.liveStorySettingsDialogDiv3}>
+									<Activity className={styles.liveStorySettingsDialogActivity} />
 								</div>
-								<div className='flex flex-col gap-1'>
-									<p className='text-sm font-semibold'>Live</p>
-									<p className='text-xs text-muted-foreground'>Re-run queries to refresh data.</p>
+								<div className={styles.liveStorySettingsDialogDiv4}>
+									<p className={styles.liveStorySettingsDialogP}>Live</p>
+									<p className={styles.liveStorySettingsDialogP2}>Re-run queries to refresh data.</p>
 								</div>
 							</div>
 							<Switch checked={localIsLive} onCheckedChange={setLocalIsLive} />
 						</div>
 
 						{localIsLive && (
-							<div className='flex flex-col gap-4 pl-10'>
-								<div className='flex flex-col gap-2'>
-									<label className='text-sm font-semibold'>Refresh schedule</label>
-									<p className='text-xs text-muted-foreground'>
+							<div className={styles.liveStorySettingsDialogDiv5}>
+								<div className={styles.liveStorySettingsDialogDiv6}>
+									<label className={styles.liveStorySettingsDialogP}>Refresh schedule</label>
+									<p className={styles.liveStorySettingsDialogP2}>
 										How often the data should be automatically refreshed. You can always refresh
 										manually using the refresh button.
 									</p>
 									<Select value={localPreset} onValueChange={handlePresetChange}>
-										<SelectTrigger className='w-full bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+										<SelectTrigger className={styles.liveStorySettingsDialogSelectTrigger}>
 											<SelectValue />
 										</SelectTrigger>
-										<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+										<SelectContent className={styles.liveStorySettingsDialogSelectContent}>
 											{SCHEDULE_PRESETS.map((opt) => (
 												<SelectItem key={opt.value} value={opt.value}>
 													{opt.label}
@@ -236,12 +237,12 @@ export function LiveStorySettingsDialog({
 									</Select>
 
 									{localPreset === 'custom' && (
-										<div className='flex flex-col gap-3'>
-											<div className='flex flex-col gap-1.5'>
-												<label className='text-sm font-medium text-muted-foreground'>
+										<div className={styles.liveStorySettingsDialogDiv7}>
+											<div className={styles.liveStorySettingsDialogDiv8}>
+												<label className={styles.liveStorySettingsDialogDialogDescription}>
 													Describe in plain English
 												</label>
-												<div className='flex gap-2'>
+												<div className={styles.liveStorySettingsDialogDiv9}>
 													<Input
 														value={nlInput}
 														onChange={(e) => {
@@ -253,7 +254,7 @@ export function LiveStorySettingsDialog({
 															}
 														}}
 														placeholder='e.g. every weekday at 9am'
-														className='h-8 text-sm flex-1 bg-panel'
+														className={styles.liveStorySettingsDialogInput}
 														onKeyDown={(e) => {
 															if (e.key === 'Enter') {
 																handleNlConvert();
@@ -263,26 +264,26 @@ export function LiveStorySettingsDialog({
 													<Button
 														variant='outline'
 														size='sm'
-														className='gap-1 shrink-0 h-8 rounded-full'
+														className={styles.liveStorySettingsDialogButton}
 														onClick={handleNlConvert}
 														disabled={!nlInput.trim() || cronNlpMutation.isPending}
 													>
 														{cronNlpMutation.isPending ? (
-															<Loader2 className='size-3 animate-spin' />
+															<Loader2 className={styles.liveStorySettingsDialogLoader2} />
 														) : (
-															<Wand2 className='size-3' />
+															<Wand2 className={styles.liveStorySettingsDialogWand2} />
 														)}
 														<span>Convert</span>
 													</Button>
 												</div>
 												{(cronNlpMutation.isError || nlConvertFailed) && (
-													<p className='text-[11px] text-destructive'>
+													<p className={styles.liveStorySettingsDialogP3}>
 														Could not convert to cron expression. Try a different
 														description.
 													</p>
 												)}
 												{!(cronNlpMutation.isError || nlConvertFailed) && (
-													<p className='text-[11px] text-muted-foreground'>
+													<p className={styles.liveStorySettingsDialogP4}>
 														{hasUnsavedDescriptionChanges
 															? 'Click Convert to update the cron expression and saved description.'
 															: 'This description is saved with the cron expression.'}
@@ -290,17 +291,17 @@ export function LiveStorySettingsDialog({
 												)}
 											</div>
 
-											<div className='flex flex-col gap-1.5'>
-												<label className='text-sm font-medium text-muted-foreground'>
+											<div className={styles.liveStorySettingsDialogDiv8}>
+												<label className={styles.liveStorySettingsDialogDialogDescription}>
 													Or enter a cron expression
 												</label>
 												<Input
 													value={localCustomCron}
 													onChange={(e) => setLocalCustomCron(e.target.value)}
 													placeholder='*/5 * * * *'
-													className='h-8 text-sm font-mono bg-panel'
+													className={styles.liveStorySettingsDialogInput2}
 												/>
-												<p className='text-[11px] text-muted-foreground'>
+												<p className={styles.liveStorySettingsDialogP4}>
 													Format: minute hour day-of-month month day-of-week
 												</p>
 											</div>
@@ -308,11 +309,11 @@ export function LiveStorySettingsDialog({
 									)}
 								</div>
 
-								<div className='flex items-center justify-between gap-4'>
-									<div className='flex items-center gap-2.5'>
-										<div className='flex flex-col gap-1'>
-											<p className='text-sm font-semibold'>Regenerate the narrative</p>
-											<p className='text-xs text-muted-foreground'>
+								<div className={styles.liveStorySettingsDialogDiv}>
+									<div className={styles.liveStorySettingsDialogDiv2}>
+										<div className={styles.liveStorySettingsDialogDiv4}>
+											<p className={styles.liveStorySettingsDialogP}>Regenerate the narrative</p>
+											<p className={styles.liveStorySettingsDialogP2}>
 												Refresh the story text with updated numbers while keeping the current
 												structure, charts, tables, and titles
 											</p>
@@ -346,7 +347,7 @@ export function LiveStorySettingsDialog({
 				<DialogFooter>
 					<Button
 						variant='outline'
-						className='rounded-full'
+						className={styles.liveStorySettingsDialogButton2}
 						onClick={() => onOpenChange(false)}
 						disabled={isBusy}
 					>
@@ -354,11 +355,11 @@ export function LiveStorySettingsDialog({
 					</Button>
 					<Button
 						variant='primary-gradient'
-						className='rounded-full'
+						className={styles.liveStorySettingsDialogButton2}
 						onClick={handleSave}
 						disabled={!hasChanges || (localIsLive && !deliveryStatus.valid) || isBusy}
 					>
-						{isBusy && <Loader2 className='size-3.5 animate-spin' />}
+						{isBusy && <Loader2 className={styles.liveStorySettingsDialogLoader22} />}
 						Save
 					</Button>
 				</DialogFooter>

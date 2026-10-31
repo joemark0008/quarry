@@ -2,6 +2,7 @@ import { ArchiveRestoreIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-archived-banner.module.css';
 
 interface ArchivedBannerProps {
 	chatId: string;
@@ -27,16 +28,16 @@ export function ArchivedBanner({ chatId, storySlug }: ArchivedBannerProps) {
 	);
 
 	return (
-		<div className='flex items-center justify-between gap-3 border-b bg-muted/50 px-4 py-2'>
-			<span className='text-xs text-muted-foreground'>This story has been archived.</span>
+		<div className={styles.archivedBannerDiv}>
+			<span className={styles.archivedBannerSpan}>This story has been archived.</span>
 			<Button
 				variant='outline'
 				size='sm'
-				className='gap-1.5 shrink-0 rounded-full'
+				className={styles.archivedBannerButton}
 				onClick={() => unarchiveMutation.mutate({ chatId, storySlug })}
 				disabled={unarchiveMutation.isPending}
 			>
-				<ArchiveRestoreIcon className='size-3' />
+				<ArchiveRestoreIcon className={styles.archivedBannerArchiveRestoreIcon} />
 				<span>Unarchive</span>
 			</Button>
 		</div>

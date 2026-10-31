@@ -1,0 +1,35 @@
+.shell {
+	min-width: 0;
+	flex: 1;
+}
+
+.main {
+	display: flex;
+	height: 100dvh;
+	min-height: 0;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: var(--app-surface);
+}
+
+.page {
+	display: flex;
+	min-width: 0;
+	min-height: 0;
+	flex: 1;
+}
+
+.backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: 90;
+	background-color: rgb(0 0 0 / 50%);
+}
+
+.navbar {
+	border-inline-end: 0;
+
+	@mixin smaller-than $mantine-breakpoint-sm {
+		width: 15rem;
+	}
+}

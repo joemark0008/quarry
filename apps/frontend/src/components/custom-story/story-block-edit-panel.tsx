@@ -13,6 +13,7 @@ import { useChatActivity } from '@/hooks/use-chat-activity';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { cn } from '@/lib/utils';
 import { storyBlockEditStore } from '@/stores/story-block-edit';
+import styles from './story-block-edit-panel.module.css';
 
 export function StoryBlockEditPanel({ chatId }: { chatId: string }) {
 	const target = useSyncExternalStore(storyBlockEditStore.subscribe, storyBlockEditStore.getSnapshot);
@@ -35,32 +36,32 @@ export function StoryBlockEditPanel({ chatId }: { chatId: string }) {
 	return (
 		<div
 			className={cn(
-				'flex flex-col border bg-background',
-				isMobile ? 'fixed inset-0 z-50' : 'absolute inset-x-0 top-0 z-20 mx-3 my-3 rounded-2xl',
+				styles.storyBlockEditPanelDiv,
+				isMobile ? styles.storyBlockEditPanelDiv2 : styles.storyBlockEditPanelDiv3,
 			)}
 			style={isMobile ? undefined : { bottom: 'var(--chat-input-height)' }}
 			data-selection-ignore
 		>
-			<div className='flex shrink-0 items-start justify-between gap-2 px-6 pt-4 pb-2'>
-				<div className='min-w-0'>
-					<div className='text-sm font-semibold'>
+			<div className={styles.storyBlockEditPanelDiv4}>
+				<div className={styles.storyBlockEditPanelDiv5}>
+					<div className={styles.storyBlockEditPanelDiv6}>
 						{target.kind === 'table' ? 'Edit table formatting' : 'Edit chart'}
 					</div>
-					<div className='text-xs text-muted-foreground'>
+					<div className={styles.storyBlockEditPanelDiv7}>
 						{target.kind === 'table' ? TABLE_FORMAT_EDIT_DESCRIPTION : BLOCK_EDIT_DESCRIPTION}
 					</div>
 				</div>
 				<Button
 					variant='ghost'
 					size='icon-sm'
-					className='hover:rounded-full'
+					className={styles.storyBlockEditPanelButton}
 					onClick={storyBlockEditStore.close}
 					aria-label='Close'
 				>
-					<X className='size-3.5' />
+					<X className={styles.storyBlockEditPanelX} />
 				</Button>
 			</div>
-			<div className='min-h-0 flex-1 overflow-y-auto px-6 pb-4'>
+			<div className={styles.storyBlockEditPanelDiv8}>
 				{target.kind === 'table' ? (
 					<CustomStoryTableFormatForm
 						key={target.id}

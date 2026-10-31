@@ -16,6 +16,7 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useLoadAllQueryRows, useQueryRowsSource } from '@/hooks/use-query-rows';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { SidePanelContent } from '@/components/side-panel/sql-editor';
+import styles from './execute-sql.module.css';
 
 type ViewMode = 'results' | 'query';
 
@@ -90,7 +91,7 @@ export const SqlToolCallView = ({
 	const actions: ActionButton[] = [
 		{
 			id: 'results',
-			label: <TableIcon className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <TableIcon className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'results',
 			onClick: () => setViewMode('results'),
@@ -98,7 +99,7 @@ export const SqlToolCallView = ({
 		},
 		{
 			id: 'query',
-			label: <Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Code className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			expandOnClick: true,
 			isActive: viewMode === 'query',
 			onClick: () => setViewMode('query'),
@@ -106,7 +107,7 @@ export const SqlToolCallView = ({
 		},
 		{
 			id: 'format',
-			label: <Palette className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Palette className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => {
 				if (!output) {
 					return;
@@ -118,7 +119,7 @@ export const SqlToolCallView = ({
 		},
 		{
 			id: 'copy',
-			label: <Copy className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Copy className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => {
 				navigator.clipboard.writeText(input?.sql_query ?? '');
 			},
@@ -128,7 +129,7 @@ export const SqlToolCallView = ({
 			? [
 					{
 						id: 'download',
-						label: <Download className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+						label: <Download className={styles.actionsTableIcon} strokeWidth={2.25} />,
 						title: 'Export results',
 						export: {
 							columns: output.columns,
@@ -141,7 +142,7 @@ export const SqlToolCallView = ({
 			: []),
 		{
 			id: 'edit',
-			label: <Pencil className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Pencil className={styles.actionsTableIcon} strokeWidth={2.25} />,
 			onClick: () => openEditor(isEditable),
 			title: isEditable ? 'Edit in side panel' : 'Open in side panel',
 		},
@@ -149,7 +150,7 @@ export const SqlToolCallView = ({
 			? [
 					{
 						id: 'save-as-tool',
-						label: <BookmarkPlus className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+						label: <BookmarkPlus className={styles.actionsTableIcon} strokeWidth={2.25} />,
 						onClick: () =>
 							navigate({ to: '/settings/project/query-tools', search: { sql: input.sql_query } }),
 						title: 'Save as query tool',
@@ -163,9 +164,9 @@ export const SqlToolCallView = ({
 			defaultExpanded={false}
 			overrideError={viewMode === 'query'}
 			title={
-				<span className='flex items-baseline gap-2.5'>
-					<span className='text-foreground'>{label}</span>
-					<span className='text-xs text-muted-foreground truncate'>{subtitle}</span>
+				<span className={styles.sqlToolCallViewSpan}>
+					<span className={styles.sqlToolCallViewSpan2}>{label}</span>
+					<span className={styles.sqlToolCallViewSpan3}>{subtitle}</span>
 				</span>
 			}
 			badge={output?.row_count && `${output.row_count} rows`}

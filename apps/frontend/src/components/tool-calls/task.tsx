@@ -11,6 +11,7 @@ import { useIsInToolGroup } from '@/contexts/tool-group';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { cn } from '@/lib/utils';
+import styles from './task.module.css';
 
 /** A subagent task summarised in the conversation; clicking it opens the run as its own conversation. */
 export const TaskToolCall = ({
@@ -35,9 +36,9 @@ export const TaskToolCall = ({
 	const content = isCompact ? <CompactRow summary={summary} /> : <Card summary={summary} />;
 
 	return (
-		<div className={cn(!isCompact && '-mx-3')} data-replay-target-id={toolCallId}>
+		<div className={cn(!isCompact && styles.taskToolCallDiv)} data-replay-target-id={toolCallId}>
 			{chatId ? (
-				<SubagentLink chatId={chatId} toolCallId={toolCallId} className='block'>
+				<SubagentLink chatId={chatId} toolCallId={toolCallId} className={styles.taskToolCallSubagentLink}>
 					{content}
 				</SubagentLink>
 			) : (
@@ -63,35 +64,35 @@ const Card = ({ summary }: { summary: RunSummary }) => {
 	return (
 		<div
 			className={cn(
-				'flex flex-col gap-2 rounded-lg border border-border bg-backgroundSecondary/30 px-3 py-2.5 text-sm transition-colors',
-				summary.canOpen && 'cursor-pointer hover:bg-accent/40',
+				`${styles.cardDiv} bg-backgroundSecondary/30`,
+				summary.canOpen && styles.cardDiv2,
 			)}
 		>
-			<div className='flex items-center gap-2 min-w-0'>
+			<div className={styles.cardDiv3}>
 				<StatusIcon summary={summary} />
-				<span className={cn('font-medium truncate', !summary.isSettled && 'text-shimmer')}>
+				<span className={cn(styles.cardSpan, !summary.isSettled && styles.cardSpan2)}>
 					{summary.title}
 				</span>
-				<span className='ml-auto shrink-0 text-xs text-muted-foreground'>{summary.work}</span>
-				{summary.canOpen && <ArrowUpRight className='size-3.5 shrink-0 text-muted-foreground' />}
+				<span className={styles.cardSpan3}>{summary.work}</span>
+				{summary.canOpen && <ArrowUpRight className={styles.cardArrowUpRight} />}
 			</div>
-			{summary.prompt && <p className='text-foreground/70 italic line-clamp-2'>{summary.prompt}</p>}
-			{hasError ? <p className='text-xs text-red-500 line-clamp-2'>{summary.errorText}</p> : null}
+			{summary.prompt && <p className={styles.cardP}>{summary.prompt}</p>}
+			{hasError ? <p className={styles.cardP2}>{summary.errorText}</p> : null}
 		</div>
 	);
 };
 
 const CompactRow = ({ summary }: { summary: RunSummary }) => {
 	return (
-		<div className={cn('flex items-center gap-2 min-w-0 text-sm', summary.canOpen && 'cursor-pointer')}>
-			<div className='size-3 flex items-center justify-center shrink-0'>
+		<div className={cn(styles.compactRowDiv, summary.canOpen && styles.compactRowDiv2)}>
+			<div className={styles.compactRowDiv3}>
 				<LeadingIcon summary={summary} />
 			</div>
-			<span className='flex items-baseline gap-2.5 min-w-0'>
-				<span className={cn('shrink-0 text-foreground', !summary.isSettled && 'text-shimmer')}>
+			<span className={styles.compactRowSpan}>
+				<span className={cn(styles.compactRowSpan2, !summary.isSettled && styles.cardSpan2)}>
 					{summary.label}
 				</span>
-				<span className='truncate text-xs text-muted-foreground'>{summary.title}</span>
+				<span className={styles.compactRowSpan3}>{summary.title}</span>
 			</span>
 		</div>
 	);
@@ -99,10 +100,10 @@ const CompactRow = ({ summary }: { summary: RunSummary }) => {
 
 const StatusIcon = ({ summary }: { summary: RunSummary }) => {
 	if (!summary.isSettled) {
-		return <Spinner className='size-3 shrink-0' />;
+		return <Spinner className={styles.statusIconSpinner} />;
 	}
 	if (summary.errorText) {
-		return <div className='size-2 shrink-0 rounded-full bg-red-500' />;
+		return <div className={styles.statusIconDiv} />;
 	}
 	return null;
 };

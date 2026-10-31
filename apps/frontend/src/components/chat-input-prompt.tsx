@@ -20,6 +20,7 @@ import { toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { cn } from '@/lib/utils';
 import { skillApi } from '@/lib/skill-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import styles from './chat-input-prompt.module.css';
 
 export const STORY_MENTION_ID = story.MENTION_ID;
 export const CUSTOM_STORY_MENTION_ID = story.CUSTOM_MENTION_ID;
@@ -29,14 +30,14 @@ export const storyMentionOption: MentionOption = {
 	id: STORY_MENTION_ID,
 	label: 'Story mode',
 	labelRight: 'Create a new story',
-	icon: <StoryIcon className='size-4' strokeWidth={2.25} />,
+	icon: <StoryIcon className={styles.storyMentionOptionStoryIcon} strokeWidth={2.25} />,
 };
 
 export const customStoryMentionOption: MentionOption = {
 	id: CUSTOM_STORY_MENTION_ID,
 	label: 'Custom story mode',
 	labelRight: 'Create a new custom story that works as a data app',
-	icon: <AppWindow className='size-4' strokeWidth={2.25} />,
+	icon: <AppWindow className={styles.storyMentionOptionStoryIcon} strokeWidth={2.25} />,
 };
 
 export function useStoryMentionOptions(storyCreationEnabled: boolean): MentionOption[] {
@@ -70,31 +71,31 @@ type ChatPromptProps = {
 
 const theme: PromptTheme = {
 	backgroundColor: 'transparent',
-	placeholderColor: 'var(--color-muted-foreground)',
+	placeholderColor: 'var(--app-muted)',
 	borderColor: 'transparent',
 	focusBorderColor: 'transparent',
 	focusBoxShadow: 'none',
 	minHeight: '70px',
-	color: 'var(--color-foreground)',
+	color: 'var(--app-text)',
 	padding: '12px',
 	fontFamily: 'inherit',
 	fontSize: '14px',
 	menu: {
 		minWidth: '400px',
 		maxHeight: '360px',
-		backgroundColor: 'var(--popover)',
-		borderColor: 'var(--border)',
-		color: 'var(--popover-foreground)',
-		itemHoverColor: 'var(--accent)',
-		chevronColor: 'var(--color-muted-foreground)',
-		chevronHoverColor: 'var(--color-foreground)',
+		backgroundColor: 'var(--app-surface)',
+		borderColor: 'var(--app-line)',
+		color: 'var(--app-text)',
+		itemHoverColor: 'var(--app-fill)',
+		chevronColor: 'var(--app-muted)',
+		chevronHoverColor: 'var(--app-text)',
 		title: {
-			labelColor: 'var(--color-muted-foreground)',
+			labelColor: 'var(--app-muted)',
 		},
 	},
 	pill: {
-		backgroundColor: 'var(--background)',
-		color: 'var(--foreground)',
+		backgroundColor: 'var(--app-surface)',
+		color: 'var(--app-text)',
 		padding: 'calc(var(--spacing) * 1) calc(var(--spacing) * 2.5)',
 		borderRadius: '9999px',
 	},
@@ -166,7 +167,7 @@ export function ChatPrompt({
 				onChange={handleChange}
 				onEnter={onEnter}
 				submitOnEnter={submitOnEnter}
-				className={cn('w-full quarry-input', resizable && 'quarry-input-resizable')}
+				className={cn(`${styles.chatPromptPrompt} quarry-input`, resizable && 'quarry-input-resizable')}
 				style={
 					{
 						'--prompt-min-height': minHeight || '70px',

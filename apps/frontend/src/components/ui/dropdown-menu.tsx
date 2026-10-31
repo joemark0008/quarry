@@ -112,8 +112,8 @@ function DropdownMenuTrigger({
 
 function DropdownMenuContent({
 	className,
-	side: _side,
-	align: _align,
+	side = 'bottom',
+	align = 'center',
 	sideOffset: _sideOffset,
 	collisionPadding: _collisionPadding,
 	onCloseAutoFocus: _onCloseAutoFocus,
@@ -121,6 +121,15 @@ function DropdownMenuContent({
 	...props
 }: ContentProps) {
 	const ref = useRef<HTMLDivElement>(null);
+	const ariaLabel = props['aria-label'];
+
+	// Mantine names the dropdown after its target, which would hide an explicit label.
+	useEffect(() => {
+		if (ariaLabel) {
+			ref.current?.removeAttribute('aria-labelledby');
+			ref.current?.setAttribute('aria-label', ariaLabel);
+		}
+	}, [ariaLabel]);
 
 	useEffect(() => {
 		if (!onInteractOutside) {
@@ -139,6 +148,8 @@ function DropdownMenuContent({
 		<Menu.Dropdown
 			ref={ref}
 			data-slot='dropdown-menu-content'
+			data-side={side}
+			data-align={align}
 			className={cn(styles.floating, styles.menu, className)}
 			{...(props as object)}
 		/>

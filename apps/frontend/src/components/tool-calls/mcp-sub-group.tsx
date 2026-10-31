@@ -8,6 +8,7 @@ import { AssistantReasoning } from '@/components/chat-messages/assistant-reasoni
 import { useChatView } from '@/contexts/chat-view';
 import { isToolSettled, isReasoningPart } from '@/lib/ai';
 import { isMcpCallPart } from '@/lib/mcp';
+import styles from './mcp-sub-group.module.css';
 
 export const McpToolCallsSubGroup = ({ group, isSettled }: { group: McpSubGroupPart; isSettled: boolean }) => {
 	const isLoading = !isSettled && group.parts.some((part) => !isReasoningPart(part) && !isToolSettled(part));
@@ -39,7 +40,7 @@ export const McpToolCallsSubGroup = ({ group, isSettled }: { group: McpSubGroupP
 			isLoading={isLoading}
 			variant='inline'
 		>
-			<div className='flex flex-col gap-2'>
+			<div className={styles.mcpToolCallsSubGroupDiv}>
 				{group.parts.map((part, index) => {
 					if (isReasoningPart(part)) {
 						return (

@@ -19,6 +19,7 @@ import { lastUserMessagePayload } from '@/lib/mcp-auth-retry';
 import { openMcpConnectPopup } from '@/lib/mcp-oauth';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
+import styles from './chat-input-suggestions.module.css';
 
 /**
  * Milliseconds of inactivity before we ask the user how the conversation went, indexed by how many
@@ -62,7 +63,7 @@ export function ChatInputSuggestions({
 
 	return (
 		<div
-			className='overflow-hidden'
+			className={styles.chatInputSuggestionsDiv}
 			style={{
 				height: isCollapsed ? 0 : height,
 				opacity: isCollapsed ? 0 : 1,
@@ -71,7 +72,7 @@ export function ChatInputSuggestions({
 			aria-hidden={isCollapsed}
 			inert={isCollapsed}
 		>
-			<div ref={ref} className={cn('pb-2', isCollapsed && 'pointer-events-none')}>
+			<div ref={ref} className={cn(styles.chatInputSuggestionsDiv2, isCollapsed && styles.chatInputSuggestionsDiv3)}>
 				{content}
 			</div>
 		</div>
@@ -118,14 +119,14 @@ function renderSuggestion({
 	if (mcpAuth.isVisible && mcpAuth.server) {
 		return (
 			<SuggestionCard
-				icon={<Plug className='size-4 text-primary' />}
+				icon={<Plug className={styles.renderSuggestionPlug} />}
 				message={`Connect your account to "${mcpAuth.server}" to continue`}
 				description={mcpAuth.error}
 			>
 				<Button
 					variant='ghost'
 					size='sm'
-					className='rounded-full text-muted-foreground'
+					className={styles.renderSuggestionButton}
 					onClick={mcpAuth.dismiss}
 				>
 					Not now
@@ -133,7 +134,7 @@ function renderSuggestion({
 				<Button
 					variant='primary-gradient'
 					size='sm'
-					className='rounded-full'
+					className={styles.renderSuggestionButton2}
 					onClick={mcpAuth.connect}
 					disabled={mcpAuth.connecting}
 				>
@@ -146,21 +147,21 @@ function renderSuggestion({
 	if (storyCreationEnabled && story.isVisible) {
 		return (
 			<SuggestionCard
-				icon={<StoryIcon className='size-5 text-primary' />}
+				icon={<StoryIcon className={styles.renderSuggestionStoryIcon} />}
 				message='Would you want to create a story?'
 			>
 				<Button
 					variant='ghost'
 					size='sm'
-					className='rounded-full text-muted-foreground'
+					className={styles.renderSuggestionButton}
 					onClick={story.neverPropose}
 				>
 					Do not propose again
 				</Button>
-				<Button variant='ghost' size='sm' className='rounded-full' onClick={story.dismiss}>
+				<Button variant='ghost' size='sm' className={styles.renderSuggestionButton2} onClick={story.dismiss}>
 					No
 				</Button>
-				<Button variant='primary-gradient' size='sm' className='rounded-full' onClick={story.accept}>
+				<Button variant='primary-gradient' size='sm' className={styles.renderSuggestionButton2} onClick={story.accept}>
 					Yes
 				</Button>
 			</SuggestionCard>
@@ -171,19 +172,19 @@ function renderSuggestion({
 		return (
 			<>
 				<SuggestionCard
-					icon={<Activity className='size-4 text-primary' />}
+					icon={<Activity className={styles.renderSuggestionPlug} />}
 					message='Keep this story up to date?'
 					description='A live story re-runs its queries on a schedule, so its charts and numbers stay current instead of staying frozen at the moment it was created.'
 				>
 					<Button
 						variant='ghost'
 						size='sm'
-						className='rounded-full text-muted-foreground'
+						className={styles.renderSuggestionButton}
 						onClick={liveStory.dismiss}
 					>
 						Not now
 					</Button>
-					<Button variant='primary-gradient' size='sm' className='rounded-full' onClick={liveStory.accept}>
+					<Button variant='primary-gradient' size='sm' className={styles.renderSuggestionButton2} onClick={liveStory.accept}>
 						Make it live
 					</Button>
 				</SuggestionCard>
@@ -198,45 +199,45 @@ function renderSuggestion({
 	}
 
 	if (feedback.showThanks) {
-		return <SuggestionCard icon={<Check className='size-4 text-primary' />} message='Thanks for your feedback!' />;
+		return <SuggestionCard icon={<Check className={styles.renderSuggestionPlug} />} message='Thanks for your feedback!' />;
 	}
 
 	if (feedback.isVisible) {
 		return (
 			<>
 				<SuggestionCard
-					icon={<MessageSquare className='size-4 text-muted-foreground' />}
+					icon={<MessageSquare className={styles.renderSuggestionMessageSquare} />}
 					message='How did this conversation go?'
 					keepActionsInline
 				>
 					<Button
 						variant='ghost'
 						size='icon-sm'
-						className='hover:rounded-full'
+						className={styles.renderSuggestionButton3}
 						onClick={() => feedback.openFeedbackDialog('up')}
 						disabled={feedback.isPending}
 						aria-label='Good conversation'
 					>
-						<ThumbsUp className='size-4' />
+						<ThumbsUp className={styles.renderSuggestionThumbsUp} />
 					</Button>
 					<Button
 						variant='ghost'
 						size='icon-sm'
-						className='hover:rounded-full'
+						className={styles.renderSuggestionButton3}
 						onClick={() => feedback.openFeedbackDialog('down')}
 						disabled={feedback.isPending}
 						aria-label='Bad conversation'
 					>
-						<ThumbsDown className='size-4' />
+						<ThumbsDown className={styles.renderSuggestionThumbsUp} />
 					</Button>
 					<Button
 						variant='ghost'
 						size='icon-sm'
-						className='hover:rounded-full text-muted-foreground'
+						className={styles.renderSuggestionButton4}
 						onClick={feedback.dismiss}
 						aria-label='Dismiss'
 					>
-						<X className='size-4' />
+						<X className={styles.renderSuggestionThumbsUp} />
 					</Button>
 				</SuggestionCard>
 				<FeedbackDialog
@@ -637,25 +638,25 @@ export function SuggestionCard({
 		<div
 			data-selection-ignore
 			className={cn(
-				'@container group relative flex flex-wrap items-center gap-1 rounded-2xl border border-muted-foreground/25 bg-background p-2',
-				icon && 'min-h-[3.25rem]',
+				`${styles.suggestionCardDiv} group`,
+				icon && styles.suggestionCardDiv2,
 			)}
 		>
 			{icon && (
-				<div className='absolute left-2 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center'>
+				<div className={styles.suggestionCardDiv3}>
 					{icon}
 				</div>
 			)}
-			<div className={cn('min-w-0 flex-1', icon && 'ml-9')}>
-				<p className='truncate text-sm font-medium text-foreground'>{message}</p>
+			<div className={cn(styles.suggestionCardDiv4, icon && styles.suggestionCardDiv5)}>
+				<p className={styles.suggestionCardP}>{message}</p>
 				{description && <ExpandableDescription key={description} description={description} />}
 			</div>
 			{children && (
 				<div
 					className={cn(
-						'flex shrink-0 items-center gap-1',
-						keepActionsInline ? 'ml-auto' : 'w-full justify-end @lg:w-auto',
-						icon && !keepActionsInline && 'pl-9 @lg:pl-0',
+						styles.suggestionCardDiv6,
+						keepActionsInline ? styles.suggestionCardDiv7 : styles.suggestionCardDiv8,
+						icon && !keepActionsInline && styles.suggestionCardDiv9,
 					)}
 				>
 					{children}
@@ -687,14 +688,14 @@ function ExpandableDescription({ description }: { description: string }) {
 
 	return (
 		<>
-			<div className='text-xs text-muted-foreground @lg:hidden'>
-				<p ref={textRef} className={cn(!isExpanded && 'line-clamp-2')}>
+			<div className={styles.expandableDescriptionDiv}>
+				<p ref={textRef} className={cn(!isExpanded && styles.expandableDescriptionP)}>
 					{description}
 				</p>
 				{isOverflowing && (
 					<button
 						type='button'
-						className='font-medium text-foreground hover:underline'
+						className={styles.expandableDescriptionButton}
 						aria-expanded={isExpanded}
 						onClick={() => setExpanded((expanded) => !expanded)}
 					>
@@ -702,7 +703,7 @@ function ExpandableDescription({ description }: { description: string }) {
 					</button>
 				)}
 			</div>
-			<p className='hidden text-xs text-muted-foreground @lg:block'>{description}</p>
+			<p className={styles.expandableDescriptionP2}>{description}</p>
 		</>
 	);
 }

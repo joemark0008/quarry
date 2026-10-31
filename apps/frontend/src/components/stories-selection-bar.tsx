@@ -3,6 +3,7 @@ import { ArchiveIcon, ArchiveRestoreIcon, FolderInput, MessageSquarePlus, X } fr
 import { Button } from '@/components/ui/button';
 import { useContentCenteredStyle } from '@/hooks/use-sidebar-content-offset';
 import { cn } from '@/lib/utils';
+import styles from './stories-selection-bar.module.css';
 
 export function StoriesSelectionBar({
 	selectedCount,
@@ -37,27 +38,27 @@ export function StoriesSelectionBar({
 		<div
 			style={centeredStyle}
 			className={cn(
-				'fixed bottom-6 -translate-x-1/2 z-50 transition-[left] duration-300',
-				'flex items-center gap-3 px-4 py-2.5 rounded-full',
-				'bg-background border shadow-lg',
+				styles.storiesSelectionBarDiv,
+				styles.storiesSelectionBarDiv2,
+				styles.storiesSelectionBarDiv3,
 			)}
 		>
-			<span className='text-sm font-medium text-foreground tabular-nums'>{selectedCount} selected</span>
+			<span className={styles.storiesSelectionBarSpan}>{selectedCount} selected</span>
 			{limitReached && (
-				<span className='text-xs text-muted-foreground'>
+				<span className={styles.storiesSelectionBarSpan2}>
 					Please select max {BULK_ITEMS_LIMIT} stories and {BULK_ITEMS_LIMIT} folders
 				</span>
 			)}
-			<div className='w-px h-4 bg-border' />
+			<div className={styles.storiesSelectionBarDiv4} />
 			{showArchived ? (
 				<Button
 					size='sm'
 					variant='ghost'
 					onClick={onUnarchive}
 					disabled={isPending}
-					className='gap-1.5 h-7 text-xs rounded-full'
+					className={styles.storiesSelectionBarButton}
 				>
-					<ArchiveRestoreIcon className='size-3.5' />
+					<ArchiveRestoreIcon className={styles.storiesSelectionBarArchiveRestoreIcon} />
 					Restore
 				</Button>
 			) : (
@@ -67,9 +68,9 @@ export function StoriesSelectionBar({
 						variant='ghost'
 						onClick={onStartChat}
 						disabled={isPending}
-						className='gap-1.5 h-7 text-xs rounded-full'
+						className={styles.storiesSelectionBarButton}
 					>
-						<MessageSquarePlus className='size-3.5' />
+						<MessageSquarePlus className={styles.storiesSelectionBarArchiveRestoreIcon} />
 						New chat
 					</Button>
 					<Button
@@ -77,9 +78,9 @@ export function StoriesSelectionBar({
 						variant='ghost'
 						onClick={onMove}
 						disabled={isPending || !canMove}
-						className='gap-1.5 h-7 text-xs rounded-full'
+						className={styles.storiesSelectionBarButton}
 					>
-						<FolderInput className='size-3.5' />
+						<FolderInput className={styles.storiesSelectionBarArchiveRestoreIcon} />
 						Move
 					</Button>
 					<Button
@@ -87,9 +88,9 @@ export function StoriesSelectionBar({
 						variant='ghost'
 						onClick={onArchive}
 						disabled={isPending}
-						className='gap-1.5 h-7 text-xs rounded-full'
+						className={styles.storiesSelectionBarButton}
 					>
-						<ArchiveIcon className='size-3.5' />
+						<ArchiveIcon className={styles.storiesSelectionBarArchiveRestoreIcon} />
 						Archive
 					</Button>
 				</>
@@ -100,9 +101,9 @@ export function StoriesSelectionBar({
 				onClick={onCancel}
 				disabled={isPending}
 				aria-label='Cancel selection'
-				className='rounded-full hover:rounded-full'
+				className={styles.storiesSelectionBarButton2}
 			>
-				<X className='size-3.5' />
+				<X className={styles.storiesSelectionBarArchiveRestoreIcon} />
 			</Button>
 		</div>
 	);

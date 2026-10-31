@@ -17,6 +17,7 @@ import ChartStackedAreaIcon from '@/components/icons/chart-stacked-area.svg';
 
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import styles from './chart-type-picker.module.css';
 
 interface ChartTypeOption {
 	value: ChartType;
@@ -50,7 +51,7 @@ export function ChartTypePicker({ value, onValueChange, className }: ChartTypePi
 		<div
 			role='group'
 			aria-label='Chart type'
-			className={cn('grid grid-cols-[repeat(auto-fill,minmax(2.5rem,1fr))] gap-1.5', className)}
+			className={cn(styles.chartTypePickerDiv, className)}
 		>
 			{CHART_TYPE_OPTIONS.map(({ value: option, label, icon: Icon }) => {
 				const isSelected = value === option;
@@ -62,12 +63,12 @@ export function ChartTypePicker({ value, onValueChange, className }: ChartTypePi
 							aria-label={label}
 							onClick={() => onValueChange(option)}
 							className={cn(
-								'flex aspect-square cursor-pointer items-center justify-center rounded-lg border bg-panel text-muted-foreground transition-colors',
-								'hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-								isSelected && 'border-foreground bg-background text-foreground hover:bg-background',
+								styles.chartTypePickerButton,
+								styles.chartTypePickerButton2,
+								isSelected && styles.chartTypePickerButton3,
 							)}
 						>
-							<Icon className='size-5' strokeWidth={1.75} />
+							<Icon className={styles.chartTypePickerIcon} strokeWidth={1.75} />
 						</button>
 					</SimpleTooltip>
 				);

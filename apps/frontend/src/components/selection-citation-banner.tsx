@@ -4,6 +4,7 @@ import { SelectionCitationExcerpt } from '@/components/selection-citation-excerp
 import { useChatPendingCitation } from '@/hooks/use-chat-pending-citation';
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { useChatId } from '@/hooks/use-chat-id';
+import styles from './selection-citation-banner.module.css';
 
 export const SelectionCitationBanner = () => {
 	const chatId = useChatId();
@@ -14,14 +15,14 @@ export const SelectionCitationBanner = () => {
 	}
 
 	return (
-		<div className='relative mb-2 px-4 py-3 border border-border bg-background rounded-xl animate-in fade-in slide-in-from-bottom-2 duration-200'>
+		<div className={styles.selectionCitationBannerDiv}>
 			<Button
 				variant='ghost'
 				size='icon-xs'
-				className='absolute top-1.5 right-1.5 text-muted-foreground rounded-full'
+				className={styles.selectionCitationBannerButton}
 				onClick={() => chatPendingCitationStore.clear(chatId)}
 			>
-				<X className='size-3' />
+				<X className={styles.selectionCitationBannerX} />
 			</Button>
 			<SelectionCitationExcerpt
 				start={citation.start}

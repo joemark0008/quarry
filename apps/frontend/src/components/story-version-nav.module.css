@@ -1,0 +1,46 @@
+.vERSIONLABELCLASSNAME {
+	height: 1.5rem;
+	flex-shrink: 0;
+	gap: 0.25rem;
+	border-radius: calc(infinity * 1px);
+	padding-inline: 0.5rem;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	--fx-font-weight: 400;
+	font-weight: 400;
+	--fx-numeric-spacing: tabular-nums;
+	font-variant-numeric: var(--fx-ordinal,) var(--fx-slashed-zero,) var(--fx-numeric-figure,)
+		var(--fx-numeric-spacing,) var(--fx-numeric-fraction,);
+}
+.storyVersionNavSpan {
+	display: inline-flex;
+	align-items: center;
+	white-space: nowrap;
+	color: var(--app-muted);
+}
+.storyVersionNavButton {
+	color: var(--app-text);
+}
+.storyVersionNavRotateCwFadingClock {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.storyVersionNavDropdownMenuContent {
+	max-height: 18rem;
+	overflow-y: auto;
+}
+.storyVersionNavDropdownMenuRadioItem {
+	padding-right: 1.75rem;
+	padding-left: 0.5rem;
+	font-size: 0.75rem;
+	line-height: var(--fx-leading, calc(1 / 0.75));
+	--fx-numeric-spacing: tabular-nums;
+	font-variant-numeric: var(--fx-ordinal,) var(--fx-slashed-zero,) var(--fx-numeric-figure,)
+		var(--fx-numeric-spacing,) var(--fx-numeric-fraction,);
+	& > span:first-child {
+		right: 0.5rem;
+	}
+	& > span:first-child {
+		left: auto;
+	}
+}

@@ -4,6 +4,7 @@ import type { StoryQuerySqlSource } from '@/contexts/story-query-sql';
 
 import { SqlQueryDisplay } from '@/components/tool-calls/sql-query-display';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-chart-query.module.css';
 
 export function StoryChartQueryView({ queryId, source }: { queryId: string; source: StoryQuerySqlSource }) {
 	const ownedQuery = useQuery({
@@ -30,8 +31,8 @@ export function StoryChartQueryView({ queryId, source }: { queryId: string; sour
 
 	if (query.isLoading) {
 		return (
-			<div className='flex items-center gap-2 rounded-lg border border-dashed p-4 text-sm text-muted-foreground'>
-				<Loader2 className='size-4 animate-spin' />
+			<div className={styles.storyChartQueryViewDiv}>
+				<Loader2 className={styles.storyChartQueryViewLoader2} />
 				Loading query…
 			</div>
 		);
@@ -39,7 +40,7 @@ export function StoryChartQueryView({ queryId, source }: { queryId: string; sour
 
 	if (query.isError || !data) {
 		return (
-			<div className='rounded-lg border border-dashed p-4 text-sm text-muted-foreground'>
+			<div className={styles.storyChartQueryViewDiv2}>
 				{query.error?.message ?? 'Query unavailable'}
 			</div>
 		);
@@ -48,25 +49,25 @@ export function StoryChartQueryView({ queryId, source }: { queryId: string; sour
 	const showBoth = data.sqlQuery.trim() !== data.renderedSql.trim();
 
 	return (
-		<div className='flex flex-col gap-4 rounded-lg border bg-muted/20 p-3'>
+		<div className={styles.storyChartQueryViewDiv3}>
 			{showBoth ? (
 				<>
-					<section className='flex flex-col gap-1'>
-						<h4 className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>
+					<section className={styles.storyChartQueryViewSection}>
+						<h4 className={styles.storyChartQueryViewH4}>
 							Template query
 						</h4>
 						<SqlQueryDisplay query={data.sqlQuery} />
 					</section>
-					<section className='flex flex-col gap-1'>
-						<h4 className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>
+					<section className={styles.storyChartQueryViewSection}>
+						<h4 className={styles.storyChartQueryViewH4}>
 							Rendered query
 						</h4>
 						<SqlQueryDisplay query={data.renderedSql} />
 					</section>
 				</>
 			) : (
-				<section className='flex flex-col gap-1'>
-					<h4 className='text-xs font-medium uppercase tracking-wide text-muted-foreground'>Query</h4>
+				<section className={styles.storyChartQueryViewSection}>
+					<h4 className={styles.storyChartQueryViewH4}>Query</h4>
 					<SqlQueryDisplay query={data.renderedSql} />
 				</section>
 			)}

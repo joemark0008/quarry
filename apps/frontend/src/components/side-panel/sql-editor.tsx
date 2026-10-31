@@ -22,6 +22,7 @@ import { formatSQL } from '@/lib/sql-formatter';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
 import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
+import styles from './sql-editor.module.css';
 
 const RESULTS_MIN_HEIGHT = 240;
 const SQL_MIN_HEIGHT = 100;
@@ -38,7 +39,7 @@ interface SqlEditorProps {
 
 export const SidePanelContent = ({ input, output, toolCallId, editable = false }: SqlEditorProps) => {
 	return (
-		<div className='flex h-full min-h-0 flex-col bg-background'>
+		<div className={styles.sidePanelContentDiv}>
 			<SidePanelHeader title={input.name ?? input.sql_query} label={output.id} />
 			<SqlQueryEditor input={input} output={output} toolCallId={toolCallId} editable={editable} />
 		</div>
@@ -256,61 +257,61 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 	);
 
 	return (
-		<div ref={rootRef} className='flex min-h-0 flex-1 flex-col bg-background'>
+		<div ref={rootRef} className={styles.sqlQueryEditorDiv}>
 			{canEdit && (
-				<div className='flex shrink-0 items-center justify-between gap-2 border-b px-4 py-2'>
-					<div className='text-xs text-muted-foreground'>
+				<div className={styles.sqlQueryEditorDiv2}>
+					<div className={styles.sqlQueryEditorDiv3}>
 						{isDirty ? 'Unsaved changes' : 'Edit SQL, then run or save'}
 					</div>
-					<div className='flex items-center gap-2'>
+					<div className={styles.sqlQueryEditorDiv4}>
 						<Button
 							type='button'
 							variant='outline'
 							size='sm'
-							className='h-8 gap-1.5'
+							className={styles.sqlQueryEditorButton}
 							onClick={handleRun}
 							disabled={isBusy || !sqlQuery.trim()}
 						>
 							{previewMutation.isPending ? (
-								<Loader2 className='size-3.5 animate-spin' />
+								<Loader2 className={styles.sqlQueryEditorLoader2} />
 							) : (
-								<Play className='size-3.5' />
+								<Play className={styles.sqlQueryEditorPlay} />
 							)}
 							<span>Run</span>
-							<kbd className='text-[10px] opacity-60 font-sans'>⌘↵</kbd>
+							<kbd className={styles.sqlQueryEditorKbd}>⌘↵</kbd>
 						</Button>
 						<Button
 							type='button'
 							size='sm'
-							className='h-8 gap-1.5'
+							className={styles.sqlQueryEditorButton}
 							onClick={handleSaveAndRun}
 							disabled={isBusy || !sqlQuery.trim()}
 						>
 							{saveMutation.isPending ? (
-								<Loader2 className='size-3.5 animate-spin' />
+								<Loader2 className={styles.sqlQueryEditorLoader2} />
 							) : (
-								<Save className='size-3.5' />
+								<Save className={styles.sqlQueryEditorPlay} />
 							)}
 							<span>Save & run</span>
-							<kbd className='text-[10px] opacity-60 font-sans'>⌘S</kbd>
+							<kbd className={styles.sqlQueryEditorKbd}>⌘S</kbd>
 						</Button>
 					</div>
 				</div>
 			)}
 
 			{error && (
-				<div className='shrink-0 border-b bg-destructive/10 px-4 py-2 text-sm text-destructive'>{error}</div>
+				<div className={styles.sqlQueryEditorDiv5}>{error}</div>
 			)}
 			{validationIssues.length > 0 && <SqlValidationBanner queryId={queryId} issues={validationIssues} />}
 
-			<ResizablePanelGroup orientation='vertical' className='min-h-0 flex-1' elementRef={groupElementRef}>
+			<ResizablePanelGroup orientation='vertical' className={styles.sqlQueryEditorResizablePanelGroup} elementRef={groupElementRef}>
 				<ResizablePanel
 					id='sql'
 					minSize={SQL_MIN_HEIGHT}
 					panelRef={sqlPanelRef}
-					className='relative w-full group'
+					className={`${styles.sqlQueryEditorResizablePanel} group`}
 				>
-					<div className='w-full h-full overflow-auto [&_span]:font-mono pl-2'>
+					<div className={styles.sqlQueryEditorDiv6}>
 						<Editor
 							value={canEdit ? sqlQuery : formatSQL(input.sql_query, output.dialect)}
 							onChange={canEdit ? (value) => setSqlQuery(value ?? '') : undefined}
@@ -346,8 +347,8 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 						data={resultRows.rows}
 						serverPagination={resultRows.serverPagination}
 						columns={previewOutput.columns}
-						className='h-full'
-						tableContainerClassName='flex-1 rounded-none border-0'
+						className={styles.sqlQueryEditorTableDisplay}
+						tableContainerClassName={styles.sqlQueryEditorTableDisplay2}
 						emptyLabel={resultRows.isLoadingRows ? 'Loading rows...' : 'No rows returned'}
 						maxRowsBeforePagination={RESULTS_PAGE_SIZE}
 					/>
@@ -366,24 +367,24 @@ function SqlValidationBanner({ queryId, issues }: { queryId: string | undefined;
 	].join('\n');
 
 	return (
-		<div className='flex shrink-0 items-start justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200'>
-			<div className='min-w-0 flex-1'>
-				<div className='flex items-center gap-1.5 font-medium'>
-					<AlertTriangle className='size-3.5 shrink-0' />
+		<div className={styles.sqlValidationBannerDiv}>
+			<div className={styles.sqlValidationBannerDiv2}>
+				<div className={styles.sqlValidationBannerDiv3}>
+					<AlertTriangle className={styles.sqlValidationBannerAlertTriangle} />
 					<span>
 						{issues.length} SQL template {issues.length === 1 ? 'warning' : 'warnings'}
 					</span>
 				</div>
-				<ul className='mt-1 flex flex-col gap-0.5'>
+				<ul className={styles.sqlValidationBannerUl}>
 					{issues.slice(0, 5).map((issue) => (
-						<li key={issue} className='truncate'>
+						<li key={issue} className={styles.sqlValidationBannerLi}>
 							{issue}
 						</li>
 					))}
-					{issues.length > 5 && <li className='opacity-70'>and {issues.length - 5} more...</li>}
+					{issues.length > 5 && <li className={styles.sqlValidationBannerLi2}>and {issues.length - 5} more...</li>}
 				</ul>
 			</div>
-			<FixInChatButton message={fixMessage} className='shrink-0 gap-1.5' />
+			<FixInChatButton message={fixMessage} className={styles.sqlValidationBannerFixInChatButton} />
 		</div>
 	);
 }

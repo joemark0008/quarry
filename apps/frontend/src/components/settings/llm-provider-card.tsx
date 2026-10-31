@@ -4,6 +4,7 @@ import { providerKind, providerLabel, providerLabels, providerName } from '@quar
 import { LlmProviderIcon } from '../ui/llm-provider-icon';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
+import styles from './llm-provider-card.module.css';
 
 interface ProviderCardProps {
 	provider: LlmProvider;
@@ -40,46 +41,46 @@ export function ProviderCard({
 	getModelDisplayName,
 }: ProviderCardProps) {
 	return (
-		<div className='p-4 rounded-lg border border-border bg-muted/30'>
-			<div className='flex items-center gap-4'>
-				<div className='flex-1 grid gap-1'>
-					<div className='flex items-center gap-2'>
-						<LlmProviderIcon provider={provider} baseUrl={baseUrl || envBaseUrl} className='size-3.5' />
-						<span className='text-sm font-medium text-foreground'>{providerLabel(provider)}</span>
+		<div className={styles.providerCardDiv}>
+			<div className={styles.providerCardDiv2}>
+				<div className={styles.providerCardDiv3}>
+					<div className={styles.providerCardDiv4}>
+						<LlmProviderIcon provider={provider} baseUrl={baseUrl || envBaseUrl} className={styles.providerCardLlmProviderIcon} />
+						<span className={styles.providerCardSpan}>{providerLabel(provider)}</span>
 						{providerName(provider) && (
-							<span className='text-xs text-muted-foreground'>
+							<span className={styles.providerCardSpan2}>
 								{providerLabels[providerKind(provider)]}
 							</span>
 						)}
 						{badges.map((badge) => (
 							<span
 								key={badge}
-								className='px-1.5 py-0.5 text-[10px] font-medium rounded bg-muted text-muted-foreground'
+								className={styles.providerCardSpan3}
 							>
 								{badge}
 							</span>
 						))}
 					</div>
 					{apiKeyPreview || credentialPreviews ? (
-						<div className='flex items-center gap-2 text-xs text-muted-foreground flex-wrap'>
-							{apiKeyPreview && <span className='font-mono'>{apiKeyPreview}</span>}
+						<div className={styles.providerCardDiv5}>
+							{apiKeyPreview && <span className={styles.providerCardSpan4}>{apiKeyPreview}</span>}
 							{credentialPreviews &&
 								Object.entries(credentialPreviews).map(([key, preview]) => (
-									<span key={key} className='font-mono'>
+									<span key={key} className={styles.providerCardSpan4}>
 										{key}: {preview}
 									</span>
 								))}
 							{(baseUrl || envBaseUrl) && (
 								<>
-									<span className='text-border'>•</span>
-									<span className='truncate max-w-[200px]' title={baseUrl || envBaseUrl}>
+									<span className={styles.providerCardSpan5}>•</span>
+									<span className={styles.providerCardSpan6} title={baseUrl || envBaseUrl}>
 										{baseUrl || envBaseUrl}
 									</span>
 								</>
 							)}
 						</div>
 					) : (
-						<div className='flex items-center gap-2 text-xs text-muted-foreground'>
+						<div className={styles.providerCardDiv6}>
 							<span>
 								{status ??
 									(getProviderAuth(provider).apiKey === 'required'
@@ -90,8 +91,8 @@ export function ProviderCard({
 							</span>
 							{envBaseUrl && (
 								<>
-									<span className='text-border'>•</span>
-									<span className='truncate max-w-[200px]' title={envBaseUrl}>
+									<span className={styles.providerCardSpan5}>•</span>
+									<span className={styles.providerCardSpan6} title={envBaseUrl}>
 										{envBaseUrl}
 									</span>
 								</>
@@ -100,10 +101,10 @@ export function ProviderCard({
 					)}
 				</div>
 				{isAdmin && (onEdit || onDelete) && (
-					<div className='flex items-center gap-1'>
+					<div className={styles.providerCardDiv7}>
 						{onEdit && (
 							<Button variant='ghost' size='icon-sm' onClick={onEdit} disabled={isFormActive}>
-								<Pencil className='size-3 text-muted-foreground' />
+								<Pencil className={styles.providerCardPencil} />
 							</Button>
 						)}
 						{onDelete && (
@@ -113,28 +114,28 @@ export function ProviderCard({
 								onClick={onDelete}
 								disabled={isDeleting || isFormActive}
 							>
-								<Trash2 className='size-4 text-destructive' />
+								<Trash2 className={styles.providerCardTrash2} />
 							</Button>
 						)}
 					</div>
 				)}
 			</div>
-			<div className='mt-3 pt-3 border-t border-border/50'>
+			<div className={styles.providerCardDiv8}>
 				{enabledModels && enabledModels.length > 0 ? (
 					<>
-						<span className='text-xs text-muted-foreground'>Enabled models:</span>
-						<div className='flex flex-wrap gap-1.5 mt-1.5'>
+						<span className={styles.providerCardSpan2}>Enabled models:</span>
+						<div className={styles.providerCardDiv9}>
 							{enabledModels.map((modelId) => (
-								<span key={modelId} className='px-2 py-0.5 text-xs rounded bg-primary/10 text-primary'>
+								<span key={modelId} className={styles.providerCardSpan7}>
 									{getModelDisplayName(provider, modelId)}
 								</span>
 							))}
 						</div>
 					</>
 				) : getDefaultModelId(provider) ? (
-					<span className='text-xs text-muted-foreground'>Default model: {getDefaultModelId(provider)}</span>
+					<span className={styles.providerCardSpan2}>Default model: {getDefaultModelId(provider)}</span>
 				) : (
-					<span className='text-xs text-muted-foreground'>No model yet — add one to use this provider</span>
+					<span className={styles.providerCardSpan2}>No model yet — add one to use this provider</span>
 				)}
 			</div>
 		</div>

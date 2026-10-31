@@ -30,6 +30,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useSidePanel } from '@/contexts/side-panel';
 import { usePermissions } from '@/hooks/use-permissions';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-theme-preview.module.css';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const REGIONS = [
@@ -138,12 +139,12 @@ export function StoryThemePreview({ theme }: { theme: StoryTheme }) {
 
 	return (
 		<StoryThemeProvider theme={theme}>
-			<div className='min-h-full bg-background text-foreground'>
+			<div className={styles.storyThemePreviewDiv}>
 				<PreviewBrandHeader brand={theme.brand} />
-				<div className='mx-auto flex max-w-5xl flex-col gap-4 p-4 md:p-8'>
-					<div className='flex flex-col gap-2'>
+				<div className={styles.storyThemePreviewDiv2}>
+					<div className={styles.storyThemePreviewDiv3}>
 						<h1>{PREVIEW_TITLE}</h1>
-						<p className='max-w-[720px] opacity-80'>{PREVIEW_DESCRIPTION}</p>
+						<p className={styles.storyThemePreviewP}>{PREVIEW_DESCRIPTION}</p>
 					</div>
 					<PreviewFilterBar />
 					<SegmentList
@@ -170,12 +171,12 @@ function PreviewBrandHeader({ brand }: { brand: StoryTheme['brand'] }) {
 	const [activeTab, setActiveTab] = useState(0);
 	const isBand = brand.header === 'band';
 	return (
-		<header className='flex flex-col'>
+		<header className={styles.previewBrandHeaderHeader}>
 			<div
-				className={isBand ? undefined : 'bg-card'}
+				className={isBand ? undefined : styles.previewBrandHeaderDiv}
 				style={{ background: isBand ? 'var(--story-header-bg)' : undefined, color: 'var(--story-header-fg)' }}
 			>
-				<div className='quarry-brand-header__bar mx-auto w-full max-w-5xl px-4 py-3 md:px-8'>
+				<div className={`${styles.previewBrandHeaderDiv2} quarry-brand-header__bar`}>
 					{showsBrandIdentity(brand) ? <StoryBrandMark brand={brand} /> : <span />}
 				</div>
 			</div>
@@ -184,8 +185,8 @@ function PreviewBrandHeader({ brand }: { brand: StoryTheme['brand'] }) {
 				activeIndex={activeTab}
 				onSelect={setActiveTab}
 				showAddTab
-				containerClassName='bg-card'
-				contentClassName='mx-auto w-full max-w-5xl px-4 md:px-8'
+				containerClassName={styles.previewBrandHeaderDiv}
+				contentClassName={styles.previewBrandHeaderStoryTabsBar}
 			/>
 		</header>
 	);
@@ -266,21 +267,21 @@ export function StoryThemePreviewPanel() {
 	};
 
 	return (
-		<div className='flex h-full flex-col'>
-			<div className='flex items-center gap-2 border-b px-4 py-2'>
+		<div className={styles.storyThemePreviewPanelDiv}>
+			<div className={styles.storyThemePreviewPanelDiv2}>
 				<Button
 					variant='ghost'
 					size='icon-sm'
-					className='mr-2 hover:rounded-full'
+					className={styles.storyThemePreviewPanelButton}
 					onClick={close}
 					aria-label='Close preview'
 				>
-					<X className='size-3.5' strokeWidth={2.25} />
+					<X className={styles.storyThemePreviewPanelX} strokeWidth={2.25} />
 				</Button>
-				<div className='flex min-w-0 flex-1 flex-col'>
-					<span className='truncate text-sm font-medium'>{slotLabel(current, currentVersion)}</span>
+				<div className={styles.storyThemePreviewPanelDiv3}>
+					<span className={styles.storyThemePreviewPanelSpan}>{slotLabel(current, currentVersion)}</span>
 					{currentSources && (
-						<span className='truncate text-xs text-muted-foreground' title={currentSources}>
+						<span className={styles.storyThemePreviewPanelSpan2} title={currentSources}>
 							From {currentSources}
 						</span>
 					)}
@@ -289,13 +290,13 @@ export function StoryThemePreviewPanel() {
 					options={STORY_THEME_MODE_OPTIONS}
 					value={mode}
 					onValueChange={setMode}
-					className='shrink-0'
+					className={styles.storyThemePreviewPanelIconSegmentedToggle}
 				/>
 				<StoryThemeVersionMenu entries={versionEntries} currentIndex={currentIndex} onSelect={selectVersion} />
 			</div>
 			{!isViewingLatest && (
-				<div className='flex items-center justify-between border-b bg-muted/40 px-4 py-2'>
-					<span className='text-xs text-muted-foreground'>
+				<div className={styles.storyThemePreviewPanelDiv4}>
+					<span className={styles.storyThemePreviewPanelSpan3}>
 						Viewing v{currentVersion} of {totalVersions}
 					</span>
 					{isAdmin && (
@@ -304,20 +305,20 @@ export function StoryThemePreviewPanel() {
 							size='sm'
 							onClick={restoreCurrent}
 							disabled={restore.isPending}
-							className='gap-1.5'
+							className={styles.storyThemePreviewPanelButton2}
 						>
-							<RotateCcw className='size-3' strokeWidth={2.25} />
+							<RotateCcw className={styles.storyThemePreviewPanelRotateCcw} strokeWidth={2.25} />
 							<span>{restore.isPending ? 'Restoring…' : 'Restore'}</span>
 						</Button>
 					)}
 				</div>
 			)}
-			<div className='min-h-0 flex-1 overflow-auto'>
+			<div className={styles.storyThemePreviewPanelDiv5}>
 				{previewTheme ? (
 					<StoryThemePreview theme={previewTheme} />
 				) : (
-					<div className='flex h-full items-center justify-center'>
-						<Spinner className='size-5' />
+					<div className={styles.storyThemePreviewPanelDiv6}>
+						<Spinner className={styles.storyThemePreviewPanelSpinner} />
 					</div>
 				)}
 			</div>

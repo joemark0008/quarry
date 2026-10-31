@@ -3,6 +3,7 @@ import { GitBranch } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SettingsCard } from '@/components/ui/settings-card';
+import styles from './deployment-managed-git-settings.module.css';
 
 interface DeploymentContextSource {
 	repositoryUrl: string | null;
@@ -30,7 +31,7 @@ export function DeploymentManagedGitSettings({ contextSource, configurationError
 	return (
 		<SettingsCard
 			title='Deployment repository'
-			icon={<GitBranch className='size-4' />}
+			icon={<GitBranch className={styles.deploymentManagedGitSettingsGitBranch} />}
 			description={getDescription(contextSource?.authMethod)}
 			action={
 				repositoryUrl && isHttpUrl(repositoryUrl) ? (
@@ -41,22 +42,22 @@ export function DeploymentManagedGitSettings({ contextSource, configurationError
 					</Button>
 				) : undefined
 			}
-			className='gap-6 p-6'
+			className={styles.deploymentManagedGitSettingsSettingsCard}
 		>
-			<div className='min-w-0'>
-				<div className='truncate font-mono text-base font-medium text-foreground'>
+			<div className={styles.deploymentManagedGitSettingsDiv}>
+				<div className={styles.deploymentManagedGitSettingsDiv2}>
 					{repositoryUrl ? getRepositoryName(repositoryUrl) : 'Repository unavailable'}
 				</div>
 				{secondaryFacts.length > 0 && (
-					<div className='mt-1 truncate text-sm text-muted-foreground'>{secondaryFacts.join(' · ')}</div>
+					<div className={styles.deploymentManagedGitSettingsDiv3}>{secondaryFacts.join(' · ')}</div>
 				)}
 				{configurationError && (
-					<div className='mt-3'>
+					<div className={styles.deploymentManagedGitSettingsDiv4}>
 						<ErrorMessage message={configurationError} />
 					</div>
 				)}
 				{contextSource?.authMethod === 'public' && (
-					<p className='mt-2 text-xs text-muted-foreground'>
+					<p className={styles.deploymentManagedGitSettingsP}>
 						Context files are read-only because no access token or SSH deploy key is configured.
 					</p>
 				)}

@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client/react';
 import { useSession } from '@/lib/auth-client';
 import { ModifyPasswordDocument } from '@/graphql/generated/graphql';
 import { AuthForm, FormTextField } from '@/components/auth-form';
+import styles from './modify-password.module.css';
 
 export function ModifyPassword() {
 	const { refetch } = useSession();
@@ -31,20 +32,20 @@ export function ModifyPassword() {
 	});
 
 	return (
-		<div className='flex h-screen'>
+		<div className={styles.modifyPasswordDiv}>
 			<AuthForm
 				form={form}
 				title='Change your password to secure your account'
 				submitText={isUpdating ? 'Updating...' : 'Reset password'}
 				serverError={serverError}
 			>
-				<FormTextField form={form} name='newPassword' type='password' title='New password' className='mb-6' />
+				<FormTextField form={form} name='newPassword' type='password' title='New password' className={styles.modifyPasswordFormTextField} />
 				<FormTextField
 					form={form}
 					name='confirmPassword'
 					type='password'
 					title='Confirm new password'
-					className='mb-10'
+					className={styles.modifyPasswordFormTextField2}
 				/>
 			</AuthForm>
 		</div>

@@ -9,6 +9,7 @@ import {
 } from '@/lib/story-reference';
 import { cn } from '@/lib/utils';
 import { useStoryDragOverNewChat } from '@/stores/story-references';
+import styles from './new-chat-drop-target.module.css';
 
 /** Dropping stories or story folders here starts a new chat that references them. */
 export function NewChatDropTarget({ children }: { children: ReactNode }) {
@@ -40,8 +41,8 @@ export function NewChatDropTarget({ children }: { children: ReactNode }) {
 			onDragLeave={() => setIsLinkDragOver(false)}
 			onDrop={handleDrop}
 			className={cn(
-				'rounded-md transition-shadow',
-				(isStoryDragOver || isLinkDragOver) && 'ring-2 ring-primary/50 bg-sidebar-accent',
+				styles.newChatDropTargetDiv,
+				(isStoryDragOver || isLinkDragOver) && styles.newChatDropTargetDiv2,
 			)}
 		>
 			{children}

@@ -7,6 +7,7 @@ import { formatSQL } from '@/lib/sql-formatter';
 import { useSidePanel } from '@/contexts/side-panel';
 import { SidePanelHeader } from '@/components/side-panel/side-panel-header';
 import { chatApi } from '@/lib/chat-api';
+import styles from './citation-popover.module.css';
 
 const HOVER_DELAY_MS = 500;
 const POPOVER_MAX_HEIGHT = 400;
@@ -52,11 +53,11 @@ export const CitationPopover = memo(
 		return (
 			<span
 				ref={triggerRef}
-				className='relative inline'
+				className={styles.citationPopoverSpan}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
-				<span className='cursor-help underline decoration-dotted decoration-muted-foreground/50 underline-offset-2'>
+				<span className={styles.citationPopoverSpan2}>
 					{value}
 				</span>
 				{isOpen && data && (
@@ -74,39 +75,39 @@ export const CitationPopover = memo(
 const PopoverContent = memo(
 	({ data, topOffset, onExpand }: { data: CitationPayload; topOffset: number; onExpand: () => void }) => {
 		return (
-			<div className='absolute left-full z-50 pl-2' style={{ top: topOffset }}>
+			<div className={styles.popoverContentDiv} style={{ top: topOffset }}>
 				<div
 					className={cn(
-						'w-[420px] max-h-[400px] overflow-auto',
-						'rounded-lg border bg-popover p-3 text-popover-foreground shadow-lg',
-						'text-xs',
+						styles.popoverContentDiv2,
+						styles.popoverContentDiv3,
+						styles.popoverContentDiv4,
 					)}
 				>
-					<div className='space-y-3'>
-						<div className='flex items-center justify-between'>
-							<span className='font-medium text-muted-foreground'>SQL Query</span>
+					<div className={styles.popoverContentDiv5}>
+						<div className={styles.popoverContentDiv6}>
+							<span className={styles.popoverContentSpan}>SQL Query</span>
 							<button
 								type='button'
 								onClick={onExpand}
-								className='rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground'
+								className={styles.popoverContentButton}
 							>
-								<ArrowUpRight className='size-3.5' />
+								<ArrowUpRight className={styles.popoverContentArrowUpRight} />
 							</button>
 						</div>
-						<details className='rounded bg-muted text-[11px]'>
-							<summary className='cursor-pointer select-none px-2 py-1.5 font-medium text-muted-foreground hover:text-foreground'>
+						<details className={styles.popoverContentDetails}>
+							<summary className={styles.popoverContentSummary}>
 								Show query
 							</summary>
-							<pre className='overflow-auto px-2 pb-2 font-mono whitespace-pre-wrap'>
+							<pre className={styles.popoverContentPre}>
 								{data.sql_query}
 							</pre>
 						</details>
 						<CitationSection title='Database Origin'>
-							<p className='font-mono'>{data.database_id}</p>
+							<p className={styles.popoverContentP}>{data.database_id}</p>
 						</CitationSection>
 						{data.tables.length > 0 && (
 							<CitationSection title='Main Tables'>
-								<ul className='list-disc list-inside space-y-0.5 font-mono'>
+								<ul className={styles.popoverContentUl}>
 									{data.tables.map((table) => (
 										<li key={table.name}>{table.name}</li>
 									))}
@@ -126,25 +127,25 @@ const PopoverContent = memo(
 
 function CitationSidePanel({ data }: { data: CitationPayload }) {
 	return (
-		<div className='flex h-full min-h-0 flex-col bg-background'>
+		<div className={styles.citationSidePanelDiv}>
 			<SidePanelHeader title='Citation' label='Column lineage' />
-			<div className='flex-1 space-y-4 overflow-y-auto p-4'>
+			<div className={styles.citationSidePanelDiv2}>
 				<CitationSection title='SQL Query'>
-					<pre className='overflow-x-auto rounded bg-muted p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap'>
+					<pre className={styles.citationSidePanelPre}>
 						{formatSQL(data.sql_query)}
 					</pre>
 				</CitationSection>
 
 				<div>
-					<p className='font-medium text-muted-foreground'>Database origin</p>
-					<p className='font-mono'>{data.database_id}</p>
+					<p className={styles.popoverContentSpan}>Database origin</p>
+					<p className={styles.popoverContentP}>{data.database_id}</p>
 				</div>
 
 				{data.tables.length > 0 && (
 					<CitationSection title='Tables'>
-						<div className='flex flex-wrap gap-1.5'>
+						<div className={styles.citationSidePanelDiv3}>
 							{data.tables.map((table) => (
-								<span key={table.name} className='rounded bg-muted px-1.5 py-0.5 font-mono text-xs'>
+								<span key={table.name} className={styles.citationSidePanelSpan}>
 									{table.name}
 								</span>
 							))}
@@ -163,7 +164,7 @@ function CitationSidePanel({ data }: { data: CitationPayload }) {
 function CitationSection({ title, children }: { title: string; children: React.ReactNode }) {
 	return (
 		<div>
-			<div className='mb-1 font-medium text-muted-foreground'>{title}</div>
+			<div className={styles.citationSectionDiv}>{title}</div>
 			{children}
 		</div>
 	);
@@ -174,12 +175,12 @@ function LineageTree({ node, depth }: { node: ColumnLineageNode; depth: number }
 
 	return (
 		<div style={{ paddingLeft: depth * 12 }}>
-			<div className='font-mono'>
-				{depth > 0 && <span className='text-muted-foreground mr-1'>←</span>}
-				<span className={depth === 0 ? 'font-semibold' : ''}>{label}</span>
-				{node.expression && <span className='ml-1 text-muted-foreground'>({node.expression})</span>}
+			<div className={styles.popoverContentP}>
+				{depth > 0 && <span className={styles.lineageTreeSpan}>←</span>}
+				<span className={depth === 0 ? styles.lineageTreeSpan2 : ''}>{label}</span>
+				{node.expression && <span className={styles.lineageTreeSpan3}>({node.expression})</span>}
 				{node.reference_node_name && (
-					<span className='ml-1 text-[10px] text-muted-foreground bg-muted px-1 rounded'>
+					<span className={styles.lineageTreeSpan4}>
 						{node.reference_node_name}
 					</span>
 				)}

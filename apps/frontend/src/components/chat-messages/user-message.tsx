@@ -33,10 +33,11 @@ import McpIcon from '@/components/icons/model-context-protocol.svg';
 import TelegramIcon from '@/components/icons/telegram.svg';
 import WhatsAppIcon from '@/components/icons/whatsapp.svg';
 import { useCurrentProject } from '@/hooks/use-current-project';
+import styles from './user-message.module.css';
 
 const messageTheme: PromptTheme = {
 	backgroundColor: 'transparent',
-	color: 'var(--color-foreground)',
+	color: 'var(--app-text)',
 	fontSize: '16px',
 	fontFamily: 'inherit',
 	borderColor: 'transparent',
@@ -45,21 +46,21 @@ const messageTheme: PromptTheme = {
 	padding: '0',
 	minHeight: 'auto',
 	pill: {
-		backgroundColor: 'var(--background)',
-		color: 'var(--foreground)',
+		backgroundColor: 'var(--app-surface)',
+		color: 'var(--app-text)',
 		padding: 'calc(var(--spacing) * 1) calc(var(--spacing) * 2.5)',
 		borderRadius: '9999px',
 	},
 };
 
 const MESSAGE_SOURCES = {
-	slack: { icon: <SlackIcon className='size-3.5' />, label: 'sent in Slack' },
-	teams: { icon: <TeamsIcon className='size-4' />, label: 'sent in Teams' },
-	telegram: { icon: <TelegramIcon className='size-4' />, label: 'sent in Telegram' },
-	mattermost: { icon: <MattermostIcon className='size-4' />, label: 'sent in Mattermost' },
-	discord: { icon: <DiscordIcon className='size-4' />, label: 'sent in Discord' },
-	whatsapp: { icon: <WhatsAppIcon className='size-4' />, label: 'sent in WhatsApp' },
-	mcp: { icon: <McpIcon className='size-4' />, label: 'sent via MCP' },
+	slack: { icon: <SlackIcon className={styles.mESSAGESOURCESSlackIcon} />, label: 'sent in Slack' },
+	teams: { icon: <TeamsIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent in Teams' },
+	telegram: { icon: <TelegramIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent in Telegram' },
+	mattermost: { icon: <MattermostIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent in Mattermost' },
+	discord: { icon: <DiscordIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent in Discord' },
+	whatsapp: { icon: <WhatsAppIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent in WhatsApp' },
+	mcp: { icon: <McpIcon className={styles.mESSAGESOURCESTeamsIcon} />, label: 'sent via MCP' },
 } as const;
 
 function MessageSourceBadge({ source }: { source: UIMessage['source'] }) {
@@ -69,7 +70,7 @@ function MessageSourceBadge({ source }: { source: UIMessage['source'] }) {
 	}
 
 	return (
-		<span className='flex items-center justify-end gap-1 text-xs text-muted-foreground mb-2'>
+		<span className={styles.messageSourceBadgeSpan}>
 			{config.icon}
 			{config.label}
 		</span>
@@ -127,7 +128,7 @@ export const UserMessageBubble = memo(({ message }: { message: UIMessage }) => {
 	const displayText = legacyCitation ? legacyCitation.question : rawText;
 
 	return (
-		<div className='rounded-2xl px-3 py-2 bg-panel text-card-foreground ml-auto max-w-xl'>
+		<div className={styles.userMessageBubbleDiv}>
 			<MessageSourceBadge source={message.source} />
 			{citation && (
 				<ChatMessagesCitationChip
@@ -139,21 +140,21 @@ export const UserMessageBubble = memo(({ message }: { message: UIMessage }) => {
 				/>
 			)}
 			{images.length > 0 && (
-				<div className='flex gap-2 flex-wrap mb-2'>
+				<div className={styles.userMessageBubbleDiv2}>
 					{images.map((img, idx) => (
 						<button
 							key={idx}
 							type='button'
 							onClick={() => setLightboxSrc(img.url)}
-							className='cursor-pointer'
+							className={styles.userMessageBubbleButton}
 						>
-							<img src={img.url} alt='' className='max-w-48 max-h-48 rounded-lg object-cover' />
+							<img src={img.url} alt='' className={styles.userMessageBubbleImg} />
 						</button>
 					))}
 				</div>
 			)}
 			{documents.length > 0 && (
-				<div className='flex gap-1.5 flex-wrap mb-2 justify-end'>
+				<div className={styles.userMessageBubbleDiv3}>
 					{documents.map((document) => (
 						<FileChip key={document.path} path={document.path} label={document.filename} />
 					))}
@@ -164,7 +165,7 @@ export const UserMessageBubble = memo(({ message }: { message: UIMessage }) => {
 					value={displayText}
 					mentionConfigs={mentionConfigs}
 					theme={messageTheme}
-					className='flex items-center justify-end'
+					className={styles.userMessageBubbleMessage}
 					onMentionClick={openMentionedStory}
 				/>
 			)}
@@ -195,7 +196,7 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 			<div ref={editContainerRef}>
 				<ChatInputInline
 					initialText={text}
-					className='p-0 **:data-[slot=input-group]:shadow-none!'
+					className={styles.userMessageChatInputInline}
 					onCancel={() => editedMessageIdStore.setEditingId(undefined)}
 					onSubmitMessage={async ({ text: nextText, images, documents }) => {
 						editedMessageIdStore.setEditingId(undefined);
@@ -207,14 +208,14 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 	}
 
 	return (
-		<div className='group flex flex-col gap-2 items-end w-full'>
+		<div className={`${styles.userMessageDiv} group`}>
 			<UserMessageBubble message={message} />
 
-			<div className='flex items-center gap-1'>
+			<div className={styles.userMessageDiv2}>
 				<div
 					className={cn(
-						'flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200',
-						isRunning && 'group-last:opacity-0 invisible',
+						styles.userMessageDiv3,
+						isRunning && styles.userMessageDiv4,
 					)}
 				>
 					{message.createdAt && <MessageTimestamp createdAt={message.createdAt} />}
@@ -222,7 +223,7 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 						<Button
 							variant='ghost-muted'
 							size='icon-sm'
-							className='hover:rounded-full'
+							className={styles.userMessageButton}
 							aria-label='Resend'
 							disabled={isRunning}
 							onClick={() => resendMessage({ messageId: message.id })}
@@ -234,7 +235,7 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 						<Button
 							variant='ghost-muted'
 							size='icon-sm'
-							className='hover:rounded-full'
+							className={styles.userMessageButton}
 							aria-label='Edit'
 							onClick={() => editedMessageIdStore.setEditingId(message.id)}
 						>
@@ -245,11 +246,11 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 						<Button
 							variant='ghost-muted'
 							size='icon-sm'
-							className='hover:rounded-full'
+							className={styles.userMessageButton}
 							aria-label='Copy'
 							onClick={() => copy(getMessageText(message))}
 						>
-							{isCopied ? <Check className='size-4' /> : <Copy />}
+							{isCopied ? <Check className={styles.mESSAGESOURCESTeamsIcon} /> : <Copy />}
 						</Button>
 					</SimpleTooltip>
 				</div>
@@ -270,7 +271,7 @@ function MessageTimestamp({ createdAt }: { createdAt: number }) {
 	const { humanReadable } = useTimeAgo(createdAt);
 	return (
 		<SimpleTooltip content={new Date(createdAt).toLocaleString()}>
-			<span className='px-1 text-xs text-muted-foreground cursor-default select-none'>{humanReadable}</span>
+			<span className={styles.messageTimestampSpan}>{humanReadable}</span>
 		</SimpleTooltip>
 	);
 }
@@ -289,24 +290,24 @@ function MessageVersionNav({
 	const goToNext = () => onSwitch(versionIds[currentVersion]);
 
 	return (
-		<div className='flex items-center text-xs text-muted-foreground'>
+		<div className={styles.messageVersionNavDiv}>
 			<Button
 				variant='ghost-muted'
 				size='icon-sm'
-				className='hover:rounded-full size-6'
+				className={styles.messageVersionNavButton}
 				aria-label='Previous version'
 				disabled={disabled || currentVersion <= 1}
 				onClick={goToPrevious}
 			>
 				<ChevronLeft />
 			</Button>
-			<span className='tabular-nums select-none'>
+			<span className={styles.messageVersionNavSpan}>
 				{currentVersion}/{totalVersions}
 			</span>
 			<Button
 				variant='ghost-muted'
 				size='icon-sm'
-				className='hover:rounded-full size-6'
+				className={styles.messageVersionNavButton}
 				aria-label='Next version'
 				disabled={disabled || currentVersion >= totalVersions}
 				onClick={goToNext}

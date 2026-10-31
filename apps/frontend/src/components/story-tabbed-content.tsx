@@ -13,6 +13,7 @@ import { StoryBlock, StoryMapFrame, StoryTableFrame } from '@/components/story-b
 import { SegmentList } from '@/components/story-rendering';
 import { StoryQuerySqlProvider } from '@/contexts/story-query-sql';
 import { useStoryFilters } from '@/hooks/use-story-filters';
+import styles from './story-tabbed-content.module.css';
 
 export interface StoryEmbedRenderOptions {
 	queryData: QueryDataMap | null;
@@ -37,7 +38,7 @@ export function StoryTabbedContent({
 	renderChart,
 	renderTable,
 	renderMap,
-	contentClassName = 'max-w-5xl mx-auto p-4 md:p-8 flex flex-col gap-4',
+	contentClassName = styles.defaultContent,
 	baselineQueryData,
 	filterApi,
 	theme,
@@ -69,17 +70,17 @@ export function StoryTabbedContent({
 		<StoryQuerySqlProvider value={querySqlSource}>
 			<StoryThemeProvider
 				theme={theme ?? null}
-				className='flex flex-1 min-h-0 flex-col bg-background text-foreground'
+				className={styles.storyTabbedContentStoryThemeProvider}
 			>
 				{isTabbed && tabs && (
 					<StoryTabsBar
 						tabs={tabs.map((tab) => ({ title: tab.title }))}
 						activeIndex={activeTabIndex}
 						onSelect={setActiveIndex}
-						contentClassName='mx-auto w-full max-w-5xl px-4 md:px-8'
+						contentClassName={styles.storyTabbedContentStoryTabsBar}
 					/>
 				)}
-				<div className='flex-1 overflow-auto'>
+				<div className={styles.storyTabbedContentDiv}>
 					<div className={contentClassName}>
 						<StoryFilterBar
 							filters={storyFilters.filters}
@@ -122,7 +123,7 @@ export function StoryTabbedContent({
 							)}
 						/>
 					</div>
-					<div aria-hidden className='h-[var(--story-bottom-inset,0px)] shrink-0' />
+					<div aria-hidden className={styles.storyTabbedContentDiv2} />
 				</div>
 			</StoryThemeProvider>
 		</StoryQuerySqlProvider>

@@ -13,6 +13,7 @@ import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
 import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
+import styles from './chart-editor-preview.module.css';
 
 type EditableChartInput = Omit<displayChart.KpiCardInput, 'chart_type'> & { chart_type: ChartType };
 
@@ -24,7 +25,7 @@ const PREVIEW_MODE_OPTIONS: IconSegmentedToggleOption<PreviewMode>[] = [
 	{ value: 'split', label: 'Chart and table', icon: Rows2 },
 ];
 
-const X_AXIS_HIGHLIGHT = 'color-mix(in srgb, var(--muted-foreground) 12%, transparent)';
+const X_AXIS_HIGHLIGHT = 'color-mix(in srgb, var(--app-muted) 12%, transparent)';
 const SERIES_HIGHLIGHT_OPACITY = '15%';
 const SPLIT_PANE_MIN_HEIGHT = 160;
 
@@ -43,30 +44,30 @@ export function ChartEditorPreview({ draft, data, columns, summary, className }:
 	const table = <SourceTable data={data} columns={columns} summary={summary} />;
 
 	return (
-		<div className={cn('flex min-h-0 flex-1 flex-col', className)}>
-			<div className='flex min-h-12 shrink-0 items-center justify-between gap-3 px-4 py-2 select-none'>
+		<div className={cn(styles.chartEditorPreviewDiv, className)}>
+			<div className={styles.chartEditorPreviewDiv2}>
 				<ChartSelectionIssues issues={summary.issues} />
 				<IconSegmentedToggle
 					options={PREVIEW_MODE_OPTIONS}
 					value={mode}
 					onValueChange={setMode}
-					className='ml-auto shrink-0'
+					className={styles.chartEditorPreviewIconSegmentedToggle}
 				/>
 			</div>
 			{mode === 'chart' && chart}
 			{mode === 'table' && table}
 			{mode === 'split' && (
-				<ResizablePanelGroup orientation='vertical' className='min-h-0 flex-1'>
+				<ResizablePanelGroup orientation='vertical' className={styles.chartEditorPreviewResizablePanelGroup}>
 					<ResizablePanel
 						id='chart'
 						defaultSize='55%'
 						minSize={SPLIT_PANE_MIN_HEIGHT}
-						className='flex flex-col'
+						className={styles.chartEditorPreviewResizablePanel}
 					>
 						{chart}
 					</ResizablePanel>
 					<ResizableSeparator withHandle />
-					<ResizablePanel id='table' minSize={SPLIT_PANE_MIN_HEIGHT} className='flex flex-col'>
+					<ResizablePanel id='table' minSize={SPLIT_PANE_MIN_HEIGHT} className={styles.chartEditorPreviewResizablePanel}>
 						{table}
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -80,14 +81,14 @@ function ChartSelectionIssues({ issues }: { issues: string[] }) {
 		return null;
 	}
 	return (
-		<ul className='flex min-w-0 flex-col gap-0.5' title={issues.join('\n')}>
+		<ul className={styles.chartSelectionIssuesUl} title={issues.join('\n')}>
 			{issues.map((issue) => (
 				<li
 					key={issue}
-					className='flex min-w-0 items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400'
+					className={styles.chartSelectionIssuesLi}
 				>
-					<TriangleAlert className='size-3.5 shrink-0' />
-					<span className='truncate'>{issue}</span>
+					<TriangleAlert className={styles.chartSelectionIssuesTriangleAlert} />
+					<span className={styles.chartSelectionIssuesSpan}>{issue}</span>
 				</li>
 			))}
 		</ul>
@@ -119,7 +120,7 @@ function LiveChart({ draft, data, hasSeries }: LiveChartProps) {
 
 	const isKpi = draft.chart_type === 'kpi_card';
 	return (
-		<div className={cn('min-h-0 px-4 pb-4', isKpi ? 'shrink-0' : 'h-full flex-1')}>
+		<div className={cn(styles.liveChartDiv, isKpi ? styles.liveChartDiv2 : styles.liveChartDiv3)}>
 			<ChartDisplay
 				data={chartData}
 				chartType={draft.chart_type}
@@ -166,8 +167,8 @@ function SourceTable({ data, columns, summary }: SourceTableProps) {
 			columns={columns.length > 0 ? columns : Object.keys(data[0] ?? {})}
 			cellBackground={columnBackground}
 			headerBackground={columnBackground}
-			className='chart-editor-table h-full min-h-0 flex-1'
-			tableContainerClassName='flex-1 rounded-none border-0'
+			className={`${styles.sourceTableTableDisplay} chart-editor-table`}
+			tableContainerClassName={styles.sourceTableTableDisplay2}
 			maxRowsBeforePagination={100}
 			compactFooter
 		/>
@@ -190,7 +191,7 @@ function buildColumnHighlights(summary: ChartSelectionSummary): Map<string, stri
 
 function PreviewPlaceholder({ children }: { children: ReactNode }) {
 	return (
-		<div className='mx-4 mb-4 flex h-40 shrink-0 items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground'>
+		<div className={styles.previewPlaceholderDiv}>
 			{children}
 		</div>
 	);

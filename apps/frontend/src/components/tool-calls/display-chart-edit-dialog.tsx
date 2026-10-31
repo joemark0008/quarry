@@ -36,6 +36,7 @@ import { cn } from '@/lib/utils';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
 import { summarizeChartSelection } from '@/lib/chart-selection-summary';
 import { useAgentContext, useAgentMessages, useOptionalAgentContext } from '@/contexts/agent.provider';
+import styles from './display-chart-edit-dialog.module.css';
 
 const X_AXIS_TYPE_OPTIONS: { value: NonNullable<displayChart.XAxisType> | 'auto'; label: string }[] = [
 	{ value: 'auto', label: 'Auto' },
@@ -181,14 +182,14 @@ export function ChartConfigEditDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='flex h-[min(92vh,60rem)] w-[min(96vw,100rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-[100rem]'>
-				<DialogHeader className='shrink-0 border-b px-6 py-4'>
+			<DialogContent className={styles.chartConfigEditDialogDialogContent}>
+				<DialogHeader className={styles.chartConfigEditDialogDialogHeader}>
 					<DialogTitle>Edit chart</DialogTitle>
-					<DialogDescription className='text-sm text-muted-foreground font-medium'>
+					<DialogDescription className={styles.chartConfigEditDialogDialogDescription}>
 						{description}
 					</DialogDescription>
 				</DialogHeader>
-				<ResizablePanelGroup orientation='horizontal' className='min-h-0 flex-1'>
+				<ResizablePanelGroup orientation='horizontal' className={styles.chartConfigEditDialogResizablePanelGroup}>
 					<ResizablePanel
 						id='data'
 						panelRef={dataPanelRef}
@@ -198,7 +199,7 @@ export function ChartConfigEditDialog({
 						collapsible
 						collapsedSize={DATA_PANEL_COLLAPSED_WIDTH}
 						onResize={() => setIsDataPanelCollapsed(dataPanelRef.current?.isCollapsed() ?? false)}
-						className='flex flex-col'
+						className={styles.chartConfigEditDialogResizablePanel}
 						style={PANEL_OVERFLOW_HIDDEN}
 					>
 						{isDataPanelCollapsed ? (
@@ -210,7 +211,7 @@ export function ChartConfigEditDialog({
 							/>
 						) : (
 							<ChartEditorDataPanel
-								className='flex h-full'
+								className={styles.chartConfigEditDialogChartEditorDataPanel}
 								columns={columns}
 								data={data}
 								summary={summary}
@@ -222,10 +223,10 @@ export function ChartConfigEditDialog({
 						)}
 					</ResizablePanel>
 					<ResizableSeparator />
-					<ResizablePanel id='workspace' className='flex flex-col' style={PANEL_OVERFLOW_HIDDEN}>
+					<ResizablePanel id='workspace' className={styles.chartConfigEditDialogResizablePanel} style={PANEL_OVERFLOW_HIDDEN}>
 						{canEditQuery && editableQuery && queryEditorState !== 'unopened' && (
 							<ChartEditorQueryPane
-								className={cn(queryEditorState === 'hidden' && 'hidden')}
+								className={cn(queryEditorState === styles.chartConfigEditDialogChartEditorQueryPane && styles.chartConfigEditDialogChartEditorQueryPane)}
 								input={editableQuery.input}
 								output={editableQuery.output}
 								toolCallId={editableQuery.toolCallId}
@@ -233,14 +234,14 @@ export function ChartConfigEditDialog({
 								onClose={() => setQueryEditorState('hidden')}
 							/>
 						)}
-						<div className={cn('flex min-h-0 flex-1', isEditingQuery && 'hidden')}>
-							<ResizablePanelGroup orientation='horizontal' className='min-h-0 flex-1'>
+						<div className={cn(styles.chartConfigEditDialogDiv, isEditingQuery && styles.chartConfigEditDialogChartEditorQueryPane)}>
+							<ResizablePanelGroup orientation='horizontal' className={styles.chartConfigEditDialogResizablePanelGroup}>
 								<ResizablePanel
 									id='form'
 									defaultSize={FORM_PANEL_DEFAULT_WIDTH}
 									minSize={FORM_PANEL_MIN_WIDTH}
 									maxSize={FORM_PANEL_MAX_WIDTH}
-									className='select-none'
+									className={styles.chartConfigEditDialogResizablePanel2}
 									style={PANEL_SCROLL_Y}
 								>
 									<ChartConfigEditForm
@@ -248,7 +249,7 @@ export function ChartConfigEditDialog({
 										availableColumns={columns}
 										data={data}
 										id={formId}
-										className='p-6'
+										className={styles.chartConfigEditDialogChartConfigEditForm}
 										showActions={false}
 										onDraftChange={setDraft}
 										onCancel={() => onOpenChange(false)}
@@ -259,7 +260,7 @@ export function ChartConfigEditDialog({
 								<ResizablePanel
 									id='chart'
 									minSize={CHART_PANEL_MIN_WIDTH}
-									className='flex flex-col'
+									className={styles.chartConfigEditDialogResizablePanel}
 									style={PANEL_OVERFLOW_HIDDEN}
 								>
 									<ChartEditorPreview draft={draft} data={data} columns={columns} summary={summary} />
@@ -270,7 +271,7 @@ export function ChartConfigEditDialog({
 				</ResizablePanelGroup>
 				<ChartConfigEditActions
 					formId={formId}
-					className='shrink-0 border-t px-6 py-3'
+					className={styles.chartConfigEditDialogChartConfigEditActions}
 					isSaving={form.isSaving ?? false}
 					canSave={!unsupportedNumberFormat}
 					onCancel={() => onOpenChange(false)}
@@ -493,24 +494,24 @@ export function ChartConfigEditForm({
 	};
 
 	return (
-		<form id={id} onSubmit={handleSubmit} className={cn('flex flex-col gap-4', className)}>
-			<div className='grid gap-2'>
-				<label htmlFor='chart-title' className='text-sm font-semibold text-foreground'>
+		<form id={id} onSubmit={handleSubmit} className={cn(styles.chartConfigEditFormForm, className)}>
+			<div className={styles.chartConfigEditFormDiv}>
+				<label htmlFor='chart-title' className={styles.chartConfigEditFormLabel}>
 					Title
 				</label>
 				<Input
 					id='chart-title'
-					className='h-8 bg-panel'
+					className={styles.chartConfigEditFormInput}
 					value={draft.title}
 					onChange={(e) => setDraft((prev) => ({ ...prev, title: e.target.value }))}
 					placeholder='Chart title'
 				/>
 			</div>
 
-			<div className='grid gap-2'>
-				<div className='flex items-baseline justify-between gap-2'>
-					<span className='text-sm font-semibold text-foreground'>Chart type</span>
-					<span className='text-xs text-muted-foreground'>
+			<div className={styles.chartConfigEditFormDiv}>
+				<div className={styles.chartConfigEditFormDiv2}>
+					<span className={styles.chartConfigEditFormLabel}>Chart type</span>
+					<span className={styles.chartConfigEditFormSpan}>
 						{chartTypeLabel(baseChartType(draft.chart_type))}
 					</span>
 				</div>
@@ -530,12 +531,12 @@ export function ChartConfigEditForm({
 			</div>
 
 			{showNormalizeToggle && (
-				<div className='flex items-center justify-between gap-3'>
-					<div className='grid gap-0.5'>
-						<label htmlFor='chart-normalize' className='text-sm font-semibold text-foreground'>
+				<div className={styles.chartConfigEditFormDiv3}>
+					<div className={styles.chartConfigEditFormDiv4}>
+						<label htmlFor='chart-normalize' className={styles.chartConfigEditFormLabel}>
 							Normalize to 100%
 						</label>
-						<span className='text-xs text-muted-foreground'>
+						<span className={styles.chartConfigEditFormSpan}>
 							Show each series as a share of the category total.
 						</span>
 					</div>
@@ -556,13 +557,13 @@ export function ChartConfigEditForm({
 			)}
 
 			{draft.chart_type !== 'kpi_card' && (
-				<div className='grid gap-3 py-2'>
-					<span className='text-sm font-semibold text-foreground'>X-axis</span>
+				<div className={styles.chartConfigEditFormDiv5}>
+					<span className={styles.chartConfigEditFormLabel}>X-axis</span>
 					<div
-						className={`grid gap-3 items-end ${supportsAxisLabels ? 'grid-cols-[1fr_1fr_1fr]' : 'grid-cols-[1fr_1fr]'}`}
+						className={`${styles.chartConfigEditFormDiv6} ${supportsAxisLabels ? styles.state100 : styles.state101}`}
 					>
-						<div className='grid gap-1'>
-							<span className='text-xs text-muted-foreground'>Column</span>
+						<div className={styles.chartConfigEditFormDiv7}>
+							<span className={styles.chartConfigEditFormSpan}>Column</span>
 							<ColumnSelect
 								value={draft.x_axis_key ?? ''}
 								columns={xAxisOptions}
@@ -571,10 +572,10 @@ export function ChartConfigEditForm({
 							/>
 						</div>
 						{supportsAxisLabels && (
-							<div className='grid gap-1'>
-								<span className='text-xs text-muted-foreground'>Label</span>
+							<div className={styles.chartConfigEditFormDiv7}>
+								<span className={styles.chartConfigEditFormSpan}>Label</span>
 								<Input
-									className='h-8 bg-panel'
+									className={styles.chartConfigEditFormInput}
 									placeholder='Label (optional)'
 									value={draft.x_axis_label ?? ''}
 									onChange={(e) =>
@@ -586,8 +587,8 @@ export function ChartConfigEditForm({
 								/>
 							</div>
 						)}
-						<div className='grid gap-1'>
-							<span className='text-xs text-muted-foreground'>Type</span>
+						<div className={styles.chartConfigEditFormDiv7}>
+							<span className={styles.chartConfigEditFormSpan}>Type</span>
 							<Select
 								value={draft.x_axis_type ?? 'auto'}
 								onValueChange={(value) =>
@@ -597,10 +598,10 @@ export function ChartConfigEditForm({
 									}))
 								}
 							>
-								<SelectTrigger className='w-full bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+								<SelectTrigger className={styles.chartConfigEditFormSelectTrigger}>
 									<SelectValue />
 								</SelectTrigger>
-								<SelectContent className='border-none bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+								<SelectContent className={styles.chartConfigEditFormSelectContent}>
 									{X_AXIS_TYPE_OPTIONS.map((option) => (
 										<SelectItem key={option.value} value={option.value}>
 											{option.label}
@@ -613,22 +614,22 @@ export function ChartConfigEditForm({
 				</div>
 			)}
 
-			<div className='grid gap-2'>
-				<div className='flex items-center justify-between py-2'>
-					<span className='text-sm font-semibold text-foreground'>Series</span>
+			<div className={styles.chartConfigEditFormDiv}>
+				<div className={styles.chartConfigEditFormDiv8}>
+					<span className={styles.chartConfigEditFormLabel}>Series</span>
 					<Button
 						type='button'
 						size='sm'
 						variant='outline'
-						className='rounded-full text-xs'
+						className={styles.chartConfigEditFormButton}
 						onClick={() => addSeries()}
 						disabled={!nextUnusedSeriesColumn}
 						title={nextUnusedSeriesColumn ? undefined : 'All columns are already used'}
 					>
-						<Plus className='size-3.5' /> Add series
+						<Plus className={styles.chartConfigEditFormPlus} /> Add series
 					</Button>
 				</div>
-				<div className='flex flex-col gap-3'>
+				<div className={styles.chartConfigEditFormDiv9}>
 					{draft.series.map((series, index) => {
 						const placement: UnitPlacement = series.value_format?.prefix ? 'prefix' : 'suffix';
 						const unit =
@@ -638,7 +639,7 @@ export function ChartConfigEditForm({
 						const isOpen = openValueFormatIndexes.has(index);
 						const row = (
 							<div
-								className={`grid ${isCombo ? 'grid-cols-[1fr_1fr_auto_auto_auto_auto]' : 'grid-cols-[1fr_1fr_auto_auto_auto]'} gap-2 items-center`}
+								className={`${styles.rowDiv} ${isCombo ? styles.state102 : styles.state103} ${styles.rowDiv2}`}
 							>
 								<ColumnSelect
 									value={series.data_key}
@@ -651,7 +652,7 @@ export function ChartConfigEditForm({
 									value={series.label ?? ''}
 									onChange={(e) => updateSeriesAt(index, { label: e.target.value || undefined })}
 									placeholder='Label (optional)'
-									className='h-8 rounded-lg text-sm bg-panel'
+									className={styles.rowInput}
 								/>
 								{isCombo && (
 									<YAxisSideToggle
@@ -665,25 +666,25 @@ export function ChartConfigEditForm({
 									aria-label='Series color'
 									value={normalizeHexColor(series.color, paletteHexes[index % paletteHexes.length])}
 									onChange={(e) => updateSeriesAt(index, { color: e.target.value })}
-									className='h-8 w-8 cursor-pointer overflow-hidden rounded-lg border-none bg-transparent p-0 [&::-moz-color-swatch]:rounded-lg [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-lg [&::-webkit-color-swatch]:border-none'
+									className={styles.rowInput2}
 								/>
 								<Button
 									type='button'
 									size='icon-sm'
 									variant='ghost-muted'
-									className='size-8'
+									className={styles.rowButton}
 									onClick={() => removeSeriesAt(index)}
 									disabled={draft.series.length <= 1}
 									title='Remove series'
 								>
-									<Trash2 className='size-4' />
+									<Trash2 className={styles.rowTrash2} />
 								</Button>
 							</div>
 						);
 
 						if (!isCombo) {
 							return (
-								<div key={index} className='flex flex-col gap-2 rounded-md'>
+								<div key={index} className={styles.chartConfigEditFormDiv10}>
 									{row}
 									{isOpen && (
 										<SeriesValueFormatFields
@@ -706,14 +707,14 @@ export function ChartConfigEditForm({
 						}
 
 						return (
-							<fieldset key={index} className='rounded-md border border-border px-3 pt-1 pb-3'>
-								<legend className='ml-1'>
+							<fieldset key={index} className={styles.chartConfigEditFormFieldset}>
+								<legend className={styles.chartConfigEditFormLegend}>
 									<SeriesTypeSelect
 										value={series.series_type ?? 'bar'}
 										onChange={(value) => updateSeriesAt(index, { series_type: value })}
 									/>
 								</legend>
-								<div className='flex flex-col gap-2'>
+								<div className={styles.chartConfigEditFormDiv11}>
 									{row}
 									{isOpen && (
 										<SeriesValueFormatFields
@@ -741,8 +742,8 @@ export function ChartConfigEditForm({
 
 			{isCombo
 				? (hasLeftAxis || hasRightAxis) && (
-						<div className='grid gap-3 py-2'>
-							<span className='text-sm font-semibold text-foreground'>Y-axis range</span>
+						<div className={styles.chartConfigEditFormDiv5}>
+							<span className={styles.chartConfigEditFormLabel}>Y-axis range</span>
 							{hasLeftAxis && (
 								<AxisFields
 									name='Left label'
@@ -783,8 +784,8 @@ export function ChartConfigEditForm({
 						</div>
 					)
 				: (supportsAxisLabels || supportsYAxisRange) && (
-						<div className='grid gap-3 py-2'>
-							<span className='text-sm font-semibold text-foreground'>Y-axis</span>
+						<div className={styles.chartConfigEditFormDiv5}>
+							<span className={styles.chartConfigEditFormLabel}>Y-axis</span>
 							{supportsAxisLabels ? (
 								<AxisFields
 									name='Label'
@@ -802,7 +803,7 @@ export function ChartConfigEditForm({
 									onMaxChange={updateYAxisMax}
 								/>
 							) : (
-								<div className='grid grid-cols-[1fr_1fr] gap-3 items-end'>
+								<div className={styles.chartConfigEditFormDiv12}>
 									<MinMaxFields
 										minId='chart-y-axis-min'
 										maxId='chart-y-axis-max'
@@ -816,11 +817,11 @@ export function ChartConfigEditForm({
 						</div>
 					)}
 
-			<div className='grid gap-2'>
-				<span className='text-sm font-semibold text-foreground'>Options</span>
+			<div className={styles.chartConfigEditFormDiv}>
+				<span className={styles.chartConfigEditFormLabel}>Options</span>
 				{canShowComparisonPill && (
-					<div className='grid gap-2'>
-						<span className='text-sm font-semibold text-foreground'>Comparison pill</span>
+					<div className={styles.chartConfigEditFormDiv}>
+						<span className={styles.chartConfigEditFormLabel}>Comparison pill</span>
 						<Select
 							value={'comparison_mode' in draft ? (draft.comparison_mode ?? 'none') : 'none'}
 							onValueChange={(value) =>
@@ -830,10 +831,10 @@ export function ChartConfigEditForm({
 								}))
 							}
 						>
-							<SelectTrigger className='w-full bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+							<SelectTrigger className={styles.chartConfigEditFormSelectTrigger}>
 								<SelectValue />
 							</SelectTrigger>
-							<SelectContent className='border-none bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+							<SelectContent className={styles.chartConfigEditFormSelectContent}>
 								{COMPARISON_MODE_OPTIONS.map((option) => (
 									<SelectItem key={option.value} value={option.value}>
 										{option.label}
@@ -843,8 +844,8 @@ export function ChartConfigEditForm({
 						</Select>
 					</div>
 				)}
-				<div className='flex h-8 items-center justify-between'>
-					<label htmlFor='show-data-labels' className='text-sm text-foreground'>
+				<div className={styles.chartConfigEditFormDiv13}>
+					<label htmlFor='show-data-labels' className={styles.chartConfigEditFormLabel2}>
 						Show data labels
 					</label>
 					<Switch
@@ -856,7 +857,7 @@ export function ChartConfigEditForm({
 			</div>
 
 			{(error || unsupportedNumberFormat) && (
-				<p className='text-xs text-destructive'>{error ?? UNSUPPORTED_NUMBER_FORMAT_MESSAGE}</p>
+				<p className={styles.chartConfigEditFormP}>{error ?? UNSUPPORTED_NUMBER_FORMAT_MESSAGE}</p>
 			)}
 
 			{showActions && (
@@ -877,14 +878,14 @@ interface ChartConfigEditActionsProps {
 function ChartConfigEditActions({ isSaving, canSave, onCancel, formId, className }: ChartConfigEditActionsProps) {
 	return (
 		<DialogFooter className={className}>
-			<Button type='button' variant='ghost' className='rounded-full border' onClick={onCancel}>
+			<Button type='button' variant='ghost' className={styles.chartConfigEditActionsButton} onClick={onCancel}>
 				Cancel
 			</Button>
 			<Button
 				variant='primary-gradient'
 				type='submit'
 				form={formId}
-				className='rounded-full'
+				className={styles.chartConfigEditActionsButton2}
 				isLoading={isSaving}
 				disabled={isSaving || !canSave}
 			>
@@ -969,16 +970,16 @@ function ColumnSelect({ value, columns, onChange, draggedColumnKind, acceptsKind
 		<div
 			{...dropTargetProps}
 			className={cn(
-				'rounded-md',
-				isDropCandidate && 'outline-2 outline-offset-2 outline-primary/40 outline-dashed',
-				isOver && 'outline-primary outline-solid',
+				styles.columnSelectDiv,
+				isDropCandidate && styles.columnSelectDiv2,
+				isOver && styles.columnSelectDiv3,
 			)}
 		>
 			<Select value={value} onValueChange={onChange} disabled={items.length === 0}>
-				<SelectTrigger className='w-full text-sm bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+				<SelectTrigger className={styles.columnSelectSelectTrigger}>
 					<SelectValue placeholder='Select column' />
 				</SelectTrigger>
-				<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+				<SelectContent className={styles.columnSelectSelectContent}>
 					{items.map((column) => (
 						<SelectItem key={column} value={column}>
 							{column}
@@ -996,11 +997,11 @@ function SeriesDropZone({ onDrop }: { onDrop: (column: string) => void }) {
 		<div
 			{...dropTargetProps}
 			className={cn(
-				'flex h-10 items-center justify-center gap-1.5 rounded-md border border-dashed border-primary/40 text-xs text-muted-foreground transition-colors',
-				isOver && 'border-primary bg-accent text-foreground',
+				styles.seriesDropZoneDiv,
+				isOver && styles.seriesDropZoneDiv2,
 			)}
 		>
-			<Plus className='size-3.5' /> Drop to add a series
+			<Plus className={styles.chartConfigEditFormPlus} /> Drop to add a series
 		</div>
 	);
 }
@@ -1016,22 +1017,22 @@ interface ClearableInputProps {
 
 function ClearableInput({ value, onChange, onClear, placeholder, ariaLabel, className }: ClearableInputProps) {
 	return (
-		<div className='relative'>
+		<div className={styles.clearableInputDiv}>
 			<Input
 				value={value}
 				onChange={(event) => onChange(event.target.value)}
 				placeholder={placeholder}
 				aria-label={ariaLabel}
-				className={cn(className, 'pr-7')}
+				className={cn(className, styles.clearableInputInput)}
 			/>
 			{value && (
 				<button
 					type='button'
 					aria-label={`Clear ${ariaLabel}`}
 					onClick={onClear}
-					className='absolute inset-y-0 right-1.5 flex items-center text-muted-foreground hover:text-foreground'
+					className={styles.clearableInputButton}
 				>
-					<X className='size-3.5' />
+					<X className={styles.chartConfigEditFormPlus} />
 				</button>
 			)}
 		</div>
@@ -1067,11 +1068,11 @@ function AxisFields({
 	onMaxChange,
 }: AxisFieldsProps) {
 	return (
-		<div className={`grid gap-3 items-end ${showRange ? 'grid-cols-[2fr_1fr_1fr]' : 'grid-cols-1'}`}>
-			<div className='grid gap-1'>
-				<span className='text-xs text-muted-foreground'>{name}</span>
+		<div className={`${styles.chartConfigEditFormDiv6} ${showRange ? styles.state104 : styles.state105}`}>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<span className={styles.chartConfigEditFormSpan}>{name}</span>
 				<Input
-					className='h-8 bg-panel'
+					className={styles.chartConfigEditFormInput}
 					placeholder={labelPlaceholder}
 					value={labelValue}
 					onChange={(e) => onLabelChange(e.target.value)}
@@ -1103,13 +1104,13 @@ interface MinMaxFieldsProps {
 function MinMaxFields({ minId, maxId, minValue, maxValue, onMinChange, onMaxChange }: MinMaxFieldsProps) {
 	return (
 		<>
-			<div className='grid gap-1'>
-				<label htmlFor={minId} className='text-xs text-muted-foreground'>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<label htmlFor={minId} className={styles.chartConfigEditFormSpan}>
 					Min
 				</label>
 				<Input
 					id={minId}
-					className='h-8 bg-panel'
+					className={styles.chartConfigEditFormInput}
 					type='text'
 					inputMode='decimal'
 					placeholder='Auto'
@@ -1117,13 +1118,13 @@ function MinMaxFields({ minId, maxId, minValue, maxValue, onMinChange, onMaxChan
 					onChange={(e) => onMinChange(e.target.value)}
 				/>
 			</div>
-			<div className='grid gap-1'>
-				<label htmlFor={maxId} className='text-xs text-muted-foreground'>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<label htmlFor={maxId} className={styles.chartConfigEditFormSpan}>
 					Max
 				</label>
 				<Input
 					id={maxId}
-					className='h-8 bg-panel'
+					className={styles.chartConfigEditFormInput}
 					type='text'
 					inputMode='decimal'
 					placeholder='Auto'
@@ -1143,10 +1144,10 @@ interface SeriesTypeSelectProps {
 function SeriesTypeSelect({ value, onChange }: SeriesTypeSelectProps) {
 	return (
 		<Select value={value} onValueChange={(next) => onChange(next as displayChart.SeriesType)}>
-			<SelectTrigger variant='ghost' size='sm' className='h-auto gap-1 px-1 py-0 text-xs [&_svg]:size-3.5'>
+			<SelectTrigger variant='ghost' size='sm' className={styles.seriesTypeSelectSelectTrigger}>
 				<SelectValue />
 			</SelectTrigger>
-			<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+			<SelectContent className={styles.columnSelectSelectContent}>
 				{SERIES_TYPE_OPTIONS.map(({ value: optionValue, label, icon: Icon }) => (
 					<SelectItem key={optionValue} value={optionValue}>
 						<Icon strokeWidth={1.5} />
@@ -1174,15 +1175,15 @@ function SeriesValueFormatFields({
 	onUnitChange,
 }: SeriesValueFormatFieldsProps) {
 	return (
-		<div className='grid grid-cols-[1fr_1fr_8rem] gap-2'>
-			<div className='grid gap-1'>
-				<div className='flex items-center gap-2'>
-					<span className='text-xs text-muted-foreground'>Number format</span>
+		<div className={styles.seriesValueFormatFieldsDiv}>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<div className={styles.seriesValueFormatFieldsDiv2}>
+					<span className={styles.chartConfigEditFormSpan}>Number format</span>
 					<a
 						href='https://d3js.org/d3-format'
 						target='_blank'
 						rel='noreferrer'
-						className='text-xs text-blue-500 hover:text-blue-400 hover:underline'
+						className={styles.seriesValueFormatFieldsA}
 					>
 						How to format
 					</a>
@@ -1193,22 +1194,22 @@ function SeriesValueFormatFields({
 					onClear={() => onD3FormatChange('')}
 					placeholder='e.g. ,.2f'
 					ariaLabel='d3-format specifier'
-					className='h-8 rounded-lg text-sm bg-panel'
+					className={styles.rowInput}
 				/>
 			</div>
-			<div className='grid gap-1'>
-				<span className='text-xs text-muted-foreground'>Unit</span>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<span className={styles.chartConfigEditFormSpan}>Unit</span>
 				<ClearableInput
 					value={unit}
 					onChange={(value) => onUnitChange(value, placement)}
 					onClear={() => onUnitChange('', placement)}
 					placeholder='$ or %'
 					ariaLabel='Value unit'
-					className='h-8 rounded-lg text-sm bg-panel'
+					className={styles.rowInput}
 				/>
 			</div>
-			<div className='grid gap-1'>
-				<span className='text-xs text-muted-foreground'>Placement</span>
+			<div className={styles.chartConfigEditFormDiv7}>
+				<span className={styles.chartConfigEditFormSpan}>Placement</span>
 				<Select
 					value={placement}
 					disabled={!unit}
@@ -1216,11 +1217,11 @@ function SeriesValueFormatFields({
 				>
 					<SelectTrigger
 						aria-label='Unit placement'
-						className='h-8 w-full bg-panel text-sm disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:text-foreground! [&_svg]:opacity-100!'
+						className={styles.seriesValueFormatFieldsSelectTrigger}
 					>
 						<SelectValue />
 					</SelectTrigger>
-					<SelectContent className='bg-panel'>
+					<SelectContent className={styles.seriesValueFormatFieldsSelectContent}>
 						<SelectItem value='prefix'>Prefix</SelectItem>
 						<SelectItem value='suffix'>Suffix</SelectItem>
 					</SelectContent>
@@ -1242,16 +1243,16 @@ function ValueFormatToggle({ unit, open, onClick }: ValueFormatToggleProps) {
 			type='button'
 			variant='outline'
 			size='icon-sm'
-			className='size-8 overflow-hidden bg-panel'
+			className={styles.valueFormatToggleButton}
 			aria-label='Value formatting'
 			aria-expanded={open}
 			title={unit || 'Value formatting'}
 			onClick={onClick}
 		>
 			{unit ? (
-				<span className='max-w-full truncate px-0.5 text-xs font-semibold'>{unit}</span>
+				<span className={styles.valueFormatToggleSpan}>{unit}</span>
 			) : (
-				<span className='max-w-full truncate px-0.5 text-xs font-semibold text-muted-foreground'>$</span>
+				<span className={styles.valueFormatToggleSpan2}>$</span>
 			)}
 		</Button>
 	);
@@ -1273,14 +1274,14 @@ function YAxisSideToggle({ value, onChange }: YAxisSideToggleProps) {
 					type='button'
 					variant='outline'
 					size='icon-sm'
-					className='size-8 bg-panel'
+					className={styles.yAxisSideToggleButton}
 					aria-label={isRight ? 'Right Y-axis' : 'Left Y-axis'}
 					onClick={() => {
 						onChange(isRight ? 'left' : 'right');
 						setOpen(true);
 					}}
 				>
-					<Icon className={`size-4 transition-transform ${isRight ? '-rotate-90' : ''}`} />
+					<Icon className={`${styles.yAxisSideToggleIcon} ${isRight ? styles.state106 : ''}`} />
 				</Button>
 			</TooltipTrigger>
 			<TooltipContent side='top'>{isRight ? 'Right Y-axis' : 'Left Y-axis'}</TooltipContent>

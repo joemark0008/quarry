@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useDateFormat } from '@/hooks/use-date-format';
 import { tableToTsv } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
+import styles from './data-table-card.module.css';
 
 interface DataTableCardProps {
 	columns: string[];
@@ -46,48 +47,48 @@ export const DataTableCard = memo(
 
 		const handleCopy = () => navigator.clipboard.writeText(tableToTsv(resolvedColumns, data, dateFormat));
 		return (
-			<div data-slot='data-table-card' className={cn('flex flex-col gap-2 border rounded-lg pt-2', className)}>
+			<div data-slot='data-table-card' className={cn(styles.dataTableCardDiv, className)}>
 				<div
 					className={cn(
-						'flex items-center gap-1 px-3',
-						title || leadingHeader ? 'justify-between' : 'justify-end',
+						styles.dataTableCardDiv2,
+						title || leadingHeader ? styles.dataTableCardDiv3 : styles.dataTableCardDiv4,
 					)}
 				>
 					{title || leadingHeader ? (
-						<div className='flex min-w-0 items-center gap-1'>
+						<div className={styles.dataTableCardDiv5}>
 							{leadingHeader}
-							{title ? <span className='text-sm font-medium truncate'>{title}</span> : null}
+							{title ? <span className={styles.dataTableCardSpan}>{title}</span> : null}
 						</div>
 					) : null}
-					<div className='flex items-center gap-1'>
+					<div className={styles.dataTableCardDiv6}>
 						{headerActions}
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className='hover:rounded-full hover:bg-accent/70'
+							className={styles.dataTableCardButton}
 							onClick={handleCopy}
 							title='Copy rows'
 						>
-							<Copy className='size-3 text-muted-foreground/70' />
+							<Copy className={styles.dataTableCardCopy} />
 						</Button>
 						<ExportDataMenu columns={resolvedColumns} data={data} filename={title || 'table'}>
 							<Button
 								variant='ghost-muted'
 								size='icon-xs'
-								className='hover:rounded-full hover:bg-accent/70'
+								className={styles.dataTableCardButton}
 								title='Export data'
 							>
-								<Download className='size-3 text-muted-foreground/70' />
+								<Download className={styles.dataTableCardCopy} />
 							</Button>
 						</ExportDataMenu>
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className='hover:rounded-full hover:bg-accent/70'
+							className={styles.dataTableCardButton}
 							onClick={() => setIsFullscreen(true)}
 							title='View fullscreen'
 						>
-							<Maximize2 className='size-3 text-muted-foreground/70' />
+							<Maximize2 className={styles.dataTableCardCopy} />
 						</Button>
 					</div>
 				</div>
@@ -103,34 +104,34 @@ export const DataTableCard = memo(
 				/>
 
 				<Dialog open={isFullscreen} onOpenChange={setIsFullscreen}>
-					<DialogContent className='flex max-h-[90vh] w-fit min-w-[32rem] max-w-[95vw] flex-col gap-2 sm:max-w-[95vw]'>
+					<DialogContent className={styles.dataTableCardDialogContent}>
 						<DialogTitle className='sr-only'>{title ?? 'Table'}</DialogTitle>
-						<div className='flex flex-row justify-end gap-1 -my-1 px-5'>
+						<div className={styles.dataTableCardDiv7}>
 							<Button
 								variant='ghost-muted'
 								size='icon-xs'
-								className='hover:rounded-full'
+								className={styles.dataTableCardButton2}
 								onClick={handleCopy}
 								title='Copy rows'
 							>
-								<Copy className='size-3.5' />
+								<Copy className={styles.dataTableCardCopy2} />
 							</Button>
 							<ExportDataMenu columns={resolvedColumns} data={data} filename={title || 'table'}>
 								<Button
 									variant='ghost-muted'
 									size='icon-xs'
-									className='hover:rounded-full'
+									className={styles.dataTableCardButton2}
 									title='Export data'
 								>
-									<Download className='size-3.5' />
+									<Download className={styles.dataTableCardCopy2} />
 								</Button>
 							</ExportDataMenu>
 						</div>
 						<TableDisplay
 							data={data}
 							columns={resolvedColumns}
-							className='min-h-0 min-w-0 overflow-hidden rounded-lg border'
-							tableContainerClassName='max-h-[75vh] border-t-0'
+							className={styles.dataTableCardTableDisplay}
+							tableContainerClassName={styles.dataTableCardTableDisplay2}
 							maxRowsBeforePagination={maxRowsBeforePagination}
 							compactFooter={true}
 							conditionalFormats={conditionalFormats}

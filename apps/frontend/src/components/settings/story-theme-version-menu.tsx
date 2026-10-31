@@ -10,6 +10,7 @@ import {
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import styles from './story-theme-version-menu.module.css';
 
 export interface ThemeVersionEntry {
 	label: string;
@@ -34,32 +35,32 @@ export function StoryThemeVersionMenu({ entries, currentIndex, onSelect }: Story
 				<Button
 					variant='ghost-muted'
 					size='sm'
-					className='h-6 shrink-0 gap-1 rounded-full px-2 text-xs font-normal tabular-nums text-foreground'
+					className={styles.storyThemeVersionMenuButton}
 					aria-label='Select theme version'
 				>
-					<RotateCwFadingClock className='size-3.5' strokeWidth={2.25} />
+					<RotateCwFadingClock className={styles.storyThemeVersionMenuRotateCwFadingClock} strokeWidth={2.25} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='end' className='max-h-80 w-72 overflow-y-auto'>
+			<DropdownMenuContent align='end' className={styles.storyThemeVersionMenuDropdownMenuContent}>
 				<DropdownMenuRadioGroup value={String(currentIndex)} onValueChange={(value) => onSelect(Number(value))}>
 					{newestFirst.map(({ entry, index }) => (
 						<DropdownMenuRadioItem
 							key={index}
 							value={String(index)}
 							indicator='check'
-							className='items-start pr-7 pl-2 [&>span:first-child]:right-2 [&>span:first-child]:left-auto'
+							className={styles.storyThemeVersionMenuDropdownMenuRadioItem}
 						>
-							<div className='flex min-w-0 flex-col gap-0.5'>
-								<span className='text-xs'>
+							<div className={styles.storyThemeVersionMenuDiv}>
+								<span className={styles.storyThemeVersionMenuSpan}>
 									{entry.label}
 									{entry.date && (
-										<span className='text-muted-foreground'>
+										<span className={styles.storyThemeVersionMenuSpan2}>
 											{' '}
 											· {entry.date.toLocaleString(undefined, DATE_FORMAT)}
 										</span>
 									)}
 								</span>
-								<span className='truncate text-xs text-muted-foreground'>{describeEntry(entry)}</span>
+								<span className={styles.storyThemeVersionMenuSpan3}>{describeEntry(entry)}</span>
 							</div>
 						</DropdownMenuRadioItem>
 					))}

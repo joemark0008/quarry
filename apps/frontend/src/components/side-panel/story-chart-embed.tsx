@@ -20,8 +20,9 @@ import { useSourceQuery } from '@/hooks/use-source-query';
 import { useStoryChartSourceQuery } from '@/hooks/use-story-chart-source-query';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
+import styles from './story-chart-embed.module.css';
 
-const STORY_CHART_HEIGHT_CLASS = 'h-72';
+const STORY_CHART_HEIGHT_CLASS = styles.sTORYCHARTHEIGHTCLASS;
 const EMPTY_ROWS: Record<string, unknown>[] = [];
 
 type ChartBlock = ParsedChartBlock;
@@ -99,7 +100,7 @@ export const StoryChartEmbed = memo(function StoryChartEmbed({
 				hideTotal={chart.hideTotal}
 				kpiLeadingSlot={kpiLeadingHandle}
 				disableTooltip={isSelected || storyBlockDrag?.isDragging === true}
-				className={cn(isKpi && storyBlockDrag != null && 'select-none')}
+				className={cn(isKpi && storyBlockDrag != null && styles.storyChartEmbedChartDisplay)}
 			/>
 		</StoryChartEmbedShell>
 	);
@@ -193,9 +194,9 @@ export function StoryChartEmbedShell({
 			size='icon-xs'
 			onClick={() => openEditor('chart')}
 			title='Edit chart'
-			className='shrink-0 hover:bg-accent hover:rounded-full'
+			className={styles.editButtonButton}
 		>
-			<Pencil className='size-3.5' />
+			<Pencil className={styles.editButtonPencil} />
 		</Button>
 	) : null;
 	const queryButton = canViewQuery ? (
@@ -204,37 +205,37 @@ export function StoryChartEmbedShell({
 			size='icon-xs'
 			onClick={() => (canOpenQueryEditor ? openEditor('query') : setShowQuery((current) => !current))}
 			title={canOpenQueryEditor ? 'Edit SQL query' : showQuery ? 'Hide SQL query' : 'View SQL query'}
-			className={cn('shrink-0 hover:bg-accent hover:rounded-full', showQuery && 'bg-accent rounded-full')}
+			className={cn(styles.editButtonButton, showQuery && styles.queryButtonButton)}
 		>
-			<Code className='size-3.5' />
+			<Code className={styles.editButtonPencil} />
 		</Button>
 	) : null;
 
 	return (
-		<div ref={paletteScopeRef} className='my-2 flex flex-col gap-4'>
+		<div ref={paletteScopeRef} className={styles.storyChartEmbedShellDiv}>
 			{!isKpi && (canEdit || canViewQuery || dragHandle != null || chart.title) && (
-				<div className='flex w-full items-center justify-between gap-2'>
-					<div className='flex min-w-0 flex-1 items-center gap-1'>
+				<div className={styles.storyChartEmbedShellDiv2}>
+					<div className={styles.storyChartEmbedShellDiv3}>
 						{dragHandlePlacement === 'leading' ? dragHandle : null}
 						{chart.title ? (
-							<span className='text-sm font-medium text-foreground min-w-0 truncate'>{chart.title}</span>
+							<span className={styles.storyChartEmbedShellSpan}>{chart.title}</span>
 						) : null}
 					</div>
-					<div className='flex shrink-0 items-center gap-1'>
+					<div className={styles.storyChartEmbedShellDiv4}>
 						{dragHandlePlacement === 'leading' ? null : dragHandle}
 						{queryButton}
 						{editButton}
 					</div>
 				</div>
 			)}
-			<div className={cn('relative', !isKpi && !showQuery && STORY_CHART_HEIGHT_CLASS)}>
+			<div className={cn(styles.storyChartEmbedShellDiv5, !isKpi && !showQuery && STORY_CHART_HEIGHT_CLASS)}>
 				{showQuery && querySqlSource ? (
 					<StoryChartQueryView queryId={chart.queryId} source={querySqlSource} />
 				) : (
 					children
 				)}
 				{isKpi && ((dragHandlePlacement !== 'leading' && dragHandle != null) || canViewQuery || canEdit) && (
-					<div className='absolute top-0 right-0 z-10 flex items-center gap-1'>
+					<div className={styles.storyChartEmbedShellDiv6}>
 						{dragHandlePlacement === 'leading' ? null : dragHandle}
 						{queryButton}
 						{editButton}

@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useChatId } from '@/hooks/use-chat-id';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { chatApi } from '@/lib/chat-api';
+import styles from './chat-input-context-window-ring.module.css';
 
 const RADIUS = 8;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -38,12 +39,12 @@ function buildTooltipText({
 
 function ringColor(value: number): string {
 	if (value >= 85) {
-		return 'stroke-destructive';
+		return styles.ringColor;
 	}
 	if (value >= 65) {
-		return 'stroke-amber-500';
+		return styles.ringColor2;
 	}
-	return 'stroke-primary';
+	return styles.ringColor3;
 }
 
 export function ContextWindowRingView({
@@ -67,13 +68,13 @@ export function ContextWindowRingView({
 				<span
 					tabIndex={0}
 					aria-label={tooltipText}
-					className='inline-flex shrink-0 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background'
+					className={styles.contextWindowRingViewSpan}
 				>
 					<svg
 						width='20'
 						height='20'
 						viewBox='0 0 20 20'
-						className={cn('-rotate-90', className)}
+						className={cn(styles.contextWindowRingViewSvg, className)}
 						aria-hidden='true'
 					>
 						<circle
@@ -82,7 +83,7 @@ export function ContextWindowRingView({
 							r={RADIUS}
 							fill='none'
 							strokeWidth='2.5'
-							className='stroke-muted-foreground/20'
+							className={styles.contextWindowRingViewCircle}
 						/>
 						<circle
 							cx='10'
@@ -93,7 +94,7 @@ export function ContextWindowRingView({
 							strokeLinecap='round'
 							strokeDasharray={CIRCUMFERENCE}
 							strokeDashoffset={offset}
-							className={cn('transition-[stroke-dashoffset,stroke] duration-700', ringColor(clamped))}
+							className={cn(styles.contextWindowRingViewCircle2, ringColor(clamped))}
 						/>
 					</svg>
 				</span>

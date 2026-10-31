@@ -3,6 +3,7 @@ import { UnfoldVertical } from 'lucide-react';
 
 import type { DiffLine } from '@/lib/line-diff';
 import { cn } from '@/lib/utils';
+import styles from './file-diff.module.css';
 
 const CONTEXT_LINES = 3;
 const MIN_COLLAPSE = 2;
@@ -16,7 +17,7 @@ export function FileDiffBody({ lines }: { lines: DiffLine[] }) {
 	const expandGap = (index: number) => setExpandedGaps((current) => new Set(current).add(index));
 
 	return (
-		<div className='overflow-x-auto font-mono text-xs leading-relaxed'>
+		<div className={styles.fileDiffBodyDiv}>
 			{rows.map((row, index) => {
 				if (row.type === 'line') {
 					return <DiffLineRow key={index} line={row.line} />;
@@ -35,9 +36,9 @@ export function FileDiffBody({ lines }: { lines: DiffLine[] }) {
 						key={index}
 						type='button'
 						onClick={() => expandGap(index)}
-						className='flex w-full select-none items-center gap-2 border-y bg-muted/40 px-2 py-1 text-[11px] text-muted-foreground hover:bg-muted/70'
+						className={styles.fileDiffBodyButton}
 					>
-						<UnfoldVertical className='size-3.5 shrink-0' />
+						<UnfoldVertical className={styles.fileDiffBodyUnfoldVertical} />
 						<span>
 							Show {row.lines.length} unchanged {row.lines.length === 1 ? 'line' : 'lines'}
 						</span>
@@ -52,27 +53,27 @@ function DiffLineRow({ line }: { line: DiffLine }) {
 	return (
 		<div
 			className={cn(
-				'flex',
-				line.type === 'add' && 'bg-emerald-500/10',
-				line.type === 'remove' && 'bg-red-500/10',
+				styles.diffLineRowDiv,
+				line.type === 'add' && styles.diffLineRowDiv2,
+				line.type === 'remove' && styles.diffLineRowDiv3,
 			)}
 		>
-			<span className='w-9 shrink-0 select-none px-1 text-right text-muted-foreground/50'>
+			<span className={styles.diffLineRowSpan}>
 				{line.oldNumber ?? ''}
 			</span>
-			<span className='w-9 shrink-0 select-none px-1 text-right text-muted-foreground/50'>
+			<span className={styles.diffLineRowSpan}>
 				{line.newNumber ?? ''}
 			</span>
 			<span
 				className={cn(
-					'w-4 shrink-0 select-none text-center',
-					line.type === 'add' && 'text-emerald-600 dark:text-emerald-400',
-					line.type === 'remove' && 'text-red-600 dark:text-red-400',
+					styles.diffLineRowSpan2,
+					line.type === 'add' && styles.diffLineRowSpan3,
+					line.type === 'remove' && styles.diffLineRowSpan4,
 				)}
 			>
 				{line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ''}
 			</span>
-			<span className='flex-1 whitespace-pre-wrap break-words pr-3'>{line.text || ' '}</span>
+			<span className={styles.diffLineRowSpan5}>{line.text || ' '}</span>
 		</div>
 	);
 }

@@ -21,6 +21,7 @@ import { SavedPromptItem, SavedPromptSkeleton } from './saved-prompt';
 import type { SavedPrompt } from '@/lib/api-types';
 import { useSavedPromptsQuery, useSavedPromptMutations } from '@/hooks/use-saved-prompts';
 import { Button } from '@/components/ui/button';
+import styles from './saved-prompts.module.css';
 
 interface SavedPromptsSectionProps {
 	isAdmin: boolean;
@@ -94,8 +95,8 @@ export function SavedPrompts({ isAdmin }: SavedPromptsSectionProps) {
 				description='Save repeatable, customizable prompts for the agent to follow.'
 				action={
 					isAdmin && (
-						<Button variant='secondary' size='sm' className='ml-auto' onClick={handleNewPrompt}>
-							<Plus className='size-4' />
+						<Button variant='secondary' size='sm' className={styles.savedPromptsButton} onClick={handleNewPrompt}>
+							<Plus className={styles.savedPromptsPlus} />
 							New Prompt
 						</Button>
 					)
@@ -104,9 +105,9 @@ export function SavedPrompts({ isAdmin }: SavedPromptsSectionProps) {
 			>
 				{isLoading ? (
 					<>
-						<SavedPromptSkeleton className='pt-0' />
+						<SavedPromptSkeleton className={styles.savedPromptsSavedPromptSkeleton} />
 						<SavedPromptSkeleton />
-						<SavedPromptSkeleton className='pb-0' />
+						<SavedPromptSkeleton className={styles.savedPromptsSavedPromptSkeleton2} />
 					</>
 				) : savedPrompts.length === 0 ? (
 					<Empty>No saved prompts yet.</Empty>
@@ -116,7 +117,7 @@ export function SavedPrompts({ isAdmin }: SavedPromptsSectionProps) {
 							<SavedPromptItem
 								key={prompt.id}
 								prompt={prompt}
-								className='last:pb-0 first:pt-0'
+								className={styles.savedPromptsSavedPromptItem}
 								onEdit={handleEditPrompt}
 								onDelete={handleDeletePrompt}
 							/>
@@ -199,18 +200,18 @@ const PromptDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onClose}>
-			<DialogContent className='p-6' showCloseButton={false}>
+			<DialogContent className={styles.promptDialogDialogContent} showCloseButton={false}>
 				<form
 					onSubmit={handleSubmit}
-					className='flex flex-col gap-4'
+					className={styles.promptDialogForm}
 					onKeyDown={(e) => {
 						if (e.key === 'Enter' && e.metaKey) {
 							handleSubmit(e);
 						}
 					}}
 				>
-					<DialogHeader className='-mb-4 border-b pb-4'>
-						<DialogTitle className='text-base font-medium text-foreground w-full'>
+					<DialogHeader className={styles.promptDialogDialogHeader}>
+						<DialogTitle className={styles.promptDialogDialogTitle}>
 							<form.Field name='title'>
 								{(field) => (
 									<NakedInput
@@ -218,7 +219,7 @@ const PromptDialog = ({
 										value={field.state.value}
 										onChange={(e) => field.handleChange(e.target.value)}
 										placeholder='Prompt title (used for UI display)'
-										className='w-full '
+										className={styles.promptDialogNakedInput}
 									/>
 								)}
 							</form.Field>
@@ -231,7 +232,7 @@ const PromptDialog = ({
 								value={field.state.value}
 								onChange={(e) => field.handleChange(e.target.value)}
 								placeholder='Describe what the agent should do...'
-								className='w-full border-none bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 rounded-none placeholder:font-normal field-sizing-fixed pt-4'
+								className={styles.promptDialogTextarea}
 								rows={5}
 							/>
 						)}
@@ -288,7 +289,7 @@ const DeletePromptDialog = ({
 	return (
 		<AlertDialog open={open} onOpenChange={onOpenChange}>
 			<AlertDialogContent size='sm' closeOnOutsideClick onCloseOnOutsideClick={() => onOpenChange(false)}>
-				<AlertDialogHeader className='p-2'>
+				<AlertDialogHeader className={styles.deletePromptDialogAlertDialogHeader}>
 					<AlertDialogTitle className='text-md'>Delete "{promptToDelete?.title}"?</AlertDialogTitle>
 					<AlertDialogDescription>This will be permanently deleted.</AlertDialogDescription>
 					{error && <ErrorMessage message={error} />}

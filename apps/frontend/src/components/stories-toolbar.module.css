@@ -1,0 +1,41 @@
+.storiesToolbarDiv {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+.storiesToolbarDiv2 {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+.storiesToolbarSearchBar {
+	flex-basis: 100%;
+	@media (width >= 40rem) {
+		flex: 1;
+	}
+	@media (width >= 40rem) {
+		flex-basis: 0px;
+	}
+}
+.selectionToggleButton {
+	background-color: var(--app-fill);
+}
+.displayModeToggleDiv {
+	display: flex;
+	height: 2.25rem;
+	align-items: center;
+	gap: 0.125rem;
+	border-radius: calc(infinity * 1px);
+	border-style: var(--fx-border-style);
+	border-width: 1px;
+	padding: 0.125rem;
+}
+.displayModeButtonButton {
+	border-radius: calc(infinity * 1px);
+	@media (hover: hover) {
+		&:hover {
+			border-radius: calc(infinity * 1px);
+		}
+	}
+}

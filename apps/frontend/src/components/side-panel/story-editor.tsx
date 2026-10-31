@@ -9,6 +9,7 @@ import { GridDragContext, StoryBlockDragContext } from './story-editor-drag-cont
 import type { StoryEditorDragControls } from './story-editor-drag-context';
 import type { Editor } from '@tiptap/react';
 import { cn } from '@/lib/utils';
+import styles from './story-editor.module.css';
 
 export { preprocessForEditor } from './story-editor-utils';
 export { StoryBlockDragGrip, StoryBlockDropZones } from './story-editor-block-drag';
@@ -54,14 +55,14 @@ export const StoryEditor = memo(function StoryEditor({
 				<div
 					ref={storyEditorRef}
 					className={cn(
-						'story-editor relative',
+						`${styles.storyEditorDiv} story-editor`,
 						storyBlockDragContext.activeDropZone && 'drop-indicator-active',
 					)}
 				>
 					{editor && (
 						<DragHandle
 							editor={editor}
-							className={cn('drag-handle', hideFloatingHandle && 'pointer-events-none!')}
+							className={cn('drag-handle', hideFloatingHandle && styles.storyEditorDragHandle)}
 							onNodeChange={handleDragHandleNodeChange}
 							onElementDragStart={onElementDragStart}
 							onElementDragEnd={onElementDragEnd}
@@ -70,9 +71,9 @@ export const StoryEditor = memo(function StoryEditor({
 								editor={editor}
 								getOrigin={getDragHandleOrigin}
 								ariaLabel='Move story block'
-								iconClassName='size-4'
+								iconClassName={styles.storyEditorStoryBlockActionGrip}
 								lockHandleWhileOpen
-								wrapperClassName={cn('drag-handle-button', hideFloatingHandle && 'invisible')}
+								wrapperClassName={cn('drag-handle-button', hideFloatingHandle && styles.storyEditorStoryBlockActionGrip2)}
 							/>
 						</DragHandle>
 					)}

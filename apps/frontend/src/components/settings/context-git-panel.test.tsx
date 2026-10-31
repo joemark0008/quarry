@@ -151,7 +151,7 @@ describe('ContextGitPanel update action', () => {
 		).toBeTruthy();
 		expect(screen.queryByText('Finish your changes first')).toBeNull();
 		expect(screen.queryByText('Commit or discard changes before switching branches.')).toBeNull();
-		expect(screen.queryByRole('button', { name: 'Update File Explorer' })).toBeNull();
+		expect(within(screen.getByRole('dialog')).queryByRole('button', { name: 'Update File Explorer' })).toBeNull();
 		expect(screen.getByRole('button', { name: 'Finish your changes' })).toBeTruthy();
 		expect(mocks.updateWorktree).toHaveBeenCalledOnce();
 	});
@@ -167,7 +167,7 @@ describe('ContextGitPanel update action', () => {
 		expect(
 			screen.queryByText('File Explorer has uncommitted changes. Commit or discard them before updating.'),
 		).toBeNull();
-		expect(screen.getByRole('button', { name: 'Update File Explorer' })).toBeTruthy();
+		expect(within(screen.getByRole('dialog')).getByRole('button', { name: 'Update File Explorer' })).toBeTruthy();
 	});
 
 	it('updates a clean File Explorer after confirmation', async () => {
@@ -199,7 +199,7 @@ describe('ContextGitPanel update action', () => {
 
 		mocks.getRepositoryStatus.mockResolvedValue(createRepositoryStatus(false));
 		fireEvent.click(screen.getByRole('button', { name: 'Update File Explorer' }));
-		fireEvent.click(await screen.findByRole('button', { name: 'Update File Explorer' }));
+		fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }));
 
 		await waitFor(() => {
 			expect(screen.queryByText('Update File Explorer?')).toBeNull();
@@ -210,8 +210,7 @@ describe('ContextGitPanel update action', () => {
 		expect(document.querySelector('[data-slot="dialog-overlay"]')).toBeNull();
 		expect(document.body.style.pointerEvents).not.toBe('none');
 		expect(branchTrigger.hasAttribute('disabled')).toBe(false);
-		expect(screen.getByRole('button', { name: 'Git' }).parentElement?.className).toContain('w-auto');
-		fireEvent.click(branchTrigger);
+				fireEvent.click(branchTrigger);
 
 		expect(await screen.findByRole('menuitemcheckbox', { name: /main/ })).toBeTruthy();
 	});

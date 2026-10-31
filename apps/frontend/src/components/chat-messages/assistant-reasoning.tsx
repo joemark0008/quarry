@@ -5,6 +5,7 @@ import { StreamingMarkdown } from '@/components/chat-messages/streaming-markdown
 import { Expandable } from '@/components/ui/expandable';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './assistant-reasoning.module.css';
 
 interface AssistantReasoningProps {
 	text: string;
@@ -37,9 +38,9 @@ export const AssistantReasoning = memo(({ text, isStreaming }: AssistantReasonin
 			disabled={!hasText}
 			isLoading={isStreaming}
 		>
-			<div className='text-muted-foreground markdown-small'>
-				<Conversation className='p-0'>
-					<ConversationContent className='p-0' scrollClassName='max-h-[200px]'>
+			<div className={styles.assistantReasoningDiv}>
+				<Conversation className={styles.assistantReasoningConversation}>
+					<ConversationContent className={styles.assistantReasoningConversation} scrollClassName={styles.assistantReasoningConversationContent}>
 						{isStreaming ? (
 							<StreamingMarkdown text={text} />
 						) : (

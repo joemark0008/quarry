@@ -1,0 +1,23 @@
+.standaloneStoryPageDiv {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+}
+.standaloneStoryPageDiv2 {
+	position: relative;
+	display: flex;
+	height: 100%;
+	min-width: 0px;
+	flex: 1;
+	flex-direction: column;
+	overflow: hidden;
+	background-color: var(--app-surface);
+}
+.standaloneStoryPageDiv3 {
+	position: relative;
+	display: flex;
+	min-height: 0px;
+	flex: 1;
+	flex-direction: column;
+}

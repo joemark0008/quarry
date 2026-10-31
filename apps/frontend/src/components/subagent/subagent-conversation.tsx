@@ -14,6 +14,7 @@ import { TextShimmer } from '@/components/ui/text-shimmer';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { isToolSettled } from '@/lib/ai';
 import { useChatQuery } from '@/queries/use-chat-query';
+import styles from './subagent-conversation.module.css';
 
 export type SubagentPart = UIToolPart<'task'>;
 
@@ -26,10 +27,10 @@ export function SubagentConversation({ chatId, toolCallId }: { chatId: string; t
 	const isSettled = !!part && (isToolSettled(part) || !isRunning);
 
 	return (
-		<div className='flex flex-col h-full flex-1 min-w-0 overflow-hidden bg-background'>
+		<div className={styles.subagentConversationDiv}>
 			<Header chatId={chatId} chatTitle={chatTitle} title={title} />
 			{isLoadingMessages ? (
-				<div className='flex flex-1 items-center justify-center'>
+				<div className={styles.subagentConversationDiv2}>
 					<Spinner />
 				</div>
 			) : !part ? (
@@ -47,17 +48,17 @@ function selectChatTitle(chat: Chat): string {
 
 function Header({ chatId, chatTitle, title }: { chatId: string; chatTitle: string | undefined; title: string }) {
 	return (
-		<div className='flex items-center justify-between gap-4 px-4 py-3 border-b'>
-			<nav aria-label='Conversation navigation' className='flex items-center gap-1 min-w-0 text-sm'>
+		<div className={styles.headerDiv}>
+			<nav aria-label='Conversation navigation' className={styles.headerNav}>
 				<Link
 					to='/$chatId'
 					params={{ chatId }}
-					className='truncate text-muted-foreground hover:text-foreground transition-colors'
+					className={styles.headerLink}
 				>
 					{chatTitle ?? 'Conversation'}
 				</Link>
-				<ChevronRight className='size-4 text-muted-foreground/50 shrink-0' />
-				<span className='truncate text-foreground'>{title}</span>
+				<ChevronRight className={styles.headerChevronRight} />
+				<span className={styles.headerSpan}>{title}</span>
 			</nav>
 			<Button variant='ghost' size='sm' asChild>
 				<Link to='/$chatId' params={{ chatId }}>
@@ -75,14 +76,14 @@ export function SubagentConversationBody({ part, isSettled }: { part: SubagentPa
 
 	return (
 		<Conversation initial={false}>
-			<ConversationContent className='max-w-3xl mx-auto w-full gap-6 pb-12' data-selection-container>
-				<div className='flex flex-col items-end w-full'>
+			<ConversationContent className={styles.subagentConversationBodyConversationContent} data-selection-container>
+				<div className={styles.subagentConversationBodyDiv}>
 					<UserMessageBubble message={promptMessage} />
 				</div>
-				<div className='px-3 flex flex-col gap-3'>
+				<div className={styles.subagentConversationBodyDiv2}>
 					<SubagentWork output={part.output} isSettled={isSettled} />
 					{part.errorText ? (
-						<pre className='p-3 rounded-lg bg-red-500/5 text-red-500 text-xs whitespace-pre-wrap'>
+						<pre className={styles.subagentConversationBodyPre}>
 							{part.errorText}
 						</pre>
 					) : isSettled && report ? (
@@ -99,7 +100,7 @@ export function SubagentConversationBody({ part, isSettled }: { part: SubagentPa
 
 function NotFound({ chatId }: { chatId: string }) {
 	return (
-		<div className='flex flex-1 flex-col items-center justify-center gap-3 text-sm text-muted-foreground'>
+		<div className={styles.notFoundDiv}>
 			<span>This subagent run is not part of the conversation.</span>
 			<Button variant='outline' size='sm' asChild>
 				<Link to='/$chatId' params={{ chatId }}>

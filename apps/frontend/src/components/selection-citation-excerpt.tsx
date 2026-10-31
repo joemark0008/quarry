@@ -1,5 +1,6 @@
 import type { StoryBlockReference } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
+import styles from './selection-citation-excerpt.module.css';
 
 interface SelectionCitationExcerptProps {
 	label?: string;
@@ -24,14 +25,14 @@ export function SelectionCitationExcerpt({
 
 	return (
 		<>
-			<p className='text-[11px] text-muted-foreground font-mono tracking-tight mb-1.5'>
+			<p className={styles.selectionCitationExcerptP}>
 				{label ?? describeLabel(start, end, block)}
 			</p>
 			{displayed && (
 				<blockquote
 					className={cn(
-						'text-xs text-foreground/80 italic leading-relaxed border-l-2 border-primary pl-3',
-						lineClamp === 2 ? 'line-clamp-2' : 'line-clamp-3',
+						styles.selectionCitationExcerptBlockquote,
+						lineClamp === 2 ? styles.selectionCitationExcerptBlockquote2 : styles.selectionCitationExcerptBlockquote3,
 					)}
 				>
 					&ldquo;{displayed}&rdquo;

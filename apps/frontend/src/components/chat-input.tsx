@@ -68,6 +68,7 @@ import { useCurrentProject } from '@/hooks/use-current-project';
 import { projectApi } from '@/lib/project-api';
 import { storageApi } from '@/lib/storage-api';
 import { storyApi } from '@/lib/story-api';
+import styles from './chat-input.module.css';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -530,7 +531,7 @@ function ChatInputBase({
 	);
 
 	return (
-		<div ref={dropZoneRef} className={cn('px-3 pb-3 pt-0 md:px-3 md:pb-3 max-w-3xl w-full mx-auto', className)}>
+		<div ref={dropZoneRef} className={cn(styles.chatInputBaseDiv, className)}>
 			<ChatInputMessageQueue onEditMessage={handleEditQueuedMessage} onSubmitNow={submitQueuedMessageWithGuard} />
 			<SelectionCitationBanner />
 			{allowQueueing && !isAdminMode && (
@@ -541,13 +542,13 @@ function ChatInputBase({
 			)}
 			{isAdminMode ? <ChatInputAdminBadge /> : null}
 
-			<form onSubmit={handleSubmitMessage} onKeyDown={handleKeyDown} className='mx-auto relative'>
+			<form onSubmit={handleSubmitMessage} onKeyDown={handleKeyDown} className={styles.chatInputBaseForm}>
 				<InputGroup
 					htmlFor='chat-input'
 					className={cn(
-						'bg-background dark:bg-background shadow-xs border-none max-md:rounded-4xl',
-						isDragging && 'ring-2 ring-primary/50 border-primary',
-						isAdminMode && 'ring-4 ring-amber-500/60',
+						styles.chatInputBaseInputGroup,
+						isDragging && styles.chatInputBaseInputGroup2,
+						isAdminMode && styles.chatInputBaseInputGroup3,
 					)}
 				>
 					{!isAdminMode && (variant === 'default' || variant === 'onboarding') && <ChatInputAnimatedBorder />}
@@ -569,7 +570,7 @@ function ChatInputBase({
 						type='file'
 						accept={isTrial ? TRIAL_ATTACHMENT_ACCEPT : ATTACHMENT_ACCEPT}
 						multiple
-						className='hidden'
+						className={styles.chatInputBaseInput}
 						onChange={attachmentUpload.handleFileInputChange}
 					/>
 
@@ -580,7 +581,7 @@ function ChatInputBase({
 
 						{isTranscribeReady && isRecording && <SlidingWaveform analyserRef={analyserRef} />}
 
-						<div className='flex items-center gap-1.5 md:gap-2 ml-auto relative'>
+						<div className={styles.chatInputBaseDiv2}>
 							{mode !== 'onboarding' && (
 								<ChatInputPlusMenu
 									hasDatabases={hasDatabases}
@@ -650,7 +651,7 @@ async function dataUrlToFile(url: string, mediaType: string, name: string): Prom
 
 function ChatInputAdminBadge() {
 	return (
-		<div className='flex justify-end pr-4'>
+		<div className={styles.chatInputAdminBadgeDiv}>
 			<SimpleTooltip
 				side='top'
 				align='end'
@@ -658,13 +659,13 @@ function ChatInputAdminBadge() {
 			>
 				<span
 					className={cn(
-						'flex w-fit cursor-help items-center gap-1 mb-1',
-						'rounded-t-lg px-2 py-0.5',
-						'text-[10px] font-medium text-amber-700 dark:text-amber-300',
-						'bg-amber-500/60',
+						styles.chatInputAdminBadgeSpan,
+						styles.chatInputAdminBadgeSpan2,
+						styles.chatInputAdminBadgeSpan3,
+						styles.chatInputAdminBadgeSpan4,
 					)}
 				>
-					<Shield className='size-3' />
+					<Shield className={styles.chatInputAdminBadgeShield} />
 					Admin Mode
 				</span>
 			</SimpleTooltip>
@@ -725,34 +726,34 @@ function ChatInputPlusMenu({
 				<button
 					type='button'
 					aria-label='Add context'
-					className='inline-flex items-center justify-center rounded-full size-7 text-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer'
+					className={styles.chatInputPlusMenuButton}
 				>
-					<Plus className='size-4 transition-transform duration-200 [[data-state=open]_&]:rotate-45' />
+					<Plus className={styles.chatInputPlusMenuPlus} />
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				side='top'
 				align='start'
 				collisionPadding={12}
-				className='min-w-44'
+				className={styles.chatInputPlusMenuDropdownMenuContent}
 				onCloseAutoFocus={(e) => {
 					e.preventDefault();
 					requestAnimationFrame(restorePromptFocus);
 				}}
 			>
 				<DropdownMenuItem onSelect={onAddAttachment}>
-					<Paperclip className='size-4' />
+					<Paperclip className={styles.chatInputPlusMenuPaperclip} />
 					<span>Attach file</span>
 				</DropdownMenuItem>
 				{hasDatabases && (
 					<DropdownMenuItem onSelect={() => deferMentionMenu(() => onOpenReferenceMenu(TABLES_ROOT_ID))}>
-						<Database className='size-4' />
+						<Database className={styles.chatInputPlusMenuPaperclip} />
 						<span>Database tables</span>
 					</DropdownMenuItem>
 				)}
 				{hasStoryReferences && (
 					<DropdownMenuItem onSelect={() => deferMentionMenu(() => onOpenReferenceMenu(STORIES_ROOT_ID))}>
-						<Library className='size-4' />
+						<Library className={styles.chatInputPlusMenuPaperclip} />
 						<span>Reference stories</span>
 					</DropdownMenuItem>
 				)}
@@ -764,7 +765,7 @@ function ChatInputPlusMenu({
 				))}
 				{hasSkills && (
 					<DropdownMenuItem onSelect={() => deferMentionMenu(() => onOpenMentionMenu(SKILL_MENTION_TRIGGER))}>
-						<PencilRuler className='size-4' />
+						<PencilRuler className={styles.chatInputPlusMenuPaperclip} />
 						<span>Skills</span>
 					</DropdownMenuItem>
 				)}
@@ -776,9 +777,9 @@ function ChatInputPlusMenu({
 							disabled={adminModeLocked && isAdminMode}
 							title={adminModeLocked && !isAdminMode ? 'Start a new chat in admin mode' : undefined}
 						>
-							<Shield className='size-4' />
+							<Shield className={styles.chatInputPlusMenuPaperclip} />
 							<span>Admin mode</span>
-							{isAdminMode && <Check className='size-4 ml-auto' />}
+							{isAdminMode && <Check className={styles.chatInputPlusMenuCheck} />}
 						</DropdownMenuItem>
 					</>
 				)}
@@ -817,7 +818,7 @@ function RecordingTimer() {
 	const secs = elapsed % 60;
 
 	return (
-		<span className='text-xs tabular-nums text-muted-foreground'>
+		<span className={styles.recordingTimerSpan}>
 			{mins}:{secs.toString().padStart(2, '0')}
 		</span>
 	);
@@ -825,19 +826,19 @@ function RecordingTimer() {
 
 function MicWarningBanner({ onDismiss }: { onDismiss: () => void }) {
 	return (
-		<div className='absolute bottom-full right-0 mb-2 w-64 rounded-md border bg-popover p-3 text-popover-foreground shadow-md animate-in fade-in slide-in-from-bottom-2 duration-200'>
+		<div className={styles.micWarningBannerDiv}>
 			<button
 				type='button'
 				onClick={onDismiss}
-				className='absolute top-1 right-1.5 text-muted-foreground hover:text-foreground text-xs cursor-pointer'
+				className={styles.micWarningBannerButton}
 			>
 				&times;
 			</button>
-			<p className='text-sm'>
+			<p className={styles.micWarningBannerP}>
 				Voice input is disabled.{' '}
 				<Link
 					to='/settings/project/models'
-					className='font-medium text-primary underline underline-offset-2 hover:text-primary/80'
+					className={styles.micWarningBannerLink}
 				>
 					Go to Settings &rarr; Models
 				</Link>{' '}

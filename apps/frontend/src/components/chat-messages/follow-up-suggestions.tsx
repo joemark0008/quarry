@@ -4,6 +4,7 @@ import { Skeleton } from '../ui/skeleton';
 import type { UIToolPart } from '@quarry/api/agent/types/chat';
 import { useSetChatInputCallback } from '@/contexts/set-chat-input-callback';
 import { cn } from '@/lib/utils';
+import styles from './follow-up-suggestions.module.css';
 
 export const FollowUpSuggestions = ({ toolPart }: { toolPart: UIToolPart<'suggest_follow_ups'> }) => {
 	const setPromptCallback = useSetChatInputCallback();
@@ -14,11 +15,11 @@ export const FollowUpSuggestions = ({ toolPart }: { toolPart: UIToolPart<'sugges
 
 	if (toolPart.state === 'input-streaming') {
 		return (
-			<div key={'skeleton'} className='flex flex-col gap-1 animate-fade-in-up'>
+			<div key={'skeleton'} className={styles.followUpSuggestionsDiv}>
 				{Array.from({ length: 3 }).map((_, idx) => (
-					<div className='flex justify-start items-center gap-2 px-3 py-2 text-left rounded-lg h-9' key={idx}>
-						<CornerDownRight size={16} className='text-muted-foreground opacity-50 shrink-0' />
-						<Skeleton key={idx} className='w-full h-4 rounded-lg' />
+					<div className={styles.followUpSuggestionsDiv2} key={idx}>
+						<CornerDownRight size={16} className={styles.followUpSuggestionsCornerDownRight} />
+						<Skeleton key={idx} className={styles.followUpSuggestionsSkeleton} />
 					</div>
 				))}
 			</div>
@@ -30,8 +31,8 @@ export const FollowUpSuggestions = ({ toolPart }: { toolPart: UIToolPart<'sugges
 	}
 
 	return (
-		<div key={'suggestions'} className={cn('flex flex-col gap-1', 'animate-fade-in-up delay-100')}>
-			<p className='px-3 pb-1 text-sm text-muted-foreground'>
+		<div key={'suggestions'} className={cn(styles.followUpSuggestionsDiv3, styles.followUpSuggestionsDiv4)}>
+			<p className={styles.followUpSuggestionsP}>
 				Pick a suggestion below to keep going, or ask me anything else.
 			</p>
 			{toolPart.input.suggestions.map((suggestion, index) => (
@@ -39,10 +40,10 @@ export const FollowUpSuggestions = ({ toolPart }: { toolPart: UIToolPart<'sugges
 					key={index}
 					variant='ghost'
 					onClick={() => setPromptCallback.fire(suggestion)}
-					className='justify-start gap-2 px-3 py-2 text-left rounded-lg'
+					className={styles.followUpSuggestionsButton}
 				>
-					<CornerDownRight className='text-muted-foreground opacity-50' />
-					<span className='truncate'>{suggestion}</span>
+					<CornerDownRight className={styles.followUpSuggestionsCornerDownRight2} />
+					<span className={styles.followUpSuggestionsSpan}>{suggestion}</span>
 				</Button>
 			))}
 		</div>

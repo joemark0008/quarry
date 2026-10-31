@@ -45,6 +45,7 @@ import { SwitchIndicator } from '@/components/ui/switch';
 import { LiveStoryTimestamp, StoryRefreshButton, StoryRefreshFailureBanner } from '@/components/story-page-header';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-header.module.css';
 
 interface StoryViewModeControls {
 	viewMode: StoryViewMode;
@@ -156,40 +157,40 @@ export const StoryHeader = memo(function StoryHeader({
 	const showSubHeader = viewMode === 'edit' || isEditingCode || !isViewingLatest;
 
 	const titleElement = hasMultiple ? (
-		<div className='flex min-w-20 flex-1 items-center gap-1'>
+		<div className={styles.titleElementDiv}>
 			<EditableStoryTitle
 				storyId={storyId}
 				title={title}
 				canEdit={!isReadonlyMode}
 				heading='h3'
-				className='min-w-0 truncate text-sm font-medium'
-				inputClassName='text-sm font-medium'
+				className={styles.titleElementEditableStoryTitle}
+				inputClassName={styles.titleElementEditableStoryTitle2}
 			/>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button
 						type='button'
 						variant='ghost-muted'
-						className='hover:rounded-full'
+						className={styles.titleElementButton}
 						size='icon-sm'
 						aria-label='Switch story'
 					>
-						<ChevronDown className='size-3.5' strokeWidth={2.25} />
+						<ChevronDown className={styles.titleElementChevronDown} strokeWidth={2.25} />
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align='start'>
 					{otherStories.map((story) => (
 						<DropdownMenuItem key={story.id} onClick={() => switchToStory(story.id)}>
-							<span className='truncate'>{story.title}</span>
+							<span className={styles.titleElementSpan}>{story.title}</span>
 						</DropdownMenuItem>
 					))}
 					{mentionedStories.length > 0 && (
 						<>
 							{otherStories.length > 0 && <DropdownMenuSeparator />}
-							<DropdownMenuLabel className='text-xs text-muted-foreground'>Mention</DropdownMenuLabel>
+							<DropdownMenuLabel className={styles.titleElementDropdownMenuLabel}>Mention</DropdownMenuLabel>
 							{mentionedStories.map((story) => (
 								<DropdownMenuItem key={story.storyId} onClick={() => openMentionedStory(story)}>
-									<span className='truncate'>{story.title}</span>
+									<span className={styles.titleElementSpan}>{story.title}</span>
 								</DropdownMenuItem>
 							))}
 						</>
@@ -198,21 +199,21 @@ export const StoryHeader = memo(function StoryHeader({
 			</DropdownMenu>
 		</div>
 	) : (
-		<div className='min-w-20 flex-1'>
+		<div className={styles.titleElementDiv2}>
 			<EditableStoryTitle
 				storyId={storyId}
 				title={title}
 				canEdit={!isReadonlyMode}
 				heading='h3'
-				className='truncate text-sm font-medium'
-				inputClassName='text-sm font-medium'
+				className={styles.titleElementEditableStoryTitle3}
+				inputClassName={styles.titleElementEditableStoryTitle2}
 			/>
 		</div>
 	);
 
 	const updatingIndicator = isStoryUpdating && (
-		<div className='flex shrink-0 items-center gap-1 text-xs text-muted-foreground' role='status'>
-			<Loader2 className='size-3 animate-spin' strokeWidth={2.25} />
+		<div className={styles.updatingIndicatorDiv} role='status'>
+			<Loader2 className={styles.updatingIndicatorLoader2} strokeWidth={2.25} />
 			<span>Updating…</span>
 		</div>
 	);
@@ -242,20 +243,20 @@ export const StoryHeader = memo(function StoryHeader({
 		<>
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<span className='inline-flex' tabIndex={isLiveUpdating ? 0 : undefined}>
+					<span className={styles.liveControlsSpan} tabIndex={isLiveUpdating ? 0 : undefined}>
 						<button
 							type='button'
 							onClick={onOpenLiveSettings}
 							disabled={isReadonlyMode || isAgentRunning || isLiveUpdating}
 							className={cn(
-								'flex items-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 border hover:bg-secondary rounded-full px-2 py-0.75',
-								isLiveUpdating && 'pointer-events-none',
+								styles.liveControlsButton,
+								isLiveUpdating && styles.liveControlsButton2,
 							)}
 						>
-							<Activity className='size-3.5 text-foreground' strokeWidth={2.25} />
-							<span className='text-xs font-medium'>Live story</span>
+							<Activity className={styles.liveControlsActivity} strokeWidth={2.25} />
+							<span className={styles.liveControlsSpan2}>Live story</span>
 							{isLiveUpdating ? (
-								<Loader2 className='size-3.5 animate-spin' strokeWidth={2.25} />
+								<Loader2 className={styles.liveControlsLoader2} strokeWidth={2.25} />
 							) : (
 								<SwitchIndicator checked={isLive} />
 							)}
@@ -300,11 +301,11 @@ export const StoryHeader = memo(function StoryHeader({
 	const actionButtons = showActionsMenu && (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='ghost' size='icon-sm' className='hover:rounded-full' aria-label='More actions'>
-					<Ellipsis className='size-3.5' strokeWidth={2.25} />
+				<Button variant='ghost' size='icon-sm' className={styles.titleElementButton} aria-label='More actions'>
+					<Ellipsis className={styles.titleElementChevronDown} strokeWidth={2.25} />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align='end' className='w-auto min-w-20'>
+			<DropdownMenuContent align='end' className={styles.actionButtonsDropdownMenuContent}>
 				<StoryDownloadMenu {...downloadOptions} isAgentRunning={isAgentRunning} isSaving={isSaving} />
 				{canFavorite && <StoryFavoriteMenuItem storyId={storyId} />}
 				{!isReadonlyMode && (
@@ -320,20 +321,20 @@ export const StoryHeader = memo(function StoryHeader({
 	);
 
 	return (
-		<div className='shrink-0' data-selection-ignore>
+		<div className={styles.storyHeaderDiv} data-selection-ignore>
 			{isMobile ? (
 				<>
-					<div className='flex items-center gap-2 border-b px-3 py-2'>
+					<div className={styles.storyHeaderDiv2}>
 						<Button
 							variant='ghost'
 							size='icon-md'
-							className='hover:rounded-full'
+							className={styles.titleElementButton}
 							onClick={onClose}
 							aria-label='Close'
 						>
-							<X className='size-4' strokeWidth={2.25} />
+							<X className={styles.storyHeaderX} strokeWidth={2.25} />
 						</Button>
-						<div className='flex-1' />
+						<div className={styles.storyHeaderDiv3} />
 						{viewModeToggle}
 						{liveControls}
 						{feedbackButtons}
@@ -341,22 +342,22 @@ export const StoryHeader = memo(function StoryHeader({
 						{shareButton}
 						{actionButtons}
 					</div>
-					<div className='flex items-center gap-2 border-b px-4 py-2'>
+					<div className={styles.storyHeaderDiv4}>
 						{titleElement}
 						{updatingIndicator}
 						{versionNav}
 					</div>
 				</>
 			) : (
-				<div className='flex items-center gap-2 border-b px-4 py-2'>
+				<div className={styles.storyHeaderDiv4}>
 					<Button
 						variant='ghost'
 						size='icon-sm'
-						className='mr-2 hover:rounded-full'
+						className={styles.storyHeaderButton}
 						onClick={onClose}
 						aria-label='Close'
 					>
-						<X className='size-3.5' strokeWidth={2.25} />
+						<X className={styles.titleElementChevronDown} strokeWidth={2.25} />
 					</Button>
 					{titleElement}
 					{updatingIndicator}
@@ -372,11 +373,11 @@ export const StoryHeader = memo(function StoryHeader({
 
 			{lastRefreshFailure && <StoryRefreshFailureBanner failure={lastRefreshFailure} isRetrying={isRefreshing} />}
 			{showSubHeader && (
-				<div className='flex items-center justify-between border-b bg-muted/40 px-4 py-2'>
+				<div className={styles.storyHeaderDiv5}>
 					{viewMode === 'edit' ? (
 						<>
-							<span className='text-xs text-muted-foreground'>Editing</span>
-							<div className='flex items-center gap-2'>
+							<span className={styles.titleElementDropdownMenuLabel}>Editing</span>
+							<div className={styles.storyHeaderDiv6}>
 								<Button variant='outline' size='sm' onClick={onCancel} disabled={isSaving}>
 									Cancel
 								</Button>
@@ -386,20 +387,20 @@ export const StoryHeader = memo(function StoryHeader({
 									onClick={onSave}
 									disabled={isSaving}
 									isLoading={isSaving}
-									className='gap-1.5'
+									className={styles.storyHeaderButton2}
 								>
-									<Save className='size-3' strokeWidth={2.25} />
+									<Save className={styles.storyHeaderSave} strokeWidth={2.25} />
 									<span>Save</span>
-									<kbd className='text-[10px] opacity-60 font-sans'>⌘S</kbd>
+									<kbd className={styles.storyHeaderKbd}>⌘S</kbd>
 								</Button>
 							</div>
 						</>
 					) : isEditingCode ? (
 						<>
-							<span className='text-xs text-muted-foreground'>
+							<span className={styles.titleElementDropdownMenuLabel}>
 								{isCodeValid ? 'Editing code' : 'Fix validation errors to save'}
 							</span>
-							<div className='flex items-center gap-2'>
+							<div className={styles.storyHeaderDiv6}>
 								<Button variant='outline' size='sm' onClick={onCancel} disabled={isSaving}>
 									Cancel
 								</Button>
@@ -409,17 +410,17 @@ export const StoryHeader = memo(function StoryHeader({
 									onClick={onSave}
 									disabled={isSaving || !isCodeValid}
 									isLoading={isSaving}
-									className='gap-1.5'
+									className={styles.storyHeaderButton2}
 								>
-									<Save className='size-3' strokeWidth={2.25} />
+									<Save className={styles.storyHeaderSave} strokeWidth={2.25} />
 									<span>Save</span>
-									<kbd className='text-[10px] opacity-60 font-sans'>⌘S</kbd>
+									<kbd className={styles.storyHeaderKbd}>⌘S</kbd>
 								</Button>
 							</div>
 						</>
 					) : (
 						<>
-							<span className='text-xs text-muted-foreground'>
+							<span className={styles.titleElementDropdownMenuLabel}>
 								{describeViewedVersion(versionDate, currentVersion)}
 							</span>
 							<Button
@@ -427,9 +428,9 @@ export const StoryHeader = memo(function StoryHeader({
 								size='sm'
 								onClick={onRestore}
 								disabled={isSaving}
-								className='gap-1.5 rounded-full'
+								className={styles.storyHeaderButton3}
 							>
-								<RotateCcw className='size-3' strokeWidth={2.25} />
+								<RotateCcw className={styles.storyHeaderSave} strokeWidth={2.25} />
 								<span>Restore</span>
 							</Button>
 						</>
@@ -496,40 +497,40 @@ function ViewModeToggle({ controls, isReadonlyMode, isAgentRunning, isSaving }: 
 	const { viewMode, onViewModeChange } = controls;
 
 	return (
-		<div className='flex items-center rounded-full border p-0.5 gap-1.5'>
+		<div className={styles.viewModeToggleDiv}>
 			<Button
 				variant='ghost'
 				className={cn(
-					'size-5.5 px-2',
-					viewMode === 'preview' && 'bg-accent rounded-full',
-					'hover:rounded-full',
+					styles.viewModeToggleButton,
+					viewMode === 'preview' && styles.viewModeToggleButton2,
+					styles.titleElementButton,
 				)}
 				onClick={() => onViewModeChange('preview')}
 				disabled={isSaving}
 			>
-				<Eye className='size-3' strokeWidth={2.25} />
+				<Eye className={styles.storyHeaderSave} strokeWidth={2.25} />
 			</Button>
 			{!isReadonlyMode && (
 				<Button
 					variant='ghost'
 					className={cn(
-						'size-5.5 px-2',
-						viewMode === 'edit' && 'bg-accent rounded-full',
-						'hover:rounded-full',
+						styles.viewModeToggleButton,
+						viewMode === 'edit' && styles.viewModeToggleButton2,
+						styles.titleElementButton,
 					)}
 					onClick={() => onViewModeChange('edit')}
 					disabled={isAgentRunning || isSaving}
 				>
-					<Pencil className='size-3' strokeWidth={2.25} />
+					<Pencil className={styles.storyHeaderSave} strokeWidth={2.25} />
 				</Button>
 			)}
 			<Button
 				variant='ghost'
-				className={cn('size-5.5 px-2', viewMode === 'code' && 'bg-accent rounded-full', 'hover:rounded-full')}
+				className={cn(styles.viewModeToggleButton, viewMode === 'code' && styles.viewModeToggleButton2, styles.titleElementButton)}
 				onClick={() => onViewModeChange('code')}
 				disabled={isSaving}
 			>
-				<Code className='size-3' strokeWidth={2.25} />
+				<Code className={styles.storyHeaderSave} strokeWidth={2.25} />
 			</Button>
 		</div>
 	);

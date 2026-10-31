@@ -13,6 +13,7 @@ import type {
 	ThresholdOperator,
 } from '@quarry/shared/conditional-formatting';
 import type { FormattableColumnType } from '@quarry/shared/story-table-utils';
+import styles from './display-table-edit-dialog.module.css';
 
 type RuleKind = 'none' | 'color-scale' | 'threshold' | 'boolean' | 'string';
 
@@ -65,10 +66,10 @@ export function TableFormatEditDialog({
 }: TableFormatEditDialogProps) {
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className='sm:max-w-xl max-h-[90vh] overflow-y-auto'>
+			<DialogContent className={styles.tableFormatEditDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Edit table formatting</DialogTitle>
-					<DialogDescription className='text-sm text-muted-foreground font-medium'>
+					<DialogDescription className={styles.tableFormatEditDialogDialogDescription}>
 						{description}
 					</DialogDescription>
 				</DialogHeader>
@@ -137,9 +138,9 @@ export function TableFormatEditForm({
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className='flex flex-col gap-3'>
+		<form onSubmit={handleSubmit} className={styles.tableFormatEditFormForm}>
 			{formattableColumns.length === 0 ? (
-				<p className='text-sm text-muted-foreground'>No columns available to format.</p>
+				<p className={styles.tableFormatEditFormP}>No columns available to format.</p>
 			) : (
 				formattableColumns.map(({ column, type }) => (
 					<ColumnRuleRow
@@ -152,16 +153,16 @@ export function TableFormatEditForm({
 				))
 			)}
 
-			{error && <p className='text-xs text-destructive'>{error}</p>}
+			{error && <p className={styles.tableFormatEditFormP2}>{error}</p>}
 
 			<DialogFooter>
-				<Button type='button' variant='ghost' className='rounded-full border' onClick={onCancel}>
+				<Button type='button' variant='ghost' className={styles.tableFormatEditFormButton} onClick={onCancel}>
 					Cancel
 				</Button>
 				<Button
 					variant='primary-gradient'
 					type='submit'
-					className='rounded-full'
+					className={styles.tableFormatEditFormButton2}
 					isLoading={isSaving}
 					disabled={isSaving}
 				>
@@ -188,14 +189,14 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 	};
 
 	return (
-		<div className='flex flex-col gap-2 rounded-md border border-border/60 p-2'>
-			<div className='grid grid-cols-[1fr_auto] items-center gap-2'>
-				<span className='truncate text-sm font-medium text-foreground'>{column}</span>
+		<div className={styles.columnRuleRowDiv}>
+			<div className={styles.columnRuleRowDiv2}>
+				<span className={styles.columnRuleRowSpan}>{column}</span>
 				<Select value={kind} onValueChange={(value) => handleKindChange(value as RuleKind)}>
-					<SelectTrigger className='w-36 bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+					<SelectTrigger className={styles.columnRuleRowSelectTrigger}>
 						<SelectValue />
 					</SelectTrigger>
-					<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+					<SelectContent className={styles.columnRuleRowSelectContent}>
 						<SelectItem value='none'>None</SelectItem>
 						{availableKinds.map((option) => (
 							<SelectItem key={option} value={option}>
@@ -207,8 +208,8 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 			</div>
 
 			{rule?.type === 'color-scale' && (
-				<div className='flex items-center gap-2 pl-0.5'>
-					<span className='text-xs text-muted-foreground'>Color</span>
+				<div className={styles.columnRuleRowDiv3}>
+					<span className={styles.columnRuleRowSpan2}>Color</span>
 					<ColorSwatch
 						ariaLabel={`Color scale color for ${column}`}
 						value={toHexColor(rule.color ?? rule.maxColor ?? rule.minColor, DEFAULT_SCALE_HEX)}
@@ -218,15 +219,15 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 			)}
 
 			{rule?.type === 'threshold' && (
-				<div className='flex items-center gap-2 pl-0.5'>
+				<div className={styles.columnRuleRowDiv3}>
 					<Select
 						value={rule.operator}
 						onValueChange={(operator) => onChange({ ...rule, operator: operator as ThresholdOperator })}
 					>
-						<SelectTrigger className='w-16 bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+						<SelectTrigger className={styles.columnRuleRowSelectTrigger2}>
 							<SelectValue />
 						</SelectTrigger>
-						<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+						<SelectContent className={styles.columnRuleRowSelectContent}>
 							{OPERATOR_OPTIONS.map((option) => (
 								<SelectItem key={option.value} value={option.value}>
 									{option.label}
@@ -238,7 +239,7 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 						type='number'
 						value={Number.isFinite(rule.value) ? rule.value : 0}
 						onChange={(e) => onChange({ ...rule, value: Number(e.target.value) })}
-						className='h-8 w-24 bg-panel'
+						className={styles.columnRuleRowInput}
 						aria-label={`Threshold value for ${column}`}
 					/>
 					<ColorSwatch
@@ -250,8 +251,8 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 			)}
 
 			{rule?.type === 'boolean' && (
-				<div className='flex items-center gap-4 pl-0.5'>
-					<label className='flex items-center gap-2 text-xs text-muted-foreground'>
+				<div className={styles.columnRuleRowDiv4}>
+					<label className={styles.columnRuleRowLabel}>
 						True
 						<ColorSwatch
 							ariaLabel={`True color for ${column}`}
@@ -259,7 +260,7 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 							onChange={(color) => onChange({ ...rule, trueColor: color })}
 						/>
 					</label>
-					<label className='flex items-center gap-2 text-xs text-muted-foreground'>
+					<label className={styles.columnRuleRowLabel}>
 						False
 						<ColorSwatch
 							ariaLabel={`False color for ${column}`}
@@ -271,15 +272,15 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 			)}
 
 			{rule?.type === 'string' && (
-				<div className='flex items-center gap-2 pl-0.5'>
+				<div className={styles.columnRuleRowDiv3}>
 					<Select
 						value={rule.operator}
 						onValueChange={(operator) => onChange(withStringOperator(rule, operator as StringOperator))}
 					>
-						<SelectTrigger className='w-28 bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+						<SelectTrigger className={styles.columnRuleRowSelectTrigger3}>
 							<SelectValue />
 						</SelectTrigger>
-						<SelectContent className='bg-panel [&_svg]:text-foreground! [&_svg]:opacity-100!'>
+						<SelectContent className={styles.columnRuleRowSelectContent}>
 							{STRING_OPERATOR_OPTIONS.map((option) => (
 								<SelectItem key={option.value} value={option.value}>
 									{option.label}
@@ -291,7 +292,7 @@ function ColumnRuleRow({ column, columnType, rule, onChange }: ColumnRuleRowProp
 						value={stringValueToText(rule.value)}
 						onChange={(e) => onChange({ ...rule, value: textToStringValue(rule.operator, e.target.value) })}
 						placeholder={rule.operator === 'in' ? 'value1, value2' : 'value'}
-						className='h-8 flex-1 bg-panel'
+						className={styles.columnRuleRowInput2}
 						aria-label={`Match value for ${column}`}
 					/>
 					<ColorSwatch
@@ -358,7 +359,7 @@ function ColorSwatch({
 			aria-label={ariaLabel}
 			value={value}
 			onChange={(e) => onChange(e.target.value)}
-			className='h-8 w-8 cursor-pointer overflow-hidden rounded-lg border-none bg-transparent p-0 [&::-moz-color-swatch]:rounded-lg [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-lg [&::-webkit-color-swatch]:border-none'
+			className={styles.colorSwatchInput}
 		/>
 	);
 }

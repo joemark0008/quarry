@@ -3,6 +3,7 @@ import type { ColumnConditionalFormats } from '@quarry/shared/conditional-format
 import type { executeSql } from '@quarry/shared/tools';
 import type { QueryRowsSource } from '@/hooks/use-query-rows';
 import { useFullQueryOutput, useServerPaginatedRows } from '@/hooks/use-query-rows';
+import styles from './sql-result-display.module.css';
 
 const PAGE_SIZE = 10;
 
@@ -29,7 +30,7 @@ export function SqlResultDisplay({ output, rowsSource, conditionalFormats }: Sql
 			data={rows}
 			serverPagination={needsAllRows ? undefined : pagedRows.serverPagination}
 			columns={output.columns}
-			tableContainerClassName='max-h-80 rounded-none border-0 bg-transparent'
+			tableContainerClassName={styles.sqlResultDisplayTableDisplay}
 			maxRowsBeforePagination={PAGE_SIZE}
 			emptyLabel={isLoadingRows ? 'Loading rows...' : undefined}
 			compactFooter

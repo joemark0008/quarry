@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { useEditorTheme } from '@/hooks/use-editor-theme';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
+import styles from './query-tool-sql-editor.module.css';
 
 /** The Monaco SQL editor of the chat's side panel (same highlighting), as a plain controlled field. */
 export function QueryToolSqlEditor({
@@ -43,7 +44,7 @@ export function QueryToolSqlEditor({
 		: editorTheme;
 
 	return (
-		<div className='h-64 overflow-hidden rounded-md border [&_span]:font-mono' data-testid='query-tool-sql-editor'>
+		<div className={styles.queryToolSqlEditorDiv} data-testid='query-tool-sql-editor'>
 			<Editor
 				value={value}
 				onChange={(next) => onChange(next ?? '')}

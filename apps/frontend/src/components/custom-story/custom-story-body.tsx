@@ -12,6 +12,7 @@ import { CustomStoryFrame } from '@/components/custom-story/custom-story-frame';
 import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsDarkMode } from '@/contexts/theme.provider';
+import localStyles from './custom-story-body.module.css';
 
 export type CustomStoryContent = ApiOutputs['story']['getCustomVersion'];
 export type CustomStoryFileSummary = CustomStoryContent['files'][number];
@@ -73,7 +74,7 @@ export function CustomStoryBody({
 	return (
 		<>
 			{runtimeErrors.length > 0 && <RuntimeErrorBanner errors={runtimeErrors} count={runtimeErrorCount} />}
-			<div className='min-h-0 flex-1'>
+			<div className={localStyles.customStoryBodyDiv}>
 				{isLoading || !hasPublishedVersion ? (
 					<StoryBuilding />
 				) : error ? (
@@ -111,7 +112,7 @@ export function useActiveStoryTheme(pair: StoryThemePair | null | undefined): St
 
 export function ActionErrorBanner({ message }: { message: string }) {
 	return (
-		<div className='border-b bg-red-500/5 px-4 py-2 text-xs text-red-600 dark:text-red-400' role='alert'>
+		<div className={localStyles.actionErrorBannerDiv} role='alert'>
 			{message}
 		</div>
 	);
@@ -159,16 +160,16 @@ function useRuntimeErrors(versionId: string | undefined) {
 function RuntimeErrorBanner({ errors, count }: { errors: CustomStoryRuntimeError[]; count: number }) {
 	const latest = errors[errors.length - 1];
 	return (
-		<div className='flex items-start gap-2 border-b bg-red-500/5 px-4 py-2 text-xs text-red-600 dark:text-red-400'>
-			<AlertTriangle className='mt-0.5 size-3.5 shrink-0' />
+		<div className={localStyles.runtimeErrorBannerDiv}>
+			<AlertTriangle className={localStyles.runtimeErrorBannerAlertTriangle} />
 			<Tooltip>
 				<TooltipTrigger asChild>
-					<span className='min-w-0 flex-1 truncate'>
-						{count > 1 && <span className='mr-1 font-medium'>{count} errors ·</span>}
+					<span className={localStyles.runtimeErrorBannerSpan}>
+						{count > 1 && <span className={localStyles.runtimeErrorBannerSpan2}>{count} errors ·</span>}
 						{latest.message}
 					</span>
 				</TooltipTrigger>
-				<TooltipContent className='max-w-md whitespace-pre-wrap font-mono text-[11px]'>
+				<TooltipContent className={localStyles.runtimeErrorBannerTooltipContent}>
 					{latest.stack ?? latest.message}
 				</TooltipContent>
 			</Tooltip>
@@ -178,12 +179,12 @@ function RuntimeErrorBanner({ errors, count }: { errors: CustomStoryRuntimeError
 
 function BuildFailure({ message }: { message: string }) {
 	return (
-		<div className='flex h-full flex-col gap-3 overflow-auto p-6 text-sm'>
-			<div className='flex items-center gap-2 font-medium text-red-600 dark:text-red-400'>
-				<AlertTriangle className='size-4' />
+		<div className={localStyles.buildFailureDiv}>
+			<div className={localStyles.buildFailureDiv2}>
+				<AlertTriangle className={localStyles.buildFailureAlertTriangle} />
 				This version did not build
 			</div>
-			<pre className='whitespace-pre-wrap rounded-md bg-muted p-3 font-mono text-xs text-muted-foreground'>
+			<pre className={localStyles.buildFailurePre}>
 				{message}
 			</pre>
 		</div>
@@ -194,9 +195,9 @@ function StoryBuilding() {
 	const message = useCyclingMessage(BUILDING_MESSAGES, BUILDING_MESSAGE_INTERVAL_MS);
 	return (
 		<Centered>
-			<div className='flex items-baseline justify-center gap-6'>
+			<div className={localStyles.storyBuildingDiv}>
 				<QuarryLogoAnimated height={16} width={16} durationSeconds={2.2} title='' />
-				<span className='font-medium text-foreground'>{message}</span>
+				<span className={localStyles.storyBuildingSpan}>{message}</span>
 			</div>
 		</Centered>
 	);
@@ -218,5 +219,5 @@ function useCyclingMessage(messages: string[], intervalMs: number) {
 }
 
 function Centered({ children }: { children: React.ReactNode }) {
-	return <div className='flex h-full items-center justify-center p-6 text-sm text-muted-foreground'>{children}</div>;
+	return <div className={localStyles.centeredDiv}>{children}</div>;
 }

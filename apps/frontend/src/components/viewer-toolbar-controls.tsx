@@ -7,6 +7,7 @@ import { GROUP_BY_LABELS } from '@/lib/viewer-home';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import styles from './viewer-toolbar-controls.module.css';
 
 export function ViewerToolbarControls({
 	searchQuery,
@@ -24,7 +25,7 @@ export function ViewerToolbarControls({
 	onDisplayModeChange: (value: StoryPanelDisplayMode) => void;
 }) {
 	return (
-		<div className='flex items-center gap-3'>
+		<div className={styles.viewerToolbarControlsDiv}>
 			<SearchInput value={searchQuery} onChange={onSearchQueryChange} />
 			<GroupBySelect value={groupBy} onChange={onGroupByChange} />
 			<DisplayModeToggle value={displayMode} onChange={onDisplayModeChange} />
@@ -58,18 +59,18 @@ function SearchInput({ value, onChange }: { value: string; onChange: (value: str
 			<Button
 				variant='ghost'
 				size='icon-xs'
-				className='rounded-full hover:rounded-full'
+				className={styles.searchInputButton}
 				onClick={() => setOpen(true)}
 				aria-label='Search shared content'
 			>
-				<Search className='size-4' />
+				<Search className={styles.searchInputSearch} />
 			</Button>
 		);
 	}
 
 	return (
-		<div className='flex items-center gap-1.5 rounded-full border px-2 py-0.5 pt-1.5 pb-1.5'>
-			<Search className='size-4 text-foreground shrink-0' />
+		<div className={styles.searchInputDiv}>
+			<Search className={styles.searchInputSearch2} />
 			<input
 				ref={inputRef}
 				type='text'
@@ -77,10 +78,10 @@ function SearchInput({ value, onChange }: { value: string; onChange: (value: str
 				onChange={(event) => onChange(event.target.value)}
 				onKeyDown={handleKeyDown}
 				placeholder='Search...'
-				className='bg-transparent text-xs outline-none placeholder:text-muted-foreground w-40'
+				className={styles.searchInputInput}
 			/>
-			<button type='button' onClick={handleClose} className='text-muted-foreground hover:text-foreground'>
-				<X className='size-4' />
+			<button type='button' onClick={handleClose} className={styles.searchInputButton2}>
+				<X className={styles.searchInputSearch} />
 			</button>
 		</div>
 	);
@@ -89,8 +90,8 @@ function SearchInput({ value, onChange }: { value: string; onChange: (value: str
 function GroupBySelect({ value, onChange }: { value: GroupBy; onChange: (value: GroupBy) => void }) {
 	return (
 		<Select value={value} onValueChange={(v) => onChange(v as GroupBy)}>
-			<SelectTrigger variant='ghost' size='sm' className='*:data-[slot=select-value]:text-foreground'>
-				<span className='text-muted-foreground'>Group by</span>
+			<SelectTrigger variant='ghost' size='sm' className={styles.groupBySelectSelectTrigger}>
+				<span className={styles.groupBySelectSpan}>Group by</span>
 				<SelectValue />
 			</SelectTrigger>
 			<SelectContent>
@@ -112,12 +113,12 @@ function DisplayModeToggle({
 	onChange: (value: StoryPanelDisplayMode) => void;
 }) {
 	return (
-		<div className='flex items-center gap-0.5 rounded-full border p-0.5'>
+		<div className={styles.displayModeToggleDiv}>
 			<Button
 				variant='ghost'
 				size='icon-xs'
 				onClick={() => onChange('grid')}
-				className={cn(value === 'grid' && 'bg-accent rounded-full', 'hover:rounded-full')}
+				className={cn(value === styles.displayModeToggleButton && styles.displayModeToggleButton2, styles.displayModeToggleButton3)}
 				aria-label='Grid view'
 			>
 				<LayoutGrid />
@@ -126,7 +127,7 @@ function DisplayModeToggle({
 				variant='ghost'
 				size='icon-xs'
 				onClick={() => onChange('lines')}
-				className={cn(value === 'lines' && 'bg-accent rounded-full', 'hover:rounded-full')}
+				className={cn(value === 'lines' && styles.displayModeToggleButton2, styles.displayModeToggleButton3)}
 				aria-label='List view'
 			>
 				<List />

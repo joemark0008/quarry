@@ -9,6 +9,7 @@ import * as RechartsPrimitive from 'recharts';
 import type { ChartConfig } from '@quarry/shared/chart-tooltip';
 
 import { cn } from '@/lib/utils';
+import styles from './chart.module.css';
 
 function ChartContainer({
 	id,
@@ -29,11 +30,11 @@ function ChartContainer({
 
 	return (
 		<ChartConfigProvider config={config}>
-			<div data-slot='chart' data-chart={chartId} className={cn('flex w-full flex-col', className)} {...props}>
+			<div data-slot='chart' data-chart={chartId} className={cn(styles.chartContainerDiv, className)} {...props}>
 				{header}
 				<div
 					className={cn(
-						"[&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border flex aspect-video min-h-0 justify-center text-xs [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+						styles.chartContainerDiv2,
 						contentClassName,
 					)}
 				>

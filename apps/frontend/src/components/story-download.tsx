@@ -9,6 +9,7 @@ import {
 	DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { storyApi } from '@/lib/story-api';
+import styles from './story-download.module.css';
 
 export interface StoryDownloadFile {
 	data: string;
@@ -111,9 +112,9 @@ export function StoryDownloadMenu({ isAgentRunning, isSaving, ...downloadOptions
 		<DropdownMenuSub>
 			<DropdownMenuSubTrigger disabled={isDisabled}>
 				{isDownloading ? (
-					<Loader2 className='size-3.5 animate-spin' strokeWidth={2.25} />
+					<Loader2 className={styles.storyDownloadMenuLoader2} strokeWidth={2.25} />
 				) : (
-					<Download className='size-3.5' strokeWidth={2.25} />
+					<Download className={styles.storyDownloadMenuDownload} strokeWidth={2.25} />
 				)}
 				<span>Download</span>
 			</DropdownMenuSubTrigger>

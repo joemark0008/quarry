@@ -43,6 +43,7 @@ import { getActiveProjectId } from '@/lib/active-project';
 import { resolveCssVariableColor } from '@/lib/css-color';
 import { maplibregl } from '@/lib/maplibre';
 import { projectApi } from '@/lib/project-api';
+import styles from './display-map-view.module.css';
 
 const POINTS_SOURCE_ID = 'query-points';
 const POINTS_LAYER_ID = 'query-points-circles';
@@ -332,15 +333,15 @@ export default memo(function MapView({
 
 	if (initFailed) {
 		return (
-			<div className='my-2 text-foreground/50 text-sm'>
+			<div className={styles.div}>
 				Interactive maps are not supported in this browser (WebGL unavailable).
 			</div>
 		);
 	}
 
 	return (
-		<div className='relative'>
-			<div ref={containerRef} className='w-full aspect-3/2 rounded-lg overflow-hidden' />
+		<div className={styles.div2}>
+			<div ref={containerRef} className={styles.div3} />
 			{isChoropleth && choroplethDomain && (
 				<ChoroplethLegend color={color} domain={choroplethDomain} theme={surfaceTheme} />
 			)}
@@ -598,10 +599,10 @@ function buildTooltipElement(model: TooltipModel, color: string, theme: MapSurfa
 
 	if (model.label) {
 		const title = document.createElement('div');
-		title.className = 'flex items-center gap-2 font-medium';
+		title.className = styles.mapTooltipTitle;
 		title.style.color = theme.foreground;
 		const dot = document.createElement('span');
-		dot.className = 'h-2.5 w-2.5 shrink-0 rounded-[2px]';
+		dot.className = styles.state100;
 		dot.style.backgroundColor = model.swatchOpacity != null ? withOpacity(color, model.swatchOpacity) : color;
 		const text = document.createElement('span');
 		text.textContent = model.label;
@@ -611,12 +612,12 @@ function buildTooltipElement(model: TooltipModel, color: string, theme: MapSurfa
 
 	for (const entry of model.rows) {
 		const row = document.createElement('div');
-		row.className = 'flex items-start justify-between gap-4 leading-tight';
+		row.className = styles.mapTooltipRow;
 		const label = document.createElement('span');
 		label.style.color = theme.mutedForeground;
 		label.textContent = entry.label;
 		const value = document.createElement('span');
-		value.className = 'font-mono font-medium tabular-nums text-right';
+		value.className = styles.state101;
 		value.style.color = theme.foreground;
 		value.textContent = entry.value;
 		row.append(label, value);
@@ -629,8 +630,7 @@ function buildTooltipElement(model: TooltipModel, color: string, theme: MapSurfa
 
 	const container = document.createElement('div');
 	container.style.borderColor = withOpacity(theme.border, 0.1);
-	container.className =
-		'grid min-w-32 items-start gap-1.5 rounded-lg border border-[1px] px-2.5 py-1.5 text-xs shadow-xl font-sans';
+	container.className = styles.mapTooltip;
 	container.style.backgroundColor = theme.background;
 	container.append(...rows);
 	return container;
@@ -885,16 +885,16 @@ function drawBubbleLegend(
 function ChoroplethLegend({ color, domain, theme }: { color: string; domain: NumericDomain; theme: MapSurfaceTheme }) {
 	return (
 		<div
-			className='absolute bottom-2 left-2 rounded-md border border-[1px] px-2 py-1.5 text-[10px] shadow-sm backdrop-blur'
+			className={styles.choroplethLegendDiv}
 			style={{ borderColor: withOpacity(theme.border, 0.1), backgroundColor: withOpacity(theme.background, 0.9) }}
 		>
 			<div
-				className='h-2 w-24 rounded-full'
+				className={styles.choroplethLegendDiv2}
 				style={{
 					background: `linear-gradient(to right, ${withOpacity(color, CHOROPLETH_MIN_OPACITY)}, ${color})`,
 				}}
 			/>
-			<div className='mt-1 flex justify-between font-mono tabular-nums' style={{ color: theme.mutedForeground }}>
+			<div className={styles.choroplethLegendDiv3} style={{ color: theme.mutedForeground }}>
 				<span>{formatCompactNumber(domain.min)}</span>
 				<span>{formatCompactNumber(domain.max)}</span>
 			</div>
@@ -917,16 +917,16 @@ function BubbleLegend({
 	const values = bubbleLegendValues(domain);
 	return (
 		<div
-			className='absolute bottom-2 left-2 flex items-end gap-2 rounded-md border border-[1px] px-2 py-1.5 text-[10px] shadow-sm backdrop-blur'
+			className={styles.bubbleLegendDiv}
 			style={{ borderColor: withOpacity(theme.border, 0.1), backgroundColor: withOpacity(theme.background, 0.9) }}
 		>
 			{values.map((value, index) => {
 				const radius = scaleBubbleRadius(value, domain, maxRadius);
 				return (
-					<div key={index} className='flex flex-col items-center gap-1'>
+					<div key={index} className={styles.bubbleLegendDiv2}>
 						<div style={{ height: size, display: 'flex', alignItems: 'flex-end' }}>
 							<span
-								className='rounded-full'
+								className={styles.bubbleLegendSpan}
 								style={{
 									width: radius * 2,
 									height: radius * 2,
@@ -934,7 +934,7 @@ function BubbleLegend({
 								}}
 							/>
 						</div>
-						<span className='font-mono tabular-nums' style={{ color: theme.mutedForeground }}>
+						<span className={styles.bubbleLegendSpan2} style={{ color: theme.mutedForeground }}>
 							{formatCompactNumber(value)}
 						</span>
 					</div>

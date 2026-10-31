@@ -2,6 +2,7 @@ import { Globe, ExternalLink } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
+import styles from './web-search.module.css';
 
 interface WebSearchSource {
 	url: string;
@@ -76,16 +77,16 @@ const SourceLink = ({ url, title }: { url: string; title?: string | null }) => (
 		href={url}
 		target='_blank'
 		rel='noopener noreferrer'
-		className='flex items-center gap-2 px-2 py-1.5 hover:bg-background/50 rounded text-sm group/source'
+		className={`${styles.sourceLinkA} group/source`}
 	>
-		<Globe size={14} className='text-foreground/50 shrink-0' />
-		<div className='flex-1 min-w-0 flex flex-col'>
-			{title && <span className='text-foreground/80 truncate text-xs'>{title}</span>}
-			<span className='font-mono text-xs text-foreground/40 truncate'>{getDomain(url)}</span>
+		<Globe size={14} className={styles.sourceLinkGlobe} />
+		<div className={styles.sourceLinkDiv}>
+			{title && <span className={styles.sourceLinkSpan}>{title}</span>}
+			<span className={styles.sourceLinkSpan2}>{getDomain(url)}</span>
 		</div>
 		<ExternalLink
 			size={12}
-			className='text-foreground/30 shrink-0 opacity-0 group-hover/source:opacity-100 transition-opacity'
+			className={styles.sourceLinkExternalLink}
 		/>
 	</a>
 );
@@ -99,8 +100,8 @@ export const WebSearchToolCall = ({ toolPart }: ToolCallComponentProps) => {
 	return (
 		<ToolCallWrapper title={title} badge={badge}>
 			{action.type === 'search' && action.sources.length > 0 && (
-				<div className='overflow-auto max-h-80'>
-					<div className='flex flex-col gap-0.5 py-1'>
+				<div className={styles.webSearchToolCallDiv}>
+					<div className={styles.webSearchToolCallDiv2}>
 						{action.sources.map((source, i) => (
 							<SourceLink key={i} {...source} />
 						))}
@@ -108,12 +109,12 @@ export const WebSearchToolCall = ({ toolPart }: ToolCallComponentProps) => {
 				</div>
 			)}
 			{action.type === 'openPage' && (
-				<div className='flex flex-col gap-0.5 py-1'>
+				<div className={styles.webSearchToolCallDiv2}>
 					<SourceLink url={action.url} />
 				</div>
 			)}
 			{action.type === 'findInPage' && (
-				<div className='flex flex-col gap-0.5 py-1'>
+				<div className={styles.webSearchToolCallDiv2}>
 					<SourceLink url={action.url} title={action.pattern ? `Pattern: ${action.pattern}` : undefined} />
 				</div>
 			)}

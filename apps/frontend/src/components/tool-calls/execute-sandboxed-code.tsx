@@ -6,6 +6,7 @@ import { ToolCallWrapper } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { cn } from '@/lib/utils';
+import styles from './execute-sandboxed-code.module.css';
 
 type ViewMode = 'output' | 'code';
 
@@ -24,21 +25,21 @@ export const ExecuteSandboxedCodeToolCall = ({
 	const actions = [
 		{
 			id: 'output',
-			label: <Terminal className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Terminal className={styles.actionsTerminal} strokeWidth={2.25} />,
 			isActive: viewMode === 'output',
 			onClick: () => setViewMode('output'),
 			title: 'View output',
 		},
 		{
 			id: 'code',
-			label: <Code className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Code className={styles.actionsTerminal} strokeWidth={2.25} />,
 			isActive: viewMode === 'code',
 			onClick: () => setViewMode('code'),
 			title: 'View code',
 		},
 		{
 			id: 'copy',
-			label: <Copy className='size-3 text-muted-foreground/70' strokeWidth={2.25} />,
+			label: <Copy className={styles.actionsTerminal} strokeWidth={2.25} />,
 			onClick: () => {
 				navigator.clipboard.writeText(input?.code ?? '');
 			},
@@ -63,31 +64,31 @@ export const ExecuteSandboxedCodeToolCall = ({
 			defaultExpanded={false}
 			overrideError={viewMode === 'code'}
 			title={
-				<span className='flex items-center gap-1.5'>
-					<Box size={12} className='shrink-0 opacity-60' />
+				<span className={styles.executeSandboxedCodeToolCallSpan}>
+					<Box size={12} className={styles.executeSandboxedCodeToolCallBox} />
 					{isSettled ? 'Ran' : 'Running'} {language}{' '}
-					<span className='text-xs font-normal truncate'>{codePreview.replace(/\n/g, ' ')}</span>
+					<span className={styles.executeSandboxedCodeToolCallSpan2}>{codePreview.replace(/\n/g, ' ')}</span>
 				</span>
 			}
 			badge={
 				isSettled && exitCode !== null ? (
-					<span className={cn(hasError ? 'text-red-400' : 'text-green-400')}>exit {exitCode}</span>
+					<span className={cn(hasError ? styles.executeSandboxedCodeToolCallSpan3 : styles.executeSandboxedCodeToolCallSpan4)}>exit {exitCode}</span>
 				) : undefined
 			}
 			actions={isSettled ? actions : []}
 		>
 			{viewMode === 'code' ? (
-				<div className='overflow-auto max-h-80'>
+				<div className={styles.executeSandboxedCodeToolCallDiv}>
 					{!!(packages?.length || dataFiles?.length) && (
-						<div className='flex flex-wrap gap-2 px-3 py-2 border-b border-border text-xs text-foreground/60'>
+						<div className={styles.executeSandboxedCodeToolCallDiv2}>
 							{!!packages?.length && (
-								<span className='flex items-center gap-1'>
+								<span className={styles.executeSandboxedCodeToolCallSpan5}>
 									<Package size={10} />
 									{packages.join(', ')}
 								</span>
 							)}
 							{!!dataFiles?.length && (
-								<span className='flex items-center gap-1'>
+								<span className={styles.executeSandboxedCodeToolCallSpan5}>
 									<Database size={10} />
 									{dataFiles.map((f) => f?.filename).join(', ')}
 								</span>
@@ -103,51 +104,51 @@ export const ExecuteSandboxedCodeToolCall = ({
 					)}
 				</div>
 			) : output ? (
-				<div className='overflow-auto max-h-80'>
+				<div className={styles.executeSandboxedCodeToolCallDiv}>
 					{(setupInfo || sandboxId) && (
-						<div className='flex items-center gap-3 px-3 py-1.5 border-b border-border text-xs text-foreground/50'>
+						<div className={styles.executeSandboxedCodeToolCallDiv3}>
 							{setupInfo && <span>{setupInfo}</span>}
-							<span className='flex items-center gap-1'>
+							<span className={styles.executeSandboxedCodeToolCallSpan5}>
 								<Cpu size={10} />
 								{vmSize.toUpperCase()} · {vmSpecs.memoryMib}MB · {vmSpecs.cpus}cpu
 							</span>
 							{sandboxId && (
-								<span className='ml-auto font-mono truncate max-w-[180px]' title={sandboxId}>
+								<span className={styles.executeSandboxedCodeToolCallSpan6} title={sandboxId}>
 									{sandboxId}
 								</span>
 							)}
 						</div>
 					)}
 					{output.stdout && (
-						<pre className='font-mono text-sm rounded overflow-auto hide-code-header'>
+						<pre className={`${styles.executeSandboxedCodeToolCallPre} hide-code-header`}>
 							<Streamdown mode='static' controls={{ code: false }}>
 								{`\`\`\`\n${output.stdout}\n\`\`\``}
 							</Streamdown>
 						</pre>
 					)}
 					{output.stderr && (
-						<pre className='font-mono text-sm rounded overflow-auto hide-code-header text-red-400'>
+						<pre className={`${styles.executeSandboxedCodeToolCallPre2} hide-code-header`}>
 							<Streamdown mode='static' controls={{ code: false }}>
 								{`\`\`\`\n${output.stderr}\n\`\`\``}
 							</Streamdown>
 						</pre>
 					)}
 					{!!savedFiles?.length && (
-						<div className='flex flex-col gap-1 px-3 py-2 text-xs text-foreground/60'>
+						<div className={styles.executeSandboxedCodeToolCallDiv4}>
 							{savedFiles.map((savedPath) => (
-								<span key={savedPath} className='flex items-center gap-1.5 font-mono'>
-									<Save size={10} className='shrink-0' />
-									<span className='truncate'>{savedPath}</span>
+								<span key={savedPath} className={styles.executeSandboxedCodeToolCallSpan7}>
+									<Save size={10} className={styles.executeSandboxedCodeToolCallSave} />
+									<span className={styles.executeSandboxedCodeToolCallSpan8}>{savedPath}</span>
 								</span>
 							))}
 						</div>
 					)}
 					{!output.stdout && !output.stderr && !savedFiles?.length && (
-						<div className='p-4 text-center text-foreground/50 text-sm'>No output</div>
+						<div className={styles.executeSandboxedCodeToolCallDiv5}>No output</div>
 					)}
 				</div>
 			) : (
-				<div className='p-4 text-center text-foreground/50 text-sm'>Running in sandbox...</div>
+				<div className={styles.executeSandboxedCodeToolCallDiv5}>Running in sandbox...</div>
 			)}
 		</ToolCallWrapper>
 	);

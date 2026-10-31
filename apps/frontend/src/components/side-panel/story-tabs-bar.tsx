@@ -8,6 +8,7 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTr
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import styles from './story-tabs-bar.module.css';
 
 export interface StoryTabsExternalDrop {
 	onDrop: (origin: DragOrigin, destinationTabIndex: number) => void;
@@ -163,7 +164,7 @@ export function StoryTabsBar({
 
 	return (
 		<div
-			className={cn('relative w-full', containerClassName ?? 'bg-muted/30')}
+			className={cn(styles.storyTabsBarDiv, containerClassName ?? styles.storyTabsBarDiv2)}
 			onDrop={handleDrop}
 			onDragLeave={(event) => {
 				if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -171,17 +172,17 @@ export function StoryTabsBar({
 				}
 			}}
 		>
-			<div className='pointer-events-none absolute inset-x-0 bottom-0 h-px bg-border' />
+			<div className={styles.storyTabsBarDiv3} />
 			<div
 				className={cn(
-					'flex min-h-10 items-end gap-1 overflow-x-auto pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+					styles.storyTabsBarDiv4,
 					contentClassName,
 				)}
 			>
 				{tabs.map((tab, index) => (
 					<Fragment key={`${index}-${tab.title}`}>
 						{dropSlot === index && (
-							<div className='pointer-events-none h-9 w-[3px] shrink-0 self-center rounded-full bg-primary shadow-[0_0_6px] shadow-primary/40' />
+							<div className={styles.storyTabsBarDiv5} />
 						)}
 						<div
 							draggable={Boolean(editable) && editingIndex !== index}
@@ -196,13 +197,13 @@ export function StoryTabsBar({
 							}}
 							data-story-block-drop-target={externalDropIndex === index ? '' : undefined}
 							className={cn(
-								'group/tab flex h-9 shrink-0 cursor-pointer items-center rounded-t-md border border-transparent transition-[color,background-color,transform,opacity]',
+								`${styles.storyTabsBarDiv6} group/tab`,
 								index === activeIndex
-									? 'relative z-10 border-border border-b-0 bg-background text-foreground'
-									: 'text-muted-foreground hover:bg-background/50 hover:text-foreground',
-								draggingIndex === index && 'scale-95 opacity-40',
+									? styles.storyTabsBarDiv7
+									: styles.storyTabsBarDiv8,
+								draggingIndex === index && styles.storyTabsBarDiv9,
 								externalDropIndex === index &&
-									'border-primary bg-primary/10 text-foreground ring-2 ring-primary/30',
+									styles.storyTabsBarDiv10,
 							)}
 						>
 							{editingIndex === index ? (
@@ -212,7 +213,7 @@ export function StoryTabsBar({
 									onChange={(event) => setEditingTitle(event.target.value)}
 									onBlur={finishRenaming}
 									onKeyDown={handleRenameKeyDown}
-									className='mx-1 h-7 w-32 px-2 text-sm'
+									className={styles.storyTabsBarInput}
 								/>
 							) : (
 								<button
@@ -220,8 +221,8 @@ export function StoryTabsBar({
 									onClick={() => onSelect(index)}
 									onDoubleClick={() => editable && startRenaming(index)}
 									className={cn(
-										'quarry-story-tab h-full max-w-48 cursor-pointer truncate pl-3 text-sm font-medium outline-none',
-										editable ? 'pr-1' : 'pr-3',
+										`${styles.storyTabsBarButton} quarry-story-tab`,
+										editable ? styles.storyTabsBarButton2 : styles.storyTabsBarButton3,
 									)}
 								>
 									{tab.title || 'Untitled'}
@@ -229,7 +230,7 @@ export function StoryTabsBar({
 							)}
 
 							{editable && editingIndex !== index && (
-								<div className='mr-1 flex items-center opacity-0 transition-opacity group-hover/tab:opacity-100 group-focus-within/tab:opacity-100'>
+								<div className={styles.storyTabsBarDiv11}>
 									<Dialog>
 										<DialogTrigger asChild>
 											<Button
@@ -245,19 +246,19 @@ export function StoryTabsBar({
 											<DialogHeader>
 												<DialogTitle>Delete this tab?</DialogTitle>
 											</DialogHeader>
-											<p className='text-sm text-muted-foreground'>
+											<p className={styles.storyTabsBarP}>
 												The tab and all of its content will be removed.
 											</p>
-											<div className='flex justify-end gap-2'>
+											<div className={styles.storyTabsBarDiv12}>
 												<DialogClose asChild>
-													<Button variant='outline' className='rounded-full border'>
+													<Button variant='outline' className={styles.storyTabsBarButton4}>
 														Cancel
 													</Button>
 												</DialogClose>
 												<DialogClose asChild>
 													<Button
 														variant='destructive'
-														className='rounded-full'
+														className={styles.storyTabsBarButton5}
 														onClick={() => editable.onDelete(index)}
 													>
 														Delete
@@ -273,7 +274,7 @@ export function StoryTabsBar({
 				))}
 
 				{dropSlot === tabs.length && (
-					<div className='pointer-events-none h-9 w-[3px] shrink-0 self-center rounded-full bg-primary shadow-[0_0_6px] shadow-primary/40' />
+					<div className={styles.storyTabsBarDiv5} />
 				)}
 
 				{(editable || showAddTab) && (
@@ -284,11 +285,11 @@ export function StoryTabsBar({
 						tabIndex={editable ? undefined : -1}
 						onClick={editable?.onAdd}
 						className={cn(
-							'flex h-9 shrink-0 items-center rounded-t-md border border-transparent px-2.5 text-muted-foreground outline-none transition-[color,background-color] hover:bg-background/50 hover:text-foreground focus-visible:bg-background/50 focus-visible:text-foreground',
-							editable ? 'cursor-pointer' : 'cursor-default',
+							styles.storyTabsBarButton6,
+							editable ? styles.storyTabsBarButton7 : styles.storyTabsBarButton8,
 						)}
 					>
-						<Plus className='size-4' />
+						<Plus className={styles.storyTabsBarPlus} />
 					</button>
 				)}
 			</div>

@@ -7,6 +7,7 @@ import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import styles from './model-select-field.module.css';
 
 export type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 export type ResolvedModel = { provider: LlmProvider; modelId: string; name: string };
@@ -61,32 +62,32 @@ export function ModelSelectField({
 	};
 
 	return (
-		<div className='grid gap-1.5'>
-			<div className='flex items-center gap-2'>
+		<div className={styles.modelSelectFieldDiv}>
+			<div className={styles.modelSelectFieldDiv2}>
 				{icon}
-				<label id={labelId} className='text-sm font-medium text-foreground'>
+				<label id={labelId} className={styles.modelSelectFieldLabel}>
 					{label}
 				</label>
 				{isUnavailable && (
 					<SimpleTooltip content={unavailableWarning}>
-						<AlertTriangle className='size-3.5 text-amber-500' />
+						<AlertTriangle className={styles.modelSelectFieldAlertTriangle} />
 					</SimpleTooltip>
 				)}
 			</div>
-			<p id={descriptionId} className='text-xs text-muted-foreground'>
+			<p id={descriptionId} className={styles.modelSelectFieldP}>
 				{description}
 			</p>
 			<Select value={value ? modelValue(value) : DEFAULT_VALUE} onValueChange={handleChange} disabled={disabled}>
-				<SelectTrigger className='w-full' aria-labelledby={labelId} aria-describedby={descriptionId}>
+				<SelectTrigger className={styles.modelSelectFieldSelectTrigger} aria-labelledby={labelId} aria-describedby={descriptionId}>
 					<SelectValue>
 						{value ? (
-							<div className='flex items-center gap-2'>
+							<div className={styles.modelSelectFieldDiv2}>
 								<LlmProviderIcon
 									provider={value.provider}
 									baseUrl={selected?.baseUrl ?? null}
-									className='size-4'
+									className={styles.modelSelectFieldLlmProviderIcon}
 								/>
-								<span className={cn(isUnavailable && 'text-amber-600 dark:text-amber-500')}>
+								<span className={cn(isUnavailable && styles.modelSelectFieldSpan)}>
 									{selected?.name ?? value.modelId}
 								</span>
 							</div>
@@ -101,7 +102,7 @@ export function ModelSelectField({
 					</SelectItem>
 					{availableModels.map((model) => (
 						<SelectItem key={modelValue(model)} value={modelValue(model)}>
-							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className='size-4' />
+							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className={styles.modelSelectFieldLlmProviderIcon} />
 							{model.name}
 						</SelectItem>
 					))}
@@ -122,15 +123,15 @@ function DefaultOptionContent({
 	const detail = model ? model.name : hint;
 
 	return (
-		<div className='flex items-center gap-2'>
+		<div className={styles.modelSelectFieldDiv2}>
 			{model && (
 				<LlmProviderIcon
 					provider={model.provider}
 					baseUrl={findModel(availableModels, model)?.baseUrl ?? null}
-					className='size-4'
+					className={styles.modelSelectFieldLlmProviderIcon}
 				/>
 			)}
-			<span className='text-muted-foreground'>
+			<span className={styles.defaultOptionContentSpan}>
 				{label}
 				{detail && <span> · {detail}</span>}
 			</span>
