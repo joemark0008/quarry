@@ -496,7 +496,7 @@ describe('edit-mode chart actions', () => {
 		expect(grip.draggable).toBe(true);
 		const moveItem = await screen.findByRole('menuitem', { name: 'Move to a tab' });
 		expect(grip.getAttribute('aria-expanded')).toBe('true');
-		fireEvent.pointerMove(moveItem, { pointerType: 'mouse' });
+		fireEvent.mouseEnter(moveItem);
 		const destinationItem = await screen.findByRole('menuitem', { name: 'Destination' });
 		const submenu = destinationItem.closest('[data-slot="dropdown-menu-sub-content"]');
 		expect(submenu?.getAttribute('data-side')).toBe('right');
@@ -540,7 +540,7 @@ describe('edit-mode chart actions', () => {
 
 		await openChartMenu();
 		const moveItem = await screen.findByRole('menuitem', { name: 'Move to a tab' });
-		fireEvent.pointerMove(moveItem, { pointerType: 'mouse' });
+		fireEvent.mouseEnter(moveItem);
 		fireEvent.click(await screen.findByRole('menuitem', { name: 'Destination' }));
 
 		const destinationButton = screen.getByRole('button', { name: 'Destination' });
@@ -580,7 +580,7 @@ describe('edit-mode chart actions', () => {
 		}
 		fireEvent.click(grip);
 		const moveItem = await screen.findByRole('menuitem', { name: 'Move to a tab' });
-		fireEvent.pointerMove(moveItem, { pointerType: 'mouse' });
+		fireEvent.mouseEnter(moveItem);
 		fireEvent.click(await screen.findByRole('menuitem', { name: 'Destination' }));
 
 		await waitFor(() => {
@@ -805,7 +805,7 @@ describe('edit-mode chart actions', () => {
 		const grips = await screen.findAllByRole('button', { name: 'Move story block' });
 		fireEvent.click(grips[1]);
 		const moveItem = await screen.findByRole('menuitem', { name: 'Move to a tab' });
-		fireEvent.pointerMove(moveItem, { pointerType: 'mouse' });
+		fireEvent.mouseEnter(moveItem);
 		fireEvent.click(await screen.findByRole('menuitem', { name: 'Destination' }));
 
 		await waitFor(() => {

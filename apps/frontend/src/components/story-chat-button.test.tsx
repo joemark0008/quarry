@@ -91,10 +91,7 @@ describe('StoryChatButton', () => {
 	it('mentions the story in a new chat from the menu, without changing the button', async () => {
 		render(<StoryChatButton storyId='story-1' isOwner={false} canChat />);
 
-		fireEvent.pointerDown(screen.getByRole('button', { name: 'More ways to talk to this story' }), {
-			button: 0,
-			ctrlKey: false,
-		});
+		fireEvent.click(screen.getByRole('button', { name: 'More ways to talk to this story' }));
 		fireEvent.click(await screen.findByRole('menuitem', { name: /^Mention story/ }));
 
 		await vi.waitFor(() =>

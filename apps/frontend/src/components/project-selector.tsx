@@ -162,7 +162,7 @@ function ProjectDropdown({
 				</PopoverTrigger>
 				<PopoverContent
 					align='start'
-					className={cn('p-0', variant === 'sidebar' && 'w-[var(--radix-popover-trigger-width)]')}
+					className={cn('p-0', variant === 'sidebar' && 'w-[var(--popover-trigger-width)]')}
 				>
 					<Command loop={mode !== 'upgrade'}>
 						{mode !== 'upgrade' && projects.length > 5 && <CommandInput placeholder='Search projects...' />}

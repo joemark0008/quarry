@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { setColorSchemeAttribute } from '@/lib/color-scheme';
 import { useMemoObject } from '@/hooks/useMemoObject';
 
 type Theme = 'light' | 'dark' | 'system';
@@ -43,7 +44,7 @@ export const useIsDarkMode = (): boolean => {
 function syncThemeColor() {
 	const meta = document.querySelector('meta[name="theme-color"]');
 	if (meta) {
-		meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--background'));
+		meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--app-surface'));
 	}
 }
 
@@ -57,31 +58,19 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 		localStorage.setItem('theme', theme);
 	}, [theme]);
 	useEffect(() => {
-		const root = document.documentElement;
-		root.classList.remove('dark');
-
-		if (theme === 'dark') {
-			root.classList.add('dark');
+		if (theme !== 'system') {
+			setColorSchemeAttribute(theme === 'dark');
 			syncThemeColor();
-		} else if (theme === 'system') {
-			const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			if (systemDark) {
-				root.classList.add('dark');
-			}
-			syncThemeColor();
-			const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-			const handleChange = (e: MediaQueryListEvent) => {
-				root.classList.remove('dark');
-				if (e.matches) {
-					root.classList.add('dark');
-				}
-				syncThemeColor();
-			};
-			mediaQuery.addEventListener('change', handleChange);
-			return () => mediaQuery.removeEventListener('change', handleChange);
-		} else {
-			syncThemeColor();
+			return;
 		}
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		const apply = () => {
+			setColorSchemeAttribute(mediaQuery.matches);
+			syncThemeColor();
+		};
+		apply();
+		mediaQuery.addEventListener('change', apply);
+		return () => mediaQuery.removeEventListener('change', apply);
 	}, [theme]);
 
 	const value = useMemoObject({ theme, setTheme });

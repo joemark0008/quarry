@@ -45,6 +45,7 @@ export default defineConfig({
 	test: {
 		// e2e/ runs under Playwright (`npm run test:e2e`).
 		exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
+		setupFiles: ['./src/test/setup.ts'],
 	},
 	server: {
 		fs: {

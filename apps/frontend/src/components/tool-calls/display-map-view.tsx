@@ -1,3 +1,4 @@
+import { isDarkColorScheme, setColorSchemeAttribute } from '@/lib/color-scheme';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import {
@@ -199,7 +200,7 @@ export default memo(function MapView({
 			return;
 		}
 
-		const styleUrl = resolveStyleUrl(getMapStyle(), document.documentElement.classList.contains('dark'));
+		const styleUrl = resolveStyleUrl(getMapStyle(), isDarkColorScheme());
 		styleUrlRef.current = styleUrl;
 
 		let map: maplibregl.Map;
@@ -759,9 +760,9 @@ function captureLightSnapshot({
 
 function resolveLightMapColors(config: displayMap.Input): { fill: string; stroke: string; line: string } {
 	const root = document.documentElement;
-	const wasDark = root.classList.contains('dark');
+	const wasDark = isDarkColorScheme(root);
 	if (wasDark) {
-		root.classList.remove('dark');
+		setColorSchemeAttribute(false, root);
 	}
 	try {
 		const fill = resolveMarkerColor(config.color, root);
@@ -772,7 +773,7 @@ function resolveLightMapColors(config: displayMap.Input): { fill: string; stroke
 		};
 	} finally {
 		if (wasDark) {
-			root.classList.add('dark');
+			setColorSchemeAttribute(true, root);
 		}
 	}
 }
@@ -944,12 +945,12 @@ function BubbleLegend({
 }
 
 function useIsDark() {
-	const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+	const [isDark, setIsDark] = useState(() => isDarkColorScheme());
 
 	useEffect(() => {
 		const root = document.documentElement;
-		const observer = new MutationObserver(() => setIsDark(root.classList.contains('dark')));
-		observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+		const observer = new MutationObserver(() => setIsDark(isDarkColorScheme(root)));
+		observer.observe(root, { attributes: true, attributeFilter: ['data-mantine-color-scheme'] });
 		return () => observer.disconnect();
 	}, []);
 
@@ -1071,7 +1072,7 @@ function resolveMapSurfaceTheme(element: HTMLElement | null): MapSurfaceTheme {
 		border: resolveCssColor('--border', 'rgba(0, 0, 0, 0.1)', element),
 		mutedForeground: resolveCssColor('--muted-foreground', '#6b7280', element),
 		accent: resolveCssColor('--accent', 'rgba(0, 0, 0, 0.05)', element),
-		isDark: isMapStyleDark(getMapStyle(), document.documentElement.classList.contains('dark')),
+		isDark: isMapStyleDark(getMapStyle(), isDarkColorScheme()),
 	}));
 }
 
@@ -1085,16 +1086,16 @@ function applyControlTheme(element: HTMLElement, theme: MapSurfaceTheme) {
 
 function withMapStyleTheme<T>(run: () => T): T {
 	const root = document.documentElement;
-	const wasDark = root.classList.contains('dark');
+	const wasDark = isDarkColorScheme(root);
 	const styleIsDark = isMapStyleDark(getMapStyle(), wasDark);
 	if (styleIsDark === wasDark) {
 		return run();
 	}
-	root.classList.toggle('dark', styleIsDark);
+	setColorSchemeAttribute(styleIsDark, root);
 	try {
 		return run();
 	} finally {
-		root.classList.toggle('dark', wasDark);
+		setColorSchemeAttribute(wasDark, root);
 	}
 }
 

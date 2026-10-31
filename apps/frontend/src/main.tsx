@@ -1,6 +1,12 @@
+import '@mantine/core/styles.layer.css';
+import '@mantine/notifications/styles.layer.css';
 import './styles.css';
+import './theme/tokens.css';
 import 'katex/dist/katex.min.css';
 import { StrictMode } from 'react';
+import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 import { ApolloProvider } from '@apollo/client/react';
@@ -11,6 +17,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { subscribeToExternalActiveProjectChanges } from './lib/active-project';
 import { apolloClient } from './lib/apollo-client';
 import { routeTree } from './routeTree.gen';
+import { cssVariablesResolver, theme } from './theme';
 import reportWebVitals from './reportWebVitals';
 
 // Register the router instance for type safety
@@ -56,17 +63,22 @@ if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<ThemeProvider>
-				<ApolloProvider client={apolloClient}>
-					<QueryClientProvider client={queryClient}>
-						<McpProvider>
-							<TooltipProvider>
-								<RouterProvider router={router} />
-							</TooltipProvider>
-						</McpProvider>
-					</QueryClientProvider>
-				</ApolloProvider>
-			</ThemeProvider>
+			<MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme='auto'>
+				<ModalsProvider>
+					<Notifications position='top-right' />
+					<ThemeProvider>
+						<ApolloProvider client={apolloClient}>
+							<QueryClientProvider client={queryClient}>
+								<McpProvider>
+									<TooltipProvider>
+										<RouterProvider router={router} />
+									</TooltipProvider>
+								</McpProvider>
+							</QueryClientProvider>
+						</ApolloProvider>
+					</ThemeProvider>
+				</ModalsProvider>
+			</MantineProvider>
 		</StrictMode>,
 	);
 }

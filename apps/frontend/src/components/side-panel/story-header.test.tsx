@@ -189,7 +189,7 @@ describe('StoryHeader story switcher', () => {
 		};
 		renderHeader({ chatId: 'chat-2' });
 
-		fireEvent.pointerDown(screen.getByRole('button', { name: 'Switch story' }), { button: 0, ctrlKey: false });
+		fireEvent.click(screen.getByRole('button', { name: 'Switch story' }));
 
 		expect(screen.queryByRole('menuitem', { name: 'Revenue' })).toBeNull();
 
@@ -200,7 +200,7 @@ describe('StoryHeader story switcher', () => {
 });
 
 function openActionsMenu() {
-	fireEvent.pointerDown(screen.getByRole('button', { name: 'More actions' }), { button: 0, ctrlKey: false });
+	fireEvent.click(screen.getByRole('button', { name: 'More actions' }));
 }
 
 function renderHeader(overrides: Partial<ClassicStoryHeaderProps>) {

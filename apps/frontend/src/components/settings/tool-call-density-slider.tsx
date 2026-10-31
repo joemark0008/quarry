@@ -1,4 +1,4 @@
-import { Slider } from 'radix-ui';
+import { Slider } from '@mantine/core';
 import type { ToolCallDensity } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
 
@@ -20,39 +20,17 @@ export const ToolCallDensitySlider = ({
 
 	return (
 		<div className='flex w-44 flex-col gap-1.5'>
-			<Slider.Root
-				className={cn(
-					'relative flex h-4 w-full touch-none select-none items-center transition-opacity',
-					disabled && 'cursor-default opacity-50',
-				)}
-				value={[selectedIndex]}
-				onValueChange={([index]) => onValueChange(densityOptions[index].value)}
+			<Slider
+				value={selectedIndex}
+				onChange={(index) => onValueChange(densityOptions[index].value)}
 				min={0}
 				max={densityOptions.length - 1}
 				step={1}
 				disabled={disabled}
-			>
-				<Slider.Track className='relative h-1.5 grow rounded-full bg-muted-foreground/25'>
-					{densityOptions.map((option, index) => (
-						<span
-							key={option.value}
-							className={cn(
-								'absolute top-1/2 size-1 -translate-y-1/2 rounded-full bg-muted-foreground/60',
-								index === 0 ? 'left-1.5' : 'right-1.5',
-								index === selectedIndex && 'opacity-0',
-							)}
-						/>
-					))}
-				</Slider.Track>
-				<Slider.Thumb
-					aria-label='Tool call density'
-					className={cn(
-						'block size-4 rounded-full border border-transparent bg-brand-gradient shadow-md transition-colors',
-						disabled ? 'cursor-default' : 'cursor-pointer',
-						'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-					)}
-				/>
-			</Slider.Root>
+				label={null}
+				size='sm'
+				thumbLabel='Tool call density'
+			/>
 			<div className='flex justify-between text-xs'>
 				{densityOptions.map((option) => (
 					<button

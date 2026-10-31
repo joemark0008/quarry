@@ -101,7 +101,7 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 	const handleCustomBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		const next = event.relatedTarget as HTMLElement | null;
 		const isMovingToPresetSelect =
-			next?.id === PRESET_SELECT_ID || Boolean(next?.closest('[data-radix-popper-content-wrapper]'));
+			next?.id === PRESET_SELECT_ID || Boolean(next?.closest('[data-slot="select-content"]'));
 		if (isMovingToPresetSelect) {
 			return;
 		}

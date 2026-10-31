@@ -1,61 +1,87 @@
-import * as React from 'react';
-import * as AccordionPrimitive from '@radix-ui/react-accordion';
+import { createContext, useContext } from 'react';
+import type { ComponentProps } from 'react';
 
+import styles from './overlay.module.css';
 import { cn } from '@/lib/utils';
 
-function Accordion({ ...props }: React.ComponentProps<typeof AccordionPrimitive.Root>) {
-	return <AccordionPrimitive.Root data-slot='accordion' {...props} />;
+const AccordionContext = createContext<{
+	isOpen: (item: string) => boolean;
+	toggle: (item: string) => void;
+	disabled?: boolean;
+}>({ isOpen: () => false, toggle: () => undefined });
+const AccordionItemContext = createContext('');
+
+type AccordionProps = Omit<ComponentProps<'div'>, 'defaultValue'> & { disabled?: boolean } & (
+		| { type?: 'single'; collapsible?: boolean; value?: string; onValueChange?: (value: string) => void }
+		| { type: 'multiple'; collapsible?: boolean; value?: string[]; onValueChange?: (value: string[]) => void }
+	);
+
+function Accordion({ type = 'single', value, onValueChange, disabled, collapsible: _collapsible, ...props }: AccordionProps) {
+	const open = Array.isArray(value) ? value : value ? [value] : [];
+	const toggle = (item: string) => {
+		const isOpen = open.includes(item);
+		if (type === 'multiple') {
+			(onValueChange as ((next: string[]) => void) | undefined)?.(
+				isOpen ? open.filter((entry) => entry !== item) : [...open, item],
+			);
+			return;
+		}
+		(onValueChange as ((next: string) => void) | undefined)?.(isOpen ? '' : item);
+	};
+	return (
+		<AccordionContext.Provider value={{ isOpen: (item) => open.includes(item), toggle, disabled }}>
+			<div data-slot='accordion' {...props} />
+		</AccordionContext.Provider>
+	);
 }
 
-function AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+function AccordionItem({ className, value, ...props }: ComponentProps<'div'> & { value: string }) {
 	return (
-		<AccordionPrimitive.Item
-			data-slot='accordion-item'
-			className={cn('border-b last:border-b-0', className)}
-			{...props}
-		/>
+		<AccordionItemContext.Provider value={value}>
+			<div data-slot='accordion-item' className={cn(styles.accordionItem, className)} {...props} />
+		</AccordionItemContext.Provider>
 	);
 }
 
 function AccordionTrigger({
 	className,
 	headerClassName,
-	children,
+	onClick,
 	...props
-}: React.ComponentProps<typeof AccordionPrimitive.Trigger> & { headerClassName?: string }) {
+}: ComponentProps<'button'> & { headerClassName?: string }) {
+	const accordion = useContext(AccordionContext);
+	const itemValue = useContext(AccordionItemContext);
+	const isOpen = accordion.isOpen(itemValue);
 	return (
-		<AccordionPrimitive.Header className={cn('flex min-w-0 overflow-hidden', headerClassName ?? 'w-full')}>
-			<AccordionPrimitive.Trigger
+		<h3 className={cn(styles.accordionHeader, headerClassName ?? styles.accordionHeaderFull)}>
+			<button
+				type='button'
 				data-slot='accordion-trigger'
-				className={cn(
-					'focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 min-w-0 overflow-hidden items-start gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50',
-					className,
-				)}
+				data-state={isOpen ? 'open' : 'closed'}
+				aria-expanded={isOpen}
+				disabled={accordion.disabled}
+				className={cn(styles.accordionTrigger, className)}
+				onClick={(event) => {
+					onClick?.(event);
+					accordion.toggle(itemValue);
+				}}
 				{...props}
-			>
-				{children}
-			</AccordionPrimitive.Trigger>
-		</AccordionPrimitive.Header>
+			/>
+		</h3>
 	);
 }
 
-function AccordionContent({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
+function AccordionContent({ className, children, ...props }: ComponentProps<'div'>) {
+	const accordion = useContext(AccordionContext);
+	const itemValue = useContext(AccordionItemContext);
+	if (!accordion.isOpen(itemValue)) {
+		return <div data-slot='accordion-content' data-state='closed' hidden {...props} />;
+	}
 	return (
-		<AccordionPrimitive.Content
-			data-slot='accordion-content'
-			className='group data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm'
-			{...props}
-		>
-			<div
-				className={cn(
-					'pt-0 pb-4 group-data-[state=open]:animate-fade-in group-data-[state=closed]:animate-fade-out',
-					className,
-				)}
-			>
-				{children}
-			</div>
-		</AccordionPrimitive.Content>
+		<div data-slot='accordion-content' data-state='open' className={styles.accordionContent} {...props}>
+			<div className={cn(styles.accordionContentInner, className)}>{children}</div>
+		</div>
 	);
 }
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

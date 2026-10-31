@@ -1,3 +1,4 @@
+import { isDarkColorScheme } from '@/lib/color-scheme';
 import { DEFAULT_COLORS } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
@@ -147,7 +148,7 @@ function resolveTheme(theme: 'light' | 'dark' | 'system'): 'light' | 'dark' {
 	if (theme !== 'system') {
 		return theme;
 	}
-	return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+	return isDarkColorScheme() ? 'dark' : 'light';
 }
 
 function toErrorMessage(error: unknown): string {

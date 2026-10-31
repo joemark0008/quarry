@@ -1,3 +1,4 @@
+import { isDarkColorScheme } from '@/lib/color-scheme';
 import { useEffect, useRef, useState } from 'react';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -454,7 +455,7 @@ function BoundaryPreviewMap({ geojson }: { geojson: FeatureCollection }) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const mapRef = useRef<maplibregl.Map | null>(null);
 
-	const isDark = document.documentElement.classList.contains('dark');
+	const isDark = isDarkColorScheme();
 	const styleUrl = isDark ? MAP_STYLE_DARK : MAP_STYLE_LIGHT;
 
 	useEffect(() => {

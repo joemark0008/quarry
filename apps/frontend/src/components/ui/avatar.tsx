@@ -1,7 +1,6 @@
-import { cva } from 'class-variance-authority';
-import type { VariantProps } from 'class-variance-authority';
 
-import { cn } from '@/lib/utils';
+import { classVariants, cn } from '@/lib/utils';
+import type { VariantProps } from '@/lib/utils';
 import { hashValue } from '@/lib/hash';
 
 const avatarColors = [
@@ -37,7 +36,7 @@ function getColorClass(username: string): string {
 	return avatarColors[hash % avatarColors.length];
 }
 
-const avatarVariants = cva('inline-flex items-center justify-center rounded-full font-medium text-white select-none', {
+const avatarVariants = classVariants('inline-flex items-center justify-center rounded-full font-medium text-white select-none', {
 	variants: {
 		size: {
 			sm: 'size-6 text-xs',
@@ -51,9 +50,8 @@ const avatarVariants = cva('inline-flex items-center justify-center rounded-full
 	},
 });
 
-interface AvatarProps extends React.ComponentProps<'div'>, VariantProps<typeof avatarVariants> {
-	username: string;
-}
+type AvatarProps = Omit<React.ComponentProps<'div'>, 'className'> &
+	VariantProps<typeof avatarVariants> & { username: string; className?: string };
 
 export function Avatar({ username, size, className, ...props }: AvatarProps) {
 	const initials = getInitials(username);

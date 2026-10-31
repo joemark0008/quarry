@@ -217,10 +217,7 @@ function renderViewer({
 }
 
 function openGroupPicker() {
-	fireEvent.pointerDown(screen.getByRole('button', { name: /Select user groups/ }), {
-		button: 0,
-		ctrlKey: false,
-	});
+	fireEvent.click(screen.getByRole('button', { name: /Select user groups/ }));
 }
 
 function createMemoryStorage(): Storage {

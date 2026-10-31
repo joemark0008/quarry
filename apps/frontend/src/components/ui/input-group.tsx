@@ -1,11 +1,10 @@
-import { cva } from 'class-variance-authority';
 import * as React from 'react';
-import type { VariantProps } from 'class-variance-authority';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+import { classVariants, cn } from '@/lib/utils';
+import type { VariantProps } from '@/lib/utils';
 
 function InputGroup({ className, ...props }: React.ComponentProps<'label'>) {
 	return (
@@ -35,7 +34,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<'label'>) {
 	);
 }
 
-const inputGroupAddonVariants = cva(
+const inputGroupAddonVariants = classVariants(
 	"text-muted-foreground flex h-auto cursor-text items-center justify-center gap-2 text-sm font-medium select-none [&>svg:not([class*='size-'])]:size-4 [&>kbd]:rounded-[calc(var(--radius)-5px)] group-data-[disabled=true]/input-group:opacity-50",
 	{
 		variants: {
@@ -76,7 +75,7 @@ function InputGroupAddon({
 	);
 }
 
-const inputGroupButtonVariants = cva('text-sm shadow-none flex gap-2 items-center', {
+const inputGroupButtonVariants = classVariants('text-sm shadow-none flex gap-2 items-center', {
 	variants: {
 		size: {
 			xs: "h-6 gap-1 px-2 rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-3.5 has-[>svg]:px-2",

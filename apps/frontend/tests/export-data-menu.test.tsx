@@ -51,6 +51,6 @@ function renderMenu() {
 }
 
 async function selectMenuItem(label: string) {
-	fireEvent.pointerDown(screen.getByRole('button', { name: 'Export' }), { button: 0, ctrlKey: false });
+	fireEvent.click(screen.getByRole('button', { name: 'Export' }));
 	fireEvent.click(await screen.findByText(label));
 }

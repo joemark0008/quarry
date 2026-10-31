@@ -54,7 +54,7 @@ it('shows the example model instead of setup for a project-less user', () => {
 	expect(screen.getByText('GPT 6 Sol')).toBeTruthy();
 	expect(screen.queryByText('Configure a model')).toBeNull();
 
-	fireEvent.keyDown(screen.getByRole('combobox', { name: 'Model' }), { key: 'Enter' });
+	fireEvent.click(screen.getByRole('combobox', { name: 'Model' }));
 
 	expect(
 		screen.getByRole('option', { name: 'Set up a project to switch models' }).getAttribute('aria-disabled'),

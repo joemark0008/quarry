@@ -64,7 +64,7 @@ describe('DialogContent', () => {
 	it('still closes on a press outside the dialog', async () => {
 		const onOpenChange = await renderDialogWithSplitPanels();
 
-		fireEvent.pointerDown(document.body, { ...POINTER, clientX: 800, clientY: 800 });
+		fireEvent.click(document.querySelector('.mantine-Modal-overlay') as HTMLElement);
 
 		expect(onOpenChange).toHaveBeenCalledWith(false);
 	});

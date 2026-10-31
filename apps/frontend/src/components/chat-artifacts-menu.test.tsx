@@ -159,7 +159,11 @@ describe('ChatArtifactsMenu', () => {
 
 	it('expands, scrolls to and outlines the query result it reveals', () => {
 		vi.stubGlobal('CSS', { escape: (value: string) => value });
-		vi.stubGlobal('matchMedia', () => ({ matches: true }));
+		vi.stubGlobal('matchMedia', () => ({
+			matches: true,
+			addEventListener: () => undefined,
+			removeEventListener: () => undefined,
+		}));
 		const toolCall = document.createElement('div');
 		toolCall.dataset.replayTargetId = 'call_query';
 		toolCall.scrollIntoView = vi.fn();
@@ -190,7 +194,7 @@ describe('ChatArtifactsMenu', () => {
 		expect(screen.queryByText('Stories')).toBeNull();
 
 		fireEvent.click(toggle);
-		fireEvent.pointerDown(screen.getByText('Stories'));
+		fireEvent.click(screen.getByText('Stories'));
 		expect(screen.getByText('Stories')).toBeDefined();
 		fireEvent.pointerDown(document.body);
 		expect(screen.queryByText('Stories')).toBeNull();

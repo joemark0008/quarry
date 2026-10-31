@@ -1,23 +1,19 @@
-import * as React from 'react';
-import { Separator as SeparatorPrimitive } from 'radix-ui';
+import type { ComponentProps } from 'react';
 
+import styles from './overlay.module.css';
 import { cn } from '@/lib/utils';
 
 function Separator({
 	className,
 	orientation = 'horizontal',
-	decorative = true,
 	...props
-}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+}: ComponentProps<'div'> & { orientation?: 'horizontal' | 'vertical' }) {
 	return (
-		<SeparatorPrimitive.Root
+		<div
+			role='none'
 			data-slot='separator'
-			decorative={decorative}
-			orientation={orientation}
-			className={cn(
-				'bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px',
-				className,
-			)}
+			data-orientation={orientation}
+			className={cn(styles.separator, className)}
 			{...props}
 		/>
 	);

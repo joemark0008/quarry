@@ -1,15 +1,37 @@
 import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import type { ClassValue } from 'clsx';
 
+import styles from './utils.module.css';
+
 export function cn(...inputs: Array<ClassValue>) {
-	return twMerge(clsx(inputs));
+	return clsx(inputs);
 }
 
-/** Add tailwind classes to hide/show an element based on a condition by changing the opacity and visibility */
+/** Hide/show an element based on a condition by changing the opacity and visibility */
 export function hideIf(condition: boolean): string {
-	return condition ? 'opacity-0 invisible' : 'opacity-100 visible';
+	return condition ? styles.hidden : styles.shown;
 }
+
+type VariantConfig<V extends Record<string, Record<string, ClassValue>>> = {
+	variants: V;
+	defaultVariants?: { [K in keyof V]?: keyof V[K] };
+};
+
+/** Maps variant props onto classes. Callers keep a typed table instead of a chain of conditions. */
+export function classVariants<V extends Record<string, Record<string, ClassValue>>>(
+	base: ClassValue,
+	config: VariantConfig<V>,
+) {
+	return (props: { [K in keyof V]?: keyof V[K] | null } & { className?: ClassValue } = {}) => {
+		const selected = Object.keys(config.variants).map((key) => {
+			const choice = props[key] ?? config.defaultVariants?.[key];
+			return choice === undefined || choice === null ? undefined : config.variants[key][choice as string];
+		});
+		return cn(base, selected, props.className);
+	};
+}
+
+export type VariantProps<T extends (...args: never[]) => unknown> = NonNullable<Parameters<T>[0]>;
 
 export function formatBytes(bytes: number): string {
 	if (bytes === 0) {
