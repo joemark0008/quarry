@@ -20,7 +20,7 @@ import type {
 	GroupedMessagePart,
 	MessageGroup,
 } from '@/types/ai';
-import type { DynamicToolName } from '@/components/tool-calls';
+import type { DynamicToolName } from '@/feature/chat/components/tool-calls/index';
 import { getStoryToolPartSlug } from '@/lib/story.utils';
 
 /** The ID used for new chats not yet persisted to the db. */

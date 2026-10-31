@@ -3,9 +3,9 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { EmailVerified } from './email-verified';
-import { Login } from './_public/login';
-import { SignUp } from './_public/signup';
+import { EmailVerified } from '@/feature/auth/email-verified-page';
+import { Login } from '@/feature/auth/login-page';
+import { SignUp } from '@/feature/auth/signup-page';
 import type { ReactNode } from 'react';
 
 const mocks = vi.hoisted(() => ({
@@ -29,6 +29,7 @@ vi.mock('@tanstack/react-router', () => ({
 		...options,
 		useSearch: () => mocks.searchByPath[path] ?? {},
 	}),
+	getRouteApi: (path: string) => ({ useSearch: () => mocks.searchByPath[path] ?? {} }),
 	Link: ({ children }: { children: ReactNode }) => <a>{children}</a>,
 	useNavigate: () => mocks.navigate,
 	useRouter: () => ({ history: { push: mocks.push } }),
@@ -61,7 +62,7 @@ vi.mock('@/test/procedures', () => ({
 	},
 }));
 
-vi.mock('@/components/auth-form', () => ({
+vi.mock('@/feature/auth/components/auth-form', () => ({
 	AuthForm: ({
 		content,
 		form,

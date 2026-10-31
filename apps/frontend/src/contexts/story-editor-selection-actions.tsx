@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { DragOrigin } from '@/components/side-panel/story-block-selection';
+import type { DragOrigin } from '@/feature/stories/components/side-panel/story-block-selection';
 
 export interface StoryTabDestination {
 	index: number;

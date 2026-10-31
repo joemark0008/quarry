@@ -21,7 +21,7 @@ import {
 	selectBlockFromHandle,
 	selectColumnFromHandle,
 	topLevelBlockPositions,
-} from '@/components/side-panel/story-block-selection';
+} from '@/feature/stories/components/side-panel/story-block-selection';
 
 function createEditor(): Editor {
 	return new Editor({

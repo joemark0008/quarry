@@ -10,7 +10,7 @@ import {
 import { act, renderHook } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import type { StoryViewMode } from '@/components/side-panel/story-viewer.types';
+import type { StoryViewMode } from '@/feature/stories/components/side-panel/story-viewer.types.ts';
 import type { StorySaveResult } from '@/lib/story-save';
 import { selectStoryEditorCode, useStoryEditBuffer } from '@/hooks/use-story-edit-buffer';
 import { useStoryEditTransitions } from '@/hooks/use-story-edit-transitions';

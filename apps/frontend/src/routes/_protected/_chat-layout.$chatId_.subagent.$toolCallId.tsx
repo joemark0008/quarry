@@ -1,11 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SubagentConversation } from '@/components/subagent/subagent-conversation';
+import { RouteComponent } from '@/feature/chat/subagent-page';
 
 export const Route = createFileRoute('/_protected/_chat-layout/$chatId_/subagent/$toolCallId')({
 	component: RouteComponent,
 });
-
-function RouteComponent() {
-	const { chatId, toolCallId } = Route.useParams();
-	return <SubagentConversation chatId={chatId} toolCallId={toolCallId} />;
-}

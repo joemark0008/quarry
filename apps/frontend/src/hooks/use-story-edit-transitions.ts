@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { StoryViewMode } from '@/components/side-panel/story-viewer.types';
+import type { StoryViewMode } from '@/feature/stories/components/side-panel/story-viewer.types.ts';
 import type { StorySaveResult } from '@/lib/story-save';
 
 function didSaveSucceed(result: StorySaveResult) {

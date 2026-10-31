@@ -5,7 +5,7 @@ import { getStoryFiltersFromCode } from '@quarry/shared/story-segments';
 import type { StoryFilterSelection, StoryFilterSelections } from '@quarry/shared/sql-template';
 import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
 
-import type { QueryDataMap } from '@/components/story-embeds';
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { storyApi } from '@/lib/story-api';

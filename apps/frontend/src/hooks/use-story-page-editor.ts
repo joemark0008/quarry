@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Editor as TiptapEditor } from '@tiptap/react';
 
-import type { StoryCodeViewHandle } from '@/components/side-panel/story-code-view';
-import { useStoryViewerVersionActions } from '@/components/side-panel/hooks/use-story-viewer-version-actions';
-import { useStoryViewerVersions } from '@/components/side-panel/hooks/use-story-viewer-versions';
-import { useStoryViewerViewMode } from '@/components/side-panel/hooks/use-story-viewer-view-mode';
+import type { StoryCodeViewHandle } from '@/feature/stories/components/side-panel/story-code-view';
+import { useStoryViewerVersionActions } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-version-actions';
+import { useStoryViewerVersions } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-versions';
+import { useStoryViewerViewMode } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-view-mode';
 import { selectStoryEditorCode, useStoryEditBuffer } from '@/hooks/use-story-edit-buffer';
 import { useStoryEditTransitions } from '@/hooks/use-story-edit-transitions';
 import { useStoryExitGuard } from '@/hooks/use-story-exit-guard';

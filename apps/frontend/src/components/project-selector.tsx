@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import type { UserRole } from '@quarry/shared/types';
 
-import { UpgradeToEnterprise } from '@/components/settings/upgrade-to-enterprise';
-import { CreateProjectDialog } from '@/components/create-project-dialog';
+import { UpgradeToEnterprise } from '@/feature/settings/components/upgrade-to-enterprise';
+import { CreateProjectDialog } from '@/feature/settings/components/create-project-dialog';
 import {
 	Command,
 	CommandEmpty,

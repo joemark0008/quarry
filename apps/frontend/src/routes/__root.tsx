@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet, useRouterState } from '@tanstack/react-router';
 
-import { ModifyPassword } from '@/components/modify-password';
+import { ModifyPassword } from '@/feature/auth/components/modify-password';
 import { Spinner } from '@/components/ui/spinner';
 import { useDisposeInactiveAgents } from '@/hooks/use-agent';
 import { useSessionOrNavigateToIndexPage } from '@/hooks/use-session-or-navigate-to-index-page';

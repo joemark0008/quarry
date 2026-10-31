@@ -1,6 +1,6 @@
 import { useBlocker } from '@tanstack/react-router';
 import { useCallback, useState } from 'react';
-import type { StoryUnsavedChangesDialogProps } from '@/components/story-unsaved-changes-dialog';
+import type { StoryUnsavedChangesDialogProps } from '@/feature/stories/components/story-unsaved-changes-dialog';
 import type { StorySaveResult } from '@/lib/story-save';
 
 type ExitAction = () => void;

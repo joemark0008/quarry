@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { StoryRouteError } from '@/components/story-access-error';
+import { StoryRouteError } from '@/feature/stories/components/story-access-error';
 import { storyApi } from '@/lib/story-api';
 
 export const Route = createFileRoute('/_protected/stories/preview/$chatId/$storySlug')({

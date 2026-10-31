@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import type { QueryDataMap } from '@/components/story-embeds';
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import { storyApi } from '@/lib/story-api';
 
 interface UseStoryVersionQueryDataParams {

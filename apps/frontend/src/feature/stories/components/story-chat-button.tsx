@@ -1,0 +1,198 @@
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
+import { AtSign, ChevronDown, Loader2, MessageCircle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+import { ChatListSection } from '@/feature/chat/components/chat-list-menu-section';
+import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { useProjectSwitch } from '@/hooks/use-project-switch';
+import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
+import { requestAsk } from '@/stores/ask-bar';
+import { useCurrentProject } from '@/hooks/use-current-project';
+import { storyApi } from '@/lib/story-api';
+import styles from './story-chat-button.module.css';
+
+export type StoryChatMode = 'edit' | 'ask' | 'mention';
+
+export interface StoryChatControls {
+	storyId: string | null;
+	isOwner: boolean;
+	/** False for project viewers and archived stories, which can only be read. */
+	canChat: boolean;
+	onOpenInChat?: () => void;
+	isOpeningInChat?: boolean;
+}
+
+const MODES: Record<StoryChatMode, { label: string; icon: LucideIcon }> = {
+	edit: { label: 'Edit story', icon: MessageCircle },
+	ask: { label: 'Ask story', icon: MessageCircle },
+	mention: { label: 'Mention story', icon: AtSign },
+};
+
+export function StoryChatButton({
+	storyId,
+	isOwner,
+	canChat,
+	onOpenInChat,
+	isOpeningInChat = false,
+}: StoryChatControls) {
+	const mode: StoryChatMode = isOwner ? 'edit' : 'ask';
+	const actions = useStoryChatActions(storyId, onOpenInChat);
+	const lists = useStoryChatLists(storyId, canChat);
+	const isDisabled = isOpeningInChat || !actions.isReady;
+
+	useKeyboardShortcuts({
+		'toggle-story-chat': canChat && !isDisabled ? () => actions.run(mode) : undefined,
+	});
+
+	if (!canChat || !storyId) {
+		return null;
+	}
+
+	const { label, icon: Icon } = MODES[mode];
+
+	return (
+		<div className={styles.storyChatButtonDiv}>
+			<Button
+				variant='ghost'
+				size='sm'
+				className={styles.storyChatButtonButton}
+				disabled={isDisabled}
+				onClick={() => actions.run(mode)}
+			>
+				{isOpeningInChat ? (
+					<Loader2 className={styles.storyChatButtonLoader2} strokeWidth={2.25} />
+				) : (
+					<Icon className={styles.storyChatButtonIcon} strokeWidth={2.25} />
+				)}
+				<span>{label}</span>
+			</Button>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						variant='ghost'
+						size='sm'
+						className={styles.storyChatButtonButton2}
+						disabled={isDisabled}
+						aria-label='More ways to talk to this story'
+					>
+						<ChevronDown className={styles.storyChatButtonChevronDown} strokeWidth={2.25} />
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align='end' className={styles.storyChatButtonDropdownMenuContent}>
+					<MentionItem onSelect={() => actions.run('mention')} />
+					<StoryChatLists
+						lists={lists}
+						onOpenQuickQuestion={(chatId) => requestAsk({ chatId })}
+						onOpenChat={actions.openChat}
+					/>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
+	);
+}
+
+function MentionItem({ onSelect }: { onSelect: () => void }) {
+	const { label, icon: Icon } = MODES.mention;
+	return (
+		<DropdownMenuItem onSelect={onSelect}>
+			<span className={styles.mentionItemSpan}>
+				<Icon strokeWidth={2.25} />
+			</span>
+			<span className={styles.mentionItemSpan2}>
+				<span>{label}</span>
+				<span className={styles.mentionItemSpan3}>Start a new chat about this story</span>
+			</span>
+		</DropdownMenuItem>
+	);
+}
+
+function StoryChatLists({
+	lists,
+	onOpenQuickQuestion,
+	onOpenChat,
+}: {
+	lists: ReturnType<typeof useStoryChatLists>;
+	onOpenQuickQuestion: (chatId: string) => void;
+	onOpenChat: (chatId: string) => void;
+}) {
+	const { quickQuestions, mentioningChats } = lists;
+	const mentions = (mentioningChats.data?.chats ?? []).filter((chat) => !chat.isOrigin);
+
+	return (
+		<>
+			<ChatListSection
+				title='Quick questions'
+				query={quickQuestions}
+				chats={quickQuestions.data ?? []}
+				onOpen={onOpenQuickQuestion}
+			/>
+			<ChatListSection title='Mentions' query={mentioningChats} chats={mentions} onOpen={onOpenChat} />
+		</>
+	);
+}
+
+function useStoryChatLists(storyId: string | null, canChat: boolean) {
+	const enabled = canChat && Boolean(storyId);
+	const quickQuestions = useQuery({
+		...storyApi.story.listQuickQuestions.queryOptions({ storyId: storyId ?? '' }),
+		enabled,
+	});
+	const mentioningChats = useQuery({
+		...storyApi.story.listMentioningChats.queryOptions({ storyId: storyId ?? '' }),
+		enabled,
+	});
+	return { quickQuestions, mentioningChats };
+}
+
+/** The chats around a story live in its project, so the project is switched before reaching them. */
+function useStoryChatActions(storyId: string | null, onOpenInChat: (() => void) | undefined) {
+	const navigate = useNavigate();
+	const startChatWithStories = useStartChatWithStories();
+	const { data: currentProject } = useCurrentProject();
+	const switchProject = useProjectSwitch(currentProject?.id);
+	const { data: resolvedStory } = useQuery({
+		...storyApi.story.resolve.queryOptions({ storyId: storyId ?? '' }),
+		enabled: Boolean(storyId),
+	});
+
+	const switchToStoryProject = async () => {
+		if (resolvedStory?.projectId) {
+			await switchProject(resolvedStory.projectId);
+		}
+	};
+
+	const openChat = async (chatId: string, openStorySlug?: string) => {
+		await switchToStoryProject();
+		navigate({ to: '/$chatId', params: { chatId }, state: openStorySlug ? { openStorySlug } : undefined });
+	};
+
+	const run = async (mode: StoryChatMode) => {
+		if (!storyId || !resolvedStory) {
+			return;
+		}
+		if (mode === 'ask') {
+			requestAsk();
+			return;
+		}
+		if (mode === 'mention') {
+			await switchToStoryProject();
+			startChatWithStories({ storyIds: [storyId], folderIds: [] });
+			return;
+		}
+		if (resolvedStory.chatId) {
+			await openChat(resolvedStory.chatId, resolvedStory.slug);
+			return;
+		}
+		onOpenInChat?.();
+	};
+
+	return { run, openChat: (chatId: string) => openChat(chatId), isReady: Boolean(resolvedStory) };
+}

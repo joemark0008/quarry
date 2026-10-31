@@ -8,7 +8,7 @@ import type {
 	StorySummary,
 	SummarySegment,
 } from '@quarry/shared/types';
-import type { QueryDataMap } from '@/components/story-embeds';
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 
 type RouterOutputs = ApiOutputs;
 

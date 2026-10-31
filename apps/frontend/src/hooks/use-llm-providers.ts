@@ -11,7 +11,7 @@ import {
 } from '@quarry/shared/types';
 import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/api/agent/types/llm';
 import type { LlmProvider, LlmProviderKind } from '@quarry/shared/types';
-import type { InheritedKeySource } from '@/components/settings/llm-provider-form';
+import type { InheritedKeySource } from '@/feature/settings/components/llm-provider-form';
 import { projectApi } from '@/lib/project-api';
 
 export interface EditingState {

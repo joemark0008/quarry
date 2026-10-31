@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
 
-import type { QueryDataMap } from '@/components/story-embeds';
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 
 const StoryEmbedDataContext = createContext<QueryDataMap | null>(null);
 

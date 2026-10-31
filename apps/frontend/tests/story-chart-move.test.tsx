@@ -11,11 +11,11 @@ import {
 	blockSelectionPluginKey,
 	emptySelection,
 	topLevelBlockPositions,
-} from '@/components/side-panel/story-block-selection';
-import { StoryTabbedEditor } from '@/components/side-panel/story-tabbed-editor';
-import editorStyles from '@/components/side-panel/story-editor.module.css';
-import dragStyles from '@/components/side-panel/story-editor-block-drag.module.css';
-import tabsBarStyles from '@/components/side-panel/story-tabs-bar.module.css';
+} from '@/feature/stories/components/side-panel/story-block-selection';
+import { StoryTabbedEditor } from '@/feature/stories/components/side-panel/story-tabbed-editor';
+import editorStyles from '@/feature/stories/components/side-panel/story-editor.module.css';
+import dragStyles from '@/feature/stories/components/side-panel/story-editor-block-drag.module.css';
+import tabsBarStyles from '@/feature/stories/components/side-panel/story-tabs-bar.module.css';
 
 vi.hoisted(() => {
 	Object.defineProperty(window.URL, 'createObjectURL', {
@@ -24,19 +24,19 @@ vi.hoisted(() => {
 	});
 });
 
-vi.mock('@/components/side-panel/story-chart-embed', () => ({
+vi.mock('@/feature/stories/components/side-panel/story-chart-embed', () => ({
 	StoryChartEmbed: ({ chart }: { chart: { queryId: string } }) => <div>Chart {chart.queryId}</div>,
 }));
 
-vi.mock('@/components/side-panel/story-map-embed', () => ({
+vi.mock('@/feature/stories/components/side-panel/story-map-embed', () => ({
 	StoryMapEmbed: () => null,
 }));
 
-vi.mock('@/components/side-panel/story-table-embed', () => ({
+vi.mock('@/feature/stories/components/side-panel/story-table-embed', () => ({
 	StoryTableEmbed: () => null,
 }));
 
-vi.mock('@/components/chat-messages/markdown-table', () => ({
+vi.mock('@/feature/chat/components/chat-messages/markdown-table', () => ({
 	MarkdownTable: () => null,
 }));
 

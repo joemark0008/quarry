@@ -11,7 +11,7 @@ import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
 import type { FolderSystemType } from '@quarry/shared/types';
 import type { MentionOption } from 'prompt-mentions';
 import type { ApiOutputs } from '@/lib/api-types';
-import type { MentionOrigin, MentionOriginNode } from '@/components/mention-origin-preview';
+import type { MentionOrigin, MentionOriginNode } from '@/feature/chat/components/mention-origin-preview';
 import { DatabaseIcon } from '@/components/ui/database-icon';
 import StoryIcon from '@/components/ui/story-icon';
 import styles from './reference-mention-menu.module.css';

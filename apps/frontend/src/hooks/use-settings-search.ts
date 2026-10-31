@@ -1,8 +1,8 @@
 import Fuse from 'fuse.js';
 import { useMemo } from 'react';
 
-import type { SettingsSearchEntry } from '@/components/settings-search-index';
-import { settingsSearchIndex } from '@/components/settings-search-index';
+import type { SettingsSearchEntry } from '@/feature/settings/components/settings-search-index';
+import { settingsSearchIndex } from '@/feature/settings/components/settings-search-index';
 import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { usePermissions } from '@/hooks/use-permissions';

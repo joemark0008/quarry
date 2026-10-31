@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 
-import { useStoryThemeForCurrentMode } from '@/components/story-theme-provider';
+import { useStoryThemeForCurrentMode } from '@/feature/stories/components/story-theme-provider';
 import { storyApi } from '@/lib/story-api';
 
 export function useActiveStoryTheme(): StoryTheme | null {

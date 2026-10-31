@@ -1,0 +1,358 @@
+import { getGridClass, getGridTemplateColumns } from '@quarry/shared/story-segments';
+import { mergeAttributes, Node } from '@tiptap/core';
+import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
+import { Streamdown } from 'streamdown';
+import { useContext } from 'react';
+import { StoryChartEmbed } from './story-chart-embed';
+import { StoryBlockActionGrip } from './story-editor-block-drag';
+import { StoryMapEmbed } from './story-map-embed';
+import { StoryTableEmbed } from './story-table-embed';
+import { BlockSelectionContext } from './story-block-selection-context';
+import { StoryBlockDragContext } from './story-editor-drag-context';
+import { decodeFromAttr } from './story-editor-utils';
+import { useStoryEditorGridBlock } from '@/feature/stories/components/side-panel/hooks/use-story-editor-grid-block';
+import type { Segment } from '@quarry/shared/story-segments';
+import type { ReactNodeViewProps } from '@tiptap/react';
+import type { ReactNode } from 'react';
+import { MarkdownTable } from '@/feature/chat/components/chat-messages/markdown-table';
+import { StoryBlock, StoryMapFrame, StoryTableFrame } from '@/feature/stories/components/story-block';
+import { EditorStoryChartEditProvider } from '@/contexts/story-chart-edit';
+import { EditorStoryMapEditProvider } from '@/contexts/story-map-edit';
+import { markdownPlugins } from '@/lib/markdown';
+import { cn } from '@/lib/utils';
+import { markdownLinkSafety } from '@/components/external-link-dialog';
+import styles from './story-editor-grid-block.module.css';
+
+const markdownComponents = { table: ({ node, className }: any) => <MarkdownTable node={node} className={className} /> };
+
+/**
+ * Renders a single grid column's content in the editor. Charts/tables receive
+ * the column drag handle; nested grids render recursively so their content
+ * stays visible while editing.
+ */
+function renderColumnContent(
+	segment: Segment,
+	dragHandle: ReactNode,
+	onReplaceTag: (rawTag: string, nextTag: string) => void,
+	dragHandlePlacement: 'leading' | 'trailing' = 'trailing',
+	isSelected: boolean = false,
+): ReactNode {
+	switch (segment.type) {
+		case 'markdown':
+			return (
+				<Streamdown
+					linkSafety={markdownLinkSafety}
+					mode='static'
+					plugins={markdownPlugins}
+					components={markdownComponents}
+				>
+					{segment.content}
+				</Streamdown>
+			);
+		case 'chart':
+			return (
+				<EditorStoryChartEditProvider onReplaceTag={onReplaceTag}>
+					<StoryBlock>
+						<StoryChartEmbed
+							chart={segment.chart}
+							dragHandle={dragHandle}
+							dragHandlePlacement={dragHandlePlacement}
+							isSelected={isSelected}
+						/>
+					</StoryBlock>
+				</EditorStoryChartEditProvider>
+			);
+		case 'table':
+			return (
+				<StoryTableFrame>
+					<StoryTableEmbed
+						table={segment.table}
+						dragHandle={dragHandle}
+						dragHandlePlacement={dragHandlePlacement}
+					/>
+				</StoryTableFrame>
+			);
+		case 'map':
+			return (
+				<EditorStoryMapEditProvider onReplaceTag={onReplaceTag}>
+					<StoryMapFrame>
+						<StoryMapEmbed map={segment.map} dragHandle={dragHandle} />
+					</StoryMapFrame>
+				</EditorStoryMapEditProvider>
+			);
+		case 'grid':
+			return (
+				<div className={styles.renderColumnContentDiv}>
+					{segment.children.map((child, index) => (
+						<div key={index} className={styles.renderColumnContentDiv2}>
+							{renderColumnContent(child, null, onReplaceTag, 'trailing', false)}
+						</div>
+					))}
+				</div>
+			);
+	}
+}
+
+function GridBlockView(props: ReactNodeViewProps) {
+	const selectedGridColumns = useContext(BlockSelectionContext);
+	const storyBlockDrag = useContext(StoryBlockDragContext);
+	const {
+		gridRef,
+		segments,
+		cols,
+		visualWidths,
+		activeBoundary,
+		resizeHandlePositions,
+		dropIndicatorLeft,
+		externalBlockActive,
+		handleReplaceTag,
+		clearDrag,
+		handleColumnDragStart,
+		handleGridDragOver,
+		handleGridDrop,
+		insertExternalStoryBlock,
+		handleResizeStart,
+		updateResize,
+		finishResize,
+		handleResizeKeyDown,
+		setBlockDropIndex,
+	} = useStoryEditorGridBlock(props);
+	const resolvedGridPos = props.getPos();
+	const gridPos = typeof resolvedGridPos === 'number' ? resolvedGridPos : null;
+
+	return (
+		<NodeViewWrapper draggable data-type='grid-block'>
+			<div
+				className={styles.gridBlockViewDiv}
+				onDragOver={handleGridDragOver}
+				onDragLeave={(event) => {
+					if (!event.currentTarget.contains(event.relatedTarget as globalThis.Node | null)) {
+						setBlockDropIndex(null);
+					}
+				}}
+				onDrop={handleGridDrop}
+			>
+				<div
+					ref={gridRef}
+					className={
+						visualWidths !== null
+							? styles.gridBlockViewDiv2
+							: `${styles.gridBlockViewDiv3} ${getGridClass(cols)} ${styles.gridBlockViewDiv4}`
+					}
+					{...(visualWidths !== null
+						? { style: { ['--quarry-grid-cols' as string]: getGridTemplateColumns(visualWidths) } }
+						: {})}
+				>
+					{segments.map((segment, i) => {
+						// Markdown columns cannot be dragged out (createBlockNode would
+						// turn their markdown into literal text), so only chart/table
+						// columns get a move handle.
+						const columnGrip =
+							segments.length >= 2 && (segment.type === 'chart' || segment.type === 'table') ? (
+								<StoryBlockActionGrip
+									editor={props.editor}
+									getOrigin={() =>
+										gridPos === null ? null : { kind: 'gridColumn', gridPos, index: i }
+									}
+									ariaLabel={`Move column ${i + 1}`}
+									draggable
+									onDragStart={(event) => handleColumnDragStart(i, event)}
+									onDragEnd={(event) => {
+										event.stopPropagation();
+										clearDrag();
+									}}
+								/>
+							) : null;
+						const isLeftmostColumn = i === 0;
+						const canDragColumn = columnGrip !== null;
+						const isColumnSelected =
+							gridPos !== null &&
+							selectedGridColumns.some((column) => column.gridPos === gridPos && column.index === i);
+
+						return (
+							<div
+								key={i}
+								className={cn(
+									`${styles.gridBlockViewDiv5} group`,
+									gridPos !== null &&
+										selectedGridColumns.some(
+											(column) => column.gridPos === gridPos && column.index === i,
+										) &&
+										'quarry-block-selected',
+								)}
+								draggable={canDragColumn || undefined}
+								onDragStart={canDragColumn ? (event) => handleColumnDragStart(i, event) : undefined}
+								onDragEnd={
+									canDragColumn
+										? (event) => {
+												event.stopPropagation();
+												clearDrag();
+											}
+										: undefined
+								}
+								{...(gridPos === null
+									? {}
+									: {
+											'data-grid-column': '',
+											'data-col-index': i,
+											'data-grid-pos': gridPos,
+											'data-col-type': segment.type,
+										})}
+							>
+								{isLeftmostColumn && columnGrip ? (
+									<div contentEditable={false} className={styles.gridBlockViewDiv6}>
+										{columnGrip}
+									</div>
+								) : null}
+								{renderColumnContent(
+									segment,
+									isLeftmostColumn ? null : columnGrip,
+									handleReplaceTag,
+									'leading',
+									isColumnSelected,
+								)}
+							</div>
+						);
+					})}
+				</div>
+				{externalBlockActive && (
+					<>
+						<div
+							contentEditable={false}
+							className={styles.gridBlockViewDiv7}
+							onDragOver={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								event.dataTransfer.dropEffect = 'move';
+								setBlockDropIndex(0);
+								if (gridPos !== null) {
+									storyBlockDrag?.setActiveDropZone((current) => {
+										const id = `grid:${gridPos}`;
+										return current === id ? current : id;
+									});
+								}
+								if (storyBlockDrag) {
+									storyBlockDrag.pendingDropRef.current = () => handleGridDrop();
+								}
+							}}
+							onDrop={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								insertExternalStoryBlock(0);
+							}}
+						/>
+						<div
+							contentEditable={false}
+							className={styles.gridBlockViewDiv8}
+							onDragOver={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								event.dataTransfer.dropEffect = 'move';
+								setBlockDropIndex(segments.length);
+								if (gridPos !== null) {
+									storyBlockDrag?.setActiveDropZone((current) => {
+										const id = `grid:${gridPos}`;
+										return current === id ? current : id;
+									});
+								}
+								if (storyBlockDrag) {
+									storyBlockDrag.pendingDropRef.current = () => handleGridDrop();
+								}
+							}}
+							onDrop={(event) => {
+								event.preventDefault();
+								event.stopPropagation();
+								insertExternalStoryBlock(segments.length);
+							}}
+						/>
+					</>
+				)}
+				{dropIndicatorLeft !== null &&
+					gridPos !== null &&
+					storyBlockDrag?.activeDropZone === `grid:${gridPos}` && (
+						<div
+							contentEditable={false}
+							className={styles.gridBlockViewDiv9}
+							style={{ left: dropIndicatorLeft }}
+						/>
+					)}
+				{resizeHandlePositions.map(({ index, left }) => (
+					<button
+						key={index}
+						type='button'
+						aria-label={`Resize columns ${index + 1} and ${index + 2}`}
+						contentEditable={false}
+						className={`${styles.gridBlockViewButton} group`}
+						draggable={false}
+						style={{ left }}
+						onKeyDown={(event) => {
+							handleResizeKeyDown(index, event);
+						}}
+						onPointerDown={(event) => {
+							handleResizeStart(index, event);
+						}}
+						onPointerMove={(event) => {
+							if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+								updateResize(event.clientX);
+							}
+						}}
+						onPointerUp={(event) => {
+							finishResize(event, true);
+						}}
+						onPointerCancel={(event) => {
+							finishResize(event, false);
+						}}
+					>
+						<div
+							className={`${styles.gridBlockViewDiv10} ${activeBoundary === index
+									? styles.state100
+									: styles.state101}`}
+						/>
+					</button>
+				))}
+			</div>
+		</NodeViewWrapper>
+	);
+}
+
+export const GridBlock = Node.create({
+	name: 'gridBlock',
+	group: 'block',
+	atom: true,
+	selectable: true,
+	draggable: true,
+
+	addAttributes() {
+		return {
+			rawContent: { default: '' },
+		};
+	},
+
+	parseHTML() {
+		return [
+			{
+				tag: 'grid-embed',
+				getAttrs(element) {
+					if (typeof element === 'string') {
+						return false;
+					}
+					const encoded = element.getAttribute('data-raw') || '';
+					return { rawContent: decodeFromAttr(encoded) };
+				},
+			},
+		];
+	},
+
+	renderHTML({ HTMLAttributes }) {
+		return ['grid-embed', mergeAttributes(HTMLAttributes)];
+	},
+
+	addNodeView() {
+		return ReactNodeViewRenderer(GridBlockView);
+	},
+
+	renderMarkdown(node) {
+		const rawContent = typeof node.attrs?.rawContent === 'string' ? node.attrs.rawContent : '';
+		return `${rawContent}\n\n`;
+	},
+});
