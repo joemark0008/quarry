@@ -73,7 +73,7 @@ export function Sidebar() {
 
 	useEffect(() => {
 		if (isInSettings) {
-			expandSidebar();
+			expandSidebar({ persist: false });
 		}
 	}, [isInSettings, expandSidebar]);
 

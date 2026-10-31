@@ -123,13 +123,21 @@ function DropdownMenuContent({
 	const ref = useRef<HTMLDivElement>(null);
 	const ariaLabel = props['aria-label'];
 
-	// Mantine names the dropdown after its target, which would hide an explicit label.
+	const { open } = useContext(MenuContext);
+
+	// Mantine names the dropdown after its target, which would hide an explicit label. It mounts when opened.
 	useEffect(() => {
-		if (ariaLabel) {
+		if (!ariaLabel || !open) {
+			return;
+		}
+		const applyLabel = () => {
 			ref.current?.removeAttribute('aria-labelledby');
 			ref.current?.setAttribute('aria-label', ariaLabel);
-		}
-	}, [ariaLabel]);
+		};
+		applyLabel();
+		const frame = requestAnimationFrame(applyLabel);
+		return () => cancelAnimationFrame(frame);
+	}, [ariaLabel, open]);
 
 	useEffect(() => {
 		if (!onInteractOutside) {

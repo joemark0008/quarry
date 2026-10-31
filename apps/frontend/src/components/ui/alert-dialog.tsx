@@ -53,13 +53,15 @@ function AlertDialogContent({
 			centered
 			size='auto'
 			closeOnClickOutside={closeOnOutsideClick}
+			classNames={{
+				content: cn(styles.dialog, styles.alertDialog, size === 'sm' && styles.alertDialogSmall, className),
+			}}
 		>
 			<Modal.Overlay className={styles.overlay} onClick={closeOnOutsideClick ? onCloseOnOutsideClick : undefined} />
 			<Modal.Content
 				role='alertdialog'
 				data-slot='alert-dialog-content'
 				data-size={size}
-				className={cn(styles.dialog, styles.alertDialog, size === 'sm' && styles.alertDialogSmall, className)}
 				{...(props as object)}
 			>
 				{children}

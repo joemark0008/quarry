@@ -95,9 +95,15 @@ function DialogContent({
 }: ComponentProps<'div'> & { showCloseButton?: boolean }) {
 	const { open, setOpen } = useDialogContext();
 	return (
-		<Modal.Root opened={open} onClose={() => setOpen(false)} centered size='auto'>
+		<Modal.Root
+			opened={open}
+			onClose={() => setOpen(false)}
+			centered
+			size='auto'
+			classNames={{ content: cn(styles.dialog, className) }}
+		>
 			<Modal.Overlay className={styles.overlay} />
-			<Modal.Content data-slot='dialog-content' className={cn(styles.dialog, className)} {...(props as object)}>
+			<Modal.Content data-slot='dialog-content' {...(props as object)}>
 				{children}
 				{showCloseButton && (
 					<button type='button' className={styles.dialogClose} onClick={() => setOpen(false)}>
