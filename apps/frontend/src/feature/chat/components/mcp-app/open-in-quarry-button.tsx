@@ -1,8 +1,8 @@
 import { ExternalLink } from 'lucide-react';
+import styles from './open-in-quarry-button.module.css';
 import type { MouseEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
-import styles from './open-in-quarry-button.module.css';
 
 interface OpenInQuarryButtonProps {
 	url: string;

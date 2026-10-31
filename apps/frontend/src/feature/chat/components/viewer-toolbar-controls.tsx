@@ -1,5 +1,6 @@
 import { LayoutGrid, List, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import styles from './viewer-toolbar-controls.module.css';
 import type { KeyboardEvent } from 'react';
 import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { GroupBy } from '@/lib/viewer-home';
@@ -7,7 +8,6 @@ import { GROUP_BY_LABELS } from '@/lib/viewer-home';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import styles from './viewer-toolbar-controls.module.css';
 
 export function ViewerToolbarControls({
 	searchQuery,
@@ -118,7 +118,10 @@ function DisplayModeToggle({
 				variant='ghost'
 				size='icon-xs'
 				onClick={() => onChange('grid')}
-				className={cn(value === styles.displayModeToggleButton && styles.displayModeToggleButton2, styles.displayModeToggleButton3)}
+				className={cn(
+					value === styles.displayModeToggleButton && styles.displayModeToggleButton2,
+					styles.displayModeToggleButton3,
+				)}
 				aria-label='Grid view'
 			>
 				<LayoutGrid />

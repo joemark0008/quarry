@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { ChevronDown, RotateCw } from 'lucide-react';
 
+import styles from './chat-list-menu-section.module.css';
 import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { getTimeAgo } from '@/lib/time-ago';
-import styles from './chat-list-menu-section.module.css';
 
 const MAX_COLLAPSED_CHATS = 5;
 
@@ -48,7 +48,11 @@ export function ChatListSection({
 				</DropdownMenuItem>
 			)}
 			{listedChats.map((chat) => (
-				<DropdownMenuItem key={chat.chatId} onSelect={() => onOpen(chat.chatId)} className={styles.chatListSectionDropdownMenuItem}>
+				<DropdownMenuItem
+					key={chat.chatId}
+					onSelect={() => onOpen(chat.chatId)}
+					className={styles.chatListSectionDropdownMenuItem}
+				>
 					<span className={styles.chatListSectionSpan2}>{chat.title}</span>
 					<span className={styles.chatListSectionSpan3}>
 						{getTimeAgo(new Date(chat.updatedAt).getTime()).humanReadable}

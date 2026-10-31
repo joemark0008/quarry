@@ -8,7 +8,7 @@
 		var(--fx-animation-fill-mode, none);
 	align-items: center;
 	justify-content: center;
-	background-color: color-mix(in oklab, #000 80%, transparent);
+	background-color: color-mix(in oklab, var(--app-black) 80%, transparent);
 	--fx-duration: 150ms;
 	transition-duration: 150ms;
 	--fx-enter-opacity: 0;
@@ -25,8 +25,8 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: calc(infinity * 1px);
-	background-color: color-mix(in oklab, #fff 10%, transparent);
-	color: #fff;
+	background-color: color-mix(in oklab, var(--app-white) 10%, transparent);
+	color: var(--app-white);
 	transition-property:
 		color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --fx-gradient-from,
 		--fx-gradient-via, --fx-gradient-to;
@@ -34,12 +34,12 @@
 	transition-duration: var(--fx-duration, 150ms);
 	@media (hover: hover) {
 		&:hover {
-			background-color: color-mix(in srgb, #fff 20%, transparent);
+			background-color: color-mix(in srgb, var(--app-white) 20%, transparent);
 		}
 	}
 	@media (hover: hover) {
 		&:hover {
-			background-color: color-mix(in oklab, #fff 20%, transparent);
+			background-color: color-mix(in oklab, var(--app-white) 20%, transparent);
 		}
 	}
 }

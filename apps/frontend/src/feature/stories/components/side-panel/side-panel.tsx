@@ -1,11 +1,11 @@
 import { memo, useEffect } from 'react';
 
+import styles from './side-panel.module.css';
 import { ResizableHandle } from '@/components/ui/resizable';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useSidePanelResize } from '@/hooks/use-side-panel-resize';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { cn } from '@/lib/utils';
-import styles from './side-panel.module.css';
 
 type SidePanelProps = {
 	containerRef: React.RefObject<HTMLDivElement | null>;
@@ -61,10 +61,7 @@ export const SidePanel = memo(function SidePanel({
 	return (
 		<div ref={sidePanelRef} className={cn(styles.sidePanelDiv3, className)}>
 			<div className={styles.sidePanelDiv4}>
-				<div
-					className={styles.sidePanelDiv5}
-					ref={resizeHandleRef}
-				>
+				<div className={styles.sidePanelDiv5} ref={resizeHandleRef}>
 					<ResizableHandle aria-orientation='vertical' className={styles.sidePanelResizableHandle} />
 				</div>
 

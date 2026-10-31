@@ -1,10 +1,10 @@
 import { MessageCircle } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import styles from './highlight-bubble.module.css';
 import { Button } from '@/components/ui/button';
 
 import { useSelection } from '@/contexts/text-selection';
 import { useTrackedBubbleRect } from '@/hooks/use-tracked-bubble-rect';
-import styles from './highlight-bubble.module.css';
 
 export interface SelectionData {
 	start: number;
@@ -56,11 +56,7 @@ function BubbleContent({ onAsk }: { onAsk: (data: SelectionData) => void }) {
 			}}
 			onMouseDown={(e) => e.stopPropagation()}
 		>
-			<Button
-				type='button'
-				onClick={handleAsk}
-				className={styles.bubbleContentButton}
-			>
+			<Button type='button' onClick={handleAsk} className={styles.bubbleContentButton}>
 				<MessageCircle className={styles.bubbleContentMessageCircle} />
 				Ask
 			</Button>

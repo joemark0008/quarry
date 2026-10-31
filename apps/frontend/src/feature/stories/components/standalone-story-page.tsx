@@ -1,22 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
-
-import type { QueryDataMap } from './story-embeds';
-import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
 import { StoryAccessError } from './story-access-error';
 import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from './story-embeds';
 import { StoryTabbedContent } from './story-tabbed-content';
 import { useStoryThemeForCurrentMode } from './story-theme-provider';
 import { STORY_ASK_BAR_INSET_STYLE, StoryAskBar } from './story-ask-bar';
 import { StoryPageHeader } from './story-page-header';
+import styles from './standalone-story-page.module.css';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+
+import type { QueryDataMap } from './story-embeds';
+import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
 import { Spinner } from '@/components/ui/spinner';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
-import styles from './standalone-story-page.module.css';
 
 export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	const navigate = useNavigate();
@@ -51,10 +51,7 @@ export function StandaloneStoryPage({ storyId }: { storyId: string }) {
 	const isArchived = Boolean(story.archivedAt);
 
 	return (
-		<div
-			className={styles.standaloneStoryPageDiv2}
-			style={isArchived ? undefined : STORY_ASK_BAR_INSET_STYLE}
-		>
+		<div className={styles.standaloneStoryPageDiv2} style={isArchived ? undefined : STORY_ASK_BAR_INSET_STYLE}>
 			<StoryPageHeader
 				title={story.title}
 				storyChat={{

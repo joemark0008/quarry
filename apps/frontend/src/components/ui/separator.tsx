@@ -1,6 +1,6 @@
+import styles from './overlay.module.css';
 import type { ComponentProps } from 'react';
 
-import styles from './overlay.module.css';
 import { cn } from '@/lib/utils';
 
 function Separator({

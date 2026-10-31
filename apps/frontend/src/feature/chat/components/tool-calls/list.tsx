@@ -1,12 +1,12 @@
 import { File, Folder, Link } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { McpTitle } from './mcp-title';
+import styles from './list.module.css';
 import type { ToolCallComponentProps } from '.';
 import type { McpTarget } from '@/lib/mcp';
 import { getMcpTarget } from '@/lib/mcp';
 import { formatBytes } from '@/lib/utils';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './list.module.css';
 
 const getIcon = (type?: string) => {
 	switch (type) {
@@ -40,10 +40,7 @@ export const ListToolCall = ({ toolPart }: ToolCallComponentProps<'list'>) => {
 						<McpListTitle target={mcpTarget} isSettled={false} />
 					) : (
 						<>
-							Listing...{' '}
-							<code className={styles.listToolCallCode}>
-								{input?.path}
-							</code>
+							Listing... <code className={styles.listToolCallCode}>{input?.path}</code>
 						</>
 					)
 				}
@@ -59,8 +56,7 @@ export const ListToolCall = ({ toolPart }: ToolCallComponentProps<'list'>) => {
 					<McpListTitle target={mcpTarget} isSettled={true} />
 				) : (
 					<>
-						Listed{' '}
-						<code className={styles.listToolCallCode2}>{input?.path}</code>
+						Listed <code className={styles.listToolCallCode2}>{input?.path}</code>
 					</>
 				)
 			}
@@ -70,16 +66,11 @@ export const ListToolCall = ({ toolPart }: ToolCallComponentProps<'list'>) => {
 				<div className={styles.listToolCallDiv2}>
 					<div className={styles.listToolCallDiv3}>
 						{entries.map((item, index) => (
-							<div
-								key={index}
-								className={styles.listToolCallDiv4}
-							>
+							<div key={index} className={styles.listToolCallDiv4}>
 								{getIcon(item.type)}
 								<span className={styles.listToolCallSpan}>{item.name}</span>
 								{item.description && (
-									<span className={styles.listToolCallSpan2}>
-										{item.description}
-									</span>
+									<span className={styles.listToolCallSpan2}>{item.description}</span>
 								)}
 								{item.type === 'directory' && item.itemCount !== undefined && (
 									<span className={styles.listToolCallSpan3}>
@@ -92,9 +83,7 @@ export const ListToolCall = ({ toolPart }: ToolCallComponentProps<'list'>) => {
 							</div>
 						))}
 					</div>
-					{entries.length === 0 && (
-						<div className={styles.listToolCallDiv}>Empty directory</div>
-					)}
+					{entries.length === 0 && <div className={styles.listToolCallDiv}>Empty directory</div>}
 				</div>
 			)}
 		</ToolCallWrapper>

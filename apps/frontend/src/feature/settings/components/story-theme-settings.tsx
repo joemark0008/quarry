@@ -15,11 +15,6 @@ import { deriveStoryThemeVariant, mapPairBrand } from '@quarry/shared/story-them
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Eye, Plus, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
-import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
-
-import type { InspirationOutcome } from './story-theme-inspiration';
-import type { ViewedThemeVersion } from './story-theme-recorded-sources';
 import { StoryThemeTypographyEditor } from './story-theme-typography-editor';
 import {
 	generationToSave,
@@ -30,6 +25,12 @@ import {
 import { LockedFieldset } from './locked-fieldset';
 import { StoryThemeInspiration } from './story-theme-inspiration';
 import { StoryThemePreviewPanel } from './story-theme-preview';
+import styles from './story-theme-settings.module.css';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
+
+import type { InspirationOutcome } from './story-theme-inspiration';
+import type { ViewedThemeVersion } from './story-theme-recorded-sources';
 import { Button } from '@/components/ui/button';
 import { Empty } from '@/components/ui/empty';
 import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
@@ -42,7 +43,6 @@ import { Switch } from '@/components/ui/switch';
 import { useSidePanel } from '@/contexts/side-panel';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-theme-settings.module.css';
 
 const BORDER_WIDTHS = [0, 1, 2, 3, 4];
 const HEADER_LAYOUTS = {
@@ -82,10 +82,8 @@ export function StoryThemeSettings({ isAdmin }: StoryThemeSettingsProps) {
 			<SettingsCard>
 				<Empty className={styles.storyThemeSettingsEmpty}>
 					This feature is currently in beta. To enable it, set the environment variable{' '}
-					<code className={styles.storyThemeSettingsCode}>
-						BETA_CUSTOM_STORIES_ENABLED=true
-					</code>{' '}
-					on your quarry instance and restart it.
+					<code className={styles.storyThemeSettingsCode}>BETA_CUSTOM_STORIES_ENABLED=true</code> on your
+					quarry instance and restart it.
 				</Empty>
 			</SettingsCard>
 		);

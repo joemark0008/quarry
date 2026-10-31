@@ -1,9 +1,9 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
+import styles from './user-group-chips.module.css';
 import { Badge } from '@/components/ui/badge';
 import { calculateVisibleGroupChipCount } from '@/lib/user-group-chip-overflow';
 import { cn } from '@/lib/utils';
-import styles from './user-group-chips.module.css';
 
 type GroupChipSize = 'default' | 'compact';
 
@@ -114,7 +114,10 @@ function GroupNameChip({ name, size, measure }: { name: string; size: GroupChipS
 	return (
 		<Badge
 			variant='secondary'
-			className={cn(styles.groupNameChipBadge, size === 'compact' ? styles.groupNameChipBadge2 : styles.groupNameChipBadge3)}
+			className={cn(
+				styles.groupNameChipBadge,
+				size === 'compact' ? styles.groupNameChipBadge2 : styles.groupNameChipBadge3,
+			)}
 			data-measure-group={measure === 'group' ? '' : undefined}
 			data-measure-overflow={typeof measure === 'number' ? measure : undefined}
 		>

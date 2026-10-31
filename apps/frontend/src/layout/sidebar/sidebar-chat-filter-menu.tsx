@@ -1,6 +1,8 @@
 import { CheckIcon, ChevronRight, CircleIcon, ListFilter } from 'lucide-react';
 import { useRef, useState } from 'react';
 
+import styles from './sidebar-chat-filter-menu.module.css';
+import type { ChatFilterType, ChatGroupBy } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -10,9 +12,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { ChatFilterType, ChatGroupBy } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
-import styles from './sidebar-chat-filter-menu.module.css';
 
 interface ChatFilterMenuProps {
 	groupBy: ChatGroupBy;
@@ -103,13 +103,15 @@ export function ChatFilterMenu({ groupBy, filters, onGroupByChange, onFilterTogg
 
 				<DropdownMenuSeparator />
 
-				<div className={styles.chatFilterMenuDiv} onMouseEnter={() => setSubOpen(true)} onMouseLeave={() => setSubOpen(false)}>
+				<div
+					className={styles.chatFilterMenuDiv}
+					onMouseEnter={() => setSubOpen(true)}
+					onMouseLeave={() => setSubOpen(false)}
+				>
 					<div
 						className={cn(
 							styles.chatFilterMenuDiv2,
-							subOpen
-								? styles.chatFilterMenuDiv3
-								: styles.chatFilterMenuDiv4,
+							subOpen ? styles.chatFilterMenuDiv3 : styles.chatFilterMenuDiv4,
 						)}
 					>
 						Filter

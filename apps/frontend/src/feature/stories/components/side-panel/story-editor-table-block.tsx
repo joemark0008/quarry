@@ -5,9 +5,9 @@ import { useMemo } from 'react';
 import { StoryTableEmbed } from './story-table-embed';
 import { StoryBlockDragGrip, StoryBlockDropZones, useStoryBlockDrag } from './story-editor-block-drag';
 import { decodeFromAttr } from './story-editor-utils';
+import styles from './story-editor-table-block.module.css';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import { StoryTableFrame } from '@/feature/stories/components/story-block';
-import styles from './story-editor-table-block.module.css';
 
 function TableBlockView({ node, editor, getPos }: ReactNodeViewProps) {
 	const rawTag = node.attrs.rawTag as string;
@@ -25,16 +25,19 @@ function TableBlockView({ node, editor, getPos }: ReactNodeViewProps) {
 	if (!table) {
 		return (
 			<NodeViewWrapper draggable data-type='table-block'>
-				<div className={styles.tableBlockViewDiv}>
-					Invalid table block
-				</div>
+				<div className={styles.tableBlockViewDiv}>Invalid table block</div>
 			</NodeViewWrapper>
 		);
 	}
 
 	return (
 		<NodeViewWrapper draggable data-type='table-block'>
-			<div className={`${styles.tableBlockViewDiv2} group`} draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+			<div
+				className={`${styles.tableBlockViewDiv2} group`}
+				draggable
+				onDragStart={handleDragStart}
+				onDragEnd={handleDragEnd}
+			>
 				<StoryBlockDropZones node={node} editor={editor} getPos={getPos} />
 				<div contentEditable={false} className={styles.tableBlockViewDiv3}>
 					<StoryBlockDragGrip node={node} editor={editor} getPos={getPos} />

@@ -11,6 +11,7 @@ import {
 } from './story-block-selection';
 import { createBlockNode, removeCardFromOrigin } from './story-editor-utils';
 import { GridDragContext, setStoryBlockDragOrigin, StoryBlockDragContext } from './story-editor-drag-context';
+import styles from './story-editor-block-drag.module.css';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import type { DragEvent as ReactDragEvent } from 'react';
 import type { DragOrigin } from './story-block-selection';
@@ -27,7 +28,6 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useStoryEditorSelectionActions } from '@/contexts/story-editor-selection-actions';
 import { cn } from '@/lib/utils';
-import styles from './story-editor-block-drag.module.css';
 
 const STORY_ACTION_SUBMENU_SIDE_OFFSET = 5;
 const STORY_ACTION_SUBMENU_ALIGN_OFFSET = -4;

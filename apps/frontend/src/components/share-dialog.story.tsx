@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, Link as LinkIcon, Loader2, Pin } from 'lucide-react';
+import styles from './share-dialog.story.module.css';
 import type { Visibility } from '@quarry/shared/types';
 import {
 	hasAccessChanges,
@@ -17,7 +18,6 @@ import { useSession } from '@/lib/auth-client';
 import { storyApi } from '@/lib/story-api';
 import { useGroupPicker, useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
-import styles from './share-dialog.story.module.css';
 
 export type ShareStoryIntent = 'share' | 'pin';
 
@@ -168,7 +168,11 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 	const description = isPinIntent
 		? "Pinning surfaces a story on the project's homepage. Choose who should see it — pinning requires sharing first."
 		: 'Share a link to this story. Recipients will always see the latest version.';
-	const confirmIdleIcon = isPinIntent ? <Pin className={styles.confirmIdleIconPin} /> : <LinkIcon className={styles.confirmIdleIconLinkIcon} />;
+	const confirmIdleIcon = isPinIntent ? (
+		<Pin className={styles.confirmIdleIconPin} />
+	) : (
+		<LinkIcon className={styles.confirmIdleIconLinkIcon} />
+	);
 	const confirmIdleLabel = isPinIntent ? 'Share & pin' : 'Share & copy link';
 	const confirmDoneLabel = isPinIntent ? 'Pinned!' : 'Link copied!';
 
@@ -177,7 +181,9 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 			<DialogContent className={SHARE_STORY_DIALOG_WIDTH}>
 				<DialogHeader className={styles.createShareDialogDialogHeader}>
 					<DialogTitle>{title}</DialogTitle>
-					<DialogDescription className={styles.createShareDialogDialogDescription}>{description}</DialogDescription>
+					<DialogDescription className={styles.createShareDialogDialogDescription}>
+						{description}
+					</DialogDescription>
 				</DialogHeader>
 
 				<div className={styles.createShareDialogDiv}>
@@ -212,7 +218,11 @@ function CreateShareDialog({ open, onOpenChange, chatId, storySlug, intent = 'sh
 				</div>
 
 				<div className={styles.createShareDialogDiv3}>
-					<Button variant='outline' className={styles.createShareDialogButton} onClick={() => onOpenChange(false)}>
+					<Button
+						variant='outline'
+						className={styles.createShareDialogButton}
+						onClick={() => onOpenChange(false)}
+					>
 						Cancel
 					</Button>
 					<Button

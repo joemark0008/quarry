@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
+import { SettingsMemoryItem, SettingsMemorySkeleton } from './memory-item';
+import styles from './memories.module.css';
 import type { UserMemoryRecord } from '@quarry/api/agent/types/memory';
 import {
 	AlertDialog,
@@ -19,10 +21,8 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { SettingsMemoryItem, SettingsMemorySkeleton } from './memory-item';
 import { useMemoriesQuery, useMemoryMutations, useMemorySettingsQuery } from '@/queries/use-memories';
 import { memoryApi } from '@/lib/memory-api';
-import styles from './memories.module.css';
 
 export function SettingsMemories({ isAdmin }: { isAdmin: boolean }) {
 	const projectMemorySettings = useQuery(memoryApi.project.getMemorySettings.queryOptions());

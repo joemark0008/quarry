@@ -1,11 +1,11 @@
 import { Code, Eye } from 'lucide-react';
 import { useState } from 'react';
+import styles from './custom-story-view-mode.module.css';
 import type { ReactNode } from 'react';
 
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';
 import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
 import { cn } from '@/lib/utils';
-import styles from './custom-story-view-mode.module.css';
 
 export type CustomStoryViewMode = 'app' | 'files';
 
@@ -41,14 +41,20 @@ export function CustomStoryViewLayers({ viewMode, app, files }: CustomStoryViewL
 	return (
 		<div className={styles.customStoryViewLayersDiv}>
 			<div
-				className={cn(styles.customStoryViewLayersDiv2, viewMode === 'files' && styles.customStoryViewLayersDiv3)}
+				className={cn(
+					styles.customStoryViewLayersDiv2,
+					viewMode === 'files' && styles.customStoryViewLayersDiv3,
+				)}
 				aria-hidden={viewMode === 'files'}
 			>
 				{app}
 			</div>
 			{hasOpenedFiles && (
 				<div
-					className={cn(styles.customStoryViewLayersDiv4, viewMode !== 'files' && styles.customStoryViewLayersDiv3)}
+					className={cn(
+						styles.customStoryViewLayersDiv4,
+						viewMode !== 'files' && styles.customStoryViewLayersDiv3,
+					)}
 					aria-hidden={viewMode !== 'files'}
 				>
 					{files}

@@ -10,6 +10,7 @@ import {
 	SettingsIcon,
 	SunIcon,
 } from 'lucide-react';
+import styles from './command-menu.module.css';
 import type { LucideIcon } from 'lucide-react';
 
 import type { SettingsSearchEntry } from '@/feature/settings/components/settings-search-index';
@@ -32,7 +33,6 @@ import { useSettingsSearch, useSettingsSuggestions } from '@/hooks/use-settings-
 import { TextShimmer } from '@/components/ui/text-shimmer';
 import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
 import { invalidateStoriesCaches } from '@/lib/stories-cache';
-import styles from './command-menu.module.css';
 
 type CommandConfig = {
 	id: string;
@@ -228,7 +228,9 @@ export function CommandMenu({ onOpenKeyboardShortcuts }: { onOpenKeyboardShortcu
 							>
 								<MessageSquareIcon />
 								<div className={styles.commandMenuDiv}>
-									<span className={styles.commandMenuSpan}>{highlightMatch(chat.title, debouncedSearch)}</span>
+									<span className={styles.commandMenuSpan}>
+										{highlightMatch(chat.title, debouncedSearch)}
+									</span>
 									{chat.matchedText && (
 										<span className={styles.commandMenuSpan2}>
 											...

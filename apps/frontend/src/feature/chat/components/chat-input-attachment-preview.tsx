@@ -1,9 +1,9 @@
 import { AlertTriangle, Loader2, X } from 'lucide-react';
 
-import type { Attachment } from '@/hooks/use-attachment-upload';
 import { AttachmentFileIcon } from './attachment-file-icon';
-import { cn, formatBytes } from '@/lib/utils';
 import styles from './chat-input-attachment-preview.module.css';
+import type { Attachment } from '@/hooks/use-attachment-upload';
+import { cn, formatBytes } from '@/lib/utils';
 
 interface ChatInputAttachmentPreviewProps {
 	attachments: Attachment[];
@@ -15,10 +15,7 @@ export function ChatInputAttachmentPreview({ attachments, rejection, onRemove }:
 	const isVisible = attachments.length > 0 || !!rejection;
 
 	return (
-		<div
-			className={styles.chatInputAttachmentPreviewDiv}
-			style={{ gridTemplateRows: isVisible ? '1fr' : '0fr' }}
-		>
+		<div className={styles.chatInputAttachmentPreviewDiv} style={{ gridTemplateRows: isVisible ? '1fr' : '0fr' }}>
 			<div className={styles.chatInputAttachmentPreviewDiv2}>
 				<div className={styles.chatInputAttachmentPreviewDiv3}>
 					{attachments.map((attachment) =>
@@ -64,16 +61,14 @@ function DocumentPreview({ attachment, onRemove }: { attachment: Attachment; onR
 
 	return (
 		<PreviewShell attachment={attachment} onRemove={onRemove}>
-			<div
-				className={cn(
-					styles.documentPreviewDiv,
-					attachment.error && styles.documentPreviewDiv2,
-				)}
-			>
+			<div className={cn(styles.documentPreviewDiv, attachment.error && styles.documentPreviewDiv2)}>
 				{isUploading ? (
 					<Loader2 className={styles.documentPreviewLoader2} />
 				) : (
-					<AttachmentFileIcon fileName={attachment.name} className={styles.documentPreviewAttachmentFileIcon} />
+					<AttachmentFileIcon
+						fileName={attachment.name}
+						className={styles.documentPreviewAttachmentFileIcon}
+					/>
 				)}
 				<div className={styles.documentPreviewDiv3}>
 					<p className={styles.documentPreviewP}>{attachment.name}</p>

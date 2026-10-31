@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronRight, Lock, Search, TextSearch } from 'lucide-react';
-import type { FileTreeEntry } from '@quarry/shared/types';
 import { FileExplorerIcon } from './file-explorer-icon';
+import styles from './file-tree.module.css';
+import type { FileTreeEntry } from '@quarry/shared/types';
 import { Spinner } from '@/components/ui/spinner';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { matchesOrderedTerms } from '@/lib/path-search';
 import { getAutoExpandKeys, getTreeNodePadding, removeExpandedSubtree } from '@/lib/tree-expansion';
 import { cn } from '@/lib/utils';
-import styles from './file-tree.module.css';
 
 export type ContentMatch = {
 	count: number;
@@ -112,9 +112,7 @@ export function FileTree({
 							aria-label='Search inside files'
 							className={cn(
 								styles.fileTreeButton,
-								isContentSearchEnabled
-									? styles.fileTreeButton2
-									: styles.fileTreeButton3,
+								isContentSearchEnabled ? styles.fileTreeButton2 : styles.fileTreeButton3,
 							)}
 						>
 							<TextSearch className={styles.fileTreeTextSearch} />
@@ -165,11 +163,7 @@ function TreeEmptyState({
 		return null;
 	}
 
-	return (
-		<div className={styles.treeEmptyStateDiv}>
-			{isContentSearchPending ? 'Searching…' : 'No files found'}
-		</div>
-	);
+	return <div className={styles.treeEmptyStateDiv}>{isContentSearchPending ? 'Searching…' : 'No files found'}</div>;
 }
 
 function SearchStatusNote({
@@ -251,11 +245,7 @@ function FileTreeNode({
 						<Lock className={styles.fileTreeNodeLock} aria-label='Read-only' />
 					</SimpleTooltip>
 				)}
-				{contentMatch && (
-					<span className={styles.fileTreeNodeSpan3}>
-						{contentMatch.count}
-					</span>
-				)}
+				{contentMatch && <span className={styles.fileTreeNodeSpan3}>{contentMatch.count}</span>}
 			</button>
 
 			{isDirectory && isExpanded && entry.children && (

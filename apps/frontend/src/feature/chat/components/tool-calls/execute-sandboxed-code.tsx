@@ -3,10 +3,10 @@ import { Streamdown } from 'streamdown';
 import { executeSandboxedCode } from '@quarry/shared/tools';
 import { Box, Code, Copy, Cpu, Database, Package, Save, Terminal } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './execute-sandboxed-code.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { cn } from '@/lib/utils';
-import styles from './execute-sandboxed-code.module.css';
 
 type ViewMode = 'output' | 'code';
 
@@ -72,7 +72,15 @@ export const ExecuteSandboxedCodeToolCall = ({
 			}
 			badge={
 				isSettled && exitCode !== null ? (
-					<span className={cn(hasError ? styles.executeSandboxedCodeToolCallSpan3 : styles.executeSandboxedCodeToolCallSpan4)}>exit {exitCode}</span>
+					<span
+						className={cn(
+							hasError
+								? styles.executeSandboxedCodeToolCallSpan3
+								: styles.executeSandboxedCodeToolCallSpan4,
+						)}
+					>
+						exit {exitCode}
+					</span>
 				) : undefined
 			}
 			actions={isSettled ? actions : []}

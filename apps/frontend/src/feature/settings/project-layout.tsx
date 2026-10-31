@@ -1,9 +1,8 @@
 import { Outlet, useMatches } from '@tanstack/react-router';
+import styles from './project-layout.module.css';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { Empty } from '@/components/ui/empty';
 import { useCurrentProject } from '@/hooks/use-current-project';
-import styles from './project-layout.module.css';
-
 
 declare module '@tanstack/react-router' {
 	interface StaticDataRouteOption {
@@ -23,9 +22,7 @@ export function ProjectPage() {
 				{pageHeader?.title && (
 					<div>
 						<h1 className={styles.projectPageH1}>{pageHeader.title}</h1>
-						{pageHeader.description && (
-							<p className={styles.projectPageP}>{pageHeader.description}</p>
-						)}
+						{pageHeader.description && <p className={styles.projectPageP}>{pageHeader.description}</p>}
 					</div>
 				)}
 				<div className={styles.projectPageDiv2}>

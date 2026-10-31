@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, Copy, Check, Ellipsis, ClipboardCopy, FileText, FileDown, Loader2 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
+import styles from './assistant-message-actions.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { FormEvent, KeyboardEvent } from 'react';
 import type { Chat } from '@/queries/use-chat-query';
@@ -23,7 +24,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { chatApi } from '@/lib/chat-api';
-import styles from './assistant-message-actions.module.css';
 
 export function AssistantMessageActions({
 	message,
@@ -140,7 +140,11 @@ export function AssistantMessageActions({
 					className={styles.assistantMessageActionsButton}
 					aria-label='Copy message'
 				>
-					{isCopied ? <Check className={styles.assistantMessageActionsCheck} /> : <Copy className={styles.assistantMessageActionsCheck} />}
+					{isCopied ? (
+						<Check className={styles.assistantMessageActionsCheck} />
+					) : (
+						<Copy className={styles.assistantMessageActionsCheck} />
+					)}
 				</Button>
 
 				<DropdownMenu>
@@ -155,24 +159,15 @@ export function AssistantMessageActions({
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align='start' className={styles.assistantMessageActionsDropdownMenuContent}>
-						<label
-							className={styles.assistantMessageActionsLabel}
-							onClick={(e) => e.stopPropagation()}
-						>
+						<label className={styles.assistantMessageActionsLabel} onClick={(e) => e.stopPropagation()}>
 							<span>Include errors</span>
 							<Switch checked={includeErrors} onCheckedChange={setIncludeErrors} />
 						</label>
-						<label
-							className={styles.assistantMessageActionsLabel}
-							onClick={(e) => e.stopPropagation()}
-						>
+						<label className={styles.assistantMessageActionsLabel} onClick={(e) => e.stopPropagation()}>
 							<span>Include SQL</span>
 							<Switch checked={includeSql} onCheckedChange={setIncludeSql} />
 						</label>
-						<label
-							className={styles.assistantMessageActionsLabel}
-							onClick={(e) => e.stopPropagation()}
-						>
+						<label className={styles.assistantMessageActionsLabel} onClick={(e) => e.stopPropagation()}>
 							<span>Include Python</span>
 							<Switch checked={includePython} onCheckedChange={setIncludePython} />
 						</label>
@@ -192,7 +187,11 @@ export function AssistantMessageActions({
 								void handleExportPdf();
 							}}
 						>
-							{isExportingPdf ? <Loader2 className={styles.assistantMessageActionsLoader2} /> : <FileDown />}
+							{isExportingPdf ? (
+								<Loader2 className={styles.assistantMessageActionsLoader2} />
+							) : (
+								<FileDown />
+							)}
 							<span>{isExportingPdf ? 'Generating PDF…' : 'Export chat to PDF'}</span>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
@@ -244,7 +243,10 @@ function FeedbackButton({
 			)}
 			aria-label={label}
 		>
-			<Icon key={`icon-${celebrationKey}`} className={cn(styles.assistantMessageActionsCheck, isCelebrating && iconAnimationClassName)} />
+			<Icon
+				key={`icon-${celebrationKey}`}
+				className={cn(styles.assistantMessageActionsCheck, isCelebrating && iconAnimationClassName)}
+			/>
 			{isCelebrating && (
 				<ConfettiBurst
 					key={`confetti-${celebrationKey}`}
@@ -362,7 +364,12 @@ export function FeedbackDialog({
 						className={styles.feedbackDialogTextarea}
 					/>
 
-					<Button variant='primary-gradient' className={styles.feedbackDialogButton} type='submit' disabled={isPending}>
+					<Button
+						variant='primary-gradient'
+						className={styles.feedbackDialogButton}
+						type='submit'
+						disabled={isPending}
+					>
 						Submit
 					</Button>
 				</form>

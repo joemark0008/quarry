@@ -3,6 +3,7 @@ import { Settings, TriangleAlert } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { providerLabel, providerName } from '@quarry/shared/types';
 
+import styles from './chat-input-model-select.module.css';
 import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
@@ -12,7 +13,6 @@ import QuarryIcon from '@/components/icons/quarry-logo-greyscale.svg';
 import { isSameModel, useModelSelection } from '@/hooks/use-model-selection';
 import { usePermissions } from '@/hooks/use-permissions';
 import { getShortcutLabel } from '@/lib/keyboard-shortcuts';
-import styles from './chat-input-model-select.module.css';
 
 /** Listed as an option rather than a link, so that the keyboard reaches it like any other. */
 const MANAGE_MODELS_VALUE = 'manage-models';
@@ -89,10 +89,7 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 			return <ExampleModel />;
 		}
 		return (
-			<Link
-				to='/settings/project/models'
-				className={styles.chatInputModelSelectLink}
-			>
+			<Link to='/settings/project/models' className={styles.chatInputModelSelectLink}>
 				<TriangleAlert className={styles.chatInputModelSelectTriangleAlert} />
 				<span>Configure a model</span>
 			</Link>
@@ -115,16 +112,11 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 
 	if (!canCycleModels) {
 		if (!isAdmin) {
-			return (
-				<div className={styles.chatInputModelSelectDiv}>{singleModel}</div>
-			);
+			return <div className={styles.chatInputModelSelectDiv}>{singleModel}</div>;
 		}
 
 		return (
-			<Link
-				to='/settings/project/models'
-				className={styles.chatInputModelSelectLink2}
-			>
+			<Link to='/settings/project/models' className={styles.chatInputModelSelectLink2}>
 				{singleModel}
 			</Link>
 		);
@@ -147,7 +139,9 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 								<span className={styles.chatInputModelSelectSpan}>{selectedModelName}</span>
 								{usesDefaultModel
 									? resolvedModelName && (
-											<span className={styles.chatInputModelSelectSpan2}>{resolvedModelName}</span>
+											<span className={styles.chatInputModelSelectSpan2}>
+												{resolvedModelName}
+											</span>
 										)
 									: selectedModel && <NamedProviderHint provider={selectedModel.provider} />}
 							</div>
@@ -202,7 +196,12 @@ export function ChatInputModelSelect({ isExample = false }: { isExample?: boolea
 function ExampleModel() {
 	return (
 		<Select value={EXAMPLE_MODEL_VALUE}>
-			<SelectTrigger variant='ghost' className={styles.chatInputModelSelectSelectTrigger} size='sm' aria-label='Model'>
+			<SelectTrigger
+				variant='ghost'
+				className={styles.chatInputModelSelectSelectTrigger}
+				size='sm'
+				aria-label='Model'
+			>
 				<SelectValue>
 					<div className={styles.chatInputModelSelectDiv2}>
 						<QuarryIcon className={styles.exampleModelQuarryIcon} />

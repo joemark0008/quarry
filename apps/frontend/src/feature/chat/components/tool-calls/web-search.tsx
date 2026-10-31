@@ -1,8 +1,8 @@
 import { Globe, ExternalLink } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './web-search.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './web-search.module.css';
 
 interface WebSearchSource {
 	url: string;
@@ -73,21 +73,13 @@ function getBadge(action: WebSearchAction): string | undefined {
 }
 
 const SourceLink = ({ url, title }: { url: string; title?: string | null }) => (
-	<a
-		href={url}
-		target='_blank'
-		rel='noopener noreferrer'
-		className={`${styles.sourceLinkA} group/source`}
-	>
+	<a href={url} target='_blank' rel='noopener noreferrer' className={`${styles.sourceLinkA} group/source`}>
 		<Globe size={14} className={styles.sourceLinkGlobe} />
 		<div className={styles.sourceLinkDiv}>
 			{title && <span className={styles.sourceLinkSpan}>{title}</span>}
 			<span className={styles.sourceLinkSpan2}>{getDomain(url)}</span>
 		</div>
-		<ExternalLink
-			size={12}
-			className={styles.sourceLinkExternalLink}
-		/>
+		<ExternalLink size={12} className={styles.sourceLinkExternalLink} />
 	</a>
 );
 

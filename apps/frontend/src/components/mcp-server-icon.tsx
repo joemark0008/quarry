@@ -1,8 +1,8 @@
+import styles from './mcp-server-icon.module.css';
 import McpIcon from '@/components/icons/model-context-protocol.svg';
 import { Favicon } from '@/components/ui/favicon';
 import { useMcpContext } from '@/contexts/mcp';
 import { cn } from '@/lib/utils';
-import styles from './mcp-server-icon.module.css';
 
 export const McpServerIcon = ({ server, className }: { server?: string | null; className?: string }) => {
 	const { servers } = useMcpContext();

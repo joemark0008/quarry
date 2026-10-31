@@ -127,7 +127,7 @@
 	color: var(--app-muted);
 }
 .settingsCardP2 {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .settingsCardP3 {

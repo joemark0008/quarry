@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DEFAULT_SEMANTIC_LAYER_MODE, SEMANTIC_LAYER_MODES } from '@quarry/shared/types';
+import styles from './semantic-layer.module.css';
 import type { SemanticLayerMode } from '@quarry/shared/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { projectApi } from '@/lib/project-api';
-import styles from './semantic-layer.module.css';
 
 interface SettingsSemanticLayerProps {
 	isAdmin: boolean;

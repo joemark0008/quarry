@@ -1,9 +1,9 @@
 import { BULK_ITEMS_LIMIT } from '@quarry/shared';
 import { ArchiveIcon, ArchiveRestoreIcon, FolderInput, MessageSquarePlus, X } from 'lucide-react';
+import styles from './stories-selection-bar.module.css';
 import { Button } from '@/components/ui/button';
 import { useContentCenteredStyle } from '@/hooks/use-sidebar-content-offset';
 import { cn } from '@/lib/utils';
-import styles from './stories-selection-bar.module.css';
 
 export function StoriesSelectionBar({
 	selectedCount,

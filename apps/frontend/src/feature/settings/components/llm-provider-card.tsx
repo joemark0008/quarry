@@ -1,10 +1,10 @@
 import { Pencil, Trash2 } from 'lucide-react';
 import { getDefaultModelId, getProviderAuth } from '@quarry/api/agent/providers/provider-meta';
 import { providerKind, providerLabel, providerLabels, providerName } from '@quarry/shared/types';
-import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
-import type { LlmProvider } from '@quarry/shared/types';
-import { Button } from '@/components/ui/button';
 import styles from './llm-provider-card.module.css';
+import type { LlmProvider } from '@quarry/shared/types';
+import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
+import { Button } from '@/components/ui/button';
 
 interface ProviderCardProps {
 	provider: LlmProvider;
@@ -45,18 +45,17 @@ export function ProviderCard({
 			<div className={styles.providerCardDiv2}>
 				<div className={styles.providerCardDiv3}>
 					<div className={styles.providerCardDiv4}>
-						<LlmProviderIcon provider={provider} baseUrl={baseUrl || envBaseUrl} className={styles.providerCardLlmProviderIcon} />
+						<LlmProviderIcon
+							provider={provider}
+							baseUrl={baseUrl || envBaseUrl}
+							className={styles.providerCardLlmProviderIcon}
+						/>
 						<span className={styles.providerCardSpan}>{providerLabel(provider)}</span>
 						{providerName(provider) && (
-							<span className={styles.providerCardSpan2}>
-								{providerLabels[providerKind(provider)]}
-							</span>
+							<span className={styles.providerCardSpan2}>{providerLabels[providerKind(provider)]}</span>
 						)}
 						{badges.map((badge) => (
-							<span
-								key={badge}
-								className={styles.providerCardSpan3}
-							>
+							<span key={badge} className={styles.providerCardSpan3}>
 								{badge}
 							</span>
 						))}

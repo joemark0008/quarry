@@ -1,12 +1,13 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { useMemo } from 'react';
+import { SubagentReport } from './subagent-report';
+import { SubagentWork } from './subagent-work';
+import styles from './subagent-conversation.module.css';
 import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { Chat } from '@/queries/use-chat-query';
 import { taskTitle } from '@/feature/chat/components/tool-calls/task';
 import { UserMessageBubble } from '@/feature/chat/components/chat-messages/user-message';
-import { SubagentReport } from './subagent-report';
-import { SubagentWork } from './subagent-work';
 import { Button } from '@/components/ui/button';
 import { Conversation, ConversationContent, ConversationScrollButton } from '@/components/ui/conversation';
 import { Spinner } from '@/components/ui/spinner';
@@ -14,7 +15,6 @@ import { TextShimmer } from '@/components/ui/text-shimmer';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { isToolSettled } from '@/lib/ai';
 import { useChatQuery } from '@/queries/use-chat-query';
-import styles from './subagent-conversation.module.css';
 
 export type SubagentPart = UIToolPart<'task'>;
 
@@ -50,11 +50,7 @@ function Header({ chatId, chatTitle, title }: { chatId: string; chatTitle: strin
 	return (
 		<div className={styles.headerDiv}>
 			<nav aria-label='Conversation navigation' className={styles.headerNav}>
-				<Link
-					to='/$chatId'
-					params={{ chatId }}
-					className={styles.headerLink}
-				>
+				<Link to='/$chatId' params={{ chatId }} className={styles.headerLink}>
 					{chatTitle ?? 'Conversation'}
 				</Link>
 				<ChevronRight className={styles.headerChevronRight} />
@@ -76,16 +72,17 @@ export function SubagentConversationBody({ part, isSettled }: { part: SubagentPa
 
 	return (
 		<Conversation initial={false}>
-			<ConversationContent className={styles.subagentConversationBodyConversationContent} data-selection-container>
+			<ConversationContent
+				className={styles.subagentConversationBodyConversationContent}
+				data-selection-container
+			>
 				<div className={styles.subagentConversationBodyDiv}>
 					<UserMessageBubble message={promptMessage} />
 				</div>
 				<div className={styles.subagentConversationBodyDiv2}>
 					<SubagentWork output={part.output} isSettled={isSettled} />
 					{part.errorText ? (
-						<pre className={styles.subagentConversationBodyPre}>
-							{part.errorText}
-						</pre>
+						<pre className={styles.subagentConversationBodyPre}>{part.errorText}</pre>
 					) : isSettled && report ? (
 						<SubagentReport report={report} />
 					) : (

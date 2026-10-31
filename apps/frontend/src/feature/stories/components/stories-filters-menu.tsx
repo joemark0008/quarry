@@ -1,4 +1,5 @@
 import { Activity, Archive, ChevronDown, Globe, ListFilter, ShieldCheck, Star, X } from 'lucide-react';
+import styles from './stories-filters-menu.module.css';
 import type { LucideIcon } from 'lucide-react';
 import type { StoriesFilters, StoriesFormatFilter, StoriesOwnerFilter } from '@/lib/stories-page';
 import { countActiveFilters, DEFAULT_FILTERS } from '@/lib/stories-page';
@@ -15,7 +16,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import styles from './stories-filters-menu.module.css';
 
 export const TOOLBAR_BUTTON_CLASS = styles.tOOLBARBUTTONCLASS;
 
@@ -58,14 +58,13 @@ export function StoriesFiltersMenu({ filters, onFiltersChange, showArchived, onS
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='ghost' className={cn(TOOLBAR_BUTTON_CLASS, activeCount > 0 && styles.storiesFiltersMenuButton)}>
+				<Button
+					variant='ghost'
+					className={cn(TOOLBAR_BUTTON_CLASS, activeCount > 0 && styles.storiesFiltersMenuButton)}
+				>
 					<ListFilter />
 					Filters
-					{activeCount > 0 && (
-						<span className={styles.storiesFiltersMenuSpan}>
-							{activeCount}
-						</span>
-					)}
+					{activeCount > 0 && <span className={styles.storiesFiltersMenuSpan}>{activeCount}</span>}
 					<ChevronDown className={styles.storiesFiltersMenuChevronDown} />
 				</Button>
 			</DropdownMenuTrigger>
@@ -166,11 +165,7 @@ export function StoriesActiveFilters({ filters, onFiltersChange, showArchived, o
 				<FilterChip label={ownerChipLabel} onRemove={() => onFiltersChange({ ...filters, owner: 'anyone' })} />
 			)}
 			{activeCount > 1 && (
-				<button
-					type='button'
-					onClick={clearAll}
-					className={styles.storiesActiveFiltersButton}
-				>
+				<button type='button' onClick={clearAll} className={styles.storiesActiveFiltersButton}>
 					Clear all
 				</button>
 			)}

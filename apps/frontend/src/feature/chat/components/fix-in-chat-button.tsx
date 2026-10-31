@@ -1,8 +1,8 @@
 import { MessageSquare } from 'lucide-react';
 
+import styles from './fix-in-chat-button.module.css';
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { Button } from '@/components/ui/button';
-import styles from './fix-in-chat-button.module.css';
 
 export function FixInChatButton({ message, className }: { message: string; className?: string }) {
 	const agent = useOptionalAgentContext();

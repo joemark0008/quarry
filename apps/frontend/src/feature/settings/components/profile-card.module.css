@@ -20,7 +20,7 @@
 	color: var(--app-text);
 }
 .userProfileCardP {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }

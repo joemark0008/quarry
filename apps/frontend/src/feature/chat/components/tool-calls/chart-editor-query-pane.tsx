@@ -1,10 +1,10 @@
 import { ArrowLeft } from 'lucide-react';
+import styles from './chart-editor-query-pane.module.css';
 import type { executeSql } from '@quarry/shared/tools';
 
 import { SqlQueryEditor } from '@/feature/stories/components/side-panel/sql-editor';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import styles from './chart-editor-query-pane.module.css';
 
 interface ChartEditorQueryPaneProps {
 	input: executeSql.Input;
@@ -28,7 +28,13 @@ export function ChartEditorQueryPane({
 		<div className={cn(styles.chartEditorQueryPaneDiv, className)}>
 			<div className={styles.chartEditorQueryPaneDiv2}>
 				<span className={styles.chartEditorQueryPaneSpan}>Query editor</span>
-				<Button type='button' variant='ghost' size='sm' className={styles.chartEditorQueryPaneButton} onClick={onClose}>
+				<Button
+					type='button'
+					variant='ghost'
+					size='sm'
+					className={styles.chartEditorQueryPaneButton}
+					onClick={onClose}
+				>
 					<ArrowLeft className={styles.chartEditorQueryPaneArrowLeft} /> Back to chart
 				</Button>
 			</div>

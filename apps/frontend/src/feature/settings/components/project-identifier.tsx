@@ -1,8 +1,8 @@
 import { Check, Copy } from 'lucide-react';
 
+import styles from './project-identifier.module.css';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import styles from './project-identifier.module.css';
 
 export function ProjectIdentifier({ projectId }: { projectId: string }) {
 	const { isCopied, copy } = useCopyToClipboard();
@@ -18,7 +18,11 @@ export function ProjectIdentifier({ projectId }: { projectId: string }) {
 				aria-label={`Copy project ID ${projectId}`}
 				onClick={() => void copy(projectId)}
 			>
-				{isCopied ? <Check className={styles.projectIdentifierCheck} /> : <Copy className={styles.projectIdentifierCopy} />}
+				{isCopied ? (
+					<Check className={styles.projectIdentifierCheck} />
+				) : (
+					<Copy className={styles.projectIdentifierCopy} />
+				)}
 			</Button>
 		</div>
 	);

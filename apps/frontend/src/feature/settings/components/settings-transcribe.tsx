@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2, Mic, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import styles from './settings-transcribe.module.css';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
@@ -9,7 +10,6 @@ import { Switch } from '@/components/ui/switch';
 import { capitalize } from '@/lib/utils';
 import { transcribeAudio } from '@/lib/transcribe';
 import { projectApi } from '@/lib/project-api';
-import styles from './settings-transcribe.module.css';
 
 const TEST_DURATION_MS = 5000;
 
@@ -167,9 +167,9 @@ export function SettingsTranscribe({ isAdmin }: SettingsTranscribeProps) {
 
 								{testResult && (
 									<div
-										className={`${styles.settingsTranscribeDiv5} ${testResult.success
-												? styles.state100
-												: styles.state101}`}
+										className={`${styles.settingsTranscribeDiv5} ${
+											testResult.success ? styles.state100 : styles.state101
+										}`}
 									>
 										{testResult.success ? (
 											<p>

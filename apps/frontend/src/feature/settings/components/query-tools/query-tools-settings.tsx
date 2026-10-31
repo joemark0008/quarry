@@ -1,6 +1,7 @@
 import { Pencil, Plus, TerminalSquare, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { QueryToolEditor } from './query-tool-editor';
+import styles from './query-tools-settings.module.css';
 import type { ProjectQueryTool } from '@/lib/api-types';
 
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import { Switch } from '@/components/ui/switch';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
 import { useQueryToolMutations, useQueryToolsQuery } from '@/queries/use-query-tools';
-import styles from './query-tools-settings.module.css';
 
 type EditorState = { mode: 'create'; sql?: string } | { mode: 'edit'; tool: ProjectQueryTool } | null;
 
@@ -79,9 +79,7 @@ export function QueryToolsSettings({
 							</div>
 							<div className={styles.queryToolsSettingsDiv5}>
 								<div className={styles.queryToolsSettingsDiv6}>
-									<span className={styles.queryToolsSettingsSpan}>
-										{tool.agentToolName}
-									</span>
+									<span className={styles.queryToolsSettingsSpan}>{tool.agentToolName}</span>
 									{tool.parameters.length > 0 && (
 										<span className={styles.queryToolsSettingsSpan2}>
 											({tool.parameters.map((parameter) => parameter.name).join(', ')})

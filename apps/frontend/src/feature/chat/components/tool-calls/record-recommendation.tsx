@@ -1,8 +1,8 @@
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './record-recommendation.module.css';
 import type { ToolCallComponentProps } from '.';
 import { Badge } from '@/components/ui/badge';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './record-recommendation.module.css';
 
 interface RecommendationInsight {
 	signalType: string;
@@ -42,7 +42,8 @@ export const RecordRecommendationToolCall = ({ toolPart }: ToolCallComponentProp
 					{input.summary && <p className={styles.recordRecommendationToolCallP}>{input.summary}</p>}
 					{input.suggestedAction && (
 						<p>
-							<span className={styles.recordRecommendationToolCallSpan2}>Fix:</span> {input.suggestedAction}
+							<span className={styles.recordRecommendationToolCallSpan2}>Fix:</span>{' '}
+							{input.suggestedAction}
 						</p>
 					)}
 					{input.suggestedFile && (

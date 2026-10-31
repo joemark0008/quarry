@@ -1,9 +1,9 @@
 import { HardDriveDownload } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './write.module.css';
 import type { ToolCallComponentProps } from '.';
 import { formatBytes } from '@/lib/utils';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './write.module.css';
 
 export const WriteToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'write'>) => {
 	const { isSettled } = useToolCallContext();
@@ -16,8 +16,7 @@ export const WriteToolCall = ({ toolPart: { output, input } }: ToolCallComponent
 			title={
 				<>
 					<HardDriveDownload size={13} className={styles.writeToolCallHardDriveDownload} />
-					{isSettled ? 'Saved' : 'Saving...'}{' '}
-					<code className={styles.writeToolCallCode}>{fileName}</code>
+					{isSettled ? 'Saved' : 'Saving...'} <code className={styles.writeToolCallCode}>{fileName}</code>
 					{' to your files'}
 				</>
 			}
@@ -25,14 +24,8 @@ export const WriteToolCall = ({ toolPart: { output, input } }: ToolCallComponent
 		>
 			{input?.content !== undefined && (
 				<div className={styles.writeToolCallDiv}>
-					{filePath && (
-						<div className={styles.writeToolCallDiv2}>
-							{filePath}
-						</div>
-					)}
-					<pre className={styles.writeToolCallPre}>
-						{input.content}
-					</pre>
+					{filePath && <div className={styles.writeToolCallDiv2}>{filePath}</div>}
+					<pre className={styles.writeToolCallPre}>{input.content}</pre>
 				</div>
 			)}
 		</ToolCallWrapper>

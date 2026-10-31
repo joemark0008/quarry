@@ -1,6 +1,7 @@
 import { MantineProvider } from '@mantine/core';
 import { createElement } from 'react';
 import { vi } from 'vitest';
+import type * as TestingLibrary from '@testing-library/react';
 import type { ReactNode } from 'react';
 
 /** Mantine reads these on mount; jsdom has neither. */
@@ -24,11 +25,15 @@ if (typeof window !== 'undefined') {
 
 /** Every rendered tree gets the provider the app has at its root. */
 vi.mock('@testing-library/react', async (importOriginal) => {
-	const actual = await importOriginal<typeof import('@testing-library/react')>();
+	const actual = await importOriginal<typeof TestingLibrary>();
 	const wrapIn = (Inner?: React.ComponentType<{ children: ReactNode }>) =>
 		function TestProviders({ children }: { children: ReactNode }) {
 			const content = Inner ? createElement(Inner, null, children) : children;
-			return createElement(MantineProvider, { env: 'test', withCssVariables: false, withGlobalClasses: false }, content);
+			return createElement(
+				MantineProvider,
+				{ env: 'test', withCssVariables: false, withGlobalClasses: false },
+				content,
+			);
 		};
 	return {
 		...actual,

@@ -1,6 +1,6 @@
+import styles from './settings-toggle-row.module.css';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import styles from './settings-toggle-row.module.css';
 
 interface SettingsControlRowProps {
 	label: string;

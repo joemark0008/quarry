@@ -15,12 +15,13 @@ import {
 	Star,
 	Trash2,
 } from 'lucide-react';
+import { FolderThumbnail } from './story-thumbnail';
+import styles from './stories-folder-card.module.css';
 import type { DragEvent, MouseEvent } from 'react';
 import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { FolderItem } from '@/lib/stories-page';
 import { isSystemFolder } from '@/lib/stories-page';
 import { GRID_CARD_CLASS, GridCardFooter, LINES_CARD_CLASS } from '@/components/item-card';
-import { FolderThumbnail } from './story-thumbnail';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -36,7 +37,6 @@ import { hasAnyStoryReference, setStoryDragData } from '@/lib/story-reference';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { cn } from '@/lib/utils';
-import styles from './stories-folder-card.module.css';
 
 export type FolderDisplayMode = StoryPanelDisplayMode | 'grid-large';
 
@@ -168,13 +168,9 @@ export function FolderCard({
 							<span className={styles.folderCardSpan}>{folder.name}</span>
 							<FolderStoryCount count={folder.storyCount} />
 						</div>
-						<div className={styles.folderCardDiv8}>
-							{currentUserName}
-						</div>
+						<div className={styles.folderCardDiv8}>{currentUserName}</div>
 						<div className={styles.folderCardDiv9} />
-						<div className={styles.folderCardDiv10}>
-							{formatRelativeDate(folder.updatedAt)}
-						</div>
+						<div className={styles.folderCardDiv10}>{formatRelativeDate(folder.updatedAt)}</div>
 					</Link>
 				</div>
 				<div className={styles.folderCardDiv11}>
@@ -194,12 +190,7 @@ export function FolderCard({
 								</div>
 							)}
 							<div
-								className={cn(
-									styles.folderCardDiv13,
-									!isViewer &&
-										canManage &&
-										styles.folderCardDiv14,
-								)}
+								className={cn(styles.folderCardDiv13, !isViewer && canManage && styles.folderCardDiv14)}
 								onPointerDown={(e) => e.stopPropagation()}
 							>
 								<FolderFavoriteButton folder={folder} />
@@ -268,10 +259,7 @@ export function FolderCard({
 							{!selectionActive && <FolderFavoriteButton folder={folder} />}
 						</div>
 						{!isViewer && !selectionActive && (
-							<div
-								className={styles.folderCardDiv21}
-								onPointerDown={(e) => e.stopPropagation()}
-							>
+							<div className={styles.folderCardDiv21} onPointerDown={(e) => e.stopPropagation()}>
 								<FolderKebab
 									folder={folder}
 									canManage={canManage}
@@ -289,11 +277,18 @@ export function FolderCard({
 		);
 	}
 
-	const contentLeftPadding = !canSelect ? styles.contentLeftPadding : selected || selectionActive ? styles.contentLeftPadding2 : styles.contentLeftPadding3;
+	const contentLeftPadding = !canSelect
+		? styles.contentLeftPadding
+		: selected || selectionActive
+			? styles.contentLeftPadding2
+			: styles.contentLeftPadding3;
 	const contentRightPadding =
 		selectionActive || isSystemFolder(folder)
 			? styles.contentRightPadding2
-			: cn(isFolderFavorited ? styles.contentRightPadding : styles.contentRightPadding2, styles.contentRightPadding3);
+			: cn(
+					isFolderFavorited ? styles.contentRightPadding : styles.contentRightPadding2,
+					styles.contentRightPadding3,
+				);
 
 	return (
 		<div
@@ -311,24 +306,14 @@ export function FolderCard({
 			onClick={selectionActive && canSelect ? handleToggleSelect : undefined}
 		>
 			{selectionActive ? (
-				<div
-					className={cn(
-						styles.folderCardDiv23,
-						contentLeftPadding,
-						contentRightPadding,
-					)}
-				>
+				<div className={cn(styles.folderCardDiv23, contentLeftPadding, contentRightPadding)}>
 					<FolderCardLabel folder={folder} />
 				</div>
 			) : (
 				<Link
 					to='/stories'
 					search={{ folderId: folder.id }}
-					className={cn(
-						styles.folderCardDiv23,
-						contentLeftPadding,
-						contentRightPadding,
-					)}
+					className={cn(styles.folderCardDiv23, contentLeftPadding, contentRightPadding)}
 					onClick={handleLinkClick}
 				>
 					<FolderCardLabel folder={folder} />
@@ -337,10 +322,7 @@ export function FolderCard({
 			{!isSystemFolder(folder) && (
 				<>
 					{canSelect && (
-						<div
-							className={styles.folderCardDiv24}
-							onPointerDown={(e) => e.stopPropagation()}
-						>
+						<div className={styles.folderCardDiv24} onPointerDown={(e) => e.stopPropagation()}>
 							<FolderCheckbox
 								selected={selected}
 								visible={selected || selectionActive}
@@ -364,11 +346,7 @@ export function FolderCard({
 								</div>
 							)}
 							<div
-								className={cn(
-									styles.folderCardDiv26,
-									!isViewer &&
-										styles.folderCardDiv14,
-								)}
+								className={cn(styles.folderCardDiv26, !isViewer && styles.folderCardDiv14)}
 								onPointerDown={(e) => e.stopPropagation()}
 							>
 								<FolderFavoriteButton folder={folder} />
@@ -403,7 +381,11 @@ function FolderCheckbox({
 				selected && styles.folderCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className={styles.folderCardLock} /> : <Circle className={styles.folderCardLock} />}
+			{selected ? (
+				<CircleCheck className={styles.folderCardLock} />
+			) : (
+				<Circle className={styles.folderCardLock} />
+			)}
 		</button>
 	);
 }
@@ -429,9 +411,7 @@ function FolderFavoriteButton({ folder }: { folder: FolderItem }) {
 				disabled={favorite.isPending}
 				className={cn(
 					styles.folderFavoriteButtonButton,
-					isFavorited
-						? styles.folderFavoriteButtonButton2
-						: styles.folderFavoriteButtonButton3,
+					isFavorited ? styles.folderFavoriteButtonButton2 : styles.folderFavoriteButtonButton3,
 				)}
 			>
 				<Star className={styles.folderCardLock} />

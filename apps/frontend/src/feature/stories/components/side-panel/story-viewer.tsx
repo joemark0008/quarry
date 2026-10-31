@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { parseStoryTabs, stripStoryTabsMarkup } from '@quarry/shared/story-tabs';
-import { ShareStoryDialog } from '@/components/share-dialog.story.tsx';
-import { StoryUnsavedChangesDialog } from '@/feature/stories/components/story-unsaved-changes-dialog';
 import { StoryEditor } from './story-editor';
 import { LiveStorySettingsDialog } from './live-story-settings-dialog';
 import { ArchivedBanner } from './story-archived-banner';
@@ -12,6 +10,13 @@ import { StoryPreview } from './story-preview';
 import { StoryCodeView } from './story-code-view';
 import { StoryTabsBar } from './story-tabs-bar';
 import { StoryTabbedEditor } from './story-tabbed-editor';
+import styles from './story-viewer.module.css';
+import type { ShareSource, StoryFormat } from '@quarry/shared/types';
+import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
+import type { Editor as TiptapEditor } from '@tiptap/react';
+import type { StoryCodeViewHandle } from './story-code-view';
+import { ShareStoryDialog } from '@/components/share-dialog.story.tsx';
+import { StoryUnsavedChangesDialog } from '@/feature/stories/components/story-unsaved-changes-dialog';
 import { useStoryViewerAgentState } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-agent-state';
 import { useStoryViewerContent } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-content';
 import { useStoryViewerEnlarge } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-enlarge';
@@ -22,10 +27,6 @@ import { useStoryViewerSwitchStory } from '@/feature/stories/components/side-pan
 import { useStoryViewerVersionActions } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-version-actions';
 import { useStoryViewerVersions } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-versions';
 import { useStoryViewerViewMode } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-view-mode';
-import type { ShareSource, StoryFormat } from '@quarry/shared/types';
-import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
-import type { Editor as TiptapEditor } from '@tiptap/react';
-import type { StoryCodeViewHandle } from './story-code-view';
 import { CustomStoryViewer } from '@/feature/stories/components/custom-story/custom-story-viewer';
 import { ReadonlyCustomStoryViewer } from '@/feature/stories/components/custom-story/readonly-custom-story-viewer';
 import { MentionedStoriesProvider } from '@/contexts/mentioned-stories';
@@ -47,7 +48,6 @@ import { useRegisterStoryBeforeAgentSend } from '@/contexts/story-before-agent-s
 import { StoryThemeProvider, useStoryThemeForCurrentMode } from '@/feature/stories/components/story-theme-provider';
 import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-viewer.module.css';
 
 interface StoryViewerProps {
 	chatId: string;
@@ -456,10 +456,7 @@ function ClassicStoryViewer({ chatId, storySlug, isReadonlyMode: readonlyProp, i
 						)
 					) : viewMode === 'edit' ? (
 						<StoryEmbedDataProvider value={versionQueryData}>
-							<StoryThemeProvider
-								theme={storyTheme}
-								className={styles.contentStoryThemeProvider}
-							>
+							<StoryThemeProvider theme={storyTheme} className={styles.contentStoryThemeProvider}>
 								{isEditTabbedStory ? (
 									<StoryTabbedEditor
 										code={editCode}

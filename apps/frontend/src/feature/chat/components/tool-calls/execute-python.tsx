@@ -3,9 +3,9 @@ import { Streamdown } from 'streamdown';
 import { Code, Copy, Terminal } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { ToolOutputFallback } from './tool-output-fallback';
+import styles from './execute-python.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './execute-python.module.css';
 
 type ViewMode = 'output' | 'code';
 

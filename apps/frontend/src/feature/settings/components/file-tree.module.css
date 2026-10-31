@@ -152,7 +152,7 @@
 	gap: 0.375rem;
 	padding-block: 0.25rem;
 	padding-right: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .fileTreeNodeButton2 {

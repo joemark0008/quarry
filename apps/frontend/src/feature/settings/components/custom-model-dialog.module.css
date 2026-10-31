@@ -18,7 +18,7 @@
 	gap: 0.5rem;
 }
 .customModelDialogLabel {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;

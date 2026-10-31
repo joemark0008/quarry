@@ -1,6 +1,6 @@
+import styles from './confetti-burst.module.css';
 import type { CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
-import styles from './confetti-burst.module.css';
 
 const DEFAULT_CONFETTI_COLORS = [
 	'var(--chart-1)',

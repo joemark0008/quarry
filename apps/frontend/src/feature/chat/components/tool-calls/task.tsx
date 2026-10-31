@@ -1,6 +1,7 @@
 import { task } from '@quarry/shared/tools';
 import { ArrowUpRight } from 'lucide-react';
 
+import styles from './task.module.css';
 import type { ToolCallComponentProps } from '.';
 
 import { SubagentLink } from '@/feature/chat/components/subagent/subagent-link';
@@ -11,7 +12,6 @@ import { useIsInToolGroup } from '@/contexts/tool-group';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { cn } from '@/lib/utils';
-import styles from './task.module.css';
 
 /** A subagent task summarised in the conversation; clicking it opens the run as its own conversation. */
 export const TaskToolCall = ({
@@ -62,17 +62,10 @@ interface RunSummary {
 const Card = ({ summary }: { summary: RunSummary }) => {
 	const hasError = !!summary.errorText;
 	return (
-		<div
-			className={cn(
-				`${styles.cardDiv} bg-backgroundSecondary/30`,
-				summary.canOpen && styles.cardDiv2,
-			)}
-		>
+		<div className={cn(`${styles.cardDiv} bg-backgroundSecondary/30`, summary.canOpen && styles.cardDiv2)}>
 			<div className={styles.cardDiv3}>
 				<StatusIcon summary={summary} />
-				<span className={cn(styles.cardSpan, !summary.isSettled && styles.cardSpan2)}>
-					{summary.title}
-				</span>
+				<span className={cn(styles.cardSpan, !summary.isSettled && styles.cardSpan2)}>{summary.title}</span>
 				<span className={styles.cardSpan3}>{summary.work}</span>
 				{summary.canOpen && <ArrowUpRight className={styles.cardArrowUpRight} />}
 			</div>

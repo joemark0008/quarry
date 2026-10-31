@@ -18,13 +18,13 @@ import {
 	topLevelBlockPositions,
 } from './story-block-selection';
 import { StoryTabsBar } from './story-tabs-bar';
+import styles from './story-tabbed-editor.module.css';
 import type { DragOrigin } from './story-block-selection';
 import type { StoryEditorDragControls } from './story-editor-drag-context';
 import type { Node as PMNode } from '@tiptap/pm/model';
 import type { MutableRefObject } from 'react';
 import type { Editor as TiptapEditor } from '@tiptap/react';
 import { StoryEditorSelectionActionsProvider } from '@/contexts/story-editor-selection-actions';
-import styles from './story-tabbed-editor.module.css';
 
 interface StoryTabbedEditorProps {
 	code: string;

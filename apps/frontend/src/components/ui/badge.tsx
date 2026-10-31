@@ -1,35 +1,31 @@
 import * as React from 'react';
+import styles from './badge.module.css';
+import type { VariantProps } from '@/lib/utils';
 import { Slot } from '@/components/ui/slot';
 
 import { classVariants, cn } from '@/lib/utils';
-import type { VariantProps } from '@/lib/utils';
-import styles from './badge.module.css';
 
-const badgeVariants = classVariants(
-	styles.badgeVariants,
-	{
-		variants: {
-			variant: {
-				default: styles.badgeVariantsDefault,
-				secondary: styles.badgeVariantsSecondary,
-				destructive:
-					styles.badgeVariantsDestructive,
-				outline: styles.badgeVariantsOutline,
-				ghost: styles.badgeVariantsGhost,
-				link: styles.badgeVariantsLink,
-				admin: styles.badgeVariantsAdmin,
-				user: styles.badgeVariantsUser,
-				viewer: styles.badgeVariantsViewer,
-				context_admin: styles.badgeVariantsContextAdmin,
-				success: styles.badgeVariantsSuccess,
-				error: styles.badgeVariantsError,
-			},
-		},
-		defaultVariants: {
-			variant: 'default',
+const badgeVariants = classVariants(styles.badgeVariants, {
+	variants: {
+		variant: {
+			default: styles.badgeVariantsDefault,
+			secondary: styles.badgeVariantsSecondary,
+			destructive: styles.badgeVariantsDestructive,
+			outline: styles.badgeVariantsOutline,
+			ghost: styles.badgeVariantsGhost,
+			link: styles.badgeVariantsLink,
+			admin: styles.badgeVariantsAdmin,
+			user: styles.badgeVariantsUser,
+			viewer: styles.badgeVariantsViewer,
+			context_admin: styles.badgeVariantsContextAdmin,
+			success: styles.badgeVariantsSuccess,
+			error: styles.badgeVariantsError,
 		},
 	},
-);
+	defaultVariants: {
+		variant: 'default',
+	},
+});
 
 function Badge({
 	className,

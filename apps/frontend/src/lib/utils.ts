@@ -1,7 +1,6 @@
 import { clsx } from 'clsx';
-import type { ClassValue } from 'clsx';
-
 import styles from './utils.module.css';
+import type { ClassValue } from 'clsx';
 
 export function cn(...inputs: Array<ClassValue>) {
 	return clsx(inputs);

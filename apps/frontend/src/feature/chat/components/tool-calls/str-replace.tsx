@@ -1,8 +1,8 @@
 import { FilePenLine } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './str-replace.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './str-replace.module.css';
 
 export const StrReplaceToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'str_replace'>) => {
 	const { isSettled } = useToolCallContext();
@@ -23,11 +23,7 @@ export const StrReplaceToolCall = ({ toolPart: { output, input } }: ToolCallComp
 		>
 			{input?.old_string !== undefined && (
 				<div className={styles.strReplaceToolCallDiv}>
-					{filePath && (
-						<div className={styles.strReplaceToolCallDiv2}>
-							{filePath}
-						</div>
-					)}
+					{filePath && <div className={styles.strReplaceToolCallDiv2}>{filePath}</div>}
 					<DiffLines text={input.old_string} kind='removed' />
 					{input.new_string !== undefined && <DiffLines text={input.new_string} kind='added' />}
 				</div>
@@ -38,10 +34,7 @@ export const StrReplaceToolCall = ({ toolPart: { output, input } }: ToolCallComp
 
 const DiffLines = ({ text, kind }: { text: string; kind: 'removed' | 'added' }) => {
 	const marker = kind === 'removed' ? '-' : '+';
-	const tone =
-		kind === 'removed'
-			? styles.state100
-			: styles.state101;
+	const tone = kind === 'removed' ? styles.state100 : styles.state101;
 
 	return (
 		<pre className={`${styles.diffLinesPre} ${tone}`}>

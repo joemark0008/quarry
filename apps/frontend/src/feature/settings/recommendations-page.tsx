@@ -1,10 +1,31 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
-import { ArrowDown01, ArrowDownUp, ArrowDownWideNarrow, ArrowUp01, ArrowUpWideNarrow, AlertTriangle, Check, ClockArrowDown, ClockArrowUp, Copy, GitPullRequest, ListChecks, ListFilter, Loader2, X } from 'lucide-react';
+import {
+	ArrowDown01,
+	ArrowDownUp,
+	ArrowDownWideNarrow,
+	ArrowUp01,
+	ArrowUpWideNarrow,
+	AlertTriangle,
+	Check,
+	ClockArrowDown,
+	ClockArrowUp,
+	Copy,
+	GitPullRequest,
+	ListChecks,
+	ListFilter,
+	Loader2,
+	X,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { selectBackgroundModel } from '@quarry/shared';
-import { CONTEXT_RECOMMENDATION_CATEGORIES, CONTEXT_RECOMMENDATION_CATEGORY_LABELS, MAX_TRIGGER_CHATS, normalizeContextRecommendationCategory } from '@quarry/shared/context-recommendation';
+import {
+	CONTEXT_RECOMMENDATION_CATEGORIES,
+	CONTEXT_RECOMMENDATION_CATEGORY_LABELS,
+	MAX_TRIGGER_CHATS,
+	normalizeContextRecommendationCategory,
+} from '@quarry/shared/context-recommendation';
+import styles from './recommendations-page.module.css';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { ApiOutputs } from '@/lib/api-types';
@@ -13,7 +34,14 @@ import { RecommendationCard } from '@/feature/settings/components/recommendation
 import { RecommendationRepoCard } from '@/feature/settings/components/recommendation-repo-card';
 import { SidePanel } from '@/feature/stories/components/side-panel/side-panel';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Empty } from '@/components/ui/empty';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -31,10 +59,8 @@ import { cn } from '@/lib/utils';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
 import { usePublicConfig } from '@/hooks/use-public-config';
 import { projectApi } from '@/lib/project-api';
-import styles from './recommendations-page.module.css';
 
 const Route = getRouteApi('/_protected/settings/recommendations');
-
 
 const PAGE_DESCRIPTION = "Diagnostic suggestions for improving this project's context, mined from real usage.";
 
@@ -908,11 +934,7 @@ function BatchActionBar({ selectedIds, recommendations, onSelectAll, onClear }: 
 	return (
 		<div
 			style={centeredStyle}
-			className={cn(
-				styles.batchActionBarDiv,
-				styles.batchActionBarDiv2,
-				styles.batchActionBarDiv3,
-			)}
+			className={cn(styles.batchActionBarDiv, styles.batchActionBarDiv2, styles.batchActionBarDiv3)}
 		>
 			<span className={styles.batchActionBarSpan}>
 				{eligibleIds.length} commit{eligibleIds.length === 1 ? '' : 's'}
@@ -969,13 +991,9 @@ function BatchActionBar({ selectedIds, recommendations, onSelectAll, onClear }: 
 				<X className={styles.batchActionBarListChecks} />
 			</Button>
 			{atSelectionLimit && (
-				<span className={styles.batchActionBarSpan2}>
-					Up to {MAX_BATCH_SELECTION} can be actioned at once
-				</span>
+				<span className={styles.batchActionBarSpan2}>Up to {MAX_BATCH_SELECTION} can be actioned at once</span>
 			)}
-			{createBatchPr.error && (
-				<span className={styles.batchActionBarSpan3}>{createBatchPr.error.message}</span>
-			)}
+			{createBatchPr.error && <span className={styles.batchActionBarSpan3}>{createBatchPr.error.message}</span>}
 			{copyError && <span className={styles.batchActionBarSpan3}>{copyError}</span>}
 		</div>
 	);
@@ -1007,12 +1025,21 @@ function SelectionToggle({ active, onToggle }: { active: boolean; onToggle: () =
 	return (
 		<Button
 			variant='ghost'
-			className={cn(styles.selectionToggleButton, active ? styles.selectionToggleButton2 : styles.selectionToggleButton3)}
+			className={cn(
+				styles.selectionToggleButton,
+				active ? styles.selectionToggleButton2 : styles.selectionToggleButton3,
+			)}
 			aria-label='Selection'
 			aria-pressed={active}
 			onClick={onToggle}
 		>
-			<span className={styles.selectionToggleSpan}>{active ? <X className={styles.recommendationsPageSpinner} /> : <ListChecks className={styles.recommendationsPageSpinner} />}</span>
+			<span className={styles.selectionToggleSpan}>
+				{active ? (
+					<X className={styles.recommendationsPageSpinner} />
+				) : (
+					<ListChecks className={styles.recommendationsPageSpinner} />
+				)}
+			</span>
 		</Button>
 	);
 }
@@ -1074,9 +1101,7 @@ function RecommendationsToolbar({
 					<Button variant='ghost' className={styles.recommendationsToolbarButton} aria-label='Filter'>
 						<span className={styles.selectionToggleSpan}>
 							<ListFilter className={styles.recommendationsPageSpinner} />
-							{hasActiveFilters && (
-								<span className={styles.recommendationsToolbarSpan} />
-							)}
+							{hasActiveFilters && <span className={styles.recommendationsToolbarSpan} />}
 						</span>
 					</Button>
 				</DropdownMenuTrigger>
@@ -1299,12 +1324,7 @@ function ConfigTab({ enabled }: { enabled: boolean }) {
 													baseUrl={selectedAvailableModel?.baseUrl ?? null}
 													className={styles.recommendationsPageSpinner}
 												/>
-												<span
-													className={cn(
-														selectedModelUnavailable &&
-															styles.configTabSpan,
-													)}
-												>
+												<span className={cn(selectedModelUnavailable && styles.configTabSpan)}>
 													{selectedAvailableModel?.name ?? selectedModel.modelId}
 												</span>
 												{selectedModelUnavailable && (
@@ -1433,9 +1453,7 @@ function ConfigTab({ enabled }: { enabled: boolean }) {
 						<div className={styles.configTabDiv3}>
 							<div>
 								<div className={styles.configTabDiv4}>Max pull requests per run</div>
-								<div className={styles.configTabDiv7}>
-									Highest-impact recommendations go first
-								</div>
+								<div className={styles.configTabDiv7}>Highest-impact recommendations go first</div>
 							</div>
 							<div className={styles.configTabDiv5}>
 								<Select

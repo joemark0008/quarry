@@ -126,12 +126,7 @@ export function ChartTooltipContent({
 	const firstItemFormat = getPayloadConfigFromPayload(config, firstItem, firstItemKey)?.valueFormat;
 
 	return (
-		<div
-			className={cn(
-				'quarry-shared-charttooltipcontentdiv-24a33e quarry-chart-tooltip',
-				className,
-			)}
-		>
+		<div className={cn('quarry-shared-charttooltipcontentdiv-24a33e quarry-chart-tooltip', className)}>
 			{!nestLabel ? tooltipLabel : null}
 			<div className='quarry-shared-charttooltipcontentdiv-c7bd35 quarry-chart-tooltip__items'>
 				{visiblePayload.map((item, index) => {
@@ -159,11 +154,14 @@ export function ChartTooltipContent({
 												className={cn(
 													`quarry-chart-tooltip__indicator quarry-chart-tooltip__indicator--${indicator} quarry-chart-tooltip__indicator-layout`,
 													{
-														'quarry-shared-charttooltipcontentdiv-315860': indicator === 'dot',
-														'quarry-shared-charttooltipcontentdiv-0b0057': indicator === 'line',
+														'quarry-shared-charttooltipcontentdiv-315860':
+															indicator === 'dot',
+														'quarry-shared-charttooltipcontentdiv-0b0057':
+															indicator === 'line',
 														'quarry-shared-charttooltipcontentdiv-c4f2ae':
 															indicator === 'dashed',
-														'quarry-shared-charttooltipcontentdiv-7bd3b5': nestLabel && indicator === 'dashed',
+														'quarry-shared-charttooltipcontentdiv-7bd3b5':
+															nestLabel && indicator === 'dashed',
 													},
 												)}
 												style={
@@ -178,7 +176,9 @@ export function ChartTooltipContent({
 									<div
 										className={cn(
 											'quarry-shared-charttooltipcontentdiv-72d25d quarry-chart-tooltip__row',
-											nestLabel ? 'quarry-shared-charttooltipcontentdiv-6f27f4' : 'quarry-shared-charttooltipcontentdiv-3960ff',
+											nestLabel
+												? 'quarry-shared-charttooltipcontentdiv-6f27f4'
+												: 'quarry-shared-charttooltipcontentdiv-3960ff',
 										)}
 									>
 										<div className='quarry-shared-charttooltipcontentdiv-c7bd35'>
@@ -206,7 +206,9 @@ export function ChartTooltipContent({
 				{showTotal && (
 					<div className='quarry-shared-charttooltipcontentdiv-1a8d63 quarry-chart-tooltip__total'>
 						<div className='quarry-shared-charttooltipcontentdiv-d70e83 quarry-chart-tooltip__row'>
-							<span className='quarry-shared-charttooltipcontentspan-5963c2 quarry-chart-tooltip__name'>Total</span>
+							<span className='quarry-shared-charttooltipcontentspan-5963c2 quarry-chart-tooltip__name'>
+								Total
+							</span>
 							<span className='quarry-shared-charttooltipcontentspan-40f631 quarry-chart-tooltip__value'>
 								{percent
 									? '100%'
@@ -259,8 +261,14 @@ export function ChartLegendContent({
 					? 'quarry-shared-chartlegendcontentdiv-446d83'
 					: cn(
 							'quarry-shared-chartlegendcontentdiv-bc3c5d',
-							align === 'right' ? 'quarry-shared-chartlegendcontentdiv-77c08e' : align === 'left' ? 'quarry-shared-chartlegendcontentdiv-4b5cc1' : 'quarry-shared-chartlegendcontentdiv-86843c',
-							verticalAlign === 'top' ? 'quarry-shared-chartlegendcontentdiv-7fcf91' : 'quarry-shared-chartlegendcontentdiv-ce335a',
+							align === 'right'
+								? 'quarry-shared-chartlegendcontentdiv-77c08e'
+								: align === 'left'
+									? 'quarry-shared-chartlegendcontentdiv-4b5cc1'
+									: 'quarry-shared-chartlegendcontentdiv-86843c',
+							verticalAlign === 'top'
+								? 'quarry-shared-chartlegendcontentdiv-7fcf91'
+								: 'quarry-shared-chartlegendcontentdiv-ce335a',
 						),
 				className,
 			)}
@@ -279,7 +287,8 @@ export function ChartLegendContent({
 								'quarry-shared-chartlegendcontentdiv-e898c8 quarry-chart-legend__item',
 								onItemClick &&
 									'quarry-shared-chartlegendcontentdiv-b18edd quarry-chart-legend__item--clickable',
-								item.isHidden && 'quarry-shared-chartlegendcontentdiv-2a2db4 quarry-chart-legend__item--hidden',
+								item.isHidden &&
+									'quarry-shared-chartlegendcontentdiv-2a2db4 quarry-chart-legend__item--hidden',
 							)}
 							onClick={() => onItemClick?.(dataKey)}
 						>

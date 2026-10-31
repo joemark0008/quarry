@@ -227,7 +227,9 @@ describe('edit-mode chart actions', () => {
 		});
 		try {
 			fireEvent.mouseMove(editorDom, { clientX: 100, clientY: 20 });
-			await waitFor(() => expect(fixedGrip?.classList.contains(editorStyles.storyEditorStoryBlockActionGrip2)).toBe(true));
+			await waitFor(() =>
+				expect(fixedGrip?.classList.contains(editorStyles.storyEditorStoryBlockActionGrip2)).toBe(true),
+			);
 		} finally {
 			Object.defineProperty(document, 'elementsFromPoint', {
 				configurable: true,

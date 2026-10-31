@@ -1,14 +1,12 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { Link, useRouter } from '@tanstack/react-router';
+import { getRouteApi, Link, useRouter } from '@tanstack/react-router';
 import { CircleAlert } from 'lucide-react';
+import styles from './email-verified-page.module.css';
 import { AuthForm } from '@/feature/auth/components/auth-form';
 import { Button } from '@/components/ui/button';
 import { getEmailVerificationErrorMessage } from '@/lib/email-verification';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
-import styles from './email-verified-page.module.css';
 
 const Route = getRouteApi('/email-verified');
-
 
 export function EmailVerified() {
 	const router = useRouter();
@@ -48,9 +46,7 @@ export function EmailVerified() {
 				<div className={styles.emailVerifiedDiv}>
 					<div className={styles.emailVerifiedDiv3}>
 						<p className={styles.emailVerifiedP2}>Your email address has been verified.</p>
-						<p className={styles.emailVerifiedP3}>
-							Return to your original tab, or continue here.
-						</p>
+						<p className={styles.emailVerifiedP3}>Return to your original tab, or continue here.</p>
 					</div>
 					{isOAuthAuthorization ? (
 						<Button asChild variant='outline' className={styles.emailVerifiedButton}>

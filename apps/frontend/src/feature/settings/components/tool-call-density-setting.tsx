@@ -1,6 +1,6 @@
+import { ToolCallDensitySlider } from './tool-call-density-slider';
 import type { ToolCallDensity } from '@quarry/shared/types';
 
-import { ToolCallDensitySlider } from './tool-call-density-slider';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 
 export function ToolCallDensitySetting({

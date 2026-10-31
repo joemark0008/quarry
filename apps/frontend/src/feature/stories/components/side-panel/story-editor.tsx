@@ -3,13 +3,13 @@ import { EditorContent } from '@tiptap/react';
 import { memo } from 'react';
 import { StoryBlockActionGrip } from './story-editor-block-drag';
 import { getStoryEditorMarkdown } from './story-editor-utils';
-import { useStoryEditor } from '@/feature/stories/components/side-panel/hooks/use-story-editor';
 import { BlockSelectionContext, SelectedBlockPositionsContext } from './story-block-selection-context';
 import { GridDragContext, StoryBlockDragContext } from './story-editor-drag-context';
+import styles from './story-editor.module.css';
 import type { StoryEditorDragControls } from './story-editor-drag-context';
 import type { Editor } from '@tiptap/react';
 import { cn } from '@/lib/utils';
-import styles from './story-editor.module.css';
+import { useStoryEditor } from '@/feature/stories/components/side-panel/hooks/use-story-editor';
 
 export { preprocessForEditor } from './story-editor-utils';
 export { StoryBlockDragGrip, StoryBlockDropZones } from './story-editor-block-drag';
@@ -73,7 +73,10 @@ export const StoryEditor = memo(function StoryEditor({
 								ariaLabel='Move story block'
 								iconClassName={styles.storyEditorStoryBlockActionGrip}
 								lockHandleWhileOpen
-								wrapperClassName={cn('drag-handle-button', hideFloatingHandle && styles.storyEditorStoryBlockActionGrip2)}
+								wrapperClassName={cn(
+									'drag-handle-button',
+									hideFloatingHandle && styles.storyEditorStoryBlockActionGrip2,
+								)}
 							/>
 						</DragHandle>
 					)}

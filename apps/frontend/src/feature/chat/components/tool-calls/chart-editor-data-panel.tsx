@@ -1,5 +1,6 @@
 import { CalendarDays, CaseSensitive, Hash, PanelLeftClose, PanelLeftOpen, Search, ToggleLeft } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import styles from './chart-editor-data-panel.module.css';
 import type { LucideIcon } from 'lucide-react';
 
 import type { ChartSelectionSummary, ColumnProfile, ColumnValueKind } from '@/lib/chart-selection-summary';
@@ -9,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { startColumnDrag } from '@/hooks/use-column-drag';
 import { profileColumn } from '@/lib/chart-selection-summary';
 import { cn } from '@/lib/utils';
-import styles from './chart-editor-data-panel.module.css';
 
 const X_AXIS_USAGE_COLOR = 'var(--app-muted)';
 

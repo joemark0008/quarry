@@ -1,5 +1,6 @@
 import { Check, Globe, Link as LinkIcon, Loader2, SearchIcon, Unlink, Users } from 'lucide-react';
 
+import styles from './share-dialog.module.css';
 import type { Visibility } from '@quarry/shared/types';
 
 import { Avatar } from '@/components/ui/avatar';
@@ -15,7 +16,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
-import styles from './share-dialog.module.css';
 
 export function ShareLoadingDialog({
 	open,
@@ -193,18 +193,21 @@ export function ManageShareFooter({
 }) {
 	return (
 		<DialogFooter className={styles.manageShareFooterDialogFooter}>
-			<Button
-				variant='outline'
-				onClick={onUnshare}
-				disabled={isBusy}
-				className={styles.manageShareFooterButton}
-			>
-				{isDeletePending ? <Loader2 className={styles.manageShareFooterLoader2} /> : <Unlink className={styles.manageShareFooterUnlink} />}
+			<Button variant='outline' onClick={onUnshare} disabled={isBusy} className={styles.manageShareFooterButton}>
+				{isDeletePending ? (
+					<Loader2 className={styles.manageShareFooterLoader2} />
+				) : (
+					<Unlink className={styles.manageShareFooterUnlink} />
+				)}
 				<span>Unshare</span>
 			</Button>
 			<div className={styles.manageShareFooterDiv}>
 				{hasChanges && (
-					<Button onClick={onSaveAccess} disabled={isBusy || !canSave} className={styles.manageShareFooterButton2}>
+					<Button
+						onClick={onSaveAccess}
+						disabled={isBusy || !canSave}
+						className={styles.manageShareFooterButton2}
+					>
 						{isUpdatePending ? (
 							<Loader2 className={styles.manageShareFooterLoader2} />
 						) : (
@@ -214,7 +217,11 @@ export function ManageShareFooter({
 					</Button>
 				)}
 				<Button variant='outline' onClick={onCopyLink} className={styles.manageShareFooterButton2}>
-					{isCopied ? <Check className={styles.manageShareFooterUnlink} /> : <LinkIcon className={styles.manageShareFooterUnlink} />}
+					{isCopied ? (
+						<Check className={styles.manageShareFooterUnlink} />
+					) : (
+						<LinkIcon className={styles.manageShareFooterUnlink} />
+					)}
 					<span>{isCopied ? 'Copied!' : 'Copy link'}</span>
 				</Button>
 			</div>
@@ -300,9 +307,7 @@ export function MemberPicker({
 						<Loader2 className={styles.shareLoadingDialogLoader2} />
 					</div>
 				) : !hasResults ? (
-					<div className={styles.memberPickerDiv3}>
-						{search ? 'No members found' : emptyMessage}
-					</div>
+					<div className={styles.memberPickerDiv3}>{search ? 'No members found' : emptyMessage}</div>
 				) : (
 					<>
 						{showGroups && (
@@ -403,18 +408,10 @@ function PickerRow({
 			type='button'
 			onClick={onClick}
 			aria-pressed={selected}
-			className={cn(
-				styles.pickerRowButton,
-				styles.pickerRowButton2,
-			)}
+			className={cn(styles.pickerRowButton, styles.pickerRowButton2)}
 		>
 			{children}
-			<div
-				className={cn(
-					styles.pickerRowDiv,
-					selected ? styles.pickerRowDiv2 : styles.pickerRowDiv3,
-				)}
-			>
+			<div className={cn(styles.pickerRowDiv, selected ? styles.pickerRowDiv2 : styles.pickerRowDiv3)}>
 				{selected && <Check className={styles.pickerRowCheck} />}
 			</div>
 		</button>

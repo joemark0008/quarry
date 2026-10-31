@@ -6,10 +6,10 @@ import {
 } from '@quarry/shared/chart-tooltip';
 import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
+import styles from './chart.module.css';
 import type { ChartConfig } from '@quarry/shared/chart-tooltip';
 
 import { cn } from '@/lib/utils';
-import styles from './chart.module.css';
 
 function ChartContainer({
 	id,
@@ -32,12 +32,7 @@ function ChartContainer({
 		<ChartConfigProvider config={config}>
 			<div data-slot='chart' data-chart={chartId} className={cn(styles.chartContainerDiv, className)} {...props}>
 				{header}
-				<div
-					className={cn(
-						styles.chartContainerDiv2,
-						contentClassName,
-					)}
-				>
+				<div className={cn(styles.chartContainerDiv2, contentClassName)}>
 					<ChartStyle id={chartId} config={config} />
 					<RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
 				</div>

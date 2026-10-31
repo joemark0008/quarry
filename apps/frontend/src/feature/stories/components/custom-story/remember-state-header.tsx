@@ -1,6 +1,6 @@
 import { HistoryIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import styles from './remember-state-header.module.css';
+import { Button } from '@/components/ui/button';
 
 export function RememberStateHeader({ onRemember }: { onRemember: () => void }) {
 	return (

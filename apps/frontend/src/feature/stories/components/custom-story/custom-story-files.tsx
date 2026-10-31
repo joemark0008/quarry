@@ -4,15 +4,12 @@ import { AlertTriangle, File, Lock, Save } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useDefaultLayout } from 'react-resizable-panels';
 
-import type { CustomStoryFileSummary } from './custom-story-body';
-import type { CustomStoryFileSource } from './story-data-options';
 import { fileOptions } from './story-data-options';
 import { buildStoryFileTree, findContentMatches } from './story-file-tree';
-import {
-	isStoryKitPath,
-	STORY_KIT_FILE_PATHS,
-	storyKitFileQueryOptions,
-} from './story-kit-sources';
+import { isStoryKitPath, STORY_KIT_FILE_PATHS, storyKitFileQueryOptions } from './story-kit-sources';
+import styles from './custom-story-files.module.css';
+import type { CustomStoryFileSummary } from './custom-story-body';
+import type { CustomStoryFileSource } from './story-data-options';
 import { FixInChatButton } from '@/feature/chat/components/fix-in-chat-button';
 import { FileExplorerIcon } from '@/feature/settings/components/file-explorer-icon';
 import { FileSourceEditor } from '@/feature/settings/components/file-source-editor';
@@ -22,7 +19,6 @@ import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/compo
 import { Spinner } from '@/components/ui/spinner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { storyApi } from '@/lib/story-api';
-import styles from './custom-story-files.module.css';
 
 interface CustomStoryFilesProps {
 	source: CustomStoryFileSource;
@@ -163,11 +159,7 @@ function StoryFileContent({
 		);
 	}
 	if (error || !file) {
-		return (
-			<div className={styles.storyFileContentDiv3}>
-				{error?.message ?? 'Failed to load file'}
-			</div>
-		);
+		return <div className={styles.storyFileContentDiv3}>{error?.message ?? 'Failed to load file'}</div>;
 	}
 
 	const fileName = file.path.split('/').pop() ?? file.path;
@@ -179,9 +171,7 @@ function StoryFileContent({
 				<div className={styles.storyFileContentDiv5}>
 					<div className={styles.storyFileContentDiv6}>
 						<span className={styles.storyFileContentSpan}>{fileName}</span>
-						<span className={styles.storyFileContentSpan2}>
-							{formatFileSize(file.size)}
-						</span>
+						<span className={styles.storyFileContentSpan2}>{formatFileSize(file.size)}</span>
 						{isKitFile && <ReadOnlyBadge />}
 					</div>
 					<span className={styles.storyFileContentSpan3}>{file.path}</span>
@@ -381,11 +371,7 @@ function StoryBuildErrorItem({ error }: { error: string }) {
 				{location && <span className={styles.storyBuildErrorItemSpan}>{location}</span>}
 				{message}
 			</p>
-			{excerpt && (
-				<pre className={styles.storyBuildErrorItemPre}>
-					{excerpt}
-				</pre>
-			)}
+			{excerpt && <pre className={styles.storyBuildErrorItemPre}>{excerpt}</pre>}
 		</li>
 	);
 }

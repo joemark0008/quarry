@@ -1,5 +1,8 @@
 import { useRef } from 'react';
 import { parseStoryTabs } from '@quarry/shared/story-tabs';
+import { StoryUnsavedChangesDialog } from './story-unsaved-changes-dialog';
+import { StoryThemeProvider } from './story-theme-provider';
+import styles from './story-page-body.module.css';
 import type { ReactNode } from 'react';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 
@@ -9,10 +12,7 @@ import { useDragAutoScroll } from '@/hooks/use-drag-auto-scroll';
 import { StoryCodeView } from '@/feature/stories/components/side-panel/story-code-view';
 import { StoryEditor } from '@/feature/stories/components/side-panel/story-editor';
 import { StoryTabbedEditor } from '@/feature/stories/components/side-panel/story-tabbed-editor';
-import { StoryUnsavedChangesDialog } from './story-unsaved-changes-dialog';
-import { StoryThemeProvider } from './story-theme-provider';
 import { StoryEmbedDataProvider } from '@/contexts/story-embed-data';
-import styles from './story-page-body.module.css';
 
 interface StoryPageBodyProps {
 	editor: ReturnType<typeof useStoryPageEditor>;
@@ -33,10 +33,7 @@ export function StoryPageBody({ editor, preview, queryData, theme }: StoryPageBo
 		return (
 			<>
 				<StoryEmbedDataProvider value={queryData ?? null}>
-					<StoryThemeProvider
-						theme={theme ?? null}
-						className={styles.storyPageBodyStoryThemeProvider}
-					>
+					<StoryThemeProvider theme={theme ?? null} className={styles.storyPageBodyStoryThemeProvider}>
 						<div ref={scrollContainerRef} className={styles.storyPageBodyDiv}>
 							{isTabbed ? (
 								<StoryTabbedEditor

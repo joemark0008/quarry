@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import styles from './tool-call-wrapper.module.css';
 import type { ReactNode } from 'react';
 import type { DataExportFormat } from '@/components/export-data-menu';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
 import { Expandable } from '@/components/ui/expandable';
@@ -10,7 +11,6 @@ import { useIsInToolGroup } from '@/contexts/tool-group';
 import { ToolCallActionsProvider } from '@/contexts/tool-call-actions';
 import { useMemoObject } from '@/hooks/useMemoObject';
 import { ExportDataMenu } from '@/components/export-data-menu';
-import styles from './tool-call-wrapper.module.css';
 
 interface ExportAction {
 	columns: string[];
@@ -119,7 +119,10 @@ export const ToolCallWrapper = ({
 								action.onClick();
 							}}
 							title={action.title}
-							className={cn(styles.actionsContentButton, action.isActive ? styles.actionsContentButton2 : '')}
+							className={cn(
+								styles.actionsContentButton,
+								action.isActive ? styles.actionsContentButton2 : '',
+							)}
 						>
 							{action.label}
 						</Button>
@@ -129,9 +132,7 @@ export const ToolCallWrapper = ({
 		) : undefined;
 
 	const errorContent = isBordered ? (
-		<pre className={styles.errorContentPre}>
-			{toolPart.errorText}
-		</pre>
+		<pre className={styles.errorContentPre}>{toolPart.errorText}</pre>
 	) : (
 		<pre className={styles.errorContentPre2}>{toolPart.errorText}</pre>
 	);

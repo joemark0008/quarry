@@ -28,9 +28,6 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Customized } from 'recharts';
-import { useOptionalAgentContext } from '@/contexts/agent.provider.tsx';
-import { Button } from '@/components/ui/button';
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { DisplayChartEditDialog } from './display-chart-edit-dialog';
 import { DisplayChartTable } from './display-chart-table';
 import { ChartRangeSelector } from './display-chart-range-selector';
@@ -39,10 +36,20 @@ import { SqlQueryDisplay } from './sql-query-display';
 import { SqlResultDisplay } from './sql-result-display';
 import { VisualizationSkeleton } from './visualization-skeleton';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './display-chart.module.css';
 import type { ChartConfig } from '@quarry/shared/chart-tooltip';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ToolCallComponentProps } from '.';
 import type { DateRange } from '@/lib/charts.utils';
+import { useOptionalAgentContext } from '@/contexts/agent.provider.tsx';
+import { Button } from '@/components/ui/button';
+import {
+	ChartContainer,
+	ChartLegend,
+	ChartLegendContent,
+	ChartTooltip,
+	ChartTooltipContent,
+} from '@/components/ui/chart';
 import { chartsApi } from '@/lib/charts-api';
 import {
 	DATE_RANGE_OPTIONS,
@@ -62,7 +69,6 @@ import { cn } from '@/lib/utils';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { storyApi } from '@/lib/story-api';
-import styles from './display-chart.module.css';
 
 const LEGEND_SCROLL_OFFSET = 120;
 const HORIZONTAL_LABEL_GAP = 12;
@@ -262,7 +268,9 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 				viewMode === 'chart' ? styles.displayChartToolCallDiv5 : styles.displayChartToolCallDiv6,
 				viewMode === 'chart' ? styles.displayChartToolCallDiv7 : styles.displayChartToolCallDiv8,
 				isKpiChartView ? styles.displayChartToolCallDiv9 : '',
-				viewMode === 'chart' && chartConfig.chart_type !== 'kpi_card' && !normalSize ? styles.displayChartToolCallDiv10 : '',
+				viewMode === 'chart' && chartConfig.chart_type !== 'kpi_card' && !normalSize
+					? styles.displayChartToolCallDiv10
+					: '',
 			)}
 		>
 			<div
@@ -308,12 +316,18 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 							onClick={() => setViewMode('chart')}
 							title='View chart'
 						>
-							<ChartNoAxesColumn className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
+							<ChartNoAxesColumn
+								className={styles.displayChartToolCallChartNoAxesColumn}
+								strokeWidth={2.25}
+							/>
 						</Button>
 						<Button
 							variant='ghost-muted'
 							size='icon-xs'
-							className={cn(styles.displayChartToolCallButton, viewMode === 'data' ? styles.displayChartToolCallButton2 : '')}
+							className={cn(
+								styles.displayChartToolCallButton,
+								viewMode === 'data' ? styles.displayChartToolCallButton2 : '',
+							)}
 							onClick={() => setViewMode('data')}
 							title='View data'
 						>
@@ -356,7 +370,10 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 									disabled={isDownloading}
 									title='Download as PNG'
 								>
-									<Download className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
+									<Download
+										className={styles.displayChartToolCallChartNoAxesColumn}
+										strokeWidth={2.25}
+									/>
 								</Button>
 							)
 						) : (
@@ -371,7 +388,10 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 									className={styles.displayChartToolCallButton}
 									title='Export data'
 								>
-									<Download className={styles.displayChartToolCallChartNoAxesColumn} strokeWidth={2.25} />
+									<Download
+										className={styles.displayChartToolCallChartNoAxesColumn}
+										strokeWidth={2.25}
+									/>
 								</Button>
 							</ExportDataMenu>
 						)}
@@ -427,7 +447,9 @@ export const DisplayChartToolCall = ({ toolPart }: ToolCallComponentProps<'displ
 					comparisonMode={'comparison_mode' in chartConfig ? chartConfig.comparison_mode : undefined}
 					hideTotal={chartConfig.hide_total}
 					className={isPieChart(chartConfig.chart_type) ? styles.displayChartToolCallChartDisplay : undefined}
-					chartContentClassName={isPieChart(chartConfig.chart_type) ? styles.displayChartToolCallChartDisplay2 : undefined}
+					chartContentClassName={
+						isPieChart(chartConfig.chart_type) ? styles.displayChartToolCallChartDisplay2 : undefined
+					}
 				/>
 			)}
 		</div>
@@ -759,10 +781,7 @@ export const ChartDisplay = memo(function ChartDisplay({
 				</Button>
 			)}
 			{showInlineLegend && (
-				<div
-					ref={scrollRef}
-					className={styles.inlineHeaderDiv4}
-				>
+				<div ref={scrollRef} className={styles.inlineHeaderDiv4}>
 					<ChartLegendContent
 						payload={legendPayload}
 						align='right'
@@ -802,8 +821,15 @@ export const ChartDisplay = memo(function ChartDisplay({
 			) : (
 				<ChartContainer
 					config={chartConfig}
-					className={cn(normalSize ? styles.chartDisplayChartContainer : styles.chartDisplayChartContainer2, pieCenteringClass, chartContainerClassName)}
-					contentClassName={cn(normalSize ? styles.chartDisplayChartContainer3 : undefined, chartContentClassName)}
+					className={cn(
+						normalSize ? styles.chartDisplayChartContainer : styles.chartDisplayChartContainer2,
+						pieCenteringClass,
+						chartContainerClassName,
+					)}
+					contentClassName={cn(
+						normalSize ? styles.chartDisplayChartContainer3 : undefined,
+						chartContentClassName,
+					)}
 					header={inlineHeader}
 				>
 					{chartElement}

@@ -10,10 +10,11 @@ import { StoryTableEmbed } from './story-table-embed';
 import { BlockSelectionContext } from './story-block-selection-context';
 import { StoryBlockDragContext } from './story-editor-drag-context';
 import { decodeFromAttr } from './story-editor-utils';
-import { useStoryEditorGridBlock } from '@/feature/stories/components/side-panel/hooks/use-story-editor-grid-block';
+import styles from './story-editor-grid-block.module.css';
 import type { Segment } from '@quarry/shared/story-segments';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import type { ReactNode } from 'react';
+import { useStoryEditorGridBlock } from '@/feature/stories/components/side-panel/hooks/use-story-editor-grid-block';
 import { MarkdownTable } from '@/feature/chat/components/chat-messages/markdown-table';
 import { StoryBlock, StoryMapFrame, StoryTableFrame } from '@/feature/stories/components/story-block';
 import { EditorStoryChartEditProvider } from '@/contexts/story-chart-edit';
@@ -21,7 +22,6 @@ import { EditorStoryMapEditProvider } from '@/contexts/story-map-edit';
 import { markdownPlugins } from '@/lib/markdown';
 import { cn } from '@/lib/utils';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './story-editor-grid-block.module.css';
 
 const markdownComponents = { table: ({ node, className }: any) => <MarkdownTable node={node} className={className} /> };
 
@@ -304,9 +304,9 @@ function GridBlockView(props: ReactNodeViewProps) {
 						}}
 					>
 						<div
-							className={`${styles.gridBlockViewDiv10} ${activeBoundary === index
-									? styles.state100
-									: styles.state101}`}
+							className={`${styles.gridBlockViewDiv10} ${
+								activeBoundary === index ? styles.state100 : styles.state101
+							}`}
 						/>
 					</button>
 				))}

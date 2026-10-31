@@ -1,19 +1,19 @@
 import { resolveDataKey } from '@quarry/shared';
 import { ChartNoAxesColumn, Rows2, TableIcon, TriangleAlert } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { ChartDisplay } from './display-chart';
+import { TableDisplay } from './display-table';
+import styles from './chart-editor-preview.module.css';
 import type { ReactNode } from 'react';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { displayChart } from '@quarry/shared/tools';
 import type { IconSegmentedToggleOption } from '@/components/ui/icon-segmented-toggle';
 import type { ChartSelectionSummary } from '@/lib/chart-selection-summary';
 
-import { ChartDisplay } from './display-chart';
-import { TableDisplay } from './display-table';
 import { IconSegmentedToggle } from '@/components/ui/icon-segmented-toggle';
 import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
-import styles from './chart-editor-preview.module.css';
 
 type EditableChartInput = Omit<displayChart.KpiCardInput, 'chart_type'> & { chart_type: ChartType };
 
@@ -67,7 +67,11 @@ export function ChartEditorPreview({ draft, data, columns, summary, className }:
 						{chart}
 					</ResizablePanel>
 					<ResizableSeparator withHandle />
-					<ResizablePanel id='table' minSize={SPLIT_PANE_MIN_HEIGHT} className={styles.chartEditorPreviewResizablePanel}>
+					<ResizablePanel
+						id='table'
+						minSize={SPLIT_PANE_MIN_HEIGHT}
+						className={styles.chartEditorPreviewResizablePanel}
+					>
 						{table}
 					</ResizablePanel>
 				</ResizablePanelGroup>
@@ -83,10 +87,7 @@ function ChartSelectionIssues({ issues }: { issues: string[] }) {
 	return (
 		<ul className={styles.chartSelectionIssuesUl} title={issues.join('\n')}>
 			{issues.map((issue) => (
-				<li
-					key={issue}
-					className={styles.chartSelectionIssuesLi}
-				>
+				<li key={issue} className={styles.chartSelectionIssuesLi}>
 					<TriangleAlert className={styles.chartSelectionIssuesTriangleAlert} />
 					<span className={styles.chartSelectionIssuesSpan}>{issue}</span>
 				</li>
@@ -190,9 +191,5 @@ function buildColumnHighlights(summary: ChartSelectionSummary): Map<string, stri
 }
 
 function PreviewPlaceholder({ children }: { children: ReactNode }) {
-	return (
-		<div className={styles.previewPlaceholderDiv}>
-			{children}
-		</div>
-	);
+	return <div className={styles.previewPlaceholderDiv}>{children}</div>;
 }

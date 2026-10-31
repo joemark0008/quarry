@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
 import styles from './input-edit.module.css';
+import { cn } from '@/lib/utils';
 
 interface Props extends React.ComponentProps<'input'> {
 	value: string;
@@ -22,12 +22,7 @@ export const InputEdit = ({ value, onChange, onSubmit, onEscape, className, auto
 	}, [autoFocus]);
 
 	return (
-		<div
-			data-value={value}
-			className={cn(
-				styles.inputEditDiv,
-			)}
-		>
+		<div data-value={value} className={cn(styles.inputEditDiv)}>
 			<input
 				ref={inputRef}
 				value={value}
@@ -40,10 +35,7 @@ export const InputEdit = ({ value, onChange, onSubmit, onEscape, className, auto
 					}
 				}}
 				onBlur={onSubmit}
-				className={cn(
-					styles.inputEditInput,
-					className,
-				)}
+				className={cn(styles.inputEditInput, className)}
 				{...rest}
 			/>
 		</div>

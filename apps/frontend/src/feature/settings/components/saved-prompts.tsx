@@ -1,6 +1,9 @@
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from '@tanstack/react-form';
+import { SavedPromptItem, SavedPromptSkeleton } from './saved-prompt';
+import styles from './saved-prompts.module.css';
+import type { SavedPrompt } from '@/lib/api-types';
 import {
 	AlertDialog,
 	AlertDialogContent,
@@ -17,11 +20,8 @@ import { NakedInput } from '@/components/ui/input';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Empty } from '@/components/ui/empty';
-import { SavedPromptItem, SavedPromptSkeleton } from './saved-prompt';
-import type { SavedPrompt } from '@/lib/api-types';
 import { useSavedPromptsQuery, useSavedPromptMutations } from '@/hooks/use-saved-prompts';
 import { Button } from '@/components/ui/button';
-import styles from './saved-prompts.module.css';
 
 interface SavedPromptsSectionProps {
 	isAdmin: boolean;
@@ -95,7 +95,12 @@ export function SavedPrompts({ isAdmin }: SavedPromptsSectionProps) {
 				description='Save repeatable, customizable prompts for the agent to follow.'
 				action={
 					isAdmin && (
-						<Button variant='secondary' size='sm' className={styles.savedPromptsButton} onClick={handleNewPrompt}>
+						<Button
+							variant='secondary'
+							size='sm'
+							className={styles.savedPromptsButton}
+							onClick={handleNewPrompt}
+						>
 							<Plus className={styles.savedPromptsPlus} />
 							New Prompt
 						</Button>

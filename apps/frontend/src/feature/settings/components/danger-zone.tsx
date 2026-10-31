@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import styles from './danger-zone.module.css';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -14,7 +15,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { chatApi } from '@/lib/chat-api';
-import styles from './danger-zone.module.css';
 
 export function DangerZone() {
 	const [isOpen, setIsOpen] = useState(false);

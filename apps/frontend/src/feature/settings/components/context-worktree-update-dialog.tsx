@@ -1,6 +1,6 @@
+import styles from './context-worktree-update-dialog.module.css';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import styles from './context-worktree-update-dialog.module.css';
 
 export const DIRTY_WORKTREE_CONFLICT_MESSAGE = 'Commit or discard changes before switching branches.';
 

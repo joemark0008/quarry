@@ -1,6 +1,6 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { RangeOptions } from '@/lib/charts.utils';
 import styles from './display-chart-range-selector.module.css';
+import type { RangeOptions } from '@/lib/charts.utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props<T extends RangeOptions> {
 	selectedRange: keyof T;

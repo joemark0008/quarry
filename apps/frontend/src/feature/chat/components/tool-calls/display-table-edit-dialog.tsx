@@ -1,10 +1,7 @@
 import { colorToHex, DEFAULT_THRESHOLD_COLOR } from '@quarry/shared/conditional-formatting';
 import { getFormattableColumnType } from '@quarry/shared/story-table-utils';
 import { useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import styles from './display-table-edit-dialog.module.css';
 import type {
 	ColumnConditionalFormats,
 	ConditionalFormatRule,
@@ -13,7 +10,17 @@ import type {
 	ThresholdOperator,
 } from '@quarry/shared/conditional-formatting';
 import type { FormattableColumnType } from '@quarry/shared/story-table-utils';
-import styles from './display-table-edit-dialog.module.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type RuleKind = 'none' | 'color-scale' | 'threshold' | 'boolean' | 'string';
 

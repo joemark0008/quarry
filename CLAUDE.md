@@ -8,7 +8,7 @@ Rewrite of getnao/nao on NestJS 11 (Express) + GraphQL code-first (Apollo) + Pri
 
 - NestJS 11 on Express, GraphQL code-first (`@nestjs/graphql` + Apollo), one server, no federation. REST only for the endpoints listed in PLAN.md §5.
 - Prisma on PostgreSQL only. No SQLite, no Python, no billing, nothing marked `/* @license Enterprise */` upstream.
-- Frontend: React (TanStack Router, Shadcn, Tailwind) with Apollo Client + GraphQL Code Generator. Calls go through the `lib/*-api.ts` modules (`lib/apollo-procedures.ts`), typed by `lib/api-types.ts`; types of `apps/api` are imported with `import type` from `@quarry/api/*`.
+- Frontend: React (TanStack Router, Mantine, CSS Modules) following [docs/frontend-design.md](docs/frontend-design.md), with Apollo Client + GraphQL Code Generator. Calls go through the `lib/*-api.ts` modules (`lib/apollo-procedures.ts`), typed by `lib/api-types.ts`; types of `apps/api` are imported with `import type` from `@quarry/api/*`.
 - Node from `.nvmrc` (`nvm use`), npm pinned by `packageManager` (`engine-strict`).
 
 ## Module conventions
@@ -43,7 +43,7 @@ npm run lint
 npm test
 ```
 
-Plus `npm run format:check`, and the phase's "Verify" items in PHASES.md.
+Plus `npm run format:check`, and the phase's "Verify" items in PHASES.md. For frontend changes also run `npm run test:e2e -w @quarry/frontend` with the local stack up (the chat flow makes one real LLM call).
 
 ## Local setup
 

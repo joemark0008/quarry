@@ -1,7 +1,7 @@
 import { Slider } from '@mantine/core';
+import styles from './tool-call-density-slider.module.css';
 import type { ToolCallDensity } from '@quarry/shared/types';
 import { cn } from '@/lib/utils';
-import styles from './tool-call-density-slider.module.css';
 
 const densityOptions: { value: ToolCallDensity; label: string }[] = [
 	{ value: 'compact', label: 'Compact' },
@@ -42,7 +42,9 @@ export const ToolCallDensitySlider = ({
 						className={cn(
 							styles.toolCallDensitySliderButton,
 							disabled ? styles.toolCallDensitySliderButton2 : styles.toolCallDensitySliderButton3,
-							option.value === value ? styles.toolCallDensitySliderButton4 : styles.toolCallDensitySliderButton5,
+							option.value === value
+								? styles.toolCallDensitySliderButton4
+								: styles.toolCallDensitySliderButton5,
 						)}
 					>
 						{option.label}

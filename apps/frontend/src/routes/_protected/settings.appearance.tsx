@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
+import type { AppearanceTab } from '@/feature/settings/appearance-page';
 import { requireNonViewer } from '@/lib/route-guards';
-import { AppearanceTab, AppearancePage, isAppearanceTab } from '@/feature/settings/appearance-page';
+import { AppearancePage, isAppearanceTab } from '@/feature/settings/appearance-page';
 
 export const Route = createFileRoute('/_protected/settings/appearance')({
 	beforeLoad: requireNonViewer,

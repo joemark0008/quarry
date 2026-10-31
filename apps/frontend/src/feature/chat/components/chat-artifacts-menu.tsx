@@ -1,11 +1,12 @@
 import { AtSign, ChevronDown, Layers, Table2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { AttachmentFileIcon } from './attachment-file-icon';
+import styles from './chat-artifacts-menu.module.css';
 import type { ReactNode, RefObject } from 'react';
 import type { ChatArtifacts, FileArtifact, QueryArtifact } from '@/lib/chat-artifacts';
 import type { StorySummary } from '@/lib/story.utils';
 import type { ResolvedStory } from '@/hooks/use-mentioned-stories';
 
-import { AttachmentFileIcon } from './attachment-file-icon';
 import { AttachmentViewer } from '@/feature/stories/components/side-panel/attachment-viewer';
 import { useOpenStoryInSidePanel } from '@/feature/stories/components/side-panel/open-story-in-side-panel';
 import { StoryViewer } from '@/feature/stories/components/side-panel/story-viewer';
@@ -17,7 +18,6 @@ import { useOpenMentionedStory, useMentionedStories } from '@/hooks/use-mentione
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { areChatArtifactsEqual, collectChatArtifacts, countChatArtifacts } from '@/lib/chat-artifacts';
 import { cn } from '@/lib/utils';
-import styles from './chat-artifacts-menu.module.css';
 
 /** Mirrors `max-w-3xl` on the conversation column. */
 const CHAT_COLUMN_MAX_WIDTH = 768;
@@ -99,16 +99,16 @@ export function ChatArtifactsMenu({ chatId, chatColumnRef, panelClassName }: Cha
 					<Layers className={styles.chatArtifactsMenuLayers} strokeWidth={2.25} />
 					<span className={styles.chatArtifactsMenuSpan}>Library</span>
 					<span className={styles.chatArtifactsMenuSpan2}>{count}</span>
-					<ChevronDown className={cn(styles.chatArtifactsMenuChevronDown, isOpen && styles.chatArtifactsMenuChevronDown2)} />
+					<ChevronDown
+						className={cn(
+							styles.chatArtifactsMenuChevronDown,
+							isOpen && styles.chatArtifactsMenuChevronDown2,
+						)}
+					/>
 				</Button>
 			)}
 			{isOpen && (
-				<div
-					className={cn(
-						styles.chatArtifactsMenuDiv2,
-						panelClassName,
-					)}
-				>
+				<div className={cn(styles.chatArtifactsMenuDiv2, panelClassName)}>
 					{isDocked && <ArtifactsPanelHeading count={count} />}
 					<ChatArtifactsList
 						artifacts={artifacts}
@@ -184,7 +184,12 @@ export function ChatArtifactsList({
 					{artifacts.files.map((file) => (
 						<ArtifactItem
 							key={file.path}
-							icon={<AttachmentFileIcon fileName={file.path} className={styles.artifactsPanelHeadingLayers} />}
+							icon={
+								<AttachmentFileIcon
+									fileName={file.path}
+									className={styles.artifactsPanelHeadingLayers}
+								/>
+							}
 							label={file.filename}
 							title={file.path}
 							onClick={() => onOpenFile(file)}
@@ -230,7 +235,12 @@ function ArtifactSection({ title, count, defaultCollapsed = false, children }: A
 			>
 				<span className={styles.artifactSectionSpan}>{title}</span>
 				<span className={styles.artifactSectionSpan2}>{count}</span>
-				<ChevronDown className={cn(styles.chatArtifactsMenuChevronDown, isCollapsed && styles.artifactSectionChevronDown)} />
+				<ChevronDown
+					className={cn(
+						styles.chatArtifactsMenuChevronDown,
+						isCollapsed && styles.artifactSectionChevronDown,
+					)}
+				/>
 			</button>
 			{!isCollapsed && children}
 		</section>
@@ -247,12 +257,7 @@ interface ArtifactItemProps {
 
 function ArtifactItem({ icon, label, detail, title, onClick }: ArtifactItemProps) {
 	return (
-		<button
-			type='button'
-			onClick={onClick}
-			title={title}
-			className={`${styles.artifactItemButton} group`}
-		>
+		<button type='button' onClick={onClick} title={title} className={`${styles.artifactItemButton} group`}>
 			<span className={styles.artifactItemSpan}>{icon}</span>
 			<span className={styles.artifactItemSpan2}>{label}</span>
 			{detail && <span className={styles.artifactItemSpan3}>{detail}</span>}

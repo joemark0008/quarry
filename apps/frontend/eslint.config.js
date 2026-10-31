@@ -49,7 +49,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/components/settings/file-explorer-icon.tsx'],
+		files: ['src/feature/settings/components/file-explorer-icon.tsx'],
 		rules: {
 			'no-restricted-imports': 'off',
 		},

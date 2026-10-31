@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import styles from './auth-form.module.css';
 import { InputGroup } from '@/components/ui/input-group';
 import { NakedInput } from '@/components/ui/input';
 import { Button, ChatButton, AuthSocialButton } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import { usePublicConfig } from '@/hooks/use-public-config';
 import { handleGithubSignIn, handleGitlabSignIn, handleGoogleSignIn } from '@/lib/auth-client';
 import { loadLastSignInMethod, rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { cn } from '@/lib/utils';
-import styles from './auth-form.module.css';
 
 /**
  * Shrinks the email/password fields when sign-in providers are on screen, so the
@@ -108,7 +108,10 @@ export function AuthForm({
 			<div className={styles.authFormDiv2}>
 				<div className={styles.authFormDiv3}>
 					<div
-						className={cn(`${styles.authFormDiv4} start`, content ? styles.authFormDiv5 : styles.authFormDiv6)}
+						className={cn(
+							`${styles.authFormDiv4} start`,
+							content ? styles.authFormDiv5 : styles.authFormDiv6,
+						)}
 					>
 						<QuarryLogo className={styles.authFormQuarryLogo} />
 						<h1 className={cn(styles.authFormH1, titleClassName)}>{title}</h1>
@@ -253,10 +256,19 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 			}}
 		>
 			{(field: { state: { value: string }; handleChange: (v: string) => void; handleBlur: () => void }) => (
-				<div className={cn(styles.formTextFieldDiv, compact ? styles.formTextFieldDiv2 : styles.formTextFieldDiv3, className)}>
+				<div
+					className={cn(
+						styles.formTextFieldDiv,
+						compact ? styles.formTextFieldDiv2 : styles.formTextFieldDiv3,
+						className,
+					)}
+				>
 					<label
 						htmlFor={name}
-						className={cn(styles.formTextFieldLabel, compact ? styles.formTextFieldLabel2 : styles.formTextFieldLabel3)}
+						className={cn(
+							styles.formTextFieldLabel,
+							compact ? styles.formTextFieldLabel2 : styles.formTextFieldLabel3,
+						)}
 					>
 						{title ?? name.charAt(0).toUpperCase() + name.slice(1)}
 					</label>
@@ -271,7 +283,8 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 							className={cn(
 								styles.formTextFieldNakedInput,
 								compact ? styles.formTextFieldNakedInput2 : styles.formTextFieldNakedInput3,
-								isPassword && (compact ? styles.formTextFieldNakedInput4 : styles.formTextFieldNakedInput5),
+								isPassword &&
+									(compact ? styles.formTextFieldNakedInput4 : styles.formTextFieldNakedInput5),
 							)}
 						/>
 						{showLastUsed && <LastUsedPill className={styles.formTextFieldLastUsedPill} />}
@@ -289,10 +302,7 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 								{showPassword ? (
 									<EyeOff size={eyeIconSize} />
 								) : (
-									<Eye
-										size={eyeIconSize}
-										className={styles.formTextFieldEye}
-									/>
+									<Eye size={eyeIconSize} className={styles.formTextFieldEye} />
 								)}
 							</button>
 						)}

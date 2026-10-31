@@ -2,6 +2,7 @@ import { FoldHorizontal, Pencil, UnfoldHorizontal } from 'lucide-react';
 import { memo, useMemo, useRef, useState } from 'react';
 import { mapBlockToInput } from '@quarry/shared/story-segments';
 import { StoryEmbedFallback } from './story-embed-fallback';
+import styles from './story-map-embed.module.css';
 import type { ParsedMapBlock } from '@quarry/shared/story-segments';
 
 import { StoryMapRender } from '@/feature/stories/components/story-map-embed';
@@ -13,7 +14,6 @@ import { useStoryMapEdit } from '@/contexts/story-map-edit';
 import { useBreakoutStyle } from '@/hooks/use-breakout-width';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { cn } from '@/lib/utils';
-import styles from './story-map-embed.module.css';
 
 export const StoryMapEmbed = memo(function StoryMapEmbed({
 	map,
@@ -65,9 +65,7 @@ export function StoryMapEmbedShell({ map, dragHandle, allowExpand = false, child
 				{showHeader && (
 					<div className={styles.storyMapEmbedShellDiv3}>
 						{map.title ? (
-							<span className={styles.storyMapEmbedShellSpan}>
-								{map.title}
-							</span>
+							<span className={styles.storyMapEmbedShellSpan}>{map.title}</span>
 						) : (
 							<div className={styles.storyMapEmbedShellDiv4} />
 						)}

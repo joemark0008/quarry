@@ -1,15 +1,15 @@
-import { isDarkColorScheme } from '@/lib/color-scheme';
 import { DEFAULT_COLORS } from '@quarry/shared';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import * as Recharts from 'recharts';
+import styles from './custom-chart.module.css';
 import type { ChartPluginCleanup, ChartPluginModule, ChartPluginRenderContext } from '@quarry/shared';
 import type { displayChart } from '@quarry/shared/tools';
 
 import { useTheme } from '@/contexts/theme.provider';
 import { chartsApi } from '@/lib/charts-api';
-import styles from './custom-chart.module.css';
+import { isDarkColorScheme } from '@/lib/color-scheme';
 
 const PLUGIN_REFRESH_INTERVAL_MS = 2_000;
 

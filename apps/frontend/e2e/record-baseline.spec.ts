@@ -1,7 +1,7 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { controlInventory, logIn, trackErrors } from './helpers';
 import { APP_ROUTES, PUBLIC_ROUTES } from './routes';
@@ -44,4 +44,25 @@ test('record every route', async ({ browser }) => {
 		await context.close();
 	}
 	writeFileSync(join(OUT!, 'inventory.json'), `${JSON.stringify(report, null, '\t')}\n`);
+	expect(missingFromBaseline(report)).toEqual({});
 });
+
+type Inventory = Record<string, Record<'headings' | 'buttons' | 'inputs', string[]>>;
+
+/** Controls recorded before the redesign that no longer appear. Links hold chat titles, so they vary with the data. */
+function missingFromBaseline(report: Record<string, unknown>) {
+	const baseline = JSON.parse(
+		readFileSync(new URL('./baseline-inventory.json', import.meta.url), 'utf8'),
+	) as Inventory;
+	const current = report as Inventory;
+	const missing: Record<string, string[]> = {};
+	for (const [route, recorded] of Object.entries(baseline)) {
+		const gone = (['headings', 'buttons', 'inputs'] as const).flatMap((kind) =>
+			recorded[kind].filter((name) => !current[route]?.[kind].includes(name)),
+		);
+		if (gone.length > 0) {
+			missing[route] = gone;
+		}
+	}
+	return missing;
+}

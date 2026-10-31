@@ -27,7 +27,7 @@ npm run test
 
 ## Styling
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+This project uses [Mantine](https://mantine.dev/) components with CSS Modules and the design tokens in `src/theme/tokens.css`. See [docs/frontend-design.md](../../docs/frontend-design.md) for the pattern. `npm run lint` includes `scripts/check-styles.mjs`, which fails on stray px and hex values and on CSS Module classes that don't exist.
 
 ## Linting & Formatting
 

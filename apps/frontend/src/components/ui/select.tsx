@@ -1,10 +1,10 @@
 import { Combobox, useCombobox } from '@mantine/core';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { ComponentProps, ReactNode } from 'react';
 
 import styles from './overlay.module.css';
 import { findPart, toFloatingPosition } from './floating';
+import type { ComponentProps, ReactNode } from 'react';
 import type { FloatingAlign, FloatingSide } from './floating';
 import { usePortalContainer } from '@/contexts/portal-container';
 import { cn } from '@/lib/utils';
@@ -243,7 +243,14 @@ function SelectSeparator({ className, ...props }: ComponentProps<'div'>) {
 	if (useContext(RegistrationPassContext)) {
 		return null;
 	}
-	return <div role='separator' data-slot='select-separator' className={cn(styles.selectSeparator, className)} {...props} />;
+	return (
+		<div
+			role='separator'
+			data-slot='select-separator'
+			className={cn(styles.selectSeparator, className)}
+			{...props}
+		/>
+	);
 }
 
 export { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue };

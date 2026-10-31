@@ -3,10 +3,10 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { ReactNode } from 'react';
 import { EmailVerified } from '@/feature/auth/email-verified-page';
 import { Login } from '@/feature/auth/login-page';
 import { SignUp } from '@/feature/auth/signup-page';
-import type { ReactNode } from 'react';
 
 const mocks = vi.hoisted(() => ({
 	formValues: {} as Record<string, string | boolean>,

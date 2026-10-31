@@ -3,12 +3,12 @@ import { memo, useMemo } from 'react';
 
 import { McpAppHeader } from './mcp-app-header';
 import { OpenInQuarryButton } from './open-in-quarry-button';
+import styles from './chart-app-view.module.css';
 import type { displayChart } from '@quarry/shared/tools';
 import type { ReactNode } from 'react';
 import type { McpChartEmbedStoredConfig } from '@quarry/shared';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { ChartDisplay } from '@/feature/chat/components/tool-calls/display-chart';
-import styles from './chart-app-view.module.css';
 
 interface ChartAppViewProps {
 	config: McpChartEmbedStoredConfig;
@@ -39,23 +39,11 @@ export const ChartAppView = memo(function ChartAppView({ config, data, quarryUrl
 
 	let body: ReactNode;
 	if (!chartData.length) {
-		body = (
-			<div className={styles.chartAppViewDiv}>
-				Chart data unavailable.
-			</div>
-		);
+		body = <div className={styles.chartAppViewDiv}>Chart data unavailable.</div>;
 	} else if (series.length === 0) {
-		body = (
-			<div className={styles.chartAppViewDiv}>
-				No series configured for this chart.
-			</div>
-		);
+		body = <div className={styles.chartAppViewDiv}>No series configured for this chart.</div>;
 	} else if (!isBuiltinChartType(config.chartType)) {
-		body = (
-			<div className={styles.chartAppViewDiv}>
-				Custom charts are available in web chats only.
-			</div>
-		);
+		body = <div className={styles.chartAppViewDiv}>Custom charts are available in web chats only.</div>;
 	} else {
 		body = (
 			<div className={`${styles.chartAppViewDiv2} ${config.chartType !== 'kpi_card' ? styles.state100 : ''}`}>

@@ -1,8 +1,8 @@
 import { ChevronRight, Folder, FolderLock, Globe, Home, Lock } from 'lucide-react';
 
+import styles from './stories-folder-tree-select.module.css';
 import type { FolderItem } from '@/lib/stories-page';
 import { cn } from '@/lib/utils';
-import styles from './stories-folder-tree-select.module.css';
 
 export type FolderTreeSelectProps = {
 	tree: FolderItem[];

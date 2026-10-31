@@ -2,19 +2,20 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { ArchiveRestoreIcon } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 
-import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
-import type { LiveQueryConfig, QueryDataMap } from './story-embeds';
 import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from './story-embeds';
-import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
 import { StoryTabbedContent } from './story-tabbed-content';
 import { useStoryThemeForCurrentMode } from './story-theme-provider';
+import { StoryPageBody } from './story-page-body';
+import { STORY_ASK_BAR_INSET_STYLE, StoryAskBar } from './story-ask-bar';
+import { StoryPageHeader } from './story-page-header';
+import styles from './owned-story-page.module.css';
+import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
+import type { LiveQueryConfig, QueryDataMap } from './story-embeds';
+import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
 import { Button } from '@/components/ui/button';
 import { LiveStorySettingsDialog } from '@/feature/stories/components/side-panel/live-story-settings-dialog';
 import { useStoryViewerLiveSettings } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-live-settings';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
-import { StoryPageBody } from './story-page-body';
-import { STORY_ASK_BAR_INSET_STYLE, StoryAskBar } from './story-ask-bar';
-import { StoryPageHeader } from './story-page-header';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { StoryChartEditProvider } from '@/contexts/story-chart-edit';
 import { StoryMapEditProvider } from '@/contexts/story-map-edit';
@@ -25,7 +26,6 @@ import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh
 import { useStoryPageEditor } from '@/hooks/use-story-page-editor';
 import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { storyApi } from '@/lib/story-api';
-import styles from './owned-story-page.module.css';
 
 export function OwnedStoryPage({ chatId, storySlug }: { chatId: string; storySlug: string }) {
 	const { data: story } = useSuspenseQuery(storyApi.story.getLatest.queryOptions({ chatId, storySlug }));

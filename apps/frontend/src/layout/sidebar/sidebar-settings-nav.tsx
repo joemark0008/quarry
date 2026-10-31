@@ -2,11 +2,11 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowUpRight, Search, X } from 'lucide-react';
 import { Fragment, useEffect, useRef, useState } from 'react';
 
-import { getVisibleSettingsNavGroups } from '@/lib/navigation';
+import styles from './sidebar-settings-nav.module.css';
 import type { NavContext } from '@/lib/navigation';
+import { getVisibleSettingsNavGroups } from '@/lib/navigation';
 import { useSettingsSearch } from '@/hooks/use-settings-search';
 import { cn, hideIf } from '@/lib/utils';
-import styles from './sidebar-settings-nav.module.css';
 
 const navRowClassName = styles.navRowClassName;
 
@@ -119,9 +119,7 @@ export function SidebarSettingsNav({
 								<X className={styles.sidebarSettingsNavX} />
 							</button>
 						) : (
-							<kbd className={styles.sidebarSettingsNavKbd}>
-								/
-							</kbd>
+							<kbd className={styles.sidebarSettingsNavKbd}>/</kbd>
 						)}
 					</div>
 				</div>
@@ -139,10 +137,7 @@ export function SidebarSettingsNav({
 									to={result.page}
 									search={result.search}
 									onClick={() => setQuery('')}
-									className={cn(
-										styles.sidebarSettingsNavLink,
-										styles.sidebarSettingsNavLink2,
-									)}
+									className={cn(styles.sidebarSettingsNavLink, styles.sidebarSettingsNavLink2)}
 								>
 									<span className={styles.sidebarSettingsNavSpan}>{result.title}</span>
 									<span className={styles.sidebarSettingsNavSpan2}>
@@ -157,15 +152,16 @@ export function SidebarSettingsNav({
 					<nav className={styles.sidebarSettingsNavNav}>
 						{navGroups.map((group) => (
 							<Fragment key={group.label}>
-								<div className={styles.sidebarSettingsNavDiv7}>
-									{group.label}
-								</div>
+								<div className={styles.sidebarSettingsNavDiv7}>{group.label}</div>
 								{group.items.map((item) => {
 									const leavesSettingsIndicator = item.leavesSettings ? (
 										<>
 											<ArrowUpRight
 												aria-hidden='true'
-												className={cn(styles.leavesSettingsIndicatorArrowUpRight, styles.leavesSettingsIndicatorArrowUpRight2)}
+												className={cn(
+													styles.leavesSettingsIndicatorArrowUpRight,
+													styles.leavesSettingsIndicatorArrowUpRight2,
+												)}
 											/>
 											<span className='sr-only'>Opens a chat outside settings</span>
 										</>
@@ -187,7 +183,7 @@ export function SidebarSettingsNav({
 													}}
 												>
 													<item.icon className={styles.navIcon} />
-<span>{item.label}</span>
+													<span>{item.label}</span>
 													{leavesSettingsIndicator}
 												</Link>
 											) : (
@@ -203,7 +199,7 @@ export function SidebarSettingsNav({
 													}}
 												>
 													<item.icon className={styles.navIcon} />
-<span>{item.label}</span>
+													<span>{item.label}</span>
 													{leavesSettingsIndicator}
 												</Link>
 											)}

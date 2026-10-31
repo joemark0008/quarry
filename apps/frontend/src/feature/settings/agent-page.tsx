@@ -1,5 +1,5 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import styles from './agent-page.module.css';
 import type { LlmProvider } from '@quarry/shared/types';
 import type { ProviderToEdit } from '@/feature/settings/components/llm-providers-section';
 import type { TabBarItem } from '@/components/ui/tab-bar';
@@ -19,10 +19,8 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { TabBar, TabPanel } from '@/components/ui/tab-bar';
 import { usePermissions } from '@/hooks/use-permissions';
 import { usePublicConfig } from '@/hooks/use-public-config';
-import styles from './agent-page.module.css';
 
 const Route = getRouteApi('/_protected/settings/project/agent');
-
 
 type AgentTab = 'models' | 'tools';
 

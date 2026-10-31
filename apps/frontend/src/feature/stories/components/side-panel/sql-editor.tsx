@@ -4,17 +4,18 @@ import { validateSqlFilterTemplate } from '@quarry/shared/sql-template';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, Loader2, Play, Save } from 'lucide-react';
 import { usePanelRef } from 'react-resizable-panels';
-import { ResizableSeparator, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { SidePanelHeader } from './side-panel-header';
+import styles from './sql-editor.module.css';
 import type { Monaco } from '@monaco-editor/react';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { executeSql } from '@quarry/shared/tools';
 import type { editor } from 'monaco-editor';
+import { ResizableSeparator, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 import { useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useEditorTheme } from '@/hooks/use-editor-theme';
 import { useQueryRowsSource, useServerPaginatedRows } from '@/hooks/use-query-rows';
 import { FixInChatButton } from '@/feature/chat/components/fix-in-chat-button';
-import { SidePanelHeader } from './side-panel-header';
 import { TableDisplay } from '@/feature/chat/components/tool-calls/display-table';
 import { Button } from '@/components/ui/button';
 import { applyExecuteSqlResultToMessages } from '@/lib/execute-sql-messages';
@@ -22,7 +23,6 @@ import { formatSQL } from '@/lib/sql-formatter';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
 import { chatApi } from '@/lib/chat-api';
 import { storyApi } from '@/lib/story-api';
-import styles from './sql-editor.module.css';
 
 const RESULTS_MIN_HEIGHT = 240;
 const SQL_MIN_HEIGHT = 100;
@@ -299,12 +299,14 @@ export function SqlQueryEditor({ input, output, toolCallId, editable = false, on
 				</div>
 			)}
 
-			{error && (
-				<div className={styles.sqlQueryEditorDiv5}>{error}</div>
-			)}
+			{error && <div className={styles.sqlQueryEditorDiv5}>{error}</div>}
 			{validationIssues.length > 0 && <SqlValidationBanner queryId={queryId} issues={validationIssues} />}
 
-			<ResizablePanelGroup orientation='vertical' className={styles.sqlQueryEditorResizablePanelGroup} elementRef={groupElementRef}>
+			<ResizablePanelGroup
+				orientation='vertical'
+				className={styles.sqlQueryEditorResizablePanelGroup}
+				elementRef={groupElementRef}
+			>
 				<ResizablePanel
 					id='sql'
 					minSize={SQL_MIN_HEIGHT}
@@ -381,7 +383,9 @@ function SqlValidationBanner({ queryId, issues }: { queryId: string | undefined;
 							{issue}
 						</li>
 					))}
-					{issues.length > 5 && <li className={styles.sqlValidationBannerLi2}>and {issues.length - 5} more...</li>}
+					{issues.length > 5 && (
+						<li className={styles.sqlValidationBannerLi2}>and {issues.length - 5} more...</li>
+					)}
 				</ul>
 			</div>
 			<FixInChatButton message={fixMessage} className={styles.sqlValidationBannerFixInChatButton} />

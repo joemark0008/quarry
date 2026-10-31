@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { ArrowUp, ChevronDown, ChevronUp, Loader2, Maximize2, MessageCircle, X } from 'lucide-react';
+import { ChatInputAnimatedBorder } from './chat-input-animated-border';
+import { SelectionCitationExcerpt } from './selection-citation-excerpt';
+import styles from './ask-bar.module.css';
 import type { FormEvent, ReactNode, RefObject } from 'react';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import type { AskQuestion, AskSelection } from '@/stores/ask-bar';
-import { ChatInputAnimatedBorder } from './chat-input-animated-border';
 import { ChatMessagesContent } from '@/feature/chat/components/chat-messages/chat-messages';
-import { SelectionCitationExcerpt } from './selection-citation-excerpt';
 import { Button } from '@/components/ui/button';
 import { Conversation, ConversationContent, ConversationScrollButton } from '@/components/ui/conversation';
 import { TextShimmer } from '@/components/ui/text-shimmer';
@@ -16,7 +17,6 @@ import { SetChatInputCallbackProvider, useRegisterSetChatInputCallback } from '@
 import { ChatIdContext, useChatId } from '@/hooks/use-chat-id';
 import { cn } from '@/lib/utils';
 import { useAskRequest } from '@/stores/ask-bar';
-import styles from './ask-bar.module.css';
 
 type AskSession = {
 	chatId: string | null;
@@ -127,13 +127,7 @@ export function AskBar({
 
 function FloatingBar({ isHidden, children }: { isHidden: boolean; children: ReactNode }) {
 	return (
-		<div
-			data-selection-ignore
-			className={cn(
-				styles.floatingBarDiv,
-				isHidden && styles.floatingBarDiv2,
-			)}
-		>
+		<div data-selection-ignore className={cn(styles.floatingBarDiv, isHidden && styles.floatingBarDiv2)}>
 			<div className={styles.floatingBarDiv3}>{children}</div>
 		</div>
 	);
@@ -262,10 +256,7 @@ function AskPanelFrame({
 	children: ReactNode;
 }) {
 	return (
-		<aside
-			data-selection-ignore
-			className={styles.askPanelFrameAside}
-		>
+		<aside data-selection-ignore className={styles.askPanelFrameAside}>
 			<AskPanelHeader onCollapse={onCollapse} onClose={onClose} />
 			{selection && (
 				<div className={styles.askPanelFrameDiv}>
@@ -360,10 +351,7 @@ function AskInput({
 	return (
 		<form
 			onSubmit={submit}
-			className={cn(
-				styles.askInputForm,
-				selection ? styles.askInputForm2 : styles.askStatusButton2,
-			)}
+			className={cn(styles.askInputForm, selection ? styles.askInputForm2 : styles.askStatusButton2)}
 		>
 			<ChatInputAnimatedBorder isStatic />
 			{fillsFromFollowUps && <FollowUpFiller onFill={setText} />}

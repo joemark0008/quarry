@@ -4,9 +4,9 @@ import { Code, Copy, Table as TableIcon } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { ToolOutputFallback } from './tool-output-fallback';
 import { TableDisplay } from './display-table';
+import styles from './query-app-db.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './query-app-db.module.css';
 
 type ViewMode = 'results' | 'query';
 

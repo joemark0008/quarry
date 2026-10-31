@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Activity, MessageSquare, X, ThumbsDown, ThumbsUp, Check, Plug } from 'lucide-react';
+import styles from './chat-input-suggestions.module.css';
+import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
+import type { FeedbackVote } from '@/feature/chat/components/chat-messages/assistant-message-actions';
 import { FeedbackDialog } from '@/feature/chat/components/chat-messages/assistant-message-actions';
 import { Button } from '@/components/ui/button';
 import StoryIcon from '@/components/ui/story-icon';
-import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
-import type { FeedbackVote } from '@/feature/chat/components/chat-messages/assistant-message-actions';
 import { useStoryViewerLiveSettings } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-live-settings';
 import { LiveStorySettingsDialog } from '@/feature/stories/components/side-panel/live-story-settings-dialog';
 import { useAgentContext, useAgentMessagesGetter, useAgentMessagesSelector } from '@/contexts/agent.provider';
@@ -19,7 +20,6 @@ import { lastUserMessagePayload } from '@/lib/mcp-auth-retry';
 import { openMcpConnectPopup } from '@/lib/mcp-oauth';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
-import styles from './chat-input-suggestions.module.css';
 
 /**
  * Milliseconds of inactivity before we ask the user how the conversation went, indexed by how many
@@ -72,7 +72,10 @@ export function ChatInputSuggestions({
 			aria-hidden={isCollapsed}
 			inert={isCollapsed}
 		>
-			<div ref={ref} className={cn(styles.chatInputSuggestionsDiv2, isCollapsed && styles.chatInputSuggestionsDiv3)}>
+			<div
+				ref={ref}
+				className={cn(styles.chatInputSuggestionsDiv2, isCollapsed && styles.chatInputSuggestionsDiv3)}
+			>
 				{content}
 			</div>
 		</div>
@@ -123,12 +126,7 @@ function renderSuggestion({
 				message={`Connect your account to "${mcpAuth.server}" to continue`}
 				description={mcpAuth.error}
 			>
-				<Button
-					variant='ghost'
-					size='sm'
-					className={styles.renderSuggestionButton}
-					onClick={mcpAuth.dismiss}
-				>
+				<Button variant='ghost' size='sm' className={styles.renderSuggestionButton} onClick={mcpAuth.dismiss}>
 					Not now
 				</Button>
 				<Button
@@ -161,7 +159,12 @@ function renderSuggestion({
 				<Button variant='ghost' size='sm' className={styles.renderSuggestionButton2} onClick={story.dismiss}>
 					No
 				</Button>
-				<Button variant='primary-gradient' size='sm' className={styles.renderSuggestionButton2} onClick={story.accept}>
+				<Button
+					variant='primary-gradient'
+					size='sm'
+					className={styles.renderSuggestionButton2}
+					onClick={story.accept}
+				>
 					Yes
 				</Button>
 			</SuggestionCard>
@@ -184,7 +187,12 @@ function renderSuggestion({
 					>
 						Not now
 					</Button>
-					<Button variant='primary-gradient' size='sm' className={styles.renderSuggestionButton2} onClick={liveStory.accept}>
+					<Button
+						variant='primary-gradient'
+						size='sm'
+						className={styles.renderSuggestionButton2}
+						onClick={liveStory.accept}
+					>
 						Make it live
 					</Button>
 				</SuggestionCard>
@@ -199,7 +207,12 @@ function renderSuggestion({
 	}
 
 	if (feedback.showThanks) {
-		return <SuggestionCard icon={<Check className={styles.renderSuggestionPlug} />} message='Thanks for your feedback!' />;
+		return (
+			<SuggestionCard
+				icon={<Check className={styles.renderSuggestionPlug} />}
+				message='Thanks for your feedback!'
+			/>
+		);
 	}
 
 	if (feedback.isVisible) {
@@ -637,16 +650,9 @@ export function SuggestionCard({
 	return (
 		<div
 			data-selection-ignore
-			className={cn(
-				`${styles.suggestionCardDiv} group`,
-				icon && styles.suggestionCardDiv2,
-			)}
+			className={cn(`${styles.suggestionCardDiv} group`, icon && styles.suggestionCardDiv2)}
 		>
-			{icon && (
-				<div className={styles.suggestionCardDiv3}>
-					{icon}
-				</div>
-			)}
+			{icon && <div className={styles.suggestionCardDiv3}>{icon}</div>}
 			<div className={cn(styles.suggestionCardDiv4, icon && styles.suggestionCardDiv5)}>
 				<p className={styles.suggestionCardP}>{message}</p>
 				{description && <ExpandableDescription key={description} description={description} />}

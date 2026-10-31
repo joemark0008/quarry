@@ -11,12 +11,12 @@ import { NAMED_PROVIDER_KIND, providerKind, providerLabels, toProviderName } fro
 import { CustomModelDialog } from './custom-model-dialog';
 import { ModelParametersDialog } from './model-parameters-dialog';
 import { applySavedModelSettings } from './model-settings-overrides';
+import styles from './llm-provider-form.module.css';
 import type { CustomModelMetadata, ModelSettingsMap } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PasswordField, TextField, TextareaField, FormError } from '@/components/ui/form-fields';
-import styles from './llm-provider-form.module.css';
 
 /** Where credentials already come from when the UI is only layering settings on top. */
 export type InheritedKeySource = 'env' | 'config';
@@ -230,9 +230,7 @@ export function LlmProviderForm({
 	const baseUrlField = (
 		<form.Field name='baseUrl'>
 			{(field) => (
-				<div
-					className={providerMeta.requiresBaseUrl ? styles.nameFieldDiv : styles.baseUrlFieldDiv}
-				>
+				<div className={providerMeta.requiresBaseUrl ? styles.nameFieldDiv : styles.baseUrlFieldDiv}>
 					<label htmlFor='base-url' className={styles.nameFieldLabel}>
 						Base URL{' '}
 						<span className={styles.nameFieldSpan}>
@@ -272,9 +270,7 @@ export function LlmProviderForm({
 				<span className={styles.nameFieldLabel}>
 					{title}
 					{inheritedKeyLabel && (
-						<span className={styles.contentSpan}>
-							(using {inheritedKeyLabel} API key)
-						</span>
+						<span className={styles.contentSpan}>(using {inheritedKeyLabel} API key)</span>
 					)}
 				</span>
 				<Button variant='ghost' size='icon-sm' onClick={onCancel} type='button'>
@@ -286,10 +282,10 @@ export function LlmProviderForm({
 				<div className={styles.contentDiv2}>
 					<TriangleAlert className={styles.contentTriangleAlert} />
 					<p className={styles.contentP}>
-						This provider is defined in <span className={styles.contentSpan2}>quarry_config.yaml</span>. Settings
-						saved here are stored in the project and take precedence over the file, so later edits to{' '}
-						<span className={styles.contentSpan2}>quarry_config.yaml</span> are ignored until you delete this provider
-						here.
+						This provider is defined in <span className={styles.contentSpan2}>quarry_config.yaml</span>.
+						Settings saved here are stored in the project and take precedence over the file, so later edits
+						to <span className={styles.contentSpan2}>quarry_config.yaml</span> are ignored until you delete
+						this provider here.
 					</p>
 				</div>
 			)}
@@ -365,10 +361,7 @@ export function LlmProviderForm({
 
 									if (isEnabled && supportsModelParameters(model.id)) {
 										return (
-											<div
-												key={model.id}
-												className={styles.contentDiv4}
-											>
+											<div key={model.id} className={styles.contentDiv4}>
 												<button
 													type='button'
 													onClick={() => toggleModel(model.id)}
@@ -410,10 +403,7 @@ export function LlmProviderForm({
 													const metadata = customModels.find((m) => m.id === modelId);
 													const label = metadata?.displayName?.trim() || modelId;
 													return (
-														<div
-															key={modelId}
-															className={styles.contentDiv5}
-														>
+														<div key={modelId} className={styles.contentDiv5}>
 															<button
 																type='button'
 																onClick={() => toggleModel(modelId)}
@@ -429,7 +419,9 @@ export function LlmProviderForm({
 																className={styles.contentButton2}
 																aria-label={`Edit ${modelId}`}
 															>
-																<MoreHorizontal className={styles.contentMoreHorizontal} />
+																<MoreHorizontal
+																	className={styles.contentMoreHorizontal}
+																/>
 															</button>
 														</div>
 													);
@@ -476,7 +468,9 @@ export function LlmProviderForm({
 						onClick={() => setShowAdvanced(!showAdvanced)}
 						className={styles.contentButton5}
 					>
-						<ChevronDown className={`${styles.contentChevronDown} ${showAdvanced ? styles.state104 : ''}`} />
+						<ChevronDown
+							className={`${styles.contentChevronDown} ${showAdvanced ? styles.state104 : ''}`}
+						/>
 						Advanced settings
 					</button>
 					{showAdvanced && baseUrlField}

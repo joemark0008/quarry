@@ -1,5 +1,5 @@
-import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import styles from './story-content-loading.module.css';
+import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 
 export function StoryContentLoading() {
 	return (

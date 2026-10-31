@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react';
 import { parseStoryTabs, stripStoryTabsMarkup } from '@quarry/shared/story-tabs';
 import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
+import { StoryFilterBar } from './story-filter-bar';
+import { StoryThemeProvider } from './story-theme-provider';
+import { StoryBlock, StoryMapFrame, StoryTableFrame } from './story-block';
+import { SegmentList } from './story-rendering';
+import styles from './story-tabbed-content.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 
 import type { QueryDataMap } from './story-embeds';
 import type { StoryFilterApi } from '@/hooks/use-story-filters';
-import { StoryFilterBar } from './story-filter-bar';
-import { StoryThemeProvider } from './story-theme-provider';
 import { StoryTabsBar } from '@/feature/stories/components/side-panel/story-tabs-bar';
-import { StoryBlock, StoryMapFrame, StoryTableFrame } from './story-block';
-import { SegmentList } from './story-rendering';
 import { StoryQuerySqlProvider } from '@/contexts/story-query-sql';
 import { useStoryFilters } from '@/hooks/use-story-filters';
-import styles from './story-tabbed-content.module.css';
 
 export interface StoryEmbedRenderOptions {
 	queryData: QueryDataMap | null;
@@ -68,10 +68,7 @@ export function StoryTabbedContent({
 
 	return (
 		<StoryQuerySqlProvider value={querySqlSource}>
-			<StoryThemeProvider
-				theme={theme ?? null}
-				className={styles.storyTabbedContentStoryThemeProvider}
-			>
+			<StoryThemeProvider theme={theme ?? null} className={styles.storyTabbedContentStoryThemeProvider}>
 				{isTabbed && tabs && (
 					<StoryTabsBar
 						tabs={tabs.map((tab) => ({ title: tab.title }))}

@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Download, Loader2 } from 'lucide-react';
 import { Streamdown } from 'streamdown';
+import { SidePanelHeader } from './side-panel-header';
+import styles from './attachment-viewer.module.css';
 import type { AttachmentPreview, AttachmentSheet } from '@/lib/attachment-preview';
 import { AttachmentFileIcon } from '@/feature/chat/components/attachment-file-icon';
 import { MarkdownTable } from '@/feature/chat/components/chat-messages/markdown-table';
-import { SidePanelHeader } from './side-panel-header';
 import { TextFilePreview } from '@/feature/chat/components/text-file-preview';
 import { TableDisplay } from '@/feature/chat/components/tool-calls/display-table';
 import { Button } from '@/components/ui/button';
@@ -16,7 +17,6 @@ import { useAttachmentDownload } from '@/hooks/use-attachment-download';
 import { loadAttachmentPreview, MAX_PREVIEW_ROWS, MAX_TABULAR_PREVIEW_SIZE_MB } from '@/lib/attachment-preview';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './attachment-viewer.module.css';
 
 const markdownComponents = { table: ({ node, className }: any) => <MarkdownTable node={node} className={className} /> };
 

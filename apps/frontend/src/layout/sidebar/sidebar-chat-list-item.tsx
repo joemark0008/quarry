@@ -2,6 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { EllipsisVertical, Pencil, StarIcon, StarOffIcon, TrashIcon, Upload } from 'lucide-react';
 import { useState } from 'react';
+import styles from './sidebar-chat-list-item.module.css';
+import type { ComponentProps } from 'react';
+import type { GroupedChatItem } from '@quarry/shared/types';
 import { ShareChatDialog } from '@/components/share-dialog.chat.tsx';
 import {
 	DropdownMenu,
@@ -13,9 +16,7 @@ import {
 import { InputEdit } from '@/components/ui/input-edit';
 import { Link } from '@/components/ui/link';
 import { Spinner } from '@/components/ui/spinner';
-import type { ComponentProps } from 'react';
 
-import type { GroupedChatItem } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { getOnboardingChatIdStorage } from '@/hooks/use-agent';
 import { useChatActivity } from '@/hooks/use-chat-activity';
@@ -24,7 +25,6 @@ import { useToggleStarred } from '@/hooks/use-toggle-starred';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
-import styles from './sidebar-chat-list-item.module.css';
 
 export interface Props extends Omit<ComponentProps<'div'>, 'children'> {
 	chat: GroupedChatItem;
@@ -112,10 +112,7 @@ export function ChatListItem({ chat }: Props) {
 			<Link
 				params={{ chatId: chat.id }}
 				to={`/$chatId`}
-				className={cn(
-					`${styles.chatListItemLink} group`,
-					!isRenaming && styles.chatListItemLink2,
-				)}
+				className={cn(`${styles.chatListItemLink} group`, !isRenaming && styles.chatListItemLink2)}
 				inactiveProps={{
 					className: styles.chatListItemClassName,
 				}}
@@ -135,15 +132,11 @@ export function ChatListItem({ chat }: Props) {
 				) : (
 					<>
 						{activity.unread && <span className={styles.chatListItemSpan} />}
-						<div className={styles.chatListItemDiv}>
-							{chat.isOnboarding ? 'Project setup' : chat.title}
-						</div>
+						<div className={styles.chatListItemDiv}>{chat.isOnboarding ? 'Project setup' : chat.title}</div>
 						{activity.running ? (
 							<Spinner className={styles.chatListItemSpinner} />
 						) : (
-							<div className={styles.chatListItemDiv2}>
-								{timeAgo.humanReadable}
-							</div>
+							<div className={styles.chatListItemDiv2}>{timeAgo.humanReadable}</div>
 						)}
 
 						<DropdownMenu>
@@ -158,7 +151,10 @@ export function ChatListItem({ chat }: Props) {
 								</Button>
 							</DropdownMenuTrigger>
 
-							<DropdownMenuContent className={styles.chatListItemDropdownMenuContent} onClick={(e) => e.stopPropagation()}>
+							<DropdownMenuContent
+								className={styles.chatListItemDropdownMenuContent}
+								onClick={(e) => e.stopPropagation()}
+							>
 								<DropdownMenuGroup>
 									<DropdownMenuItem onSelect={handleStarSelect}>
 										{chat.isStarred ? <StarOffIcon /> : <StarIcon />}

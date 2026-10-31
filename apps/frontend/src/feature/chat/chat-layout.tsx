@@ -6,7 +6,6 @@ import { useChatQuery } from '@/queries/use-chat-query';
 import { SetChatInputCallbackProvider } from '@/contexts/set-chat-input-callback';
 import { StoryBeforeAgentSendProvider } from '@/contexts/story-before-agent-send';
 
-
 export function RouteComponent() {
 	const exampleSearch = useRouterState({ select: (state) => state.location.search.example === true });
 	const isCloud = useIsCloud();

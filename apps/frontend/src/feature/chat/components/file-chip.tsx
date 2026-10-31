@@ -1,6 +1,7 @@
 import { Download, Loader2 } from 'lucide-react';
 
 import { AttachmentFileIcon } from './attachment-file-icon';
+import styles from './file-chip.module.css';
 import { AttachmentViewer } from '@/feature/stories/components/side-panel/attachment-viewer';
 import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
@@ -8,7 +9,6 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useAttachmentDownload } from '@/hooks/use-attachment-download';
 import { fileNameOf } from '@/lib/attachments';
 import { cn } from '@/lib/utils';
-import styles from './file-chip.module.css';
 
 interface FileChipProps {
 	/** Virtual path in permanent storage, e.g. `/home/exports/churn-2025.csv`. */
@@ -69,5 +69,4 @@ export function FileChip({ path, label, className }: FileChipProps) {
 	);
 }
 
-const chipClassName =
-	styles.chipClassName;
+const chipClassName = styles.chipClassName;

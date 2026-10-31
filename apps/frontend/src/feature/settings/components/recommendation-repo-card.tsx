@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { GitBranch, Github } from 'lucide-react';
 
+import styles from './recommendation-repo-card.module.css';
 import type { RepoProvider } from '@quarry/shared/types';
 
 import GitlabIcon from '@/components/icons/gitlab-icon.svg';
@@ -9,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
-import styles from './recommendation-repo-card.module.css';
 
 export function RecommendationRepoCard() {
 	const repo = useQuery({
@@ -53,12 +53,7 @@ export function RecommendationRepoCard() {
 			action={<GitSettingsLink label='Manage in Git settings' />}
 		>
 			<div className={styles.recommendationRepoCardDiv}>
-				<a
-					href={webUrl}
-					target='_blank'
-					rel='noopener noreferrer'
-					className={styles.recommendationRepoCardA}
-				>
+				<a href={webUrl} target='_blank' rel='noopener noreferrer' className={styles.recommendationRepoCardA}>
 					{repoFullName}
 				</a>
 				{branch && (

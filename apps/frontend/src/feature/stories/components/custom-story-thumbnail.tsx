@@ -1,16 +1,16 @@
 import { ChartColumn, ChartLine, ChartPie, Pencil } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { SHEET_TRANSFORM, SHEET_VISUAL, StoryThumbnail } from './story-thumbnail';
+import { StoryThemeProvider } from './story-theme-provider';
+import styles from './custom-story-thumbnail.module.css';
 import type { CSSProperties, ReactNode } from 'react';
 import type { StorySummary } from '@quarry/shared/types';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { QueryDataMap } from './story-embeds';
-import { SHEET_TRANSFORM, SHEET_VISUAL, StoryThumbnail } from './story-thumbnail';
-import { StoryThemeProvider } from './story-theme-provider';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './custom-story-thumbnail.module.css';
 
 const ANIMATED = 'app-preview-animated';
 
@@ -179,10 +179,7 @@ function ScreenshotSheet({
 				<StoryThemeProvider theme={theme} className={styles.screenshotSheetStoryThemeProvider}>
 					<div className={styles.screenshotSheetDiv4}>
 						<div
-							className={cn(
-								styles.screenshotSheetDiv5,
-								SHEET_VISUAL,
-							)}
+							className={cn(styles.screenshotSheetDiv5, SHEET_VISUAL)}
 							style={{ transform: SHEET_TRANSFORM }}
 						/>
 						<img
@@ -193,11 +190,7 @@ function ScreenshotSheet({
 							fetchPriority='low'
 							onLoad={onLoad}
 							onError={onError}
-							className={cn(
-								styles.screenshotSheetImg,
-								SHEET_VISUAL,
-								styles.screenshotSheetImg2,
-							)}
+							className={cn(styles.screenshotSheetImg, SHEET_VISUAL, styles.screenshotSheetImg2)}
 							style={{ transform: SHEET_TRANSFORM }}
 						/>
 					</div>
@@ -214,7 +207,10 @@ function ScreenshotSheet({
 				styles.screenshotSheetDiv6,
 			)}
 		>
-			<StoryThemeProvider theme={theme} className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}>
+			<StoryThemeProvider
+				theme={theme}
+				className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}
+			>
 				<div className={styles.screenshotSheetDiv7}>
 					<img
 						src={src}
@@ -254,7 +250,10 @@ function AppIllustration({ isToolPart, theme }: { isToolPart: boolean; theme: St
 
 	return (
 		<div className={`${styles.appIllustrationDiv3} custom-story-thumbnail`}>
-			<StoryThemeProvider theme={theme} className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}>
+			<StoryThemeProvider
+				theme={theme}
+				className={cn(styles.screenshotSheetStoryThemeProvider, FLAT_THUMBNAIL_FRAME)}
+			>
 				<AppSheet isToolPart={isToolPart} />
 				<div className={styles.appIllustrationDiv2}>
 					<BarTooltip />
@@ -275,11 +274,7 @@ function AppSheet({ isToolPart }: { isToolPart: boolean }) {
 		return (
 			<>
 				<div
-					className={cn(
-						styles.appSheetDiv,
-						sheetSize,
-						SHEET_VISUAL,
-					)}
+					className={cn(styles.appSheetDiv, sheetSize, SHEET_VISUAL)}
 					style={{ transform: SHEET_TRANSFORM }}
 				/>
 				<div
@@ -321,24 +316,14 @@ function BlockEditPanel({ isToolPart }: { isToolPart: boolean }) {
 	const adjustedTop = isToolPart ? 4 : 0;
 	return (
 		<div
-			className={cn(
-				styles.blockEditPanelDiv,
-				isToolPart ? styles.blockEditPanelDiv2 : styles.blockEditPanelDiv3,
-			)}
+			className={cn(styles.blockEditPanelDiv, isToolPart ? styles.blockEditPanelDiv2 : styles.blockEditPanelDiv3)}
 		>
 			<div
-				className={cn(
-					styles.blockEditPanelDiv4,
-					isToolPart && styles.blockEditPanelDiv5,
-					ANIMATED,
-				)}
+				className={cn(styles.blockEditPanelDiv4, isToolPart && styles.blockEditPanelDiv5, ANIMATED)}
 				style={animation('app-preview-edit-panel')}
 			>
 				<div className={styles.blockEditPanelDiv6} />
-				<div
-					className={cn(styles.blockEditPanelDiv7, ANIMATED)}
-					style={animation('app-preview-editing')}
-				/>
+				<div className={cn(styles.blockEditPanelDiv7, ANIMATED)} style={animation('app-preview-editing')} />
 				<div className={styles.blockEditPanelDiv8} />
 				<ChartTypeTile left={6} top={adjustedTop} icon={ChartColumn} selectedAnimation='app-preview-tile-bar' />
 				<ChartTypeTile left={23} top={adjustedTop} icon={ChartLine} selectedAnimation='app-preview-tile-line' />
@@ -385,19 +370,10 @@ function ChartTypeTile({
 	selectedAnimation?: string;
 }) {
 	return (
-		<div
-			className={styles.chartTypeTileDiv}
-			style={{ left, top: top + 18 }}
-		>
+		<div className={styles.chartTypeTileDiv} style={{ left, top: top + 18 }}>
 			<Icon className={styles.chartTypeTileIcon} strokeWidth={3} />
 			{selectedAnimation && (
-				<div
-					className={cn(
-						styles.chartTypeTileDiv2,
-						ANIMATED,
-					)}
-					style={animation(selectedAnimation)}
-				>
+				<div className={cn(styles.chartTypeTileDiv2, ANIMATED)} style={animation(selectedAnimation)}>
 					<Icon className={styles.chartTypeTileIcon2} strokeWidth={3} />
 				</div>
 			)}
@@ -417,14 +393,7 @@ function ColorSwatches({ isToolPart }: { isToolPart: boolean }) {
 }
 
 function StoryTitle({ isToolPart }: { isToolPart: boolean }) {
-	return (
-		<div
-			className={cn(
-				styles.storyTitleDiv,
-				isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3,
-			)}
-		/>
-	);
+	return <div className={cn(styles.storyTitleDiv, isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3)} />;
 }
 
 function StoryTabs({ isToolPart }: { isToolPart: boolean }) {
@@ -433,19 +402,9 @@ function StoryTabs({ isToolPart }: { isToolPart: boolean }) {
 	return (
 		<>
 			{[1, 2, 3].map((tab) => (
-				<div
-					key={tab}
-					className={styles.storyTabsDiv}
-					style={{ left: firstTabLeft + 34 * tab }}
-				>
+				<div key={tab} className={styles.storyTabsDiv} style={{ left: firstTabLeft + 34 * tab }}>
 					<div className={styles.storyTabsDiv2} />
-					<div
-						className={cn(
-							styles.storyTabsDiv3,
-							ANIMATED,
-						)}
-						style={animation(`app-preview-tab-${tab}`)}
-					>
+					<div className={cn(styles.storyTabsDiv3, ANIMATED)} style={animation(`app-preview-tab-${tab}`)}>
 						<div className={styles.storyTabsDiv4} />
 					</div>
 				</div>
@@ -493,10 +452,7 @@ function TypedLine({
 function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 	return (
 		<StoryBlock tab={2} isToolPart={isToolPart} className={styles.chartBlockStoryBlock}>
-			<div
-				className={cn(styles.chartBlockDiv, ANIMATED)}
-				style={animation('app-preview-chart-bars')}
-			>
+			<div className={cn(styles.chartBlockDiv, ANIMATED)} style={animation('app-preview-chart-bars')}>
 				{BAR_HEIGHTS.map((height, index) => (
 					<ChartBar
 						key={index}
@@ -523,13 +479,7 @@ function ChartBlock({ isToolPart }: { isToolPart: boolean }) {
 					style={animation('app-preview-line-draw')}
 				/>
 			</svg>
-			<div
-				className={cn(
-					styles.chartBlockDiv2,
-					ANIMATED,
-				)}
-				style={animation('app-preview-editing')}
-			/>
+			<div className={cn(styles.chartBlockDiv2, ANIMATED)} style={animation('app-preview-editing')} />
 			<BlockPencil className={styles.chartBlockBlockPencil} />
 		</StoryBlock>
 	);
@@ -541,12 +491,7 @@ function ChartBar({ height, delaySeconds, isHovered }: { height: number; delaySe
 			className={cn(styles.chartBarDiv, ANIMATED)}
 			style={{ height: `${height * 100}%`, ...animation('app-preview-grow', delaySeconds) }}
 		>
-			{isHovered && (
-				<div
-					className={cn(styles.chartBarDiv2, ANIMATED)}
-					style={animation('app-preview-hover')}
-				/>
-			)}
+			{isHovered && <div className={cn(styles.chartBarDiv2, ANIMATED)} style={animation('app-preview-hover')} />}
 		</div>
 	);
 }
@@ -555,19 +500,30 @@ function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 	return (
 		<StoryBlock tab={3} isToolPart={isToolPart} className={styles.insightsBlockStoryBlock}>
 			<div
-				className={cn(styles.insightsBlockDiv, isToolPart ? styles.insightsBlockDiv2 : styles.insightsBlockDiv3, ANIMATED)}
+				className={cn(
+					styles.insightsBlockDiv,
+					isToolPart ? styles.insightsBlockDiv2 : styles.insightsBlockDiv3,
+					ANIMATED,
+				)}
 				style={animation('app-preview-insight-pop')}
 			>
 				<div className={styles.insightsBlockDiv4}>
-					<div
-						className={cn(styles.insightsBlockDiv5, ANIMATED)}
-						style={animation('app-preview-kpi-fill')}
-					/>
+					<div className={cn(styles.insightsBlockDiv5, ANIMATED)} style={animation('app-preview-kpi-fill')} />
 					<div className={styles.insightsBlockDiv6} />
 				</div>
-				<BlockPencil className={cn(styles.insightsBlockBlockPencil, isToolPart ? styles.insightsBlockBlockPencil2 : styles.insightsBlockBlockPencil3)} />
+				<BlockPencil
+					className={cn(
+						styles.insightsBlockBlockPencil,
+						isToolPart ? styles.insightsBlockBlockPencil2 : styles.insightsBlockBlockPencil3,
+					)}
+				/>
 			</div>
-			<div className={cn(styles.insightsBlockDiv7, isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockDiv9)}>
+			<div
+				className={cn(
+					styles.insightsBlockDiv7,
+					isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockDiv9,
+				)}
+			>
 				<svg viewBox='0 0 36 36' className={styles.insightsBlockSvg}>
 					<circle cx='18' cy='18' r='12' className={styles.insightsBlockCircle} strokeWidth={6} />
 					<circle
@@ -583,7 +539,12 @@ function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 				</svg>
 				<BlockPencil className={styles.insightsBlockBlockPencil4} />
 			</div>
-			<div className={cn(styles.insightsBlockDiv10, isToolPart ? styles.insightsBlockDiv11 : styles.insightsBlockDiv12)}>
+			<div
+				className={cn(
+					styles.insightsBlockDiv10,
+					isToolPart ? styles.insightsBlockDiv11 : styles.insightsBlockDiv12,
+				)}
+			>
 				<svg viewBox='0 0 46 24' className={styles.insightsBlockSvg2}>
 					<path d='M2 22H44' className={styles.insightsBlockCircle} strokeWidth={1} />
 					<path
@@ -597,7 +558,12 @@ function InsightsBlock({ isToolPart }: { isToolPart: boolean }) {
 						style={animation('app-preview-spark-draw')}
 					/>
 				</svg>
-				<BlockPencil className={cn(styles.insightsBlockBlockPencil5, isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockBlockPencil6)} />
+				<BlockPencil
+					className={cn(
+						styles.insightsBlockBlockPencil5,
+						isToolPart ? styles.insightsBlockDiv8 : styles.insightsBlockBlockPencil6,
+					)}
+				/>
 			</div>
 		</StoryBlock>
 	);
@@ -616,7 +582,12 @@ function StoryBlock({
 }) {
 	return (
 		<div
-			className={cn(styles.storyBlockDiv, isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3, className, ANIMATED)}
+			className={cn(
+				styles.storyBlockDiv,
+				isToolPart ? styles.storyTitleDiv2 : styles.storyTitleDiv3,
+				className,
+				ANIMATED,
+			)}
 			style={animation(`app-preview-tab-${tab}`)}
 		>
 			{children}
@@ -626,12 +597,7 @@ function StoryBlock({
 
 function BlockPencil({ className }: { className: string }) {
 	return (
-		<div
-			className={cn(
-				styles.blockPencilDiv,
-				className,
-			)}
-		>
+		<div className={cn(styles.blockPencilDiv, className)}>
 			<Pencil className={styles.blockPencilPencil} strokeWidth={3} />
 		</div>
 	);
@@ -639,10 +605,7 @@ function BlockPencil({ className }: { className: string }) {
 
 function BarTooltip() {
 	return (
-		<div
-			className={cn(styles.barTooltipDiv, ANIMATED)}
-			style={animation('app-preview-hover')}
-		>
+		<div className={cn(styles.barTooltipDiv, ANIMATED)} style={animation('app-preview-hover')}>
 			<div className={styles.barTooltipDiv2}>
 				<div className={styles.barTooltipDiv3} />
 				<div className={styles.barTooltipDiv4} />
@@ -665,10 +628,7 @@ function Pointer() {
 	return (
 		<svg
 			viewBox='0 0 24 24'
-			className={cn(
-				styles.pointerSvg,
-				ANIMATED,
-			)}
+			className={cn(styles.pointerSvg, ANIMATED)}
 			strokeWidth={1.6}
 			strokeLinejoin='round'
 			style={{ ...animation('app-preview-pointer'), animationTimingFunction: 'ease-in-out' }}

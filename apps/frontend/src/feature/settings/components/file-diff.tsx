@@ -1,9 +1,9 @@
 import { Fragment, useMemo, useState } from 'react';
 import { UnfoldVertical } from 'lucide-react';
 
+import styles from './file-diff.module.css';
 import type { DiffLine } from '@/lib/line-diff';
 import { cn } from '@/lib/utils';
-import styles from './file-diff.module.css';
 
 const CONTEXT_LINES = 3;
 const MIN_COLLAPSE = 2;
@@ -58,12 +58,8 @@ function DiffLineRow({ line }: { line: DiffLine }) {
 				line.type === 'remove' && styles.diffLineRowDiv3,
 			)}
 		>
-			<span className={styles.diffLineRowSpan}>
-				{line.oldNumber ?? ''}
-			</span>
-			<span className={styles.diffLineRowSpan}>
-				{line.newNumber ?? ''}
-			</span>
+			<span className={styles.diffLineRowSpan}>{line.oldNumber ?? ''}</span>
+			<span className={styles.diffLineRowSpan}>{line.newNumber ?? ''}</span>
 			<span
 				className={cn(
 					styles.diffLineRowSpan2,

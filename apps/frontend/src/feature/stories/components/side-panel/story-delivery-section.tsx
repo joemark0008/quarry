@@ -2,6 +2,7 @@ import { NO_CACHE_SCHEDULE } from '@quarry/shared';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2, Mail, Send, Slack, Wand2 } from 'lucide-react';
+import styles from './story-delivery-section.module.css';
 import type { NotificationChannel, RecipientMode } from '@quarry/shared/types';
 
 import { MemberPicker } from '@/components/share-dialog';
@@ -14,7 +15,6 @@ import { useShareAudience } from '@/hooks/use-share-dialog';
 import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-delivery-section.module.css';
 
 export interface StoryDeliveryHandle {
 	save: () => Promise<void>;
@@ -453,12 +453,7 @@ export const StoryDeliverySection = forwardRef<StoryDeliveryHandle, StoryDeliver
 function TimingOption({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
 	return (
 		<button type='button' onClick={onClick} className={styles.timingOptionButton}>
-			<span
-				className={cn(
-					styles.timingOptionSpan,
-					active ? styles.timingOptionSpan2 : styles.timingOptionSpan3,
-				)}
-			>
+			<span className={cn(styles.timingOptionSpan, active ? styles.timingOptionSpan2 : styles.timingOptionSpan3)}>
 				{active && <span className={styles.timingOptionSpan4} />}
 			</span>
 			<div className={styles.timingOptionDiv}>
@@ -593,11 +588,7 @@ function ChannelCard({
 			disabled={disabled}
 			className={cn(
 				styles.channelCardButton,
-				active
-					? styles.timingOptionSpan2
-					: disabled
-						? styles.channelCardButton2
-						: styles.channelCardButton3,
+				active ? styles.timingOptionSpan2 : disabled ? styles.channelCardButton2 : styles.channelCardButton3,
 				className,
 			)}
 		>

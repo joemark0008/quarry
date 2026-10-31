@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react';
+import styles from './chat-messages-citation-chip.module.css';
 import type { StoryBlockReference } from '@quarry/shared/types';
 import { useOptionalSelection } from '@/contexts/text-selection';
 import { useSidePanel } from '@/contexts/side-panel';
@@ -6,7 +7,6 @@ import { useChatId } from '@/hooks/use-chat-id';
 import { SelectionCitationExcerpt } from '@/feature/chat/components/selection-citation-excerpt';
 import { StoryViewer } from '@/feature/stories/components/side-panel/story-viewer';
 import { createRangeFromOffsets, findTextRange } from '@/lib/selection-dom.utils';
-import styles from './chat-messages-citation-chip.module.css';
 
 interface ChatMessagesCitationChipProps {
 	start: number;
@@ -55,12 +55,7 @@ export const ChatMessagesCitationChip = ({ start, end, text, storySlug, block }:
 	}, [selectionCtx, sidePanel, chatId, storySlug, block, start, end, text]);
 
 	return (
-		<button
-			ref={buttonRef}
-			type='button'
-			onClick={handleClick}
-			className={styles.chatMessagesCitationChipButton}
-		>
+		<button ref={buttonRef} type='button' onClick={handleClick} className={styles.chatMessagesCitationChipButton}>
 			<SelectionCitationExcerpt start={start} end={end} block={block} text={text} maxLength={80} lineClamp={2} />
 		</button>
 	);

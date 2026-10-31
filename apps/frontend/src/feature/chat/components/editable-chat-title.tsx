@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import styles from './editable-chat-title.module.css';
 import { cn } from '@/lib/utils';
 import { chatApi } from '@/lib/chat-api';
-import styles from './editable-chat-title.module.css';
 
 interface Props {
 	chatId: string;

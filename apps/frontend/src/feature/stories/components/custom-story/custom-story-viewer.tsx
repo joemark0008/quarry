@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
-import type { StoryBlockReference } from '@quarry/shared/types';
-
-import type { CustomStoryViewMode } from './custom-story-view-mode';
 import { ActionErrorBanner, CustomStoryBody } from './custom-story-body';
 import { CustomStoryFiles } from './custom-story-files';
 import { CustomStoryViewLayers } from './custom-story-view-mode';
 import { rememberStatePrompt } from './remember-state-header';
 import { useCustomStory } from './use-custom-story';
+import styles from './custom-story-viewer.module.css';
+import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
+import type { StoryBlockReference } from '@quarry/shared/types';
+
+import type { CustomStoryViewMode } from './custom-story-view-mode';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
 import { useStoryViewerEnlarge } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-enlarge';
 import { useStoryViewerLiveSettings } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-live-settings';
@@ -24,7 +25,6 @@ import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-
 import { useRetryStaleStoryRefresh } from '@/hooks/use-retry-stale-story-refresh';
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { storyBlockEditStore } from '@/stores/story-block-edit';
-import styles from './custom-story-viewer.module.css';
 
 interface CustomStoryViewerProps {
 	chatId: string;

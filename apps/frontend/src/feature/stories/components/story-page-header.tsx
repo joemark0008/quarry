@@ -12,11 +12,6 @@ import {
 	Save,
 } from 'lucide-react';
 
-import type { StoryViewMode } from '@/feature/stories/components/side-panel/story-viewer.types.ts';
-import type { StoryDownloadOptions } from './story-download';
-import type { CustomStoryViewModeControls } from '@/feature/stories/components/custom-story/custom-story-view-mode';
-import type { StoryChatControls } from './story-chat-button';
-import { CustomStoryViewModeToggle, isCustomStoryViewMode } from '@/feature/stories/components/custom-story/custom-story-view-mode';
 import { EditableStoryTitle } from './editable-story-title';
 import { StoryChatButton } from './story-chat-button';
 import { StoryDownloadMenu, canDownloadStory } from './story-download';
@@ -29,6 +24,15 @@ import {
 	StoryFeedbackButtons,
 } from './story-header-actions';
 import { describeViewedVersion, StoryVersionNav } from './story-version-nav';
+import styles from './story-page-header.module.css';
+import type { StoryViewMode } from '@/feature/stories/components/side-panel/story-viewer.types.ts';
+import type { StoryDownloadOptions } from './story-download';
+import type { CustomStoryViewModeControls } from '@/feature/stories/components/custom-story/custom-story-view-mode';
+import type { StoryChatControls } from './story-chat-button';
+import {
+	CustomStoryViewModeToggle,
+	isCustomStoryViewMode,
+} from '@/feature/stories/components/custom-story/custom-story-view-mode';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -40,7 +44,6 @@ import { SwitchIndicator } from '@/components/ui/switch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTimeAgo } from '@/hooks/use-time-ago';
 import { cn } from '@/lib/utils';
-import styles from './story-page-header.module.css';
 
 interface LiveControls {
 	isLive: boolean;
@@ -129,9 +132,7 @@ export function StoryPageHeader({
 					className={styles.storyPageHeaderEditableStoryTitle}
 					inputClassName={styles.storyPageHeaderEditableStoryTitle2}
 				/>
-				{authorName && (
-					<span className={styles.storyPageHeaderSpan}>by {authorName}</span>
-				)}
+				{authorName && <span className={styles.storyPageHeaderSpan}>by {authorName}</span>}
 
 				<div className={styles.storyPageHeaderDiv2}>
 					{versionControls && (
@@ -225,7 +226,11 @@ function ViewModeToggle({ controls }: { controls: ViewModeControls }) {
 			)}
 			<Button
 				variant='ghost'
-				className={cn(styles.viewModeToggleButton, viewMode === 'code' && styles.viewModeToggleButton2, styles.storyPageHeaderButton)}
+				className={cn(
+					styles.viewModeToggleButton,
+					viewMode === 'code' && styles.viewModeToggleButton2,
+					styles.storyPageHeaderButton,
+				)}
 				onClick={() => onViewModeChange('code')}
 				disabled={isSaving}
 				aria-label='Code'
@@ -457,10 +462,7 @@ export function StoryRefreshFailureBanner({
 	const timeAgo = useTimeAgo(failedAt.getTime());
 
 	return (
-		<div
-			role={isRetrying ? 'status' : 'alert'}
-			className={styles.storyRefreshFailureBannerDiv}
-		>
+		<div role={isRetrying ? 'status' : 'alert'} className={styles.storyRefreshFailureBannerDiv}>
 			{isRetrying ? (
 				<Loader2 className={styles.storyRefreshFailureBannerLoader2} />
 			) : (

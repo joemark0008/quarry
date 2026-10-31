@@ -4,13 +4,14 @@ import { appendBlockToStoryCode } from '@quarry/shared/story-tabs';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FilePlus, Pencil } from 'lucide-react';
-import { DataTableCard } from '@/components/data-table-card';
-import { Button } from '@/components/ui/button';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { TableFormatEditDialog } from './display-table-edit-dialog';
+import styles from './display-chart-table.module.css';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type { displayChart } from '@quarry/shared/tools';
 import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
+import { DataTableCard } from '@/components/data-table-card';
+import { Button } from '@/components/ui/button';
 import { useAgentMessagesGetter, useOptionalAgentContext } from '@/contexts/agent.provider';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useSidePanel } from '@/contexts/side-panel';
@@ -19,7 +20,6 @@ import { useStoryIds } from '@/hooks/use-story-ids';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { chartsApi } from '@/lib/charts-api';
 import { storyApi } from '@/lib/story-api';
-import styles from './display-chart-table.module.css';
 
 const EMPTY_COLUMNS: string[] = [];
 const EMPTY_ROWS: Record<string, unknown>[] = [];
@@ -185,9 +185,7 @@ export function DisplayChartTable({ config, outputError, toolCallId }: DisplayCh
 
 	if (!sourceData?.data || sourceData.data.length === 0) {
 		return (
-			<div className={styles.displayChartTableDiv2}>
-				Could not display the table because the data is missing.
-			</div>
+			<div className={styles.displayChartTableDiv2}>Could not display the table because the data is missing.</div>
 		);
 	}
 

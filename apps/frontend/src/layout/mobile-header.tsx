@@ -1,8 +1,8 @@
+import styles from './mobile-header.module.css';
 import { ChatArtifactsMenu } from '@/feature/chat/components/chat-artifacts-menu';
 import { EditableChatTitle } from '@/feature/chat/components/editable-chat-title';
 import { ExampleProjectInfoCard } from '@/feature/chat/components/example-project-info-card';
 import { useSidebar } from '@/contexts/sidebar';
-import styles from './mobile-header.module.css';
 
 export function MobileHeader({
 	chatId,
@@ -13,7 +13,7 @@ export function MobileHeader({
 	title?: string;
 	showExampleProjectInfo?: boolean;
 }) {
-	const { isMobile, openMobile } = useSidebar();
+	const { isMobile } = useSidebar();
 
 	if (!isMobile) {
 		return null;
@@ -24,15 +24,17 @@ export function MobileHeader({
 			{showExampleProjectInfo && <ExampleProjectInfoCard compact />}
 			{chatId && title && (
 				<>
-					<EditableChatTitle
-						chatId={chatId}
-						title={title}
-						className={styles.mobileHeaderEditableChatTitle}
-					/>
+					<EditableChatTitle chatId={chatId} title={title} className={styles.mobileHeaderEditableChatTitle} />
 				</>
 			)}
 			<div className={styles.mobileHeaderDiv2}>
-				{chatId && <ChatArtifactsMenu key={chatId} chatId={chatId} panelClassName={styles.mobileHeaderChatArtifactsMenu} />}
+				{chatId && (
+					<ChatArtifactsMenu
+						key={chatId}
+						chatId={chatId}
+						panelClassName={styles.mobileHeaderChatArtifactsMenu}
+					/>
+				)}
 			</div>
 		</div>
 	);

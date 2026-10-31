@@ -1,11 +1,10 @@
-import { isDarkColorScheme } from '@/lib/color-scheme';
 import { useEffect, useRef, useState } from 'react';
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
-
+import styles from './display-map.module.css';
 import type { CustomBoundarySet } from '@quarry/shared';
 import type { FeatureCollection } from 'geojson';
+import { isDarkColorScheme } from '@/lib/color-scheme';
 
 import {
 	AlertDialog,
@@ -31,7 +30,6 @@ import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
-import styles from './display-map.module.css';
 
 interface SettingsDisplayMapProps {
 	isAdmin: boolean;
@@ -201,13 +199,13 @@ function BoundarySetItem({
 	return (
 		<div className={styles.boundarySetItemDiv2}>
 			<div className={styles.boundarySetItemDiv3}>
-				<button
-					type='button'
-					onClick={onToggle}
-					className={styles.boundarySetItemButton}
-				>
+				<button type='button' onClick={onToggle} className={styles.boundarySetItemButton}>
 					<span className={styles.boundarySetItemSpan4}>
-						{isExpanded ? <ChevronUp className={styles.boundarySetItemChevronUp} /> : <ChevronDown className={styles.boundarySetItemChevronUp} />}
+						{isExpanded ? (
+							<ChevronUp className={styles.boundarySetItemChevronUp} />
+						) : (
+							<ChevronDown className={styles.boundarySetItemChevronUp} />
+						)}
 					</span>
 					<span className={styles.boundarySetItemSpan}>
 						<span className={styles.boundarySetItemSpan2}>{set.label}</span>
@@ -216,12 +214,7 @@ function BoundarySetItem({
 						)}
 					</span>
 				</button>
-				<Button
-					variant='ghost'
-					size='icon'
-					className={styles.boundarySetItemButton2}
-					onClick={onDelete}
-				>
+				<Button variant='ghost' size='icon' className={styles.boundarySetItemButton2} onClick={onDelete}>
 					<Trash2 className={styles.boundarySetItemChevronUp} />
 				</Button>
 			</div>
@@ -418,7 +411,8 @@ function BoundaryEditPanel({
 				hint={
 					<>
 						Explains to the agent what values to produce in the{' '}
-						<code className={styles.boundaryEditPanelCode}>region_key</code> column, so it writes the right SQL.
+						<code className={styles.boundaryEditPanelCode}>region_key</code> column, so it writes the right
+						SQL.
 					</>
 				}
 			>

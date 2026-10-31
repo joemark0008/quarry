@@ -1,8 +1,8 @@
 import { useRef } from 'react';
+import styles from './tab-bar.module.css';
 import type { KeyboardEvent, ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
-import styles from './tab-bar.module.css';
 
 export interface TabBarItem<Id extends string> {
 	id: Id;

@@ -1,4 +1,3 @@
-import { isDarkColorScheme, setColorSchemeAttribute } from '@/lib/color-scheme';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import {
@@ -26,6 +25,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { formatRgb } from 'culori';
 import { memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import styles from './display-map-view.module.css';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 import type { Ref } from 'react';
 import type { displayMap } from '@quarry/shared/tools';
@@ -43,7 +43,7 @@ import { getActiveProjectId } from '@/lib/active-project';
 import { resolveCssVariableColor } from '@/lib/css-color';
 import { maplibregl } from '@/lib/maplibre';
 import { projectApi } from '@/lib/project-api';
-import styles from './display-map-view.module.css';
+import { isDarkColorScheme, setColorSchemeAttribute } from '@/lib/color-scheme';
 
 const POINTS_SOURCE_ID = 'query-points';
 const POINTS_LAYER_ID = 'query-points-circles';
@@ -333,9 +333,7 @@ export default memo(function MapView({
 
 	if (initFailed) {
 		return (
-			<div className={styles.div}>
-				Interactive maps are not supported in this browser (WebGL unavailable).
-			</div>
+			<div className={styles.div}>Interactive maps are not supported in this browser (WebGL unavailable).</div>
 		);
 	}
 

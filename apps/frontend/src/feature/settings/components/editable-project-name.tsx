@@ -2,13 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { Pencil } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation as useApolloMutation } from '@apollo/client/react';
+import styles from './editable-project-name.module.css';
 import type { KeyboardEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { refetchProjectQueries } from '@/hooks/use-current-project';
 import { RenameProjectDocument } from '@/graphql/generated/graphql';
-import styles from './editable-project-name.module.css';
 
 interface EditableProjectNameProps {
 	projectId: string;

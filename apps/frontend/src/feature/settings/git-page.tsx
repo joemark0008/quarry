@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import styles from './git-page.module.css';
 import { DeploymentManagedGitSettings } from '@/feature/settings/components/deployment-managed-git-settings';
 import { LiveContextUpdateSettings } from '@/feature/settings/components/live-context-update-settings';
 import { Button } from '@/components/ui/button';
@@ -7,8 +8,6 @@ import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card
 import { Spinner } from '@/components/ui/spinner';
 import { usePermissions } from '@/hooks/use-permissions';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
-import styles from './git-page.module.css';
-
 
 /**
  * The context files repository configured for the deployment (`QUARRY_CONTEXT_SOURCE=git`). Connecting GitHub or

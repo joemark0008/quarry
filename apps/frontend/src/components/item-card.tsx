@@ -1,21 +1,18 @@
 import { Activity, Dot, Globe, Lock, ShieldCheck, Users } from 'lucide-react';
+import styles from './item-card.module.css';
 import type { ReactNode } from 'react';
 import type { StoryPanelDisplayMode, Visibility } from '@quarry/shared/types';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
-import styles from './item-card.module.css';
 
-export const GRID_CARD_CLASS =
-	`${styles.gRIDCARDCLASS} group`;
+export const GRID_CARD_CLASS = `${styles.gRIDCARDCLASS} group`;
 
 export const LINES_CARD_CLASS = `${styles.lINESCARDCLASS} group`;
 
-export const GRID_THUMBNAIL_CLASS =
-	styles.gRIDTHUMBNAILCLASS;
+export const GRID_THUMBNAIL_CLASS = styles.gRIDTHUMBNAILCLASS;
 
-export const GRID_HOVER_ACTION_GRADIENT_CLASS =
-	styles.gRIDHOVERACTIONGRADIENTCLASS;
+export const GRID_HOVER_ACTION_GRADIENT_CLASS = styles.gRIDHOVERACTIONGRADIENTCLASS;
 
 export function CardsSection({
 	title,
@@ -43,8 +40,7 @@ export function CardsGrid({ displayMode, children }: { displayMode: StoryPanelDi
 	return (
 		<div
 			className={cn(
-				displayMode === styles.cardsGridDiv &&
-					`${styles.cardsGridDiv2} 2xl:grid-cols-6`,
+				displayMode === styles.cardsGridDiv && `${styles.cardsGridDiv2} 2xl:grid-cols-6`,
 				displayMode === 'lines' && styles.cardsGridDiv3,
 			)}
 		>
@@ -57,9 +53,7 @@ export function GridCardFooter({ title, subtitle }: { title: string; subtitle: R
 	return (
 		<div className={styles.gridCardFooterDiv}>
 			<span className={styles.gridCardFooterSpan}>{title}</span>
-			<span className={styles.gridCardFooterSpan2}>
-				{subtitle}
-			</span>
+			<span className={styles.gridCardFooterSpan2}>{subtitle}</span>
 		</div>
 	);
 }
@@ -75,11 +69,7 @@ export function AuthorDateLabel({ author, createdAt }: { author: string; created
 }
 
 export function NoResults({ query }: { query: string }) {
-	return (
-		<p className={styles.noResultsP}>
-			No results matching &ldquo;{query.trim()}&rdquo;
-		</p>
-	);
+	return <p className={styles.noResultsP}>No results matching &ldquo;{query.trim()}&rdquo;</p>;
 }
 
 export function LiveBadge({ iconOnly = false }: { iconOnly?: boolean }) {
@@ -133,7 +123,11 @@ export function SharingBadge({
 	return (
 		<SimpleTooltip content={tooltip}>
 			<span className={styles.sharingBadgeSpan}>
-				{visibility === 'project' ? <Globe className={styles.liveBadgeActivity} /> : <Users className={styles.liveBadgeActivity} />}
+				{visibility === 'project' ? (
+					<Globe className={styles.liveBadgeActivity} />
+				) : (
+					<Users className={styles.liveBadgeActivity} />
+				)}
 			</span>
 		</SimpleTooltip>
 	);

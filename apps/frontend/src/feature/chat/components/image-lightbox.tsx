@@ -23,10 +23,7 @@ export function ImageLightbox({ src, onClose }: ImageLightboxProps) {
 	}, [handleKeyDown]);
 
 	return (
-		<div
-			className={styles.imageLightboxDiv}
-			onClick={onClose}
-		>
+		<div className={styles.imageLightboxDiv} onClick={onClose}>
 			<button
 				type='button'
 				onClick={(e) => {
@@ -37,12 +34,7 @@ export function ImageLightbox({ src, onClose }: ImageLightboxProps) {
 			>
 				<X className={styles.imageLightboxX} />
 			</button>
-			<img
-				src={src}
-				alt=''
-				className={styles.imageLightboxImg}
-				onClick={(e) => e.stopPropagation()}
-			/>
+			<img src={src} alt='' className={styles.imageLightboxImg} onClick={(e) => e.stopPropagation()} />
 		</div>
 	);
 }

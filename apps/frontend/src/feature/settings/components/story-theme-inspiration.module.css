@@ -84,7 +84,7 @@
 .urlSourceNakedInput {
 	height: 1.25rem;
 	width: 100%;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	&::placeholder {
 		color: var(--app-muted);
@@ -189,7 +189,7 @@
 	border-width: 0px;
 	background-color: transparent;
 	padding: 0px;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-shadow: 0 0 #0000;
 	box-shadow:
@@ -206,7 +206,7 @@
 			var(--fx-shadow);
 	}
 	@media (width >= 48rem) {
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		line-height: var(--fx-leading, calc(1.25 / 0.875));
 	}
 	&:is(:root[data-mantine-color-scheme='dark'] *) {

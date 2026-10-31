@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import styles from './mcp-app-header.module.css';
+import type { ReactNode } from 'react';
 
 interface MCPAppHeaderProps {
 	title: string;

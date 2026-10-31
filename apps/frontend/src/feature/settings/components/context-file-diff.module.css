@@ -9,7 +9,7 @@
 	height: 100%;
 	align-items: center;
 	justify-content: center;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
@@ -20,7 +20,7 @@
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
@@ -40,7 +40,7 @@
 	background-color: color-mix(in oklab, var(--app-fill) 30%, transparent);
 	padding-inline: 1rem;
 	padding-block: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .contextFileDiffFilePen {

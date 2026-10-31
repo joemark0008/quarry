@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from './new-chat-drop-target.module.css';
 import type { DragEvent, ReactNode } from 'react';
 import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
 import {
@@ -9,7 +10,6 @@ import {
 } from '@/lib/story-reference';
 import { cn } from '@/lib/utils';
 import { useStoryDragOverNewChat } from '@/stores/story-references';
-import styles from './new-chat-drop-target.module.css';
 
 /** Dropping stories or story folders here starts a new chat that references them. */
 export function NewChatDropTarget({ children }: { children: ReactNode }) {

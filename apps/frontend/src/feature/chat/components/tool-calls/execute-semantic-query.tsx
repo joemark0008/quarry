@@ -5,6 +5,7 @@ import { ToolOutputFallback } from './tool-output-fallback';
 import { TableFormatEditDialog } from './display-table-edit-dialog';
 import { SqlQueryDisplay } from './sql-query-display';
 import { SqlResultDisplay } from './sql-result-display';
+import styles from './execute-semantic-query.module.css';
 import type { ActionButton } from './tool-call-wrapper';
 import type { ToolCallComponentProps } from '.';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
@@ -13,7 +14,6 @@ import { useLoadAllQueryRows, useQueryRowsSource } from '@/hooks/use-query-rows'
 import { useToolCallContext } from '@/contexts/tool-call';
 import { SidePanelContent } from '@/feature/stories/components/side-panel/sql-editor';
 import { semanticQueryAsSql } from '@/lib/execute-sql-messages';
-import styles from './execute-semantic-query.module.css';
 
 type ViewMode = 'results' | 'definition' | 'sql';
 

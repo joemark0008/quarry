@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
+import { StoryMapRender } from './story-map-embed';
+import styles from './story-embeds.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 import type { ChartType } from '@quarry/shared/chart-types';
 
@@ -8,12 +10,10 @@ import { DataTableCard } from '@/components/data-table-card';
 import { StoryChartEmbedShell } from '@/feature/stories/components/side-panel/story-chart-embed';
 import { StoryMapEmbedShell } from '@/feature/stories/components/side-panel/story-map-embed';
 import { StoryTableEditControls } from '@/feature/stories/components/side-panel/story-table-embed';
-import { StoryMapRender } from './story-map-embed';
 import { ChartDisplay } from '@/feature/chat/components/tool-calls/display-chart';
 import { useSourceQuery } from '@/hooks/use-source-query';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
-import styles from './story-embeds.module.css';
 
 export type QueryDataMap = Record<string, { data: Record<string, unknown>[]; columns: string[] }>;
 type EmbedData = QueryDataMap[string];
@@ -23,11 +23,7 @@ export interface LiveQueryConfig {
 }
 
 function EmbedPlaceholder({ children }: { children: React.ReactNode }) {
-	return (
-		<div className={styles.embedPlaceholderDiv}>
-			{children}
-		</div>
-	);
+	return <div className={styles.embedPlaceholderDiv}>{children}</div>;
 }
 
 function EmbedLoading({ label = 'Loading live data...' }: { label?: string }) {

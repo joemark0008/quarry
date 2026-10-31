@@ -1,13 +1,13 @@
 import { ArrowUpRight } from 'lucide-react';
+import { CustomStoryThumbnail } from './custom-story-thumbnail';
+import { StoryThumbnail } from './story-thumbnail';
+import styles from './story-card.module.css';
 import type { ReactNode } from 'react';
 import type { StorySummary } from '@quarry/shared/types';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { QueryDataMap } from './story-embeds';
 
-import { CustomStoryThumbnail } from './custom-story-thumbnail';
-import { StoryThumbnail } from './story-thumbnail';
 import { Button } from '@/components/ui/button';
-import styles from './story-card.module.css';
 
 const EMPTY_SUMMARY: StorySummary = { segments: [] };
 
@@ -38,12 +38,7 @@ export function StoryCard({
 	onOpen,
 }: StoryCardProps) {
 	return (
-		<button
-			type='button'
-			onClick={onOpen}
-			disabled={!canOpen}
-			className={`${styles.storyCardButton} group`}
-		>
+		<button type='button' onClick={onOpen} disabled={!canOpen} className={`${styles.storyCardButton} group`}>
 			<div className={styles.storyCardDiv}>
 				{isCustomStory ? (
 					<CustomStoryThumbnail

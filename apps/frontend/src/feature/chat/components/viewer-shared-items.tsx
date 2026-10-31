@@ -1,5 +1,6 @@
 import { MessageSquare } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
+import styles from './viewer-shared-items.module.css';
 import type { ReactNode } from 'react';
 import type { SharedGroup, SharedItem } from '@/lib/viewer-home';
 import type { MessageBubble, StoryPanelDisplayMode } from '@quarry/shared/types';
@@ -19,7 +20,6 @@ import { PaperSheet, StoryThumbnail } from '@/feature/stories/components/story-t
 import StoryIcon from '@/components/ui/story-icon';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
-import styles from './viewer-shared-items.module.css';
 
 export function ViewerGroups({ groups, displayMode }: { groups: SharedGroup[]; displayMode: StoryPanelDisplayMode }) {
 	return (
@@ -88,10 +88,7 @@ function SharedChatCard({ item, displayMode }: { item: SharedItem; displayMode: 
 	if (displayMode === 'lines') {
 		return (
 			<Link to='/shared-chat/$shareId' params={{ shareId: item.id }} className={LINES_CARD_CLASS}>
-				<SharedItemLine
-					item={item}
-					icon={<MessageSquare className={styles.sharedStoryCardStoryIcon} />}
-				/>
+				<SharedItemLine item={item} icon={<MessageSquare className={styles.sharedStoryCardStoryIcon} />} />
 			</Link>
 		);
 	}
@@ -187,7 +184,11 @@ function ChatBubbles({ bubbles }: { bubbles: MessageBubble[] }) {
 
 const USER_BUBBLE_BORDER = styles.uSERBUBBLEBORDER;
 const USER_BUBBLE_LINE = styles.uSERBUBBLELINE;
-const USER_BUBBLE_LINE_WIDTHS = [styles.uSERBUBBLELINEWIDTHS, styles.uSERBUBBLELINEWIDTHS2, styles.uSERBUBBLELINEWIDTHS3];
+const USER_BUBBLE_LINE_WIDTHS = [
+	styles.uSERBUBBLELINEWIDTHS,
+	styles.uSERBUBBLELINEWIDTHS2,
+	styles.uSERBUBBLELINEWIDTHS3,
+];
 
 function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: number }) {
 	const ratio = Math.max(charCount / maxChars, 0.15);
@@ -195,13 +196,7 @@ function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: numb
 	const lineCount = Math.max(1, Math.min(Math.round(charCount / 60), 3));
 
 	return (
-		<div
-			className={cn(
-				styles.userBubbleDiv,
-				USER_BUBBLE_BORDER,
-			)}
-			style={{ width: `${Math.round(widthPercent)}%` }}
-		>
+		<div className={cn(styles.userBubbleDiv, USER_BUBBLE_BORDER)} style={{ width: `${Math.round(widthPercent)}%` }}>
 			{Array.from({ length: lineCount }, (_, i) => (
 				<div
 					key={i}
@@ -216,7 +211,14 @@ function UserBubble({ charCount, maxChars }: { charCount: number; maxChars: numb
 	);
 }
 
-const ASSISTANT_LINE_WIDTHS = [styles.aSSISTANTLINEWIDTHS, styles.aSSISTANTLINEWIDTHS2, styles.aSSISTANTLINEWIDTHS3, styles.aSSISTANTLINEWIDTHS4, styles.uSERBUBBLELINEWIDTHS2, styles.uSERBUBBLELINEWIDTHS3];
+const ASSISTANT_LINE_WIDTHS = [
+	styles.aSSISTANTLINEWIDTHS,
+	styles.aSSISTANTLINEWIDTHS2,
+	styles.aSSISTANTLINEWIDTHS3,
+	styles.aSSISTANTLINEWIDTHS4,
+	styles.uSERBUBBLELINEWIDTHS2,
+	styles.uSERBUBBLELINEWIDTHS3,
+];
 
 function AssistantResponseLines({ charCount }: { charCount: number }) {
 	const lineCount = Math.max(2, Math.min(Math.round(charCount / 80), 6));

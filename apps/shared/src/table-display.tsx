@@ -110,7 +110,9 @@ export const TableDisplay = memo(function TableDisplay({
 
 	return (
 		<div className={cn('quarry-shared-tabledisplaydiv-555def quarry-table-display', className)}>
-			{title ? <span className='quarry-shared-tabledisplayspan-acadca quarry-table-display__title'>{title}</span> : null}
+			{title ? (
+				<span className='quarry-shared-tabledisplayspan-acadca quarry-table-display__title'>{title}</span>
+			) : null}
 
 			<div
 				className={cn(
@@ -139,7 +141,8 @@ export const TableDisplay = memo(function TableDisplay({
 										}
 										className={cn(
 											'quarry-shared-tabledisplayth-df8127',
-											alignRight && 'quarry-shared-tabledisplayth-a01bce quarry-table-display__numeric',
+											alignRight &&
+												'quarry-shared-tabledisplayth-a01bce quarry-table-display__numeric',
 										)}
 									>
 										<button
@@ -147,7 +150,9 @@ export const TableDisplay = memo(function TableDisplay({
 											onClick={() => paging.toggleSort(column)}
 											className='quarry-shared-tabledisplaybutton-9f278e group'
 										>
-											<span className={cn(alignRight && 'quarry-shared-tabledisplayspan-fb56d9')}>{columnLabel(column)}</span>
+											<span className={cn(alignRight && 'quarry-shared-tabledisplayspan-fb56d9')}>
+												{columnLabel(column)}
+											</span>
 											<SortIndicator direction={sortDirection} cn={cn} />
 										</button>
 									</th>
@@ -159,10 +164,7 @@ export const TableDisplay = memo(function TableDisplay({
 					<tbody>
 						{hasRows ? (
 							pageData.map((row, rowIndex) => (
-								<tr
-									key={rowIndex}
-									className='quarry-shared-tabledisplaytr-b7b16d'
-								>
+								<tr key={rowIndex} className='quarry-shared-tabledisplaytr-b7b16d'>
 									<td className='quarry-shared-tabledisplaytd-ecce13 quarry-table-display__index'>
 										<span className='quarry-shared-tabledisplayspan-a04514'>
 											{pageIndex * pageSize + rowIndex + 1}
@@ -228,7 +230,14 @@ export const TableDisplay = memo(function TableDisplay({
 						compactFooter ? 'quarry-shared-tabledisplaydiv-4b5cc1' : 'quarry-shared-tabledisplaydiv-77c08e',
 					)}
 				>
-					<span className={cn('quarry-shared-tabledisplayspan-bfa603', compactFooter ? 'quarry-shared-tabledisplayspan-359090' : 'quarry-shared-tabledisplayspan-fc7473')}>
+					<span
+						className={cn(
+							'quarry-shared-tabledisplayspan-bfa603',
+							compactFooter
+								? 'quarry-shared-tabledisplayspan-359090'
+								: 'quarry-shared-tabledisplayspan-fc7473',
+						)}
+					>
 						{paging.totalRows} rows
 					</span>
 				</div>

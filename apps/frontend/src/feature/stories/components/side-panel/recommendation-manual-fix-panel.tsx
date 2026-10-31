@@ -1,9 +1,9 @@
 import { Check, Copy } from 'lucide-react';
 
 import { SidePanelHeader } from './side-panel-header';
+import styles from './recommendation-manual-fix-panel.module.css';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import styles from './recommendation-manual-fix-panel.module.css';
 
 interface RecommendationManualFixPanelProps {
 	title: string;
@@ -39,13 +39,15 @@ export function RecommendationManualFixPanel({ title, guidance, prompt }: Recomm
 									Prompt for your coding LLM
 								</div>
 								<Button size='sm' variant='outline' onClick={() => copy(prompt)}>
-									{isCopied ? <Check className={styles.recommendationManualFixPanelCheck} /> : <Copy className={styles.recommendationManualFixPanelCheck} />}
+									{isCopied ? (
+										<Check className={styles.recommendationManualFixPanelCheck} />
+									) : (
+										<Copy className={styles.recommendationManualFixPanelCheck} />
+									)}
 									{isCopied ? 'Copied' : 'Copy'}
 								</Button>
 							</div>
-							<pre className={styles.recommendationManualFixPanelPre}>
-								{prompt}
-							</pre>
+							<pre className={styles.recommendationManualFixPanelPre}>{prompt}</pre>
 						</div>
 					)}
 				</div>

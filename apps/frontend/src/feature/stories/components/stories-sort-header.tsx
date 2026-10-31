@@ -1,8 +1,8 @@
 import { ChevronDown } from 'lucide-react';
+import styles from './stories-sort-header.module.css';
 import type { SortField, SortState } from '@/lib/stories-page';
 import { defaultSortDirection } from '@/lib/stories-page';
 import { cn } from '@/lib/utils';
-import styles from './stories-sort-header.module.css';
 
 export function SortHeader({ value, onChange }: { value: SortState; onChange: (next: SortState) => void }) {
 	return (
@@ -50,13 +50,13 @@ function SortPill({
 		<button
 			type='button'
 			onClick={handleClick}
-			className={cn(
-				styles.sortPillButton,
-				isActive ? styles.sortPillButton2 : styles.sortPillButton3,
-			)}
+			className={cn(styles.sortPillButton, isActive ? styles.sortPillButton2 : styles.sortPillButton3)}
 		>
 			<span>{label}</span>
-			<ChevronDown size={12} className={cn(styles.sortPillChevronDown, showsAscending && styles.sortPillChevronDown2)} />
+			<ChevronDown
+				size={12}
+				className={cn(styles.sortPillChevronDown, showsAscending && styles.sortPillChevronDown2)}
+			/>
 		</button>
 	);
 }

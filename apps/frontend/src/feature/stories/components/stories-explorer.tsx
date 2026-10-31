@@ -1,18 +1,13 @@
 import { Fragment } from 'react';
 import { FolderPlus } from 'lucide-react';
+import { FolderCard } from './stories-folder-card';
+import { CertifiedStoriesEmptyState, StoryCard, StoriesEmptyState, StoriesNoResults } from './stories-groups';
+import styles from './stories-explorer.module.css';
 import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { ExplorerEntry, FolderItem, StoriesFilters, StoryItem } from '@/lib/stories-page';
 import { countActiveFilters, DEFAULT_FILTERS, isSystemFolder } from '@/lib/stories-page';
-import { FolderCard } from './stories-folder-card';
-import {
-	CertifiedStoriesEmptyState,
-	StoryCard,
-	StoriesEmptyState,
-	StoriesNoResults,
-} from './stories-groups';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
-import styles from './stories-explorer.module.css';
 
 const GRID_CLASS = `${styles.gRIDCLASS} 2xl:grid-cols-6`;
 
@@ -203,11 +198,7 @@ function NewFolderCard({ onClick }: { onClick: () => void }) {
 		<button
 			type='button'
 			onClick={onClick}
-			className={cn(
-				styles.newFolderCardButton,
-				styles.newFolderCardButton2,
-				styles.newFolderCardButton3,
-			)}
+			className={cn(styles.newFolderCardButton, styles.newFolderCardButton2, styles.newFolderCardButton3)}
 		>
 			<FolderPlus className={styles.newFolderCardFolderPlus} />
 			<span className={styles.newFolderCardSpan}>New folder</span>
@@ -217,11 +208,7 @@ function NewFolderCard({ onClick }: { onClick: () => void }) {
 
 function NewFolderRow({ onClick }: { onClick: () => void }) {
 	return (
-		<button
-			type='button'
-			onClick={onClick}
-			className={styles.newFolderRowButton}
-		>
+		<button type='button' onClick={onClick} className={styles.newFolderRowButton}>
 			<div className={styles.newFolderRowDiv}>
 				<FolderPlus className={styles.newFolderCardFolderPlus} />
 				<span className={styles.newFolderRowSpan}>New folder</span>

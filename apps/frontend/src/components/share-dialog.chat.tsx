@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, Link as LinkIcon, Loader2 } from 'lucide-react';
+import styles from './share-dialog.chat.module.css';
 import type { Visibility } from '@quarry/shared/types';
 import {
 	hasAccessChanges,
@@ -18,7 +19,6 @@ import { useSession } from '@/lib/auth-client';
 import { useMemberPicker, useCopyWithFeedback, useShareAudience } from '@/hooks/use-share-dialog';
 import { useSmtpSetup } from '@/hooks/use-public-config';
 import { chatApi } from '@/lib/chat-api';
-import styles from './share-dialog.chat.module.css';
 
 interface ShareChatDialogProps {
 	open: boolean;
@@ -170,7 +170,11 @@ function CreateShareDialog({ open, onOpenChange, chatId }: ShareChatDialogProps)
 				</div>
 
 				<div className={styles.createShareDialogDiv2}>
-					<Button variant='outline' className={styles.createShareDialogButton} onClick={() => onOpenChange(false)}>
+					<Button
+						variant='outline'
+						className={styles.createShareDialogButton}
+						onClick={() => onOpenChange(false)}
+					>
 						Cancel
 					</Button>
 					<Button

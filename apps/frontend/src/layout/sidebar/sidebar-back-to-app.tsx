@@ -1,11 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './sidebar-back-to-app.module.css';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useBackToApp } from '@/hooks/use-last-app-location';
 import { cn, hideIf } from '@/lib/utils';
-import styles from './sidebar-back-to-app.module.css';
 
 const BACK_TO_APP_LABEL = 'Back to app';
 

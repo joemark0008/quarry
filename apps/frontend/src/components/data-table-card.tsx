@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { Copy, Download, Maximize2 } from 'lucide-react';
+import styles from './data-table-card.module.css';
 import type { ReactNode } from 'react';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import { ExportDataMenu } from '@/components/export-data-menu';
@@ -9,7 +10,6 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useDateFormat } from '@/hooks/use-date-format';
 import { tableToTsv } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
-import styles from './data-table-card.module.css';
 
 interface DataTableCardProps {
 	columns: string[];

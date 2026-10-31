@@ -5,10 +5,10 @@ import { useCallback, useMemo } from 'react';
 import { StoryMapEmbed } from './story-map-embed';
 import { StoryBlockDragGrip, StoryBlockDropZones } from './story-editor-block-drag';
 import { decodeFromAttr } from './story-editor-utils';
+import styles from './story-editor-map-block.module.css';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import { StoryMapFrame } from '@/feature/stories/components/story-block';
 import { EditorStoryMapEditProvider } from '@/contexts/story-map-edit';
-import styles from './story-editor-map-block.module.css';
 
 function MapBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewProps) {
 	const rawTag = node.attrs.rawTag as string;
@@ -30,9 +30,7 @@ function MapBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewP
 	if (!map) {
 		return (
 			<NodeViewWrapper draggable data-type='map-block'>
-				<div className={styles.mapBlockViewDiv}>
-					Invalid map block
-				</div>
+				<div className={styles.mapBlockViewDiv}>Invalid map block</div>
 			</NodeViewWrapper>
 		);
 	}

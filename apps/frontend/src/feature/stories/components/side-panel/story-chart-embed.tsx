@@ -3,14 +3,18 @@ import { Code, Pencil } from 'lucide-react';
 import { memo, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryBlockDragContext } from './story-editor-drag-context';
 import { StoryEmbedFallback } from './story-embed-fallback';
+import { StoryChartQueryView } from './story-chart-query';
+import styles from './story-chart-embed.module.css';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ParsedChartBlock } from '@quarry/shared/story-segments';
 import type { displayChart } from '@quarry/shared/tools';
 
 import type { ChartEditorView } from '@/feature/chat/components/tool-calls/display-chart-edit-dialog';
-import { StoryChartQueryView } from './story-chart-query';
 import { ChartDisplay } from '@/feature/chat/components/tool-calls/display-chart';
-import { ChartConfigEditDialog, resolveChartPaletteHexes } from '@/feature/chat/components/tool-calls/display-chart-edit-dialog';
+import {
+	ChartConfigEditDialog,
+	resolveChartPaletteHexes,
+} from '@/feature/chat/components/tool-calls/display-chart-edit-dialog';
 import { Button } from '@/components/ui/button';
 import { useStoryChartEdit } from '@/contexts/story-chart-edit';
 import { useStoryEmbedData } from '@/contexts/story-embed-data';
@@ -20,7 +24,6 @@ import { useSourceQuery } from '@/hooks/use-source-query';
 import { useStoryChartSourceQuery } from '@/hooks/use-story-chart-source-query';
 import { sortByDateKey } from '@/lib/charts.utils';
 import { cn } from '@/lib/utils';
-import styles from './story-chart-embed.module.css';
 
 const STORY_CHART_HEIGHT_CLASS = styles.sTORYCHARTHEIGHTCLASS;
 const EMPTY_ROWS: Record<string, unknown>[] = [];
@@ -217,9 +220,7 @@ export function StoryChartEmbedShell({
 				<div className={styles.storyChartEmbedShellDiv2}>
 					<div className={styles.storyChartEmbedShellDiv3}>
 						{dragHandlePlacement === 'leading' ? dragHandle : null}
-						{chart.title ? (
-							<span className={styles.storyChartEmbedShellSpan}>{chart.title}</span>
-						) : null}
+						{chart.title ? <span className={styles.storyChartEmbedShellSpan}>{chart.title}</span> : null}
 					</div>
 					<div className={styles.storyChartEmbedShellDiv4}>
 						{dragHandlePlacement === 'leading' ? null : dragHandle}

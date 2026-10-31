@@ -1,7 +1,7 @@
+import styles from './visualization-skeleton.module.css';
 import GraphLoaderAnimated from '@/components/icons/graph-loader-animated';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TextShimmer } from '@/components/ui/text-shimmer';
-import styles from './visualization-skeleton.module.css';
 
 export function VisualizationSkeleton({ label }: { label: string }) {
 	return (

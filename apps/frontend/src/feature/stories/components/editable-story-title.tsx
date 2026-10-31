@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import styles from './editable-story-title.module.css';
 import type { KeyboardEvent, MouseEvent } from 'react';
 
 import { invalidateStoryTitleCaches } from '@/lib/stories-cache';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './editable-story-title.module.css';
 
 interface EditableStoryTitleProps {
 	storyId?: string | null;
@@ -117,10 +117,7 @@ export function EditableStoryTitle({
 				onClick={(event) => event.stopPropagation()}
 				onDoubleClick={(event) => event.stopPropagation()}
 				disabled={renameStory.isPending}
-				className={cn(
-					styles.editableStoryTitleInput,
-					inputClassName,
-				)}
+				className={cn(styles.editableStoryTitleInput, inputClassName)}
 			/>
 		);
 	}

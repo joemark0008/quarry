@@ -1,10 +1,10 @@
 import { Search, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import styles from './search-bar.module.css';
 import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
 import { Kbd } from '@/components/ui/kbd';
 import { isTypingTarget } from '@/lib/keyboard-shortcuts';
 import { cn } from '@/lib/utils';
-import styles from './search-bar.module.css';
 
 export function SearchBar({
 	value,
@@ -65,9 +65,7 @@ export function SearchBar({
 					<X className={styles.searchBarX} />
 				</button>
 			) : (
-				focusShortcutKey && (
-					<Kbd keys={[focusShortcutKey]} className={styles.searchBarKbd} />
-				)
+				focusShortcutKey && <Kbd keys={[focusShortcutKey]} className={styles.searchBarKbd} />
 			)}
 		</div>
 	);

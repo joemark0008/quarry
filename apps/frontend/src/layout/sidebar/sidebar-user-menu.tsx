@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router';
 import { SlidersVertical } from 'lucide-react';
+import styles from './sidebar-user-menu.module.css';
 import { Avatar } from '@/components/ui/avatar';
 import { useCurrentUser } from '@/hooks/use-current-user';
 import { cn, hideIf } from '@/lib/utils';
-import styles from './sidebar-user-menu.module.css';
 
 interface SidebarUserMenuProps {
 	isCollapsed: boolean;
@@ -35,24 +35,23 @@ export function SidebarUserMenu({ isCollapsed, isInSettings }: SidebarUserMenuPr
 					className={styles.sidebarUserMenuLink}
 				>
 					<div className={cn(styles.sidebarUserMenuDiv6, hideIf(isCollapsed))}>
-						{!isCollapsed && username && <Avatar username={username} className={styles.sidebarUserMenuAvatar} />}
-						<span
-							className={cn(
-								styles.sidebarUserMenuSpan,
-								hideIf(isCollapsed),
-							)}
-						>
+						{!isCollapsed && username && (
+							<Avatar username={username} className={styles.sidebarUserMenuAvatar} />
+						)}
+						<span className={cn(styles.sidebarUserMenuSpan, hideIf(isCollapsed))}>
 							<span className={styles.sidebarUserMenuSpan2}>{username}</span>
 							<span className={styles.sidebarUserMenuSpan3}>{email}</span>
 						</span>
 					</div>
 				</Link>
 				{!isInSettings && (
-					<div className={cn(styles.sidebarUserMenuDiv7, isCollapsed ? styles.sidebarUserMenuDiv5 : styles.sidebarUserMenuDiv8)}>
-						<Link
-							to='/settings'
-							className={styles.sidebarUserMenuLink2}
-						>
+					<div
+						className={cn(
+							styles.sidebarUserMenuDiv7,
+							isCollapsed ? styles.sidebarUserMenuDiv5 : styles.sidebarUserMenuDiv8,
+						)}
+					>
+						<Link to='/settings' className={styles.sidebarUserMenuLink2}>
 							<SlidersVertical className={styles.sidebarUserMenuSlidersVertical} />
 						</Link>
 					</div>

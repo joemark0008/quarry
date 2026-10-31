@@ -1,6 +1,7 @@
 import { NO_CACHE_SCHEDULE } from '@quarry/shared';
 import { splitCodeIntoSegments } from '@quarry/shared/story-segments';
 import { memo, useCallback, useMemo, useRef } from 'react';
+import styles from './story-preview.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 
@@ -18,7 +19,6 @@ import { StoryQuerySqlProvider } from '@/contexts/story-query-sql';
 import { useStoryFilters } from '@/hooks/use-story-filters';
 import { stabilizeStorySegments } from '@/lib/story-segment-stability';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-preview.module.css';
 
 interface StoryPreviewProps {
 	code: string;

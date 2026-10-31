@@ -538,7 +538,9 @@ export function KpiCard({ value, displayName, comparison, valueFormat, leadingSl
 			{(displayName || leadingSlot) && (
 				<div className='quarry-shared-kpicarddiv-986e63 quarry-kpi-card__header'>
 					{leadingSlot}
-					{displayName && <div className='quarry-shared-kpicarddiv-efaca3 quarry-kpi-card__name'>{displayName}</div>}
+					{displayName && (
+						<div className='quarry-shared-kpicarddiv-efaca3 quarry-kpi-card__name'>{displayName}</div>
+					)}
 				</div>
 			)}
 			<div className='quarry-shared-kpicarddiv-bbdaca quarry-kpi-card__value'>{formattedValue}</div>

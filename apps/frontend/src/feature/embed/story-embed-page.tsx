@@ -1,7 +1,7 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useRouterState } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { useRouterState } from '@tanstack/react-router';
 import { useMemo } from 'react';
+import styles from './story-embed-page.module.css';
 import type { ReactNode } from 'react';
 import type { DownloadFormat } from '@quarry/shared/types';
 import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
@@ -10,10 +10,8 @@ import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-embed-page.module.css';
 
 const Route = getRouteApi('/embed/story/$storyId');
-
 
 export function StoryEmbedPage() {
 	const { storyId } = Route.useParams();
@@ -33,11 +31,7 @@ export function StoryEmbedPage() {
 			</div>
 		);
 	} else if (storyQuery.isError || !story) {
-		inner = (
-			<div className={styles.storyEmbedPageDiv2}>
-				Story unavailable or link expired.
-			</div>
-		);
+		inner = <div className={styles.storyEmbedPageDiv2}>Story unavailable or link expired.</div>;
 	} else {
 		const quarryUrl = `${window.location.origin}${story.openInQuarryPath}`;
 		inner = (
@@ -53,10 +47,7 @@ export function StoryEmbedPage() {
 	}
 
 	return (
-		<div
-			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className={styles.storyEmbedPageDiv3}
-		>
+		<div {...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }} className={styles.storyEmbedPageDiv3}>
 			{inner}
 		</div>
 	);

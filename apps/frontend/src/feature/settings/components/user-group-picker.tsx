@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 
 import { ResponsiveGroupChips } from './user-group-chips';
+import styles from './user-group-picker.module.css';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -9,7 +10,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import styles from './user-group-picker.module.css';
 
 export interface UserGroupPickerOption {
 	id: string;
@@ -50,10 +50,7 @@ export function UserGroupPicker({
 					type='button'
 					variant='outline'
 					size={compact ? 'sm' : 'default'}
-					className={cn(
-						styles.pickerButton,
-						compact ? styles.pickerButton2 : styles.pickerButton3,
-					)}
+					className={cn(styles.pickerButton, compact ? styles.pickerButton2 : styles.pickerButton3)}
 					aria-label={`Select user groups. Current groups: ${chipNames.join(', ')}`}
 					disabled={loading}
 				>

@@ -19,7 +19,7 @@
 	gap: 0.5rem;
 }
 .savedPromptItemSpan {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -30,7 +30,7 @@
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }

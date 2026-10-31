@@ -1,10 +1,10 @@
 import { ArrowDownIcon } from 'lucide-react';
 import { StickToBottom, useStickToBottomContext } from 'use-stick-to-bottom';
+import styles from './conversation.module.css';
 import type { ComponentProps } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import styles from './conversation.module.css';
 
 export type ConversationProps = ComponentProps<typeof StickToBottom>;
 
@@ -39,10 +39,7 @@ export const ConversationEmptyState = ({
 	children,
 	...props
 }: ConversationEmptyStateProps) => (
-	<div
-		className={cn(styles.conversationEmptyStateDiv, className)}
-		{...props}
-	>
+	<div className={cn(styles.conversationEmptyStateDiv, className)} {...props}>
 		{children ?? (
 			<>
 				{icon && <div className={styles.conversationEmptyStateDiv2}>{icon}</div>}
@@ -63,10 +60,7 @@ export const ConversationScrollButton = ({ className, ...props }: ConversationSc
 	return (
 		!isAtBottom && (
 			<Button
-				className={cn(
-					styles.conversationScrollButtonButton,
-					className,
-				)}
+				className={cn(styles.conversationScrollButtonButton, className)}
 				onClick={() => scrollToBottom()}
 				size='icon-sm'
 				type='button'

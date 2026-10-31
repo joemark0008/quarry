@@ -1,8 +1,8 @@
 import { BookOpenText, ChevronDown, ShieldCheck } from 'lucide-react';
 
+import styles from './example-project-info-card.module.css';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import styles from './example-project-info-card.module.css';
 
 export function ExampleProjectInfoCard({ compact = false }: { compact?: boolean }) {
 	return (
@@ -10,13 +10,10 @@ export function ExampleProjectInfoCard({ compact = false }: { compact?: boolean 
 			<PopoverTrigger asChild>
 				<Button variant='outline' size='icon-sm' className={styles.exampleProjectInfoCardButton}>
 					<BookOpenText aria-hidden className={styles.exampleProjectInfoCardBookOpenText} />
-					<span className={styles.exampleProjectInfoCardSpan}>{compact ? 'About Jaffle Shop' : 'Jaffle Shop'}</span>
-					{!compact && (
-						<ChevronDown
-							aria-hidden
-							className={styles.exampleProjectInfoCardChevronDown}
-						/>
-					)}
+					<span className={styles.exampleProjectInfoCardSpan}>
+						{compact ? 'About Jaffle Shop' : 'Jaffle Shop'}
+					</span>
+					{!compact && <ChevronDown aria-hidden className={styles.exampleProjectInfoCardChevronDown} />}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent
@@ -34,9 +31,7 @@ export function ExampleProjectInfoCard({ compact = false }: { compact?: boolean 
 							backgroundSize: '18px 18px',
 						}}
 					/>
-					<h2 className={styles.exampleProjectInfoCardH2}>
-						Jaffle Shop
-					</h2>
+					<h2 className={styles.exampleProjectInfoCardH2}>Jaffle Shop</h2>
 				</div>
 				<div className={styles.exampleProjectInfoCardDiv3}>
 					<p className={styles.exampleProjectInfoCardP}>

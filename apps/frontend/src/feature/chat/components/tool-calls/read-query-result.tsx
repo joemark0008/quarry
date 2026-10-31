@@ -1,9 +1,9 @@
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { TableDisplay } from './display-table';
+import styles from './read-query-result.module.css';
 import type { readQueryResult } from '@quarry/shared/tools';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './read-query-result.module.css';
 
 export const ReadQueryResultToolCall = ({
 	toolPart: { output, input },
@@ -17,8 +17,7 @@ export const ReadQueryResultToolCall = ({
 			<ToolCallWrapper
 				title={
 					<>
-						Reading rows from{' '}
-						<code className={styles.readQueryResultToolCallCode}>{queryId}</code>...
+						Reading rows from <code className={styles.readQueryResultToolCallCode}>{queryId}</code>...
 					</>
 				}
 			/>

@@ -1,8 +1,8 @@
 import { Streamdown } from 'streamdown';
 import { code } from '@streamdown/code';
 
-import { cn } from '@/lib/utils';
 import styles from './sql-query-display.module.css';
+import { cn } from '@/lib/utils';
 
 interface SqlQueryDisplayProps {
 	query: string;

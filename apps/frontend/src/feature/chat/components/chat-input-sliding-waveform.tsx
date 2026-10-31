@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import type { RefObject } from 'react';
 import styles from './chat-input-sliding-waveform.module.css';
+import type { RefObject } from 'react';
 
 const SAMPLE_INTERVAL_MS = 50;
 const BAR_WIDTH = 2.5;

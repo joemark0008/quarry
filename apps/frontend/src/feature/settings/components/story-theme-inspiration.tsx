@@ -13,19 +13,15 @@ import {
 
 import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
 import { STORY_LOGO_MEDIA_TYPES } from '@quarry/shared/story-theme';
+import { renderPdfPages, renderZipPdfs } from './story-theme-pdf';
+import { GenerationSummary, RecordedSources, SOURCE_ICONS, WELL_CLASS } from './story-theme-recorded-sources';
+import styles from './story-theme-inspiration.module.css';
 import type { ApiOutputs } from '@/lib/api-types';
 import type { SourceImageMediaType } from '@quarry/shared/story-theme-source';
 import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 import type { StoryLogoMediaType } from '@quarry/shared/story-theme';
 import type { RenderedPdf } from './story-theme-pdf';
 import type { ViewedThemeVersion } from './story-theme-recorded-sources';
-import { renderPdfPages, renderZipPdfs } from './story-theme-pdf';
-import {
-	GenerationSummary,
-	RecordedSources,
-	SOURCE_ICONS,
-	WELL_CLASS,
-} from './story-theme-recorded-sources';
 import { Button } from '@/components/ui/button';
 import { Favicon } from '@/components/ui/favicon';
 import { Switch } from '@/components/ui/switch';
@@ -34,7 +30,6 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, formatBytes } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-theme-inspiration.module.css';
 
 export type GenerateResult = ApiOutputs['storyTheme']['generate'];
 type FileSourceKind = 'image' | 'pdf' | 'zip';
@@ -161,7 +156,10 @@ export function StoryThemeInspiration({
 		<SettingsCard
 			title='Start from a brand'
 			description='Describe the theme you want, then optionally add a website, image, PDF or ZIP so quarry can ground it in brand assets.'
-			className={cn(styles.storyThemeInspirationSettingsCard, (outcome || viewedVersion) && styles.storyThemeInspirationSettingsCard2)}
+			className={cn(
+				styles.storyThemeInspirationSettingsCard,
+				(outcome || viewedVersion) && styles.storyThemeInspirationSettingsCard2,
+			)}
 		>
 			{viewedVersion ? (
 				<RecordedSources version={viewedVersion} onLeave={onLeaveVersion} />
@@ -261,10 +259,7 @@ function UrlSource({
 
 	return (
 		<div className={cn(TEXT_WELL_CLASS, disabled && styles.urlSourceDiv)}>
-			<div
-				className={styles.urlSourceDiv2}
-				onClick={() => inputRef.current?.focus()}
-			>
+			<div className={styles.urlSourceDiv2} onClick={() => inputRef.current?.focus()}>
 				<span className={styles.urlSourceSpan}>
 					{preview ? (
 						<Favicon
@@ -356,11 +351,7 @@ function FileSource({
 
 	return (
 		<div
-			className={cn(
-				WELL_CLASS,
-				disabled && styles.urlSourceDiv,
-				isDragging && styles.fileSourceDiv,
-			)}
+			className={cn(WELL_CLASS, disabled && styles.urlSourceDiv, isDragging && styles.fileSourceDiv)}
 			onDragEnter={(event) => {
 				event.preventDefault();
 				if (!disabled) {
@@ -419,9 +410,7 @@ function FileSource({
 						</div>
 						<span className={styles.urlSourceDiv3}>
 							<span className={styles.fileSourceSpan4}>{DROP_PROMPTS[kind]}</span>
-							<span className={styles.fileSourceSpan5}>
-								{acceptedFormatsHint(kind)}
-							</span>
+							<span className={styles.fileSourceSpan5}>{acceptedFormatsHint(kind)}</span>
 						</span>
 					</>
 				)}
@@ -458,10 +447,7 @@ function InstructionSource({
 
 	return (
 		<div className={cn(TEXT_WELL_CLASS, styles.instructionSourceDiv, disabled && styles.urlSourceDiv)}>
-			<div
-				className={styles.instructionSourceDiv2}
-				onClick={() => textareaRef.current?.focus()}
-			>
+			<div className={styles.instructionSourceDiv2} onClick={() => textareaRef.current?.focus()}>
 				<span className={styles.instructionSourceSpan}>
 					<PenLine className={styles.urlSourceGlobe} />
 				</span>
@@ -476,9 +462,7 @@ function InstructionSource({
 						aria-label='Theme instructions'
 						className={styles.instructionSourceTextarea}
 					/>
-					<p className={styles.urlSourceP}>
-						Instructions · take priority over the sources below
-					</p>
+					<p className={styles.urlSourceP}>Instructions · take priority over the sources below</p>
 				</div>
 			</div>
 			{value ? (
@@ -614,7 +598,11 @@ function GenerateButton({
 			disabled={disabled || pending}
 			aria-busy={pending}
 		>
-			{pending ? <Loader2 className={styles.generateButtonLoader2} /> : <Sparkles className={styles.clearButtonX} />}
+			{pending ? (
+				<Loader2 className={styles.generateButtonLoader2} />
+			) : (
+				<Sparkles className={styles.clearButtonX} />
+			)}
 			{pending ? label : 'Generate theme'}
 		</Button>
 	);

@@ -1,11 +1,11 @@
 import { AlertCircleIcon, CheckIcon, CopyIcon, RotateCcwIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import styles from './chat-error.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
+import { Button } from '@/components/ui/button';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { getLastUserMessageIdx } from '@/lib/ai';
 import { cn } from '@/lib/utils';
-import styles from './chat-error.module.css';
 
 export interface Props {
 	className?: string;

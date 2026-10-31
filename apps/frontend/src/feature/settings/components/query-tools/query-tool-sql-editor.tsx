@@ -1,9 +1,9 @@
 import { Editor, useMonaco } from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
 
+import styles from './query-tool-sql-editor.module.css';
 import { useEditorTheme } from '@/hooks/use-editor-theme';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
-import styles from './query-tool-sql-editor.module.css';
 
 /** The Monaco SQL editor of the chat's side panel (same highlighting), as a plain controlled field. */
 export function QueryToolSqlEditor({

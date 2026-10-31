@@ -1,6 +1,6 @@
+import styles from './form-fields.module.css';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import styles from './form-fields.module.css';
 
 type AnyForm = any;
 
@@ -188,19 +188,11 @@ export function FormActions({
 			{(canSubmit: boolean) => (
 				<div className={styles.formActionsDiv}>
 					{showCancel && onCancel && (
-						<button
-							type='button'
-							onClick={onCancel}
-							className={styles.formActionsButton}
-						>
+						<button type='button' onClick={onCancel} className={styles.formActionsButton}>
 							Cancel
 						</button>
 					)}
-					<button
-						type='submit'
-						disabled={!canSubmit || isPending}
-						className={styles.formActionsButton2}
-					>
+					<button type='submit' disabled={!canSubmit || isPending} className={styles.formActionsButton2}>
 						{submitIcon}
 						{submitText}
 					</button>

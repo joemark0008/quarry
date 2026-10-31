@@ -4,8 +4,14 @@ import type { ColumnConditionalFormats } from '@quarry/shared/conditional-format
 import type { StoryBlockChartConfig } from '@quarry/shared/story-app';
 import type { StoryBlockEditTarget, StoryTableFormatEditTarget } from '@/stores/story-block-edit';
 
-import { ChartConfigEditDialog, ChartConfigEditForm } from '@/feature/chat/components/tool-calls/display-chart-edit-dialog';
-import { TableFormatEditDialog, TableFormatEditForm } from '@/feature/chat/components/tool-calls/display-table-edit-dialog';
+import {
+	ChartConfigEditDialog,
+	ChartConfigEditForm,
+} from '@/feature/chat/components/tool-calls/display-chart-edit-dialog';
+import {
+	TableFormatEditDialog,
+	TableFormatEditForm,
+} from '@/feature/chat/components/tool-calls/display-table-edit-dialog';
 import {
 	diffKitBlock,
 	fromDialogConfig,

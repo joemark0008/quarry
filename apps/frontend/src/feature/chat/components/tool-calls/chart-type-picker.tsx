@@ -9,6 +9,7 @@ import {
 	ChartScatter,
 	SquareSigma,
 } from 'lucide-react';
+import styles from './chart-type-picker.module.css';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ComponentType } from 'react';
 import ChartDonutIcon from '@/components/icons/chart-donut.svg';
@@ -17,7 +18,6 @@ import ChartStackedAreaIcon from '@/components/icons/chart-stacked-area.svg';
 
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import styles from './chart-type-picker.module.css';
 
 interface ChartTypeOption {
 	value: ChartType;
@@ -48,11 +48,7 @@ interface ChartTypePickerProps {
 
 export function ChartTypePicker({ value, onValueChange, className }: ChartTypePickerProps) {
 	return (
-		<div
-			role='group'
-			aria-label='Chart type'
-			className={cn(styles.chartTypePickerDiv, className)}
-		>
+		<div role='group' aria-label='Chart type' className={cn(styles.chartTypePickerDiv, className)}>
 			{CHART_TYPE_OPTIONS.map(({ value: option, label, icon: Icon }) => {
 				const isSelected = value === option;
 				return (

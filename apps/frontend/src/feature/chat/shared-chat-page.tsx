@@ -1,7 +1,7 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useRef } from 'react';
+import styles from './shared-chat-page.module.css';
 import { ChatMessagesReadonly } from '@/feature/chat/components/chat-messages/chat-messages-readonly';
 import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
 import { SharedChatAskBar } from '@/feature/chat/components/shared-chat-ask-bar';
@@ -15,10 +15,8 @@ import { SidePanelProvider } from '@/contexts/side-panel';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
 import { chatApi } from '@/lib/chat-api';
-import styles from './shared-chat-page.module.css';
 
 const Route = getRouteApi('/_protected/shared-chat/$shareId');
-
 
 export function SharedChatPage() {
 	const { shareId } = Route.useParams();

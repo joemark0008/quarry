@@ -1,6 +1,7 @@
 import { ROLE_LIMITS, STORY_TEXT_ROLE_LABELS, STORY_TEXT_ROLES } from '@quarry/shared/story-theme-typography';
 import { Italic } from 'lucide-react';
 import { useState } from 'react';
+import styles from './story-theme-typography-editor.module.css';
 import type { StoryTextRole, StoryTextRoleStyle, StoryTypography } from '@quarry/shared/story-theme-typography';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { CSSProperties } from 'react';
@@ -8,7 +9,6 @@ import type { CSSProperties } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import styles from './story-theme-typography-editor.module.css';
 
 const FONT_OPTIONS = [
 	{ value: 'heading', label: 'Heading' },
@@ -99,10 +99,7 @@ function TypographyRow({ role, style, theme, onChange }: TypographyRowProps) {
 				aria-label={`${label} in italics`}
 				aria-pressed={style.italic}
 				onClick={() => onChange({ italic: !style.italic })}
-				className={cn(
-					styles.typographyRowButton,
-					style.italic && styles.typographyRowButton2,
-				)}
+				className={cn(styles.typographyRowButton, style.italic && styles.typographyRowButton2)}
 			>
 				<Italic className={styles.typographyRowItalic} />
 			</button>

@@ -1,8 +1,8 @@
 import { X } from 'lucide-react';
 
+import styles from './side-panel-header.module.css';
 import { useSidePanel } from '@/contexts/side-panel';
 import { Button } from '@/components/ui/button';
-import styles from './side-panel-header.module.css';
 
 interface SidePanelHeaderProps {
 	title: string;

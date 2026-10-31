@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
+import styles from './text-shimmer.module.css';
 import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { cn } from '@/lib/utils';
-import styles from './text-shimmer.module.css';
 
 const DEFAULT_WORDS = ['Crunching', 'Analyzing', 'Thinking'];
 

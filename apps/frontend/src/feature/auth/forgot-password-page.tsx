@@ -1,11 +1,10 @@
 import { Link } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
+import styles from './forgot-password-page.module.css';
 import { requestPasswordReset } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/feature/auth/components/auth-form';
 import { useRedirectIfSmtpNotSetup } from '@/hooks/useRedirectIfSmtpNotSetup';
-import styles from './forgot-password-page.module.css';
-
 
 export function ForgotPassword() {
 	const isPending = useRedirectIfSmtpNotSetup();

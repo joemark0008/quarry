@@ -2,6 +2,7 @@ import { Download, Loader2 } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { McpAppHeader } from './mcp-app-header';
 import { OpenInQuarryButton } from './open-in-quarry-button';
+import styles from './story-app-view.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 import type { StoryThemePair } from '@quarry/shared/story-theme';
 import type { DownloadFormat } from '@quarry/shared/types';
@@ -17,7 +18,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import styles from './story-app-view.module.css';
 
 interface StoryAppViewProps {
 	title: string;
@@ -140,8 +140,17 @@ function StoryDownloadButton({ onDownload }: { onDownload: (format: DownloadForm
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='outline' size='sm' className={styles.storyDownloadButtonButton} disabled={isDownloading}>
-					{isDownloading ? <Loader2 className={styles.storyDownloadButtonLoader2} /> : <Download className={styles.storyDownloadButtonDownload} />}
+				<Button
+					variant='outline'
+					size='sm'
+					className={styles.storyDownloadButtonButton}
+					disabled={isDownloading}
+				>
+					{isDownloading ? (
+						<Loader2 className={styles.storyDownloadButtonLoader2} />
+					) : (
+						<Download className={styles.storyDownloadButtonDownload} />
+					)}
 					<span className={styles.storyDownloadButtonSpan}>Download</span>
 				</Button>
 			</DropdownMenuTrigger>

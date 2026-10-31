@@ -1,9 +1,9 @@
 import { ScrollText, Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './agent-prompt-card.module.css';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import styles from './agent-prompt-card.module.css';
 
 export function AgentPromptCard({ prompt }: { prompt: string }) {
 	const { isCopied, copy } = useCopyToClipboard();

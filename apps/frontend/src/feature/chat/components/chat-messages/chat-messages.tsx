@@ -1,14 +1,15 @@
 import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouterState } from '@tanstack/react-router';
-import { TextShimmer } from '@/components/ui/text-shimmer';
 import { ChatError } from './chat-error';
 import { FollowUpSuggestions } from './follow-up-suggestions';
 import { AssistantMessage } from './assistant-message';
 import { UserMessage } from './user-message';
+import styles from './chat-messages.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { MessageGroup } from '@/types/ai';
 import type { Chat } from '@/queries/use-chat-query';
+import { TextShimmer } from '@/components/ui/text-shimmer';
 import {
 	groupMessages,
 	checkIsLastMessageStreaming,
@@ -30,7 +31,6 @@ import { useScrollToBottomOnNewUserMessage } from '@/hooks/use-scroll-to-bottom-
 import { useChatId } from '@/hooks/use-chat-id';
 import { useChatQuery } from '@/queries/use-chat-query';
 import { chatApi } from '@/lib/chat-api';
-import styles from './chat-messages.module.css';
 
 const DEBUG_MESSAGES = false;
 
@@ -45,7 +45,11 @@ export function ChatMessages() {
 			<Conversation>
 				<ConversationContent className={styles.chatMessagesConversationContent}>
 					<ChatMessagesContent />
-					<div className={styles.chatMessagesDiv3} style={{ height: 'var(--chat-input-height, 0px)' }} aria-hidden />
+					<div
+						className={styles.chatMessagesDiv3}
+						style={{ height: 'var(--chat-input-height, 0px)' }}
+						aria-hidden
+					/>
 				</ConversationContent>
 
 				<ConversationScrollButton className={styles.chatMessagesConversationScrollButton} />
@@ -162,7 +166,9 @@ const MessageGroup = memo(
 					/>
 				))}
 
-				{showLoader && !assistantMessages.length && <TextShimmer showLogo className={styles.messageGroupTextShimmer} />}
+				{showLoader && !assistantMessages.length && (
+					<TextShimmer showLogo className={styles.messageGroupTextShimmer} />
+				)}
 			</div>
 		);
 	},
@@ -187,12 +193,7 @@ const MessageBlock = memo(
 
 		if (DEBUG_MESSAGES) {
 			return (
-				<div
-					className={cn(
-						styles.messageBlockDiv,
-						isUser ? styles.messageBlockDiv2 : styles.messageBlockDiv3,
-					)}
-				>
+				<div className={cn(styles.messageBlockDiv, isUser ? styles.messageBlockDiv2 : styles.messageBlockDiv3)}>
 					<pre>{JSON.stringify(message, null, 2)}</pre>
 				</div>
 			);

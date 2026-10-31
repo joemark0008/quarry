@@ -2,15 +2,15 @@ import { memo } from 'react';
 import { Streamdown } from 'streamdown';
 import { normalizeCitationMarkers, STORY_REFERENCE_TAG, stripAssistantTags } from '@quarry/shared';
 
-import { CitationPopover } from '@/feature/chat/components/citation-popover';
 import { MarkdownTable } from './markdown-table';
 import { StoryReferenceCard, StoryReferenceLink } from './story-reference-card';
 import { StreamingMarkdown } from './streaming-markdown';
+import styles from './citation-text.module.css';
+import { CitationPopover } from '@/feature/chat/components/citation-popover';
 import { FileChip } from '@/feature/chat/components/file-chip';
 import { isStoredFilePath } from '@/lib/attachments';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './citation-text.module.css';
 
 type AssistantTextSegment =
 	{ type: 'markdown'; text: string } | { type: 'story-reference'; storyId: string; title: string };

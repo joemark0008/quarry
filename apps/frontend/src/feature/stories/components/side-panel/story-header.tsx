@@ -13,13 +13,17 @@ import {
 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import styles from './story-header.module.css';
 import type { ShareSource } from '@quarry/shared/types';
 import type { StorySummary } from '@/lib/story.utils';
 import type { StoryViewMode } from './story-viewer.types.ts';
 import type { StoryRefreshFailure } from '@/feature/stories/components/story-page-header';
 import type { StoryDownloadOptions } from '@/feature/stories/components/story-download';
 import type { CustomStoryViewModeControls } from '@/feature/stories/components/custom-story/custom-story-view-mode';
-import { CustomStoryViewModeToggle, isCustomStoryViewMode } from '@/feature/stories/components/custom-story/custom-story-view-mode';
+import {
+	CustomStoryViewModeToggle,
+	isCustomStoryViewMode,
+} from '@/feature/stories/components/custom-story/custom-story-view-mode';
 import { useMentionedStoriesContext } from '@/contexts/mentioned-stories';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { StoryDownloadMenu, canDownloadStory } from '@/feature/stories/components/story-download';
@@ -42,10 +46,13 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SwitchIndicator } from '@/components/ui/switch';
-import { LiveStoryTimestamp, StoryRefreshButton, StoryRefreshFailureBanner } from '@/feature/stories/components/story-page-header';
+import {
+	LiveStoryTimestamp,
+	StoryRefreshButton,
+	StoryRefreshFailureBanner,
+} from '@/feature/stories/components/story-page-header';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-header.module.css';
 
 interface StoryViewModeControls {
 	viewMode: StoryViewMode;
@@ -187,7 +194,9 @@ export const StoryHeader = memo(function StoryHeader({
 					{mentionedStories.length > 0 && (
 						<>
 							{otherStories.length > 0 && <DropdownMenuSeparator />}
-							<DropdownMenuLabel className={styles.titleElementDropdownMenuLabel}>Mention</DropdownMenuLabel>
+							<DropdownMenuLabel className={styles.titleElementDropdownMenuLabel}>
+								Mention
+							</DropdownMenuLabel>
 							{mentionedStories.map((story) => (
 								<DropdownMenuItem key={story.storyId} onClick={() => openMentionedStory(story)}>
 									<span className={styles.titleElementSpan}>{story.title}</span>
@@ -248,10 +257,7 @@ export const StoryHeader = memo(function StoryHeader({
 							type='button'
 							onClick={onOpenLiveSettings}
 							disabled={isReadonlyMode || isAgentRunning || isLiveUpdating}
-							className={cn(
-								styles.liveControlsButton,
-								isLiveUpdating && styles.liveControlsButton2,
-							)}
+							className={cn(styles.liveControlsButton, isLiveUpdating && styles.liveControlsButton2)}
 						>
 							<Activity className={styles.liveControlsActivity} strokeWidth={2.25} />
 							<span className={styles.liveControlsSpan2}>Live story</span>
@@ -526,7 +532,11 @@ function ViewModeToggle({ controls, isReadonlyMode, isAgentRunning, isSaving }: 
 			)}
 			<Button
 				variant='ghost'
-				className={cn(styles.viewModeToggleButton, viewMode === 'code' && styles.viewModeToggleButton2, styles.titleElementButton)}
+				className={cn(
+					styles.viewModeToggleButton,
+					viewMode === 'code' && styles.viewModeToggleButton2,
+					styles.titleElementButton,
+				)}
 				onClick={() => onViewModeChange('code')}
 				disabled={isSaving}
 			>

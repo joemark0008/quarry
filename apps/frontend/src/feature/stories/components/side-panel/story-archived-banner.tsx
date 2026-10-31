@@ -1,8 +1,8 @@
 import { ArchiveRestoreIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import styles from './story-archived-banner.module.css';
 import { Button } from '@/components/ui/button';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-archived-banner.module.css';
 
 interface ArchivedBannerProps {
 	chatId: string;

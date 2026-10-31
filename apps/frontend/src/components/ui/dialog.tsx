@@ -1,9 +1,9 @@
 import { Modal } from '@mantine/core';
 import { XIcon } from 'lucide-react';
 import { cloneElement, createContext, isValidElement, useContext, useState } from 'react';
+import styles from './overlay.module.css';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';
 
-import styles from './overlay.module.css';
 import { cn } from '@/lib/utils';
 
 interface DialogContextValue {
@@ -125,11 +125,22 @@ function DialogFooter({ className, ...props }: ComponentProps<'div'>) {
 }
 
 function DialogTitle({ className, ...props }: ComponentProps<'h2'>) {
-	return <Modal.Title data-slot='dialog-title' className={cn(styles.dialogTitle, className)} {...(props as object)} />;
+	return (
+		<Modal.Title data-slot='dialog-title' className={cn(styles.dialogTitle, className)} {...(props as object)} />
+	);
 }
 
 function DialogDescription({ className, ...props }: ComponentProps<'p'>) {
 	return <p data-slot='dialog-description' className={cn(styles.dialogDescription, className)} {...props} />;
 }
 
-export { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger };
+export {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+};

@@ -1,9 +1,9 @@
 import { GitBranch } from 'lucide-react';
 
+import styles from './deployment-managed-git-settings.module.css';
 import { Button } from '@/components/ui/button';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SettingsCard } from '@/components/ui/settings-card';
-import styles from './deployment-managed-git-settings.module.css';
 
 interface DeploymentContextSource {
 	repositoryUrl: string | null;

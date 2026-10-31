@@ -1,7 +1,7 @@
+import styles from './keyboard-shortcuts-dialog.module.css';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Kbd } from '@/components/ui/kbd';
 import { SHORTCUTS } from '@/lib/keyboard-shortcuts';
-import styles from './keyboard-shortcuts-dialog.module.css';
 
 type KeyboardShortcutsDialogProps = {
 	open: boolean;
@@ -26,10 +26,7 @@ export function KeyboardShortcutsDialog({ open, onOpenChange }: KeyboardShortcut
 							<h3 className={styles.keyboardShortcutsDialogH3}>{group}</h3>
 							<div className={styles.keyboardShortcutsDialogDiv2}>
 								{SHORTCUTS.filter((entry) => entry.group === group).map((entry) => (
-									<div
-										key={entry.id}
-										className={styles.keyboardShortcutsDialogDiv3}
-									>
+									<div key={entry.id} className={styles.keyboardShortcutsDialogDiv3}>
 										<span>{entry.label}</span>
 										<div className={styles.keyboardShortcutsDialogDiv4}>
 											<Kbd shortcut={entry.shortcut} />

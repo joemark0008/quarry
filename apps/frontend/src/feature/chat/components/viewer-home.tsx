@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useMemo } from 'react';
+import { ViewerToolbarControls } from './viewer-toolbar-controls';
+import { ViewerEmptyState, ViewerGroups } from './viewer-shared-items';
+import styles from './viewer-home.module.css';
 import type { StoryPanelDisplayMode, Visibility } from '@quarry/shared/types';
 import type { GroupBy, SharedItem } from '@/lib/viewer-home';
 import { MobileHeader } from '@/layout/mobile-header';
 import { ProjectSwitcher } from '@/components/project-selector';
-import { ViewerToolbarControls } from './viewer-toolbar-controls';
 import { NoResults } from '@/components/item-card';
-import { ViewerEmptyState, ViewerGroups } from './viewer-shared-items';
 import { Spinner } from '@/components/ui/spinner';
 import { useMultiProject } from '@/hooks/use-multi-project';
 import { useProjectSwitch } from '@/hooks/use-project-switch';
@@ -14,7 +15,6 @@ import { VIEWER_DISPLAY_KEY, VIEWER_GROUP_KEY, filterItems, getStoredSetting, gr
 import { storyApi } from '@/lib/story-api';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
-import styles from './viewer-home.module.css';
 
 export function ViewerHome() {
 	const project = useCurrentProject();

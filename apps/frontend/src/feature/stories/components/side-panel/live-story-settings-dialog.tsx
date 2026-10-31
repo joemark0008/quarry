@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Activity, Loader2, Wand2 } from 'lucide-react';
 import { StoryDeliverySection } from './story-delivery-section';
+import styles from './live-story-settings-dialog.module.css';
 import type { StoryDeliveryHandle, StoryDeliveryStatus } from './story-delivery-section';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,7 +19,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { storyApi } from '@/lib/story-api';
-import styles from './live-story-settings-dialog.module.css';
 
 interface LiveStorySettingsDialogProps {
 	open: boolean;
@@ -269,7 +269,9 @@ export function LiveStorySettingsDialog({
 														disabled={!nlInput.trim() || cronNlpMutation.isPending}
 													>
 														{cronNlpMutation.isPending ? (
-															<Loader2 className={styles.liveStorySettingsDialogLoader2} />
+															<Loader2
+																className={styles.liveStorySettingsDialogLoader2}
+															/>
 														) : (
 															<Wand2 className={styles.liveStorySettingsDialogWand2} />
 														)}

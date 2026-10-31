@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
+import styles from './create-project-dialog.module.css';
 import type { FormEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,6 @@ import { Input } from '@/components/ui/input';
 import { CreateProjectDocument } from '@/graphql/generated/graphql';
 import { setActiveProjectId } from '@/lib/active-project';
 import { apolloClient } from '@/lib/apollo-client';
-import styles from './create-project-dialog.module.css';
 
 interface CreateProjectDialogProps {
 	open: boolean;

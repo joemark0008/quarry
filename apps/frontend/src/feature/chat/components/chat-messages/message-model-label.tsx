@@ -1,8 +1,8 @@
 import { providerLabel } from '@quarry/shared/types';
+import styles from './message-model-label.module.css';
 import type { MessageModel } from '@quarry/api/agent/types/chat';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
-import styles from './message-model-label.module.css';
 
 export function MessageModelLabel({ model }: { model: MessageModel }) {
 	return (

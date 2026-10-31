@@ -203,19 +203,13 @@ li .\[li_\&\]\:pl-6 {
 .cursor-pointer {
 	cursor: pointer;
 }
-.dark\:bg-\[var\(--shiki-dark-bg\,var\(--sdm-bg\,inherit\)\)\]:is(
-		:root[data-mantine-color-scheme='dark'] *
-	) {
+.dark\:bg-\[var\(--shiki-dark-bg\,var\(--sdm-bg\,inherit\)\)\]:is(:root[data-mantine-color-scheme='dark'] *) {
 	background-color: var(--shiki-dark-bg, var(--sdm-bg, inherit));
 }
-.dark\:bg-\[var\(--shiki-dark-bg\,var\(--sdm-tbg\)\)\]:is(
-		:root[data-mantine-color-scheme='dark'] *
-	) {
+.dark\:bg-\[var\(--shiki-dark-bg\,var\(--sdm-tbg\)\)\]:is(:root[data-mantine-color-scheme='dark'] *) {
 	background-color: var(--shiki-dark-bg, var(--sdm-tbg));
 }
-.dark\:text-\[var\(--shiki-dark\,var\(--sdm-c\,inherit\)\)\]:is(
-		:root[data-mantine-color-scheme='dark'] *
-	) {
+.dark\:text-\[var\(--shiki-dark\,var\(--sdm-c\,inherit\)\)\]:is(:root[data-mantine-color-scheme='dark'] *) {
 	color: var(--shiki-dark, var(--sdm-c, inherit));
 }
 .disabled\:cursor-not-allowed:disabled {

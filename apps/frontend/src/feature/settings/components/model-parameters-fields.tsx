@@ -1,7 +1,7 @@
+import styles from './model-parameters-fields.module.css';
 import type { ModelInferenceSettings, ParamControl, ParamKey, ReasoningEffort } from '@quarry/api/agent/types/llm';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import styles from './model-parameters-fields.module.css';
 
 export type ParamValues = Partial<Record<ParamKey, string>>;
 export type ParamErrors = Partial<Record<ParamKey, string>>;

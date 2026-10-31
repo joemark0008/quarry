@@ -1,9 +1,9 @@
 import { Modal } from '@mantine/core';
 import { Loader2 } from 'lucide-react';
 import { createContext, useContext } from 'react';
+import styles from './overlay.module.css';
 import type { ComponentProps, MouseEvent, ReactNode } from 'react';
 
-import styles from './overlay.module.css';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -57,13 +57,11 @@ function AlertDialogContent({
 				content: cn(styles.dialog, styles.alertDialog, size === 'sm' && styles.alertDialogSmall, className),
 			}}
 		>
-			<Modal.Overlay className={styles.overlay} onClick={closeOnOutsideClick ? onCloseOnOutsideClick : undefined} />
-			<Modal.Content
-				role='alertdialog'
-				data-slot='alert-dialog-content'
-				data-size={size}
-				{...(props as object)}
-			>
+			<Modal.Overlay
+				className={styles.overlay}
+				onClick={closeOnOutsideClick ? onCloseOnOutsideClick : undefined}
+			/>
+			<Modal.Content role='alertdialog' data-slot='alert-dialog-content' data-size={size} {...(props as object)}>
 				{children}
 			</Modal.Content>
 		</Modal.Root>
@@ -79,7 +77,13 @@ function AlertDialogFooter({ className, ...props }: ComponentProps<'div'>) {
 }
 
 function AlertDialogTitle({ className, ...props }: ComponentProps<'h2'>) {
-	return <Modal.Title data-slot='alert-dialog-title' className={cn(styles.dialogTitle, className)} {...(props as object)} />;
+	return (
+		<Modal.Title
+			data-slot='alert-dialog-title'
+			className={cn(styles.dialogTitle, className)}
+			{...(props as object)}
+		/>
+	);
 }
 
 function AlertDialogDescription({ className, ...props }: ComponentProps<'p'>) {

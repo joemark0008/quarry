@@ -144,7 +144,9 @@ describe('ContextGitPanel update action', () => {
 		renderPanel();
 
 		fireEvent.click(await screen.findByRole('button', { name: 'Update File Explorer' }));
-		fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }));
+		fireEvent.click(
+			within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }),
+		);
 
 		expect(
 			await screen.findByText('File Explorer has uncommitted changes. Commit or discard them before updating.'),
@@ -161,7 +163,9 @@ describe('ContextGitPanel update action', () => {
 		renderPanel();
 
 		fireEvent.click(await screen.findByRole('button', { name: 'Update File Explorer' }));
-		fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }));
+		fireEvent.click(
+			within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }),
+		);
 
 		expect(await screen.findByText('Unable to reach the repository.')).toBeTruthy();
 		expect(
@@ -175,7 +179,9 @@ describe('ContextGitPanel update action', () => {
 		renderPanel({ onRepositoryChanged });
 
 		fireEvent.click(await screen.findByRole('button', { name: 'Update File Explorer' }));
-		fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }));
+		fireEvent.click(
+			within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }),
+		);
 
 		await waitFor(() => {
 			expect(mocks.updateWorktree.mock.calls[0]?.[0]).toEqual({ requiredCommits: [] });
@@ -199,7 +205,9 @@ describe('ContextGitPanel update action', () => {
 
 		mocks.getRepositoryStatus.mockResolvedValue(createRepositoryStatus(false));
 		fireEvent.click(screen.getByRole('button', { name: 'Update File Explorer' }));
-		fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }));
+		fireEvent.click(
+			within(await screen.findByRole('dialog')).getByRole('button', { name: 'Update File Explorer' }),
+		);
 
 		await waitFor(() => {
 			expect(screen.queryByText('Update File Explorer?')).toBeNull();
@@ -210,7 +218,7 @@ describe('ContextGitPanel update action', () => {
 		expect(document.querySelector('[data-slot="dialog-overlay"]')).toBeNull();
 		expect(document.body.style.pointerEvents).not.toBe('none');
 		expect(branchTrigger.hasAttribute('disabled')).toBe(false);
-				fireEvent.click(branchTrigger);
+		fireEvent.click(branchTrigger);
 
 		expect(await screen.findByRole('menuitemcheckbox', { name: /main/ })).toBeTruthy();
 	});

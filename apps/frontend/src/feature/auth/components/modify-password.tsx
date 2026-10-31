@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@apollo/client/react';
-import { useSession } from '@/lib/auth-client';
-import { ModifyPasswordDocument } from '@/graphql/generated/graphql';
 import { AuthForm, FormTextField } from './auth-form';
 import styles from './modify-password.module.css';
+import { useSession } from '@/lib/auth-client';
+import { ModifyPasswordDocument } from '@/graphql/generated/graphql';
 
 export function ModifyPassword() {
 	const { refetch } = useSession();
@@ -39,7 +39,13 @@ export function ModifyPassword() {
 				submitText={isUpdating ? 'Updating...' : 'Reset password'}
 				serverError={serverError}
 			>
-				<FormTextField form={form} name='newPassword' type='password' title='New password' className={styles.modifyPasswordFormTextField} />
+				<FormTextField
+					form={form}
+					name='newPassword'
+					type='password'
+					title='New password'
+					className={styles.modifyPasswordFormTextField}
+				/>
 				<FormTextField
 					form={form}
 					name='confirmPassword'

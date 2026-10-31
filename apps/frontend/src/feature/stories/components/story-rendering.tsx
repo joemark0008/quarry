@@ -1,14 +1,14 @@
 import { getGridClass, getGridTemplateColumns } from '@quarry/shared/story-segments';
 import { Fragment, memo } from 'react';
 import { Streamdown } from 'streamdown';
+import { StoryTableFrame } from './story-block';
+import styles from './story-rendering.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock, Segment } from '@quarry/shared/story-segments';
 
 import { MarkdownTable } from '@/feature/chat/components/chat-messages/markdown-table';
-import { StoryTableFrame } from './story-block';
 import { StoryGridProvider } from '@/contexts/story-grid';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './story-rendering.module.css';
 
 const markdownComponents = {
 	table: ({ node, className }: any) => (

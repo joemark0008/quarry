@@ -1,5 +1,5 @@
-import type { StoryPageHeaderProps, StoryRefreshFailure } from './story-page-header';
 import { StoryPageHeader } from './story-page-header';
+import type { StoryPageHeaderProps, StoryRefreshFailure } from './story-page-header';
 
 interface SharedStoryHeaderProps {
 	title: string;

@@ -7,13 +7,13 @@ import {
 	CustomStoryTableFormatForm,
 	TABLE_FORMAT_EDIT_DESCRIPTION,
 } from './custom-story-block-edit';
+import styles from './story-block-edit-panel.module.css';
 import { Button } from '@/components/ui/button';
 import { useSidePanel } from '@/contexts/side-panel';
 import { useChatActivity } from '@/hooks/use-chat-activity';
 import { useIsMobile } from '@/hooks/use-is-mobile';
 import { cn } from '@/lib/utils';
 import { storyBlockEditStore } from '@/stores/story-block-edit';
-import styles from './story-block-edit-panel.module.css';
 
 export function StoryBlockEditPanel({ chatId }: { chatId: string }) {
 	const target = useSyncExternalStore(storyBlockEditStore.subscribe, storyBlockEditStore.getSnapshot);

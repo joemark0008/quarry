@@ -3,7 +3,7 @@
 	gap: 0.5rem;
 }
 .dateFormatSectionLabel {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -66,7 +66,7 @@
 }
 .dateFormatSectionSpan2 {
 	font-family: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;

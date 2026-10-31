@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
-
 import { logIn, trackErrors, USER } from './helpers';
+import type { Page } from '@playwright/test';
 
-const isDark = (page: import('@playwright/test').Page) =>
+const isDark = (page: Page) =>
 	page.evaluate(
 		() =>
 			document.documentElement.classList.contains('dark') ||

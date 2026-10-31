@@ -80,7 +80,7 @@
 }
 .badgeVariantsDestructive {
 	background-color: var(--app-danger);
-	color: #fff;
+	color: var(--app-white);
 	&:focus-visible {
 		--fx-ring-color: color-mix(in oklab, var(--app-danger) 20%, transparent);
 	}

@@ -1,6 +1,8 @@
 import { AlertTriangle } from 'lucide-react';
 import { DEFAULT_STORY_THEME_PAIR } from '@quarry/shared/story-theme';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CustomStoryFrame } from './custom-story-frame';
+import localStyles from './custom-story-body.module.css';
 import type { ApiOutputs } from '@/lib/api-types';
 import type { StoryBlockEditPayload, StoryTableFormatEditRequest } from '@quarry/shared/story-app';
 import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
@@ -8,11 +10,9 @@ import type { StoryBlockReference } from '@quarry/shared/types';
 
 import type { CustomStoryRuntimeError } from './custom-story-frame';
 import type { CustomStoryDataSource } from './story-data-options';
-import { CustomStoryFrame } from './custom-story-frame';
 import QuarryLogoAnimated from '@/components/icons/quarry-logo-animated';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsDarkMode } from '@/contexts/theme.provider';
-import localStyles from './custom-story-body.module.css';
 
 export type CustomStoryContent = ApiOutputs['story']['getCustomVersion'];
 export type CustomStoryFileSummary = CustomStoryContent['files'][number];
@@ -184,9 +184,7 @@ function BuildFailure({ message }: { message: string }) {
 				<AlertTriangle className={localStyles.buildFailureAlertTriangle} />
 				This version did not build
 			</div>
-			<pre className={localStyles.buildFailurePre}>
-				{message}
-			</pre>
+			<pre className={localStyles.buildFailurePre}>{message}</pre>
 		</div>
 	);
 }

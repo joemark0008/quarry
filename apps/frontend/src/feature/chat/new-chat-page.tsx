@@ -1,9 +1,9 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, Link, useNavigate } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from '@tanstack/react-router';
 import { ArrowRight, PlusIcon } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
+import styles from './new-chat-page.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { StoryItem } from '@/lib/stories-page';
 import { ChatInput } from '@/feature/chat/components/chat-input';
@@ -25,10 +25,8 @@ import { buildStoryItems } from '@/lib/stories-page';
 import { capitalize, cn } from '@/lib/utils';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
-import styles from './new-chat-page.module.css';
 
 const Route = getRouteApi('/_protected/_chat-layout/');
-
 
 export function RouteComponent() {
 	const { isViewer } = usePermissions();
@@ -154,11 +152,7 @@ function HomePage() {
 					<button
 						type='button'
 						onClick={() => navigate({ to: '/stories', search: { folderId: null } })}
-						className={cn(
-							styles.storiesGridButton,
-							styles.storiesGridButton2,
-							styles.storiesGridButton3,
-						)}
+						className={cn(styles.storiesGridButton, styles.storiesGridButton2, styles.storiesGridButton3)}
 					>
 						<div className={styles.storiesGridDiv3}>
 							<PlusIcon className={styles.storiesGridPlusIcon} />
@@ -212,12 +206,7 @@ function HomePage() {
 									<h1 className={styles.homePageH1}>{stateTitle}</h1>
 								</div>
 								<div className={styles.homePageDiv7}>
-									<img
-										src={logoSrc}
-										alt=''
-										aria-hidden
-										className={styles.homePageImg}
-									/>
+									<img src={logoSrc} alt='' aria-hidden className={styles.homePageImg} />
 									<ChatInput />
 									<SavedPromptSuggestions projectId={SYSTEM_EXAMPLE_PROJECT_ID} />
 								</div>
@@ -235,16 +224,9 @@ function HomePage() {
 							</div>
 						) : (
 							<>
-								<div className={styles.homePageDiv9}>
-									{stateTitle}
-								</div>
+								<div className={styles.homePageDiv9}>{stateTitle}</div>
 								<div className={styles.homePageDiv10}>
-									<img
-										src={logoSrc}
-										alt=''
-										aria-hidden
-										className={styles.homePageImg}
-									/>
+									<img src={logoSrc} alt='' aria-hidden className={styles.homePageImg} />
 									<ChatInput acceptsPendingStoryReferences />
 									<SavedPromptSuggestions />
 								</div>
@@ -272,23 +254,10 @@ function HomeLinkCard({
 	logoSrc: string;
 }) {
 	return (
-		<Link
-			to={to}
-			className={cn(
-				`${styles.homeLinkCardLink} group`,
-				styles.homeLinkCardLink2,
-			)}
-		>
-			<img
-				src={logoSrc}
-				alt=''
-				aria-hidden
-				className={styles.homeLinkCardImg}
-			/>
+		<Link to={to} className={cn(`${styles.homeLinkCardLink} group`, styles.homeLinkCardLink2)}>
+			<img src={logoSrc} alt='' aria-hidden className={styles.homeLinkCardImg} />
 			<div className={styles.homeLinkCardDiv}>
-				<span className={styles.homeLinkCardSpan}>
-					{label}
-				</span>
+				<span className={styles.homeLinkCardSpan}>{label}</span>
 				<div className={styles.homeLinkCardDiv2}>
 					<span className={styles.homeLinkCardSpan2}>{title}</span>
 					<span className={styles.homeLinkCardSpan3}>{subtitle}</span>

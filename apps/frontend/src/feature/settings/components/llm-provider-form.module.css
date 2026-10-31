@@ -3,7 +3,7 @@
 	gap: 0.5rem;
 }
 .nameFieldLabel {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -94,7 +94,7 @@
 	padding-block: 0.25rem;
 	padding-right: 0.25rem;
 	padding-left: 0.75rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-primary-fg);
 }
@@ -149,7 +149,7 @@
 	border-radius: calc(var(--app-radius) - 2px);
 	padding-inline: 0.75rem;
 	padding-block: 0.375rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	transition-property: all;
 	transition-timing-function: var(--fx-ease, cubic-bezier(0.4, 0, 0.2, 1));
@@ -164,7 +164,7 @@
 	padding-block: 0.25rem;
 	padding-right: 0.25rem;
 	padding-left: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-primary-fg);
 }

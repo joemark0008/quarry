@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { AskSelection } from '@/stores/ask-bar';
 import { AskBar } from './ask-bar';
+import type { AskSelection } from '@/stores/ask-bar';
 import { chatApi } from '@/lib/chat-api';
 
 /** Asks about a shared chat: each question is a fork of it, so the agent answers knowing the whole conversation. */

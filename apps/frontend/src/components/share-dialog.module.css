@@ -271,7 +271,7 @@
 .pickerRowDiv2 {
 	border-color: var(--app-primary-bg);
 	background-color: var(--app-primary-bg);
-	color: #fff;
+	color: var(--app-white);
 }
 .pickerRowDiv3 {
 	border-color: color-mix(in oklab, var(--app-muted) 30%, transparent);

@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import styles from './settings-card.module.css';
+import { cn } from '@/lib/utils';
 
 export function SettingsPageWrapper({ children, wide }: { children: React.ReactNode; wide?: boolean }) {
 	return (

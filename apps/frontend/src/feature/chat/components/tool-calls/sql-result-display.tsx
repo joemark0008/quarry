@@ -1,9 +1,9 @@
 import { TableDisplay } from './display-table';
+import styles from './sql-result-display.module.css';
 import type { ColumnConditionalFormats } from '@quarry/shared/conditional-formatting';
 import type { executeSql } from '@quarry/shared/tools';
 import type { QueryRowsSource } from '@/hooks/use-query-rows';
 import { useFullQueryOutput, useServerPaginatedRows } from '@/hooks/use-query-rows';
-import styles from './sql-result-display.module.css';
 
 const PAGE_SIZE = 10;
 

@@ -13,6 +13,7 @@ import { narrativesOptions, queryDataOptions, querySqlOptions, stateOptions } fr
 import { buildStoryFrameDocument } from './story-frame-document';
 import { RememberStateHeader } from './remember-state-header';
 import { useStoryStateRecorder } from './use-story-state-recorder';
+import localStyles from './custom-story-frame.module.css';
 import type {
 	StoryApp,
 	StoryBlockEditPayload,
@@ -30,7 +31,6 @@ import { useDateFormat } from '@/hooks/use-date-format';
 import { getAppWideShortcuts, isTypingTarget } from '@/lib/keyboard-shortcuts';
 import { downloadCsv, downloadXlsx, tableToCsv, tableToTsv } from '@/lib/table-export';
 import { cn } from '@/lib/utils';
-import localStyles from './custom-story-frame.module.css';
 
 export interface CustomStoryRuntimeError {
 	message: string;
@@ -293,11 +293,7 @@ export function CustomStoryFrame({
 		return null;
 	}
 	if (navigatedAway) {
-		return (
-			<div className={cn(localStyles.customStoryFrameDiv, className)}>
-				{NAVIGATED_AWAY_MESSAGE}
-			</div>
-		);
+		return <div className={cn(localStyles.customStoryFrameDiv, className)}>{NAVIGATED_AWAY_MESSAGE}</div>;
 	}
 
 	return (

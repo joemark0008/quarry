@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { getStoryBlockDragOrigin, hasStoryBlockDrag, STORY_TAB_DRAG_TYPE } from './story-editor-drag-context';
+import styles from './story-tabs-bar.module.css';
 import type { DragOrigin } from './story-block-selection';
 import type { DragEvent, KeyboardEvent } from 'react';
 
@@ -8,7 +9,6 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTr
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import styles from './story-tabs-bar.module.css';
 
 export interface StoryTabsExternalDrop {
 	onDrop: (origin: DragOrigin, destinationTabIndex: number) => void;
@@ -173,17 +173,10 @@ export function StoryTabsBar({
 			}}
 		>
 			<div className={styles.storyTabsBarDiv3} />
-			<div
-				className={cn(
-					styles.storyTabsBarDiv4,
-					contentClassName,
-				)}
-			>
+			<div className={cn(styles.storyTabsBarDiv4, contentClassName)}>
 				{tabs.map((tab, index) => (
 					<Fragment key={`${index}-${tab.title}`}>
-						{dropSlot === index && (
-							<div className={styles.storyTabsBarDiv5} />
-						)}
+						{dropSlot === index && <div className={styles.storyTabsBarDiv5} />}
 						<div
 							draggable={Boolean(editable) && editingIndex !== index}
 							onDragStart={(event) => handleDragStart(event, index)}
@@ -198,12 +191,9 @@ export function StoryTabsBar({
 							data-story-block-drop-target={externalDropIndex === index ? '' : undefined}
 							className={cn(
 								`${styles.storyTabsBarDiv6} group/tab`,
-								index === activeIndex
-									? styles.storyTabsBarDiv7
-									: styles.storyTabsBarDiv8,
+								index === activeIndex ? styles.storyTabsBarDiv7 : styles.storyTabsBarDiv8,
 								draggingIndex === index && styles.storyTabsBarDiv9,
-								externalDropIndex === index &&
-									styles.storyTabsBarDiv10,
+								externalDropIndex === index && styles.storyTabsBarDiv10,
 							)}
 						>
 							{editingIndex === index ? (
@@ -273,9 +263,7 @@ export function StoryTabsBar({
 					</Fragment>
 				))}
 
-				{dropSlot === tabs.length && (
-					<div className={styles.storyTabsBarDiv5} />
-				)}
+				{dropSlot === tabs.length && <div className={styles.storyTabsBarDiv5} />}
 
 				{(editable || showAddTab) && (
 					<button

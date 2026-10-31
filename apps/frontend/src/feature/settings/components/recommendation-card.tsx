@@ -22,6 +22,7 @@ import {
 	CONTEXT_RECOMMENDATION_CATEGORY_LABELS,
 	normalizeContextRecommendationCategory,
 } from '@quarry/shared/context-recommendation';
+import styles from './recommendation-card.module.css';
 import type { MouseEvent } from 'react';
 import type { ApiOutputs } from '@/lib/api-types';
 
@@ -40,7 +41,6 @@ import { computeLineDiff } from '@/lib/line-diff';
 import { RecommendationText } from '@/lib/recommendation-text';
 import { cn } from '@/lib/utils';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
-import styles from './recommendation-card.module.css';
 
 type RouterOutputs = ApiOutputs;
 type Recommendation = RouterOutputs['contextRecommendation']['list'][number];
@@ -294,10 +294,7 @@ export function RecommendationCard({
 			<div className={`${styles.recommendationCardDiv} items-top`}>
 				{onSelect && !readOnly && (
 					<span
-						className={cn(
-							styles.recommendationCardSpan,
-							selectionActive && styles.recommendationCardSpan2,
-						)}
+						className={cn(styles.recommendationCardSpan, selectionActive && styles.recommendationCardSpan2)}
 					>
 						<RecommendationCheckbox
 							selected={isSelected}
@@ -317,7 +314,12 @@ export function RecommendationCard({
 						aria-expanded={!collapsed}
 						aria-label={collapsed ? 'Expand recommendation' : 'Collapse recommendation'}
 					>
-						<ChevronRight className={cn(styles.recommendationCardChevronRight, !collapsed && styles.recommendationCardChevronRight2)} />
+						<ChevronRight
+							className={cn(
+								styles.recommendationCardChevronRight,
+								!collapsed && styles.recommendationCardChevronRight2,
+							)}
+						/>
 					</button>
 				</span>
 				<div className={styles.recommendationCardDiv2}>
@@ -462,10 +464,7 @@ export function RecommendationCard({
 												const title = meta?.title || row.chatId.slice(0, 8);
 												const userName = meta?.userName ?? 'Unknown user';
 												return (
-													<div
-														key={row.key}
-														className={styles.recommendationCardDiv16}
-													>
+													<div key={row.key} className={styles.recommendationCardDiv16}>
 														<span className={styles.recommendationCardSpan8}>
 															{meta?.userName ? initials(meta.userName) : '?'}
 														</span>
@@ -475,7 +474,9 @@ export function RecommendationCard({
 														<span className={styles.recommendationCardSpan10}>{title}</span>
 														{row.kind === 'feedback' && (
 															<>
-																<ThumbsDown className={styles.recommendationCardThumbsDown2} />
+																<ThumbsDown
+																	className={styles.recommendationCardThumbsDown2}
+																/>
 																{row.explanation && (
 																	<span className={styles.recommendationCardSpan11}>
 																		&ldquo;{row.explanation}&rdquo;
@@ -483,7 +484,9 @@ export function RecommendationCard({
 																)}
 															</>
 														)}
-														<ExternalLink className={styles.recommendationCardExternalLink} />
+														<ExternalLink
+															className={styles.recommendationCardExternalLink}
+														/>
 													</div>
 												);
 											})}
@@ -512,7 +515,9 @@ export function RecommendationCard({
 						<TooltipProvider delayDuration={150}>
 							<Tooltip>
 								<TooltipTrigger asChild>
-									<span className={styles.recommendationCardSpan12}>Detected {createdAgo.humanReadable}</span>
+									<span className={styles.recommendationCardSpan12}>
+										Detected {createdAgo.humanReadable}
+									</span>
 								</TooltipTrigger>
 								<TooltipContent>
 									{new Date(rec.createdAt).toLocaleString()}
@@ -620,7 +625,11 @@ function RecommendationCheckbox({
 				selected && styles.recommendationCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className={styles.recommendationCardCheck} /> : <Circle className={styles.recommendationCardCheck} />}
+			{selected ? (
+				<CircleCheck className={styles.recommendationCardCheck} />
+			) : (
+				<Circle className={styles.recommendationCardCheck} />
+			)}
 		</button>
 	);
 }

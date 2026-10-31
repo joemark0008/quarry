@@ -1,26 +1,19 @@
 import { Switch as MantineSwitch } from '@mantine/core';
 
-import { cn } from '@/lib/utils';
 import styles from './switch.module.css';
+import { cn } from '@/lib/utils';
 
-const trackClassName =
-	styles.trackClassName;
+const trackClassName = styles.trackClassName;
 
 function SwitchThumb({ checked }: { checked: boolean }) {
 	return (
 		<>
 			<span
 				aria-hidden='true'
-				className={cn(
-					styles.switchThumbSpan,
-					checked ? styles.switchThumbSpan2 : styles.switchThumbSpan3,
-				)}
+				className={cn(styles.switchThumbSpan, checked ? styles.switchThumbSpan2 : styles.switchThumbSpan3)}
 			/>
 			<span
-				className={cn(
-					styles.switchThumbSpan4,
-					checked ? styles.switchThumbSpan5 : styles.switchThumbSpan6,
-				)}
+				className={cn(styles.switchThumbSpan4, checked ? styles.switchThumbSpan5 : styles.switchThumbSpan6)}
 			/>
 		</>
 	);

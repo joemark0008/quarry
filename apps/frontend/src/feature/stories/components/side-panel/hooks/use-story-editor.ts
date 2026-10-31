@@ -4,6 +4,31 @@ import { Fragment, Slice } from '@tiptap/pm/model';
 import { dropPoint } from '@tiptap/pm/transform';
 import { useEditor } from '@tiptap/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { shouldSyncStoryEditorContent } from './story-editor-content-sync';
+import type {
+	GridDragSource,
+	StoryBlockDragSource,
+	StoryEditorDragControls,
+} from '@/feature/stories/components/side-panel/story-editor-drag-context';
+import type { DragUnit, GridColumnRef } from '@/feature/stories/components/side-panel/story-block-selection';
+import type { Node as PMNode } from '@tiptap/pm/model';
+import type { EditorState } from '@tiptap/pm/state';
+import type { Editor } from '@tiptap/react';
+import type { MutableRefObject } from 'react';
+import {
+	cloneElementWithStyles,
+	createBlockNode,
+	dispatchDropWithScroll,
+	getStoryEditorMarkdown,
+	preprocessForEditor,
+	removeCardFromOrigin,
+} from '@/feature/stories/components/side-panel/story-editor-utils';
+import {
+	GRID_COLUMN_DRAG_TYPE,
+	setStoryBlockDragOrigin,
+	STORY_BLOCK_DRAG_TYPE,
+} from '@/feature/stories/components/side-panel/story-editor-drag-context';
+import { EDITOR_EXTENSIONS } from '@/feature/stories/components/side-panel/story-editor-extensions';
 import {
 	blockSelectionPluginKey,
 	buildDragUnitNodes,
@@ -13,23 +38,6 @@ import {
 	getSelectedGridColumns,
 	resolveDragSelection,
 } from '@/feature/stories/components/side-panel/story-block-selection';
-import { EDITOR_EXTENSIONS } from '@/feature/stories/components/side-panel/story-editor-extensions';
-import { GRID_COLUMN_DRAG_TYPE, setStoryBlockDragOrigin, STORY_BLOCK_DRAG_TYPE } from '@/feature/stories/components/side-panel/story-editor-drag-context';
-import {
-	cloneElementWithStyles,
-	createBlockNode,
-	dispatchDropWithScroll,
-	getStoryEditorMarkdown,
-	preprocessForEditor,
-	removeCardFromOrigin,
-} from '@/feature/stories/components/side-panel/story-editor-utils';
-import { shouldSyncStoryEditorContent } from './story-editor-content-sync';
-import type { GridDragSource, StoryBlockDragSource, StoryEditorDragControls } from '@/feature/stories/components/side-panel/story-editor-drag-context';
-import type { DragUnit, GridColumnRef } from '@/feature/stories/components/side-panel/story-block-selection';
-import type { Node as PMNode } from '@tiptap/pm/model';
-import type { EditorState } from '@tiptap/pm/state';
-import type { Editor } from '@tiptap/react';
-import type { MutableRefObject } from 'react';
 
 interface UseStoryEditorParams {
 	code: string;

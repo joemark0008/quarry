@@ -9,7 +9,6 @@ import './theme/shared-surfaces.css';
 import './theme/streamdown.css';
 import 'katex/dist/katex.min.css';
 import { StrictMode } from 'react';
-import type { ReactNode } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
@@ -25,6 +24,7 @@ import { apolloClient } from './lib/apollo-client';
 import { routeTree } from './routeTree.gen';
 import { cssVariablesResolver, theme } from './theme';
 import reportWebVitals from './reportWebVitals';
+import type { ReactNode } from 'react';
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

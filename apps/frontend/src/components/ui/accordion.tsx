@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
+import styles from './overlay.module.css';
 import type { ComponentProps } from 'react';
 
-import styles from './overlay.module.css';
 import { cn } from '@/lib/utils';
 
 const AccordionContext = createContext<{
@@ -16,7 +16,14 @@ type AccordionProps = Omit<ComponentProps<'div'>, 'defaultValue'> & { disabled?:
 		| { type: 'multiple'; collapsible?: boolean; value?: string[]; onValueChange?: (value: string[]) => void }
 	);
 
-function Accordion({ type = 'single', value, onValueChange, disabled, collapsible: _collapsible, ...props }: AccordionProps) {
+function Accordion({
+	type = 'single',
+	value,
+	onValueChange,
+	disabled,
+	collapsible: _collapsible,
+	...props
+}: AccordionProps) {
 	const open = Array.isArray(value) ? value : value ? [value] : [];
 	const toggle = (item: string) => {
 		const isOpen = open.includes(item);

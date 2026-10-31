@@ -271,11 +271,11 @@
 .authSidePanelInputGroup6 {
 	&::before {
 		content: var(--fx-content);
-		mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+		mask-image: linear-gradient(var(--app-white) 0 0), linear-gradient(var(--app-white) 0 0);
 	}
 	&::before {
 		content: var(--fx-content);
-		-webkit-mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+		-webkit-mask-image: linear-gradient(var(--app-white) 0 0), linear-gradient(var(--app-white) 0 0);
 	}
 }
 .authSidePanelInputGroup7 {

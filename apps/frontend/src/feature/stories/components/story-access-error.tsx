@@ -2,9 +2,9 @@ import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { Link, useRouter } from '@tanstack/react-router';
 import { Lock, SearchX, TriangleAlert } from 'lucide-react';
 
+import styles from './story-access-error.module.css';
 import { Button } from '@/components/ui/button';
 import { isForbiddenError, isNotFoundError } from '@/lib/api-error';
-import styles from './story-access-error.module.css';
 
 export function StoryRouteError({ error }: { error?: unknown }) {
 	const router = useRouter();
@@ -46,7 +46,13 @@ export function StoryAccessError({ error, onRetry }: { error?: unknown; onRetry?
 
 	return (
 		<StoryErrorLayout
-			icon={forbidden ? <Lock className={styles.storyAccessErrorTriangleAlert} aria-hidden /> : <SearchX className={styles.storyAccessErrorTriangleAlert} aria-hidden />}
+			icon={
+				forbidden ? (
+					<Lock className={styles.storyAccessErrorTriangleAlert} aria-hidden />
+				) : (
+					<SearchX className={styles.storyAccessErrorTriangleAlert} aria-hidden />
+				)
+			}
 			title={title}
 			description={description}
 		>
@@ -72,9 +78,7 @@ function StoryErrorLayout({
 		<div className={styles.storyErrorLayoutDiv}>
 			<div className={styles.storyErrorLayoutDiv2}>
 				<div className={styles.storyErrorLayoutDiv3}>
-					<div className={styles.storyErrorLayoutDiv4}>
-						{icon}
-					</div>
+					<div className={styles.storyErrorLayoutDiv4}>{icon}</div>
 					<div className={styles.storyErrorLayoutDiv5}>
 						<h1 className={styles.storyErrorLayoutH1}>{title}</h1>
 						<p className={styles.storyErrorLayoutP}>{description}</p>

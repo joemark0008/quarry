@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import styles from './chat-input-context-window-ring.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { chatApi } from '@/lib/chat-api';
-import styles from './chat-input-context-window-ring.module.css';
 
 const RADIUS = 8;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -65,11 +65,7 @@ export function ContextWindowRingView({
 	return (
 		<Tooltip delayDuration={200}>
 			<TooltipTrigger asChild>
-				<span
-					tabIndex={0}
-					aria-label={tooltipText}
-					className={styles.contextWindowRingViewSpan}
-				>
+				<span tabIndex={0} aria-label={tooltipText} className={styles.contextWindowRingViewSpan}>
 					<svg
 						width='20'
 						height='20'

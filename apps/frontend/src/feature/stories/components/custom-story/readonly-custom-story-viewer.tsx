@@ -1,14 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CustomStoryBody } from './custom-story-body';
+import { CustomStoryFiles } from './custom-story-files';
+import { CustomStoryViewLayers } from './custom-story-view-mode';
+import { useCustomStoryDownload } from './use-custom-story-download';
+import styles from './readonly-custom-story-viewer.module.css';
 import type { CustomStoryViewerAccess } from '@quarry/shared/story-app';
 import type { DownloadFormat } from '@quarry/shared/types';
 
 import type { CustomStoryViewMode } from './custom-story-view-mode';
 import type { CustomStoryFileSource } from './story-data-options';
-import { CustomStoryBody } from './custom-story-body';
-import { CustomStoryFiles } from './custom-story-files';
-import { CustomStoryViewLayers } from './custom-story-view-mode';
-import { useCustomStoryDownload } from './use-custom-story-download';
 import { useStoryViewerAgentState } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-agent-state';
 import { useStoryViewerSwitchStory } from '@/feature/stories/components/side-panel/hooks/use-story-viewer-switch-story';
 import { StoryHeader } from '@/feature/stories/components/side-panel/story-header';
@@ -16,7 +17,6 @@ import { StoryViewer } from '@/feature/stories/components/side-panel/story-viewe
 import { useSidePanel } from '@/contexts/side-panel';
 import { isNotFoundError } from '@/lib/api-error';
 import { storyApi } from '@/lib/story-api';
-import styles from './readonly-custom-story-viewer.module.css';
 
 interface ReadonlyCustomStoryViewerProps {
 	chatId: string;

@@ -1,21 +1,23 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { Link, useNavigate, useRouter } from '@tanstack/react-router';
+import { getRouteApi, Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
+import styles from './login-page.module.css';
 import { sendVerificationEmail, signIn } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/feature/auth/components/auth-form';
 import { EmailVerificationPending } from '@/feature/auth/components/email-verification-pending';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
-import { buildEmailVerificationCallbackUrl, getSignInErrorMessage, isEmailNotVerifiedError } from '@/lib/email-verification';
+import {
+	buildEmailVerificationCallbackUrl,
+	getSignInErrorMessage,
+	isEmailNotVerifiedError,
+} from '@/lib/email-verification';
 import { clearApolloCache } from '@/lib/apollo-client';
 import { invalidateSession } from '@/lib/session';
 import { rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { usePublicConfig, useSmtpSetup } from '@/hooks/use-public-config';
-import styles from './login-page.module.css';
 
 const Route = getRouteApi('/_public/login');
-
 
 function buildOAuthAuthorizeUrl() {
 	const params = new URLSearchParams(window.location.search);
@@ -137,14 +139,13 @@ export function Login() {
 				name='password'
 				type='password'
 				title='Password'
-				className={isUserLoginEnabled && isSmtpSetup.data ? styles.loginFormTextField2 : styles.loginFormTextField3}
+				className={
+					isUserLoginEnabled && isSmtpSetup.data ? styles.loginFormTextField2 : styles.loginFormTextField3
+				}
 			/>
 			{isUserLoginEnabled && isSmtpSetup.data && (
 				<div className={styles.loginDiv}>
-					<Link
-						to='/forgot-password'
-						className={styles.loginLink2}
-					>
+					<Link to='/forgot-password' className={styles.loginLink2}>
 						Forgot password
 					</Link>
 				</div>

@@ -1,8 +1,9 @@
 import { ArrowDownWideNarrow, ArrowUpNarrowWide, ChevronDown } from 'lucide-react';
+import { TOOLBAR_BUTTON_CLASS } from './stories-filters-menu';
+import styles from './stories-sort-menu.module.css';
 import type { LucideIcon } from 'lucide-react';
 import type { SortDirection, SortField, SortState } from '@/lib/stories-page';
 import { defaultSortDirection, isDateSortField } from '@/lib/stories-page';
-import { TOOLBAR_BUTTON_CLASS } from './stories-filters-menu';
 import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
@@ -14,7 +15,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SimpleTooltip } from '@/components/ui/tooltip';
-import styles from './stories-sort-menu.module.css';
 
 const SORT_FIELD_LABELS: Record<SortField, string> = {
 	updated: 'Last updated',

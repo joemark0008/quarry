@@ -1,7 +1,7 @@
 import { RotateCw } from 'lucide-react';
+import styles from './tool-output-fallback.module.css';
 import { Button } from '@/components/ui/button';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './tool-output-fallback.module.css';
 
 interface Props {
 	/** What to show while the call is genuinely in flight, e.g. "Executing query...". */

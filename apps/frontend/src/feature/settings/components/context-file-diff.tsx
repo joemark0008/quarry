@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { FilePen } from 'lucide-react';
 
 import { FileDiffBody } from './file-diff';
+import styles from './context-file-diff.module.css';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { computeLineDiff } from '@/lib/line-diff';
 import { getApiErrorCode } from '@/lib/api-error';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
-import styles from './context-file-diff.module.css';
 
 interface ContextFileDiffProps {
 	path: string;

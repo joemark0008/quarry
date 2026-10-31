@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
 import { useId } from 'react';
+import styles from './subagent-model-section.module.css';
 import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
@@ -9,7 +10,6 @@ import { SettingsCard } from '@/components/ui/settings-card';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
-import styles from './subagent-model-section.module.css';
 
 type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 
@@ -125,7 +125,11 @@ function ModelField({
 					<SelectItem value={INHERIT_VALUE}>Same model as the chat</SelectItem>
 					{availableModels.map((model) => (
 						<SelectItem key={modelValue(model)} value={modelValue(model)}>
-							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className={styles.modelFieldLlmProviderIcon} />
+							<LlmProviderIcon
+								provider={model.provider}
+								baseUrl={model.baseUrl}
+								className={styles.modelFieldLlmProviderIcon}
+							/>
 							{model.name}
 						</SelectItem>
 					))}

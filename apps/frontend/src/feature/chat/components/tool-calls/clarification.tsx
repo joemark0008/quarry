@@ -1,15 +1,15 @@
 import { requestWarehouseSelection } from '@quarry/shared/tools';
 import { Check, HelpCircle } from 'lucide-react';
 import { memo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import styles from './clarification.module.css';
 import type { ToolCallComponentProps } from '.';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAgentContext, useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { getMessageText, isOnboardingContextRequestMessage, isToolUIPart } from '@/lib/ai';
 import { cn } from '@/lib/utils';
-import styles from './clarification.module.css';
 
 type AnsweredState = { isAnswered: true; answer: string } | { isAnswered: false; answer?: undefined };
 
@@ -77,12 +77,7 @@ function ClarificationQuestion({
 	};
 
 	return (
-		<div
-			className={cn(
-				styles.clarificationQuestionDiv,
-				isAnswered && styles.clarificationQuestionDiv2,
-			)}
-		>
+		<div className={cn(styles.clarificationQuestionDiv, isAnswered && styles.clarificationQuestionDiv2)}>
 			<div className={styles.clarificationQuestionDiv3}>
 				<HelpCircle size={16} className={styles.clarificationQuestionHelpCircle} />
 				<div className={styles.clarificationQuestionDiv4}>

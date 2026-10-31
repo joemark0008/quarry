@@ -5,6 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { createPortal } from 'react-dom';
 import { getStoryIdFromMentionId } from '@quarry/shared';
+import { ChatMessagesCitationChip } from './chat-messages-citation-chip';
+import styles from './user-message.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { MessageMentionConfig, MentionOption, PromptTheme } from 'prompt-mentions';
 import { cn } from '@/lib/utils';
@@ -13,7 +15,6 @@ import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { useIsEditingMessage } from '@/hooks/use-is-editing-message-store';
 import { useClickOutside } from '@/hooks/use-click-outside';
 import { ChatInputInline } from '@/feature/chat/components/chat-input';
-import { ChatMessagesCitationChip } from './chat-messages-citation-chip';
 import { FileChip } from '@/feature/chat/components/file-chip';
 import { ImageLightbox } from '@/feature/chat/components/image-lightbox';
 import { getMessageText, getMessageImages, getMessageDocuments } from '@/lib/ai';
@@ -33,7 +34,6 @@ import McpIcon from '@/components/icons/model-context-protocol.svg';
 import TelegramIcon from '@/components/icons/telegram.svg';
 import WhatsAppIcon from '@/components/icons/whatsapp.svg';
 import { useCurrentProject } from '@/hooks/use-current-project';
-import styles from './user-message.module.css';
 
 const messageTheme: PromptTheme = {
 	backgroundColor: 'transparent',
@@ -212,12 +212,7 @@ export const UserMessage = memo(({ message }: { message: UIMessage }) => {
 			<UserMessageBubble message={message} />
 
 			<div className={styles.userMessageDiv2}>
-				<div
-					className={cn(
-						styles.userMessageDiv3,
-						isRunning && styles.userMessageDiv4,
-					)}
-				>
+				<div className={cn(styles.userMessageDiv3, isRunning && styles.userMessageDiv4)}>
 					{message.createdAt && <MessageTimestamp createdAt={message.createdAt} />}
 					<SimpleTooltip content='Resend'>
 						<Button

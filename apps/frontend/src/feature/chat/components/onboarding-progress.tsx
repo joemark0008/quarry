@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { CheckCircle2, CircleAlert, Loader2, Terminal } from 'lucide-react';
+import styles from './onboarding-progress.module.css';
 import type { ApiOutputs } from '@/lib/api-types';
 
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 
 import { useAgentMessages } from '@/contexts/agent.provider';
 import { cn } from '@/lib/utils';
-import styles from './onboarding-progress.module.css';
 
 const ONBOARDING_STEPS = {
 	new: ['Install', 'Initialize', 'Verify & sync', 'Deploy'],
@@ -143,9 +143,7 @@ export function WarehouseCommandProgress({
 						<Terminal className={styles.warehouseCommandProgressTerminal} />
 						View quarry {isSyncing ? 'sync' : 'debug'} logs
 					</summary>
-					<pre className={styles.warehouseCommandProgressPre}>
-						{logs}
-					</pre>
+					<pre className={styles.warehouseCommandProgressPre}>{logs}</pre>
 				</details>
 			)}
 		</div>

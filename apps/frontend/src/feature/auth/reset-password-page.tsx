@@ -1,14 +1,12 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { getRouteApi, Link, useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { useState } from 'react';
+import styles from './reset-password-page.module.css';
 import { resetPassword } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/feature/auth/components/auth-form';
 import { useRedirectIfSmtpNotSetup } from '@/hooks/useRedirectIfSmtpNotSetup';
-import styles from './reset-password-page.module.css';
 
 const Route = getRouteApi('/reset-password');
-
 
 export function ResetPassword() {
 	const isPending = useRedirectIfSmtpNotSetup();
@@ -44,10 +42,7 @@ export function ResetPassword() {
 				<p className={styles.resetPasswordP}>
 					This password reset link is no longer valid. Please request a new one.
 				</p>
-				<Link
-					to='/forgot-password'
-					className={styles.resetPasswordLink}
-				>
+				<Link to='/forgot-password' className={styles.resetPasswordLink}>
 					Request a new link
 				</Link>
 			</div>
@@ -56,7 +51,13 @@ export function ResetPassword() {
 
 	return (
 		<AuthForm form={form} title='Reset password' submitText='Set new password' serverError={serverError}>
-			<FormTextField form={form} name='newPassword' type='password' title='New password' className={styles.resetPasswordFormTextField} />
+			<FormTextField
+				form={form}
+				name='newPassword'
+				type='password'
+				title='New password'
+				className={styles.resetPasswordFormTextField}
+			/>
 			<FormTextField
 				form={form}
 				name='confirmPassword'

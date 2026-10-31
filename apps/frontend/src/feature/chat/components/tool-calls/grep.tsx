@@ -1,8 +1,8 @@
 import { FileSearch, AlertCircle } from 'lucide-react';
-import { useToolCallContext } from '@/contexts/tool-call';
 import { ToolCallWrapper } from './tool-call-wrapper';
-import type { ToolCallComponentProps } from '.';
 import styles from './grep.module.css';
+import type { ToolCallComponentProps } from '.';
+import { useToolCallContext } from '@/contexts/tool-call';
 
 export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'grep'>) => {
 	const { isSettled } = useToolCallContext();
@@ -12,8 +12,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 			<ToolCallWrapper
 				title={
 					<>
-						Searching for{' '}
-						<code className={styles.grepToolCallCode}>{input?.pattern}</code>
+						Searching for <code className={styles.grepToolCallCode}>{input?.pattern}</code>
 					</>
 				}
 				children={<div className={styles.grepToolCallDiv}>Searching...</div>}
@@ -31,8 +30,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 		<ToolCallWrapper
 			title={
 				<>
-					Grepped{' '}
-					<code className={styles.grepToolCallCode}>{input?.pattern}</code>
+					Grepped <code className={styles.grepToolCallCode}>{input?.pattern}</code>
 					{input?.glob && (
 						<span className={styles.grepToolCallSpan}>
 							in <code className={styles.grepToolCallCode2}>{input.glob}</code>
@@ -59,12 +57,8 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 								{/* File header */}
 								<div className={styles.grepToolCallDiv6}>
 									<FileSearch size={12} className={styles.grepToolCallFileSearch} />
-									<span className={styles.grepToolCallSpan3}>
-										{match.path}
-									</span>
-									<span className={styles.grepToolCallSpan4}>
-										:{match.line_number}
-									</span>
+									<span className={styles.grepToolCallSpan3}>{match.path}</span>
+									<span className={styles.grepToolCallSpan4}>:{match.line_number}</span>
 								</div>
 
 								{/* Context before */}
@@ -93,9 +87,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 								{/* Match line */}
 								<div className={styles.grepToolCallDiv9}>
 									<div className={styles.grepToolCallDiv10}>
-										<span className={styles.grepToolCallSpan6}>
-											{match.line_number}
-										</span>
+										<span className={styles.grepToolCallSpan6}>{match.line_number}</span>
 										<HighlightedLine content={match.line_content} pattern={input?.pattern} />
 									</div>
 								</div>
@@ -126,9 +118,7 @@ export const GrepToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 						))}
 					</div>
 
-					{output.matches.length === 0 && (
-						<div className={styles.grepToolCallDiv}>No matches found</div>
-					)}
+					{output.matches.length === 0 && <div className={styles.grepToolCallDiv}>No matches found</div>}
 				</div>
 			)}
 		</ToolCallWrapper>

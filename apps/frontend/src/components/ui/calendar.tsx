@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
+import styles from './calendar.module.css';
 import type { ChevronProps, DayButton, RootProps, WeekNumberProps } from 'react-day-picker';
 
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
-import styles from './calendar.module.css';
 
 function Calendar({
 	className,
@@ -24,10 +24,7 @@ function Calendar({
 	return (
 		<DayPicker
 			showOutsideDays={showOutsideDays}
-			className={cn(
-				`${styles.calendarDayPicker} group/calendar`,
-				className,
-			)}
+			className={cn(`${styles.calendarDayPicker} group/calendar`, className)}
 			captionLayout={captionLayout}
 			formatters={{
 				formatMonthDropdown: (date) => date.toLocaleString('default', { month: 'short' }),
@@ -37,10 +34,7 @@ function Calendar({
 				root: cn(styles.calendarRoot, defaultClassNames.root),
 				months: cn(styles.calendarMonths, defaultClassNames.months),
 				month: cn(styles.calendarMonth, defaultClassNames.month),
-				nav: cn(
-					styles.calendarNav,
-					defaultClassNames.nav,
-				),
+				nav: cn(styles.calendarNav, defaultClassNames.nav),
 				button_previous: cn(
 					buttonVariants({ variant: buttonVariant }),
 					styles.calendarButtonPrevious,
@@ -51,46 +45,26 @@ function Calendar({
 					styles.calendarButtonPrevious,
 					defaultClassNames.button_next,
 				),
-				month_caption: cn(
-					styles.calendarMonthCaption,
-					defaultClassNames.month_caption,
-				),
-				dropdowns: cn(
-					styles.calendarDropdowns,
-					defaultClassNames.dropdowns,
-				),
-				dropdown_root: cn(
-					styles.calendarDropdownRoot,
-					defaultClassNames.dropdown_root,
-				),
+				month_caption: cn(styles.calendarMonthCaption, defaultClassNames.month_caption),
+				dropdowns: cn(styles.calendarDropdowns, defaultClassNames.dropdowns),
+				dropdown_root: cn(styles.calendarDropdownRoot, defaultClassNames.dropdown_root),
 				dropdown: cn(styles.calendarDropdown, defaultClassNames.dropdown),
 				caption_label: cn(
 					styles.calendarCaptionLabel,
-					captionLayout === 'label'
-						? styles.calendarCaptionLabel2
-						: styles.calendarCaptionLabel3,
+					captionLayout === 'label' ? styles.calendarCaptionLabel2 : styles.calendarCaptionLabel3,
 					defaultClassNames.caption_label,
 				),
 				month_grid: cn(styles.calendarMonthGrid, defaultClassNames.month_grid),
 				weekdays: cn(styles.calendarWeekdays, defaultClassNames.weekdays),
-				weekday: cn(
-					styles.calendarWeekday,
-					defaultClassNames.weekday,
-				),
+				weekday: cn(styles.calendarWeekday, defaultClassNames.weekday),
 				week: cn(styles.calendarWeek, defaultClassNames.week),
 				week_number_header: cn(styles.calendarWeekNumberHeader, defaultClassNames.week_number_header),
 				week_number: cn(styles.calendarWeekNumber, defaultClassNames.week_number),
-				day: cn(
-					`${styles.calendarDay} group/day`,
-					defaultClassNames.day,
-				),
+				day: cn(`${styles.calendarDay} group/day`, defaultClassNames.day),
 				range_start: cn(styles.calendarRangeStart, defaultClassNames.range_start),
 				range_middle: cn(styles.calendarRangeMiddle, defaultClassNames.range_middle),
 				range_end: cn(styles.calendarRangeEnd, defaultClassNames.range_end),
-				today: cn(
-					styles.calendarToday,
-					defaultClassNames.today,
-				),
+				today: cn(styles.calendarToday, defaultClassNames.today),
 				outside: cn(styles.calendarOutside, defaultClassNames.outside),
 				disabled: cn(styles.calendarDisabled, defaultClassNames.disabled),
 				hidden: cn(styles.calendarHidden, defaultClassNames.hidden),
@@ -154,11 +128,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: React.Compon
 			data-range-start={modifiers.range_start}
 			data-range-end={modifiers.range_end}
 			data-range-middle={modifiers.range_middle}
-			className={cn(
-				styles.calendarDayButtonButton,
-				defaultClassNames.day_button,
-				className,
-			)}
+			className={cn(styles.calendarDayButtonButton, defaultClassNames.day_button, className)}
 			{...props}
 		/>
 	);

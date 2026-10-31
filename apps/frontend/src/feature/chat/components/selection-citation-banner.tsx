@@ -1,10 +1,10 @@
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { SelectionCitationExcerpt } from './selection-citation-excerpt';
+import styles from './selection-citation-banner.module.css';
+import { Button } from '@/components/ui/button';
 import { useChatPendingCitation } from '@/hooks/use-chat-pending-citation';
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { useChatId } from '@/hooks/use-chat-id';
-import styles from './selection-citation-banner.module.css';
 
 export const SelectionCitationBanner = () => {
 	const chatId = useChatId();

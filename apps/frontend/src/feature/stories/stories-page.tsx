@@ -1,12 +1,21 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { DndContext, DragOverlay, KeyboardSensor, pointerWithin, PointerSensor, rectIntersection, useSensor, useSensors } from '@dnd-kit/core';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
+import {
+	DndContext,
+	DragOverlay,
+	KeyboardSensor,
+	pointerWithin,
+	PointerSensor,
+	rectIntersection,
+	useSensor,
+	useSensors,
+} from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { getEventCoordinates } from '@dnd-kit/utilities';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { Archive, Folder, Home } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { BULK_ITEMS_LIMIT, SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
+import styles from './stories-page.module.css';
 import type { BulkStoryItem, StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { CollisionDetection, DragEndEvent, DragStartEvent, Modifier } from '@dnd-kit/core';
 import type { FolderItem, SortState, StoriesFilters, StoryItem } from '@/lib/stories-page';
@@ -32,16 +41,26 @@ import { useDragPointer } from '@/hooks/use-drag-pointer';
 import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
 import { useSession } from '@/lib/auth-client';
 import { hasAnyStoryReference, isOverNewChatDropTarget, NO_STORY_REFERENCES } from '@/lib/story-reference';
-import { buildCurrentLevelEntries, buildStoryItems, countActiveFilters, DEFAULT_FILTERS, filterStories, getFolderSubtreeIds, getStoredSetting, isSystemFolder, readStoredSort, STORIES_DISPLAY_KEY, writeStoredSort } from '@/lib/stories-page';
+import {
+	buildCurrentLevelEntries,
+	buildStoryItems,
+	countActiveFilters,
+	DEFAULT_FILTERS,
+	filterStories,
+	getFolderSubtreeIds,
+	getStoredSetting,
+	isSystemFolder,
+	readStoredSort,
+	STORIES_DISPLAY_KEY,
+	writeStoredSort,
+} from '@/lib/stories-page';
 import { invalidateStoryArchiveCaches, invalidateStoryPlacementCaches } from '@/lib/stories-cache';
 import { cn } from '@/lib/utils';
 import { selectedStoryReferencesStore, storyDragOverNewChatStore } from '@/stores/story-references';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
-import styles from './stories-page.module.css';
 
 const Route = getRouteApi('/_protected/stories/');
-
 
 const snapCenterToCursor: Modifier = ({ activatorEvent, draggingNodeRect, transform }) => {
 	if (!draggingNodeRect || !activatorEvent) {
@@ -891,23 +910,14 @@ function isOwnStory(item: StoryItem): boolean {
 function DragOverlayCard({ item, count }: { item: StoryItem | FolderItem; count: number }) {
 	const isFolder = 'storyCount' in item;
 	return (
-		<div
-			className={cn(
-				styles.dragOverlayCardDiv,
-				styles.dragOverlayCardDiv2,
-			)}
-		>
+		<div className={cn(styles.dragOverlayCardDiv, styles.dragOverlayCardDiv2)}>
 			{isFolder ? (
 				<Folder className={styles.dragOverlayCardFolder} />
 			) : (
 				<span className={styles.dragOverlayCardSpan} />
 			)}
 			<span className={styles.dragOverlayCardSpan2}>{isFolder ? item.name : item.title}</span>
-			{count > 1 && (
-				<span className={styles.dragOverlayCardSpan3}>
-					{count}
-				</span>
-			)}
+			{count > 1 && <span className={styles.dragOverlayCardSpan3}>{count}</span>}
 		</div>
 	);
 }

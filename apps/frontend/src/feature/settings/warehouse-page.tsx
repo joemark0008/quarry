@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react';
 import { CheckCircle2, Database, RefreshCw, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import styles from './warehouse-page.module.css';
 import type { FormEvent } from 'react';
 import type { WarehouseConnectionsQuery } from '@/graphql/generated/graphql';
 import { Button } from '@/components/ui/button';
@@ -8,11 +9,16 @@ import { Input } from '@/components/ui/input';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Spinner } from '@/components/ui/spinner';
-import { ConnectWarehouseDocument, ContextSyncStatusDocument, DisconnectWarehouseDocument, SyncContextDocument, TestWarehouseConnectionDocument, WarehouseConnectionsDocument } from '@/graphql/generated/graphql';
+import {
+	ConnectWarehouseDocument,
+	ContextSyncStatusDocument,
+	DisconnectWarehouseDocument,
+	SyncContextDocument,
+	TestWarehouseConnectionDocument,
+	WarehouseConnectionsDocument,
+} from '@/graphql/generated/graphql';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
-import styles from './warehouse-page.module.css';
-
 
 type Connection = WarehouseConnectionsQuery['warehouseConnections'][number];
 
@@ -132,7 +138,11 @@ function ConnectionRow({
 						result.success ? styles.connectionRowP2 : styles.connectionRowButton,
 					)}
 				>
-					{result.success ? <CheckCircle2 className={styles.connectionRowCheckCircle2} /> : <XCircle className={styles.connectionRowCheckCircle2} />}
+					{result.success ? (
+						<CheckCircle2 className={styles.connectionRowCheckCircle2} />
+					) : (
+						<XCircle className={styles.connectionRowCheckCircle2} />
+					)}
 					{result.message}
 				</p>
 			)}
@@ -220,9 +230,7 @@ function ConnectionForm({ connection, onDone }: { connection: Connection | null;
 				})}
 				{field('schemaName', 'Schema (optional)', { placeholder: 'All schemas' })}
 			</div>
-			<p className={styles.connectionFormP}>
-				PostgreSQL only for now. Queries run in read-only transactions.
-			</p>
+			<p className={styles.connectionFormP}>PostgreSQL only for now. Queries run in read-only transactions.</p>
 			{(error || (result && !result.success)) && (
 				<p className={styles.warehouseSettingsPageP}>{error?.message ?? result?.message}</p>
 			)}
@@ -263,7 +271,12 @@ function ContextSyncCard({ canSync }: { canSync: boolean }) {
 			action={
 				canSync ? (
 					<Button size='sm' disabled={isActive || sync.loading} onClick={() => void syncContext()}>
-						<RefreshCw className={cn(styles.connectionRowCheckCircle2, isActive && styles.contextSyncCardRefreshCw)} />
+						<RefreshCw
+							className={cn(
+								styles.connectionRowCheckCircle2,
+								isActive && styles.contextSyncCardRefreshCw,
+							)}
+						/>
 						{isActive ? 'Syncing…' : 'Sync'}
 					</Button>
 				) : null
@@ -296,9 +309,7 @@ function ContextSyncCard({ canSync }: { canSync: boolean }) {
 						</ul>
 					)}
 					{current.state === 'failed' && current.log.length > 0 && (
-						<pre className={styles.contextSyncCardPre}>
-							{current.log.join('\n')}
-						</pre>
+						<pre className={styles.contextSyncCardPre}>{current.log.join('\n')}</pre>
 					)}
 				</div>
 			)}

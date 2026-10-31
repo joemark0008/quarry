@@ -1,11 +1,11 @@
 import { Link } from '@tanstack/react-router';
 import { Lock, SearchX, TriangleAlert, WifiOff } from 'lucide-react';
 
+import styles from './chat-access-error.module.css';
 import { MobileHeader } from '@/layout/mobile-header';
 import { Button } from '@/components/ui/button';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { isForbiddenError, isInternalServerError, isNotFoundError, isUnauthorizedError } from '@/lib/api-error';
-import styles from './chat-access-error.module.css';
 
 export function ChatAccessError({
 	error,
@@ -100,9 +100,7 @@ function ChatErrorLayout({
 			<MobileHeader />
 			<div className={styles.chatErrorLayoutDiv2}>
 				<div className={styles.chatErrorLayoutDiv3}>
-					<div className={styles.chatErrorLayoutDiv4}>
-						{icon}
-					</div>
+					<div className={styles.chatErrorLayoutDiv4}>{icon}</div>
 					<div className={styles.chatErrorLayoutDiv5}>
 						<h1 className={styles.chatErrorLayoutH1}>{title}</h1>
 						<p className={styles.chatErrorLayoutP}>{description}</p>

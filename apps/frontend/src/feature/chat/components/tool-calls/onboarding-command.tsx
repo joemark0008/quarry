@@ -1,13 +1,13 @@
 import { HelpCircle } from 'lucide-react';
 import { useMemo } from 'react';
 
+import styles from './onboarding-command.module.css';
 import type { ToolCallComponentProps } from '.';
 import { CommandBlock } from '@/feature/chat/components/command-block';
 import { Button } from '@/components/ui/button';
 import { useAgentContext, useAgentMessages } from '@/contexts/agent.provider';
 import { useAssistantMessage } from '@/contexts/assistant-message';
 import { isOnboardingContextRequestMessage } from '@/lib/ai';
-import styles from './onboarding-command.module.css';
 
 export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'onboarding_command'>) {
 	const command = toolPart.input?.command;
@@ -51,9 +51,7 @@ export function OnboardingCommandToolCall({ toolPart }: ToolCallComponentProps<'
 					<div className={styles.onboardingCommandToolCallDiv3}>
 						<HelpCircle className={styles.onboardingCommandToolCallHelpCircle} />
 						<div className={styles.onboardingCommandToolCallDiv4}>
-							<span className={styles.onboardingCommandToolCallSpan}>
-								Quick question
-							</span>
+							<span className={styles.onboardingCommandToolCallSpan}>Quick question</span>
 							<p className={styles.onboardingCommandToolCallP}>Did this step complete successfully?</p>
 						</div>
 					</div>

@@ -1,6 +1,7 @@
 import { Download, FileCode, FileText, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './story-download.module.css';
 import type { DownloadFormat, ShareSource } from '@quarry/shared/types';
 import {
 	DropdownMenuItem,
@@ -9,7 +10,6 @@ import {
 	DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-download.module.css';
 
 export interface StoryDownloadFile {
 	data: string;

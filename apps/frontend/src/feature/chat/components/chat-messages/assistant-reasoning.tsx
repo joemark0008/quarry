@@ -1,11 +1,11 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { Streamdown } from 'streamdown';
-import { Conversation, ConversationContent } from '@/components/ui/conversation';
 import { StreamingMarkdown } from './streaming-markdown';
+import styles from './assistant-reasoning.module.css';
+import { Conversation, ConversationContent } from '@/components/ui/conversation';
 import { Expandable } from '@/components/ui/expandable';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './assistant-reasoning.module.css';
 
 interface AssistantReasoningProps {
 	text: string;
@@ -40,7 +40,10 @@ export const AssistantReasoning = memo(({ text, isStreaming }: AssistantReasonin
 		>
 			<div className={styles.assistantReasoningDiv}>
 				<Conversation className={styles.assistantReasoningConversation}>
-					<ConversationContent className={styles.assistantReasoningConversation} scrollClassName={styles.assistantReasoningConversationContent}>
+					<ConversationContent
+						className={styles.assistantReasoningConversation}
+						scrollClassName={styles.assistantReasoningConversationContent}
+					>
 						{isStreaming ? (
 							<StreamingMarkdown text={text} />
 						) : (

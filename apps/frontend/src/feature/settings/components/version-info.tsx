@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 
-import { AppVersionDocument } from '@/graphql/generated/graphql';
 import styles from './version-info.module.css';
+import { AppVersionDocument } from '@/graphql/generated/graphql';
 
 export function SettingsVersionInfo() {
 	const versionInfo = useQuery(AppVersionDocument);

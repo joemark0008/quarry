@@ -1,52 +1,43 @@
-import { Slot } from '@/components/ui/slot';
 import * as React from 'react';
 import { ArrowUpIcon, Loader2, Mic, SquareIcon } from 'lucide-react';
+import styles from './button.module.css';
+import type { VariantProps } from '@/lib/utils';
+import { Slot } from '@/components/ui/slot';
 
 import { LastUsedPill } from '@/components/ui/last-used-pill';
 import { classVariants, cn } from '@/lib/utils';
-import type { VariantProps } from '@/lib/utils';
-import styles from './button.module.css';
 
-const buttonVariants = classVariants(
-	styles.buttonVariants,
-	{
-		variants: {
-			variant: {
-				default: styles.buttonVariantsDefault,
-				'primary-gradient': styles.buttonVariantsPrimaryGradient,
-				'primary-gradient-border':
-					styles.buttonVariantsPrimaryGradientBorder,
-				destructive:
-					styles.buttonVariantsDestructive,
-				'destructive-soft':
-					styles.buttonVariantsDestructiveSoft,
-				outline:
-					styles.buttonVariantsOutline,
-				secondary: styles.buttonVariantsSecondary,
-				'ghost-muted':
-					styles.buttonVariantsGhostMuted,
-				'ghost-no-hover':
-					styles.buttonVariantsGhostNoHover,
-				ghost: styles.buttonVariantsGhost,
-				link: styles.buttonVariantsLink,
-			},
-			size: {
-				default: styles.buttonVariantsDefault2,
-				sm: styles.buttonVariantsSm,
-				lg: styles.buttonVariantsLg,
-				icon: styles.buttonVariantsIcon,
-				'icon-xs': styles.buttonVariantsIconXs,
-				'icon-sm': styles.buttonVariantsIconSm,
-				'icon-md': styles.buttonVariantsIcon,
-				'icon-lg': styles.buttonVariantsIconLg,
-			},
+const buttonVariants = classVariants(styles.buttonVariants, {
+	variants: {
+		variant: {
+			default: styles.buttonVariantsDefault,
+			'primary-gradient': styles.buttonVariantsPrimaryGradient,
+			'primary-gradient-border': styles.buttonVariantsPrimaryGradientBorder,
+			destructive: styles.buttonVariantsDestructive,
+			'destructive-soft': styles.buttonVariantsDestructiveSoft,
+			outline: styles.buttonVariantsOutline,
+			secondary: styles.buttonVariantsSecondary,
+			'ghost-muted': styles.buttonVariantsGhostMuted,
+			'ghost-no-hover': styles.buttonVariantsGhostNoHover,
+			ghost: styles.buttonVariantsGhost,
+			link: styles.buttonVariantsLink,
 		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'default',
+		size: {
+			default: styles.buttonVariantsDefault2,
+			sm: styles.buttonVariantsSm,
+			lg: styles.buttonVariantsLg,
+			icon: styles.buttonVariantsIcon,
+			'icon-xs': styles.buttonVariantsIconXs,
+			'icon-sm': styles.buttonVariantsIconSm,
+			'icon-md': styles.buttonVariantsIcon,
+			'icon-lg': styles.buttonVariantsIconLg,
 		},
 	},
-);
+	defaultVariants: {
+		variant: 'default',
+		size: 'default',
+	},
+});
 
 function Button({
 	className,
@@ -86,10 +77,7 @@ function Button({
 
 function ButtonConnection({ children }: React.ComponentProps<'button'>) {
 	return (
-		<button
-			type='submit'
-			className={styles.buttonConnectionButton}
-		>
+		<button type='submit' className={styles.buttonConnectionButton}>
 			{children}
 		</button>
 	);

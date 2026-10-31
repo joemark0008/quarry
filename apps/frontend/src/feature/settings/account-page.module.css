@@ -4,14 +4,15 @@
 	gap: 1.25rem;
 }
 .generalPageH1 {
-	font-size: 1.125rem;
-	line-height: var(--fx-leading, calc(1.75 / 1.125));
-	--fx-font-weight: 600;
-	font-weight: 600;
+	font-family: var(--app-font-heading);
+	font-size: 1.625rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 1.2;
 	color: var(--app-text);
 }
 .generalPageP {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }

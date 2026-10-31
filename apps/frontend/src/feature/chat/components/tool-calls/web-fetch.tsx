@@ -1,8 +1,8 @@
 import { Globe, ExternalLink } from 'lucide-react';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './web-fetch.module.css';
 import type { ToolCallComponentProps } from '.';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './web-fetch.module.css';
 
 interface WebFetchResult {
 	url: string;
@@ -49,17 +49,10 @@ export const WebFetchToolCall = ({ toolPart }: ToolCallComponentProps) => {
 					>
 						<Globe size={14} className={styles.webFetchToolCallGlobe} />
 						<div className={styles.webFetchToolCallDiv2}>
-							{result.title && (
-								<span className={styles.webFetchToolCallSpan}>{result.title}</span>
-							)}
-							<span className={styles.webFetchToolCallSpan2}>
-								{getDomain(result.url)}
-							</span>
+							{result.title && <span className={styles.webFetchToolCallSpan}>{result.title}</span>}
+							<span className={styles.webFetchToolCallSpan2}>{getDomain(result.url)}</span>
 						</div>
-						<ExternalLink
-							size={12}
-							className={styles.webFetchToolCallExternalLink}
-						/>
+						<ExternalLink size={12} className={styles.webFetchToolCallExternalLink} />
 					</a>
 				</div>
 			)}

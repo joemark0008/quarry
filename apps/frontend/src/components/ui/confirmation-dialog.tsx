@@ -1,8 +1,8 @@
+import styles from './confirmation-dialog.module.css';
 import type { ComponentProps } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import styles from './confirmation-dialog.module.css';
 
 interface ConfirmationDialogProps {
 	open: boolean;
@@ -42,7 +42,9 @@ export function ConfirmationDialog({
 				<DialogHeader>
 					<DialogTitle>{title}</DialogTitle>
 				</DialogHeader>
-				<DialogDescription className={styles.confirmationDialogDialogDescription}>{description}</DialogDescription>
+				<DialogDescription className={styles.confirmationDialogDialogDescription}>
+					{description}
+				</DialogDescription>
 				{error && <p className={styles.confirmationDialogP}>{error}</p>}
 				<div className={styles.confirmationDialogDiv}>
 					<Button

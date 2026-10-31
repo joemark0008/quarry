@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { providerLabel, providerLabels } from '@quarry/shared/types';
 import { ProviderCard } from './llm-provider-card';
 import { LlmProviderForm } from './llm-provider-form';
+import styles from './llm-providers-section.module.css';
 import type { LlmProvider } from '@quarry/shared/types';
 import { useLlmProviders } from '@/hooks/use-llm-providers';
-import styles from './llm-providers-section.module.css';
 
 export type ProviderToEdit = { provider: LlmProvider; modelId?: string };
 

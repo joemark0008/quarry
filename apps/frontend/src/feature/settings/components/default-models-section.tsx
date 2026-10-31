@@ -8,16 +8,16 @@ import {
 	setSingleBackgroundModel,
 } from '@quarry/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { findModel, ModelSelectField } from './model-select-field';
+import styles from './default-models-section.module.css';
 import type { BackgroundModelCategory, BackgroundModelMode, DefaultModelSettings } from '@quarry/shared';
 import type { ReactNode } from 'react';
 import type { AvailableModel, ResolvedModel } from './model-select-field';
 
-import { findModel, ModelSelectField } from './model-select-field';
 import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { cn } from '@/lib/utils';
 import { projectApi } from '@/lib/project-api';
-import styles from './default-models-section.module.css';
 
 interface DefaultModelsSectionProps {
 	isAdmin: boolean;
@@ -162,9 +162,7 @@ function ModeToggle({
 					onClick={() => onChange(option.value)}
 					className={cn(
 						styles.modeToggleButton,
-						mode === option.value
-							? styles.modeToggleButton2
-							: styles.modeToggleButton3,
+						mode === option.value ? styles.modeToggleButton2 : styles.modeToggleButton3,
 						disabled && styles.modeToggleButton4,
 					)}
 				>

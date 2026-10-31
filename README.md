@@ -46,7 +46,7 @@ integrations. See [docs/deferred-features.md](docs/deferred-features.md) for wha
 | Path                             | What                                                                                                                              |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [`apps/api`](apps/api)           | NestJS API: GraphQL at `/graphql`, REST for auth, agent streaming, uploads and downloads; serves the built frontend in production |
-| [`apps/frontend`](apps/frontend) | React (TanStack Router, Shadcn, Tailwind), Apollo Client + GraphQL Code Generator                                                 |
+| [`apps/frontend`](apps/frontend) | React (TanStack Router, Mantine, CSS Modules), Apollo Client + GraphQL Code Generator                                             |
 | [`apps/shared`](apps/shared)     | types and helpers used by both                                                                                                    |
 | [`brand`](brand)                 | logo, icons and colours                                                                                                           |
 | [`docs`](docs)                   | design notes and deferred features                                                                                                |

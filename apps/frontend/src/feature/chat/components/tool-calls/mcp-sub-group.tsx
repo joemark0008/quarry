@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { pluralize } from '@quarry/shared';
 import { McpTitle } from './mcp-title';
+import styles from './mcp-sub-group.module.css';
 import { ToolCall } from './index';
 import type { GroupablePart, McpSubGroupPart } from '@/types/ai';
 import { Expandable } from '@/components/ui/expandable';
@@ -8,7 +9,6 @@ import { AssistantReasoning } from '@/feature/chat/components/chat-messages/assi
 import { useChatView } from '@/contexts/chat-view';
 import { isToolSettled, isReasoningPart } from '@/lib/ai';
 import { isMcpCallPart } from '@/lib/mcp';
-import styles from './mcp-sub-group.module.css';
 
 export const McpToolCallsSubGroup = ({ group, isSettled }: { group: McpSubGroupPart; isSettled: boolean }) => {
 	const isLoading = !isSettled && group.parts.some((part) => !isReasoningPart(part) && !isToolSettled(part));

@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react';
+import styles from './expandable.module.css';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
-import styles from './expandable.module.css';
 
 /** `grouped` reads like `inline` but keeps a header row so trailing actions can sit beside the title. */
 type ExpandableVariant = 'inline' | 'bordered' | 'plain' | 'grouped';
@@ -67,10 +67,7 @@ export const Expandable = ({
 			value={expanded ? 'expandable-content' : ''}
 			onValueChange={handleValueChange}
 			disabled={!canExpand}
-			className={cn(
-				isBordered && `${styles.expandableAccordion} bg-backgroundSecondary/30`,
-				className,
-			)}
+			className={cn(isBordered && `${styles.expandableAccordion} bg-backgroundSecondary/30`, className)}
 		>
 			<AccordionItem value='expandable-content' className={styles.expandableAccordionItem} style={{ padding: 0 }}>
 				{hasHeaderRow ? (
@@ -83,7 +80,12 @@ export const Expandable = ({
 						)}
 						onClick={() => canExpand && onExpandedChange(!expanded)}
 					>
-						<div className={cn(styles.expandableDiv5, titleAction ? styles.expandableDiv6 : styles.expandableDiv7)}>
+						<div
+							className={cn(
+								styles.expandableDiv5,
+								titleAction ? styles.expandableDiv6 : styles.expandableDiv7,
+							)}
+						>
 							<AccordionTrigger
 								headerClassName={styles.expandableAccordionTrigger}
 								className={cn(
@@ -93,9 +95,7 @@ export const Expandable = ({
 									triggerClassName,
 								)}
 							>
-								<div className={styles.expandableDiv8}>
-									{icon}
-								</div>
+								<div className={styles.expandableDiv8}>{icon}</div>
 								<span
 									className={cn(
 										styles.expandableSpan,
@@ -105,9 +105,7 @@ export const Expandable = ({
 								>
 									{title}
 								</span>
-								{badge && !expanded && (
-									<span className={styles.expandableSpan5}>{badge}</span>
-								)}
+								{badge && !expanded && <span className={styles.expandableSpan5}>{badge}</span>}
 							</AccordionTrigger>
 							{titleAction}
 						</div>
@@ -122,19 +120,14 @@ export const Expandable = ({
 						)}
 					>
 						<div className={styles.expandableDiv9}>{icon}</div>
-						<span
-							className={cn(
-								styles.expandableSpan6,
-								isLoading && styles.expandableSpan4,
-							)}
-						>
-							{title}
-						</span>
+						<span className={cn(styles.expandableSpan6, isLoading && styles.expandableSpan4)}>{title}</span>
 						{badge && !expanded && <span className={styles.expandableSpan7}>{badge}</span>}
 					</AccordionTrigger>
 				)}
 
-				<AccordionContent className={cn(styles.expandableAccordionContent, isInline && styles.expandableAccordionContent2)}>
+				<AccordionContent
+					className={cn(styles.expandableAccordionContent, isInline && styles.expandableAccordionContent2)}
+				>
 					{isBordered ? (
 						<div className={styles.expandableDiv10}>{children}</div>
 					) : isPlain || isGrouped ? (

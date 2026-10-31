@@ -4,13 +4,14 @@ import { Code, File, Loader2, Save } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDefaultLayout } from 'react-resizable-panels';
 import { Streamdown } from 'streamdown';
+import { FileExplorerIcon } from './file-explorer-icon';
+import { FileSourceEditor } from './file-source-editor';
+import { UserGroupPicker } from './user-group-picker';
+import styles from './file-viewer.module.css';
 import type { UserRulesGroupAccess } from '@quarry/shared/rules-template';
 import type { FileEditabilityGuidance } from '@quarry/shared/types';
 
 import type { UserGroupPickerOption } from './user-group-picker';
-import { FileExplorerIcon } from './file-explorer-icon';
-import { FileSourceEditor } from './file-source-editor';
-import { UserGroupPicker } from './user-group-picker';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -36,7 +37,6 @@ import { isForbiddenError } from '@/lib/api-error';
 import { cn } from '@/lib/utils';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './file-viewer.module.css';
 
 export { isRootRulesPath } from '@quarry/shared/rules-template';
 
@@ -327,7 +327,11 @@ function EditableFileViewer({
 		<div className={styles.editableFileViewerDiv}>
 			<div className={styles.editableFileViewerDiv2}>
 				<div className={styles.editableFileViewerDiv3}>
-					<FileExplorerIcon name={fileName} type='file' className={styles.editableFileViewerFileExplorerIcon} />
+					<FileExplorerIcon
+						name={fileName}
+						type='file'
+						className={styles.editableFileViewerFileExplorerIcon}
+					/>
 					<div className={styles.editableFileViewerDiv4}>
 						<div className={styles.editableFileViewerDiv5}>
 							<span className={styles.editableFileViewerSpan}>{fileName}</span>
@@ -486,12 +490,7 @@ function ReadOnlyNote({
 		<div className={styles.readOnlyNoteDiv}>
 			<span>{guidance.message}</span>
 			{guidance.actionPath && (
-				<button
-					type='button'
-					role='link'
-					className={styles.readOnlyNoteButton}
-					onClick={handleOpenPath}
-				>
+				<button type='button' role='link' className={styles.readOnlyNoteButton} onClick={handleOpenPath}>
 					{guidance.actionLabel ?? 'Open file'}
 				</button>
 			)}
@@ -552,11 +551,7 @@ function RulesPreviewToolbar({
 	onSelectedGroupIdsChange: (groupIds: string[]) => void;
 }) {
 	return (
-		<div
-			role='toolbar'
-			aria-label='Rules preview options'
-			className={styles.rulesPreviewToolbarDiv}
-		>
+		<div role='toolbar' aria-label='Rules preview options' className={styles.rulesPreviewToolbarDiv}>
 			<span className={styles.rulesPreviewToolbarSpan}>Preview as</span>
 			<UserGroupPicker
 				groups={groups}
@@ -590,9 +585,7 @@ function SourceToggle({ isOpen, onChange }: { isOpen: boolean; onChange: () => v
 function TokenEstimate({ count }: { count: number }) {
 	return (
 		<SimpleTooltip content="Estimated tokens this file uses in the agent's context. It is approximated from the character count, not counted exactly.">
-			<span className={styles.tokenEstimateSpan}>
-				{formatTokenCount(count)} tokens
-			</span>
+			<span className={styles.tokenEstimateSpan}>{formatTokenCount(count)} tokens</span>
 		</SimpleTooltip>
 	);
 }

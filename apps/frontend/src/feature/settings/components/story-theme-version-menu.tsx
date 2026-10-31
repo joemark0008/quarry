@@ -1,4 +1,5 @@
 import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
+import styles from './story-theme-version-menu.module.css';
 import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
 
 import { RotateCwFadingClock } from '@/components/icons/rotate-cw-fading-clock';
@@ -10,7 +11,6 @@ import {
 	DropdownMenuRadioItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import styles from './story-theme-version-menu.module.css';
 
 export interface ThemeVersionEntry {
 	label: string;
@@ -38,7 +38,10 @@ export function StoryThemeVersionMenu({ entries, currentIndex, onSelect }: Story
 					className={styles.storyThemeVersionMenuButton}
 					aria-label='Select theme version'
 				>
-					<RotateCwFadingClock className={styles.storyThemeVersionMenuRotateCwFadingClock} strokeWidth={2.25} />
+					<RotateCwFadingClock
+						className={styles.storyThemeVersionMenuRotateCwFadingClock}
+						strokeWidth={2.25}
+					/>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end' className={styles.storyThemeVersionMenuDropdownMenuContent}>

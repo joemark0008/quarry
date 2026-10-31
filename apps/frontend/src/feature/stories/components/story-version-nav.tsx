@@ -1,3 +1,4 @@
+import styles from './story-version-nav.module.css';
 import { RotateCwFadingClock } from '@/components/icons/rotate-cw-fading-clock';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,7 +9,6 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import styles from './story-version-nav.module.css';
 
 export interface StoryVersionNavProps {
 	currentVersion: number;
@@ -36,10 +36,7 @@ export function StoryVersionNav({ currentVersion, versionDates, onSelectVersion 
 	if (totalVersions <= 1) {
 		return currentVersionDate ? (
 			<span
-				className={cn(
-					styles.storyVersionNavSpan,
-					VERSION_LABEL_CLASS_NAME,
-				)}
+				className={cn(styles.storyVersionNavSpan, VERSION_LABEL_CLASS_NAME)}
 				title={formatVersionDate(currentVersionDate)}
 			>
 				{formatCompactVersionDate(currentVersionDate)}

@@ -1,9 +1,9 @@
 import { Pencil, Trash2 } from 'lucide-react';
+import styles from './saved-prompt.module.css';
 import type { SavedPrompt } from '@/lib/api-types';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import styles from './saved-prompt.module.css';
 
 interface SavedPromptProps {
 	prompt: SavedPrompt;
@@ -24,10 +24,7 @@ export function SavedPromptItem({ prompt, onEdit, onDelete, className }: SavedPr
 	};
 
 	return (
-		<div
-			className={cn(`${styles.savedPromptItemDiv} group`, className)}
-			onClick={() => onEdit(prompt.id)}
-		>
+		<div className={cn(`${styles.savedPromptItemDiv} group`, className)} onClick={() => onEdit(prompt.id)}>
 			<div className={styles.savedPromptItemDiv2}>
 				<div className={styles.savedPromptItemDiv3}>
 					<span className={styles.savedPromptItemSpan}>{prompt.title || 'Untitled Prompt'}</span>

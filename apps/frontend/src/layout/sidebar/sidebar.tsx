@@ -2,19 +2,20 @@ import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-quer
 import { Link, useMatchRoute, useNavigate, useRouterState } from '@tanstack/react-router';
 import { ChevronRight, PanelLeft, PlusIcon, SearchIcon, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { ProjectSwitcher } from '@/components/project-selector';
 import { ChatFilterMenu } from './sidebar-chat-filter-menu';
-import { NewChatDropTarget } from '@/feature/chat/components/new-chat-drop-target';
 import { ChatListItem } from './sidebar-chat-list-item';
 import { SidebarBackToApp } from './sidebar-back-to-app';
 import { SidebarCommunity } from './sidebar-community';
 import { SidebarSettingsNav } from './sidebar-settings-nav';
 import { SidebarUserMenu } from './sidebar-user-menu';
 import { SidebarVersionNotice } from './sidebar-version-notice';
-import { Spinner } from '@/components/ui/spinner';
-import StoryIcon from '@/components/ui/story-icon';
+import styles from './sidebar.module.css';
 import type { ChatFilterType, ChatGroup, ChatGroupBy, GroupedChatItem } from '@quarry/shared/types';
 import type { LucideIcon } from 'lucide-react';
+import { ProjectSwitcher } from '@/components/project-selector';
+import { NewChatDropTarget } from '@/feature/chat/components/new-chat-drop-target';
+import { Spinner } from '@/components/ui/spinner';
+import StoryIcon from '@/components/ui/story-icon';
 
 import QuarryFullLogo from '@/components/icons/quarry-full-logo.svg';
 import QuarryLogo from '@/components/icons/quarry-logo.svg';
@@ -37,7 +38,6 @@ import { useCanSeeAdvancedSettings } from '@/hooks/use-can-see-advanced-settings
 import { useSession } from '@/lib/auth-client';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
-import styles from './sidebar.module.css';
 
 export function Sidebar() {
 	const navigate = useNavigate();
@@ -275,7 +275,13 @@ function SidebarMenuButton({
 			<kbd className={isCollapsed ? 'sr-only' : styles.rowKbd}>{shortcut}</kbd>
 		</button>
 	);
-	return isCollapsed ? <SimpleTooltip content={label} side='right'>{row}</SimpleTooltip> : row;
+	return isCollapsed ? (
+		<SimpleTooltip content={label} side='right'>
+			{row}
+		</SimpleTooltip>
+	) : (
+		row
+	);
 }
 
 function SidebarChatHeader({
@@ -324,12 +330,7 @@ function SidebarNav({
 	const { data: session } = useSession();
 	const username = session?.user?.name;
 	return (
-		<div
-			className={cn(
-				styles.sidebarNavDiv,
-				hideIf(isCollapsed),
-			)}
-		>
+		<div className={cn(styles.sidebarNavDiv, hideIf(isCollapsed))}>
 			{groups?.map((group) => (
 				<GroupSection key={group.label} group={group} groupBy={groupBy} />
 			))}
@@ -340,7 +341,11 @@ function SidebarNav({
 						'No chats shared with you.'
 					) : isTrial ? (
 						<>
-							{username && <span className={styles.sidebarNavSpan}>Welcome to quarry, {capitalize(username)}!</span>}
+							{username && (
+								<span className={styles.sidebarNavSpan}>
+									Welcome to quarry, {capitalize(username)}!
+								</span>
+							)}
 							<span className={styles.sidebarNavSpan2}>
 								Your chat history will appear here.
 								<br />
@@ -442,10 +447,7 @@ function SidebarSectionHeader({
 	const showIndicator = !isOpen && activity;
 
 	return (
-		<button
-			onClick={onToggle}
-			className={`${styles.sidebarSectionHeaderButton} group`}
-		>
+		<button onClick={onToggle} className={`${styles.sidebarSectionHeaderButton} group`}>
 			<span>{label}</span>
 			<ChevronRight
 				className={cn(

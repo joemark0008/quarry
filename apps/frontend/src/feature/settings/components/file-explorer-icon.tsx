@@ -23,8 +23,8 @@ import {
 	IconTerminal2,
 } from '@tabler/icons-react';
 
-import { cn } from '@/lib/utils';
 import styles from './file-explorer-icon.module.css';
+import { cn } from '@/lib/utils';
 
 interface FileExplorerIconProps {
 	name: string;

@@ -3,10 +3,13 @@ import { Link } from '@tanstack/react-router';
 import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { filterSupersededExecuteSqlParts } from '@quarry/shared/execute-sql-parts';
 import { UserMessageBubble } from './user-message';
+import { MessageModelLabel } from './message-model-label';
+import { AssistantCompaction } from './assistant-compaction';
+import { MessageParts } from './assistant-message';
+import styles from './chat-messages-readonly.module.css';
 import type { StickToBottomContext } from 'use-stick-to-bottom';
 import type { ForkMetadata, MessageModel, UIMessage } from '@quarry/api/agent/types/chat';
 import { SelectionCitationExcerpt } from '@/feature/chat/components/selection-citation-excerpt';
-import { MessageModelLabel } from './message-model-label';
 import { checkAssistantMessageHasContent, groupMessages, groupToolCalls } from '@/lib/ai';
 import { cn } from '@/lib/utils';
 import {
@@ -15,11 +18,8 @@ import {
 	ConversationEmptyState,
 	ConversationScrollButton,
 } from '@/components/ui/conversation';
-import { AssistantCompaction } from './assistant-compaction';
 import { AssistantMessageProvider } from '@/contexts/assistant-message';
-import { MessageParts } from './assistant-message';
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
-import styles from './chat-messages-readonly.module.css';
 
 export type FeedbackRecommendationMap = Record<string, { id: string; title: string; status: string }>;
 export type MessageModelMap = Record<string, MessageModel>;
@@ -204,7 +204,10 @@ const AssistantMessageReadonly = memo(
 							)}
 							<span>Feedback</span>
 							{message.feedback.explanation != null && message.feedback.explanation.trim() !== '' && (
-								<span className={styles.assistantMessageReadonlySpan}> : {message.feedback.explanation}</span>
+								<span className={styles.assistantMessageReadonlySpan}>
+									{' '}
+									: {message.feedback.explanation}
+								</span>
 							)}
 							{message.feedback.vote === 'down' && linkedRecommendation && (
 								<Link

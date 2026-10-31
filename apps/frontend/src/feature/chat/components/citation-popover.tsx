@@ -1,13 +1,13 @@
 import { memo, useCallback, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowUpRight } from 'lucide-react';
+import styles from './citation-popover.module.css';
 import type { CitationPayload, ColumnLineageNode } from '@quarry/shared';
 import { cn } from '@/lib/utils';
 import { formatSQL } from '@/lib/sql-formatter';
 import { useSidePanel } from '@/contexts/side-panel';
 import { SidePanelHeader } from '@/feature/stories/components/side-panel/side-panel-header';
 import { chatApi } from '@/lib/chat-api';
-import styles from './citation-popover.module.css';
 
 const HOVER_DELAY_MS = 500;
 const POPOVER_MAX_HEIGHT = 400;
@@ -57,9 +57,7 @@ export const CitationPopover = memo(
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
-				<span className={styles.citationPopoverSpan2}>
-					{value}
-				</span>
+				<span className={styles.citationPopoverSpan2}>{value}</span>
 				{isOpen && data && (
 					<PopoverContent
 						topOffset={topOffset}
@@ -76,31 +74,17 @@ const PopoverContent = memo(
 	({ data, topOffset, onExpand }: { data: CitationPayload; topOffset: number; onExpand: () => void }) => {
 		return (
 			<div className={styles.popoverContentDiv} style={{ top: topOffset }}>
-				<div
-					className={cn(
-						styles.popoverContentDiv2,
-						styles.popoverContentDiv3,
-						styles.popoverContentDiv4,
-					)}
-				>
+				<div className={cn(styles.popoverContentDiv2, styles.popoverContentDiv3, styles.popoverContentDiv4)}>
 					<div className={styles.popoverContentDiv5}>
 						<div className={styles.popoverContentDiv6}>
 							<span className={styles.popoverContentSpan}>SQL Query</span>
-							<button
-								type='button'
-								onClick={onExpand}
-								className={styles.popoverContentButton}
-							>
+							<button type='button' onClick={onExpand} className={styles.popoverContentButton}>
 								<ArrowUpRight className={styles.popoverContentArrowUpRight} />
 							</button>
 						</div>
 						<details className={styles.popoverContentDetails}>
-							<summary className={styles.popoverContentSummary}>
-								Show query
-							</summary>
-							<pre className={styles.popoverContentPre}>
-								{data.sql_query}
-							</pre>
+							<summary className={styles.popoverContentSummary}>Show query</summary>
+							<pre className={styles.popoverContentPre}>{data.sql_query}</pre>
 						</details>
 						<CitationSection title='Database Origin'>
 							<p className={styles.popoverContentP}>{data.database_id}</p>
@@ -131,9 +115,7 @@ function CitationSidePanel({ data }: { data: CitationPayload }) {
 			<SidePanelHeader title='Citation' label='Column lineage' />
 			<div className={styles.citationSidePanelDiv2}>
 				<CitationSection title='SQL Query'>
-					<pre className={styles.citationSidePanelPre}>
-						{formatSQL(data.sql_query)}
-					</pre>
+					<pre className={styles.citationSidePanelPre}>{formatSQL(data.sql_query)}</pre>
 				</CitationSection>
 
 				<div>
@@ -180,9 +162,7 @@ function LineageTree({ node, depth }: { node: ColumnLineageNode; depth: number }
 				<span className={depth === 0 ? styles.lineageTreeSpan2 : ''}>{label}</span>
 				{node.expression && <span className={styles.lineageTreeSpan3}>({node.expression})</span>}
 				{node.reference_node_name && (
-					<span className={styles.lineageTreeSpan4}>
-						{node.reference_node_name}
-					</span>
+					<span className={styles.lineageTreeSpan4}>{node.reference_node_name}</span>
 				)}
 			</div>
 			{node.sources.map((child, i) => (

@@ -19,20 +19,12 @@ import {
 	resolveMapConfig,
 } from '@quarry/shared';
 import { appendBlockToStoryCode } from '@quarry/shared/story-tabs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuRadioGroup,
-	DropdownMenuRadioItem,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { TableDisplay } from './display-table';
 import { MapConfigEditDialog } from './display-map-edit-dialog';
 import { SqlQueryDisplay } from './sql-query-display';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { VisualizationSkeleton } from './visualization-skeleton';
+import styles from './display-map.module.css';
 import type { ToolCallComponentProps } from '.';
 import type { ReactNode } from 'react';
 import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
@@ -40,6 +32,15 @@ import type { displayMap } from '@quarry/shared/tools';
 import type { MapPoint } from '@quarry/shared';
 import type { MapViewHandle } from './display-map-view';
 import type { MapStyleId } from '@/hooks/use-map-style';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuRadioGroup,
+	DropdownMenuRadioItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ExportDataMenu } from '@/components/export-data-menu';
 import { cn } from '@/lib/utils';
 import { chartsApi } from '@/lib/charts-api';
@@ -53,7 +54,6 @@ import { useAgentMessagesGetter, useOptionalAgentContext } from '@/contexts/agen
 import { useSidePanel } from '@/contexts/side-panel';
 import { StoryViewer } from '@/feature/stories/components/side-panel/story-viewer';
 import { storyApi } from '@/lib/story-api';
-import styles from './display-map.module.css';
 
 const MapView = lazy(() => import('./display-map-view'));
 
@@ -213,9 +213,7 @@ export const DisplayMapToolCall = ({
 
 	if (!sourceData) {
 		return (
-			<div className={styles.displayMapToolCallDiv2}>
-				Could not display the map because the data is missing.
-			</div>
+			<div className={styles.displayMapToolCallDiv2}>Could not display the map because the data is missing.</div>
 		);
 	}
 
@@ -241,10 +239,7 @@ export const DisplayMapToolCall = ({
 
 	return (
 		<div ref={slotRef} className={styles.displayMapToolCallDiv3}>
-			<div
-				className={`${styles.displayMapToolCallDiv4} group`}
-				style={breakoutStyle}
-			>
+			<div className={`${styles.displayMapToolCallDiv4} group`} style={breakoutStyle}>
 				<div
 					className={cn(
 						styles.displayMapToolCallDiv5,
@@ -278,20 +273,26 @@ export const DisplayMapToolCall = ({
 								</>
 							)}
 							<ViewToggleButton
-								icon={<MapIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+								icon={
+									<MapIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
+								}
 								title='View map'
 								isActive={viewMode === 'map'}
 								onClick={() => setViewMode('map')}
 							/>
 							<ViewToggleButton
-								icon={<TableIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+								icon={
+									<TableIcon className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
+								}
 								title='View data table'
 								isActive={viewMode === 'table'}
 								onClick={() => setViewMode('table')}
 							/>
 							{sourceQuery?.input && (
 								<ViewToggleButton
-									icon={<Code className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+									icon={
+										<Code className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
+									}
 									title='View SQL query'
 									isActive={viewMode === 'query'}
 									onClick={() => setViewMode('query')}
@@ -299,7 +300,12 @@ export const DisplayMapToolCall = ({
 							)}
 							{storyIds.length > 0 && (
 								<ViewToggleButton
-									icon={<FilePlus className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+									icon={
+										<FilePlus
+											className={styles.displayMapToolCallFoldHorizontal}
+											strokeWidth={2.25}
+										/>
+									}
 									title='Add to story'
 									isActive={false}
 									onClick={handleAddToStory}
@@ -307,7 +313,12 @@ export const DisplayMapToolCall = ({
 							)}
 							{viewMode === 'map' ? (
 								<ViewToggleButton
-									icon={<Download className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+									icon={
+										<Download
+											className={styles.displayMapToolCallFoldHorizontal}
+											strokeWidth={2.25}
+										/>
+									}
 									title='Download as PNG'
 									isActive={false}
 									onClick={handleDownloadPng}
@@ -324,13 +335,21 @@ export const DisplayMapToolCall = ({
 										className={styles.displayMapToolCallButton}
 										title='Export data'
 									>
-										<Download className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />
+										<Download
+											className={styles.displayMapToolCallFoldHorizontal}
+											strokeWidth={2.25}
+										/>
 									</Button>
 								</ExportDataMenu>
 							)}
 							{isEditable && (
 								<ViewToggleButton
-									icon={<Pencil className={styles.displayMapToolCallFoldHorizontal} strokeWidth={2.25} />}
+									icon={
+										<Pencil
+											className={styles.displayMapToolCallFoldHorizontal}
+											strokeWidth={2.25}
+										/>
+									}
 									title='Edit map'
 									isActive={false}
 									onClick={() => setIsEditOpen(true)}
@@ -351,7 +370,12 @@ export const DisplayMapToolCall = ({
 						/>
 					)}
 
-					<div className={cn(styles.displayMapToolCallDiv10, viewMode !== 'map' && styles.displayMapToolCallDiv11)}>
+					<div
+						className={cn(
+							styles.displayMapToolCallDiv10,
+							viewMode !== 'map' && styles.displayMapToolCallDiv11,
+						)}
+					>
 						{(viewMode === 'map' || hasShownMap) && (
 							<Suspense fallback={<Skeleton className={styles.displayMapToolCallSkeleton} />}>
 								<MapView

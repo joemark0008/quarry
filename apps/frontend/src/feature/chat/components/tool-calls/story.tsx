@@ -3,11 +3,12 @@ import { Clock } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
 import { extractStorySummary } from '@quarry/api/stories/utils/story-summary';
+import styles from './story.module.css';
+import type { ToolCallComponentProps } from '.';
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import { StoryCard } from '@/feature/stories/components/story-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TextShimmer } from '@/components/ui/text-shimmer';
-import type { ToolCallComponentProps } from '.';
-import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import { StoryViewer } from '@/feature/stories/components/side-panel/story-viewer';
 import { useStoryThemeForCurrentMode } from '@/feature/stories/components/story-theme-provider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -15,7 +16,6 @@ import { useSidePanel } from '@/contexts/side-panel';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useTimeAgo } from '@/hooks/use-time-ago';
 import { storyApi } from '@/lib/story-api';
-import styles from './story.module.css';
 
 const STORY_ACTION_LABELS = {
 	create: { pending: 'Creating...', done: 'Created' },
@@ -155,9 +155,7 @@ export const StoryToolCall = ({ toolPart }: ToolCallComponentProps<'story'>) => 
 };
 
 function StoryError({ message }: { message: string }) {
-	return (
-		<div className={styles.storyErrorDiv}>{message}</div>
-	);
+	return <div className={styles.storyErrorDiv}>{message}</div>;
 }
 
 function LiveStoryTimestamp({ cachedAt }: { cachedAt: string | Date }) {

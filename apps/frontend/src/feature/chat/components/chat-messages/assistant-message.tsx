@@ -1,4 +1,9 @@
 import { memo, useMemo } from 'react';
+import { AssistantReasoning } from './assistant-reasoning';
+import { AssistantCompaction } from './assistant-compaction';
+import { AssistantTextWithCitation } from './citation-text';
+import { AssistantMessageActions } from './assistant-message-actions';
+import styles from './assistant-message.module.css';
 import type { UIMessage } from '@quarry/api/agent/types/chat';
 import type { GroupedMessagePart } from '@/types/ai';
 import {
@@ -17,18 +22,13 @@ import { QueryGroup } from '@/feature/chat/components/tool-calls/query-group';
 import { StoryStatus } from '@/feature/chat/components/tool-calls/story-status';
 import { StoryQueryGroup } from '@/feature/chat/components/tool-calls/story-query-group';
 import { ToolCall } from '@/feature/chat/components/tool-calls/index';
-import { AssistantReasoning } from './assistant-reasoning';
-import { AssistantCompaction } from './assistant-compaction';
-import { AssistantTextWithCitation } from './citation-text';
 import { TextShimmer } from '@/components/ui/text-shimmer';
-import { AssistantMessageActions } from './assistant-message-actions';
 import { cn, isLast } from '@/lib/utils';
 import { useChatId } from '@/hooks/use-chat-id';
 import { useIsCancellingMessage } from '@/hooks/use-is-cancelling-message-store';
 import { useToolCallDensity } from '@/hooks/use-tool-call-density';
 import { AssistantMessageProvider, useAssistantMessage } from '@/contexts/assistant-message';
 import { useAgentContext } from '@/contexts/agent.provider';
-import styles from './assistant-message.module.css';
 
 export const AssistantMessage = memo(
 	({

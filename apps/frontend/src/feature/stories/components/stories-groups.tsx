@@ -13,6 +13,9 @@ import {
 	Star,
 } from 'lucide-react';
 import { useState } from 'react';
+import { CustomStoryThumbnail } from './custom-story-thumbnail';
+import { StoryThumbnail } from './story-thumbnail';
+import styles from './stories-groups.module.css';
 import type { DragEvent, MouseEvent, ReactNode } from 'react';
 import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 
@@ -31,8 +34,6 @@ import {
 	SharingBadge,
 } from '@/components/item-card';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
-import { CustomStoryThumbnail } from './custom-story-thumbnail';
-import { StoryThumbnail } from './story-thumbnail';
 import StoryIcon from '@/components/ui/story-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { useToggleFavorite } from '@/hooks/use-toggle-favorite';
@@ -45,7 +46,6 @@ import { selectedStoryReferencesStore } from '@/stores/story-references';
 import { formatRelativeDate } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import { storyApi } from '@/lib/story-api';
-import styles from './stories-groups.module.css';
 
 const VIEW_COUNT_FORMAT = new Intl.NumberFormat(undefined, { notation: 'compact', maximumFractionDigits: 1 });
 
@@ -207,14 +207,12 @@ export function StoryCard({
 							<StoryThumbnail summary={item.summary} theme={storyTheme} queryData={item.kpiPreviewData} />
 						)}
 					</div>
-					<div className={cn(GRID_HOVER_ACTION_GRADIENT_CLASS, hasPersistentTopIcons && styles.storyCardDiv3)} />
+					<div
+						className={cn(GRID_HOVER_ACTION_GRADIENT_CLASS, hasPersistentTopIcons && styles.storyCardDiv3)}
+					/>
 
 					{!selectionActive && (
-						<Link
-							{...item.link}
-							onClick={handleLinkClick}
-							className={styles.storyCardLink}
-						>
+						<Link {...item.link} onClick={handleLinkClick} className={styles.storyCardLink}>
 							{certifiedBadge}
 							<div className={styles.storyCardDiv4}>
 								<GridCardFooter
@@ -243,10 +241,7 @@ export function StoryCard({
 						</div>
 					)}
 
-					<div
-						className={styles.storyCardDiv7}
-						onPointerDown={(e) => e.stopPropagation()}
-					>
+					<div className={styles.storyCardDiv7} onPointerDown={(e) => e.stopPropagation()}>
 						{canSelect && (
 							<StoryCheckbox
 								selected={selected}
@@ -308,21 +303,14 @@ export function StoryCard({
 								<StoryBadges item={item} mode='lines' />
 							</div>
 						</div>
-						<div className={styles.storyCardDiv13}>
-							{item.author}
-						</div>
+						<div className={styles.storyCardDiv13}>{item.author}</div>
 						<div className={styles.storyCardDiv14}>
 							{item.viewCount === null ? '—' : VIEW_COUNT_FORMAT.format(item.viewCount)}
 						</div>
-						<div className={styles.storyCardDiv15}>
-							{formatRelativeDate(item.createdAt)}
-						</div>
+						<div className={styles.storyCardDiv15}>{formatRelativeDate(item.createdAt)}</div>
 					</Link>
 				</div>
-				<div
-					className={styles.storyCardDiv16}
-					onPointerDown={(e) => e.stopPropagation()}
-				>
+				<div className={styles.storyCardDiv16} onPointerDown={(e) => e.stopPropagation()}>
 					{!selectionActive && (
 						<StoryActions
 							item={item}
@@ -368,7 +356,11 @@ function StoryCheckbox({
 				selected && styles.storyCheckboxButton5,
 			)}
 		>
-			{selected ? <CircleCheck className={styles.storyCheckboxCircleCheck} /> : <Circle className={styles.storyCheckboxCircleCheck} />}
+			{selected ? (
+				<CircleCheck className={styles.storyCheckboxCircleCheck} />
+			) : (
+				<Circle className={styles.storyCheckboxCircleCheck} />
+			)}
 		</button>
 	);
 }
@@ -548,9 +540,7 @@ function QuickActionButton({
 				disabled={pending || !interactive}
 				className={cn(
 					styles.quickActionButtonButton,
-					active
-						? styles.quickActionButtonButton2
-						: styles.quickActionButtonButton3,
+					active ? styles.quickActionButtonButton2 : styles.quickActionButtonButton3,
 					interactive && active && styles.quickActionButtonButton4,
 					interactive && !active && styles.quickActionButtonButton5,
 					interactive && !active && fillOnHover && styles.quickActionButtonButton6,
@@ -646,7 +636,11 @@ function StoryArchiveButton({ item, showArchived }: { item: StoryItem; showArchi
 			tooltip={showArchived ? 'Unarchive' : 'Archive'}
 			fillOnHover={false}
 		>
-			{showArchived ? <ArchiveRestoreIcon className={styles.storyCheckboxCircleCheck} /> : <ArchiveIcon className={styles.storyCheckboxCircleCheck} />}
+			{showArchived ? (
+				<ArchiveRestoreIcon className={styles.storyCheckboxCircleCheck} />
+			) : (
+				<ArchiveIcon className={styles.storyCheckboxCircleCheck} />
+			)}
 		</QuickActionButton>
 	);
 }

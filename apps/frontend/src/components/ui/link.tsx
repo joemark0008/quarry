@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Link as RouterLink } from '@tanstack/react-router';
 import { forwardRef } from 'react';
 import { cn } from '../../lib/utils';
-import type { LinkProps } from '@tanstack/react-router';
 import styles from './link.module.css';
+import type { LinkProps } from '@tanstack/react-router';
 
 interface CustomLinkProps extends LinkProps {
 	className?: string;

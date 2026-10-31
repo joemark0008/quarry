@@ -1,9 +1,9 @@
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './command-block.module.css';
 import { Button } from '@/components/ui/button';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import styles from './command-block.module.css';
 
 export function CommandBlock({ command }: { command: string }) {
 	const { isCopied, copy } = useCopyToClipboard();
@@ -24,9 +24,7 @@ export function CommandBlock({ command }: { command: string }) {
 			<span aria-hidden className={styles.commandBlockSpan}>
 				$
 			</span>
-			<code className={styles.commandBlockCode}>
-				{command}
-			</code>
+			<code className={styles.commandBlockCode}>{command}</code>
 			{copyFailed && (
 				<span role='status' className={styles.commandBlockSpan2}>
 					Command was not copied

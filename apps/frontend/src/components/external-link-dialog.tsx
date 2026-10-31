@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Check, Copy, ExternalLink, X } from 'lucide-react';
+import styles from './external-link-dialog.module.css';
 import type { LinkSafetyConfig, LinkSafetyModalProps } from 'streamdown';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
-import styles from './external-link-dialog.module.css';
 
 /** Streamdown link handling: same-origin links open directly, external ones ask for confirmation first. */
 export const markdownLinkSafety: LinkSafetyConfig = {
@@ -40,9 +40,7 @@ export function ExternalLinkDialog({ isOpen, onClose, onConfirm, url }: LinkSafe
 				<DialogDescription className={styles.externalLinkDialogDialogDescription}>
 					You're about to visit an external website.
 				</DialogDescription>
-				<div className={styles.externalLinkDialogDiv}>
-					{url}
-				</div>
+				<div className={styles.externalLinkDialogDiv}>{url}</div>
 				<div className={styles.externalLinkDialogDiv2}>
 					<Button variant='outline' className={styles.externalLinkDialogButton} onClick={handleCopy}>
 						<CopyButtonContent isCopied={isCopied} isCopyFailed={isCopyFailed} />

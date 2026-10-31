@@ -1,12 +1,12 @@
 import { QUERY_TOOL_PARAMETER_TYPES } from '@quarry/shared/query-tools';
 import { Trash2 } from 'lucide-react';
+import styles from './query-tool-parameters.module.css';
 import type { QueryToolParameter, QueryToolParameterType } from '@quarry/shared/query-tools';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import styles from './query-tool-parameters.module.css';
 
 /** Parameters of a tool: one row per `{{ name }}` placeholder, with its type, default and test value. */
 export function QueryToolParameters({
@@ -32,9 +32,10 @@ export function QueryToolParameters({
 		<div className={styles.queryToolParametersDiv}>
 			{parameters.length === 0 && missing.length === 0 && (
 				<p className={styles.queryToolParametersP}>
-					No parameters. Write <code className={styles.queryToolParametersCode}>{'{{ name }}'}</code> in the SQL where a value
-					should go, e.g. <code className={styles.queryToolParametersCode}>{'WHERE status = {{ status }}'}</code>: the agent fills
-					it in, and it is sent to the warehouse as a bound value, never pasted into the SQL.
+					No parameters. Write <code className={styles.queryToolParametersCode}>{'{{ name }}'}</code> in the
+					SQL where a value should go, e.g.{' '}
+					<code className={styles.queryToolParametersCode}>{'WHERE status = {{ status }}'}</code>: the agent
+					fills it in, and it is sent to the warehouse as a bound value, never pasted into the SQL.
 				</p>
 			)}
 			{parameters.length > 0 && (
@@ -49,10 +50,7 @@ export function QueryToolParameters({
 				</div>
 			)}
 			{parameters.map((parameter, index) => (
-				<div
-					key={index}
-					className={styles.queryToolParametersDiv3}
-				>
+				<div key={index} className={styles.queryToolParametersDiv3}>
 					<Input
 						value={parameter.name}
 						onChange={(event) => update(index, { name: event.target.value })}

@@ -11,6 +11,7 @@ import {
 	X,
 } from 'lucide-react';
 import { useState } from 'react';
+import styles from './story-theme-recorded-sources.module.css';
 import type {
 	StoryThemeGeneration,
 	StoryThemeSourceKind,
@@ -20,15 +21,13 @@ import type { LucideIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import styles from './story-theme-recorded-sources.module.css';
 
 export interface ViewedThemeVersion {
 	label: string;
 	generation: StoryThemeGeneration | null;
 }
 
-export const WELL_CLASS =
-	styles.wELLCLASS;
+export const WELL_CLASS = styles.wELLCLASS;
 
 export const SOURCE_ICONS: Record<StoryThemeSourceKind, LucideIcon> = {
 	website: Globe,
@@ -126,7 +125,12 @@ export function GenerationSummary({ sentence, generation, onDismiss }: Generatio
 						aria-expanded={expanded}
 						aria-label={expanded ? 'Hide what the generation kept' : 'Show what the generation kept'}
 					>
-						<ChevronDown className={cn(styles.generationSummaryChevronDown, expanded && styles.generationSummaryChevronDown2)} />
+						<ChevronDown
+							className={cn(
+								styles.generationSummaryChevronDown,
+								expanded && styles.generationSummaryChevronDown2,
+							)}
+						/>
 					</Button>
 				)}
 				{onDismiss && (

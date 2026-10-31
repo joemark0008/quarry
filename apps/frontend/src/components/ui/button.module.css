@@ -101,7 +101,7 @@
 		background-color: color-mix(in oklab, var(--app-danger) 60%, transparent);
 	}
 	&:is(:root[data-mantine-color-scheme='dark'] *) {
-		color: #fff;
+		color: var(--app-white);
 	}
 }
 .buttonVariantsDestructiveSoft {
@@ -121,7 +121,7 @@
 		background-color: color-mix(in oklab, var(--app-danger) 60%, transparent);
 	}
 	&:is(:root[data-mantine-color-scheme='dark'] *) {
-		color: #fff;
+		color: var(--app-white);
 	}
 }
 .buttonVariantsOutline {

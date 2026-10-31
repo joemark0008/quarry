@@ -1,17 +1,15 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useRouterState } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { useRouterState } from '@tanstack/react-router';
 import { useLayoutEffect, useMemo } from 'react';
+import styles from './map-embed-page.module.css';
 import type { ReactNode } from 'react';
 import { MapAppView } from '@/feature/chat/components/mcp-app/map-app-view';
 import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { isLikelyMcpAppPayloadToken, readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
-import styles from './map-embed-page.module.css';
 
 const Route = getRouteApi('/embed/map/$mapEmbedId');
-
 
 export function MapEmbedPage() {
 	const { mapEmbedId } = Route.useParams();
@@ -70,10 +68,7 @@ export function MapEmbedPage() {
 	}
 
 	return (
-		<div
-			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className={styles.mapEmbedPageDiv3}
-		>
+		<div {...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }} className={styles.mapEmbedPageDiv3}>
 			{inner}
 		</div>
 	);

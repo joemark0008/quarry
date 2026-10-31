@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle2, CircleAlert } from 'lucide-react';
 
+import styles from './email-verification-pending.module.css';
 import { Button } from '@/components/ui/button';
 import { sendVerificationEmail } from '@/lib/auth-client';
-import styles from './email-verification-pending.module.css';
 
 interface EmailVerificationPendingProps {
 	email: string;

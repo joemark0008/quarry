@@ -1,8 +1,8 @@
 import { SearchIcon } from 'lucide-react';
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import styles from './overlay.module.css';
 import type { ComponentProps, KeyboardEvent, ReactNode } from 'react';
 
-import styles from './overlay.module.css';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -49,7 +49,7 @@ function Command({
 		if (!current.some((item) => item.dataset.value === selected)) {
 			setSelected(current[0]?.dataset.value ?? null);
 		}
-	});
+	}, [children, search, selected]);
 
 	const move = (delta: 1 | -1) => {
 		const current = items();
@@ -191,7 +191,14 @@ function CommandGroup({
 }
 
 function CommandSeparator({ className, ...props }: ComponentProps<'div'>) {
-	return <div role='separator' data-slot='command-separator' className={cn(styles.commandSeparator, className)} {...props} />;
+	return (
+		<div
+			role='separator'
+			data-slot='command-separator'
+			className={cn(styles.commandSeparator, className)}
+			{...props}
+		/>
+	);
 }
 
 function CommandItem({

@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { isFilterSelectionActive } from '@quarry/shared/sql-template';
+import styles from './story-filter-bar.module.css';
 import type { StoryFilterSelection } from '@quarry/shared/sql-template';
 import type { DateRange } from 'react-day-picker';
 import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
@@ -20,7 +21,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-filter-bar.module.css';
 
 const CLEAR_SELECT_VALUE = '__quarry_clear_filter__';
 const SELECT_VALUE_PREFIX = '__quarry_filter_value__:';
@@ -87,7 +87,12 @@ export function StoryFilterBar({
 					/>
 				))}
 				{hasActiveFilters && (
-					<Button variant='ghost' size='sm' className={`${styles.storyFilterBarButton} quarry-filter__clear`} onClick={onClear}>
+					<Button
+						variant='ghost'
+						size='sm'
+						className={`${styles.storyFilterBarButton} quarry-filter__clear`}
+						onClick={onClear}
+					>
 						<FilterX className={styles.storyFilterBarFilterX} />
 						Clear
 					</Button>

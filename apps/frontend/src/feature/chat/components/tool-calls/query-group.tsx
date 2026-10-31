@@ -1,5 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { pluralize } from '@quarry/shared';
+import styles from './query-group.module.css';
 import { ToolCall } from './index';
 import type { UIToolPart } from '@quarry/api/agent/types/chat';
 import type { GroupablePart } from '@/types/ai';
@@ -10,7 +11,6 @@ import { isReasoningPart, isQueryToolPart } from '@/lib/ai';
 import { getLatestToolActivityLabel } from '@/lib/tool-activity';
 import { useThrottledValue } from '@/hooks/use-throttled-value';
 import { MIN_TITLE_DISPLAY_MS } from '@/hooks/use-tool-group-summary-title';
-import styles from './query-group.module.css';
 
 interface Props {
 	parts: GroupablePart[];

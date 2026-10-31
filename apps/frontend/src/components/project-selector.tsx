@@ -2,6 +2,7 @@ import { USER_ROLE_LABELS } from '@quarry/shared/types';
 import { Check, ChevronsUpDown, Plus } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './project-selector.module.css';
 import type { UserRole } from '@quarry/shared/types';
 
 import { UpgradeToEnterprise } from '@/feature/settings/components/upgrade-to-enterprise';
@@ -18,7 +19,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMultiProject } from '@/hooks/use-multi-project';
 import { cn } from '@/lib/utils';
-import styles from './project-selector.module.css';
 
 export type ProjectOption = {
 	id: string;
@@ -163,7 +163,10 @@ function ProjectDropdown({
 				</PopoverTrigger>
 				<PopoverContent
 					align='start'
-					className={cn(styles.projectDropdownPopoverContent, variant === 'sidebar' && styles.projectDropdownPopoverContent2)}
+					className={cn(
+						styles.projectDropdownPopoverContent,
+						variant === 'sidebar' && styles.projectDropdownPopoverContent2,
+					)}
 				>
 					<Command loop={mode !== 'upgrade'}>
 						{mode !== 'upgrade' && projects.length > 5 && <CommandInput placeholder='Search projects...' />}
@@ -186,9 +189,7 @@ function ProjectDropdown({
 													void onChange(project.id);
 												}}
 											>
-												<span className={styles.projectDropdownSpan}>
-													{project.name}
-												</span>
+												<span className={styles.projectDropdownSpan}>{project.name}</span>
 												<span className={styles.projectDropdownSpan2}>
 													{USER_ROLE_LABELS[project.userRole]}
 												</span>

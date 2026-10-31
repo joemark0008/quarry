@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import type { CSSProperties } from 'react';
-import type { FavoriteEntry, FolderItem, StoryItem } from '@/lib/stories-page';
 import { FolderCard } from './stories-folder-card';
 import { StoryCard } from './stories-groups';
-import { cn } from '@/lib/utils';
 import styles from './stories-pinned-favorites.module.css';
+import type { CSSProperties } from 'react';
+import type { FavoriteEntry, FolderItem, StoryItem } from '@/lib/stories-page';
+import { cn } from '@/lib/utils';
 
 const PINNED_COLLAPSED_KEY = 'stories-pinned-collapsed';
 const FAVORITES_COLLAPSED_KEY = 'stories-favorites-collapsed';
@@ -246,13 +246,13 @@ function entryKey(entry: FavoriteEntry): string {
 
 function SectionHeader({ label, collapsed, onToggle }: { label: string; collapsed: boolean; onToggle: () => void }) {
 	return (
-		<button
-			type='button'
-			className={styles.sectionHeaderButton}
-			onClick={onToggle}
-		>
+		<button type='button' className={styles.sectionHeaderButton} onClick={onToggle}>
 			<span className={styles.sectionHeaderSpan}>
-				{collapsed ? <ChevronRight className={styles.sectionHeaderChevronRight} /> : <ChevronDown className={styles.sectionHeaderChevronRight} />}
+				{collapsed ? (
+					<ChevronRight className={styles.sectionHeaderChevronRight} />
+				) : (
+					<ChevronDown className={styles.sectionHeaderChevronRight} />
+				)}
 			</span>
 			<span className={styles.sectionHeaderSpan2}>{label}</span>
 		</button>

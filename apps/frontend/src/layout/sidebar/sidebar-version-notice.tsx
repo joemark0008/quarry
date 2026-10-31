@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client/react';
 import { CircleArrowUp } from 'lucide-react';
 
+import styles from './sidebar-version-notice.module.css';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn, hideIf } from '@/lib/utils';
 import { CheckUpdateDocument } from '@/graphql/generated/graphql';
 import { QUARRY_REPOSITORY_URL } from '@/lib/quarry-links';
-import styles from './sidebar-version-notice.module.css';
 
 interface SidebarVersionNoticeProps {
 	isCollapsed: boolean;
@@ -42,9 +42,7 @@ export function SidebarVersionNotice({ isCollapsed }: SidebarVersionNoticeProps)
 			className={styles.sidebarVersionNoticeA}
 		>
 			<CircleArrowUp className={styles.sidebarVersionNoticeCircleArrowUp2} />
-			<span className={cn(styles.sidebarVersionNoticeSpan, hideIf(isCollapsed))}>
-				{label}
-			</span>
+			<span className={cn(styles.sidebarVersionNoticeSpan, hideIf(isCollapsed))}>{label}</span>
 		</a>
 	);
 }

@@ -26,14 +26,14 @@
 }
 .detailRowSpan {
 	flex-shrink: 0;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
 .detailRowDiv2 {
 	min-width: 0px;
 	text-align: right;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	word-break: break-all;
 	color: var(--app-text);

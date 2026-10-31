@@ -3,13 +3,11 @@ import { useNavigate } from '@tanstack/react-router';
 import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 
+import { ContextWorktreeUpdateDialog, isDirtyWorktreeConflict } from './context-worktree-update-dialog';
+import styles from './live-context-update-settings.module.css';
 import type { QueryClient } from '@tanstack/react-query';
 import type { LiveContextRepository } from '@/lib/live-context-links';
 
-import {
-	ContextWorktreeUpdateDialog,
-	isDirtyWorktreeConflict,
-} from './context-worktree-update-dialog';
 import { Button } from '@/components/ui/button';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { ErrorMessage } from '@/components/ui/error-message';
@@ -22,7 +20,6 @@ import {
 } from '@/lib/live-context-history';
 import { buildCommitUrl } from '@/lib/live-context-links';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
-import styles from './live-context-update-settings.module.css';
 
 interface LiveContextUpdateStatus {
 	enabled: boolean;
@@ -370,9 +367,7 @@ function PullFileList({
 								{file.path}
 							</button>
 						) : (
-							<span className={styles.pullFileListSpan}>
-								{file.path}
-							</span>
+							<span className={styles.pullFileListSpan}>{file.path}</span>
 						)}
 						<span className={styles.pullFileListSpan2}>
 							{file.additions === null || file.deletions === null ? (

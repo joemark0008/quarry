@@ -1,9 +1,9 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, Link, useRouter } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useRouter } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ArrowRight, Folder, GitFork, Globe, Upload } from 'lucide-react';
 import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
+import styles from './chat-page.module.css';
 import type { ForkMetadata, UIMessage } from '@quarry/api/agent/types/chat';
 import type { SelectionData } from '@/feature/chat/components/highlight-bubble';
 import type { Chat } from '@/queries/use-chat-query';
@@ -41,10 +41,8 @@ import { findStories } from '@/lib/story.utils';
 import { shouldShowChatAccessError } from '@/lib/api-error';
 import { useCurrentProject, useProjects } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
-import styles from './chat-page.module.css';
 
 const Route = getRouteApi('/_protected/_chat-layout/$chatId');
-
 
 const SELECTION_FORK_TYPES: ForkMetadata['type'][] = ['chat_selection', 'chat_question', 'story_selection'];
 
@@ -244,20 +242,12 @@ function ChatPage() {
 						)}
 						<StoryBlockEditPanel chatId={chatId} />
 						<div className={styles.chatPageDiv10}>
-							<div
-								ref={inputAreaRef}
-								className={styles.chatPageDiv11}
-							>
+							<div ref={inputAreaRef} className={styles.chatPageDiv11}>
 								{chat.data?.isOnboarding ? (
 									onboardingComplete ? (
 										<div className={styles.chatPageDiv12}>
-											<p className={styles.chatPageP}>
-												Project setup successful!
-											</p>
-											<Button
-												asChild
-												className={styles.chatPageButton2}
-											>
+											<p className={styles.chatPageP}>Project setup successful!</p>
+											<Button asChild className={styles.chatPageButton2}>
 												<Link to='/'>
 													Start chatting
 													<ArrowRight className={styles.chatPageArrowRight} />

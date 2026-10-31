@@ -1,3 +1,4 @@
+import styles from './story-unsaved-changes-dialog.module.css';
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -9,7 +10,6 @@ import {
 	AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import styles from './story-unsaved-changes-dialog.module.css';
 
 export interface StoryUnsavedChangesDialogProps {
 	open: boolean;
@@ -46,7 +46,9 @@ export function StoryUnsavedChangesDialog({
 						You have unsaved changes. Save them before continuing, or leave without saving.
 					</AlertDialogDescription>
 					{saveFailed && (
-						<p className={styles.storyUnsavedChangesDialogP}>Could not save your changes. Please try again.</p>
+						<p className={styles.storyUnsavedChangesDialogP}>
+							Could not save your changes. Please try again.
+						</p>
 					)}
 				</AlertDialogHeader>
 				<AlertDialogFooter>

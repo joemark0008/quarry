@@ -10,6 +10,13 @@ import {
 	splitGridColumnsRaw,
 } from '@quarry/shared/story-segments';
 import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { Segment } from '@quarry/shared/story-segments';
+import type { ReactNodeViewProps } from '@tiptap/react';
+import type {
+	DragEvent as ReactDragEvent,
+	KeyboardEvent as ReactKeyboardEvent,
+	PointerEvent as ReactPointerEvent,
+} from 'react';
 import { removeCardFromOrigin } from '@/feature/stories/components/side-panel/story-editor-utils';
 import {
 	GRID_COLUMN_DRAG_TYPE,
@@ -18,13 +25,6 @@ import {
 	StoryBlockDragContext,
 } from '@/feature/stories/components/side-panel/story-editor-drag-context';
 import { resolveDragSelection } from '@/feature/stories/components/side-panel/story-block-selection';
-import type { Segment } from '@quarry/shared/story-segments';
-import type { ReactNodeViewProps } from '@tiptap/react';
-import type {
-	DragEvent as ReactDragEvent,
-	KeyboardEvent as ReactKeyboardEvent,
-	PointerEvent as ReactPointerEvent,
-} from 'react';
 import { replaceUniqueStoryBlockTag } from '@/contexts/story-chart-edit-utils';
 
 interface GridResizeDrag {

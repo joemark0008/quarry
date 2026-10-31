@@ -1,10 +1,10 @@
+import styles from './story-reference-card.module.css';
 import type { ReactNode } from 'react';
 import type { ResolvedStory } from '@/hooks/use-mentioned-stories';
 
 import { useOpenStoryInSidePanel } from '@/feature/stories/components/side-panel/open-story-in-side-panel';
 import { StoryCard } from '@/feature/stories/components/story-card';
 import { useOpenMentionedStory, useResolvedStory } from '@/hooks/use-mentioned-stories';
-import styles from './story-reference-card.module.css';
 
 /** An existing story the agent hands over in its answer. */
 export function StoryReferenceCard({ storyId, title }: { storyId: string; title: string }) {
@@ -33,11 +33,7 @@ export function StoryReferenceLink({ storyId, children }: { storyId: string; chi
 		return <>{children}</>;
 	}
 	return (
-		<button
-			type='button'
-			className={styles.storyReferenceLinkButton}
-			onClick={() => openStory(story)}
-		>
+		<button type='button' className={styles.storyReferenceLinkButton} onClick={() => openStory(story)}>
 			{children}
 		</button>
 	);

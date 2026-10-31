@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { AtSign, ChevronDown, Loader2, MessageCircle } from 'lucide-react';
+import styles from './story-chat-button.module.css';
 import type { LucideIcon } from 'lucide-react';
 
 import { ChatListSection } from '@/feature/chat/components/chat-list-menu-section';
@@ -17,7 +18,6 @@ import { useStartChatWithStories } from '@/hooks/use-start-chat-with-stories';
 import { requestAsk } from '@/stores/ask-bar';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-chat-button.module.css';
 
 export type StoryChatMode = 'edit' | 'ask' | 'mention';
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
 import styles from './input.module.css';
+import { cn } from '@/lib/utils';
 
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -40,27 +40,14 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
 		<input
 			type={type}
 			data-slot='input'
-			className={cn(
-				styles.inputInput,
-				styles.inputInput2,
-				styles.inputInput3,
-				className,
-			)}
+			className={cn(styles.inputInput, styles.inputInput2, styles.inputInput3, className)}
 			{...props}
 		/>
 	);
 }
 
 function NakedInput({ className, ...props }: React.ComponentProps<'input'>) {
-	return (
-		<input
-			className={cn(
-				styles.nakedInputInput,
-				className,
-			)}
-			{...props}
-		/>
-	);
+	return <input className={cn(styles.nakedInputInput, className)} {...props} />;
 }
 
 export { Input, NakedInput };

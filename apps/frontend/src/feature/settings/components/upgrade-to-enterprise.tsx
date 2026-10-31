@@ -1,7 +1,7 @@
 import { Lock } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
 import styles from './upgrade-to-enterprise.module.css';
+import { cn } from '@/lib/utils';
 
 interface UpgradeToEnterpriseProps {
 	className?: string;

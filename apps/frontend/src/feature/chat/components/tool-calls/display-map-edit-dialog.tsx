@@ -3,13 +3,20 @@ import { displayMap } from '@quarry/shared/tools';
 import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import styles from './display-map-edit-dialog.module.css';
+import type { BoundarySource } from '@quarry/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import type { BoundarySource } from '@quarry/shared';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
-import styles from './display-map-edit-dialog.module.css';
 
 interface MapConfigEditDialogProps {
 	open: boolean;
@@ -106,9 +113,7 @@ export function MapConfigEditDialog({
 								/>
 							) : (
 								<div className={styles.mapConfigEditDialogDiv2}>
-									<span className={styles.mapConfigEditDialogSpan}>
-										{boundarySource.label}
-									</span>
+									<span className={styles.mapConfigEditDialogSpan}>{boundarySource.label}</span>
 									<Badge variant='secondary'>{BOUNDARY_KIND_LABELS[boundarySource.kind]}</Badge>
 								</div>
 							)}

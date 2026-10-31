@@ -2,6 +2,7 @@ import { ChartStyleContext, DEFAULT_CHART_STYLE } from '@quarry/shared';
 import { storyThemeToCssVars } from '@quarry/shared/story-theme';
 import { storyBrandStyles } from '@quarry/shared/story-theme-brand-styles';
 import { useEffect, useMemo, useState } from 'react';
+import localStyles from './story-theme-provider.module.css';
 import type { ChartStyle } from '@quarry/shared';
 import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
 import type { CSSProperties, ReactNode } from 'react';
@@ -9,7 +10,6 @@ import type { CSSProperties, ReactNode } from 'react';
 import { PortalContainerContext } from '@/contexts/portal-container';
 import { useIsDarkMode } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
-import localStyles from './story-theme-provider.module.css';
 
 interface StoryThemeProviderProps {
 	theme: StoryTheme | null;

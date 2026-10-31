@@ -1,9 +1,9 @@
+import styles from './icon-segmented-toggle.module.css';
 import type { LucideIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import styles from './icon-segmented-toggle.module.css';
 
 export interface IconSegmentedToggleOption<Value extends string> {
 	value: Value;

@@ -4,6 +4,7 @@ import { ChartDisplay } from './display-chart';
 import { TableDisplay } from './display-table';
 import { McpTitle } from './mcp-title';
 import { ToolCallWrapper } from './tool-call-wrapper';
+import styles from './mcp.module.css';
 import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { ReactNode } from 'react';
@@ -13,7 +14,6 @@ import { useAgentMessagesSelector } from '@/contexts/agent.provider';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { getToolName } from '@/lib/ai';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './mcp.module.css';
 
 type McpContent = { type: string; text: string };
 type SqlData = Record<string, unknown>[];
@@ -69,11 +69,7 @@ const McpChartOutput = ({ chartBlock }: { chartBlock: string }) => {
 	}
 
 	if (!data || data.length === 0) {
-		return (
-			<div className={styles.mcpChartOutputDiv}>
-				Chart data unavailable
-			</div>
-		);
+		return <div className={styles.mcpChartOutputDiv}>Chart data unavailable</div>;
 	}
 
 	return (
@@ -157,7 +153,13 @@ const McpOutputContent = ({ text }: { text: string }) => {
 	const parsed = tryParseJson(text);
 
 	if (isArrayOfObjects(parsed)) {
-		return <TableDisplay data={parsed} showRowCount={false} tableContainerClassName={styles.mcpOutputContentTableDisplay} />;
+		return (
+			<TableDisplay
+				data={parsed}
+				showRowCount={false}
+				tableContainerClassName={styles.mcpOutputContentTableDisplay}
+			/>
+		);
 	}
 	if (Array.isArray(parsed)) {
 		return <ListView data={parsed} />;

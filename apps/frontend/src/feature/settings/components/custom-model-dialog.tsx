@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { ModelParametersFields } from './model-parameters-fields';
 import { useModelParameters } from './use-model-parameters';
+import styles from './custom-model-dialog.module.css';
 import type { CustomModelMetadata, ModelInferenceSettings } from '@quarry/api/agent/types/llm';
 import type { LlmProvider } from '@quarry/shared/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import styles from './custom-model-dialog.module.css';
 
 interface CustomModelDialogProps {
 	open: boolean;
@@ -86,7 +86,9 @@ export function CustomModelDialog({
 			<DialogContent className={styles.customModelDialogDialogContent}>
 				<DialogHeader>
 					<DialogTitle>Custom model settings</DialogTitle>
-					<DialogDescription className={styles.customModelDialogDialogDescription}>{modelId}</DialogDescription>
+					<DialogDescription className={styles.customModelDialogDialogDescription}>
+						{modelId}
+					</DialogDescription>
 				</DialogHeader>
 
 				<div className={styles.customModelDialogDiv}>
@@ -118,9 +120,7 @@ export function CustomModelDialog({
 										{field.label}
 									</label>
 									<div className={styles.customModelDialogDiv6}>
-										<span className={styles.customModelDialogSpan3}>
-											$
-										</span>
+										<span className={styles.customModelDialogSpan3}>$</span>
 										<Input
 											id={`custom-model-cost-${field.key}`}
 											type='number'

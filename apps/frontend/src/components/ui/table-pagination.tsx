@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
+import styles from './table-pagination.module.css';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import styles from './table-pagination.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 

@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
+import styles from './table-pagination-compact.module.css';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import styles from './table-pagination-compact.module.css';
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
@@ -41,7 +41,11 @@ export function TablePaginationCompact({
 						</SelectTrigger>
 						<SelectContent align='end' className={styles.tablePaginationCompactSelectContent}>
 							{pageSizeOptions.map((size) => (
-								<SelectItem key={size} value={`${size}`} className={styles.tablePaginationCompactSelectItem}>
+								<SelectItem
+									key={size}
+									value={`${size}`}
+									className={styles.tablePaginationCompactSelectItem}
+								>
 									{size}
 								</SelectItem>
 							))}

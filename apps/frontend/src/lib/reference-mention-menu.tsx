@@ -8,13 +8,13 @@ import {
 	toStoryReferenceMentionId,
 } from '@quarry/shared';
 import { FOLDER_SYSTEM_TYPE } from '@quarry/shared/types';
+import styles from './reference-mention-menu.module.css';
 import type { FolderSystemType } from '@quarry/shared/types';
 import type { MentionOption } from 'prompt-mentions';
 import type { ApiOutputs } from '@/lib/api-types';
 import type { MentionOrigin, MentionOriginNode } from '@/feature/chat/components/mention-origin-preview';
 import { DatabaseIcon } from '@/components/ui/database-icon';
 import StoryIcon from '@/components/ui/story-icon';
-import styles from './reference-mention-menu.module.css';
 
 type RouterOutputs = ApiOutputs;
 export type ReferenceableStory = RouterOutputs['story']['listReferenceable'][number];
@@ -168,7 +168,10 @@ function buildTableTree(objects: DatabaseObject[], origins: Map<string, MentionO
 
 function buildDatabase(tables: DatabaseObject[], origins: Map<string, MentionOrigin>): MentionOption {
 	const { type, database } = tables[0];
-	const databaseNode = { label: database, icon: <DatabaseIcon dialect={type} className={styles.storyIconStoryIcon} /> };
+	const databaseNode = {
+		label: database,
+		icon: <DatabaseIcon dialect={type} className={styles.storyIconStoryIcon} />,
+	};
 	const schemas = [...groupBy(tables, (obj) => obj.schema).values()].map((schemaTables) =>
 		buildSchema(schemaTables, databaseNode, origins),
 	);

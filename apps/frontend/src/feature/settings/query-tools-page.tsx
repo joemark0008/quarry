@@ -1,9 +1,7 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { QueryToolsSettings } from '@/feature/settings/components/query-tools/query-tools-settings';
 
 const Route = getRouteApi('/_protected/settings/project/query-tools');
-
 
 export function QueryToolsPage() {
 	const { sql } = Route.useSearch();

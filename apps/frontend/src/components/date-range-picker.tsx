@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarIcon, Check, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { isSameDay, startOfDay } from 'date-fns';
+import styles from './date-range-picker.module.css';
 import type { DateRange } from 'react-day-picker';
 
 import type { DateRangeField, DateRangePreset, DateRangeSelection } from '@/lib/date-range';
@@ -19,10 +20,8 @@ import {
 	selectDay,
 } from '@/lib/date-range';
 import { cn } from '@/lib/utils';
-import styles from './date-range-picker.module.css';
 
-const TODAY_CLASS_NAME =
-	styles.tODAYCLASSNAME;
+const TODAY_CLASS_NAME = styles.tODAYCLASSNAME;
 
 export function DateRangePicker({
 	value,
@@ -83,11 +82,7 @@ export function DateRangePicker({
 	return (
 		<Popover open={isOpen} onOpenChange={handleOpenChange}>
 			<PopoverTrigger asChild>
-				<Button
-					variant='outline'
-					size='sm'
-					className={cn(styles.dateRangePickerButton, className)}
-				>
+				<Button variant='outline' size='sm' className={cn(styles.dateRangePickerButton, className)}>
 					<CalendarIcon className={styles.dateRangePickerCalendarIcon} />
 					<DateRangeTriggerLabel value={value} placeholder={placeholder} />
 					<ChevronDown className={styles.dateRangePickerChevronDown} />
@@ -121,10 +116,20 @@ export function DateRangePicker({
 				<div className={styles.dateRangePickerDiv3}>
 					<DateRangeHint selection={selection} />
 					<div className={styles.dateRangePickerDiv4}>
-						<Button variant='ghost' size='sm' className={styles.dateRangePickerButton2} onClick={() => setIsOpen(false)}>
+						<Button
+							variant='ghost'
+							size='sm'
+							className={styles.dateRangePickerButton2}
+							onClick={() => setIsOpen(false)}
+						>
 							Cancel
 						</Button>
-						<Button size='sm' className={styles.dateRangePickerButton3} disabled={!isDraftComplete} onClick={handleApply}>
+						<Button
+							size='sm'
+							className={styles.dateRangePickerButton3}
+							disabled={!isDraftComplete}
+							onClick={handleApply}
+						>
 							Apply
 						</Button>
 					</div>
@@ -163,9 +168,7 @@ function DateRangePresetList({
 
 	return (
 		<div className={styles.dateRangePresetListDiv}>
-			<span className={styles.dateRangePresetListSpan}>
-				Quick select
-			</span>
+			<span className={styles.dateRangePresetListSpan}>Quick select</span>
 			{DATE_RANGE_PRESETS.map((preset) => {
 				const isSelected = selectedPresetId === preset.id;
 				return (
@@ -275,9 +278,7 @@ function DateRangeHint({ selection }: { selection: DateRangeSelection }) {
 function DateRangeStep({ step, message }: { step: 1 | 2; message: string }) {
 	return (
 		<span className={styles.dateRangeStepSpan}>
-			<span className={styles.dateRangeStepSpan2}>
-				{step}
-			</span>
+			<span className={styles.dateRangeStepSpan2}>{step}</span>
 			{message}
 		</span>
 	);

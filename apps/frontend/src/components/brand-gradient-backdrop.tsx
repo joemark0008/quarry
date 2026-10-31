@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
 import styles from './brand-gradient-backdrop.module.css';
+import type { CSSProperties } from 'react';
 
 type BrandGradientBackdropProps = {
 	color: string;

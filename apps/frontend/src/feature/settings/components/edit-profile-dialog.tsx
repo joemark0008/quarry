@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useForm } from '@tanstack/react-form';
 
+import styles from './edit-profile-dialog.module.css';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import styles from './edit-profile-dialog.module.css';
 
 interface EditProfileDialogProps {
 	open: boolean;

@@ -3,12 +3,12 @@
 	width: 100%;
 }
 .warehouseSettingsPageP {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-danger);
 }
 .warehouseSettingsPageP2 {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
@@ -45,7 +45,7 @@
 	flex: 1;
 }
 .connectionRowDiv4 {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -88,7 +88,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .fieldSpan {
@@ -132,7 +132,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .contextSyncCardPre {

@@ -1,14 +1,14 @@
 import { buildChart, formatChartValue } from '@quarry/shared';
 import { getGridTemplateColumns } from '@quarry/shared/story-segments';
+import { StoryThemeProvider } from './story-theme-provider';
+import styles from './story-thumbnail.module.css';
 import type { ReactNode } from 'react';
 import type { StorySummary, SummarySegment } from '@quarry/shared/types';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { StoryTheme } from '@quarry/shared/story-theme';
 import type { QueryDataMap } from './story-embeds';
 import { ChartContainer } from '@/components/ui/chart';
-import { StoryThemeProvider } from './story-theme-provider';
 import { cn } from '@/lib/utils';
-import styles from './story-thumbnail.module.css';
 
 export const SHEET_VISUAL = styles.sHEETVISUAL;
 
@@ -100,13 +100,8 @@ function FlatStorySheet({
 }) {
 	return (
 		<div className={cn(styles.flatStorySheetDiv, className)}>
-			<StoryThemeProvider
-				theme={theme ?? null}
-				className={styles.flatStorySheetStoryThemeProvider}
-			>
-				<div className={styles.flatStorySheetDiv2}>
-					{children}
-				</div>
+			<StoryThemeProvider theme={theme ?? null} className={styles.flatStorySheetStoryThemeProvider}>
+				<div className={styles.flatStorySheetDiv2}>{children}</div>
 			</StoryThemeProvider>
 		</div>
 	);
@@ -116,37 +111,18 @@ export function FolderThumbnail({ theme }: { theme?: StoryTheme | null } = {}) {
 	return (
 		<div className={styles.folderThumbnailDiv}>
 			<StoryThemeProvider theme={theme ?? null} className={styles.folderThumbnailStoryThemeProvider}>
-				<div
-					className={cn(
-						styles.folderThumbnailDiv2,
-						SHEET_VISUAL,
-					)}
-					style={{ transform: SHEET_TRANSFORM }}
-				>
+				<div className={cn(styles.folderThumbnailDiv2, SHEET_VISUAL)} style={{ transform: SHEET_TRANSFORM }}>
 					<div className={styles.folderThumbnailDiv3} />
 				</div>
 
+				<div className={cn(styles.folderThumbnailDiv4, SHEET_VISUAL)} style={{ transform: SHEET_TRANSFORM }} />
+
 				<div
-					className={cn(
-						styles.folderThumbnailDiv4,
-						SHEET_VISUAL,
-					)}
+					className={cn(styles.folderThumbnailDiv5, SHEET_SURFACE, SHEET_VISUAL)}
 					style={{ transform: SHEET_TRANSFORM }}
 				/>
 
-				<div
-					className={cn(
-						styles.folderThumbnailDiv5,
-						SHEET_SURFACE,
-						SHEET_VISUAL,
-					)}
-					style={{ transform: SHEET_TRANSFORM }}
-				/>
-
-				<div
-					className={styles.folderThumbnailDiv6}
-					style={{ transform: SHEET_TRANSFORM }}
-				>
+				<div className={styles.folderThumbnailDiv6} style={{ transform: SHEET_TRANSFORM }}>
 					<div
 						className={styles.folderThumbnailDiv7}
 						style={{
@@ -329,16 +305,16 @@ function MarkdownTablePreview({ lines, variant }: { lines: string[]; variant: Th
 		>
 			<div className={styles.markdownTablePreviewDiv4}>
 				{header.slice(0, 3).map((cell, i) => (
-					<span
-						key={i}
-						className={cn(styles.markdownTablePreviewSpan, textSize(variant))}
-					>
+					<span key={i} className={cn(styles.markdownTablePreviewSpan, textSize(variant))}>
 						<InlineMarkdown text={cell} />
 					</span>
 				))}
 			</div>
 			{visibleBody.map((row, i) => (
-				<div key={i} className={cn(styles.markdownTablePreviewDiv5, i % 2 === 1 && styles.markdownTablePreviewDiv6)}>
+				<div
+					key={i}
+					className={cn(styles.markdownTablePreviewDiv5, i % 2 === 1 && styles.markdownTablePreviewDiv6)}
+				>
 					{row.slice(0, 3).map((cell, j) => (
 						<span key={j} className={cn(styles.markdownTablePreviewSpan2, textSize(variant))}>
 							<InlineMarkdown text={cell} />
@@ -416,13 +392,9 @@ function KpiSilhouette({
 					{visibleValues.map((item, i) => (
 						<div key={`${item.label}-${i}`} className={styles.kpiSilhouetteDiv2}>
 							<div className={styles.kpiSilhouetteDiv3}>
-								<div className={styles.kpiSilhouetteDiv4}>
-									{item.label}
-								</div>
+								<div className={styles.kpiSilhouetteDiv4}>{item.label}</div>
 							</div>
-							<div className={styles.kpiSilhouetteDiv5}>
-								{item.value}
-							</div>
+							<div className={styles.kpiSilhouetteDiv5}>{item.value}</div>
 						</div>
 					))}
 				</div>
@@ -430,13 +402,17 @@ function KpiSilhouette({
 		}
 
 		return (
-			<div className={cn(styles.kpiSilhouetteDiv6, visibleValues.length > 1 ? styles.kpiSilhouetteDiv7 : styles.kpiSilhouetteDiv8, styles.kpiSilhouetteDiv9)}>
+			<div
+				className={cn(
+					styles.kpiSilhouetteDiv6,
+					visibleValues.length > 1 ? styles.kpiSilhouetteDiv7 : styles.kpiSilhouetteDiv8,
+					styles.kpiSilhouetteDiv9,
+				)}
+			>
 				{visibleValues.map((item, i) => (
 					<div key={`${item.label}-${i}`} className={styles.kpiSilhouetteDiv10}>
 						<div className={styles.kpiSilhouetteDiv11}>{item.label}</div>
-						<div className={styles.kpiSilhouetteDiv12}>
-							{item.value}
-						</div>
+						<div className={styles.kpiSilhouetteDiv12}>{item.value}</div>
 					</div>
 				))}
 			</div>
@@ -538,7 +514,10 @@ function getKpiPreviewValues({
 function PreviewBlock({ title, children, variant }: { title: string; children: ReactNode; variant: ThumbnailVariant }) {
 	return (
 		<div
-			className={cn(styles.previewBlockDiv, variant === 'flat' ? styles.previewBlockDiv2 : styles.previewBlockDiv3)}
+			className={cn(
+				styles.previewBlockDiv,
+				variant === 'flat' ? styles.previewBlockDiv2 : styles.previewBlockDiv3,
+			)}
 			style={{
 				borderColor: 'var(--app-line)',
 				borderRadius: thumbnailBlockRadius(variant),
@@ -602,7 +581,10 @@ function RechartsThumbnail({
 		<ChartContainer
 			config={config}
 			className={styles.rechartsThumbnailChartContainer}
-			contentClassName={cn(styles.rechartsThumbnailChartContainer2, variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.rechartsThumbnailChartContainer4)}
+			contentClassName={cn(
+				styles.rechartsThumbnailChartContainer2,
+				variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.rechartsThumbnailChartContainer4,
+			)}
 		>
 			{chart}
 		</ChartContainer>
@@ -661,14 +643,34 @@ function TableSilhouette({ variant }: { variant: ThumbnailVariant }) {
 
 	return (
 		<div className={styles.markdownTablePreviewDiv}>
-			<div className={cn(variant === 'flat' ? styles.tableSilhouetteDiv : styles.tableSilhouetteDiv2, styles.tableSilhouetteDiv3)} />
+			<div
+				className={cn(
+					variant === 'flat' ? styles.tableSilhouetteDiv : styles.tableSilhouetteDiv2,
+					styles.tableSilhouetteDiv3,
+				)}
+			/>
 			{rows.map((i) => (
 				<div key={i} className={cn(styles.tableSilhouetteDiv4, i % 2 === 1 && styles.markdownTablePreviewDiv6)}>
-					<div className={cn(styles.tableSilhouetteDiv5, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
+					<div
+						className={cn(
+							styles.tableSilhouetteDiv5,
+							variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7,
+						)}
+					/>
 					<div className={styles.tableSilhouetteDiv8} />
-					<div className={cn(styles.tableSilhouetteDiv9, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
+					<div
+						className={cn(
+							styles.tableSilhouetteDiv9,
+							variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7,
+						)}
+					/>
 					<div className={styles.tableSilhouetteDiv8} />
-					<div className={cn(styles.tableSilhouetteDiv5, variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7)} />
+					<div
+						className={cn(
+							styles.tableSilhouetteDiv5,
+							variant === 'flat' ? styles.tableSilhouetteDiv6 : styles.tableSilhouetteDiv7,
+						)}
+					/>
 				</div>
 			))}
 		</div>
@@ -690,7 +692,10 @@ function MapSilhouette({ color = 'var(--chart-1)', variant }: { color?: string; 
 				viewBox='0 0 60 36'
 				width='100%'
 				height='100%'
-				className={cn(styles.mapSilhouetteSvg, variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.mapSilhouetteSvg2)}
+				className={cn(
+					styles.mapSilhouetteSvg,
+					variant === 'flat' ? styles.rechartsThumbnailChartContainer3 : styles.mapSilhouetteSvg2,
+				)}
 				style={{ color }}
 			>
 				<rect x='0' y='0' width='60' height='36' rx='4px' fill='currentColor' opacity={0.06} />
@@ -758,7 +763,13 @@ function GridSilhouette({
 	const visibleChildren = widths !== null ? children.slice(0, widths.length * 2) : children.slice(0, gridCols * 2);
 
 	return (
-		<div className={cn(styles.kpiSilhouetteDiv6, variant === 'flat' ? styles.gridSilhouetteDiv : styles.gridSilhouetteDiv2)} style={{ gridTemplateColumns }}>
+		<div
+			className={cn(
+				styles.kpiSilhouetteDiv6,
+				variant === 'flat' ? styles.gridSilhouetteDiv : styles.gridSilhouetteDiv2,
+			)}
+			style={{ gridTemplateColumns }}
+		>
 			{visibleChildren.map((child, i) => (
 				<SegmentSilhouette key={i} segment={child} variant={variant} queryData={queryData} />
 			))}

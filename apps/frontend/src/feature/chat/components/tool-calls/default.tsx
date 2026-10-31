@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import styles from './default.module.css';
 import type { ToolCallComponentProps } from '.';
 import { getToolName } from '@/lib/ai';
 import { Spinner } from '@/components/ui/spinner';
 import { Expandable } from '@/components/ui/expandable';
 import { useToolCallContext } from '@/contexts/tool-call';
-import styles from './default.module.css';
 
 export const DefaultToolCall = ({ toolPart }: ToolCallComponentProps) => {
 	const [isExpanded, setIsExpanded] = useState(false);

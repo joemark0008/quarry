@@ -1,8 +1,8 @@
 import { Streamdown } from 'streamdown';
+import styles from './subagent-report.module.css';
 import { markdownPlugins } from '@/lib/markdown';
 import { cn } from '@/lib/utils';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './subagent-report.module.css';
 
 export function SubagentReport({ report, className }: { report: string; className?: string }) {
 	return (

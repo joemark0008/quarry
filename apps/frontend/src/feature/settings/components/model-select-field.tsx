@@ -1,5 +1,6 @@
 import { AlertTriangle } from 'lucide-react';
 import { useId } from 'react';
+import styles from './model-select-field.module.css';
 import type { ReactNode } from 'react';
 import type { LlmProvider, LlmSelectedModel } from '@quarry/shared/types';
 
@@ -7,7 +8,6 @@ import { LlmProviderIcon } from '@/components/ui/llm-provider-icon';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import styles from './model-select-field.module.css';
 
 export type AvailableModel = { provider: LlmProvider; modelId: string; name: string; baseUrl: string | null };
 export type ResolvedModel = { provider: LlmProvider; modelId: string; name: string };
@@ -78,7 +78,11 @@ export function ModelSelectField({
 				{description}
 			</p>
 			<Select value={value ? modelValue(value) : DEFAULT_VALUE} onValueChange={handleChange} disabled={disabled}>
-				<SelectTrigger className={styles.modelSelectFieldSelectTrigger} aria-labelledby={labelId} aria-describedby={descriptionId}>
+				<SelectTrigger
+					className={styles.modelSelectFieldSelectTrigger}
+					aria-labelledby={labelId}
+					aria-describedby={descriptionId}
+				>
 					<SelectValue>
 						{value ? (
 							<div className={styles.modelSelectFieldDiv2}>
@@ -102,7 +106,11 @@ export function ModelSelectField({
 					</SelectItem>
 					{availableModels.map((model) => (
 						<SelectItem key={modelValue(model)} value={modelValue(model)}>
-							<LlmProviderIcon provider={model.provider} baseUrl={model.baseUrl} className={styles.modelSelectFieldLlmProviderIcon} />
+							<LlmProviderIcon
+								provider={model.provider}
+								baseUrl={model.baseUrl}
+								className={styles.modelSelectFieldLlmProviderIcon}
+							/>
 							{model.name}
 						</SelectItem>
 					))}

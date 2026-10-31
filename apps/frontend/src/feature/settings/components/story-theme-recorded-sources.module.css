@@ -14,7 +14,7 @@
 	background-color: color-mix(in oklab, var(--app-fill) 30%, transparent);
 	padding-inline: 0.75rem;
 	padding-block: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .recordedSourcesDiv {
@@ -31,7 +31,7 @@
 	padding-inline: 0.75rem;
 	padding-block: 1rem;
 	text-align: center;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
@@ -106,7 +106,7 @@
 .generationSummaryP {
 	min-width: 0px;
 	flex: 1;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
 .generationSummaryButton {

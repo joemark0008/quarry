@@ -1,7 +1,7 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { Link, useNavigate, useRouter } from '@tanstack/react-router';
+import { getRouteApi, Link, useNavigate, useRouter } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { useEffect, useState } from 'react';
+import styles from './signup-page.module.css';
 import { signUp } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/feature/auth/components/auth-form';
 import { EmailVerificationPending } from '@/feature/auth/components/email-verification-pending';
@@ -11,10 +11,8 @@ import { invalidateSession } from '@/lib/session';
 import { rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { usePublicConfig } from '@/hooks/use-public-config';
-import styles from './signup-page.module.css';
 
 const Route = getRouteApi('/_public/signup');
-
 
 export function SignUp() {
 	const navigate = useNavigate();
@@ -107,7 +105,13 @@ export function SignUp() {
 				</>
 			}
 		>
-			<FormTextField form={form} name='name' title='Name' placeholder='Joe' className={styles.signUpFormTextField} />
+			<FormTextField
+				form={form}
+				name='name'
+				title='Name'
+				placeholder='Joe'
+				className={styles.signUpFormTextField}
+			/>
 			<FormTextField
 				form={form}
 				name='email'
@@ -116,7 +120,13 @@ export function SignUp() {
 				placeholder='joe@gmail.com'
 				className={styles.signUpFormTextField}
 			/>
-			<FormTextField form={form} name='password' type='password' title='Password' className={styles.signUpFormTextField2} />
+			<FormTextField
+				form={form}
+				name='password'
+				type='password'
+				title='Password'
+				className={styles.signUpFormTextField2}
+			/>
 		</AuthForm>
 	);
 }

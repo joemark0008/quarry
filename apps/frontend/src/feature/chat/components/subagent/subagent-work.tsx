@@ -1,10 +1,10 @@
 import { Check, Minus, X } from 'lucide-react';
 import { useState } from 'react';
+import { useSubagentDuration } from './use-subagent-duration';
+import styles from './subagent-work.module.css';
 import type { task } from '@quarry/shared/tools';
 import { Expandable } from '@/components/ui/expandable';
 import { Spinner } from '@/components/ui/spinner';
-import { useSubagentDuration } from './use-subagent-duration';
-import styles from './subagent-work.module.css';
 
 /** The tool calls a subagent made, folded behind a one-line "Worked for …" summary. */
 export function SubagentWork({ output, isSettled }: { output: task.Output | undefined; isSettled: boolean }) {

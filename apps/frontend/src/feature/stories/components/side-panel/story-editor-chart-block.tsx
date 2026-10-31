@@ -6,10 +6,10 @@ import { StoryChartEmbed } from './story-chart-embed';
 import { StoryBlockDragGrip, StoryBlockDropZones, useStoryBlockDrag } from './story-editor-block-drag';
 import { SelectedBlockPositionsContext } from './story-block-selection-context';
 import { decodeFromAttr } from './story-editor-utils';
+import styles from './story-editor-chart-block.module.css';
 import type { ReactNodeViewProps } from '@tiptap/react';
 import { StoryBlock } from '@/feature/stories/components/story-block';
 import { EditorStoryChartEditProvider } from '@/contexts/story-chart-edit';
-import styles from './story-editor-chart-block.module.css';
 
 function ChartBlockView({ node, editor, getPos, updateAttributes }: ReactNodeViewProps) {
 	const rawTag = node.attrs.rawTag as string;
@@ -35,16 +35,19 @@ function ChartBlockView({ node, editor, getPos, updateAttributes }: ReactNodeVie
 	if (!chart) {
 		return (
 			<NodeViewWrapper draggable data-type='chart-block'>
-				<div className={styles.chartBlockViewDiv}>
-					Invalid chart block
-				</div>
+				<div className={styles.chartBlockViewDiv}>Invalid chart block</div>
 			</NodeViewWrapper>
 		);
 	}
 
 	return (
 		<NodeViewWrapper draggable data-type='chart-block'>
-			<div className={`${styles.chartBlockViewDiv2} group`} draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+			<div
+				className={`${styles.chartBlockViewDiv2} group`}
+				draggable
+				onDragStart={handleDragStart}
+				onDragEnd={handleDragEnd}
+			>
 				<StoryBlockDropZones node={node} editor={editor} getPos={getPos} />
 				<div contentEditable={false} className={styles.chartBlockViewDiv3}>
 					<StoryBlockDragGrip node={node} editor={editor} getPos={getPos} />

@@ -14,13 +14,11 @@ import {
 	RefreshCw,
 	X,
 } from 'lucide-react';
+import { ContextWorktreeUpdateDialog, isDirtyWorktreeConflict } from './context-worktree-update-dialog';
+import styles from './context-git-panel.module.css';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ContextChangedFile } from '@quarry/shared/types';
 
-import {
-	ContextWorktreeUpdateDialog,
-	isDirtyWorktreeConflict,
-} from './context-worktree-update-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
@@ -40,7 +38,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { useSidebarSectionOpen } from '@/hooks/use-sidebar-section-open';
 import { cn } from '@/lib/utils';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
-import styles from './context-git-panel.module.css';
 
 interface ContextGitPanelProps {
 	selectedDiffPath: string | null;
@@ -457,11 +454,11 @@ export function ContextGitPanel({
 										</div>
 										{currentBranch === defaultBranch && commitBranchName && (
 											<div className={styles.contextGitPanelDiv10}>
-												<p
-													className={styles.contextGitPanelP}
-													title={commitBranchName}
-												>
-													Creates branch <span className={styles.contextGitPanelSpan2}>{commitBranchName}</span>
+												<p className={styles.contextGitPanelP} title={commitBranchName}>
+													Creates branch{' '}
+													<span className={styles.contextGitPanelSpan2}>
+														{commitBranchName}
+													</span>
 												</p>
 												<Button
 													variant='ghost-muted'
@@ -725,9 +722,7 @@ function BranchMenu({
 							onSelect={() => onSwitch(branch)}
 						>
 							<span className={styles.branchMenuSpan2}>{branch}</span>
-							{branch === defaultBranch && (
-								<span className={styles.branchMenuSpan3}>(default)</span>
-							)}
+							{branch === defaultBranch && <span className={styles.branchMenuSpan3}>(default)</span>}
 						</DropdownMenuCheckboxItem>
 					))}
 					{reason && <div className={styles.branchMenuDiv2}>{reason}</div>}
@@ -775,12 +770,7 @@ function ChangedFiles({
 		<section aria-label='Changed files' className={styles.changedFilesSection}>
 			{files.length > 0 && (
 				<div className={styles.changedFilesDiv}>
-					<Button
-						variant='ghost-muted'
-						size='sm'
-						className={styles.changedFilesButton}
-						onClick={onToggleAll}
-					>
+					<Button variant='ghost-muted' size='sm' className={styles.changedFilesButton} onClick={onToggleAll}>
 						<span className={styles.branchMenuSpan}>{allSelected ? 'Select None' : 'Select All'}</span>
 					</Button>
 					<Button
@@ -852,12 +842,7 @@ function ChangedFileRow({
 	const ChangeIcon = change.icon;
 
 	return (
-		<div
-			className={cn(
-				styles.changedFileRowDiv,
-				isViewing && styles.changedFileRowDiv2,
-			)}
-		>
+		<div className={cn(styles.changedFileRowDiv, isViewing && styles.changedFileRowDiv2)}>
 			<Checkbox
 				className={styles.changedFileRowCheckbox}
 				checked={isSelected}

@@ -1,8 +1,8 @@
 import { Sun, Moon, Monitor } from 'lucide-react';
+import styles from './theme-selector.module.css';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/theme.provider';
 import { cn } from '@/lib/utils';
-import styles from './theme-selector.module.css';
 
 const themeOptions = [
 	{ value: 'light', label: 'Light', icon: Sun },
@@ -29,9 +29,7 @@ export const ThemeSelector = () => {
 						size='sm'
 						className={cn(
 							styles.themeSelectorButton,
-							isSelected
-								? styles.themeSelectorButton2
-								: styles.themeSelectorButton3,
+							isSelected ? styles.themeSelectorButton2 : styles.themeSelectorButton3,
 						)}
 					>
 						<Icon className={styles.themeSelectorIcon} />

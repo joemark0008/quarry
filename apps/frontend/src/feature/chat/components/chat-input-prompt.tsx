@@ -8,9 +8,10 @@ import { DATABASE_MENTION_TRIGGER, SKILL_MENTION_TRIGGER, STORY_REFERENCE_MENTIO
 import { story } from '@quarry/shared/tools';
 import { Prompt } from 'prompt-mentions';
 import { MentionOriginPreview, withOriginMarker } from './mention-origin-preview';
-import StoryIcon from '@/components/ui/story-icon';
+import styles from './chat-input-prompt.module.css';
 import type { MentionOption, PromptHandle, PromptTheme, SelectedMention } from 'prompt-mentions';
 import type { RefObject } from 'react';
+import StoryIcon from '@/components/ui/story-icon';
 import { useCustomStoriesEnabled } from '@/hooks/use-custom-stories-enabled';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
 import { isMenuItemMarkedWith } from '@/hooks/use-highlighted-mention';
@@ -20,7 +21,6 @@ import { toStoryReferenceOption } from '@/lib/reference-mention-menu';
 import { cn } from '@/lib/utils';
 import { skillApi } from '@/lib/skill-api';
 import { useCurrentProject } from '@/hooks/use-current-project';
-import styles from './chat-input-prompt.module.css';
 
 export const STORY_MENTION_ID = story.MENTION_ID;
 export const CUSTOM_STORY_MENTION_ID = story.CUSTOM_MENTION_ID;

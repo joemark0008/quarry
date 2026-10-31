@@ -1,10 +1,10 @@
 .contextWorktreeUpdateDialogDialogDescription {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }
 .contextWorktreeUpdateDialogP {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 600;
 	font-weight: 600;
@@ -12,7 +12,7 @@
 }
 .contextWorktreeUpdateDialogP2 {
 	text-align: center;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-red-500);
 }

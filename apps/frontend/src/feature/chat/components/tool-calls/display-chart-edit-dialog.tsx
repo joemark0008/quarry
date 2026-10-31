@@ -13,30 +13,37 @@ import { ChartArea, ChartBar, ChartColumn, ChartColumnIncreasing, ChartLine, Plu
 import { useEffect, useId, useMemo, useState } from 'react';
 import { usePanelRef } from 'react-resizable-panels';
 
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChartEditorDataPanel, ChartEditorDataRail } from './chart-editor-data-panel';
 import { ChartEditorPreview } from './chart-editor-preview';
 import { ChartEditorQueryPane } from './chart-editor-query-pane';
 import { ChartTypePicker, chartTypeLabel } from './chart-type-picker';
+import styles from './display-chart-edit-dialog.module.css';
 import type { ColumnValueKind } from '@/lib/chart-selection-summary';
 import type { SourceQuery } from '@/lib/execute-sql-messages';
 import type { LucideIcon } from 'lucide-react';
 import type { executeSql } from '@quarry/shared/tools';
 import type { ChartType } from '@quarry/shared/chart-types';
 import type { UIMessage, UIToolPart } from '@quarry/api/agent/types/chat';
+import { Button } from '@/components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { acceptNumericKind, useColumnDropTarget, useDraggedColumnKind } from '@/hooks/use-column-drag';
 import { chartsApi } from '@/lib/charts-api';
 import { cn } from '@/lib/utils';
 import { resolveCssVariableColorHex } from '@/lib/css-color';
 import { summarizeChartSelection } from '@/lib/chart-selection-summary';
 import { useAgentContext, useAgentMessages, useOptionalAgentContext } from '@/contexts/agent.provider';
-import styles from './display-chart-edit-dialog.module.css';
 
 const X_AXIS_TYPE_OPTIONS: { value: NonNullable<displayChart.XAxisType> | 'auto'; label: string }[] = [
 	{ value: 'auto', label: 'Auto' },
@@ -189,7 +196,10 @@ export function ChartConfigEditDialog({
 						{description}
 					</DialogDescription>
 				</DialogHeader>
-				<ResizablePanelGroup orientation='horizontal' className={styles.chartConfigEditDialogResizablePanelGroup}>
+				<ResizablePanelGroup
+					orientation='horizontal'
+					className={styles.chartConfigEditDialogResizablePanelGroup}
+				>
 					<ResizablePanel
 						id='data'
 						panelRef={dataPanelRef}
@@ -223,10 +233,17 @@ export function ChartConfigEditDialog({
 						)}
 					</ResizablePanel>
 					<ResizableSeparator />
-					<ResizablePanel id='workspace' className={styles.chartConfigEditDialogResizablePanel} style={PANEL_OVERFLOW_HIDDEN}>
+					<ResizablePanel
+						id='workspace'
+						className={styles.chartConfigEditDialogResizablePanel}
+						style={PANEL_OVERFLOW_HIDDEN}
+					>
 						{canEditQuery && editableQuery && queryEditorState !== 'unopened' && (
 							<ChartEditorQueryPane
-								className={cn(queryEditorState === styles.chartConfigEditDialogChartEditorQueryPane && styles.chartConfigEditDialogChartEditorQueryPane)}
+								className={cn(
+									queryEditorState === styles.chartConfigEditDialogChartEditorQueryPane &&
+										styles.chartConfigEditDialogChartEditorQueryPane,
+								)}
 								input={editableQuery.input}
 								output={editableQuery.output}
 								toolCallId={editableQuery.toolCallId}
@@ -234,8 +251,16 @@ export function ChartConfigEditDialog({
 								onClose={() => setQueryEditorState('hidden')}
 							/>
 						)}
-						<div className={cn(styles.chartConfigEditDialogDiv, isEditingQuery && styles.chartConfigEditDialogChartEditorQueryPane)}>
-							<ResizablePanelGroup orientation='horizontal' className={styles.chartConfigEditDialogResizablePanelGroup}>
+						<div
+							className={cn(
+								styles.chartConfigEditDialogDiv,
+								isEditingQuery && styles.chartConfigEditDialogChartEditorQueryPane,
+							)}
+						>
+							<ResizablePanelGroup
+								orientation='horizontal'
+								className={styles.chartConfigEditDialogResizablePanelGroup}
+							>
 								<ResizablePanel
 									id='form'
 									defaultSize={FORM_PANEL_DEFAULT_WIDTH}
@@ -994,13 +1019,7 @@ function ColumnSelect({ value, columns, onChange, draggedColumnKind, acceptsKind
 function SeriesDropZone({ onDrop }: { onDrop: (column: string) => void }) {
 	const { isOver, dropTargetProps } = useColumnDropTarget({ onDrop, acceptsKind: acceptNumericKind });
 	return (
-		<div
-			{...dropTargetProps}
-			className={cn(
-				styles.seriesDropZoneDiv,
-				isOver && styles.seriesDropZoneDiv2,
-			)}
-		>
+		<div {...dropTargetProps} className={cn(styles.seriesDropZoneDiv, isOver && styles.seriesDropZoneDiv2)}>
 			<Plus className={styles.chartConfigEditFormPlus} /> Drop to add a series
 		</div>
 	);
@@ -1215,10 +1234,7 @@ function SeriesValueFormatFields({
 					disabled={!unit}
 					onValueChange={(value) => onUnitChange(unit, value as UnitPlacement)}
 				>
-					<SelectTrigger
-						aria-label='Unit placement'
-						className={styles.seriesValueFormatFieldsSelectTrigger}
-					>
+					<SelectTrigger aria-label='Unit placement' className={styles.seriesValueFormatFieldsSelectTrigger}>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent className={styles.seriesValueFormatFieldsSelectContent}>

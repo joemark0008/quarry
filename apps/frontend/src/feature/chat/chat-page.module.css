@@ -178,7 +178,7 @@
 .chatPageButton2 {
 	border-radius: calc(infinity * 1px);
 	background-color: var(--app-violet);
-	color: #fff;
+	color: var(--app-white);
 	--fx-shadow:
 		0 1px 3px 0 var(--fx-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--fx-shadow-color, rgb(0 0 0 / 0.1));
 	box-shadow:

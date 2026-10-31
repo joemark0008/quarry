@@ -1,8 +1,8 @@
 import { LogOut, Pen } from 'lucide-react';
+import styles from './profile-card.module.css';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import styles from './profile-card.module.css';
 
 interface UserProfileCardProps {
 	name?: string;

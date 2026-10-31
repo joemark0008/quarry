@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react';
 import { QueryBuilderPanel } from './query-builder-panel';
 import { QueryToolParameters } from './query-tool-parameters';
 import { QueryToolSqlEditor } from './query-tool-sql-editor';
+import styles from './query-tool-editor.module.css';
 import type { GeneratedQuery } from '@/lib/query-builder';
 import type { QueryToolParameter } from '@quarry/shared/query-tools';
 import type { ProjectQueryTool, QueryToolPreview } from '@/lib/api-types';
@@ -24,7 +25,6 @@ import { TabBar } from '@/components/ui/tab-bar';
 import { Textarea } from '@/components/ui/textarea';
 import { WarehouseConnectionsDocument } from '@/graphql/generated/graphql';
 import { useQueryToolMutations } from '@/queries/use-query-tools';
-import styles from './query-tool-editor.module.css';
 
 type EditorTab = 'sql' | 'builder';
 

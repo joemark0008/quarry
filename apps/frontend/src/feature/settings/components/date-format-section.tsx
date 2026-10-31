@@ -7,13 +7,13 @@ import {
 	formatDateValue,
 	SUPPORTED_DATE_FORMAT_TOKENS,
 } from '@quarry/shared/date';
+import styles from './date-format-section.module.css';
 import type { DateFormatPreset } from '@quarry/shared/date';
 
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { projectApi } from '@/lib/project-api';
-import styles from './date-format-section.module.css';
 
 interface DateFormatSectionProps {
 	isAdmin: boolean;
@@ -132,7 +132,11 @@ export function DateFormatSection({ isAdmin }: DateFormatSectionProps) {
 					</SelectTrigger>
 					<SelectContent>
 						{PRESET_OPTIONS.map((option) => (
-							<SelectItem key={option.value} value={option.value} className={styles.dateFormatSectionSelectItem}>
+							<SelectItem
+								key={option.value}
+								value={option.value}
+								className={styles.dateFormatSectionSelectItem}
+							>
 								<div className={styles.dateFormatSectionDiv2}>
 									<span>{option.label}</span>
 									<span className={styles.dateFormatSectionSpan}>{option.description}</span>

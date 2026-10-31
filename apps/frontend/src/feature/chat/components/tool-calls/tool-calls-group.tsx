@@ -1,5 +1,6 @@
 import { useState, useEffect, memo, useMemo } from 'react';
 import { McpToolCallsSubGroup } from './mcp-sub-group';
+import styles from './tool-calls-group.module.css';
 import { ToolCall } from './index';
 import type { GroupablePart } from '@/types/ai';
 import { Expandable } from '@/components/ui/expandable';
@@ -9,7 +10,6 @@ import { ToolGroupProvider } from '@/contexts/tool-group';
 import { isReasoningPart } from '@/lib/ai';
 import { groupMcpToolCalls } from '@/lib/mcp';
 import { useToolGroupSummaryTitle } from '@/hooks/use-tool-group-summary-title';
-import styles from './tool-calls-group.module.css';
 
 interface Props {
 	parts: GroupablePart[];

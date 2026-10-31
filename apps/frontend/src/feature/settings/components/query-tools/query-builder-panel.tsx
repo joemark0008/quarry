@@ -2,6 +2,7 @@ import { QUERY_TOOL_PARAMETER_TYPES } from '@quarry/shared/query-tools';
 import { skipToken, useQuery } from '@tanstack/react-query';
 import { Plus, Trash2, Wand2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import styles from './query-builder-panel.module.css';
 import type { QueryToolParameterType } from '@quarry/shared/query-tools';
 import type {
 	Aggregate,
@@ -27,7 +28,6 @@ import {
 	outputName,
 } from '@/lib/query-builder';
 import { queryToolApi } from '@/lib/query-tool-api';
-import styles from './query-builder-panel.module.css';
 
 type DatabaseObject = { type: string; database: string; schema: string; table: string; fqdn: string };
 
@@ -132,7 +132,10 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										)
 									}
 								>
-									<SelectTrigger className={styles.queryBuilderPanelSelectTrigger2} aria-label='Aggregate'>
+									<SelectTrigger
+										className={styles.queryBuilderPanelSelectTrigger2}
+										aria-label='Aggregate'
+									>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -224,7 +227,10 @@ export function QueryBuilderPanel({ onGenerate }: { onGenerate: (query: Generate
 										)
 									}
 								>
-									<SelectTrigger className={styles.queryBuilderPanelSelectTrigger3} aria-label='Direction'>
+									<SelectTrigger
+										className={styles.queryBuilderPanelSelectTrigger3}
+										aria-label='Direction'
+									>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>

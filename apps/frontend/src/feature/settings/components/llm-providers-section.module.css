@@ -19,7 +19,7 @@
 	gap: 0.5rem;
 }
 .llmProvidersSectionLabel {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -36,7 +36,7 @@
 	background-color: var(--app-fill);
 	padding-inline: 1rem;
 	padding-block: 0.5rem;
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	--fx-font-weight: 500;
 	font-weight: 500;
@@ -51,7 +51,7 @@
 	}
 }
 .llmProvidersSectionP {
-	font-size: 0.875rem;
+	font-size: 0.8125rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 	color: var(--app-muted);
 }

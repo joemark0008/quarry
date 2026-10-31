@@ -5,12 +5,12 @@ import {
 } from '@quarry/shared/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import styles from './experimental.module.css';
 import { Input } from '@/components/ui/input';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { SettingsControlRow } from '@/components/ui/settings-toggle-row';
 import { Switch } from '@/components/ui/switch';
 import { projectApi } from '@/lib/project-api';
-import styles from './experimental.module.css';
 
 interface SettingsExperimentalProps {
 	isAdmin: boolean;

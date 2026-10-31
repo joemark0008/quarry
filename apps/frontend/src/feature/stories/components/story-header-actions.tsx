@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { CopyPlus, Globe, ShieldCheck, Star, ThumbsDown, ThumbsUp, Upload } from 'lucide-react';
 import { useState } from 'react';
+import styles from './story-header-actions.module.css';
 import type { LucideIcon } from 'lucide-react';
 import type { FeedbackVote } from '@/feature/chat/components/chat-messages/assistant-message-actions';
 
@@ -17,7 +18,6 @@ import { cn } from '@/lib/utils';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { storyApi } from '@/lib/story-api';
 import { chatApi } from '@/lib/chat-api';
-import styles from './story-header-actions.module.css';
 
 interface ShareButtonProps {
 	isShared: boolean;

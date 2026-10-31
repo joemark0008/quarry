@@ -1,18 +1,19 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useRef } from 'react';
+import { SharedStoryHeader } from './shared-story-header';
+import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from './story-embeds';
+import { STORY_ASK_BAR_INSET_STYLE, StoryAskBar } from './story-ask-bar';
+import { StoryPageBody } from './story-page-body';
+import { StoryTabbedContent } from './story-tabbed-content';
+import { useStoryThemeForCurrentMode } from './story-theme-provider';
+import styles from './shared-story-page.module.css';
 import type { ParsedChartBlock, ParsedMapBlock, ParsedTableBlock } from '@quarry/shared/story-segments';
 
 import type { LiveQueryConfig, QueryDataMap } from './story-embeds';
 import type { StoryPageHeaderProps } from './story-page-header';
 import { SharedCustomStoryPage } from '@/feature/stories/components/custom-story/custom-story-page';
 import { HighlightBubble } from '@/feature/chat/components/highlight-bubble';
-import { SharedStoryHeader } from './shared-story-header';
 import { SidePanel } from '@/feature/stories/components/side-panel/side-panel';
-import { StoryChartEmbed, StoryMapEmbed, StoryTableEmbed } from './story-embeds';
-import { STORY_ASK_BAR_INSET_STYLE, StoryAskBar } from './story-ask-bar';
-import { StoryPageBody } from './story-page-body';
-import { StoryTabbedContent } from './story-tabbed-content';
-import { useStoryThemeForCurrentMode } from './story-theme-provider';
 import { SidePanelProvider } from '@/contexts/side-panel';
 import { SelectionProvider } from '@/contexts/text-selection';
 import { useIsStoryRefreshing } from '@/hooks/use-is-story-refreshing';
@@ -24,7 +25,6 @@ import { useStoryVersionQueryData } from '@/hooks/use-story-version-query-data';
 import { useSession } from '@/lib/auth-client';
 import { storyApi } from '@/lib/story-api';
 import { requestAskAboutSelection } from '@/stores/ask-bar';
-import styles from './shared-story-page.module.css';
 
 export function SharedStoryPage({ storyId }: { storyId: string }) {
 	const { data: story } = useSuspenseQuery(storyApi.storyShare.get.queryOptions({ storyId }));

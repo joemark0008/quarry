@@ -2,12 +2,12 @@ import { Editor } from '@monaco-editor/react';
 import { validateStoryCode } from '@quarry/shared/story-validation';
 import { AlertTriangle } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import styles from './story-code-view.module.css';
 import type { StoryValidationError } from '@quarry/shared/story-validation';
 import type { Monaco } from '@monaco-editor/react';
 import type { editor } from 'monaco-editor';
 import { FixInChatButton } from '@/feature/chat/components/fix-in-chat-button';
 import { useEditorTheme } from '@/hooks/use-editor-theme';
-import styles from './story-code-view.module.css';
 
 const MONACO_OPTIONS = {
 	minimap: { enabled: false },
@@ -190,7 +190,9 @@ function ValidationErrorBanner({ errors }: { errors: StoryValidationError[] }) {
 							<span className={styles.validationErrorBannerSpan}>L{error.line}:</span> {error.message}
 						</li>
 					))}
-					{errors.length > 5 && <li className={styles.validationErrorBannerLi2}>and {errors.length - 5} more...</li>}
+					{errors.length > 5 && (
+						<li className={styles.validationErrorBannerLi2}>and {errors.length - 5} more...</li>
+					)}
 				</ul>
 			</div>
 			<FixInChatButton message={fixMessage} className={styles.validationErrorBannerFixInChatButton} />

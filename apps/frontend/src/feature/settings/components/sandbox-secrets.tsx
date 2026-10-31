@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { KeyRound, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
+import styles from './sandbox-secrets.module.css';
 import { Button } from '@/components/ui/button';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import {
@@ -29,7 +30,6 @@ import { getTimeAgo } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import { useSandboxSecretMutations, useSandboxSecretsQuery } from '@/queries/use-sandbox-secrets';
 import { projectApi } from '@/lib/project-api';
-import styles from './sandbox-secrets.module.css';
 
 type SandboxSecret = NonNullable<ReturnType<typeof useSandboxSecretsQuery>['data']>[number];
 
@@ -83,8 +83,8 @@ export function SettingsSandboxSecrets() {
 			{sandboxesDisabled && (
 				<p className={styles.settingsSandboxSecretsP}>
 					Sandboxes are off for this project, so these secrets are not used yet. Turn on{' '}
-					<span className={styles.settingsSandboxSecretsSpan}>Sandboxes</span> in Experimental above to let the
-					agent run code that reads them.
+					<span className={styles.settingsSandboxSecretsSpan}>Sandboxes</span> in Experimental above to let
+					the agent run code that reads them.
 				</p>
 			)}
 			{secrets.isLoading ? (

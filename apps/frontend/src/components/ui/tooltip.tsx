@@ -1,25 +1,22 @@
 import { Tooltip as MantineTooltip } from '@mantine/core';
-import {
-	Children,
-	cloneElement,
-	createContext,
-	isValidElement,
-	useContext,
-	useEffect,
-	useRef,
-	useState,
-} from 'react';
-import type { ComponentProps, FocusEvent, PointerEvent, ReactElement, ReactNode } from 'react';
+import { Children, cloneElement, createContext, isValidElement, useContext, useEffect, useRef, useState } from 'react';
 
 import styles from './overlay.module.css';
 import { toFloatingPosition } from './floating';
+import type { ComponentProps, FocusEvent, PointerEvent, ReactElement, ReactNode } from 'react';
 import type { FloatingAlign, FloatingSide } from './floating';
 import { cn } from '@/lib/utils';
 
 const DEFAULT_DELAY_MS = 700;
 const DelayContext = createContext(DEFAULT_DELAY_MS);
 
-function TooltipProvider({ delayDuration = DEFAULT_DELAY_MS, children }: { delayDuration?: number; children?: ReactNode }) {
+function TooltipProvider({
+	delayDuration = DEFAULT_DELAY_MS,
+	children,
+}: {
+	delayDuration?: number;
+	children?: ReactNode;
+}) {
 	return <DelayContext.Provider value={delayDuration}>{children}</DelayContext.Provider>;
 }
 
@@ -68,14 +65,17 @@ function Tooltip({
 
 	const parts = Children.toArray(children).filter(isValidElement) as ReactElement[];
 	const trigger = parts.find((part) => part.type === TooltipTrigger) as
-		| ReactElement<{ asChild?: boolean; children?: ReactNode }>
-		| undefined;
+		ReactElement<{ asChild?: boolean; children?: ReactNode }> | undefined;
 	const content = parts.find((part) => part.type === TooltipContent) as ReactElement<TooltipContentProps> | undefined;
 	const triggerChild = trigger?.props.children;
 	if (!trigger) {
 		return null;
 	}
-	const target = isValidElement(triggerChild) ? (triggerChild as ReactElement<TriggerHandlers>) : <span>{triggerChild}</span>;
+	const target = isValidElement(triggerChild) ? (
+		(triggerChild as ReactElement<TriggerHandlers>)
+	) : (
+		<span>{triggerChild}</span>
+	);
 
 	const setOpen = (next: boolean) => {
 		setInternalOpen(next);

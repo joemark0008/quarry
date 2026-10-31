@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import styles from './locked-fieldset.module.css';
+import { cn } from '@/lib/utils';
 
 interface LockedFieldsetProps {
 	disabled: boolean;
@@ -11,11 +11,7 @@ export function LockedFieldset({ disabled, children, className }: LockedFieldset
 	return (
 		<fieldset
 			disabled={disabled}
-			className={cn(
-				styles.lockedFieldsetFieldset,
-				className,
-				disabled && styles.lockedFieldsetFieldset2,
-			)}
+			className={cn(styles.lockedFieldsetFieldset, className, disabled && styles.lockedFieldsetFieldset2)}
 			aria-disabled={disabled}
 		>
 			{children}

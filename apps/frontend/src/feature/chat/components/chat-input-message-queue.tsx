@@ -8,13 +8,13 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ChevronDown, CornerDownLeft, GripVertical, Pencil, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import styles from './chat-input-message-queue.module.css';
 import type { DragEndEvent } from '@dnd-kit/core';
+import { Button } from '@/components/ui/button';
 import { useMessageQueueStore } from '@/hooks/use-message-queue-store';
 import { useChatId } from '@/hooks/use-chat-id';
 import { cn } from '@/lib/utils';
 import { messageQueueStore } from '@/stores/chat-message-queue';
-import styles from './chat-input-message-queue.module.css';
 
 interface ChatInputMessageQueueProps {
 	onEditMessage?: (text: string) => void;
@@ -54,7 +54,12 @@ export const ChatInputMessageQueue = ({ onEditMessage, onSubmitNow }: ChatInputM
 				onClick={() => setIsExpanded(!isExpanded)}
 				className={styles.chatInputMessageQueueButton}
 			>
-				<ChevronDown className={cn(styles.chatInputMessageQueueChevronDown, !isExpanded && styles.chatInputMessageQueueChevronDown2)} />
+				<ChevronDown
+					className={cn(
+						styles.chatInputMessageQueueChevronDown,
+						!isExpanded && styles.chatInputMessageQueueChevronDown2,
+					)}
+				/>
 				<span>{queuedMessages.length} queued</span>
 			</button>
 
@@ -126,7 +131,12 @@ function SortableQueuedMessageRow({
 					{...attributes}
 					{...listeners}
 				>
-					<GripVertical className={cn(styles.sortableQueuedMessageRowGripVertical, isFirst && styles.sortableQueuedMessageRowGripVertical2)} />
+					<GripVertical
+						className={cn(
+							styles.sortableQueuedMessageRowGripVertical,
+							isFirst && styles.sortableQueuedMessageRowGripVertical2,
+						)}
+					/>
 				</button>
 			)}
 

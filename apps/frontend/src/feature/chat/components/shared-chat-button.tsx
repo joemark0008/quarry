@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 
 import { ChatListSection } from './chat-list-menu-section';
+import styles from './shared-chat-button.module.css';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/lib/utils';
 import { requestAsk } from '@/stores/ask-bar';
 import { chatApi } from '@/lib/chat-api';
-import styles from './shared-chat-button.module.css';
 
 /** Continues the shared chat, with the user's quick questions about it a chevron away. */
 export function SharedChatButton({

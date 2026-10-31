@@ -1,12 +1,11 @@
 import { Ban, Cloud, HardDrive, Info, TriangleAlert } from 'lucide-react';
+import styles from './storage-page.module.css';
 import type { displayChart } from '@quarry/shared/tools';
 import { ChartDisplay } from '@/feature/chat/components/tool-calls/display-chart';
 import { ErrorMessage } from '@/components/ui/error-message';
 import { SettingsCard, SettingsPageWrapper } from '@/components/ui/settings-card';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useStorageConfig, useStorageHealth, useStorageUploadLimits, useStorageUsage } from '@/hooks/use-storage';
-import styles from './storage-page.module.css';
-
 
 type StorageBackend = NonNullable<ReturnType<typeof useStorageConfig>['data']>['backend'];
 type StorageUsageQuery = ReturnType<typeof useStorageUsage>;
@@ -348,7 +347,11 @@ function BackendIcon({ backend }: { backend: StorageBackend }) {
 	if (backend === 'none') {
 		return <Ban className={styles.backendIconBan} />;
 	}
-	return backend === 's3' ? <Cloud className={styles.backendIconBan} /> : <HardDrive className={styles.backendIconBan} />;
+	return backend === 's3' ? (
+		<Cloud className={styles.backendIconBan} />
+	) : (
+		<HardDrive className={styles.backendIconBan} />
+	);
 }
 
 function DisabledNotice({ children }: { children: React.ReactNode }) {

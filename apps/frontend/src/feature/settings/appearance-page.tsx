@@ -1,6 +1,6 @@
-import { getRouteApi } from '@tanstack/react-router';
-import { useNavigate } from '@tanstack/react-router';
+import { getRouteApi, useNavigate } from '@tanstack/react-router';
 import { useRef } from 'react';
+import styles from './appearance-page.module.css';
 import type { TabBarItem } from '@/components/ui/tab-bar';
 import { DateFormatSection } from '@/feature/settings/components/date-format-section';
 import { StoryThemeEditorProvider } from '@/feature/settings/components/story-theme-editor-context';
@@ -12,10 +12,8 @@ import { SidePanelProvider } from '@/contexts/side-panel';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useSidePanel } from '@/hooks/use-side-panel';
 import { useCurrentProject } from '@/hooks/use-current-project';
-import styles from './appearance-page.module.css';
 
 const Route = getRouteApi('/_protected/settings/appearance');
-
 
 export type AppearanceTab = 'general' | 'stories';
 

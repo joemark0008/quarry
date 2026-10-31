@@ -1,7 +1,7 @@
 import * as ResizablePrimitive from 'react-resizable-panels';
 
-import { cn } from '@/lib/utils';
 import styles from './resizable.module.css';
+import { cn } from '@/lib/utils';
 
 function ResizablePanelGroup({ className, ...props }: ResizablePrimitive.GroupProps) {
 	return (
@@ -28,10 +28,7 @@ function ResizableSeparator({
 	return (
 		<ResizablePrimitive.Separator
 			data-slot='resizable-handle'
-			className={cn(
-				styles.resizableSeparatorResizablePrimitiveSeparator,
-				className,
-			)}
+			className={cn(styles.resizableSeparatorResizablePrimitiveSeparator, className)}
 			{...props}
 		>
 			{children}
@@ -41,15 +38,7 @@ function ResizableSeparator({
 }
 
 function ResizableHandle({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-	return (
-		<div
-			className={cn(
-				styles.resizableHandleDiv,
-				className,
-			)}
-			{...props}
-		/>
-	);
+	return <div className={cn(styles.resizableHandleDiv, className)} {...props} />;
 }
 
 export { ResizableSeparator, ResizableHandle, ResizablePanel, ResizablePanelGroup };

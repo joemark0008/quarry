@@ -8,7 +8,10 @@ export const Route = createFileRoute('/_protected')({
 	beforeLoad: async ({ location }) => {
 		const session = await fetchSession();
 		if (!session) {
-			throw redirect({ to: '/login', search: { error: undefined, redirect: getSafeRedirectPath(location.href) ?? undefined } });
+			throw redirect({
+				to: '/login',
+				search: { error: undefined, redirect: getSafeRedirectPath(location.href) ?? undefined },
+			});
 		}
 		return { session };
 	},

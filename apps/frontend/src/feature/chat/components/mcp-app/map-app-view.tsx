@@ -2,10 +2,10 @@ import { buildMapPoints, MAX_MAP_POINTS, resolveMapConfig } from '@quarry/shared
 import { lazy, memo, Suspense, useMemo } from 'react';
 import { McpAppHeader } from './mcp-app-header';
 import { OpenInQuarryButton } from './open-in-quarry-button';
+import styles from './map-app-view.module.css';
 import type { CustomBoundarySet, MapPoint, McpMapEmbedStoredConfig } from '@quarry/shared';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import styles from './map-app-view.module.css';
 
 const MapView = lazy(() => import('@/feature/chat/components/tool-calls/display-map-view'));
 

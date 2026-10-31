@@ -6,13 +6,20 @@ import { cn } from '@/lib/utils';
 type AnyProps = Record<string, unknown>;
 
 /** Merges this element's props onto its only child, so a component can render as a link or another control. */
-export function Slot({ children, ref, ...slotProps }: HTMLAttributes<HTMLElement> & { children?: ReactNode; ref?: Ref<HTMLElement> } & AnyProps) {
+export function Slot({
+	children,
+	ref,
+	...slotProps
+}: HTMLAttributes<HTMLElement> & { children?: ReactNode; ref?: Ref<HTMLElement> } & AnyProps) {
 	const child = Children.only(children);
 	if (!isValidElement(child)) {
 		return null;
 	}
 	const element = child as ReactElement<AnyProps>;
-	return cloneElement(element, { ...mergeSlotProps(slotProps, element.props), ref: ref ?? element.props.ref } as AnyProps);
+	return cloneElement(element, {
+		...mergeSlotProps(slotProps, element.props),
+		ref: ref ?? element.props.ref,
+	} as AnyProps);
 }
 
 export function mergeSlotProps(slotProps: AnyProps, childProps: AnyProps): AnyProps {

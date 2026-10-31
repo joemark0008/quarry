@@ -5,12 +5,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { RotateCcw, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { describeStoryThemeSources } from '@quarry/shared/story-theme-generation';
-import type { StoryFilterSelection } from '@quarry/shared/sql-template';
-import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
-import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
-import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
-
-import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import {
 	generationToSave,
 	STORY_THEME_MODE_OPTIONS,
@@ -18,6 +12,13 @@ import {
 	useStoryThemeEditor,
 } from './story-theme-editor-context';
 import { StoryThemeVersionMenu } from './story-theme-version-menu';
+import styles from './story-theme-preview.module.css';
+import type { StoryFilterSelection } from '@quarry/shared/sql-template';
+import type { ParsedFilterBlock } from '@quarry/shared/story-segments';
+import type { StoryTheme, StoryThemePair } from '@quarry/shared/story-theme';
+import type { StoryThemeGeneration } from '@quarry/shared/story-theme-generation';
+
+import type { QueryDataMap } from '@/feature/stories/components/story-embeds';
 import { StoryTabsBar } from '@/feature/stories/components/side-panel/story-tabs-bar';
 import { StoryBlock, StoryTableFrame } from '@/feature/stories/components/story-block';
 import { StoryChartEmbed, StoryTableEmbed } from '@/feature/stories/components/story-embeds';
@@ -30,7 +31,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { useSidePanel } from '@/contexts/side-panel';
 import { usePermissions } from '@/hooks/use-permissions';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-theme-preview.module.css';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 const REGIONS = [

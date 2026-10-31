@@ -1,8 +1,7 @@
-
-import { classVariants, cn } from '@/lib/utils';
-import type { VariantProps } from '@/lib/utils';
-import { hashValue } from '@/lib/hash';
 import styles from './avatar.module.css';
+import type { VariantProps } from '@/lib/utils';
+import { classVariants, cn } from '@/lib/utils';
+import { hashValue } from '@/lib/hash';
 
 const avatarColors = [
 	styles.avatarColors,

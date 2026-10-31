@@ -1,14 +1,23 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useBlocker, useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useBlocker, useNavigate } from '@tanstack/react-router';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDefaultLayout } from 'react-resizable-panels';
+import styles from './context-explorer-page.module.css';
 import type { FileSelectionOptions } from '@/feature/settings/components/file-tree';
 import { ContextFileDiff } from '@/feature/settings/components/context-file-diff';
 import { ContextGitPanel } from '@/feature/settings/components/context-git-panel';
 import { FileTree } from '@/feature/settings/components/file-tree';
 import { FileViewer } from '@/feature/settings/components/file-viewer';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/components/ui/resizable';
 import { Spinner } from '@/components/ui/spinner';
@@ -17,10 +26,8 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { consumeHistoricalContextDiffSearch, getHistoricalContextDiffTarget } from '@/lib/context-explorer-search';
 import { createLocalStorage } from '@/lib/local-storage';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
-import styles from './context-explorer-page.module.css';
 
 const Route = getRouteApi('/_protected/settings/context-explorer');
-
 
 const contentSearchStorage = createLocalStorage<boolean>('quarry-file-explorer-content-search', true);
 

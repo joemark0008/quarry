@@ -1,17 +1,17 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { pluralize } from '@quarry/shared';
+import { StoryStatus } from './story-status';
+import styles from './story-query-group.module.css';
+import { ToolCall } from './index';
 import type { StoryQueryGroupItem, StoryStatusPart } from '@/types/ai';
 import type { StoryStatusDisplay } from '@/lib/story-status';
 import { Expandable } from '@/components/ui/expandable';
-import { ToolCall } from './index';
-import { StoryStatus } from './story-status';
 import { AssistantReasoning } from '@/feature/chat/components/chat-messages/assistant-reasoning';
 import { useChatView } from '@/contexts/chat-view';
 import { useAssistantMessage } from '@/contexts/assistant-message';
 import { isReasoningPart, isQueryToolPart, isStoryStatusPart } from '@/lib/ai';
 import { getStoryStatusDisplay } from '@/lib/story-status';
 import { getStoryToolPartSlug } from '@/lib/story.utils';
-import styles from './story-query-group.module.css';
 
 interface Props {
 	parts: StoryQueryGroupItem[];

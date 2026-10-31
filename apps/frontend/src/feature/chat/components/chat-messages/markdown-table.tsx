@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
+import styles from './markdown-table.module.css';
 import { DataTableCard } from '@/components/data-table-card';
 import { cn } from '@/lib/utils';
-import styles from './markdown-table.module.css';
 
 interface HastNode {
 	type?: string;

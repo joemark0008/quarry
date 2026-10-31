@@ -1,17 +1,15 @@
-import { getRouteApi } from '@tanstack/react-router';
+import { getRouteApi, useRouterState } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { useRouterState } from '@tanstack/react-router';
 import { useMemo } from 'react';
+import styles from './chart-embed-page.module.css';
 import type { ReactNode } from 'react';
 import { ChartAppView } from '@/feature/chat/components/mcp-app/chart-app-view';
 import { Spinner } from '@/components/ui/spinner';
 import { QUARRY_MCP_EMBED_MEASURE_ATTR, useMcpAppEmbedHeightReporting } from '@/hooks/use-mcp-app-embed-height';
 import { isLikelyMcpAppPayloadToken, readEmbedTokenFromLocation } from '@/lib/embed-token';
 import { storyApi } from '@/lib/story-api';
-import styles from './chart-embed-page.module.css';
 
 const Route = getRouteApi('/embed/chart/$chartEmbedId');
-
 
 export function ChartEmbedPage() {
 	const { chartEmbedId } = Route.useParams();
@@ -38,8 +36,8 @@ export function ChartEmbedPage() {
 				{usedWrongTokenFormat ? (
 					<p className={styles.chartEmbedPageP}>
 						Open the full <span className={styles.chartEmbedPageSpan}>embedUrl</span> link from{' '}
-						<code className={styles.chartEmbedPageCode}>display_chart</code> (or the &quot;Interactive app&quot;
-						markdown link), not the JSON tool payload.
+						<code className={styles.chartEmbedPageCode}>display_chart</code> (or the &quot;Interactive
+						app&quot; markdown link), not the JSON tool payload.
 					</p>
 				) : null}
 			</div>
@@ -53,10 +51,7 @@ export function ChartEmbedPage() {
 	}
 
 	return (
-		<div
-			{...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }}
-			className={styles.chartEmbedPageDiv3}
-		>
+		<div {...{ [QUARRY_MCP_EMBED_MEASURE_ATTR]: '' }} className={styles.chartEmbedPageDiv3}>
 			{inner}
 		</div>
 	);

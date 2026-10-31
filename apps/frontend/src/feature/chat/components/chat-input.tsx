@@ -5,7 +5,6 @@ import { Plus, PencilRuler, Database, Library, Paperclip, Shield, Check } from '
 import { ALLOWED_IMAGE_MEDIA_TYPES, ATTACHMENT_ACCEPT } from '@quarry/shared/attachments';
 import { toStoryReferenceMentionId } from '@quarry/shared';
 import { story } from '@quarry/shared/tools';
-import { Button, ChatButton, MicButton } from '@/components/ui/button';
 import { SlidingWaveform } from './chat-input-sliding-waveform';
 import {
 	ChatPrompt,
@@ -21,6 +20,13 @@ import { ChatInputAnimatedBorder } from './chat-input-animated-border';
 import { ChatInputModelSelect } from './chat-input-model-select';
 import { ChatInputMessageQueue } from './chat-input-message-queue';
 import { ChatInputAttachmentPreview } from './chat-input-attachment-preview';
+import { SelectionCitationBanner } from './selection-citation-banner';
+import { ChatInputSuggestions } from './chat-input-suggestions';
+import styles from './chat-input.module.css';
+import type { MentionOption, PromptHandle, SelectedMention } from 'prompt-mentions';
+import type { FormEvent } from 'react';
+import type { AgentHelpers } from '@/hooks/use-agent';
+import type { StoryReferences } from '@/lib/story-reference';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -28,10 +34,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { MentionOption, PromptHandle, SelectedMention } from 'prompt-mentions';
-import type { FormEvent } from 'react';
-import type { AgentHelpers } from '@/hooks/use-agent';
-import type { StoryReferences } from '@/lib/story-reference';
+import { Button, ChatButton, MicButton } from '@/components/ui/button';
 import { ContextWindowRing } from '@/components/ui/chat-input-context-window-ring';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 
@@ -60,15 +63,12 @@ import { chatInputRestoreStore, useChatInputRestore } from '@/stores/chat-input-
 import { chatPendingCitationStore } from '@/stores/chat-pending-citation';
 import { useChatPendingCitation } from '@/hooks/use-chat-pending-citation';
 import { useEffectiveUserGroupFeatures } from '@/hooks/use-effective-user-group-features';
-import { SelectionCitationBanner } from './selection-citation-banner';
-import { ChatInputSuggestions } from './chat-input-suggestions';
 import { runWithStoryBeforeAgentSend, useStoryBeforeAgentSend } from '@/contexts/story-before-agent-send';
 import { useIsCloud } from '@/hooks/use-quarry-mode';
 import { useCurrentProject } from '@/hooks/use-current-project';
 import { projectApi } from '@/lib/project-api';
 import { storageApi } from '@/lib/storage-api';
 import { storyApi } from '@/lib/story-api';
-import styles from './chat-input.module.css';
 
 const cycleModelShortcut = getShortcut('cycle-model').shortcut;
 const TRIAL_ATTACHMENT_ACCEPT = ALLOWED_IMAGE_MEDIA_TYPES.join(',');
@@ -723,11 +723,7 @@ function ChatInputPlusMenu({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<button
-					type='button'
-					aria-label='Add context'
-					className={styles.chatInputPlusMenuButton}
-				>
+				<button type='button' aria-label='Add context' className={styles.chatInputPlusMenuButton}>
 					<Plus className={styles.chatInputPlusMenuPlus} />
 				</button>
 			</DropdownMenuTrigger>
@@ -827,19 +823,12 @@ function RecordingTimer() {
 function MicWarningBanner({ onDismiss }: { onDismiss: () => void }) {
 	return (
 		<div className={styles.micWarningBannerDiv}>
-			<button
-				type='button'
-				onClick={onDismiss}
-				className={styles.micWarningBannerButton}
-			>
+			<button type='button' onClick={onDismiss} className={styles.micWarningBannerButton}>
 				&times;
 			</button>
 			<p className={styles.micWarningBannerP}>
 				Voice input is disabled.{' '}
-				<Link
-					to='/settings/project/models'
-					className={styles.micWarningBannerLink}
-				>
+				<Link to='/settings/project/models' className={styles.micWarningBannerLink}>
 					Go to Settings &rarr; Models
 				</Link>{' '}
 				to enable transcription. Ask your admin.

@@ -1,9 +1,9 @@
 import { ChevronRight, Lock } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { useDndContext, useDroppable } from '@dnd-kit/core';
+import styles from './stories-folder-breadcrumb.module.css';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import styles from './stories-folder-breadcrumb.module.css';
 
 export type BreadcrumbNode = { id: string | null; name: string; isPrivate?: boolean };
 

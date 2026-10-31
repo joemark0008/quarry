@@ -1,6 +1,7 @@
 import { Streamdown } from 'streamdown';
 import { ToolCallWrapper } from './tool-call-wrapper';
 import { McpTitle } from './mcp-title';
+import styles from './read.module.css';
 import type { ToolCallComponentProps } from '.';
 import type { McpTarget } from '@/lib/mcp';
 import { getMcpTarget } from '@/lib/mcp';
@@ -8,7 +9,6 @@ import { getFileName, getReadContextLabel } from '@/lib/file-path';
 import { useToolCallContext } from '@/contexts/tool-call';
 import { markdownPlugins } from '@/lib/markdown';
 import { markdownLinkSafety } from '@/components/external-link-dialog';
-import styles from './read.module.css';
 
 export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentProps<'read'>) => {
 	const { isSettled } = useToolCallContext();
@@ -32,8 +32,7 @@ export const ReadToolCall = ({ toolPart: { output, input } }: ToolCallComponentP
 						<McpReadTitle target={mcpTarget} isSettled={false} />
 					) : (
 						<>
-							Reading...{' '}
-							<code className={styles.titleContextCode}>{fileName}</code>
+							Reading... <code className={styles.titleContextCode}>{fileName}</code>
 							{titleContext}
 						</>
 					)

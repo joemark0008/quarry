@@ -1,10 +1,10 @@
 import { createPortal } from 'react-dom';
+import styles from './mention-origin-preview.module.css';
 import type { CSSProperties, ReactNode } from 'react';
 import type { MentionOption } from 'prompt-mentions';
 import type { HighlightedMention } from '@/hooks/use-highlighted-mention';
 import { mentionOriginMarkerAttributes, useHighlightedMention } from '@/hooks/use-highlighted-mention';
 import { cn } from '@/lib/utils';
-import styles from './mention-origin-preview.module.css';
 
 export type MentionOriginNode = {
 	label: string;
@@ -34,10 +34,7 @@ export function MentionOriginPreview({ owner, origins }: MentionOriginPreviewPro
 	}
 
 	return createPortal(
-		<div
-			className={styles.mentionOriginPreviewDiv}
-			style={position}
-		>
+		<div className={styles.mentionOriginPreviewDiv} style={position}>
 			{origin.map((node, depth) => (
 				<MentionOriginRow key={depth} node={node} depth={depth} isMentioned={depth === origin.length - 1} />
 			))}

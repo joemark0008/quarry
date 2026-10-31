@@ -1,11 +1,10 @@
+import styles from './project-page.module.css';
 import { EditableProjectName } from '@/feature/settings/components/editable-project-name';
 import { ProjectIdentifier } from '@/feature/settings/components/project-identifier';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useCurrentProject } from '@/hooks/use-current-project';
-import styles from './project-page.module.css';
-
 
 export function ProjectSettingsPage() {
 	const project = useCurrentProject();
@@ -18,7 +17,10 @@ export function ProjectSettingsPage() {
 					<>
 						<DetailRow label='Name' value={<Skeleton className={styles.projectSettingsPageSkeleton} />} />
 						<DetailRow label='Path' value={<Skeleton className={styles.projectSettingsPageSkeleton2} />} />
-						<DetailRow label='Project ID' value={<Skeleton className={styles.projectSettingsPageSkeleton3} />} />
+						<DetailRow
+							label='Project ID'
+							value={<Skeleton className={styles.projectSettingsPageSkeleton3} />}
+						/>
 					</>
 				) : project.data ? (
 					<>

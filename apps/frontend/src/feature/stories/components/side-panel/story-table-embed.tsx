@@ -2,6 +2,7 @@ import { sanitizeConditionalFormats } from '@quarry/shared/conditional-formattin
 import { Pencil } from 'lucide-react';
 import { memo, useState } from 'react';
 import { StoryEmbedFallback } from './story-embed-fallback';
+import styles from './story-table-embed.module.css';
 import type { ParsedTableBlock } from '@quarry/shared/story-segments';
 
 import { DataTableCard } from '@/components/data-table-card';
@@ -10,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { useStoryEmbedData } from '@/contexts/story-embed-data';
 import { useStoryTableEdit } from '@/contexts/story-table-edit';
 import { useSourceQuery } from '@/hooks/use-source-query';
-import styles from './story-table-embed.module.css';
 
 export const StoryTableEmbed = memo(function StoryTableEmbed({
 	table,

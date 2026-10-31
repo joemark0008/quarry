@@ -8,7 +8,6 @@ import { storyApi } from '@/lib/story-api';
 
 const Route = getRouteApi('/_protected/stories/$storyId');
 
-
 export function StoryPage() {
 	const { storyId } = Route.useParams();
 	const { data: story } = useSuspenseQuery(storyApi.story.resolve.queryOptions({ storyId }));

@@ -1,13 +1,13 @@
 import { ChevronRight, FilePen, FilePlus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { SidePanelHeader } from './side-panel-header';
+import styles from './recommendation-diff-panel.module.css';
 import type { MouseEvent } from 'react';
 
 import type { LineDiff } from '@/lib/line-diff';
 import { FileDiffBody } from '@/feature/settings/components/file-diff';
-import { SidePanelHeader } from './side-panel-header';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { computeLineDiff } from '@/lib/line-diff';
-import styles from './recommendation-diff-panel.module.css';
 
 interface ProposedEdit {
 	path: string;
@@ -83,9 +83,7 @@ function FileDiff({
 				<span className={styles.fileDiffSpan} title={edit.path}>
 					{edit.path}
 				</span>
-				<span className={styles.fileDiffSpan2}>
-					+{diff.additions}
-				</span>
+				<span className={styles.fileDiffSpan2}>+{diff.additions}</span>
 				<span className={styles.fileDiffSpan3}>-{diff.deletions}</span>
 			</AccordionTrigger>
 			<AccordionContent className={styles.fileDiffAccordionContent}>

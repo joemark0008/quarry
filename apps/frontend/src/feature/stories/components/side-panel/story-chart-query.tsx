@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import styles from './story-chart-query.module.css';
 import type { StoryQuerySqlSource } from '@/contexts/story-query-sql';
 
 import { SqlQueryDisplay } from '@/feature/chat/components/tool-calls/sql-query-display';
 import { storyApi } from '@/lib/story-api';
-import styles from './story-chart-query.module.css';
 
 export function StoryChartQueryView({ queryId, source }: { queryId: string; source: StoryQuerySqlSource }) {
 	const ownedQuery = useQuery({
@@ -39,11 +39,7 @@ export function StoryChartQueryView({ queryId, source }: { queryId: string; sour
 	}
 
 	if (query.isError || !data) {
-		return (
-			<div className={styles.storyChartQueryViewDiv2}>
-				{query.error?.message ?? 'Query unavailable'}
-			</div>
-		);
+		return <div className={styles.storyChartQueryViewDiv2}>{query.error?.message ?? 'Query unavailable'}</div>;
 	}
 
 	const showBoth = data.sqlQuery.trim() !== data.renderedSql.trim();
@@ -53,15 +49,11 @@ export function StoryChartQueryView({ queryId, source }: { queryId: string; sour
 			{showBoth ? (
 				<>
 					<section className={styles.storyChartQueryViewSection}>
-						<h4 className={styles.storyChartQueryViewH4}>
-							Template query
-						</h4>
+						<h4 className={styles.storyChartQueryViewH4}>Template query</h4>
 						<SqlQueryDisplay query={data.sqlQuery} />
 					</section>
 					<section className={styles.storyChartQueryViewSection}>
-						<h4 className={styles.storyChartQueryViewH4}>
-							Rendered query
-						</h4>
+						<h4 className={styles.storyChartQueryViewH4}>Rendered query</h4>
 						<SqlQueryDisplay query={data.renderedSql} />
 					</section>
 				</>

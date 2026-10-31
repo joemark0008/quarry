@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { isLlmProvider } from '@quarry/shared/types';
-import { AgentSearch, ProjectAgentPage, isAgentTab } from '@/feature/settings/agent-page';
+import type { AgentSearch } from '@/feature/settings/agent-page';
+import { ProjectAgentPage, isAgentTab } from '@/feature/settings/agent-page';
 
 export const Route = createFileRoute('/_protected/settings/project/agent')({
 	staticData: {

@@ -1,15 +1,15 @@
 import { LayoutGrid, List, ListChecks, X } from 'lucide-react';
+import { StoriesActiveFilters, StoriesFiltersMenu, TOOLBAR_BUTTON_CLASS } from './stories-filters-menu';
+import { StoriesSortMenu } from './stories-sort-menu';
+import styles from './stories-toolbar.module.css';
 import type { ReactNode } from 'react';
 import type { StoryPanelDisplayMode } from '@quarry/shared/types';
 import type { SortState, StoriesFilters } from '@/lib/stories-page';
 import { SearchBar } from '@/components/search-bar';
-import { StoriesActiveFilters, StoriesFiltersMenu, TOOLBAR_BUTTON_CLASS } from './stories-filters-menu';
-import { StoriesSortMenu } from './stories-sort-menu';
 import { Button } from '@/components/ui/button';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
-import styles from './stories-toolbar.module.css';
 
 export function StoriesToolbar({
 	searchQuery,
@@ -69,7 +69,11 @@ export function StoriesToolbar({
 
 function SelectionToggle({ active, onToggle }: { active: boolean; onToggle: () => void }) {
 	return (
-		<Button variant='ghost' onClick={onToggle} className={cn(TOOLBAR_BUTTON_CLASS, active && styles.selectionToggleButton)}>
+		<Button
+			variant='ghost'
+			onClick={onToggle}
+			className={cn(TOOLBAR_BUTTON_CLASS, active && styles.selectionToggleButton)}
+		>
 			{active ? <X /> : <ListChecks />}
 			{active ? 'Cancel' : 'Select'}
 		</Button>
