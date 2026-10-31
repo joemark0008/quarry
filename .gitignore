@@ -14,3 +14,6 @@ apps/api/projects/
 
 # Permanent storage of apps/api (QUARRY_STORAGE_LOCAL_PATH)
 apps/api/storage/
+
+# Playwright
+test-results/

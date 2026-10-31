@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { fileURLToPath } from 'node:url';
 
 import tailwindcss from '@tailwindcss/vite';
@@ -40,6 +41,10 @@ export default defineConfig({
 			// Pure modules of apps/api the frontend shares (provider metadata, story summaries); the rest is types.
 			{ find: /^@quarry\/api\/(.*)$/, replacement: fileURLToPath(new URL('../api/src/$1', import.meta.url)) },
 		],
+	},
+	test: {
+		// e2e/ runs under Playwright (`npm run test:e2e`).
+		exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
 	},
 	server: {
 		fs: {
