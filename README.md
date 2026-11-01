@@ -69,7 +69,9 @@ npm run dev:api                    # apps/api on :5006
 npm run dev:frontend               # frontend on :3000, proxies the API to :5006
 ```
 
-Open http://localhost:3000, sign up (the first user becomes the admin) or log in with the seed user, create a project
+Open http://localhost:3000. On an empty database it opens `/setup`: enter the setup token, which the API prints at
+startup (in the `npm run dev:api` terminal, or `docker compose -f docker-compose.prod.yml logs`), and create the first
+admin. Or log in with the seed user. Then create a project
 from the project switcher, then add the warehouse in **Settings → Warehouse** (`localhost:5434`, database `warehouse`,
 user/password `quarry`) and press **Sync**.
 
