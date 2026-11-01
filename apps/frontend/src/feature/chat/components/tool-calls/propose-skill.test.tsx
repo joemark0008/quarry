@@ -70,7 +70,7 @@ beforeEach(() => {
 	mocks.permissions = { isAdmin: true, isContextAdmin: false };
 	mocks.messages = [];
 	mocks.saveStatus.mockResolvedValue({ mode: 'direct', message: null });
-	mocks.create.mockResolvedValue({ name: DRAFT.name, location: '/agent/skills/churn-analysis.md', mode: 'direct' });
+	mocks.create.mockResolvedValue({ name: DRAFT.name, location: '/agent/skills/churn-analysis.md' });
 });
 afterEach(cleanup);
 
@@ -145,18 +145,6 @@ describe('ProposeSkillToolCall', () => {
 		expect(mocks.create).not.toHaveBeenCalled();
 	});
 
-	it('says the skill goes live later in git mode', async () => {
-		mocks.saveStatus.mockResolvedValue({ mode: 'git', message: null });
-		mocks.create.mockResolvedValue({ name: DRAFT.name, location: '/x', mode: 'git' });
-		renderCard();
-		fireEvent.click(await saveButton());
-		await waitFor(() =>
-			expect(mocks.queueOrSendMessage).toHaveBeenCalledWith({
-				text: expect.stringContaining('goes live after it is merged'),
-			}),
-		);
-	});
-
 	it('offers members a copy instead of Save', async () => {
 		mocks.permissions = { isAdmin: false, isContextAdmin: false };
 		renderCard();
@@ -166,16 +154,16 @@ describe('ProposeSkillToolCall', () => {
 		expect(mocks.saveStatus).not.toHaveBeenCalled();
 	});
 
-	it.each([
-		['unavailable', 'Sign in to GitHub.'],
-		['disabled', 'This deployment manages skills as files.'],
-	])('offers a copy and the reason in %s mode', async (mode, message) => {
-		mocks.saveStatus.mockResolvedValue({ mode, message });
-		renderCard();
-		expect(await screen.findByText(message)).toBeTruthy();
-		expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy();
-		expect(screen.queryByRole('button', { name: 'Save skill' })).toBeNull();
-	});
+	it.each([['disabled', 'This deployment manages skills as files.']])(
+		'offers a copy and the reason in %s mode',
+		async (mode, message) => {
+			mocks.saveStatus.mockResolvedValue({ mode, message });
+			renderCard();
+			expect(await screen.findByText(message)).toBeTruthy();
+			expect(screen.getByRole('button', { name: 'Copy' })).toBeTruthy();
+			expect(screen.queryByRole('button', { name: 'Save skill' })).toBeNull();
+		},
+	);
 
 	it('collapses once answered, which survives a reload', async () => {
 		mocks.messages = ['I saved the skill "churn-analysis".'];

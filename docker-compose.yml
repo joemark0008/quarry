@@ -2,6 +2,10 @@
 #   quarry     app database (Prisma)
 #   warehouse  test warehouse the agent queries (jaffle_shop, loaded by `npm run warehouse:load`)
 # Host port 5434, since 5432 is often taken by another local Postgres. Production: docker-compose.prod.yml.
+# Its own project name: without it this file and docker-compose.prod.yml share a project and a database volume,
+# so `docker compose -f docker-compose.prod.yml down -v` would also delete the development database.
+name: quarry-dev
+
 services:
     postgres:
         image: postgres:16-alpine

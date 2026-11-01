@@ -259,9 +259,6 @@ function EditableFileViewer({
 						setExpectedHash(result.hash);
 						setSaveError(null);
 					}
-					void queryClient.invalidateQueries({
-						queryKey: contextExplorerApi.contextExplorer.getChangedFiles.queryKey(),
-					});
 				},
 				onError: (error) => {
 					saveInProgressRef.current = false;

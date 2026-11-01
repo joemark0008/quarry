@@ -1,4 +1,3 @@
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -8,10 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.hoisted(() => {
 	process.env.MODE = 'test';
 	process.env.QUARRY_DEFAULT_PROJECT_PATH = '';
-	process.env.QUARRY_CONTEXT_SOURCE = 'local';
 });
 
-import type { ContextExplorerFileAccess } from './files/context-files.js';
 import {
 	getFileTree,
 	MAX_CONTEXT_FILE_SIZE,
@@ -19,27 +16,18 @@ import {
 	searchFileContents,
 	writeFileContent,
 } from './files/context-files.js';
-import type { ContextExplorerGitContext, ContextRepositoryProvider } from './git/context-explorer-git.js';
-import { resolveContextExplorerGit } from './git/context-explorer-git.js';
 
-describe('context explorer worktree writes', () => {
+describe('context explorer project folder writes', () => {
 	let root: string;
-	let live: string;
-	let bare: string;
-	let access: ContextExplorerFileAccess;
-	let liveSnapshot: Record<string, Buffer>;
+	let project: string;
 
-	beforeEach(async () => {
+	beforeEach(() => {
 		root = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-context-write-'));
-		live = path.join(root, 'live');
-		bare = path.join(root, 'remote.git');
-		const seed = path.join(root, 'seed');
-		fs.mkdirSync(live);
-		fs.mkdirSync(seed);
-		initRepository(seed);
-		writeFiles(seed, {
+		project = path.join(root, 'project');
+		fs.mkdirSync(project);
+		writeFiles(project, {
 			'quarry_config.yaml': 'name: project\n',
-			'context.md': 'repository content\n',
+			'context.md': 'project content\n',
 			'generated.md': '---\ntype: generated\n---\ngenerated\n',
 			'annotations.md': '---\ntype: manual\n---\nnotes\n',
 			'rendered.md': 'rendered\n',
@@ -48,98 +36,35 @@ describe('context explorer worktree writes', () => {
 			'docs/notion/page.md': 'notion\n',
 			'docs/confluence/page.md': 'confluence\n',
 			'docs/obsidian/note.md': 'obsidian\n',
-			'.gitignore': 'ignored\n',
-		});
-		commitAll(seed);
-		runGit(root, ['init', '--bare', '--quiet', '--initial-branch=main', bare]);
-		runGit(seed, ['push', bare, 'main']);
-		runGit(root, ['--git-dir', bare, 'symbolic-ref', 'HEAD', 'refs/heads/main']);
-		writeFiles(live, {
-			'quarry_config.yaml': 'name: live\n',
-			'context.md': 'live content\n',
-			'generated.md': '---\ntype: generated\n---\nlive generated\n',
-			'annotations.md': 'live notes\n',
-			'rendered.md': 'live rendered\n',
-			'rendered.md.j2': 'live template\n',
-			'repos/source.md': 'live synced\n',
-			'docs/notion/page.md': 'live notion\n',
-			'docs/confluence/page.md': 'live confluence\n',
-			'docs/obsidian/note.md': 'live obsidian\n',
-			'untracked.md': 'live only\n',
 			'.env': 'secret\n',
 			'nested/.env.local': 'nested secret\n',
 			'nested/repository/.git/config': 'protected\n',
 		});
-		liveSnapshot = snapshot(live);
-		const context: ContextExplorerGitContext = {
-			projectId: 'project-id',
-			projectFolder: live,
-			userId: 'user-1',
-			user: { name: 'Test User', email: 'test@example.com' },
-			token: 'token',
-			configOverride: { provider: 'github', repoFullName: 'quarry/context' },
-			integrationAvailableOverride: true,
-			providerOverride: provider(bare),
-		};
-		access = {
-			projectFolder: live,
-			git: await resolveContextExplorerGit(context),
-		};
 	});
 
 	afterEach(() => {
 		fs.rmSync(root, { recursive: true, force: true });
 	});
 
-	it('reads and writes tracked content only in the worktree with optimistic locking', async () => {
-		const original = await readFileContent('/context.md', access);
-		const result = await writeFileContent('/context.md', 'updated\n', original.hash, access);
-		const updated = await readFileContent('/context.md', access);
+	it('reads and writes content in the project folder with optimistic locking', async () => {
+		const original = await readFileContent('/context.md', project);
+		const result = await writeFileContent('/context.md', 'updated\n', original.hash, project);
+		const updated = await readFileContent('/context.md', project);
 
-		expect(original.content).toBe('repository content\n');
+		expect(original).toMatchObject({ content: 'project content\n', isEditable: true, reason: null });
 		expect(updated.content).toBe('updated\n');
+		expect(fs.readFileSync(path.join(project, 'context.md'), 'utf8')).toBe('updated\n');
 		expect(result.hash).toBe(updated.hash);
-		await expect(writeFileContent('/context.md', 'stale\n', original.hash, access)).rejects.toMatchObject({
+		await expect(writeFileContent('/context.md', 'stale\n', original.hash, project)).rejects.toMatchObject({
 			codeMessage: 'CONFLICT',
 		});
-		expectLiveUnchanged();
-	});
-
-	it('browses the live project read-only when no repository is connected', async () => {
-		const readOnlyAccess: ContextExplorerFileAccess = {
-			projectFolder: live,
-			git: await resolveContextExplorerGit({
-				projectId: 'project-id',
-				projectFolder: live,
-				userId: 'user-1',
-				user: { name: 'Test User', email: 'test@example.com' },
-				token: 'token',
-				configOverride: null,
-				integrationAvailableOverride: true,
-				providerOverride: provider(bare),
-			}),
-		};
-		const tree = await getFileTree(live);
-		const file = await readFileContent('/context.md', readOnlyAccess);
-
-		expect(tree.map((entry) => entry.name)).toContain('context.md');
-		expect(file).toMatchObject({
-			content: 'live content\n',
-			isEditable: false,
-			reason: 'no-repo',
-		});
-		await expect(writeFileContent('/context.md', 'changed\n', file.hash, readOnlyAccess)).rejects.toMatchObject({
-			codeMessage: 'FORBIDDEN',
-		});
-		expectLiveUnchanged();
 	});
 
 	it('returns every editability reason with actionable guidance in precedence order', async () => {
-		const generated = await readFileContent('/generated.md', access);
-		const rendered = await readFileContent('/rendered.md', access);
-		const repoSource = await readFileContent('/repos/source.md', access);
-		const notion = await readFileContent('/docs/notion/page.md', access);
-		const untracked = await readFileContent('/untracked.md', access);
+		const generated = await readFileContent('/generated.md', project);
+		const rendered = await readFileContent('/rendered.md', project);
+		const repoSource = await readFileContent('/repos/source.md', project);
+		const notion = await readFileContent('/docs/notion/page.md', project);
 
 		expect(generated).toMatchObject({
 			reason: 'generated',
@@ -154,70 +79,56 @@ describe('context explorer worktree writes', () => {
 			guidance: { actionKind: 'file', actionPath: '/quarry_config.yaml' },
 		});
 		expect(notion.reason).toBe('synced-source');
-		expect(untracked).toMatchObject({
-			reason: 'not-tracked',
-			guidance: { message: expect.stringContaining('Add it') },
-		});
-		expectLiveUnchanged();
 	});
 
 	it('excludes and rejects .git and environment files across tree, read, write, and search', async () => {
-		const tree = await getFileTree(live);
+		const tree = await getFileTree(project);
 		const nested = tree.find((entry) => entry.name === 'nested');
-		const context = await readFileContent('/context.md', access);
+		const context = await readFileContent('/context.md', project);
 
 		expect(tree.map((entry) => entry.name)).not.toEqual(expect.arrayContaining(['.git', '.env']));
 		expect(nested?.children?.map((entry) => entry.name)).not.toContain('.env.local');
 		for (const protectedPath of ['/nested/repository/.git/config', '/.env', '/nested/.env.local']) {
-			await expect(readFileContent(protectedPath, access)).rejects.toMatchObject({ codeMessage: 'FORBIDDEN' });
-			await expect(writeFileContent(protectedPath, 'changed\n', context.hash, access)).rejects.toMatchObject({
+			await expect(readFileContent(protectedPath, project)).rejects.toMatchObject({ codeMessage: 'FORBIDDEN' });
+			await expect(writeFileContent(protectedPath, 'changed\n', context.hash, project)).rejects.toMatchObject({
 				codeMessage: 'FORBIDDEN',
 			});
 		}
-		expect((await searchFileContents('secret', live)).results).toEqual([]);
-		expectLiveUnchanged();
+		expect((await searchFileContents('secret', project)).results).toEqual([]);
 	});
 
 	it('rejects traversal, symlinks, oversized and non-UTF-8 files', async () => {
-		const context = await readFileContent('/context.md', access);
-		const repo = access.git.status === 'available' ? access.git.repo : null;
-		expect(repo).not.toBeNull();
-		const worktreeProject = repo!.projectPrefix
-			? path.join(repo!.worktreeRoot, repo!.projectPrefix)
-			: repo!.worktreeRoot;
+		const context = await readFileContent('/context.md', project);
 		const outside = path.join(root, 'outside.md');
 		fs.writeFileSync(outside, 'outside\n');
-		fs.symlinkSync(outside, path.join(worktreeProject, 'linked.md'));
-		fs.writeFileSync(path.join(worktreeProject, 'context.md'), Buffer.from([0xff, 0xfe]));
+		fs.symlinkSync(outside, path.join(project, 'linked.md'));
+		fs.writeFileSync(path.join(project, 'binary.md'), Buffer.from([0xff, 0xfe]));
 
-		await expect(writeFileContent('../outside.md', 'changed\n', context.hash, access)).rejects.toMatchObject({
+		await expect(writeFileContent('../outside.md', 'changed\n', context.hash, project)).rejects.toMatchObject({
 			codeMessage: 'FORBIDDEN',
 		});
-		await expect(writeFileContent('/linked.md', 'changed\n', context.hash, access)).rejects.toMatchObject({
+		await expect(writeFileContent('/linked.md', 'changed\n', context.hash, project)).rejects.toMatchObject({
 			codeMessage: 'FORBIDDEN',
 		});
 		await expect(
-			writeFileContent('/context.md', 'a'.repeat(MAX_CONTEXT_FILE_SIZE + 1), context.hash, access),
+			writeFileContent('/context.md', 'a'.repeat(MAX_CONTEXT_FILE_SIZE + 1), context.hash, project),
 		).rejects.toMatchObject({ codeMessage: 'BAD_REQUEST' });
-		await expect(readFileContent('/context.md', access)).rejects.toMatchObject({ codeMessage: 'BAD_REQUEST' });
+		await expect(readFileContent('/binary.md', project)).rejects.toMatchObject({ codeMessage: 'BAD_REQUEST' });
 		expect(fs.readFileSync(outside, 'utf8')).toBe('outside\n');
-		expectLiveUnchanged();
 	});
 
 	it('preserves file mode and permits only one concurrent atomic write', async () => {
-		const repo = access.git.status === 'available' ? access.git.repo : null;
-		const target = path.join(repo!.worktreeRoot, 'context.md');
+		const target = path.join(project, 'context.md');
 		fs.chmodSync(target, 0o600);
-		const original = await readFileContent('/context.md', access);
+		const original = await readFileContent('/context.md', project);
 		const results = await Promise.allSettled([
-			writeFileContent('/context.md', 'first\n', original.hash, access),
-			writeFileContent('/context.md', 'second\n', original.hash, access),
+			writeFileContent('/context.md', 'first\n', original.hash, project),
+			writeFileContent('/context.md', 'second\n', original.hash, project),
 		]);
 
 		expect(results.filter((result) => result.status === 'fulfilled')).toHaveLength(1);
 		expect(results.filter((result) => result.status === 'rejected')).toHaveLength(1);
 		expect(fs.statSync(target).mode & 0o777).toBe(0o600);
-		expectLiveUnchanged();
 	});
 
 	it.each([
@@ -227,78 +138,20 @@ describe('context explorer worktree writes', () => {
 		['/docs/notion/page.md', 'synced-source', 'file', '/quarry_config.yaml'],
 		['/docs/confluence/page.md', 'synced-source', 'file', '/quarry_config.yaml'],
 		['/docs/obsidian/note.md', 'synced-source', 'file', '/quarry_config.yaml'],
-		['/untracked.md', 'not-tracked', null, null],
 	])('reports guidance for %s', async (filePath, reason, actionKind, actionPath) => {
-		const file = await readFileContent(filePath, access);
+		const file = await readFileContent(filePath, project);
 		expect(file.reason).toBe(reason);
 		expect(file.guidance?.actionKind).toBe(actionKind);
 		expect(file.guidance?.actionPath).toBe(actionPath);
 	});
 
-	it.each(['/nested/repository/.git/config', '/.env', '/nested/.env.local'])(
-		'rejects protected read %s',
-		async (filePath) => {
-			await expect(readFileContent(filePath, access)).rejects.toMatchObject({ codeMessage: 'FORBIDDEN' });
-		},
-	);
-
-	it.each(['/nested/repository/.git/config', '/.env', '/nested/.env.local'])(
-		'rejects protected write %s',
-		async (filePath) => {
-			const context = await readFileContent('/context.md', access);
-			await expect(writeFileContent(filePath, 'changed\n', context.hash, access)).rejects.toMatchObject({
-				codeMessage: 'FORBIDDEN',
-			});
-		},
-	);
-
-	it.each(['/generated.md', '/rendered.md', '/repos/source.md', '/untracked.md'])(
-		'rejects read-only write %s',
-		async (filePath) => {
-			const file = await readFileContent(filePath, access);
-			await expect(writeFileContent(filePath, 'changed\n', file.hash, access)).rejects.toMatchObject({
-				codeMessage: 'FORBIDDEN',
-			});
-		},
-	);
-
-	function expectLiveUnchanged(): void {
-		expect(snapshot(live)).toEqual(liveSnapshot);
-		expect(fs.existsSync(path.join(live, '.git'))).toBe(false);
-	}
+	it.each(['/generated.md', '/rendered.md', '/repos/source.md'])('rejects read-only write %s', async (filePath) => {
+		const file = await readFileContent(filePath, project);
+		await expect(writeFileContent(filePath, 'changed\n', file.hash, project)).rejects.toMatchObject({
+			codeMessage: 'FORBIDDEN',
+		});
+	});
 });
-
-function provider(bare: string): ContextRepositoryProvider {
-	return {
-		getToken: async () => 'token',
-		notConnectedMessage: 'Not connected.',
-		isIntegrationAvailable: () => true,
-		authenticatedRepoUrl: () => bare,
-		publicRepoUrl: () => 'https://github.com/quarry/context.git',
-		cloneRepo: () => undefined,
-		getGitInfo: () => ({ branch: 'main' }),
-		getUserGitIdentity: async () => ({ name: 'Test', email: 'test@example.com' }),
-		coAuthor: { name: 'quarry', email: 'agent@quarry.invalid' },
-		commitAllAndPushBranch: () => '',
-		pushBranch: () => '',
-		findOpenReviewRequest: async () => null,
-		findReviewRequestByBranch: async () => null,
-		openReviewRequest: async () => ({ kind: 'created', url: 'https://github.com/quarry/context/pull/1' }),
-	};
-}
-
-function initRepository(folder: string): void {
-	runGit(folder, ['init', '--quiet', '--initial-branch=main']);
-}
-
-function commitAll(folder: string): void {
-	runGit(folder, ['add', '-A']);
-	runGit(folder, ['-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '--quiet', '-m', 'initial']);
-}
-
-function runGit(cwd: string, args: string[]): Buffer {
-	return execFileSync('git', args, { cwd, stdio: 'pipe', timeout: 10_000 });
-}
 
 function writeFiles(root: string, files: Record<string, string>): void {
 	for (const [filePath, content] of Object.entries(files)) {
@@ -306,17 +159,4 @@ function writeFiles(root: string, files: Record<string, string>): void {
 		fs.mkdirSync(path.dirname(target), { recursive: true });
 		fs.writeFileSync(target, content);
 	}
-}
-
-function snapshot(root: string): Record<string, Buffer> {
-	const result: Record<string, Buffer> = {};
-	for (const entry of fs.readdirSync(root, { recursive: true, withFileTypes: true })) {
-		if (!entry.isFile()) {
-			continue;
-		}
-		const parent = entry.parentPath ?? entry.path;
-		const absolute = path.join(parent, entry.name);
-		result[path.relative(root, absolute)] = fs.readFileSync(absolute);
-	}
-	return result;
 }

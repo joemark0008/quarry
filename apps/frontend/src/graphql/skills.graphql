@@ -43,7 +43,6 @@ mutation CreateSkill($input: CreateSkillInput!) {
 	createSkill(input: $input) {
 		name
 		location
-		mode
 	}
 }
 

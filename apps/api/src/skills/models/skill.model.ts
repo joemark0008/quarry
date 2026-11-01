@@ -23,10 +23,10 @@ export class SkillLoadError {
 
 @ObjectType({ description: 'How this project saves skills written in the app.' })
 export class SkillSaveStatus {
-	@Field({ description: '`direct`, `git`, `unavailable` or `disabled`.' })
+	@Field({ description: '`direct` or `disabled`.' })
 	mode: string;
 
-	@Field(() => String, { nullable: true, description: 'Why saving is blocked, in the blocked modes.' })
+	@Field(() => String, { nullable: true, description: 'Why saving is blocked, when `disabled`.' })
 	message: string | null;
 }
 
@@ -52,9 +52,6 @@ export class CreatedSkill {
 
 	@Field()
 	location: string;
-
-	@Field({ description: '`direct`: usable now. `git`: goes live after the change is merged and pulled.' })
-	mode: string;
 }
 
 @ObjectType()

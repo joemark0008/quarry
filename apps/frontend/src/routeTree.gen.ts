@@ -25,7 +25,6 @@ import { Route as ProtectedSettingsIndexRouteImport } from './routes/_protected/
 import { Route as ProtectedSettingsAccountRouteImport } from './routes/_protected/settings.account'
 import { Route as ProtectedSettingsAppearanceRouteImport } from './routes/_protected/settings.appearance'
 import { Route as ProtectedSettingsContextExplorerRouteImport } from './routes/_protected/settings.context-explorer'
-import { Route as ProtectedSettingsGitRouteImport } from './routes/_protected/settings.git'
 import { Route as ProtectedSettingsMemoryRouteImport } from './routes/_protected/settings.memory'
 import { Route as ProtectedSettingsProjectRouteImport } from './routes/_protected/settings.project'
 import { Route as ProtectedSettingsRecommendationsRouteImport } from './routes/_protected/settings.recommendations'
@@ -130,11 +129,6 @@ const ProtectedSettingsContextExplorerRoute =
     path: '/context-explorer',
     getParentRoute: () => ProtectedSettingsRoute,
   } as any)
-const ProtectedSettingsGitRoute = ProtectedSettingsGitRouteImport.update({
-  id: '/git',
-  path: '/git',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
 const ProtectedSettingsMemoryRoute = ProtectedSettingsMemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
@@ -269,7 +263,6 @@ export interface FileRoutesByFullPath {
   '/settings/account': typeof ProtectedSettingsAccountRoute
   '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
   '/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
-  '/settings/git': typeof ProtectedSettingsGitRoute
   '/settings/memory': typeof ProtectedSettingsMemoryRoute
   '/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
@@ -305,7 +298,6 @@ export interface FileRoutesByTo {
   '/settings/account': typeof ProtectedSettingsAccountRoute
   '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
   '/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
-  '/settings/git': typeof ProtectedSettingsGitRoute
   '/settings/memory': typeof ProtectedSettingsMemoryRoute
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/settings/storage': typeof ProtectedSettingsStorageRoute
@@ -344,7 +336,6 @@ export interface FileRoutesById {
   '/_protected/settings/account': typeof ProtectedSettingsAccountRoute
   '/_protected/settings/appearance': typeof ProtectedSettingsAppearanceRoute
   '/_protected/settings/context-explorer': typeof ProtectedSettingsContextExplorerRoute
-  '/_protected/settings/git': typeof ProtectedSettingsGitRoute
   '/_protected/settings/memory': typeof ProtectedSettingsMemoryRoute
   '/_protected/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/_protected/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
@@ -384,7 +375,6 @@ export interface FileRouteTypes {
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/context-explorer'
-    | '/settings/git'
     | '/settings/memory'
     | '/settings/project'
     | '/settings/recommendations'
@@ -420,7 +410,6 @@ export interface FileRouteTypes {
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/context-explorer'
-    | '/settings/git'
     | '/settings/memory'
     | '/settings/recommendations'
     | '/settings/storage'
@@ -458,7 +447,6 @@ export interface FileRouteTypes {
     | '/_protected/settings/account'
     | '/_protected/settings/appearance'
     | '/_protected/settings/context-explorer'
-    | '/_protected/settings/git'
     | '/_protected/settings/memory'
     | '/_protected/settings/project'
     | '/_protected/settings/recommendations'
@@ -605,13 +593,6 @@ declare module '@tanstack/react-router' {
       path: '/context-explorer'
       fullPath: '/settings/context-explorer'
       preLoaderRoute: typeof ProtectedSettingsContextExplorerRouteImport
-      parentRoute: typeof ProtectedSettingsRoute
-    }
-    '/_protected/settings/git': {
-      id: '/_protected/settings/git'
-      path: '/git'
-      fullPath: '/settings/git'
-      preLoaderRoute: typeof ProtectedSettingsGitRouteImport
       parentRoute: typeof ProtectedSettingsRoute
     }
     '/_protected/settings/memory': {
@@ -810,7 +791,6 @@ interface ProtectedSettingsRouteChildren {
   ProtectedSettingsAccountRoute: typeof ProtectedSettingsAccountRoute
   ProtectedSettingsAppearanceRoute: typeof ProtectedSettingsAppearanceRoute
   ProtectedSettingsContextExplorerRoute: typeof ProtectedSettingsContextExplorerRoute
-  ProtectedSettingsGitRoute: typeof ProtectedSettingsGitRoute
   ProtectedSettingsMemoryRoute: typeof ProtectedSettingsMemoryRoute
   ProtectedSettingsProjectRoute: typeof ProtectedSettingsProjectRouteWithChildren
   ProtectedSettingsRecommendationsRoute: typeof ProtectedSettingsRecommendationsRoute
@@ -823,7 +803,6 @@ const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
   ProtectedSettingsAccountRoute: ProtectedSettingsAccountRoute,
   ProtectedSettingsAppearanceRoute: ProtectedSettingsAppearanceRoute,
   ProtectedSettingsContextExplorerRoute: ProtectedSettingsContextExplorerRoute,
-  ProtectedSettingsGitRoute: ProtectedSettingsGitRoute,
   ProtectedSettingsMemoryRoute: ProtectedSettingsMemoryRoute,
   ProtectedSettingsProjectRoute: ProtectedSettingsProjectRouteWithChildren,
   ProtectedSettingsRecommendationsRoute: ProtectedSettingsRecommendationsRoute,

@@ -27,13 +27,6 @@ import type { StorageUsage } from '@quarry/api/attachments/storage/usage';
 import type { SearchChatResult } from '@quarry/api/chats/chat.repository';
 import type { QueryRowsPage } from '@quarry/api/chats/query-rows.service';
 import type { SharedChatWithDetails } from '@quarry/api/chats/shared-chat.repository';
-import type { ContextPushResult } from '@quarry/api/context-explorer/git/context-explorer-pr';
-import type {
-	ContextHistoricalDiffAction,
-	ContextRepositoryStatus,
-	CreateBranchAndCommitResult,
-	LiveContextPullResult,
-} from '@quarry/api/context-explorer/git/types';
 import type { RecommendationRepo } from '@quarry/api/context-recommendations/context-recommendation-repo';
 import type { FeedbackLink } from '@quarry/api/context-recommendations/context-recommendation.types';
 import type { ModelSettingsService } from '@quarry/api/model-settings/model-settings.service';
@@ -47,8 +40,6 @@ import type { DisplaySettings } from '@quarry/shared/date';
 import type { CustomBoundarySet } from '@quarry/shared/map';
 import type { displayChart, displayMap } from '@quarry/shared/tools';
 import type {
-	ContextBranchInfo,
-	ContextChangedFile,
 	FileContentSearchResult,
 	FileEditabilityGuidance,
 	FileEditabilityReason,
@@ -182,56 +173,11 @@ interface GraphQLProcedures {
 		>;
 	};
 	contextExplorer: {
-		commitChanges: Procedure<{ paths: string[]; message: string }, { commit: string }>;
-		connectRepository: Procedure<
-			{ provider: 'github' | 'gitlab'; repoFullName: string },
-			{
-				provider: 'github' | 'gitlab';
-				repoFullName: string;
-				defaultBranch: string;
-				branch: string;
-				connectionType: 'linked-existing-commit';
-			}
-		>;
-		createBranch: Procedure<{ branch: string }, ContextBranchInfo & { usedFallbackBase: boolean }>;
-		createBranchAndCommit: Procedure<
-			{ paths: string[]; message: string; branch?: string | undefined },
-			CreateBranchAndCommitResult
-		>;
-		discardAllChanges: Procedure<void, void>;
-		discardLocalChange: Procedure<{ path: string }, { hash: string | null }>;
-		disconnectRepository: Procedure<void, void>;
-		getChangedFiles: Procedure<void, ContextChangedFile[]>;
-		getFileDiff: Procedure<
-			{ path: string; from?: string | undefined; to?: string | undefined },
-			ContextChangedFile & { oldContent: string; newContent: string }
-		>;
 		getFileTree: Procedure<void, { entries: FileTreeEntry[] }>;
-		getHistoricalDiffAction: Procedure<{ from: string; to: string }, 'update' | 'open' | 'switch' | 'blocked'>;
-		getLiveContextPullHistory: Procedure<
-			void,
-			{
-				fileExplorerAction: ContextHistoricalDiffAction;
-				id: string;
-				status: 'running' | 'failed' | 'completed' | 'cancelled';
-				startedAt: Date;
-				completedAt: Date | null;
-				configuredBranch: string | null;
-				changed: boolean | null;
-				oldCommit: string | null;
-				newCommit: string | null;
-				fileCount: number;
-				files: { path: string; additions: number | null; deletions: number | null }[];
-				errorMessage: string | null;
-			}[]
-		>;
-		getRepositoryStatus: Procedure<void, ContextRepositoryStatus>;
 		getRulesPreviewGroups: Procedure<
 			void,
 			{ enforced: true; groups: { id: string; name: string; isDefault: boolean }[] }
 		>;
-		pullLiveContext: Procedure<void, LiveContextPullResult>;
-		pushBranch: Procedure<void, ContextPushResult>;
 		readFile: Procedure<
 			{ path: string },
 			{
@@ -243,22 +189,6 @@ interface GraphQLProcedures {
 			}
 		>;
 		searchContent: Procedure<{ query: string }, { results: FileContentSearchResult[]; truncated: boolean }>;
-		suggestBranchName: Procedure<void, string>;
-		switchBranch: Procedure<
-			{ branch: string },
-			{
-				currentBranch: string | null;
-				defaultBranch: string;
-				aheadCommitCount: number;
-				unpushedCommitCount: number;
-				branches: string[];
-				suggestedBranch: string;
-			}
-		>;
-		updateWorktree: Procedure<
-			{ requiredCommits?: string[] | undefined },
-			{ branch: string; commit: string; fetched: boolean }
-		>;
 		writeFile: Procedure<{ path: string; content: string; expectedHash: string }, { hash: string }>;
 	};
 	contextRecommendation: {
@@ -915,10 +845,7 @@ interface GraphQLProcedures {
 		listLoadErrors: Procedure<void, SkillLoadError[]>;
 		saveStatus: Procedure<void, { mode: string; message?: string | null }>;
 		detail: Procedure<{ name: string }, { name: string; description: string; body: string; hash: string }>;
-		create: Procedure<
-			{ name: string; description: string; body: string },
-			{ name: string; location: string; mode: string }
-		>;
+		create: Procedure<{ name: string; description: string; body: string }, { name: string; location: string }>;
 		update: Procedure<
 			{ name: string; description: string; body: string; expectedHash: string },
 			{ name: string; hash: string }

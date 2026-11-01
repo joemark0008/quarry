@@ -3,7 +3,6 @@ import fsSync from 'node:fs';
 import path from 'node:path';
 
 import type {
-	ContextGitUnavailableReason,
 	FileContentResponse,
 	FileContentSearchResponse,
 	FileContentSearchResult,
@@ -25,10 +24,6 @@ import {
 	toVirtualPath,
 } from '../../agent/utils/tools.js';
 import { HandlerError } from '../../common/errors/handler-error.js';
-import type { ContextExplorerGitResolution } from '../git/context-explorer-git.js';
-import type { ContextRepoState, ResolvedContextRepo } from '../git/context-repo.js';
-import { getCommittedProjectPaths, getWorktreeProjectRoot, normalizeProjectPath } from '../git/context-repo.js';
-import { getRepoProviderDisplayName } from '../git/review-request-provider.js';
 import { assertNoSymlinkInWritePath, canonicalizeWriteRoot, writeFileAtomically } from './safe-file-write.js';
 
 const SEARCH_TIMEOUT_MS = 5_000;
@@ -41,11 +36,6 @@ export interface FileEditability {
 	isEditable: boolean;
 	reason: FileEditabilityReason | null;
 	guidance: FileEditabilityGuidance | null;
-}
-
-export interface ContextExplorerFileAccess {
-	projectFolder: string;
-	git: ContextExplorerGitResolution;
 }
 
 type RipgrepMatchEntry = {
@@ -62,30 +52,10 @@ export async function getFileTree(projectFolder: string): Promise<FileTreeEntry[
 	return readDirectoryRecursive(projectFolder, projectFolder);
 }
 
-export async function readFileContent(
-	filePath: string,
-	access: ContextExplorerFileAccess | string,
-): Promise<FileContentResponse> {
-	if (typeof access === 'string') {
-		const { realPath } = resolveAndValidatePath(filePath, access);
-		const contentBuffer = await readValidatedFile(realPath, filePath);
-		return {
-			content: decodeTextContent(contentBuffer),
-			hash: hashContent(contentBuffer),
-			isEditable: false,
-			reason: 'no-repo',
-			guidance: guidanceForReason('no-repo'),
-		};
-	}
-	const livePath = resolveAndValidatePath(filePath, access.projectFolder).realPath;
-	const repo = availableRepo(access.git);
-	const trackedPaths = repo ? getCommittedProjectPaths(repo) : new Set<string>();
-	const editability = getFileEditability(filePath, livePath, access, repo, trackedPaths);
-	const readPath =
-		repo && trackedPaths.has(normalizeProjectPath(filePath))
-			? resolveAndValidatePath(filePath, getWorktreeProjectRoot(repo)).realPath
-			: livePath;
-	const contentBuffer = await readValidatedFile(readPath, filePath);
+export async function readFileContent(filePath: string, projectFolder: string): Promise<FileContentResponse> {
+	const { realPath } = resolveAndValidatePath(filePath, projectFolder);
+	const editability = getFileEditability(filePath, realPath);
+	const contentBuffer = await readValidatedFile(realPath, filePath);
 	return {
 		content: decodeTextContent(contentBuffer),
 		hash: hashContent(contentBuffer),
@@ -99,23 +69,14 @@ export async function writeFileContent(
 	filePath: string,
 	content: string,
 	expectedHash: string,
-	access: ContextExplorerFileAccess | string,
+	projectFolder: string,
 ): Promise<FileWriteResponse> {
-	if (typeof access === 'string') {
-		throw new HandlerError('FORBIDDEN', guidanceForReason('no-repo').message);
-	}
 	validateExpectedHash(expectedHash);
 	const contentBuffer = Buffer.from(content, 'utf-8');
 	validateContentBuffer(contentBuffer);
 
-	if (access.git.status === 'unavailable') {
-		throw new HandlerError('FORBIDDEN', access.git.message);
-	}
-	const repo = access.git.repo;
-	const livePath = resolveAndValidatePath(filePath, access.projectFolder).realPath;
-	const trackedPaths = getCommittedProjectPaths(repo);
-	assertFileEditable(filePath, livePath, access, repo, trackedPaths);
-	const { realPath, root } = resolveAndValidatePath(filePath, getWorktreeProjectRoot(repo));
+	const { realPath, root } = resolveAndValidatePath(filePath, projectFolder);
+	assertFileEditable(filePath, realPath);
 	const currentContent = await readValidatedFile(realPath, filePath);
 	assertExpectedHash(currentContent, expectedHash);
 
@@ -187,17 +148,7 @@ export function removeContextFile(filePath: string, expectedHash: string, projec
 	}
 }
 
-export function getFileEditability(
-	filePath: string,
-	realPath: string,
-	access: ContextExplorerFileAccess,
-	repo: ResolvedContextRepo | null,
-	trackedPaths: Set<string>,
-): FileEditability {
-	if (access.git.status === 'unavailable') {
-		return unavailableGitEditability(access.git.reason, access.git.message, access.git.repo?.provider);
-	}
-
+export function getFileEditability(filePath: string, realPath: string): FileEditability {
 	const projectPath = normalizeProjectPath(filePath);
 	if (hasGeneratedFrontmatter(realPath)) {
 		const annotationsPath = siblingPathIfExists(filePath, realPath, 'annotations.md');
@@ -237,20 +188,11 @@ export function getFileEditability(
 			actionLabel: 'Open quarry_config.yaml',
 		});
 	}
-	if (!repo || !trackedPaths.has(projectPath)) {
-		return readOnly('not-tracked', guidanceForReason('not-tracked'));
-	}
 	return { isEditable: true, reason: null, guidance: null };
 }
 
-export function assertFileEditable(
-	filePath: string,
-	realPath: string,
-	access: ContextExplorerFileAccess,
-	repo: ResolvedContextRepo | null,
-	trackedPaths: Set<string>,
-): void {
-	const editability = getFileEditability(filePath, realPath, access, repo, trackedPaths);
+export function assertFileEditable(filePath: string, realPath: string): void {
+	const editability = getFileEditability(filePath, realPath);
 	if (editability.isEditable) {
 		return;
 	}
@@ -559,103 +501,8 @@ function hasGeneratedFrontmatter(filePath: string): boolean {
 	}
 }
 
-function availableRepo(resolution: ContextExplorerGitResolution): ResolvedContextRepo | null {
-	return resolution.status === 'available' ? resolution.repo : null;
-}
-
-function unavailableGitEditability(
-	reason: ContextGitUnavailableReason,
-	message: string,
-	provider?: ContextRepoState['provider'],
-): FileEditability {
-	return readOnly(reason, { ...guidanceForReason(reason, provider), message });
-}
-
 function readOnly(reason: FileEditabilityReason, guidance: FileEditabilityGuidance): FileEditability {
 	return { isEditable: false, reason, guidance };
-}
-
-function guidanceForReason(
-	reason: FileEditabilityReason,
-	provider?: ContextRepoState['provider'],
-): FileEditabilityGuidance {
-	const providerName = getRepoProviderDisplayName(provider);
-	const guidance: Record<FileEditabilityReason, FileEditabilityGuidance> = {
-		'github-unavailable': {
-			message: `${providerName} is not configured for this instance.`,
-			actionKind: 'route',
-			actionPath: '/settings/git',
-			actionLabel: 'Open Git settings',
-		},
-		'git-unavailable': {
-			message: 'Git is temporarily unavailable.',
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-		'repository-mismatch': {
-			message: "The connected repository does not match the live project's Git repository.",
-			actionKind: 'route',
-			actionPath: '/settings/git',
-			actionLabel: 'Open Git settings',
-		},
-		'no-token': {
-			message: `Connect your ${providerName} account to edit context files.`,
-			actionKind: 'route',
-			actionPath: '/settings/git',
-			actionLabel: `Connect ${providerName} account`,
-		},
-		'no-repo': {
-			message: 'No context repository is connected. Connect one in Git settings to edit context files.',
-			actionKind: 'route',
-			actionPath: '/settings/git',
-			actionLabel: 'Open Git settings',
-		},
-		'unsupported-provider': {
-			message: 'The connected repository provider is not supported by the context explorer.',
-			actionKind: 'route',
-			actionPath: '/settings/git',
-			actionLabel: 'Open Git settings',
-		},
-		'project-not-found': {
-			message: 'No tracked quarry_config.yaml was found in the connected repository.',
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-		'project-ambiguous': {
-			message: 'Multiple quarry projects were found in the connected repository.',
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-		generated: {
-			message: 'This file is generated by context sync.',
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-		'rendered-template': {
-			message: 'This file is rendered from a Jinja template.',
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-		'synced-source': {
-			message: 'This path is replaced by context sync. Change its source in quarry_config.yaml.',
-			actionKind: 'file',
-			actionPath: '/quarry_config.yaml',
-			actionLabel: 'Open quarry_config.yaml',
-		},
-		'not-tracked': {
-			message:
-				"This file can't be edited because it isn't in the connected repository. Add it there to make it editable.",
-			actionKind: null,
-			actionPath: null,
-			actionLabel: null,
-		},
-	};
-	return guidance[reason];
 }
 
 function siblingPathIfExists(filePath: string, realPath: string, siblingName: string): string | null {
@@ -669,6 +516,10 @@ function siblingPathIfExists(filePath: string, realPath: string, siblingName: st
 
 function normalizeVirtualPath(filePath: string): string {
 	return `/${normalizeProjectPath(filePath)}`;
+}
+
+function normalizeProjectPath(projectPath: string): string {
+	return projectPath.replaceAll('\\', '/').replace(/^\/+/, '');
 }
 
 function toFileError(error: unknown, filePath: string): HandlerError {

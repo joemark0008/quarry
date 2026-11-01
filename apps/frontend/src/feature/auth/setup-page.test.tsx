@@ -46,9 +46,19 @@ vi.mock('@/feature/auth/components/auth-form', () => ({
 			<button onClick={() => void form?.submit()}>Submit</button>
 		</div>
 	),
-	FormTextField: ({ name, error, description }: { name: string; error?: string; description?: string }) => (
+	FormTextField: ({
+		name,
+		error,
+		description,
+		onValueChange,
+	}: {
+		name: string;
+		error?: string;
+		description?: ReactNode;
+		onValueChange?: () => void;
+	}) => (
 		<div>
-			<span>{name}</span>
+			<button onClick={onValueChange}>Edit {name}</button>
 			{description && <small>{description}</small>}
 			{error && <p role='alert'>{error}</p>}
 		</div>
@@ -152,9 +162,24 @@ describe('Setup page', () => {
 		expect((await screen.findByRole('alert')).textContent).toBe('password too short');
 	});
 
-	it('says where to find the token', () => {
+	it('clears the token error as soon as the token is edited', async () => {
+		mocks.completeSetup.mockResolvedValue({ status: 'invalid-token' });
+
+		render(<Setup />);
+		fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
+		await screen.findByRole('alert');
+
+		fireEvent.click(screen.getByRole('button', { name: 'Edit token' }));
+
+		expect(screen.queryByRole('alert')).toBeNull();
+	});
+
+	it('guides the installer: what this is, where the token is, and the password rule', () => {
 		render(<Setup />);
 
-		expect(screen.getByText('Printed in the server logs when quarry starts.')).toBeTruthy();
+		expect(screen.getByText(/Create the first admin account/)).toBeTruthy();
+		expect(screen.getByText(/Printed in the server logs when quarry starts/)).toBeTruthy();
+		expect(screen.getByText(/logs quarry \| grep "setup token"/)).toBeTruthy();
+		expect(screen.getByText('At least 8 characters.')).toBeTruthy();
 	});
 });

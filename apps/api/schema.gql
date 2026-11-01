@@ -179,11 +179,6 @@ input CreateSkillInput {
 
 type CreatedSkill {
   location: String!
-
-  """
-  `direct`: usable now. `git`: goes live after the change is merged and pulled.
-  """
-  mode: String!
   name: String!
 }
 
@@ -310,29 +305,13 @@ type Mutation {
   """Upstream `trpc.chatFork.openStandalone`."""
   chatForkOpenStandalone(input: JSON): JSON
 
-  """Upstream `contextExplorer.commitChanges`: `{ paths, message }`."""
-  commitContextChanges(input: JSON!): JSON!
-
   """Creates the first admin; needs the setup token from the server log."""
   completeSetup(input: CompleteSetupInput!): Boolean!
-
-  """
-  Upstream `contextExplorer.connectRepository`: `{ provider, repoFullName }`.
-  """
-  connectContextRepository(input: JSON!): JSON!
 
   """
   Checks the credentials on a live connection, then saves them (encrypted) for the project.
   """
   connectWarehouse(input: WarehouseConnectionInput!): WarehouseConnectionResult!
-
-  """Upstream `contextExplorer.createBranch`."""
-  createContextBranch(branch: String!): JSON!
-
-  """
-  Upstream `contextExplorer.createBranchAndCommit`: `{ branch?, paths, message }`.
-  """
-  createContextBranchAndCommit(input: JSON!): JSON!
 
   """Not available until GitHub/GitLab land (Phase 7)."""
   createContextRecommendationBatchPullRequest(input: ContextRecommendationIdsInput!): JSON!
@@ -366,18 +345,7 @@ type Mutation {
   deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
-
-  """Projects without a context repository only."""
   deleteSkill(input: DeleteSkillInput!): Boolean!
-
-  """Upstream `contextExplorer.discardAllChanges`."""
-  discardAllContextChanges: JSON!
-
-  """Upstream `contextExplorer.discardLocalChange`."""
-  discardContextFileChange(path: String!): JSON!
-
-  """Upstream `contextExplorer.disconnectRepository`."""
-  disconnectContextRepository: JSON!
   disconnectWarehouse(name: String!): Boolean!
   editMemory(input: EditMemoryInput!): Memory!
 
@@ -406,14 +374,6 @@ type Mutation {
 
   """Runs an edited query without saving it (`execute_sql` output)."""
   previewSqlQuery(input: SqlEditInput!): JSON!
-
-  """
-  Upstream `contextExplorer.pullLiveContext` (project admins only, not context admins).
-  """
-  pullLiveContext: JSON!
-
-  """Upstream `contextExplorer.pushBranch`."""
-  pushContextBranch: JSON!
   renameChat(input: RenameChatInput!): Boolean!
   renameProject(input: RenameProjectInput!): ProjectSummary!
 
@@ -559,9 +519,6 @@ type Mutation {
 
   """Upstream `feedback.submit`."""
   submitMessageFeedback(input: MessageFeedbackInput!): MessageFeedback!
-
-  """Upstream `contextExplorer.switchBranch`."""
-  switchContextBranch(branch: String!): JSON!
   switchMessageVersion(chatId: ID!, messageId: ID!): Boolean!
 
   """
@@ -575,9 +532,6 @@ type Mutation {
 
   """Upstream `chart.updateConfig`: the chat owner edits a `display_chart`."""
   updateChartConfig(config: JSON!, toolCallId: String!): Boolean!
-
-  """Upstream `contextExplorer.updateWorktree`."""
-  updateContextWorktree(requiredCommits: [String!]): JSON!
 
   """Upstream `project.updateDefaultModels`."""
   updateDefaultModels(settings: JSON!): JSON!
@@ -597,8 +551,6 @@ type Mutation {
   updateSandboxSecretDescription(input: UpdateSandboxSecretDescriptionInput!): SandboxSecret!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
-
-  """Projects without a context repository only."""
   updateSkill(input: UpdateSkillInput!): UpdatedSkill!
 
   """Runs an edited query and saves it in the chat's message."""
@@ -729,26 +681,11 @@ type Query {
   """SQL and column lineage behind a cited value (upstream `citation.get`)."""
   citation(column: String!, queryId: String!): JSON!
 
-  """Upstream `contextExplorer.suggestBranchName`."""
-  contextBranchNameSuggestion: JSON!
-
-  """Upstream `contextExplorer.getChangedFiles`."""
-  contextChangedFiles: JSON!
-
   """Upstream `contextExplorer.readFile`."""
   contextFile(path: String!): JSON!
 
-  """Upstream `contextExplorer.getFileDiff`: `{ path, from?, to? }`."""
-  contextFileDiff(input: JSON!): JSON!
-
   """Upstream `contextExplorer.getFileTree`: `{ entries }`."""
   contextFileTree: JSON!
-
-  """Upstream `contextExplorer.getHistoricalDiffAction`: `{ from, to }`."""
-  contextHistoricalDiffAction(input: JSON!): JSON!
-
-  """Upstream `contextExplorer.getLiveContextPullHistory`."""
-  contextPullHistory: JSON!
 
   """Upstream `contextRecommendation.getAgentPrompt`."""
   contextRecommendationAgentPrompt(input: ContextRecommendationIdsInput!): String!
@@ -771,9 +708,6 @@ type Query {
 
   """Upstream `contextRecommendation.list`: by impact, with their feedback."""
   contextRecommendations(status: String): JSON!
-
-  """Upstream `contextExplorer.getRepositoryStatus`."""
-  contextRepositoryStatus: JSON!
 
   """Upstream `contextExplorer.getRulesPreviewGroups`."""
   contextRulesPreviewGroups: JSON!
@@ -1303,10 +1237,10 @@ type SkillLoadError {
 
 """How this project saves skills written in the app."""
 type SkillSaveStatus {
-  """Why saving is blocked, in the blocked modes."""
+  """Why saving is blocked, when `disabled`."""
   message: String
 
-  """`direct`, `git`, `unavailable` or `disabled`."""
+  """`direct` or `disabled`."""
   mode: String!
 }
 

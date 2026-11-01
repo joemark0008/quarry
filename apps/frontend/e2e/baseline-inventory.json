@@ -320,28 +320,6 @@
 		],
 		"inputs": ["Search settings..."]
 	},
-	"/settings/git": {
-		"url": "/settings/git",
-		"errors": [],
-		"headings": ["Git"],
-		"buttons": ["New chat", "Switch project. Current project: Test Project", "Toggle sidebar"],
-		"links": [
-			"Account",
-			"Agent",
-			"Appearance",
-			"Back to app",
-			"Chat with quarry dataOpens a chat outside settings",
-			"File Explorer",
-			"Git",
-			"Project Settings",
-			"Query tools",
-			"Recommendations",
-			"Storage",
-			"TTesttest@test.test",
-			"Warehouse"
-		],
-		"inputs": ["Search settings..."]
-	},
 	"/settings/recommendations": {
 		"url": "/settings/recommendations",
 		"errors": [],

@@ -29,14 +29,14 @@
 }
 .authFormDiv {
 	display: flex;
-	min-height: 100vh;
+	height: 100dvh;
 	width: 100%;
 }
 .authFormDiv2 {
 	display: flex;
 	width: 100%;
-	align-items: center;
 	justify-content: center;
+	overflow-y: auto;
 	@media (width >= 64rem) {
 		width: calc(1 / 2 * 100%);
 	}
@@ -326,27 +326,37 @@
 	font-size: 0.875rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
-.formTextFieldNakedInput {
+input.formTextFieldNakedInput {
 	width: 100%;
+	border: 1px solid var(--app-line-strong);
 	border-radius: var(--app-radius);
-	background-color: var(--app-bg);
+	background-color: var(--app-surface);
+	transition-property: border-color, box-shadow;
+	transition-duration: var(--fx-duration, 150ms);
+	&:focus-visible {
+		border-color: var(--app-primary-muted);
+		box-shadow: 0 0 0 3px color-mix(in oklab, var(--app-primary-muted) 20%, transparent);
+	}
+	&[aria-invalid='true'] {
+		border-color: var(--app-red-500);
+	}
 }
-.formTextFieldNakedInput2 {
+input.formTextFieldNakedInput2 {
 	height: 2.5rem;
 	padding-inline: 0.75rem;
 	font-size: 0.875rem;
 	line-height: var(--fx-leading, calc(1.25 / 0.875));
 }
-.formTextFieldNakedInput3 {
+input.formTextFieldNakedInput3 {
 	height: 3rem;
 	padding: 1rem;
 	font-size: 1rem;
 	line-height: var(--fx-leading, calc(1.5 / 1));
 }
-.formTextFieldNakedInput4 {
+input.formTextFieldNakedInput4 {
 	padding-right: 2.5rem;
 }
-.formTextFieldNakedInput5 {
+input.formTextFieldNakedInput5 {
 	padding-right: 3rem;
 }
 .formTextFieldLastUsedPill {

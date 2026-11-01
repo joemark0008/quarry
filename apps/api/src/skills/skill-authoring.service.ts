@@ -4,10 +4,8 @@ import { SkillDraftSchema, skillFilePath } from '@quarry/shared/skill-authoring'
 import matter from 'gray-matter';
 
 import { findInternalSkill } from '../agent/skills/index.js';
-import type { AuthUser } from '../auth/auth.service.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
-import type { ContextWriteTarget } from '../context-explorer/context-explorer.service.js';
 import { ContextExplorerService } from '../context-explorer/context-explorer.service.js';
 import {
 	createContextFile,
@@ -19,12 +17,10 @@ import type { Project } from '../generated/prisma/client.js';
 import { SkillService } from './skill.service.js';
 
 const DISABLED_MESSAGE = 'This deployment manages skills as files, so they cannot be edited in the app.';
-const GIT_MANAGED_MESSAGE = 'This project keeps skills in Git. Edit them in the File Explorer.';
 
-/**
- * Writing project skills from the app. The Markdown file stays the source of truth: `direct` projects (no context
- * repository) write to the live folder, `git` projects write to the user's worktree for review.
- */
+type SkillWriteTarget = { mode: 'direct'; root: string } | { mode: 'disabled'; message: string };
+
+/** Writing project skills from the app. The Markdown file in the project folder stays the source of truth. */
 @Injectable()
 export class SkillAuthoringService {
 	constructor(
@@ -33,8 +29,8 @@ export class SkillAuthoringService {
 		private readonly config: ConfigService,
 	) {}
 
-	async getSaveStatus(project: Project, user: AuthUser): Promise<{ mode: SkillSaveMode; message: string | null }> {
-		const target = await this.resolveTarget(project, user);
+	getSaveStatus(project: Project): { mode: SkillSaveMode; message: string | null } {
+		const target = this.resolveTarget(project);
 		return { mode: target.mode, message: 'message' in target ? target.message : null };
 	}
 
@@ -50,27 +46,22 @@ export class SkillAuthoringService {
 		};
 	}
 
-	async create(project: Project, user: AuthUser, input: SkillDraft) {
+	async create(project: Project, input: SkillDraft) {
 		const draft = parseDraft(input);
-		const target = await this.resolveTarget(project, user);
-		if ('message' in target) {
-			throw new HandlerError('FORBIDDEN', target.message);
-		}
+		const root = this.requireRoot(project);
 		await this.skills.initializeSkills(project.id);
 		if (findInternalSkill(draft.name) || this.skills.getSkill(project.id, draft.name)) {
 			throw new HandlerError('CONFLICT', `A skill called '${draft.name}' already exists.`);
 		}
 
 		const location = skillFilePath(draft.name);
-		createContextFile(location, renderSkillFile(draft), target.root);
-		if (target.mode === 'direct') {
-			this.skills.reloadSkills(project.id);
-		}
-		return { name: draft.name, location, mode: target.mode };
+		createContextFile(location, renderSkillFile(draft), root);
+		this.skills.reloadSkills(project.id);
+		return { name: draft.name, location };
 	}
 
-	async update(project: Project, user: AuthUser, input: SkillDraft & { expectedHash: string }) {
-		const root = await this.requireDirectRoot(project, user);
+	async update(project: Project, input: SkillDraft & { expectedHash: string }) {
+		const root = this.requireRoot(project);
 		await this.skills.initializeSkills(project.id);
 		const { rawContent, skill } = this.readSkill(project.id, input.name);
 		// The name stays as it is, even a hand-written one the builder wouldn't accept for a new skill.
@@ -85,8 +76,8 @@ export class SkillAuthoringService {
 		return { name: skill.name, hash };
 	}
 
-	async delete(project: Project, user: AuthUser, input: { name: string; expectedHash: string }): Promise<boolean> {
-		const root = await this.requireDirectRoot(project, user);
+	async delete(project: Project, input: { name: string; expectedHash: string }): Promise<boolean> {
+		const root = this.requireRoot(project);
 		await this.skills.initializeSkills(project.id);
 		const { skill } = this.readSkill(project.id, input.name);
 		removeContextFile(skill.location, input.expectedHash, root);
@@ -94,19 +85,19 @@ export class SkillAuthoringService {
 		return true;
 	}
 
-	private async resolveTarget(project: Project, user: AuthUser): Promise<ContextWriteTarget> {
+	private resolveTarget(project: Project): SkillWriteTarget {
 		if (this.config.env.QUARRY_SKILL_AUTHORING === 'off') {
 			return { mode: 'disabled', message: DISABLED_MESSAGE };
 		}
-		return this.contextExplorer.resolveWriteTarget(project, user);
+		return { mode: 'direct', root: this.contextExplorer.resolveWriteRoot(project) };
 	}
 
-	private async requireDirectRoot(project: Project, user: AuthUser): Promise<string> {
-		const target = await this.resolveTarget(project, user);
-		if (target.mode === 'direct') {
-			return target.root;
+	private requireRoot(project: Project): string {
+		const target = this.resolveTarget(project);
+		if (target.mode === 'disabled') {
+			throw new HandlerError('FORBIDDEN', target.message);
 		}
-		throw new HandlerError('FORBIDDEN', 'message' in target ? target.message : GIT_MANAGED_MESSAGE);
+		return target.root;
 	}
 
 	private readSkill(projectId: string, name: string) {

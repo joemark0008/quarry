@@ -4,7 +4,6 @@ import {
 	Boxes,
 	Database,
 	FileSearch,
-	FolderGit2,
 	HardDrive,
 	Lightbulb,
 	MessageSquare,
@@ -122,7 +121,6 @@ export const navLinks: NavLink[] = [
 		requiresProject: true,
 		visible: isMember,
 	},
-	{ icon: FolderGit2, label: 'Git', to: '/settings/git', section: 'context', visible: isContextManager },
 	{
 		icon: Lightbulb,
 		label: 'Recommendations',

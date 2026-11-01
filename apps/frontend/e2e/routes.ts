@@ -10,7 +10,6 @@ export const APP_ROUTES = [
 	'/settings/project/query-tools',
 	'/settings/project/skills',
 	'/settings/appearance',
-	'/settings/git',
 	'/settings/recommendations',
 	'/settings/context-explorer',
 	'/settings/memory',

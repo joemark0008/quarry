@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs the install-wizard browser test against a throwaway stack: an empty database
-# `quarry_setup_e2e`, the API on :5007 and Vite on :3001. The dev stack (:5006, :3000) is untouched.
+# `quarry_setup_e2e`, the API on :5917 and Vite on :3917. The dev stack (:5006, :3000) is untouched.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -15,9 +15,9 @@ fi
 DB_NAME=quarry_setup_e2e
 PG_USER="${POSTGRES_USER:-quarry}"
 export DATABASE_URL="postgresql://${PG_USER}:${POSTGRES_PASSWORD:-quarry}@localhost:${POSTGRES_PORT:-5434}/${DB_NAME}"
-export PORT=5007
-export BETTER_AUTH_URL=http://localhost:3001
-export QUARRY_API_URL=http://localhost:5007
+export PORT=5917
+export BETTER_AUTH_URL=http://localhost:3917
+export QUARRY_API_URL=http://localhost:5917
 export TANSTACK_DEVTOOLS_PORT=42070
 
 PIDS=()
@@ -38,7 +38,7 @@ npm run db:deploy -w @quarry/api
 LOG_DIR="$(mktemp -d)"
 npm run start -w @quarry/api >"$LOG_DIR/api.log" 2>&1 &
 PIDS+=($!)
-(cd apps/frontend && npx vite --port 3001 --strictPort >"$LOG_DIR/vite.log" 2>&1) &
+(cd apps/frontend && npx vite --port 3917 --strictPort >"$LOG_DIR/vite.log" 2>&1) &
 PIDS+=($!)
 
 wait_for() {
@@ -49,12 +49,12 @@ wait_for() {
 	echo "Timed out waiting for $1 (logs in $LOG_DIR)" >&2
 	exit 1
 }
-wait_for http://localhost:5007/graphql
-wait_for http://localhost:3001/
+wait_for http://localhost:5917/graphql
+wait_for http://localhost:3917/
 
 SETUP_E2E_TOKEN="$(node -e "console.log(require('node:crypto').createHmac('sha256', process.env.BETTER_AUTH_SECRET).update('quarry-setup-token').digest('hex').slice(0, 32))")"
 export SETUP_E2E_TOKEN
-export E2E_BASE_URL=http://localhost:3001
+export E2E_BASE_URL=http://localhost:3917
 
 cd apps/frontend
 npx playwright test e2e/setup-wizard.spec.ts

@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useId, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import styles from './auth-form.module.css';
+import type { ReactNode } from 'react';
 import { InputGroup } from '@/components/ui/input-group';
 import { NakedInput } from '@/components/ui/input';
 import { Button, ChatButton, AuthSocialButton } from '@/components/ui/button';
@@ -238,9 +239,15 @@ interface FormTextFieldProps {
 	placeholder?: string;
 	className?: string;
 	/** Help text under the input. */
-	description?: string;
+	description?: ReactNode;
 	/** A server-side error for this field, shown under the input. */
 	error?: string;
+	autoComplete?: string;
+	spellCheck?: boolean;
+	inputClassName?: string;
+	/** Beyond the required check. Its message shows once the user has left the field. */
+	validate?: (value: string) => string | undefined;
+	onValueChange?: () => void;
 }
 
 export function FormTextField({
@@ -252,7 +259,14 @@ export function FormTextField({
 	className,
 	description,
 	error,
+	autoComplete,
+	spellCheck,
+	inputClassName,
+	validate,
+	onValueChange,
 }: FormTextFieldProps) {
+	const inputId = useId();
+	const descriptionId = `${inputId}-description`;
 	const [showPassword, setShowPassword] = useState(false);
 	const { compact, emailLastUsed } = useContext(CompactFieldsContext);
 	const isPassword = type === 'password';
@@ -265,69 +279,93 @@ export function FormTextField({
 			name={name}
 			validators={{
 				onMount: ({ value }: { value: string }) => (!value ? 'Required' : undefined),
-				onChange: ({ value }: { value: string }) => (!value ? 'Required' : undefined),
+				onChange: ({ value }: { value: string }) => (!value ? 'Required' : validate?.(value)),
 			}}
 		>
-			{(field: { state: { value: string }; handleChange: (v: string) => void; handleBlur: () => void }) => (
-				<div
-					className={cn(
-						styles.formTextFieldDiv,
-						compact ? styles.formTextFieldDiv2 : styles.formTextFieldDiv3,
-						className,
-					)}
-				>
-					<label
-						htmlFor={name}
+			{(field: {
+				state: { value: string; meta: { isBlurred: boolean; errors: unknown[] } };
+				handleChange: (v: string) => void;
+				handleBlur: () => void;
+			}) => {
+				const validationError =
+					validate && field.state.meta.isBlurred
+						? (field.state.meta.errors[0] as string | undefined)
+						: undefined;
+				const shownError = error ?? validationError;
+				return (
+					<div
 						className={cn(
-							styles.formTextFieldLabel,
-							compact ? styles.formTextFieldLabel2 : styles.formTextFieldLabel3,
+							styles.formTextFieldDiv,
+							compact ? styles.formTextFieldDiv2 : styles.formTextFieldDiv3,
+							className,
 						)}
 					>
-						{title ?? name.charAt(0).toUpperCase() + name.slice(1)}
-					</label>
-					<div className={styles.authFormDiv9}>
-						<NakedInput
-							name={name}
-							type={inputType}
-							placeholder={placeholder}
-							value={field.state.value}
-							onChange={(e) => field.handleChange(e.target.value)}
-							onBlur={field.handleBlur}
+						<label
+							htmlFor={inputId}
 							className={cn(
-								styles.formTextFieldNakedInput,
-								compact ? styles.formTextFieldNakedInput2 : styles.formTextFieldNakedInput3,
-								isPassword &&
-									(compact ? styles.formTextFieldNakedInput4 : styles.formTextFieldNakedInput5),
+								styles.formTextFieldLabel,
+								compact ? styles.formTextFieldLabel2 : styles.formTextFieldLabel3,
 							)}
-						/>
-						{showLastUsed && <LastUsedPill className={styles.formTextFieldLastUsedPill} />}
-						{isPassword && (
-							<button
-								type='button'
-								onClick={() => setShowPassword(!showPassword)}
+						>
+							{title ?? name.charAt(0).toUpperCase() + name.slice(1)}
+						</label>
+						<div className={styles.authFormDiv9}>
+							<NakedInput
+								id={inputId}
+								name={name}
+								type={inputType}
+								placeholder={placeholder}
+								autoComplete={autoComplete}
+								spellCheck={spellCheck}
+								aria-describedby={description && !validationError ? descriptionId : undefined}
+								aria-invalid={shownError ? true : undefined}
+								value={field.state.value}
+								onChange={(e) => {
+									field.handleChange(e.target.value);
+									onValueChange?.();
+								}}
+								onBlur={field.handleBlur}
 								className={cn(
-									styles.formTextFieldButton,
-									compact ? styles.formTextFieldButton2 : styles.formTextFieldButton3,
+									styles.formTextFieldNakedInput,
+									compact ? styles.formTextFieldNakedInput2 : styles.formTextFieldNakedInput3,
+									isPassword &&
+										(compact ? styles.formTextFieldNakedInput4 : styles.formTextFieldNakedInput5),
+									inputClassName,
 								)}
-								tabIndex={-1}
-								aria-label={showPassword ? 'Hide password' : 'Show password'}
-							>
-								{showPassword ? (
-									<EyeOff size={eyeIconSize} />
-								) : (
-									<Eye size={eyeIconSize} className={styles.formTextFieldEye} />
-								)}
-							</button>
+							/>
+							{showLastUsed && <LastUsedPill className={styles.formTextFieldLastUsedPill} />}
+							{isPassword && (
+								<button
+									type='button'
+									onClick={() => setShowPassword(!showPassword)}
+									className={cn(
+										styles.formTextFieldButton,
+										compact ? styles.formTextFieldButton2 : styles.formTextFieldButton3,
+									)}
+									tabIndex={-1}
+									aria-label={showPassword ? 'Hide password' : 'Show password'}
+								>
+									{showPassword ? (
+										<EyeOff size={eyeIconSize} />
+									) : (
+										<Eye size={eyeIconSize} className={styles.formTextFieldEye} />
+									)}
+								</button>
+							)}
+						</div>
+						{description && !validationError && (
+							<div id={descriptionId} className={styles.formTextFieldDescription}>
+								{description}
+							</div>
+						)}
+						{shownError && (
+							<p role='alert' className={styles.formTextFieldError}>
+								{shownError}
+							</p>
 						)}
 					</div>
-					{description && <p className={styles.formTextFieldDescription}>{description}</p>}
-					{error && (
-						<p role='alert' className={styles.formTextFieldError}>
-							{error}
-						</p>
-					)}
-				</div>
-			)}
+				);
+			}}
 		</form.Field>
 	);
 }

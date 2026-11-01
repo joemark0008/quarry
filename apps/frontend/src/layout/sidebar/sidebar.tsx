@@ -185,6 +185,17 @@ export function Sidebar() {
 				</div>
 			)}
 
+			{!isInSettings && !effectiveIsCollapsed && (
+				<div className={styles.projectHeader}>
+					<ProjectSwitcher
+						projects={projects.data ?? []}
+						currentProjectId={project.data?.id}
+						onChange={handleProjectChange}
+						variant='sidebar'
+					/>
+				</div>
+			)}
+
 			{!isInSettings && (
 				<div className={styles.section}>
 					{!effectiveIsCollapsed && <div className={styles.sectionLabel}>Workspace</div>}

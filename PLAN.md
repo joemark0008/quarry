@@ -188,7 +188,6 @@ trpc `branding`, `license`, `member-budget`; `routes/backoffice.ts`, `sso.ts`, `
 | `story.blob-cleanup`      | `story-blob-cleanup.handler.ts`                                                 | 4     |
 | `context.recommendations` | `context-recommendations.handler.ts`                                            | 3     |
 | `context.sync`            | port of `upstream_core/commands/sync` (schemas, table previews → context files) | 2     |
-| `context.branch.cleanup`  | `context-branch-cleanup.handler.ts`                                             | 3     |
 | `invitation.cleanup`      | `invitation-cleanup.handler.ts`                                                 | 6     |
 | `log.cleanup`             | `log-cleanup.handler.ts`                                                        | 6     |
 | `mcp.queryData.cleanup`   | `mcp-query-data-cleanup.handler.ts`                                             | 7     |

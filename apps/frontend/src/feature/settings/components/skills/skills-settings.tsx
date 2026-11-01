@@ -1,5 +1,4 @@
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 import { BookOpen, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { SkillFormDialog } from './skill-form-dialog';
@@ -38,7 +37,6 @@ function SkillsManager() {
 	const [isCreating, setIsCreating] = useState(false);
 	const [editingName, setEditingName] = useState<string | null>(null);
 	const [deletingName, setDeletingName] = useState<string | null>(null);
-	const [pendingReview, setPendingReview] = useState<string | null>(null);
 
 	const refresh = () =>
 		Promise.all(
@@ -54,12 +52,11 @@ function SkillsManager() {
 	);
 
 	const mode = status.data?.mode;
-	const canCreate = mode === 'direct' || mode === 'git';
+	const canCreate = mode === 'direct';
 	const create = (draft: SkillDraft) => {
 		createMutation.mutate(draft, {
-			onSuccess: (created) => {
+			onSuccess: () => {
 				setIsCreating(false);
-				setPendingReview(created.mode === 'git' ? created.name : null);
 			},
 		});
 	};
@@ -95,16 +92,6 @@ function SkillsManager() {
 			{status.data?.message && (
 				<div className={styles.skillNotice} data-testid='skill-save-blocked'>
 					<span>{status.data.message}</span>
-					{mode === 'unavailable' && <Link to='/settings/git'>Open Git settings</Link>}
-				</div>
-			)}
-			{pendingReview && (
-				<div className={styles.skillNotice} data-testid='skill-pending-review'>
-					<span>
-						{pendingReview} is in your working copy. It goes live after the change is committed, merged and
-						live context is pulled.
-					</span>
-					<Link to='/settings/context-explorer'>Open the File Explorer</Link>
 				</div>
 			)}
 			{loadErrors.data?.map((error) => (
@@ -151,14 +138,6 @@ function SkillsManager() {
 										<Trash2 />
 									</Button>
 								</>
-							)}
-							{mode === 'git' && (
-								<Link
-									to='/settings/context-explorer'
-									aria-label={`Edit ${skill.name} in the File Explorer`}
-								>
-									<Pencil className={styles.skillIcon} />
-								</Link>
 							)}
 						</div>
 					))}

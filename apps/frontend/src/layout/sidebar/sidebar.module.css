@@ -246,6 +246,11 @@
 	padding: 0.25rem 0.5rem 0.5rem;
 }
 
+.projectHeader {
+	flex-shrink: 0;
+	padding: 0.25rem 0.5rem 0.5rem;
+}
+
 .section {
 	display: flex;
 	flex-shrink: 0;

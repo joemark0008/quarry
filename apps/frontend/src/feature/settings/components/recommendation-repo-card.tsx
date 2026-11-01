@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 import { GitBranch, Github } from 'lucide-react';
 
 import styles from './recommendation-repo-card.module.css';
 import type { RepoProvider } from '@quarry/shared/types';
 
 import GitlabIcon from '@/components/icons/gitlab-icon.svg';
-import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { contextRecommendationApi } from '@/lib/context-recommendation-api';
@@ -34,8 +32,7 @@ export function RecommendationRepoCard() {
 			<SettingsCard
 				title='Repository'
 				icon={<Github className={styles.recommendationRepoCardGithub} />}
-				description='Connect a context repository on the Git settings page so recommendations can include proposed changes.'
-				action={<GitSettingsLink label='Open Git settings' />}
+				description='Pull requests with drafted context changes need a GitHub or GitLab connection, which is not available yet.'
 			>
 				<LinkedReposList repos={linkedRepos.data ?? []} />
 			</SettingsCard>
@@ -50,7 +47,6 @@ export function RecommendationRepoCard() {
 			title='Repository'
 			icon={<ProviderIcon className={styles.recommendationRepoCardGithub} />}
 			description='Pull requests with drafted context changes are opened against this repository.'
-			action={<GitSettingsLink label='Manage in Git settings' />}
 		>
 			<div className={styles.recommendationRepoCardDiv}>
 				<a href={webUrl} target='_blank' rel='noopener noreferrer' className={styles.recommendationRepoCardA}>
@@ -65,14 +61,6 @@ export function RecommendationRepoCard() {
 			</div>
 			<LinkedReposList repos={linkedRepos.data ?? []} />
 		</SettingsCard>
-	);
-}
-
-function GitSettingsLink({ label }: { label: string }) {
-	return (
-		<Button size='sm' variant='outline' asChild>
-			<Link to='/settings/git'>{label}</Link>
-		</Button>
 	);
 }
 

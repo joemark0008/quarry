@@ -16,18 +16,6 @@ function loadEnvWithOverrides(overrides: NodeJS.ProcessEnv) {
 	}
 }
 
-describe('QUARRY_CONTEXT_SOURCE', () => {
-	it.each(['local', 'git', 'api'])('accepts %s', (contextSource) => {
-		expect(
-			loadEnvWithOverrides({ QUARRY_CONTEXT_SOURCE: contextSource, QUARRY_DEFAULT_PROJECT_PATH: '' }).status,
-		).toBe(0);
-	});
-
-	it('rejects unknown sources', () => {
-		expect(loadEnvWithOverrides({ QUARRY_CONTEXT_SOURCE: 'ftp' }).status).toBe(1);
-	});
-});
-
 describe('SMTP environment', () => {
 	it('allows running without SMTP configuration', () => {
 		expect(loadEnvWithOverrides({ SMTP_HOST: '', SMTP_MAIL_FROM: '' }).status).toBe(0);

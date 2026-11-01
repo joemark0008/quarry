@@ -28,5 +28,5 @@ export type SkillDraft = z.infer<typeof SkillDraftSchema>;
 
 export const skillFilePath = (name: string): string => `/agent/skills/${name}.md`;
 
-export const SKILL_SAVE_MODES = ['direct', 'git', 'unavailable', 'disabled'] as const;
+export const SKILL_SAVE_MODES = ['direct', 'disabled'] as const;
 export type SkillSaveMode = (typeof SKILL_SAVE_MODES)[number];

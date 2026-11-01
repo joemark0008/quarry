@@ -25,8 +25,8 @@ Client. The SQL engine and semantic layer are written in Node, with no Python.
   shared.
 - **Any LLM provider** — OpenAI, Anthropic and the other Vercel AI SDK providers, from the environment or
   **Settings → Agent**.
-- **Context** — **Sync** pulls the warehouse schema into project context files. The context explorer edits them (optionally
-  in a Git repository), and context recommendations propose fixes from chat feedback.
+- **Context** — **Sync** pulls the warehouse schema into project context files. The context explorer edits them in the
+  project folder, and context recommendations propose fixes from chat feedback.
 - **Semantic layer** — MetricFlow-style metrics compiled to Postgres SQL in process.
 - **Query workbench and saved query tools** — write SQL in an editor, or ask the assistant for a query it tests first,
   run it on the warehouse, then save it as a tool the agent can call by name (or save one from a chat)
@@ -100,7 +100,6 @@ After changing the GraphQL schema, `npm run codegen` regenerates the frontend's 
 | `ENABLE_USER_LOGIN`                                                        | `false` turns off email and password login (see the note below the table)     |
 | `QUARRY_PROJECTS_DIR`, `QUARRY_STORAGE_LOCAL_PATH`                         | project context folders and stored files                                      |
 | `QUARRY_STORAGE_BACKEND` (`local`, `s3`, `none`) and `QUARRY_STORAGE_S3_*` | where attachments and saved files go                                          |
-| `QUARRY_CONTEXT_SOURCE=git`, `QUARRY_CONTEXT_GIT_*`                        | keep context files in a Git repository                                        |
 | `QUARRY_SKILL_AUTHORING` (`auto`, `off`)                                   | `off` keeps skills file-only: no saving from the app or chat                  |
 | `QUARRY_FRONTEND_DIST`                                                     | built frontend the API serves (set by the Docker image)                       |
 | `VITE_QUARRY_*`                                                            | frontend links (docs, support, repository…), build time; unset hides them     |
@@ -113,13 +112,12 @@ in until one of those changes.
 Skills are Markdown files in a project's `agent/skills/` folder. Admins can write them in **Settings → Skills**, or ask the
 agent in chat to draft one and approve it. Where a skill is saved depends on the deployment:
 
-| Deployment                                 | What Save does                                                              | Setup                                                  |
-| ------------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------ |
-| Local or single container                  | Writes to the live folder, usable right away                                | None                                                   |
-| Git-managed context                        | Writes to the user's worktree; live after merge and a live context pull     | `QUARRY_CONTEXT_SOURCE=git`, project folder is a clone |
-| Several replicas on a shared volume        | Writes to the live folder; other replicas pick it up within about 5 seconds | Share `QUARRY_PROJECTS_DIR`                            |
-| Several replicas on separate disks         | Not safe directly, as the skill would exist on one replica only             | Use Git, or `QUARRY_SKILL_AUTHORING=off`               |
-| Read-only folder, or no editing in the app | Saving is disabled; skills still load from files                            | `QUARRY_SKILL_AUTHORING=off`                           |
+| Deployment                                 | What Save does                                                              | Setup                        |
+| ------------------------------------------ | --------------------------------------------------------------------------- | ---------------------------- |
+| Local or single container                  | Writes to the live folder, usable right away                                | None                         |
+| Several replicas on a shared volume        | Writes to the live folder; other replicas pick it up within about 5 seconds | Share `QUARRY_PROJECTS_DIR`  |
+| Several replicas on separate disks         | Not safe directly, as the skill would exist on one replica only             | `QUARRY_SKILL_AUTHORING=off` |
+| Read-only folder, or no editing in the app | Saving is disabled; skills still load from files                            | `QUARRY_SKILL_AUTHORING=off` |
 
 ## Deployment
 

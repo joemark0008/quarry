@@ -15,7 +15,7 @@ import { PrismaService } from '../src/prisma/prisma.service.js';
 import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
 const MODEL = { provider: 'openai', modelId: 'gpt-4.1-mini' };
-const CREATE = 'mutation ($input: CreateSkillInput!) { createSkill(input: $input) { name location mode } }';
+const CREATE = 'mutation ($input: CreateSkillInput!) { createSkill(input: $input) { name location } }';
 const DRAFT = { name: 'churn-analysis', description: 'Use for churn questions.', body: '1. Do the thing.' };
 
 describe('skills (e2e)', () => {
@@ -70,7 +70,7 @@ describe('skills (e2e)', () => {
 		await app?.close();
 	});
 
-	it('saves directly on a project without a context repository', async () => {
+	it('saves directly in the project folder', async () => {
 		const status = await graphql(adminCookie, '{ skillSaveStatus { mode message } }');
 		expect(status.body.data.skillSaveStatus).toEqual({ mode: 'direct', message: null });
 	});
@@ -89,7 +89,6 @@ describe('skills (e2e)', () => {
 		expect(created.body.data.createSkill).toEqual({
 			name: DRAFT.name,
 			location: '/agent/skills/churn-analysis.md',
-			mode: 'direct',
 		});
 
 		const list = await graphql(memberCookie, '{ skills { name description } }');

@@ -15,8 +15,7 @@ export interface RecommendationRepo {
 /**
  * Stand-in for upstream `resolveRecommendationRepo` (`services/context-pr.service.ts`, Phase 7 `git-providers`):
  * the repository saved on the recommendations settings page, with no sub-path detection. Upstream also falls back
- * to the deployment's context source (`QUARRY_CONTEXT_GIT_URL`) through `resolveContextRepository`; point this at the
- * context explorer's resolver once both land.
+ * to the deployment's Git context source, which quarry does not have (context files live in the project folder).
  */
 export function toRecommendationRepo(config: ContextRecommendationConfigRecord | null): RecommendationRepo | null {
 	if (!config?.repoFullName) {

@@ -15,6 +15,8 @@ test('install wizard creates the first admin and closes sign-up', async ({ page 
 	await page.goto('/login');
 	await expect(page).toHaveURL(/\/setup$/);
 
+	await expect(page.getByLabel('Setup token')).toBeVisible();
+	await expect(page.getByText(/logs quarry \| grep "setup token"/)).toBeVisible();
 	await page.locator('input[name="token"]').fill('not-the-token');
 	await page.locator('input[name="name"]').fill(ADMIN.name);
 	await page.locator('input[name="email"]').fill(ADMIN.email);

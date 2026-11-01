@@ -278,18 +278,7 @@ export type FileTreeEntry = {
 	readOnly?: boolean;
 };
 
-export type ContextGitUnavailableReason =
-	| 'github-unavailable'
-	| 'git-unavailable'
-	| 'repository-mismatch'
-	| 'no-token'
-	| 'no-repo'
-	| 'unsupported-provider'
-	| 'project-not-found'
-	| 'project-ambiguous';
-
-export type FileEditabilityReason =
-	ContextGitUnavailableReason | 'generated' | 'rendered-template' | 'synced-source' | 'not-tracked';
+export type FileEditabilityReason = 'generated' | 'rendered-template' | 'synced-source';
 
 export type FileEditabilityGuidance =
 	| {
@@ -327,31 +316,6 @@ export type FileContentSearchResult = {
 export type FileContentSearchResponse = {
 	results: FileContentSearchResult[];
 	truncated: boolean;
-};
-
-export type ContextChangedFile = {
-	path: string;
-	kind: 'modified' | 'untracked' | 'deleted';
-	additions: number | null;
-	deletions: number | null;
-};
-
-export type ContextBranchInfo = {
-	currentBranch: string | null;
-	defaultBranch: string;
-	aheadCommitCount: number;
-	unpushedCommitCount: number;
-	branches: string[];
-	suggestedBranch: string;
-};
-
-export type ContextBranchCreationResult = ContextBranchInfo & {
-	usedFallbackBase: boolean;
-};
-
-export type ContextFileDiff = ContextChangedFile & {
-	oldContent: string;
-	newContent: string;
 };
 
 export const WARNING_BUDGET_THRESHOLD = 0.8;

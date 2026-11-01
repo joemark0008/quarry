@@ -398,63 +398,6 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 
 	// ── Project > Agent > MCP servers ───────────────────────
 
-	// ── Git ──────────────────────────────────────────────────
-	{
-		page: '/settings/git',
-		pageLabel: 'Git',
-		title: 'Connect your context files',
-		description:
-			'Connect the Git repository for context files so they can be edited and proposed as pull or merge requests.',
-		keywords: [
-			'github',
-			'gitlab',
-			'git',
-			'oauth',
-			'client id',
-			'client secret',
-			'redeploy',
-			'restart',
-			'repository',
-			'repo',
-			'connect',
-			'disconnect',
-			'context files',
-			'account',
-			'personal',
-			'pull request',
-			'pull request author',
-			'merge request',
-			'merge request author',
-		],
-		adminOrContextAdmin: true,
-	},
-	{
-		page: '/settings/git',
-		pageLabel: 'Git',
-		title: 'Deployment repository',
-		description: 'View the repository used for File Explorer commits and review requests.',
-		keywords: [
-			'git',
-			'github',
-			'gitlab',
-			'deployment',
-			'repository',
-			'access token',
-			'ssh key',
-			'pull request author',
-			'merge request author',
-		],
-		adminOrContextAdmin: true,
-	},
-	{
-		page: '/settings/git',
-		pageLabel: 'Git',
-		title: 'Update context files',
-		description: 'Pull the configured deployment branch into this quarry instance.',
-		keywords: ['git pull', 'pull latest', 'refresh context', 'deployment branch', 'update context'],
-		adminOrContextAdmin: true,
-	},
-
 	// ── Project > Integrations & MCP > quarry MCP ──────────────
 
 	// ── Storage ─────────────────────────────────────────────

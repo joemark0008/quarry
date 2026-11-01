@@ -2,9 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { isSkillGranted } from '@quarry/shared';
 
 import { fullProjectContextAccess } from '../agent/services/user-group-context-access.service.js';
-import type { AuthUser } from '../auth/auth.service.js';
 import { ProjectAccess } from '../common/decorators/access.decorator.js';
-import { CurrentProject, CurrentUser } from '../common/decorators/current.decorator.js';
+import { CurrentProject } from '../common/decorators/current.decorator.js';
 import { ProjectContextAdmin } from '../context-explorer/context-admin.decorator.js';
 import type { Project } from '../generated/prisma/client.js';
 import { CreateSkillInput, DeleteSkillInput, UpdateSkillInput } from './dto/skill.input.js';
@@ -54,8 +53,8 @@ export class SkillsResolver {
 
 	@ProjectContextAdmin()
 	@Query(() => SkillSaveStatus)
-	skillSaveStatus(@CurrentProject() project: Project, @CurrentUser() user: AuthUser): Promise<SkillSaveStatus> {
-		return this.authoring.getSaveStatus(project, user);
+	skillSaveStatus(@CurrentProject() project: Project): SkillSaveStatus {
+		return this.authoring.getSaveStatus(project);
 	}
 
 	@ProjectContextAdmin()
@@ -66,31 +65,19 @@ export class SkillsResolver {
 
 	@ProjectContextAdmin()
 	@Mutation(() => CreatedSkill)
-	createSkill(
-		@CurrentProject() project: Project,
-		@CurrentUser() user: AuthUser,
-		@Args('input') input: CreateSkillInput,
-	): Promise<CreatedSkill> {
-		return this.authoring.create(project, user, input);
+	createSkill(@CurrentProject() project: Project, @Args('input') input: CreateSkillInput): Promise<CreatedSkill> {
+		return this.authoring.create(project, input);
 	}
 
 	@ProjectContextAdmin()
-	@Mutation(() => UpdatedSkill, { description: 'Projects without a context repository only.' })
-	updateSkill(
-		@CurrentProject() project: Project,
-		@CurrentUser() user: AuthUser,
-		@Args('input') input: UpdateSkillInput,
-	): Promise<UpdatedSkill> {
-		return this.authoring.update(project, user, input);
+	@Mutation(() => UpdatedSkill)
+	updateSkill(@CurrentProject() project: Project, @Args('input') input: UpdateSkillInput): Promise<UpdatedSkill> {
+		return this.authoring.update(project, input);
 	}
 
 	@ProjectContextAdmin()
-	@Mutation(() => Boolean, { description: 'Projects without a context repository only.' })
-	deleteSkill(
-		@CurrentProject() project: Project,
-		@CurrentUser() user: AuthUser,
-		@Args('input') input: DeleteSkillInput,
-	): Promise<boolean> {
-		return this.authoring.delete(project, user, input);
+	@Mutation(() => Boolean)
+	deleteSkill(@CurrentProject() project: Project, @Args('input') input: DeleteSkillInput): Promise<boolean> {
+		return this.authoring.delete(project, input);
 	}
 }

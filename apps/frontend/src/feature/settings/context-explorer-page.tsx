@@ -1,11 +1,9 @@
 import { getRouteApi, useBlocker, useNavigate } from '@tanstack/react-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useDefaultLayout } from 'react-resizable-panels';
 import styles from './context-explorer-page.module.css';
 import type { FileSelectionOptions } from '@/feature/settings/components/file-tree';
-import { ContextFileDiff } from '@/feature/settings/components/context-file-diff';
-import { ContextGitPanel } from '@/feature/settings/components/context-git-panel';
 import { FileTree } from '@/feature/settings/components/file-tree';
 import { FileViewer } from '@/feature/settings/components/file-viewer';
 import {
@@ -23,7 +21,6 @@ import { ResizablePanel, ResizablePanelGroup, ResizableSeparator } from '@/compo
 import { Spinner } from '@/components/ui/spinner';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { consumeHistoricalContextDiffSearch, getHistoricalContextDiffTarget } from '@/lib/context-explorer-search';
 import { createLocalStorage } from '@/lib/local-storage';
 import { contextExplorerApi } from '@/lib/context-explorer-api';
 
@@ -31,24 +28,15 @@ const Route = getRouteApi('/_protected/settings/context-explorer');
 
 const contentSearchStorage = createLocalStorage<boolean>('quarry-file-explorer-content-search', true);
 
-type ViewerTarget = { type: 'file'; path: string; openSource: boolean } | { type: 'diff'; path: string };
+type ViewerTarget = { path: string; openSource: boolean };
 type SourceAutoOpenRequest = { path: string; id: number };
 
 export function ContextExplorerPage() {
-	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const { path: initialPath, from: historicalFrom, to: historicalTo } = Route.useSearch();
-	const initialHistoricalDiff = getHistoricalContextDiffTarget({
-		path: initialPath,
-		from: historicalFrom,
-		to: historicalTo,
-	});
+	const { path: initialPath } = Route.useSearch();
 	const [selectedPath, setSelectedPath] = useState<string | null>(() => initialPath ?? null);
-	const [selectedDiffPath, setSelectedDiffPath] = useState<string | null>(null);
-	const [historicalDiff, setHistoricalDiff] = useState(() => initialHistoricalDiff);
 	const [pendingViewerTarget, setPendingViewerTarget] = useState<ViewerTarget | null>(null);
 	const [sourceAutoOpenRequest, setSourceAutoOpenRequest] = useState<SourceAutoOpenRequest | null>(null);
-	const [viewerRevision, setViewerRevision] = useState(0);
 	const [isViewerDirty, setIsViewerDirty] = useState(false);
 	const [search, setSearch] = useState('');
 	const [isContentSearchEnabled, setIsContentSearchEnabled] = useLocalStorage(contentSearchStorage);
@@ -68,25 +56,6 @@ export function ContextExplorerPage() {
 		disabled: !isViewerDirty,
 		withResolver: true,
 	});
-
-	useEffect(() => {
-		const target = getHistoricalContextDiffTarget({
-			path: initialPath,
-			from: historicalFrom,
-			to: historicalTo,
-		});
-		if (!target) {
-			return;
-		}
-		setSelectedPath(target.path);
-		setSelectedDiffPath(null);
-		setHistoricalDiff(target);
-		void navigate({
-			to: '/settings/context-explorer',
-			search: consumeHistoricalContextDiffSearch(target),
-			replace: true,
-		});
-	}, [historicalFrom, historicalTo, initialPath, navigate]);
 
 	const fileTree = useQuery(contextExplorerApi.contextExplorer.getFileTree.queryOptions());
 	const rulesPreviewGroups = useQuery(contextExplorerApi.contextExplorer.getRulesPreviewGroups.queryOptions());
@@ -123,19 +92,12 @@ export function ContextExplorerPage() {
 	};
 
 	const applyViewerTarget = (target: ViewerTarget) => {
-		if (target.type === 'file') {
-			setSelectedPath(target.path);
-			setSelectedDiffPath(null);
-			setHistoricalDiff(null);
-			if (target.openSource) {
-				requestSourceAutoOpen(target.path);
-			} else {
-				setSourceAutoOpenRequest(null);
-			}
-			return;
+		setSelectedPath(target.path);
+		if (target.openSource) {
+			requestSourceAutoOpen(target.path);
+		} else {
+			setSourceAutoOpenRequest(null);
 		}
-		setHistoricalDiff(null);
-		setSelectedDiffPath(target.path);
 	};
 
 	const requestViewerTarget = (target: ViewerTarget) => {
@@ -147,31 +109,13 @@ export function ContextExplorerPage() {
 	};
 
 	const handleSelectFile = (path: string, options: FileSelectionOptions) => {
-		if (path === selectedPath && selectedDiffPath === null && historicalDiff === null) {
+		if (path === selectedPath) {
 			if (options.isContentMatch) {
 				requestSourceAutoOpen(path);
 			}
 			return;
 		}
-		requestViewerTarget({ type: 'file', path, openSource: options.isContentMatch });
-	};
-
-	const handleViewDiff = (path: string) => {
-		if (path === selectedDiffPath) {
-			return;
-		}
-		requestViewerTarget({ type: 'diff', path });
-	};
-
-	const handleChangesCommitted = async (paths: string[]) => {
-		if (!selectedDiffPath || !paths.includes(selectedDiffPath)) {
-			return;
-		}
-		const committedDiffPath = selectedDiffPath;
-		setSelectedDiffPath(null);
-		await queryClient.cancelQueries({
-			queryKey: contextExplorerApi.contextExplorer.getFileDiff.queryKey({ path: committedDiffPath }),
-		});
+		requestViewerTarget({ path, openSource: options.isContentMatch });
 	};
 
 	const handleDiscardAndChangeView = () => {
@@ -181,40 +125,6 @@ export function ContextExplorerPage() {
 		setIsViewerDirty(false);
 		applyViewerTarget(pendingViewerTarget);
 		setPendingViewerTarget(null);
-	};
-
-	const handleLocalChangeDiscarded = async (path: string) => {
-		if (selectedDiffPath === path) {
-			setSelectedDiffPath(null);
-		}
-		if (selectedPath !== path) {
-			return;
-		}
-		setIsViewerDirty(false);
-		await queryClient.invalidateQueries({
-			queryKey: contextExplorerApi.contextExplorer.readFile.queryKey({ path }),
-		});
-		setViewerRevision((current) => current + 1);
-	};
-
-	const handleAllLocalChangesDiscarded = async () => {
-		setSelectedDiffPath(null);
-		setIsViewerDirty(false);
-		if (selectedPath) {
-			await queryClient.invalidateQueries({
-				queryKey: contextExplorerApi.contextExplorer.readFile.queryKey({ path: selectedPath }),
-			});
-			setViewerRevision((current) => current + 1);
-		}
-	};
-
-	const handleRepositoryChanged = () => {
-		setSelectedPath(null);
-		setSelectedDiffPath(null);
-		setHistoricalDiff(null);
-		setSourceAutoOpenRequest(null);
-		setIsViewerDirty(false);
-		setViewerRevision((current) => current + 1);
 	};
 
 	const handleDiscardAndNavigate = () => {
@@ -247,38 +157,27 @@ export function ContextExplorerPage() {
 								</Button>
 							</div>
 						) : (
-							<>
-								<div className={styles.contextExplorerPageDiv5}>
-									<FileTree
-										entries={fileTree.data?.entries ?? []}
-										selectedPath={historicalDiff?.path ?? selectedDiffPath ?? selectedPath}
-										onSelectFile={handleSelectFile}
-										search={search}
-										onSearchChange={setSearch}
-										isContentSearchEnabled={isContentSearchEnabled}
-										onContentSearchEnabledChange={setIsContentSearchEnabled}
-										contentMatches={contentMatches}
-										isContentSearchPending={isContentSearchPending}
-										contentSearchFailed={shouldSearchContent && contentSearch.isError}
-										contentSearchTruncated={
-											isLiveContentSearchEligible &&
-											shouldSearchContent &&
-											!isContentSearchPending &&
-											!contentSearch.isPlaceholderData &&
-											contentSearch.data?.truncated === true
-										}
-									/>
-								</div>
-								<ContextGitPanel
-									selectedDiffPath={selectedDiffPath}
-									hasUnsavedFileChanges={isViewerDirty}
-									onViewDiff={handleViewDiff}
-									onCommitted={handleChangesCommitted}
-									onDiscarded={handleLocalChangeDiscarded}
-									onDiscardAll={handleAllLocalChangesDiscarded}
-									onRepositoryChanged={handleRepositoryChanged}
+							<div className={styles.contextExplorerPageDiv5}>
+								<FileTree
+									entries={fileTree.data?.entries ?? []}
+									selectedPath={selectedPath}
+									onSelectFile={handleSelectFile}
+									search={search}
+									onSearchChange={setSearch}
+									isContentSearchEnabled={isContentSearchEnabled}
+									onContentSearchEnabledChange={setIsContentSearchEnabled}
+									contentMatches={contentMatches}
+									isContentSearchPending={isContentSearchPending}
+									contentSearchFailed={shouldSearchContent && contentSearch.isError}
+									contentSearchTruncated={
+										isLiveContentSearchEligible &&
+										shouldSearchContent &&
+										!isContentSearchPending &&
+										!contentSearch.isPlaceholderData &&
+										contentSearch.data?.truncated === true
+									}
 								/>
-							</>
+							</div>
 						)}
 					</div>
 				</ResizablePanel>
@@ -287,45 +186,36 @@ export function ContextExplorerPage() {
 
 				<ResizablePanel id='viewer' minSize={300}>
 					<div className={styles.contextExplorerPageDiv6}>
-						{historicalDiff ? (
-							<ContextFileDiff
-								path={historicalDiff.path}
-								range={{ from: historicalDiff.from, to: historicalDiff.to }}
-							/>
-						) : selectedDiffPath ? (
-							<ContextFileDiff path={selectedDiffPath} />
-						) : (
-							<FileViewer
-								key={`${selectedPath ?? 'empty'}:${viewerRevision}`}
-								filePath={selectedPath}
-								content={fileContent.data?.content}
-								hash={fileContent.data?.hash}
-								isLoading={fileContent.isLoading && fileContent.fetchStatus !== 'idle'}
-								isError={fileContent.isError && !fileContent.data}
-								isEditable={fileContent.data?.isEditable === true}
-								editabilityGuidance={fileContent.data?.guidance ?? null}
-								searchQuery={shouldSearchContent ? debouncedSearch : ''}
-								sourceAutoOpenRequestId={
-									sourceAutoOpenRequest?.path === selectedPath ? sourceAutoOpenRequest.id : null
+						<FileViewer
+							key={selectedPath ?? 'empty'}
+							filePath={selectedPath}
+							content={fileContent.data?.content}
+							hash={fileContent.data?.hash}
+							isLoading={fileContent.isLoading && fileContent.fetchStatus !== 'idle'}
+							isError={fileContent.isError && !fileContent.data}
+							isEditable={fileContent.data?.isEditable === true}
+							editabilityGuidance={fileContent.data?.guidance ?? null}
+							searchQuery={shouldSearchContent ? debouncedSearch : ''}
+							sourceAutoOpenRequestId={
+								sourceAutoOpenRequest?.path === selectedPath ? sourceAutoOpenRequest.id : null
+							}
+							onDirtyChange={setIsViewerDirty}
+							onOpenGuidancePath={(path, kind) => {
+								if (kind === 'route') {
+									void navigate({ to: path });
+									return;
 								}
-								onDirtyChange={setIsViewerDirty}
-								onOpenGuidancePath={(path, kind) => {
-									if (kind === 'route') {
-										void navigate({ to: path });
-										return;
-									}
-									requestViewerTarget({ type: 'file', path, openSource: false });
-								}}
-								onReload={async () => {
-									const result = await fileContent.refetch();
-									if (result.error) {
-										throw result.error;
-									}
-									return result.data;
-								}}
-								rulesPreviewGroups={rulesPreviewGroupsState}
-							/>
-						)}
+								requestViewerTarget({ path, openSource: false });
+							}}
+							onReload={async () => {
+								const result = await fileContent.refetch();
+								if (result.error) {
+									throw result.error;
+								}
+								return result.data;
+							}}
+							rulesPreviewGroups={rulesPreviewGroupsState}
+						/>
 					</div>
 				</ResizablePanel>
 			</ResizablePanelGroup>

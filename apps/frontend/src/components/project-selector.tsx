@@ -102,7 +102,8 @@ function SidebarProjectSwitcher({
 	const mode = useMultiProject();
 
 	if (!currentProject) {
-		return null;
+		// quarry: with no project left (e.g. all deleted), the switcher is the only way to create one.
+		return mode === 'static' ? null : <NewProjectButton className={className} />;
 	}
 
 	if (mode === 'static') {
@@ -219,6 +220,24 @@ function ProjectDropdown({
 					</Command>
 				</PopoverContent>
 			</Popover>
+			<CreateProjectDialog open={isCreating} onOpenChange={setIsCreating} />
+		</div>
+	);
+}
+
+function NewProjectButton({ className }: { className?: string }) {
+	const [isCreating, setIsCreating] = useState(false);
+
+	return (
+		<div className={cn(styles.sidebarProjectSwitcherDiv, className)}>
+			<button
+				type='button'
+				className={cn(getTriggerClassName('sidebar'), styles.projectDropdownButton)}
+				onClick={() => setIsCreating(true)}
+			>
+				<span className={styles.sidebarProjectSwitcherSpan}>New project</span>
+				<Plus className={styles.projectDropdownChevronsUpDown} />
+			</button>
 			<CreateProjectDialog open={isCreating} onOpenChange={setIsCreating} />
 		</div>
 	);

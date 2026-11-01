@@ -47,9 +47,7 @@ export const skillCreatorSkill: InternalSkill = {
 
 				<Title level={2}>When the draft is shown</Title>
 				<Span>
-					Stop after <Bold>propose_skill</Bold>. Only say the skill is saved once the user tells you it is. If
-					it was saved on a project that uses Git, it goes live after the change is merged and live context is
-					pulled.
+					Stop after <Bold>propose_skill</Bold>. Only say the skill is saved once the user tells you it is.
 				</Span>
 			</Block>,
 		),

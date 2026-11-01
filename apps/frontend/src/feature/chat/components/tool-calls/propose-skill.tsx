@@ -67,17 +67,11 @@ function SkillDraftCard({
 		}),
 	);
 
-	const canSave = canManage && (status.data?.mode === 'direct' || status.data?.mode === 'git');
-	const isGit = status.data?.mode === 'git';
+	const canSave = canManage && status.data?.mode === 'direct';
 	const save = () =>
 		createMutation.mutate(draft, {
 			onSuccess: (created) => {
-				void queueOrSendMessage({
-					text:
-						created.mode === 'git'
-							? `I saved the skill "${created.name}" to my working copy. It goes live after it is merged and pulled.`
-							: `I saved the skill "${created.name}".`,
-				});
+				void queueOrSendMessage({ text: `I saved the skill "${created.name}".` });
 			},
 		});
 
@@ -134,9 +128,6 @@ function SkillDraftCard({
 			{canManage && status.data?.message && <p className={styles.proposeSkillNote}>{status.data.message}</p>}
 			{!canManage && (
 				<p className={styles.proposeSkillNote}>Only project admins can save skills. Copy this to share it.</p>
-			)}
-			{canSave && isGit && (
-				<p className={styles.proposeSkillNote}>This saves to your working copy, for review in Git.</p>
 			)}
 
 			<div className={styles.proposeSkillActions}>

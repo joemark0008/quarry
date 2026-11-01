@@ -76,13 +76,6 @@ const baseEnvSchema = z.object({
 	QUARRY_SKILL_AUTHORING: z.enum(['auto', 'off']).default('auto'),
 	/** Built frontend (`apps/frontend/dist`) served by the API, as in the Docker image. Unset in development (Vite). */
 	QUARRY_FRONTEND_DIST: optionalNonEmptyString,
-	QUARRY_CONTEXT_SOURCE: z.enum(['local', 'git', 'api']).optional(),
-	QUARRY_CONTEXT_GIT_URL: z.string().optional(),
-	QUARRY_CONTEXT_GIT_BRANCH: z.string().optional(),
-	QUARRY_CONTEXT_GIT_SUBPATH: z.string().optional(),
-	QUARRY_CONTEXT_GIT_TOKEN: z.string().optional(),
-	QUARRY_CONTEXT_GIT_SSH_KEY: z.string().optional(),
-	QUARRY_CONTEXT_GIT_PLATFORM: z.enum(['github', 'gitlab', 'bitbucket']).optional(),
 
 	QUARRY_STORAGE_BACKEND: z.enum(['none', 'local', 's3']).default('local'),
 	QUARRY_STORAGE_LOCAL_PATH: z.string().default('./storage'),

@@ -8,8 +8,10 @@ import { clearApolloCache } from '@/lib/apollo-client';
 import { invalidateSession } from '@/lib/session';
 import { rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { completeSetup, markSetupComplete } from '@/lib/setup-api';
+import { validateSetupEmail, validateSetupName, validateSetupPassword } from '@/feature/auth/setup-validation';
 
 const INVALID_TOKEN_MESSAGE = 'Invalid setup token.';
+const TOKEN_COMMAND = 'docker compose -f docker-compose.prod.yml logs quarry | grep "setup token"';
 const SIGN_IN_FAILED_MESSAGE =
 	"Your admin account was created, but signing in failed. Check that BETTER_AUTH_URL matches this site's address, then log in.";
 
@@ -61,21 +63,56 @@ export function Setup() {
 
 	return (
 		<AuthForm form={form} title='Set up quarry' submitText='Create admin account' serverError={serverError}>
+			<p className={styles.setupIntro}>
+				Create the first admin account. Public sign-up is off, so only an admin can add other people.
+			</p>
 			<FormTextField
 				form={form}
 				name='token'
 				title='Setup token'
-				description='Printed in the server logs when quarry starts.'
+				placeholder='Paste the token here'
+				autoComplete='off'
+				spellCheck={false}
+				inputClassName={styles.setupTokenInput}
+				description={
+					<>
+						Printed in the server logs when quarry starts. With Docker, find it with:
+						<code className={styles.setupCommand}>{TOKEN_COMMAND}</code>
+					</>
+				}
 				error={tokenError}
+				onValueChange={() => setTokenError(undefined)}
 				className={styles.setupFormTextField}
 			/>
-			<FormTextField form={form} name='name' title='Name' className={styles.setupFormTextField} />
-			<FormTextField form={form} name='email' type='email' title='Email' className={styles.setupFormTextField} />
+			<FormTextField
+				form={form}
+				name='name'
+				title='Your name'
+				placeholder='Ada Lovelace'
+				autoComplete='name'
+				validate={validateSetupName}
+				className={styles.setupFormTextField}
+			/>
+			<FormTextField
+				form={form}
+				name='email'
+				type='email'
+				title='Email'
+				placeholder='admin@example.com'
+				autoComplete='email'
+				description='You will log in with this address.'
+				validate={validateSetupEmail}
+				className={styles.setupFormTextField}
+			/>
 			<FormTextField
 				form={form}
 				name='password'
 				type='password'
 				title='Password'
+				placeholder='Choose a password'
+				autoComplete='new-password'
+				description='At least 8 characters.'
+				validate={validateSetupPassword}
 				className={styles.setupFormTextField2}
 			/>
 		</AuthForm>

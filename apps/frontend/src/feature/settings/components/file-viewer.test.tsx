@@ -49,7 +49,6 @@ vi.mock('@/lib/context-explorer-api', async () => {
 vi.mock('@/test/procedures', () => ({
 	procedures: {
 		contextExplorer: {
-			getChangedFiles: { queryKey: vi.fn(() => []) },
 			readFile: { queryOptions: vi.fn(() => ({ queryKey: [] })) },
 			writeFile: { mutationOptions: vi.fn(() => ({})) },
 		},

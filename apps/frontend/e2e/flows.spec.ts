@@ -74,7 +74,6 @@ test.describe('signed in', () => {
 			['Agent', '/settings/project/agent', 'Agent'],
 			['Query tools', '/settings/project/query-tools', null],
 			['Appearance', '/settings/appearance', 'Appearance'],
-			['Git', '/settings/git', null],
 			['Recommendations', '/settings/recommendations', null],
 			['File Explorer', '/settings/context-explorer', null],
 			['Storage', '/settings/storage', null],
