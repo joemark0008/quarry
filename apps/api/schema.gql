@@ -114,6 +114,13 @@ type ChatShareOptions {
   visibility: String
 }
 
+input CompleteSetupInput {
+  email: String!
+  name: String!
+  password: String!
+  token: String!
+}
+
 input ContextRecommendationIdsInput {
   ids: [String!]!
 }
@@ -305,6 +312,9 @@ type Mutation {
 
   """Upstream `contextExplorer.commitChanges`: `{ paths, message }`."""
   commitContextChanges(input: JSON!): JSON!
+
+  """Creates the first admin; needs the setup token from the server log."""
+  completeSetup(input: CompleteSetupInput!): Boolean!
 
   """
   Upstream `contextExplorer.connectRepository`: `{ provider, repoFullName }`.

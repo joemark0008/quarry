@@ -30,6 +30,7 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { ProjectsModule } from './projects/projects.module.js';
 import { QueryToolsModule } from './query-tools/query-tools.module.js';
 import { SandboxModule } from './sandbox/sandbox.module.js';
+import { SetupModule } from './setup/setup.module.js';
 import { SkillsModule } from './skills/skills.module.js';
 import { StoryFavoritesModule } from './stories/favorites/story-favorites.module.js';
 import { StoryFeedbackModule } from './stories/feedback/story-feedback.module.js';
@@ -88,6 +89,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		SkillsModule,
 		MemoryModule,
 		OnboardingModule,
+		SetupModule,
 		StoriesModule,
 		StoryJobsModule,
 		StoryFavoritesModule,

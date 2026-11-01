@@ -80,42 +80,27 @@ export class OrganizationRepository {
 	}
 
 	/**
-	 * First sign-up of a self-hosted instance: creates the default organization with the user as
-	 * admin and, when QUARRY_DEFAULT_PROJECT_PATH is set, the default project with the user as admin.
+	 * Setup of a self-hosted instance: creates the default organization with the user as admin and, when
+	 * QUARRY_DEFAULT_PROJECT_PATH is set, the default project with the user as admin. Does nothing when an
+	 * organization exists. Runs on the caller's transaction.
 	 */
-	async initializeDefaultOrganizationForFirstUser(userId: string): Promise<void> {
-		if ((await this.prisma.user.count()) !== 1) {
-			return;
-		}
-		if (await this.getFirstOrganization()) {
+	async initializeDefaultOrganization(userId: string, tx: Prisma.TransactionClient): Promise<void> {
+		if (await this.getFirstOrganization(tx)) {
 			return;
 		}
 
-		await this.prisma.$transaction(async (tx) => {
-			const org = await tx.organization.create({ data: { name: 'Default Organization', slug: 'default' } });
-			await tx.orgMember.create({ data: { orgId: org.id, userId, role: 'admin' } });
+		const org = await tx.organization.create({ data: { name: 'Default Organization', slug: 'default' } });
+		await tx.orgMember.create({ data: { orgId: org.id, userId, role: 'admin' } });
 
-			const projectPath = this.config.env.QUARRY_DEFAULT_PROJECT_PATH;
-			if (projectPath && !(await this.projects.getProjectByPath(projectPath, tx))) {
-				const projectName = projectPath.split('/').pop() || 'Default Project';
-				const project = await this.projects.createProject(
-					{ name: projectName, type: 'local', path: projectPath, orgId: org.id },
-					tx,
-				);
-				await tx.projectMember.create({ data: { projectId: project.id, userId, role: 'admin' } });
-			}
-		});
-	}
-
-	async addUserToDefaultOrganizationIfExists(userId: string): Promise<void> {
-		if (await this.getUserOrgMembership(userId)) {
-			return;
+		const projectPath = this.config.env.QUARRY_DEFAULT_PROJECT_PATH;
+		if (projectPath && !(await this.projects.getProjectByPath(projectPath, tx))) {
+			const projectName = projectPath.split('/').pop() || 'Default Project';
+			const project = await this.projects.createProject(
+				{ name: projectName, type: 'local', path: projectPath, orgId: org.id },
+				tx,
+			);
+			await tx.projectMember.create({ data: { projectId: project.id, userId, role: 'admin' } });
 		}
-		const org = await this.getFirstOrganization();
-		if (!org) {
-			return;
-		}
-		await this.addOrgMemberIfMissing({ orgId: org.id, userId, role: this.config.env.DEFAULT_USER_ROLE });
 	}
 
 	/** Adds a user to the default organization and project. Idempotent. */
