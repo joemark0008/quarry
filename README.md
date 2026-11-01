@@ -207,6 +207,11 @@ npm run test:e2e -w @quarry/frontend   # with the local stack running
 
 After you change the GraphQL schema, run `npm run codegen` to regenerate the frontend's typed operations.
 
+## Acknowledgements
+
+quarry builds on [nao](https://github.com/getnao/nao) by nao Labs, an open-source analytics agent released under the
+Apache License 2.0. Thanks to the nao team for their work.
+
 ## License
 
 Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
