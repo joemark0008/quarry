@@ -162,7 +162,7 @@ export function getContextWorktreePath(projectId: string, projectFolder: string,
 	}
 	return path.join(
 		path.dirname(path.resolve(projectFolder)),
-		'.nao',
+		'.quarry',
 		'worktrees',
 		projectId,
 		sanitizeWorktreeUserId(userId),
@@ -348,7 +348,7 @@ export function resolveTrackedContextProjectPrefix(worktreeRoot: string): string
 	if (candidates.length > 1) {
 		throw new ContextProjectResolutionError(
 			'project-ambiguous',
-			`Multiple nao projects were found: ${candidates.join(', ')}.`,
+			`Multiple quarry projects were found: ${candidates.join(', ')}.`,
 		);
 	}
 	const directory = path.posix.dirname(candidates[0]);

@@ -38,7 +38,7 @@ export function buildChatStoryCode(
 }
 
 function renderHeader(metadata: ChatStoryMetadata): string {
-	const title = metadata.title?.trim() || 'nao chat';
+	const title = metadata.title?.trim() || 'quarry chat';
 	const details: string[] = [];
 	if (metadata.createdAt) {
 		details.push(`Created ${formatTimestamp(metadata.createdAt)}`);
@@ -57,7 +57,7 @@ function renderTurn(message: UIMessage, options: ChatStoryCodeOptions): string |
 	if (blocks.length === 0) {
 		return null;
 	}
-	const label = message.role === 'user' ? '**You**' : '**nao**';
+	const label = message.role === 'user' ? '**You**' : '**quarry**';
 	return [label, ...blocks].join(BLOCK_SEPARATOR);
 }
 

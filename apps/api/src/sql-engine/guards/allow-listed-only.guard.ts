@@ -20,7 +20,7 @@ import {
 	tableKey,
 } from './query-guard.js';
 
-/** Port of `nao_core/config/databases/allow_listed_only_guard.py`. */
+/** Port of `upstream_core/config/databases/allow_listed_only_guard.py`. */
 
 export class AllowListedOnlyGuardError extends Error {
 	override name = 'AllowListedOnlyGuardError';

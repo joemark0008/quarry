@@ -30,7 +30,7 @@ describe('context explorer worktree writes', () => {
 	let liveSnapshot: Record<string, Buffer>;
 
 	beforeEach(async () => {
-		root = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-context-write-'));
+		root = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-context-write-'));
 		live = path.join(root, 'live');
 		bare = path.join(root, 'remote.git');
 		const seed = path.join(root, 'seed');
@@ -77,7 +77,7 @@ describe('context explorer worktree writes', () => {
 			userId: 'user-1',
 			user: { name: 'Test User', email: 'test@example.com' },
 			token: 'token',
-			configOverride: { provider: 'github', repoFullName: 'nao/context' },
+			configOverride: { provider: 'github', repoFullName: 'quarry/context' },
 			integrationAvailableOverride: true,
 			providerOverride: provider(bare),
 		};
@@ -274,16 +274,16 @@ function provider(bare: string): ContextRepositoryProvider {
 		notConnectedMessage: 'Not connected.',
 		isIntegrationAvailable: () => true,
 		authenticatedRepoUrl: () => bare,
-		publicRepoUrl: () => 'https://github.com/nao/context.git',
+		publicRepoUrl: () => 'https://github.com/quarry/context.git',
 		cloneRepo: () => undefined,
 		getGitInfo: () => ({ branch: 'main' }),
 		getUserGitIdentity: async () => ({ name: 'Test', email: 'test@example.com' }),
-		coAuthor: { name: 'nao', email: 'naoagent@getnao.io' },
+		coAuthor: { name: 'quarry', email: 'agent@quarry.invalid' },
 		commitAllAndPushBranch: () => '',
 		pushBranch: () => '',
 		findOpenReviewRequest: async () => null,
 		findReviewRequestByBranch: async () => null,
-		openReviewRequest: async () => ({ kind: 'created', url: 'https://github.com/nao/context/pull/1' }),
+		openReviewRequest: async () => ({ kind: 'created', url: 'https://github.com/quarry/context/pull/1' }),
 	};
 }
 

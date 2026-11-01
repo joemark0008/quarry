@@ -15,7 +15,7 @@ import {
 import { matchIdentifier } from './query-guard.js';
 
 /**
- * Port of `nao_core/config/databases/column_access.py` + `column_access_analysis.py`: blocks queries that read a
+ * Port of `upstream_core/config/databases/column_access.py` + `column_access_analysis.py`: blocks queries that read a
  * column matched by `exclude_columns`, explicitly or through `SELECT *`. Column lineage is traced through CTEs and
  * derived tables using the column catalog (`.meta/.../columns.json`) written by sync; no connection is opened.
  */

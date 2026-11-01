@@ -172,7 +172,7 @@ describe('saveUploadedFile', () => {
 		expect(object.key.startsWith('projects/proj-1/users/user-1/uploads/')).toBe(true);
 	});
 
-	it('refuses a file type nao cannot do anything with', async () => {
+	it('refuses a file type quarry cannot do anything with', async () => {
 		await expect(saveUploadedFile(scope, 'malware.exe', Buffer.from('x'))).rejects.toThrow(
 			'Files of type .exe cannot be uploaded',
 		);

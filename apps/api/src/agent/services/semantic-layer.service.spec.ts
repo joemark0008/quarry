@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { renderToMarkdown } from '../markdown/index.js';
 import { SystemPrompt } from '../prompts/system-prompt.js';
-import { extractConfiguredSemanticLayer } from '../utils/nao-config.js';
+import { extractConfiguredSemanticLayer } from '../utils/quarry-config.js';
 import { isSemanticQueryToolEnabled, resolveSemanticLayerMode } from './semantic-layer.service.js';
 
 vi.mock('@resvg/resvg-js', () => ({
@@ -23,7 +23,7 @@ vi.mock('../tools/display-map.js', () => ({ createDisplayMapTool: () => ({}) }))
 const dirs: string[] = [];
 
 function writeProject(configLines: string[] | null): string {
-	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-semantic-layer-'));
+	const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-semantic-layer-'));
 	dirs.push(dir);
 	if (configLines) {
 		fs.writeFileSync(path.join(dir, 'quarry_config.yaml'), configLines.join('\n'));

@@ -1,8 +1,8 @@
 # quarry
 
-Rewrite of getnao/nao on NestJS 11 (Express) + GraphQL code-first (Apollo) + Prisma/PostgreSQL, keeping the React frontend. Read [PLAN.md](PLAN.md) for what is built and [PHASES.md](PHASES.md) for the order and checklists.
+Rewrite of an Apache-2.0 analytics-agent platform (see [NOTICE](NOTICE)) on NestJS 11 (Express) + GraphQL code-first (Apollo) + Prisma/PostgreSQL, keeping the React frontend. Read [PLAN.md](PLAN.md) for what is built and [PHASES.md](PHASES.md) for the order and checklists.
 
-`../fork-reference` is the upstream source: **read-only reference**. Never edit tracked files there (local `.env` files are fine). quarry no longer depends on it at runtime or build time; it is only for porting (see [docs/deferred-features.md](docs/deferred-features.md) for the areas not ported).
+`../fork-reference`, if you have one, is a local clone of the upstream source: **read-only reference**. Never edit tracked files there (local `.env` files are fine). quarry no longer depends on it at runtime or build time; it is only for porting (see [docs/deferred-features.md](docs/deferred-features.md) for the areas not ported).
 
 ## Stack rules
 

@@ -34,7 +34,7 @@ export async function naturalLanguageToCron(projectId: string, _userId: string, 
 			].join('\n'),
 			messages: [{ role: 'user', content: text }],
 			maxOutputTokens: MAX_OUTPUT_TOKENS,
-			experimental_telemetry: llmTelemetry('nao-cron-nlp', { projectId }),
+			experimental_telemetry: llmTelemetry('quarry-cron-nlp', { projectId }),
 		});
 
 		const cron = sanitizeCron(answer);

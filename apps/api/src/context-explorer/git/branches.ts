@@ -197,7 +197,7 @@ export function getContextBranchCommitMessages(repo: ResolvedContextRepo): strin
 
 export function generateContextBranchName(repo: ResolvedContextRepo, timestamp = Date.now()): string {
 	const branches = readContextBranchNames(repo);
-	const base = `nao/context-edits-${timestamp.toString(36)}`;
+	const base = `quarry/context-edits-${timestamp.toString(36)}`;
 	let candidate = base;
 	let suffix = 2;
 	while (branches.has(candidate)) {

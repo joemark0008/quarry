@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 /**
  * Dynamically imports the tools module with a mocked `path` implementation
- * (posix or win32) and a stubbed `fs` (no .naoignore files on disk).
+ * (posix or win32) and a stubbed `fs` (no .quarryignore files on disk).
  */
 async function loadTools(variant: 'posix' | 'win32') {
 	vi.resetModules();
@@ -24,7 +24,7 @@ async function loadTools(variant: 'posix' | 'win32') {
 	}));
 
 	const tools = await import('./tools.js');
-	tools.clearNaoignoreCache();
+	tools.clearQuarryignoreCache();
 	return tools;
 }
 
@@ -365,10 +365,10 @@ describe('storage mount', () => {
 });
 
 // ---------------------------------------------------------------------------
-// loadNaoignorePatterns cache invalidation
+// loadQuarryignorePatterns cache invalidation
 // ---------------------------------------------------------------------------
 
-describe('loadNaoignorePatterns cache invalidation', () => {
+describe('loadQuarryignorePatterns cache invalidation', () => {
 	async function loadToolsWithFs(files: { content: string; mtimeMs: number; size?: number }[]) {
 		vi.resetModules();
 
@@ -397,42 +397,42 @@ describe('loadNaoignorePatterns cache invalidation', () => {
 		}));
 
 		const tools = await import('./tools.js');
-		tools.clearNaoignoreCache();
+		tools.clearQuarryignoreCache();
 		return tools;
 	}
 
 	it('returns cached patterns when the file signature is unchanged', async () => {
-		const { loadNaoignorePatterns } = await loadToolsWithFs([
+		const { loadQuarryignorePatterns } = await loadToolsWithFs([
 			{ content: 'templates/\n', mtimeMs: 1000 },
 			{ content: 'templates/\n', mtimeMs: 1000 },
 			{ content: 'templates/\n', mtimeMs: 1000 },
 		]);
 
-		expect(loadNaoignorePatterns('/project')).toEqual(['templates/']);
-		expect(loadNaoignorePatterns('/project')).toEqual(['templates/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['templates/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['templates/']);
 	});
 
 	it('reloads patterns when the file mtime changes', async () => {
-		const { loadNaoignorePatterns } = await loadToolsWithFs([
+		const { loadQuarryignorePatterns } = await loadToolsWithFs([
 			{ content: 'templates/\n', mtimeMs: 1000 },
 			{ content: 'templates/\n', mtimeMs: 1000 },
 			{ content: '*.j2\ntests/\n', mtimeMs: 2000 },
 			{ content: '*.j2\ntests/\n', mtimeMs: 2000 },
 		]);
 
-		expect(loadNaoignorePatterns('/project')).toEqual(['templates/']);
-		expect(loadNaoignorePatterns('/project')).toEqual(['*.j2', 'tests/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['templates/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['*.j2', 'tests/']);
 	});
 
 	it('reloads patterns when the file size changes', async () => {
-		const { loadNaoignorePatterns } = await loadToolsWithFs([
+		const { loadQuarryignorePatterns } = await loadToolsWithFs([
 			{ content: 'templates/\n', mtimeMs: 1000, size: 11 },
 			{ content: 'templates/\n', mtimeMs: 1000, size: 11 },
 			{ content: 'tests/\n', mtimeMs: 1000, size: 7 },
 			{ content: 'tests/\n', mtimeMs: 1000, size: 7 },
 		]);
 
-		expect(loadNaoignorePatterns('/project')).toEqual(['templates/']);
-		expect(loadNaoignorePatterns('/project')).toEqual(['tests/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['templates/']);
+		expect(loadQuarryignorePatterns('/project')).toEqual(['tests/']);
 	});
 });

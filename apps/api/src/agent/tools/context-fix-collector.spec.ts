@@ -105,9 +105,9 @@ describe('context fix collector repository boundaries', () => {
 				{
 					name: 'dbt-models',
 					contextPath: 'repos/dbt-models',
-					repoFullName: 'nao/dbt-models',
+					repoFullName: 'quarry/dbt-models',
 					branch: 'main',
-					url: 'https://github.com/nao/dbt-models.git',
+					url: 'https://github.com/quarry/dbt-models.git',
 					localPath: null,
 					provider: 'github',
 				},
@@ -130,7 +130,7 @@ describe('context fix collector repository boundaries', () => {
 					path: 'repos/dbt-models/models/orders.sql',
 					newContent: 'new',
 					targetRepo: {
-						repoFullName: 'nao/dbt-models',
+						repoFullName: 'quarry/dbt-models',
 						branch: 'main',
 						path: 'models/orders.sql',
 						provider: 'github',
@@ -149,7 +149,7 @@ function runEdit(collector: Collector, input: EditInput) {
 }
 
 function createProjectFolder(temporaryRoots: string[]): string {
-	const projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-context-fix-'));
+	const projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-context-fix-'));
 	temporaryRoots.push(projectFolder);
 	fs.writeFileSync(path.join(projectFolder, 'RULES.md'), 'old');
 	fs.mkdirSync(path.join(projectFolder, 'repos/dbt-models/models'), { recursive: true });

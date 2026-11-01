@@ -24,7 +24,7 @@ beforeEach(() => {
 	process.env.QUARRY_STORAGE_BACKEND = 'none';
 	__reloadEnvForTesting();
 	__resetStorageForTesting();
-	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-config-tools-'));
+	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-config-tools-'));
 	fs.writeFileSync(path.join(projectFolder, 'quarry_config.yaml'), `llm:\n  api_key: ${SECRET}\n`);
 	fs.writeFileSync(path.join(projectFolder, 'RULES.md'), 'Rules\n');
 	fs.mkdirSync(path.join(projectFolder, 'repos', 'other'), { recursive: true });

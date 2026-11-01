@@ -1,6 +1,6 @@
 # RULES.md
 
-> Included with every message sent to the nao agent. Keep it lean — it points to context, it doesn't copy it. Per-table detail belongs in `databases/<table>/`, metrics in the semantic layer, domain rules in `docs/`.
+> Included with every message sent to the quarry agent. Keep it lean — it points to context, it doesn't copy it. Per-table detail belongs in `databases/<table>/`, metrics in the semantic layer, domain rules in `docs/`.
 
 ## Business overview
 
@@ -10,7 +10,7 @@
 
 ## Data architecture
 
-**Warehouse:** TODO. (ex: BigQuery (`nao-production`))
+**Warehouse:** TODO. (ex: BigQuery (`acme-production`))
 **Data stack:** TODO. (ex: dlt, dbt, dbt semantic layer)
 **Data layers:** TODO: describe data layers (ex bronze / silver / gold)
 

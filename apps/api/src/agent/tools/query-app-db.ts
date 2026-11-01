@@ -40,7 +40,7 @@ export async function queryAppDb(
 
 export function createQueryAppDbTool(projectId: string) {
 	return createTool<Input, QueryAppDbResult>({
-		description: `Run a read-only SQL query over the nao app database to mine usage signal. Only SELECT/WITH over these project-scoped views is allowed: ${ALLOWED_APP_DB_VIEWS.join(', ')}.`,
+		description: `Run a read-only SQL query over the quarry app database to mine usage signal. Only SELECT/WITH over these project-scoped views is allowed: ${ALLOWED_APP_DB_VIEWS.join(', ')}.`,
 		inputSchema: InputSchema,
 		execute: async ({ sql }, context) => queryAppDb(context.services.runScopedAppDbQuery, projectId, sql),
 		toModelOutput: ({ output }) => renderToModelOutput(QueryAppDbOutput({ output }), output),

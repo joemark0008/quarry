@@ -53,7 +53,7 @@ export class ProjectsService {
 	}
 
 	/**
-	 * quarry addition (upstream self-hosted has one project from `NAO_DEFAULT_PROJECT_PATH`): a project gets a
+	 * quarry addition (upstream self-hosted has one project from a default project path): a project gets a
 	 * folder under `QUARRY_PROJECTS_DIR` for its context, in the user's organization, with the user as admin.
 	 */
 	async createProject(userId: string, name: string): Promise<ProjectSummary> {

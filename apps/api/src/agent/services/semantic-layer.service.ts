@@ -13,7 +13,7 @@ import {
 import { loadProjectConfig, type ProjectConfig, ProjectConfigError } from '../../sql-engine/project-config.js';
 import type { AgentSettings } from '../types/agent-settings.js';
 import type { ToolContext } from '../types/tools.js';
-import { extractConfiguredSemanticLayer } from '../utils/nao-config.js';
+import { extractConfiguredSemanticLayer } from '../utils/quarry-config.js';
 
 /** A metric query in semantic terms, mirroring the `/semantic_layer/compile` request body. */
 export type SemanticQuery = Omit<executeSemanticQuery.Input, 'name'>;

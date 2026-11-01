@@ -251,7 +251,7 @@ function guardAccent(theme: StoryTheme, candidates: BrandCandidate[], notes: str
 	}
 	if (blendsInto(theme.accent.color, theme.surfaces.page) || blendsInto(theme.accent.color, theme.block.background)) {
 		theme.accent.color = DEFAULT_STORY_THEME.accent.color;
-		notes.push('The accent could not be told from the page or the blocks, so the nao accent is kept.');
+		notes.push('The accent could not be told from the page or the blocks, so the quarry accent is kept.');
 	}
 	theme.accent.ink = readableInkFor(theme.accent.color, [theme.text.headingColor, PURE_WHITE, PURE_BLACK]);
 }
@@ -295,7 +295,7 @@ function guardFonts(theme: StoryTheme, proposal: ThemeProposal, fontLinks: strin
 			const brandFace = stack.split(',')[0].trim();
 			const generic = /serif|mono/i.test(stack) && !/sans-serif/i.test(stack) ? 'serif' : 'sans-serif';
 			theme.text[key] = `${brandFace}, '${family}', ${generic}`;
-			const note = `${brandFace} cannot be loaded by nao, so ${family} stands in for it.`;
+			const note = `${brandFace} cannot be loaded by quarry, so ${family} stands in for it.`;
 			if (!notes.includes(note)) {
 				notes.push(note);
 			}
@@ -359,7 +359,7 @@ function keepBrandSeries(theme: StoryTheme, requested: string[], notes: string[]
 	theme.charts.series = padWithDefaults([...repaired, ...tints, ...derived], surface, notes);
 }
 
-/** The last resort when every candidate sat too close to a kept colour: nao's own palette is distinct by construction. */
+/** The last resort when every candidate sat too close to a kept colour: quarry's own palette is distinct by construction. */
 function padWithDefaults(series: string[], surface: string, notes: string[]): string[] {
 	const missing = DERIVED_SERIES_COUNT - series.length;
 	if (missing <= 0) {
@@ -368,7 +368,7 @@ function padWithDefaults(series: string[], surface: string, notes: string[]): st
 	const defaults = (isDarkSurface(surface) ? DEFAULT_DARK_STORY_THEME : DEFAULT_STORY_THEME).charts.series;
 	const added = defaults.filter((color) => !series.includes(color)).slice(0, missing);
 	notes.push(
-		`Added ${added.length} of nao's chart colour${added.length === 1 ? '' : 's'}, as the brand and its accent left too few distinct ones.`,
+		`Added ${added.length} of quarry's chart colour${added.length === 1 ? '' : 's'}, as the brand and its accent left too few distinct ones.`,
 	);
 	return [...series, ...added];
 }
@@ -552,7 +552,7 @@ class ColorReader {
 			return [];
 		}
 		return [
-			`Some proposed colours could not be read, so nao defaults are used for them: ${this.unreadable.join(', ')}.`,
+			`Some proposed colours could not be read, so quarry defaults are used for them: ${this.unreadable.join(', ')}.`,
 		];
 	}
 }

@@ -13,7 +13,7 @@ import { renderToModelOutput, SearchOutput } from '../tool-outputs/index.js';
 import type { ToolContext } from '../types/tools.js';
 import { isStoryLibraryPattern, storyIdOfLibraryPattern } from '../utils/story-library.js';
 import {
-	loadNaoignorePatterns,
+	loadQuarryignorePatterns,
 	resolveCanonicalProjectPath,
 	STORAGE_MOUNT,
 	toStorageScope,
@@ -98,9 +98,9 @@ const searchStorage = async (recursivePattern: string, context: ToolContext): Pr
 
 const searchProjectFolder = async (recursivePattern: string, context: ToolContext): Promise<searchFiles.File[]> => {
 	const projectFolder = context.projectFolder;
-	// Build ignore patterns from .naoignore
-	const naoignorePatterns = loadNaoignorePatterns(projectFolder);
-	const ignorePatterns = naoignorePatterns.flatMap((ignorePattern) => {
+	// Build ignore patterns from .quarryignore
+	const quarryignorePatterns = loadQuarryignorePatterns(projectFolder);
+	const ignorePatterns = quarryignorePatterns.flatMap((ignorePattern) => {
 		const cleanPattern = ignorePattern.endsWith('/') ? ignorePattern.slice(0, -1) : ignorePattern;
 		return [`**/${cleanPattern}`, `**/${cleanPattern}/**`];
 	});

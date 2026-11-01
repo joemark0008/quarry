@@ -506,7 +506,7 @@ function resolveThinking(
 			return resolveGeminiThinking(capabilities, effort, settings);
 		case 'moonshot':
 		case 'meta':
-			// Kimi and Muse speak nao's effort vocabulary, so the clamped value goes out as-is.
+			// Kimi and Muse speak quarry's effort vocabulary, so the clamped value goes out as-is.
 			return resolveEffortThinking(effort, (e) => ({ reasoningEffort: e }));
 		case 'qwen':
 			return resolveQwenThinking(capabilities, settings);

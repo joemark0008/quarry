@@ -37,7 +37,7 @@ export const convertToCost = (
 	const builtInCosts = getProviderMeta(provider).models.find((model) => model.id === modelId)?.costPerM;
 	const declaredCosts = customModels.find((m) => m.id === modelId)?.costPerM;
 
-	// Prices declared for a model win over nao's built-in table, token type by token type.
+	// Prices declared for a model win over quarry's built-in table, token type by token type.
 	const costPerM = builtInCosts || declaredCosts ? { ...builtInCosts, ...declaredCosts } : costs;
 
 	if (!costPerM) {

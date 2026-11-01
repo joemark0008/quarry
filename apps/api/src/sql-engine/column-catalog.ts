@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-/** Port of `nao_core/config/databases/column_catalog.py`: the `columns.json` written by sync, read by guards. */
+/** Port of `upstream_core/config/databases/column_catalog.py`: the `columns.json` written by sync, read by guards. */
 
 export const COLUMN_CATALOG_VERSION = 1;
 

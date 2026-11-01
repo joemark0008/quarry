@@ -68,10 +68,10 @@ describe('context branch cleanup', () => {
 		providerMocks.findReviewRequestByBranch.mockResolvedValue(mergedReviewRequest(OLD_COMPLETION));
 		repositoryMocks.resolveContextRepository.mockResolvedValue({
 			provider: 'github',
-			repoFullName: 'nao/context',
+			repoFullName: 'quarry/context',
 			branch: 'main',
 			source: 'settings',
-			webUrl: 'https://github.com/nao/context',
+			webUrl: 'https://github.com/quarry/context',
 		});
 	});
 
@@ -85,7 +85,7 @@ describe('context branch cleanup', () => {
 
 	it('deletes a branch merged more than 24 hours ago and releases ownership', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-old';
+		const branch = 'quarry/context-edits-old';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 
@@ -97,7 +97,7 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch merged less than 24 hours ago', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-recent';
+		const branch = 'quarry/context-edits-recent';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 		providerMocks.findReviewRequestByBranch.mockResolvedValue(mergedReviewRequest(RECENT_COMPLETION));
@@ -110,11 +110,11 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch while its review request is open', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-open';
+		const branch = 'quarry/context-edits-open';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 		providerMocks.findReviewRequestByBranch.mockResolvedValue({
-			url: 'https://github.com/nao/context/pull/1',
+			url: 'https://github.com/quarry/context/pull/1',
 			state: 'open',
 			mergedAt: null,
 			closedAt: null,
@@ -128,7 +128,7 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch when no review request is found', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-no-pr';
+		const branch = 'quarry/context-edits-no-pr';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 		providerMocks.findReviewRequestByBranch.mockResolvedValue(null);
@@ -141,7 +141,7 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch when its owner has no provider token', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-no-token';
+		const branch = 'quarry/context-edits-no-token';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 		providerMocks.getToken.mockResolvedValue(null);
@@ -155,7 +155,7 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch with a commit absent from origin and the default branch', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-unpublished';
+		const branch = 'quarry/context-edits-unpublished';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: false, checkedOut: false });
 		configureProject(fixture, [ownership(branch)]);
 
@@ -167,7 +167,7 @@ describe('context branch cleanup', () => {
 
 	it('keeps a branch when the worktree has uncommitted changes', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-dirty';
+		const branch = 'quarry/context-edits-dirty';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: false });
 		fs.writeFileSync(path.join(worktree, 'uncommitted.md'), 'keep me\n');
 		configureProject(fixture, [ownership(branch)]);
@@ -180,18 +180,18 @@ describe('context branch cleanup', () => {
 
 	it('releases ownership without cloning when the worktree is missing', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-missing-worktree';
+		const branch = 'quarry/context-edits-missing-worktree';
 		configureProject(fixture, [ownership(branch)]);
 
 		await runContextBranchCleanup(projectMocks.getProjectById);
 
 		expect(ownershipMocks.releaseContextBranch).toHaveBeenCalledWith('project-id', branch, 'user-1');
-		expect(fs.existsSync(path.join(fixture.root, '.nao', 'worktrees', 'project-id', 'user-1'))).toBe(false);
+		expect(fs.existsSync(path.join(fixture.root, '.quarry', 'worktrees', 'project-id', 'user-1'))).toBe(false);
 	});
 
 	it('skips cleanup when no context repository is connected', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-disconnected';
+		const branch = 'quarry/context-edits-disconnected';
 		configureProject(fixture, [ownership(branch)]);
 		repositoryMocks.resolveContextRepository.mockResolvedValue(null);
 
@@ -205,7 +205,7 @@ describe('context branch cleanup', () => {
 
 	it('switches off a checked-out branch before deleting it', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const branch = 'nao/context-edits-checked-out';
+		const branch = 'quarry/context-edits-checked-out';
 		const worktree = createOwnedBranch(fixture, 'user-1', branch, { push: true, checkedOut: true });
 		configureProject(fixture, [ownership(branch)]);
 
@@ -218,8 +218,8 @@ describe('context branch cleanup', () => {
 
 	it('continues processing later rows when one row throws', async () => {
 		const fixture = createFixture(temporaryRoots);
-		const failingBranch = 'nao/context-edits-failing';
-		const cleanedBranch = 'nao/context-edits-cleaned';
+		const failingBranch = 'quarry/context-edits-failing';
+		const cleanedBranch = 'quarry/context-edits-cleaned';
 		const firstWorktree = createOwnedBranch(fixture, 'user-1', failingBranch, { push: true, checkedOut: false });
 		const secondWorktree = createOwnedBranch(fixture, 'user-2', cleanedBranch, { push: true, checkedOut: false });
 		configureProject(fixture, [ownership(failingBranch), ownership(cleanedBranch, 'user-2')]);
@@ -245,7 +245,7 @@ interface Fixture {
 }
 
 function createFixture(temporaryRoots: string[]): Fixture {
-	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-context-cleanup-'));
+	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-context-cleanup-'));
 	temporaryRoots.push(root);
 	const seed = path.join(root, 'seed');
 	const live = path.join(root, 'live');
@@ -266,7 +266,7 @@ function createOwnedBranch(
 	branch: string,
 	options: { push: boolean; checkedOut: boolean },
 ): string {
-	const worktree = path.join(fixture.root, '.nao', 'worktrees', 'project-id', userId);
+	const worktree = path.join(fixture.root, '.quarry', 'worktrees', 'project-id', userId);
 	fs.mkdirSync(path.dirname(worktree), { recursive: true });
 	runGit(fixture.root, ['clone', '--quiet', fixture.bare, worktree]);
 	runGit(worktree, ['switch', '--quiet', '-c', branch]);
@@ -297,7 +297,7 @@ function ownership(branch: string, userId = 'user-1') {
 
 function mergedReviewRequest(mergedAt: string) {
 	return {
-		url: 'https://github.com/nao/context/pull/1',
+		url: 'https://github.com/quarry/context/pull/1',
 		state: 'merged' as const,
 		mergedAt,
 		closedAt: mergedAt,

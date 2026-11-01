@@ -14,7 +14,7 @@ describe('context explorer content search', () => {
 	let projectFolder: string;
 
 	beforeAll(() => {
-		projectFolder = mkdtempSync(join(tmpdir(), 'nao-context-explorer-search-'));
+		projectFolder = mkdtempSync(join(tmpdir(), 'quarry-context-explorer-search-'));
 		writeFileSync(join(projectFolder, 'literal.txt'), 'literal target\nliteral target\n');
 		writeFileSync(join(projectFolder, 'case.txt'), 'MixedCaseToken\n');
 		writeFileSync(join(projectFolder, 'regex-literal.txt'), 'a.c\n');
@@ -22,7 +22,7 @@ describe('context explorer content search', () => {
 		writeFileSync(join(projectFolder, 'ignored.txt'), 'excluded content\n');
 		writeFileSync(join(projectFolder, 'git-ignored.txt'), 'git ignored content\n');
 		writeFileSync(join(projectFolder, '.gitignore'), 'git-ignored.txt\n');
-		writeFileSync(join(projectFolder, '.naoignore'), 'ignored.txt\n');
+		writeFileSync(join(projectFolder, '.quarryignore'), 'ignored.txt\n');
 		mkdirSync(join(projectFolder, '.git'));
 		writeFileSync(join(projectFolder, '.git', 'config'), 'protected content\n');
 		writeFileSync(join(projectFolder, '.env'), 'protected content\n');
@@ -63,7 +63,7 @@ describe('context explorer content search', () => {
 		expect(response.results.map((result) => result.path)).toEqual(['/regex-literal.txt']);
 	});
 
-	it('excludes files matched by .naoignore', async () => {
+	it('excludes files matched by .quarryignore', async () => {
 		const response = await searchFileContents('excluded content', projectFolder);
 
 		expect(response.results).toEqual([]);

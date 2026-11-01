@@ -23,8 +23,8 @@ import { cn } from '@/lib/utils';
 type Connection = WarehouseConnectionsQuery['warehouseConnections'][number];
 
 /**
- * quarry: connect the project to a PostgreSQL warehouse and sync its context (replaces `nao init` / editing
- * `quarry_config.yaml` and running `nao sync`).
+ * quarry: connect the project to a PostgreSQL warehouse and sync its context (replaces the upstream CLI init / editing
+ * `quarry_config.yaml` and running `context sync`).
  */
 export function WarehouseSettingsPage() {
 	const { isAdmin } = usePermissions();

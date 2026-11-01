@@ -36,7 +36,7 @@ export function buildStoryToolDescription({
 	canReplace = true,
 }: { mapsEnabled?: boolean; customStories?: boolean; canReplace?: boolean } = {}) {
 	return [
-		'Create or modify a nao Story — an interactive document combining markdown text and chart visualizations.',
+		'Create or modify a quarry Story — an interactive document combining markdown text and chart visualizations.',
 		'Use "create" to initialize a new story, "update" to search-and-replace within it (producing a new version),',
 		'or "replace" to overwrite the entire content (producing a new version).',
 		'Charts are embedded via <chart query_id="..." chart_type="..." x_axis_key="..." series=\'[...]\' title="..." />.',

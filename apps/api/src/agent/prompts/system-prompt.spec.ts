@@ -321,8 +321,8 @@ describe('SystemPrompt configured database ids', () => {
 					{
 						id: 'bigquery-prod',
 						type: 'bigquery',
-						project_id: 'nao-corp',
-						dataset_id: 'nao-corp.movies_silver',
+						project_id: 'quarry-corp',
+						dataset_id: 'quarry-corp.movies_silver',
 					},
 				],
 			}),
@@ -335,7 +335,7 @@ describe('SystemPrompt configured database ids', () => {
 				"execute_sql's **database_id** must be one of:",
 				'',
 				'- **duckdb-jaffle-shop** — type=duckdb, database=jaffle_shop',
-				'- **bigquery-prod** — type=bigquery, project_id=nao-corp, dataset_id=nao-corp.movies_silver',
+				'- **bigquery-prod** — type=bigquery, project_id=quarry-corp, dataset_id=quarry-corp.movies_silver',
 			].join('\n'),
 		);
 	});
@@ -435,7 +435,7 @@ describe('SystemPrompt built-in skills', () => {
 		expect(markdown).toContain('Skill: pdf-handling');
 	});
 
-	it('omits the section when nao ships no built-in skills', () => {
+	it('omits the section when quarry ships no built-in skills', () => {
 		const markdown = renderToMarkdown(SystemPrompt({ internalSkills: [] }));
 		expect(markdown).not.toContain('Built-in Skills');
 	});

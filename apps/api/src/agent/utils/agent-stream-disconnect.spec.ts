@@ -32,7 +32,7 @@ describe('trackAgentStreamDisconnect', () => {
 					userId: 'user-1',
 					modelId: 'model-1',
 					userAgent: 'test-browser',
-					host: 'nao.example.com',
+					host: 'quarry.example.com',
 				}),
 			}),
 		);
@@ -87,7 +87,7 @@ function createSetup() {
 
 	const stream = trackAgentStreamDisconnect(source, {
 		request: {
-			headers: { 'user-agent': 'test-browser', 'x-forwarded-host': 'nao.example.com' },
+			headers: { 'user-agent': 'test-browser', 'x-forwarded-host': 'quarry.example.com' },
 		} as unknown as Request,
 		response: raw as unknown as Response,
 		agent,

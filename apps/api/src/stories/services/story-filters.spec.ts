@@ -36,15 +36,15 @@ describe('assertSafeSqlIdentifier', () => {
 		expect(assertSafeSqlIdentifier('orders', 'table')).toBe('orders');
 		expect(assertSafeSqlIdentifier('public.orders', 'table')).toBe('public.orders');
 		expect(assertSafeSqlIdentifier('"Order Status"', 'column')).toBe('"Order Status"');
-		expect(assertSafeSqlIdentifier('`nao-production`.`prod_silver`.`dim_products`', 'table')).toBe(
-			'`nao-production`.`prod_silver`.`dim_products`',
+		expect(assertSafeSqlIdentifier('`quarry-production`.`prod_silver`.`dim_products`', 'table')).toBe(
+			'`quarry-production`.`prod_silver`.`dim_products`',
 		);
 	});
 
 	it('rejects unsafe identifiers', () => {
 		expect(() => assertSafeSqlIdentifier('orders; DROP TABLE x', 'table')).toThrow(/Invalid filter table/);
 		expect(() => assertSafeSqlIdentifier('col-name', 'column')).toThrow(/Invalid filter column/);
-		expect(() => assertSafeSqlIdentifier('nao-production.prod_silver.dim_products', 'table')).toThrow(
+		expect(() => assertSafeSqlIdentifier('quarry-production.prod_silver.dim_products', 'table')).toThrow(
 			/Invalid filter table/,
 		);
 	});

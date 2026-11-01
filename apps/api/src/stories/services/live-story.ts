@@ -288,7 +288,7 @@ interface StoryQueryExecutionOptions {
 }
 
 /**
- * Runs the story's queries where each one belongs: the app database, nao's local DuckDB or the
+ * Runs the story's queries where each one belongs: the app database, quarry's local DuckDB or the
  * warehouse. A local query reads earlier results as tables, so the queries it references are
  * refreshed first and their fresh rows handed to DuckDB in place of the ones stored in the chat.
  */
@@ -546,7 +546,7 @@ async function generateLiveStoryOutput<T>(
 		messages: [{ role: 'user', content: instruction }],
 		output: Output.object({ schema }),
 		maxOutputTokens: MAX_OUTPUT_TOKENS,
-		experimental_telemetry: llmTelemetry('nao-live-story', { projectId: target.projectId, tags: [provider] }),
+		experimental_telemetry: llmTelemetry('quarry-live-story', { projectId: target.projectId, tags: [provider] }),
 	});
 
 	// quarry: usage tracking (`llm_inference` records) is not ported; upstream saved one here.

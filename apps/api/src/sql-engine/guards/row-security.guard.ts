@@ -20,7 +20,7 @@ import {
 } from './query-guard.js';
 
 /**
- * Port of `nao_core/config/databases/row_security_guard.py`: rewrites a query so every protected table only
+ * Port of `upstream_core/config/databases/row_security_guard.py`: rewrites a query so every protected table only
  * returns the rows its policy allows. The predicate goes into the WHERE clause, into the ON clause of the outer
  * join that makes the table nullable, or into a pre-filtering subquery (FULL joins, `USING` joins).
  */

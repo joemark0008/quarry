@@ -97,25 +97,25 @@ export const BUILT_IN_EXCLUSION_GLOBS = [...EXCLUDED_DIRECTORY_NAMES, ...ENVIRON
 	(pattern) => [`!${pattern}`, `!${pattern}/**`, `!**/${pattern}`, `!**/${pattern}/**`],
 );
 
-type NaoignoreCacheEntry = {
-	/** `mtimeMs:size` of the .naoignore file, or `null` if the file does not exist */
+type QuarryignoreCacheEntry = {
+	/** `mtimeMs:size` of the .quarryignore file, or `null` if the file does not exist */
 	signature: string | null;
 	patterns: string[];
 };
 
 /**
- * Cache for .naoignore patterns per project folder.
+ * Cache for .quarryignore patterns per project folder.
  * Entries are invalidated automatically when the underlying file changes.
  */
-const naoignoreCache = new Map<string, NaoignoreCacheEntry>();
+const quarryignoreCache = new Map<string, QuarryignoreCacheEntry>();
 
 /**
- * Computes a cheap fingerprint of the .naoignore file used to detect changes.
+ * Computes a cheap fingerprint of the .quarryignore file used to detect changes.
  * Returns `null` when the file does not exist or cannot be stat-ed.
  */
-const getNaoignoreSignature = (naoignorePath: string): string | null => {
+const getQuarryignoreSignature = (quarryignorePath: string): string | null => {
 	try {
-		const stat = fs.statSync(naoignorePath);
+		const stat = fs.statSync(quarryignorePath);
 		return `${stat.mtimeMs}:${stat.size}`;
 	} catch {
 		return null;
@@ -123,15 +123,15 @@ const getNaoignoreSignature = (naoignorePath: string): string | null => {
 };
 
 /**
- * Loads and parses the .naoignore file from the project folder.
+ * Loads and parses the .quarryignore file from the project folder.
  * Returns an array of patterns. Results are cached per project folder and
  * invalidated when the file's mtime or size changes.
  */
-export const loadNaoignorePatterns = (projectFolder: string): string[] => {
-	const naoignorePath = path.join(projectFolder, '.naoignore');
-	const signature = getNaoignoreSignature(naoignorePath);
+export const loadQuarryignorePatterns = (projectFolder: string): string[] => {
+	const quarryignorePath = path.join(projectFolder, '.quarryignore');
+	const signature = getQuarryignoreSignature(quarryignorePath);
 
-	const cached = naoignoreCache.get(projectFolder);
+	const cached = quarryignoreCache.get(projectFolder);
 	if (cached && cached.signature === signature) {
 		return cached.patterns;
 	}
@@ -139,7 +139,7 @@ export const loadNaoignorePatterns = (projectFolder: string): string[] => {
 	let patterns: string[] = [];
 	if (signature !== null) {
 		try {
-			const content = fs.readFileSync(naoignorePath, 'utf-8');
+			const content = fs.readFileSync(quarryignorePath, 'utf-8');
 			patterns = content
 				.split('\n')
 				.map((line) => line.trim())
@@ -149,25 +149,25 @@ export const loadNaoignorePatterns = (projectFolder: string): string[] => {
 		}
 	}
 
-	naoignoreCache.set(projectFolder, { signature, patterns });
+	quarryignoreCache.set(projectFolder, { signature, patterns });
 	return patterns;
 };
 
 /**
- * Clears the naoignore cache. Useful for testing or to force a reload.
+ * Clears the quarryignore cache. Useful for testing or to force a reload.
  */
-export const clearNaoignoreCache = (): void => {
-	naoignoreCache.clear();
+export const clearQuarryignoreCache = (): void => {
+	quarryignoreCache.clear();
 };
 
 /**
- * Checks if a path matches any .naoignore pattern.
+ * Checks if a path matches any .quarryignore pattern.
  * @param relativePath - Path relative to the project folder (e.g., "templates/foo.md")
  * @param projectFolder - The project folder path
  * @returns true if the path should be ignored
  */
-export const isIgnoredByNaoignore = (relativePath: string, projectFolder: string): boolean => {
-	const patterns = loadNaoignorePatterns(projectFolder);
+export const isIgnoredByQuarryignore = (relativePath: string, projectFolder: string): boolean => {
+	const patterns = loadQuarryignorePatterns(projectFolder);
 
 	// Normalize the path (remove leading slash if present)
 	const normalizedPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
@@ -204,7 +204,7 @@ export const isIgnoredByNaoignore = (relativePath: string, projectFolder: string
 };
 
 /**
- * Checks if a real filesystem path should be ignored based on .naoignore.
+ * Checks if a real filesystem path should be ignored based on .quarryignore.
  * @param realPath - Absolute filesystem path
  * @param projectFolder - The project folder path
  * @returns true if the path should be ignored
@@ -214,12 +214,12 @@ export const isIgnoredPath = (realPath: string, projectFolder: string): boolean 
 	const normalizedFolder = path.resolve(projectFolder);
 	const relativePath = path.relative(normalizedFolder, resolved);
 
-	// Paths outside project folder are not subject to naoignore
+	// Paths outside project folder are not subject to quarryignore
 	if (relativePath.startsWith('..')) {
 		return false;
 	}
 
-	return isIgnoredByNaoignore(relativePath, normalizedFolder);
+	return isIgnoredByQuarryignore(relativePath, normalizedFolder);
 };
 
 /**
@@ -247,7 +247,7 @@ const isEnvironmentFileName = (name: string): boolean => {
 
 /**
  * Checks if an entry should be excluded from directory listings.
- * Combines excluded directories and .naoignore patterns.
+ * Combines excluded directories and .quarryignore patterns.
  * @param entryName - The name of the entry (file or directory)
  * @param parentPath - The parent directory path relative to project folder
  * @param projectFolder - The project folder path
@@ -264,14 +264,14 @@ export const shouldExcludeEntry = (entryName: string, parentPath: string, projec
 		return true;
 	}
 
-	// Then check naoignore patterns
+	// Then check quarryignore patterns
 	const relativePath = parentPath ? `${parentPath}/${entryName}` : entryName;
-	return isIgnoredByNaoignore(relativePath, projectFolder);
+	return isIgnoredByQuarryignore(relativePath, projectFolder);
 };
 
 /**
  * Checks if a given path is within the project folder, not in an excluded directory,
- * and not ignored by .naoignore.
+ * and not ignored by .quarryignore.
  */
 export const isWithinProjectFolder = (filePath: string, projectFolder: string): boolean => {
 	const resolved = path.resolve(filePath);
@@ -305,7 +305,7 @@ type ToRealPathOptions = {
  *
  * The guards run on the lexical path and again on the symlink-resolved path, so a
  * symlink inside the project cannot reach outside it or into a protected file.
- * @throws Error if the resolved path escapes the project folder or is ignored by .naoignore
+ * @throws Error if the resolved path escapes the project folder or is ignored by .quarryignore
  */
 export const toRealPath = (virtualPath: string, projectFolder: string, options: ToRealPathOptions = {}): string => {
 	const normalizedFolder = path.resolve(projectFolder);
@@ -352,7 +352,7 @@ const assertAllowedProjectPath = (absolutePath: string, projectFolder: string, v
 	}
 
 	if (isIgnoredPath(absolutePath, projectFolder)) {
-		throw new Error(`Access denied: path '${virtualPath}' is ignored by .naoignore`);
+		throw new Error(`Access denied: path '${virtualPath}' is ignored by .quarryignore`);
 	}
 };
 

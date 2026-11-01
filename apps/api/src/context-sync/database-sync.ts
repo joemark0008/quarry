@@ -28,7 +28,7 @@ import {
 } from './database-templates.js';
 
 /**
- * Port of `nao_core/commands/sync/providers/databases/provider.py` (`sync_database`) and `sync/cleanup.py`:
+ * Port of `upstream_core/commands/sync/providers/databases/provider.py` (`sync_database`) and `sync/cleanup.py`:
  * for every table of a connection, write `databases/type=…/database=…/schema=…/table=…/{columns,preview}.md`,
  * keep the user's `annotations.md`, remove tables that no longer exist and refresh the column catalog.
  */

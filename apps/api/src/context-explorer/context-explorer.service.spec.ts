@@ -96,7 +96,7 @@ describe('context explorer repository connection', () => {
 		});
 		mocks.connectContextRepository.mockResolvedValue({
 			provider: 'gitlab',
-			repoFullName: 'nao/context',
+			repoFullName: 'quarry/context',
 			defaultBranch: 'main',
 			branch: 'main',
 			connectionType: 'linked-existing-commit',
@@ -104,14 +104,14 @@ describe('context explorer repository connection', () => {
 	});
 
 	it('connects a GitHub repository with the GitHub token', async () => {
-		await createCaller().connectRepository({ provider: 'github', repoFullName: 'nao/context' });
+		await createCaller().connectRepository({ provider: 'github', repoFullName: 'quarry/context' });
 
 		expect(mocks.getGithubToken).toHaveBeenCalledWith('user-id');
 		expect(mocks.getGitlabToken).not.toHaveBeenCalled();
 		expect(mocks.connectContextRepository).toHaveBeenCalledWith(
 			expect.objectContaining({
 				provider: 'github',
-				repoFullName: 'nao/context',
+				repoFullName: 'quarry/context',
 				token: 'github-token',
 			}),
 		);
@@ -119,10 +119,10 @@ describe('context explorer repository connection', () => {
 
 	it('connects a GitLab repository with the GitLab token', async () => {
 		await expect(
-			createCaller().connectRepository({ provider: 'gitlab', repoFullName: 'nao/context' }),
+			createCaller().connectRepository({ provider: 'gitlab', repoFullName: 'quarry/context' }),
 		).resolves.toMatchObject({
 			provider: 'gitlab',
-			repoFullName: 'nao/context',
+			repoFullName: 'quarry/context',
 		});
 
 		expect(mocks.getGitlabToken).toHaveBeenCalledWith('user-id');
@@ -130,7 +130,7 @@ describe('context explorer repository connection', () => {
 		expect(mocks.connectContextRepository).toHaveBeenCalledWith(
 			expect.objectContaining({
 				provider: 'gitlab',
-				repoFullName: 'nao/context',
+				repoFullName: 'quarry/context',
 				token: 'gitlab-token',
 			}),
 		);
@@ -140,7 +140,7 @@ describe('context explorer repository connection', () => {
 		mocks.getGitlabToken.mockResolvedValue(null);
 
 		await expect(
-			createCaller().connectRepository({ provider: 'gitlab', repoFullName: 'nao/context' }),
+			createCaller().connectRepository({ provider: 'gitlab', repoFullName: 'quarry/context' }),
 		).rejects.toMatchObject({
 			codeMessage: 'FORBIDDEN',
 			message: 'Connect your GitLab account first.',
@@ -167,7 +167,7 @@ describe('context explorer file access', () => {
 
 		await expect(createCaller().getFileTree()).resolves.toEqual({ entries });
 
-		expect(mocks.getFileTree).toHaveBeenCalledWith('/tmp/nao-project');
+		expect(mocks.getFileTree).toHaveBeenCalledWith('/tmp/quarry-project');
 		expect(mocks.resolveContextExplorerGit).not.toHaveBeenCalled();
 		expect(mocks.resolveContextExplorerGitSafely).not.toHaveBeenCalled();
 	});
@@ -231,7 +231,7 @@ describe('context explorer file access', () => {
 		await createCaller().getFileDiff({ path: '/context.md', from, to });
 
 		expect(mocks.getContextFileDiff).toHaveBeenCalledWith(
-			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/nao-project' }),
+			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/quarry-project' }),
 			'/context.md',
 			{ fromCommit: from, toCommit: to },
 		);
@@ -245,7 +245,7 @@ describe('context explorer file access', () => {
 		await expect(createCaller().getHistoricalDiffAction({ from, to })).resolves.toBe('switch');
 
 		expect(mocks.getHistoricalContextDiffActions).toHaveBeenCalledWith(
-			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/nao-project' }),
+			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/quarry-project' }),
 			[{ fromCommit: from, toCommit: to }],
 		);
 		expect(mocks.listContextPullActivities).not.toHaveBeenCalled();
@@ -259,7 +259,7 @@ describe('context explorer file access', () => {
 		await createCaller().updateWorktree({ requiredCommits: [from, to] });
 
 		expect(mocks.updateContextWorktree).toHaveBeenCalledWith(
-			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/nao-project' }),
+			expect.objectContaining({ projectId: 'project-id', projectFolder: '/tmp/quarry-project' }),
 			[from, to],
 		);
 	});
@@ -306,7 +306,7 @@ describe('live context update access', () => {
 		expect(mocks.pullLiveContext).toHaveBeenCalledWith(
 			expect.objectContaining({
 				projectId: 'project-id',
-				projectFolder: '/tmp/nao-project',
+				projectFolder: '/tmp/quarry-project',
 				userId: 'user-id',
 				token: 'github-token',
 			}),
@@ -648,7 +648,7 @@ function createCaller() {
 		startContextPullActivity: mocks.startContextPullActivity,
 		listActiveUserGroups: mocks.listUserGroups,
 	} as unknown as ContextExplorerRepository);
-	const project = { id: 'project-id', path: '/tmp/nao-project' };
+	const project = { id: 'project-id', path: '/tmp/quarry-project' };
 	const user = { id: 'user-id', name: 'Test User', email: 'test@example.com' };
 	return {
 		getRepositoryStatus: () => service.getRepositoryStatus(project, user),

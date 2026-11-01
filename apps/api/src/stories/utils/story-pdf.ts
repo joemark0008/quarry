@@ -16,7 +16,7 @@ export async function generateStoryPdf(
 	theme?: StoryThemePair | null,
 ): Promise<Buffer> {
 	const html = await generateStoryHtml(story, queryData, dateFormat, undefined, { theme });
-	const hasMaps = html.includes('class="nao-map"');
+	const hasMaps = html.includes('class="quarry-map"');
 	const loadsFonts = (theme?.light.text.fontStylesheets.length ?? 0) > 0;
 	const browser = await getBrowser();
 	const page = await browser.newPage();
@@ -39,7 +39,7 @@ export async function generateStoryPdf(
 				.catch(() => {});
 		}
 		if (hasMaps) {
-			await page.waitForFunction('window.__naoMapsReady === true', { timeout: 15000 }).catch(() => {});
+			await page.waitForFunction('window.__quarryMapsReady === true', { timeout: 15000 }).catch(() => {});
 		}
 		const pdfBuffer = await page.pdf({
 			format: 'A4',

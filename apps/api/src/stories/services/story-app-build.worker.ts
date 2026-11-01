@@ -35,7 +35,7 @@ const RESOLVE_EXTENSIONS = [...SCRIPT_EXTENSIONS, 'json', 'css', 'md'];
 const PRODUCTION_DEFINE = { 'process.env.NODE_ENV': '"production"' };
 const JSX_RUNTIME_IMPORTS = ['react/jsx-runtime', 'react/jsx-dev-runtime'];
 const EXECUTABLE_SCRIPT_TYPES = ['', 'module', 'text/javascript', 'application/javascript'];
-const VIRTUAL_PREFIX = '__nao-';
+const VIRTUAL_PREFIX = '__quarry-';
 const HTML_BUILD_ENTRY = `${VIRTUAL_PREFIX}entry.js`;
 
 type ScriptLoader = 'jsx' | 'tsx' | 'js' | 'ts';

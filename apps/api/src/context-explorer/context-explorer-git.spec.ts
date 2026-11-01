@@ -168,7 +168,7 @@ printf '%s|%s' "$user" "$GIT_ASKPASS"
 
 		const [actualUsername, helperPath] = runGitWithOAuth(
 			root,
-			['fetch', 'https://example.com/nao/context.git'],
+			['fetch', 'https://example.com/quarry/context.git'],
 			getGitOAuthCredential(provider, token),
 		)
 			.toString()
@@ -202,14 +202,14 @@ printf '%s|%s|%s|%s' "$*" "$username" "$password" "$GIT_ASKPASS"
 
 		const [argv, username, password, helperPath] = runGitFetchWithCredentials(
 			root,
-			'https://example.com/nao/context.git',
+			'https://example.com/quarry/context.git',
 			'main',
 			{ platform, token },
 		)
 			.toString()
 			.split('|');
 
-		expect(argv).toBe('fetch --no-tags https://example.com/nao/context.git main');
+		expect(argv).toBe('fetch --no-tags https://example.com/quarry/context.git main');
 		expect(argv).not.toContain(token);
 		expect(username).toBe(expectedUsername);
 		expect(password).toBe(token);
@@ -232,14 +232,14 @@ printf '%s|%s|%s|%s' "$*" "$("$GIT_ASKPASS" "Username")" "$("$GIT_ASKPASS" "Pass
 
 		const [argv, username, password, helperPath] = runGitFetchWithCredentials(
 			root,
-			'https://deploy-user:deploy-secret@example.com/nao/context.git',
+			'https://deploy-user:deploy-secret@example.com/quarry/context.git',
 			'main',
 			{},
 		)
 			.toString()
 			.split('|');
 
-		expect(argv).toBe('fetch --no-tags https://example.com/nao/context.git main');
+		expect(argv).toBe('fetch --no-tags https://example.com/quarry/context.git main');
 		expect(argv).not.toContain('deploy-user');
 		expect(argv).not.toContain('deploy-secret');
 		expect(username).toBe('deploy-user');
@@ -263,22 +263,22 @@ printf '%s|%s|%s' "$*" "$GIT_ASKPASS" "$GIT_SSH_COMMAND"
 
 		const [publicArgv, publicAskpass] = runGitFetchWithCredentials(
 			root,
-			'https://example.com/nao/context.git',
+			'https://example.com/quarry/context.git',
 			'main',
 			{},
 		)
 			.toString()
 			.split('|');
-		const [sshArgv, , sshCommand] = runGitFetchWithCredentials(root, 'git@example.com:nao/context.git', 'main', {
+		const [sshArgv, , sshCommand] = runGitFetchWithCredentials(root, 'git@example.com:quarry/context.git', 'main', {
 			sshKey: 'private-key',
 		})
 			.toString()
 			.split('|');
 		const keyPath = sshCommand.match(/-i '([^']+)'/)?.[1];
 
-		expect(publicArgv).toBe('fetch --no-tags https://example.com/nao/context.git main');
+		expect(publicArgv).toBe('fetch --no-tags https://example.com/quarry/context.git main');
 		expect(publicAskpass).toBe('');
-		expect(sshArgv).toBe('fetch --no-tags git@example.com:nao/context.git main');
+		expect(sshArgv).toBe('fetch --no-tags git@example.com:quarry/context.git main');
 		expect(sshCommand).not.toContain('StrictHostKeyChecking=no');
 		expect(keyPath).toBeTruthy();
 		expect(fs.existsSync(keyPath ?? '')).toBe(false);
@@ -287,7 +287,7 @@ printf '%s|%s|%s' "$*" "$GIT_ASKPASS" "$GIT_SSH_COMMAND"
 	it('redacts OAuth credentials from live Git errors', () => {
 		const token = 'oauth-secret';
 		const error = sanitizeLiveContextError(
-			new Error(`fatal: failed https://oauth2:${token}@gitlab.com/nao/context.git using ${token}`),
+			new Error(`fatal: failed https://oauth2:${token}@gitlab.com/quarry/context.git using ${token}`),
 			token,
 		);
 
@@ -297,11 +297,11 @@ printf '%s|%s|%s' "$*" "$GIT_ASKPASS" "$GIT_SSH_COMMAND"
 
 	it('redacts unknown URL credentials independently of the OAuth token', () => {
 		const error = sanitizeLiveContextError(
-			new Error('fatal: failed https://unknown-user:unknown-pass@example.com/nao/context.git'),
+			new Error('fatal: failed https://unknown-user:unknown-pass@example.com/quarry/context.git'),
 			'separate-oauth-token',
 		);
 
-		expect(error.message).toBe('fatal: failed https://[redacted]@example.com/nao/context.git');
+		expect(error.message).toBe('fatal: failed https://[redacted]@example.com/quarry/context.git');
 		expect(error.message).not.toContain('unknown-user');
 		expect(error.message).not.toContain('unknown-pass');
 	});
@@ -348,7 +348,7 @@ describe('deployment context source', () => {
 	});
 
 	it.each([
-		['https://github.com/nao/context.git', 'github.com', 'nao/context'],
+		['https://github.com/quarry/context.git', 'github.com', 'quarry/context'],
 		['git@git.example.com:team/context.git', 'git.example.com', 'team/context'],
 	])('derives the generic repository from %s', async (url, host, repositoryPath) => {
 		setContextSourceEnv({ url, token: 'secret' });
@@ -365,13 +365,13 @@ describe('deployment context source', () => {
 	it('prefers a connected repository over deployment Git', async () => {
 		setContextSourceEnv({ token: 'secret' });
 		contextConfigMocks.getConfig.mockResolvedValue({
-			repoFullName: 'nao/connected-context',
+			repoFullName: 'quarry/connected-context',
 			repoProvider: 'github',
 		});
 
 		await expect(resolveContextRepository('project-id')).resolves.toMatchObject({
 			provider: 'github',
-			repoFullName: 'nao/connected-context',
+			repoFullName: 'quarry/connected-context',
 			source: 'settings',
 		});
 	});
@@ -401,27 +401,27 @@ describe('deployment context source', () => {
 
 	it('uses x-token-auth automatically for Bitbucket Git authentication', () => {
 		setContextSourceEnv({
-			url: 'https://bitbucket.org/nao/context.git',
+			url: 'https://bitbucket.org/quarry/context.git',
 			token: 'repository-access-token',
 		});
 
 		expect(
 			GENERIC_GIT_PROVIDER.authenticatedRepoUrl(
 				'repository-access-token',
-				'https://bitbucket.org/nao/context.git',
+				'https://bitbucket.org/quarry/context.git',
 			),
-		).toBe('https://x-token-auth:repository-access-token@bitbucket.org/nao/context.git');
+		).toBe('https://x-token-auth:repository-access-token@bitbucket.org/quarry/context.git');
 	});
 
 	it('uses bearer authentication for the Bitbucket API', async () => {
 		setContextSourceEnv({
-			url: 'https://bitbucket.org/nao/context.git',
+			url: 'https://bitbucket.org/quarry/context.git',
 			token: 'repository-access-token',
 		});
 		const fetchMock = vi.fn().mockResolvedValue(
 			new Response(
 				JSON.stringify({
-					links: { html: { href: 'https://bitbucket.org/nao/context/pull-requests/1' } },
+					links: { html: { href: 'https://bitbucket.org/quarry/context/pull-requests/1' } },
 				}),
 				{ status: 201 },
 			),
@@ -430,10 +430,10 @@ describe('deployment context source', () => {
 
 		await GENERIC_GIT_PROVIDER.openReviewRequest(
 			'repository-access-token',
-			'https://bitbucket.org/nao/context.git',
+			'https://bitbucket.org/quarry/context.git',
 			{
 				title: 'Update context',
-				head: 'nao/test',
+				head: 'quarry/test',
 				base: 'main',
 				body: '- Update context',
 				requester: { name: 'Test User', email: 'test@example.com' },
@@ -442,7 +442,7 @@ describe('deployment context source', () => {
 		);
 
 		expect(fetchMock).toHaveBeenCalledWith(
-			'https://api.bitbucket.org/2.0/repositories/nao/context/pullrequests',
+			'https://api.bitbucket.org/2.0/repositories/quarry/context/pullrequests',
 			expect.objectContaining({
 				headers: expect.objectContaining({ Authorization: 'Bearer repository-access-token' }),
 			}),
@@ -450,14 +450,14 @@ describe('deployment context source', () => {
 	});
 
 	it('uses embedded Bitbucket credentials for Git and API authentication', async () => {
-		const repositoryUrl = 'https://user%40example.com:api-token@bitbucket.org/nao/context.git';
+		const repositoryUrl = 'https://user%40example.com:api-token@bitbucket.org/quarry/context.git';
 		setContextSourceEnv({
 			url: repositoryUrl,
 		});
 		const fetchMock = vi.fn().mockResolvedValue(
 			new Response(
 				JSON.stringify({
-					links: { html: { href: 'https://bitbucket.org/nao/context/pull-requests/1' } },
+					links: { html: { href: 'https://bitbucket.org/quarry/context/pull-requests/1' } },
 				}),
 				{ status: 201 },
 			),
@@ -471,7 +471,7 @@ describe('deployment context source', () => {
 
 		await GENERIC_GIT_PROVIDER.openReviewRequest('', repositoryUrl, {
 			title: 'Update context',
-			head: 'nao/test',
+			head: 'quarry/test',
 			base: 'main',
 			body: '- Update context',
 			requester: { name: 'Test User', email: 'test@example.com' },
@@ -479,7 +479,7 @@ describe('deployment context source', () => {
 		});
 
 		expect(fetchMock).toHaveBeenCalledWith(
-			'https://api.bitbucket.org/2.0/repositories/nao/context/pullrequests',
+			'https://api.bitbucket.org/2.0/repositories/quarry/context/pullrequests',
 			expect.objectContaining({
 				headers: expect.objectContaining({
 					Authorization: `Basic ${Buffer.from('user@example.com:api-token').toString('base64')}`,
@@ -489,14 +489,14 @@ describe('deployment context source', () => {
 	});
 
 	it('skips the Bitbucket API when no API credential is available', async () => {
-		const reviewLink = 'https://bitbucket.org/nao/context/pull-requests/new?source=nao/test';
+		const reviewLink = 'https://bitbucket.org/quarry/context/pull-requests/new?source=quarry/test';
 		const fetchMock = vi.fn();
 		vi.stubGlobal('fetch', fetchMock);
 
 		await expect(
-			GENERIC_GIT_PROVIDER.openReviewRequest('', 'git@bitbucket.org:nao/context.git', {
+			GENERIC_GIT_PROVIDER.openReviewRequest('', 'git@bitbucket.org:quarry/context.git', {
 				title: 'Update context',
-				head: 'nao/test',
+				head: 'quarry/test',
 				base: 'main',
 				body: '- Update context',
 				requester: { name: 'Test User', email: 'test@example.com' },
@@ -508,17 +508,17 @@ describe('deployment context source', () => {
 
 	it('discovers and stores a Bitbucket pull request before using the saved creation link', async () => {
 		setContextSourceEnv({
-			url: 'https://bitbucket.org/nao/context.git',
+			url: 'https://bitbucket.org/quarry/context.git',
 			token: 'repository-access-token',
 		});
-		const key = 'project-id:nao/test:user-1';
+		const key = 'project-id:quarry/test:user-1';
 		branchOwnershipMocks.reviewRequests.set(key, {
 			kind: 'link',
-			url: 'https://bitbucket.org/nao/context/pull-requests/new?source=nao/test',
+			url: 'https://bitbucket.org/quarry/context/pull-requests/new?source=quarry/test',
 		});
 		const created = {
 			kind: 'created' as const,
-			url: 'https://bitbucket.org/nao/context/pull-requests/42',
+			url: 'https://bitbucket.org/quarry/context/pull-requests/42',
 		};
 		const fetchMock = vi
 			.fn()
@@ -528,8 +528,8 @@ describe('deployment context source', () => {
 		vi.stubGlobal('fetch', fetchMock);
 		const args = {
 			token: 'repository-access-token',
-			repoFullName: 'https://bitbucket.org/nao/context.git',
-			branch: 'nao/test',
+			repoFullName: 'https://bitbucket.org/quarry/context.git',
+			branch: 'quarry/test',
 			projectId: 'project-id',
 			userId: 'user-1',
 		};
@@ -539,28 +539,28 @@ describe('deployment context source', () => {
 
 		expect(fetchMock).toHaveBeenCalledOnce();
 		const lookupUrl = new URL(fetchMock.mock.calls[0][0] as string);
-		expect(lookupUrl.searchParams.get('q')).toBe('source.branch.name="nao/test"');
+		expect(lookupUrl.searchParams.get('q')).toBe('source.branch.name="quarry/test"');
 		expect(lookupUrl.searchParams.get('state')).toBe('OPEN');
 		expect(branchOwnershipMocks.reviewRequests.get(key)).toEqual(created);
 	});
 
 	it('uses the saved review link when Bitbucket pull request lookup fails', async () => {
 		setContextSourceEnv({
-			url: 'https://bitbucket.org/nao/context.git',
+			url: 'https://bitbucket.org/quarry/context.git',
 			token: 'repository-access-token',
 		});
 		const stored = {
 			kind: 'link' as const,
-			url: 'https://bitbucket.org/nao/context/pull-requests/new?source=nao/test',
+			url: 'https://bitbucket.org/quarry/context/pull-requests/new?source=quarry/test',
 		};
-		branchOwnershipMocks.reviewRequests.set('project-id:nao/test:user-1', stored);
+		branchOwnershipMocks.reviewRequests.set('project-id:quarry/test:user-1', stored);
 		vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network unavailable')));
 
 		await expect(
 			GENERIC_GIT_PROVIDER.findOpenReviewRequest({
 				token: 'repository-access-token',
-				repoFullName: 'https://bitbucket.org/nao/context.git',
-				branch: 'nao/test',
+				repoFullName: 'https://bitbucket.org/quarry/context.git',
+				branch: 'quarry/test',
 				projectId: 'project-id',
 				userId: 'user-1',
 			}),
@@ -570,23 +570,23 @@ describe('deployment context source', () => {
 	it.each([
 		[
 			'github',
-			'remote: Create a pull request for nao/test by visiting:\nremote:   https://github.com/nao/context/pull/new/nao/test',
-			'https://github.com/nao/context/pull/new/nao/test',
+			'remote: Create a pull request for quarry/test by visiting:\nremote:   https://github.com/quarry/context/pull/new/quarry/test',
+			'https://github.com/quarry/context/pull/new/quarry/test',
 		],
 		[
 			'gitlab',
-			'remote: View merge request for nao/test:\nremote:   https://gitlab.com/nao/context/-/merge_requests/new?merge_request[source_branch]=nao/test',
-			'https://gitlab.com/nao/context/-/merge_requests/new?merge_request[source_branch]=nao/test',
+			'remote: View merge request for quarry/test:\nremote:   https://gitlab.com/quarry/context/-/merge_requests/new?merge_request[source_branch]=quarry/test',
+			'https://gitlab.com/quarry/context/-/merge_requests/new?merge_request[source_branch]=quarry/test',
 		],
 		[
 			'bitbucket',
-			'remote: Create pull request for nao/test:\nremote:   https://bitbucket.org/nao/context/pull-requests/new?source=nao/test',
-			'https://bitbucket.org/nao/context/pull-requests/new?source=nao/test',
+			'remote: Create pull request for quarry/test:\nremote:   https://bitbucket.org/quarry/context/pull-requests/new?source=quarry/test',
+			'https://bitbucket.org/quarry/context/pull-requests/new?source=quarry/test',
 		],
 		[
 			'self-hosted HTTP',
-			'remote: Create merge request:\nremote:   http://git.example.com/nao/context/merge_requests/new?source=nao/test',
-			'http://git.example.com/nao/context/merge_requests/new?source=nao/test',
+			'remote: Create merge request:\nremote:   http://git.example.com/quarry/context/merge_requests/new?source=quarry/test',
+			'http://git.example.com/quarry/context/merge_requests/new?source=quarry/test',
 		],
 	])('parses the %s review link from push output', (_platform, output, expected) => {
 		expect(parseReviewRequestLink(output)).toBe(expected);
@@ -594,7 +594,7 @@ describe('deployment context source', () => {
 
 	it('returns no review link when push output has none', () => {
 		expect(
-			parseReviewRequestLink('To github.com:nao/context.git\n * [new branch] nao/test -> nao/test'),
+			parseReviewRequestLink('To github.com:quarry/context.git\n * [new branch] quarry/test -> quarry/test'),
 		).toBeNull();
 	});
 
@@ -602,12 +602,12 @@ describe('deployment context source', () => {
 	it('falls back to the pushed review link when the platform API fails', async () => {
 		setContextSourceEnv({ token: 'push-only-token' });
 		vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network unavailable')));
-		const link = 'https://github.com/nao/context/pull/new/nao/test';
+		const link = 'https://github.com/quarry/context/pull/new/quarry/test';
 
 		await expect(
-			GENERIC_GIT_PROVIDER.openReviewRequest('push-only-token', 'https://github.com/nao/context.git', {
+			GENERIC_GIT_PROVIDER.openReviewRequest('push-only-token', 'https://github.com/quarry/context.git', {
 				title: 'Update context',
-				head: 'nao/test',
+				head: 'quarry/test',
 				base: 'main',
 				body: '- Update context',
 				requester: { name: 'Test User', email: 'test@example.com' },
@@ -626,7 +626,7 @@ describe('deployment context source', () => {
 
 	it('includes context source details when no write credential is configured', async () => {
 		setContextSourceEnv({
-			url: 'https://github.com/nao/context.git',
+			url: 'https://github.com/quarry/context.git',
 			branch: 'production',
 			subpath: 'projects/analytics',
 		});
@@ -640,7 +640,7 @@ describe('deployment context source', () => {
 			gitUnavailableMessage:
 				'Add QUARRY_CONTEXT_GIT_TOKEN or QUARRY_CONTEXT_GIT_SSH_KEY to edit and propose context changes.',
 			contextSource: {
-				repositoryUrl: 'https://github.com/nao/context.git',
+				repositoryUrl: 'https://github.com/quarry/context.git',
 				platform: 'github',
 				branch: 'production',
 				subpath: 'projects/analytics',
@@ -717,7 +717,7 @@ describe('live deployment context updates', { timeout: 15_000 }, () => {
 		expect(runGit(fixture.live, ['rev-parse', 'HEAD']).toString().trim()).toBe(liveCommit);
 	});
 
-	it('rejects a configured context subfolder without a tracked nao config', () => {
+	it('rejects a configured context subfolder without a tracked quarry config', () => {
 		const fixture = createFixture(temporaryRoots, {
 			'quarry_config.yaml': 'name: root\n',
 			'example/context.md': 'context\n',
@@ -750,7 +750,7 @@ describe('live deployment context updates', { timeout: 15_000 }, () => {
 		const oldCommit = runGit(fixture.live, ['rev-parse', 'HEAD']).toString().trim();
 		fs.writeFileSync(path.join(fixture.seed, 'project', 'context.md'), 'updated context\nsecond line\n');
 		fs.writeFileSync(path.join(fixture.seed, 'project', 'binary.dat'), Buffer.from([0, 1, 2, 3]));
-		fs.writeFileSync(path.join(fixture.seed, 'outside.md'), 'not part of this nao project\n');
+		fs.writeFileSync(path.join(fixture.seed, 'outside.md'), 'not part of this quarry project\n');
 		commitAll(fixture.seed, 'update deployed context');
 		runGit(fixture.seed, ['push', fixture.bare, 'main']);
 
@@ -828,9 +828,9 @@ describe('live deployment context updates', { timeout: 15_000 }, () => {
 
 	it('accepts equivalent deployment origins with different URL forms and credentials', () => {
 		const fixture = createLocalCloneFixture(temporaryRoots);
-		runGit(fixture.live, ['remote', 'set-url', 'origin', 'git@github.com:nao/context.git']);
+		runGit(fixture.live, ['remote', 'set-url', 'origin', 'git@github.com:quarry/context.git']);
 		setContextSourceEnv({
-			url: 'https://deploy-user:deploy-secret@github.com/nao/context.git',
+			url: 'https://deploy-user:deploy-secret@github.com/quarry/context.git',
 			branch: 'main',
 			subpath: 'project',
 		});
@@ -843,8 +843,8 @@ describe('live deployment context updates', { timeout: 15_000 }, () => {
 
 	it('redacts deployment credentials from fetch errors and removes askpass', () => {
 		const fixture = createLocalCloneFixture(temporaryRoots);
-		const repositoryUrl = 'https://deploy-user:deploy-secret@example.com/nao/context.git';
-		const publicUrl = 'https://example.com/nao/context.git';
+		const repositoryUrl = 'https://deploy-user:deploy-secret@example.com/quarry/context.git';
+		const publicUrl = 'https://example.com/quarry/context.git';
 		runGit(fixture.live, ['remote', 'set-url', 'origin', publicUrl]);
 		setContextSourceEnv({ url: repositoryUrl, branch: 'main', subpath: 'project' });
 		const bin = path.join(fixture.root, 'bin');
@@ -924,7 +924,7 @@ exec '${realGit.replaceAll("'", "'\\''")}' "$@"
 		const dirtyRepo = await ensureContextWorktree(dirtyContext);
 		const branchRepo = await ensureContextWorktree(branchContext);
 		fs.writeFileSync(path.join(dirtyRepo.worktreeRoot, 'project', 'context.md'), 'uncommitted work\n');
-		await createContextBranch(branchContext, 'nao/personal');
+		await createContextBranch(branchContext, 'quarry/personal');
 		const oldCommit = runGit(cleanRepo.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim();
 		setContextSourceEnv({
 			url: fixture.bare,
@@ -946,7 +946,7 @@ exec '${realGit.replaceAll("'", "'\\''")}' "$@"
 			'uncommitted work\n',
 		);
 		expect(runGit(branchRepo.worktreeRoot, ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim()).toBe(
-			'nao/personal',
+			'quarry/personal',
 		);
 		expect(runGit(branchRepo.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim()).toBe(oldCommit);
 
@@ -1018,7 +1018,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 			const provider = localProvider(fixture.bare, fixture.bare);
 			fixture.context = {
 				...fixture.context,
-				configOverride: { provider: providerName, repoFullName: 'nao/context' },
+				configOverride: { provider: providerName, repoFullName: 'quarry/context' },
 				providerOverride: provider,
 				token: `${providerName}-oauth-secret`,
 			};
@@ -1048,7 +1048,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		fixture.context.providerOverride = localProvider(fixture.bare, fixture.bare);
 
 		await expect(getContextRepositoryStatus(fixture.context)).resolves.toMatchObject({
-			liveContextRepository: { repositoryUrl: 'https://github.com/nao/context.git', platform: 'github' },
+			liveContextRepository: { repositoryUrl: 'https://github.com/quarry/context.git', platform: 'github' },
 			liveContextUpdate: {
 				enabled: true,
 				available: true,
@@ -1180,7 +1180,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		expect(fs.lstatSync(fixture.live).isSymbolicLink()).toBe(true);
 		expect(fs.readFileSync(path.join(fixture.live, 'context.md'), 'utf8')).toBe('nested context\n');
 		expect(fs.realpathSync(fixture.live)).toContain(
-			path.join('.nao', 'live-repositories', 'project-id', 'repository', 'analytics'),
+			path.join('.quarry', 'live-repositories', 'project-id', 'repository', 'analytics'),
 		);
 		expect(second).toMatchObject({ changed: false, oldCommit: first.newCommit, newCommit: first.newCommit });
 	});
@@ -1195,8 +1195,8 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		const dirty = await ensureContextWorktree(dirtyContext);
 		const branch = await ensureContextWorktree(branchContext);
 		const oldCommit = runGit(clean.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim();
-		await createContextBranch(branchContext, 'nao/personal');
-		await createContextBranch(dirtyContext, 'nao/dirty');
+		await createContextBranch(branchContext, 'quarry/personal');
+		await createContextBranch(dirtyContext, 'quarry/dirty');
 		fs.writeFileSync(path.join(dirty.worktreeRoot, 'context.md'), 'dirty\n');
 		writeRemoteChange(fixture, 'context.md', 'new live context\n');
 
@@ -1206,7 +1206,7 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		expect(runGit(clean.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim()).toBe(result.newCommit);
 		expect(runGit(clean.worktreeRoot, ['rev-parse', 'origin/main']).toString().trim()).toBe(result.newCommit);
 		expect(runGit(branch.worktreeRoot, ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim()).toBe(
-			'nao/personal',
+			'quarry/personal',
 		);
 		expect(runGit(branch.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim()).toBe(oldCommit);
 		expect(runGit(branch.worktreeRoot, ['rev-parse', 'origin/main']).toString().trim()).toBe(result.newCommit);
@@ -1216,7 +1216,9 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 		await expect(
 			getHistoricalContextDiffActions(branchContext, [{ fromCommit: oldCommit, toCommit: result.newCommit }]),
 		).resolves.toEqual(['switch']);
-		expect(runGit(dirty.worktreeRoot, ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim()).toBe('nao/dirty');
+		expect(runGit(dirty.worktreeRoot, ['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim()).toBe(
+			'quarry/dirty',
+		);
 		expect(runGit(dirty.worktreeRoot, ['rev-parse', 'HEAD']).toString().trim()).toBe(oldCommit);
 		expect(runGit(dirty.worktreeRoot, ['rev-parse', 'origin/main']).toString().trim()).toBe(result.newCommit);
 		expect(fs.readFileSync(path.join(dirty.worktreeRoot, 'context.md'), 'utf8')).toBe('dirty\n');
@@ -1264,8 +1266,8 @@ describe('OAuth live context updates', { timeout: 15_000 }, () => {
 
 describe('repository remote normalization', () => {
 	it('matches SSH shorthand to HTTPS', () => {
-		expect(normalizeRemote('git@github.com:nao/context.git')).toBe(
-			normalizeRemote('https://github.com/nao/context'),
+		expect(normalizeRemote('git@github.com:quarry/context.git')).toBe(
+			normalizeRemote('https://github.com/quarry/context'),
 		);
 	});
 
@@ -1281,44 +1283,44 @@ describe('repository remote normalization', () => {
 	});
 
 	it('keeps different repositories distinct', () => {
-		expect(normalizeRemote('git@github.com:nao/context.git')).not.toBe(
-			normalizeRemote('https://github.com/nao/other.git'),
+		expect(normalizeRemote('git@github.com:quarry/context.git')).not.toBe(
+			normalizeRemote('https://github.com/quarry/other.git'),
 		);
 	});
 
 	it('keeps different non-default ports distinct', () => {
-		expect(normalizeRemote('https://github.com:8443/nao/context.git')).not.toBe(
-			normalizeRemote('https://github.com:9443/nao/context.git'),
+		expect(normalizeRemote('https://github.com:8443/quarry/context.git')).not.toBe(
+			normalizeRemote('https://github.com:9443/quarry/context.git'),
 		);
 	});
 
 	it('ignores an explicit default HTTPS port', () => {
-		expect(normalizeRemote('https://github.com:443/nao/context.git')).toBe(
-			normalizeRemote('https://github.com/nao/context'),
+		expect(normalizeRemote('https://github.com:443/quarry/context.git')).toBe(
+			normalizeRemote('https://github.com/quarry/context'),
 		);
 	});
 
 	it('ignores URL credentials', () => {
-		expect(normalizeRemote('https://user:token@github.com:8443/nao/context.git/')).toBe(
-			normalizeRemote('https://github.com:8443/nao/context'),
+		expect(normalizeRemote('https://user:token@github.com:8443/quarry/context.git/')).toBe(
+			normalizeRemote('https://github.com:8443/quarry/context'),
 		);
 	});
 
 	it('keeps non-default SSH ports distinct from unported HTTPS', () => {
-		expect(normalizeRemote('ssh://git@github.com:2222/nao/context.git')).not.toBe(
-			normalizeRemote('https://github.com/nao/context'),
+		expect(normalizeRemote('ssh://git@github.com:2222/quarry/context.git')).not.toBe(
+			normalizeRemote('https://github.com/quarry/context'),
 		);
 	});
 
 	it('matches equivalent SSH URLs with the same non-default port', () => {
-		expect(normalizeRemote('ssh://git:secret@github.com:2222/nao/context.git/')).toBe(
-			normalizeRemote('ssh://github.com:2222/nao/context'),
+		expect(normalizeRemote('ssh://git:secret@github.com:2222/quarry/context.git/')).toBe(
+			normalizeRemote('ssh://github.com:2222/quarry/context'),
 		);
 	});
 
 	it('keeps different non-default SSH ports distinct', () => {
-		expect(normalizeRemote('ssh://git@github.com:2222/nao/context.git')).not.toBe(
-			normalizeRemote('ssh://git@github.com:2223/nao/context.git'),
+		expect(normalizeRemote('ssh://git@github.com:2222/quarry/context.git')).not.toBe(
+			normalizeRemote('ssh://git@github.com:2223/quarry/context.git'),
 		);
 	});
 });
@@ -1354,7 +1356,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const file = await readFileContent('/context.md', access);
 		await writeFileContent('/context.md', 'worktree edit\n', file.hash, access);
 
-		expect(repo.worktreeRoot).toBe(path.join(fixture.root, '.nao', 'worktrees', 'project-id', 'user-1'));
+		expect(repo.worktreeRoot).toBe(path.join(fixture.root, '.quarry', 'worktrees', 'project-id', 'user-1'));
 		expect(file.content).toBe('repository content\n');
 		expect(fs.readFileSync(path.join(repo.worktreeRoot, 'context.md'), 'utf8')).toBe('worktree edit\n');
 		expectLiveUnchanged(fixture.live, before);
@@ -1363,7 +1365,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('encodes unsafe user ids without escaping the project worktree directory', async () => {
 		const fixture = createFixture(temporaryRoots);
 		const repo = await ensureContextWorktree({ ...fixture.context, userId: '../other/user' });
-		const projectWorktrees = path.join(fixture.root, '.nao', 'worktrees', 'project-id');
+		const projectWorktrees = path.join(fixture.root, '.quarry', 'worktrees', 'project-id');
 
 		expect(path.dirname(repo.worktreeRoot)).toBe(projectWorktrees);
 		expect(path.basename(repo.worktreeRoot)).toBe('%2E%2E%2Fother%2Fuser');
@@ -1388,7 +1390,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('uses a fresh full clone and configured subpath for deployment-managed Git', async () => {
 		const fixture = createLocalCloneFixture(temporaryRoots);
 		setContextSourceEnv({
-			url: 'https://github.com/nao/context.git',
+			url: 'https://github.com/quarry/context.git',
 			branch: 'main',
 			subpath: 'project',
 			token: 'deployment-token',
@@ -1412,13 +1414,13 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		['SSH key', { sshKey: 'private-key' }, ''],
 	] as const)('makes deployment-managed Git available with a %s', async (_label, credentials, token) => {
 		const fixture = createFixture(temporaryRoots);
-		setContextSourceEnv({ url: 'https://github.com/nao/context.git', ...credentials });
+		setContextSourceEnv({ url: 'https://github.com/quarry/context.git', ...credentials });
 		fixture.context.token = token;
 		fixture.context.configOverride = undefined;
 
 		await expect(resolveContextExplorerGit(fixture.context)).resolves.toMatchObject({
 			status: 'available',
-			repo: { provider: 'generic', repoFullName: 'https://github.com/nao/context.git' },
+			repo: { provider: 'generic', repoFullName: 'https://github.com/quarry/context.git' },
 		});
 	});
 
@@ -1472,15 +1474,15 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('uses an explicit override before the saved repository setting', async () => {
 		contextConfigMocks.getConfig.mockResolvedValue({
-			repoFullName: 'nao/saved',
+			repoFullName: 'quarry/saved',
 			repoProvider: 'github',
 		});
 
 		await expect(
-			resolveContextRepository('project-id', { provider: 'gitlab', repoFullName: 'nao/override' }),
+			resolveContextRepository('project-id', { provider: 'gitlab', repoFullName: 'quarry/override' }),
 		).resolves.toMatchObject({
 			provider: 'gitlab',
-			repoFullName: 'nao/override',
+			repoFullName: 'quarry/override',
 			source: 'settings',
 		});
 		await expect(resolveContextRepository('project-id', null)).resolves.toBeNull();
@@ -1489,15 +1491,15 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('uses the saved repository setting when no override is provided', async () => {
 		contextConfigMocks.getConfig.mockResolvedValue({
-			repoFullName: 'nao/saved',
+			repoFullName: 'quarry/saved',
 			repoProvider: 'gitlab',
 		});
 
 		await expect(resolveContextRepository('project-id')).resolves.toMatchObject({
 			provider: 'gitlab',
-			repoFullName: 'nao/saved',
+			repoFullName: 'quarry/saved',
 			source: 'settings',
-			webUrl: 'https://gitlab.com/nao/saved',
+			webUrl: 'https://gitlab.com/quarry/saved',
 		});
 	});
 
@@ -1515,10 +1517,10 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 				{
 					...fixture.context,
 					provider: 'github',
-					repoFullName: 'nao/selected',
+					repoFullName: 'quarry/selected',
 				},
 				{
-					provider: localProvider(selected.bare, 'https://github.com/nao/selected.git'),
+					provider: localProvider(selected.bare, 'https://github.com/quarry/selected.git'),
 					updateConfig,
 				},
 			),
@@ -1532,8 +1534,8 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const selected = createFixture(temporaryRoots);
 		const context = {
 			...fixture.context,
-			configOverride: { provider: 'github' as const, repoFullName: 'nao/selected' },
-			providerOverride: localProvider(selected.bare, 'https://github.com/nao/selected.git'),
+			configOverride: { provider: 'github' as const, repoFullName: 'quarry/selected' },
+			providerOverride: localProvider(selected.bare, 'https://github.com/quarry/selected.git'),
 		};
 
 		await expect(resolveContextExplorerGit(context)).resolves.toMatchObject({
@@ -1546,7 +1548,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			gitUnavailableMessage: "The selected repository does not match the live project's Git repository.",
 			isGitRepository: false,
 		});
-		await expect(createContextBranch(context, 'nao/blocked')).rejects.toThrow(
+		await expect(createContextBranch(context, 'quarry/blocked')).rejects.toThrow(
 			"The selected repository does not match the live project's Git repository.",
 		);
 	});
@@ -1558,7 +1560,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		runGit(fixture.root, ['--git-dir', fixture.bare, 'symbolic-ref', 'HEAD', 'refs/heads/develop']);
 		const context = {
 			...fixture.context,
-			configOverride: { provider: 'gitlab' as const, repoFullName: 'nao/context' },
+			configOverride: { provider: 'gitlab' as const, repoFullName: 'quarry/context' },
 			providerOverride: localProvider(fixture.bare, fixture.bare),
 		};
 		const repo = await ensureContextWorktree(context);
@@ -1569,7 +1571,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			{
 				...context,
 				provider: 'gitlab',
-				repoFullName: 'nao/context',
+				repoFullName: 'quarry/context',
 			},
 			{ provider: context.providerOverride, updateConfig },
 		);
@@ -1579,7 +1581,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			runGit(repo.worktreeRoot, ['symbolic-ref', '--short', 'refs/remotes/origin/HEAD']).toString().trim(),
 		).toBe('origin/develop');
 		expect(updateConfig).toHaveBeenCalledWith('project-id', {
-			repoFullName: 'nao/context',
+			repoFullName: 'quarry/context',
 			repoProvider: 'gitlab',
 		});
 	});
@@ -1588,7 +1590,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const fixture = createFixture(temporaryRoots);
 		const context = {
 			...fixture.context,
-			configOverride: { provider: 'gitlab' as const, repoFullName: 'nao/context' },
+			configOverride: { provider: 'gitlab' as const, repoFullName: 'quarry/context' },
 			providerOverride: localProvider(fixture.bare, fixture.bare),
 		};
 		const repo = await ensureContextWorktree(context);
@@ -1602,7 +1604,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 				{
 					...context,
 					provider: 'gitlab',
-					repoFullName: 'nao/context',
+					repoFullName: 'quarry/context',
 				},
 				{ provider, updateConfig },
 			),
@@ -1612,20 +1614,20 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('supports GitLab repositories below the setup boundary', async () => {
 		const fixture = createFixture(temporaryRoots);
-		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'nao/context' };
-		fixture.context.providerOverride = localProvider(fixture.bare, 'https://gitlab.com/nao/context.git');
+		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'quarry/context' };
+		fixture.context.providerOverride = localProvider(fixture.bare, 'https://gitlab.com/quarry/context.git');
 
 		const resolution = await resolveContextExplorerGit(fixture.context);
 
 		expect(resolution).toMatchObject({
 			status: 'available',
-			repo: { provider: 'gitlab', repoFullName: 'nao/context' },
+			repo: { provider: 'gitlab', repoFullName: 'quarry/context' },
 		});
 	});
 
 	it('names GitLab in no-token guidance', async () => {
 		const fixture = createFixture(temporaryRoots);
-		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'nao/context' };
+		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'quarry/context' };
 		const access = await fileAccess({ ...fixture.context, token: null });
 
 		await expect(readFileContent('/context.md', access)).resolves.toMatchObject({
@@ -1639,7 +1641,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it('names GitLab when its integration is unavailable', async () => {
 		const fixture = createFixture(temporaryRoots);
-		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'nao/context' };
+		fixture.context.configOverride = { provider: 'gitlab', repoFullName: 'quarry/context' };
 		fixture.context.integrationAvailableOverride = false;
 		const access = await fileAccess(fixture.context);
 
@@ -1695,7 +1697,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		fixture.context.configOverride = undefined;
 		let connected = true;
 		contextConfigMocks.getConfig.mockImplementation(async () =>
-			connected ? { repoFullName: 'nao/context', repoProvider: 'github' } : null,
+			connected ? { repoFullName: 'quarry/context', repoProvider: 'github' } : null,
 		);
 		const repo = await ensureContextWorktree(fixture.context);
 		const updateConfig = vi.fn().mockImplementation(async () => {
@@ -1738,13 +1740,13 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		});
 		const changed = await getChangedContextFiles(fixture.context);
 
-		expect(result.branch).toMatch(/^nao\/context-edits-[a-z0-9]+$/);
+		expect(result.branch).toMatch(/^quarry\/context-edits-[a-z0-9]+$/);
 		expect(result.baseUsed).toBe('origin/main');
 		expect(result.usedFallbackBase).toBe(false);
 		expect(branchOwnershipMocks.claimContextBranch).toHaveBeenCalledWith('project-id', result.branch, 'user-1');
 		expect(changed).toEqual([{ path: '/other.md', kind: 'modified', additions: 1, deletions: 1 }]);
 		expect(
-			runGit(path.join(fixture.root, '.nao', 'worktrees', 'project-id', 'user-1'), [
+			runGit(path.join(fixture.root, '.quarry', 'worktrees', 'project-id', 'user-1'), [
 				'show',
 				'HEAD:context.md',
 			]).toString(),
@@ -1752,9 +1754,9 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		expectLiveUnchanged(fixture.live, before);
 	});
 
-	it('uses the logged-in nao user as the commit identity', async () => {
+	it('uses the logged-in quarry user as the commit identity', async () => {
 		const fixture = createFixture(temporaryRoots);
-		fixture.context.user = { name: 'Nao Account', email: 'nao-account@example.com' };
+		fixture.context.user = { name: 'Quarry Account', email: 'quarry-account@example.com' };
 		const access = await fileAccess(fixture.context);
 		const file = await readFileContent('/context.md', access);
 		await writeFileContent('/context.md', 'identity edit\n', file.hash, access);
@@ -1766,7 +1768,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const repo = await ensureContextWorktree(fixture.context);
 
 		expect(runGit(repo.worktreeRoot, ['log', '-1', '--format=%an <%ae>|%cn <%ce>']).toString().trim()).toBe(
-			'Nao Account <nao-account@example.com>|Nao Account <nao-account@example.com>',
+			'Quarry Account <quarry-account@example.com>|Quarry Account <quarry-account@example.com>',
 		);
 	});
 
@@ -1802,10 +1804,10 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			unpushedCommitCount: 0,
 		});
 
-		await createContextBranch(fixture.context, 'nao/empty');
+		await createContextBranch(fixture.context, 'quarry/empty');
 		const emptyBranchStatus = await getContextRepositoryStatus(fixture.context);
 		expect(emptyBranchStatus.branches).toMatchObject({
-			currentBranch: 'nao/empty',
+			currentBranch: 'quarry/empty',
 			defaultBranch: 'main',
 			aheadCommitCount: 0,
 			unpushedCommitCount: 0,
@@ -2286,7 +2288,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		writeRemoteChange(fixture, 'context.md', 'remote edit\n');
 
 		const result = await createContextBranchAndCommit(fixture.context, {
-			branch: 'nao/fallback',
+			branch: 'quarry/fallback',
 			paths: ['/context.md'],
 			message: 'Keep local edit',
 		});
@@ -2304,10 +2306,10 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const repo = await ensureContextWorktree(fixture.context);
 		writeRemoteChange(fixture, 'context.md', 'remote edit\n');
 
-		const result = await createContextBranch(fixture.context, 'nao/fallback-without-commit');
+		const result = await createContextBranch(fixture.context, 'quarry/fallback-without-commit');
 
 		expect(result.usedFallbackBase).toBe(true);
-		expect(result.currentBranch).toBe('nao/fallback-without-commit');
+		expect(result.currentBranch).toBe('quarry/fallback-without-commit');
 		expect(fs.readFileSync(path.join(repo.worktreeRoot, 'context.md'), 'utf8')).toBe('local edit\n');
 		expect(await getChangedContextFiles(fixture.context)).toEqual([
 			{ path: '/context.md', kind: 'modified', additions: 1, deletions: 1 },
@@ -2323,10 +2325,10 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		);
 		fs.writeFileSync(indexLockPath, 'locked');
 
-		await expect(createContextBranch(fixture.context, 'nao/failed')).rejects.toThrow();
+		await expect(createContextBranch(fixture.context, 'quarry/failed')).rejects.toThrow();
 
-		expect(branchOwnershipMocks.releaseContextBranch).toHaveBeenCalledWith('project-id', 'nao/failed', 'user-1');
-		expect(branchOwnershipMocks.owners.has('project-id:nao/failed')).toBe(false);
+		expect(branchOwnershipMocks.releaseContextBranch).toHaveBeenCalledWith('project-id', 'quarry/failed', 'user-1');
+		expect(branchOwnershipMocks.owners.has('project-id:quarry/failed')).toBe(false);
 	});
 
 	it('commits selected files, then pushes and opens a pull request', async () => {
@@ -2343,7 +2345,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 		expect(result).toEqual({
 			branch: commit.branch,
-			reviewRequest: { kind: 'created', url: 'https://github.com/nao/context/pull/1' },
+			reviewRequest: { kind: 'created', url: 'https://github.com/quarry/context/pull/1' },
 		});
 		expect(
 			runGit(fixture.root, ['--git-dir', fixture.bare, 'show', `${result.branch}:context.md`]).toString(),
@@ -2361,7 +2363,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			name: 'remote branch changed',
 			error: 'error: failed to push some refs\nhint: Updates were rejected because the tip is non-fast-forward',
 			expected:
-				'The branch changed on the remote repository since nao last checked it, so refresh and try again.',
+				'The branch changed on the remote repository since quarry last checked it, so refresh and try again.',
 		},
 		{
 			name: 'protected branch',
@@ -2474,7 +2476,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const result = await pushContextExplorerBranch(fixture.context);
 
 		expect(result.branch).toBe(committed.branch);
-		expect(openReviewRequest).toHaveBeenCalledWith('test-token', 'nao/context', {
+		expect(openReviewRequest).toHaveBeenCalledWith('test-token', 'quarry/context', {
 			title: 'Update shared context',
 			body: '- Update shared context\n- Clarify context details',
 			head: committed.branch,
@@ -2495,7 +2497,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		if (!provider) {
 			throw new Error('Expected a local provider.');
 		}
-		const existingPullRequest = { kind: 'created' as const, url: 'https://github.com/nao/context/pull/7' };
+		const existingPullRequest = { kind: 'created' as const, url: 'https://github.com/quarry/context/pull/7' };
 		vi.spyOn(provider, 'findOpenReviewRequest').mockResolvedValue(existingPullRequest);
 		const openReviewRequest = vi.spyOn(provider, 'openReviewRequest');
 		const access = await fileAccess(fixture.context);
@@ -2527,7 +2529,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		}
 		const reviewLink = {
 			kind: 'link' as const,
-			url: 'https://git.example.com/nao/context/pullrequestcreate?source=nao/test',
+			url: 'https://git.example.com/quarry/context/pullrequestcreate?source=quarry/test',
 		};
 		vi.spyOn(provider, 'findOpenReviewRequest').mockImplementation(
 			async ({ projectId, branch, userId }) =>
@@ -2565,11 +2567,11 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 	it('reports an empty branch as having nothing to push without throwing', async () => {
 		const fixture = createFixture(temporaryRoots);
 		const before = snapshot(fixture.live);
-		await createContextBranch(fixture.context, 'nao/empty-proposal');
+		await createContextBranch(fixture.context, 'quarry/empty-proposal');
 
 		await expect(getContextRepositoryStatus(fixture.context)).resolves.toMatchObject({
 			branches: {
-				currentBranch: 'nao/empty-proposal',
+				currentBranch: 'quarry/empty-proposal',
 				aheadCommitCount: 0,
 				unpushedCommitCount: 0,
 			},
@@ -2621,20 +2623,22 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		fs.mkdirSync(live, { recursive: true });
 
 		expect(() => assertSafeDestructiveWorktreeTarget(path.join(root, 'repo'), live)).toThrow(
-			'outside a .nao/worktrees',
+			'outside a .quarry/worktrees',
 		);
 		expect(() => assertSafeDestructiveWorktreeTarget(live, live)).toThrow();
-		expect(() => assertSafeDestructiveWorktreeTarget(path.join(root, '.nao', 'worktrees'), live)).toThrow();
-		expect(() => assertSafeDestructiveWorktreeTarget(path.join(root, '.nao', 'worktrees', 'safe'), live)).toThrow();
+		expect(() => assertSafeDestructiveWorktreeTarget(path.join(root, '.quarry', 'worktrees'), live)).toThrow();
 		expect(() =>
-			assertSafeDestructiveWorktreeTarget(path.join(root, '.nao', 'worktrees', 'safe', 'user'), live),
+			assertSafeDestructiveWorktreeTarget(path.join(root, '.quarry', 'worktrees', 'safe'), live),
+		).toThrow();
+		expect(() =>
+			assertSafeDestructiveWorktreeTarget(path.join(root, '.quarry', 'worktrees', 'safe', 'user'), live),
 		).not.toThrow();
 	});
 
 	it('allows only worktree management commands outside the asserted worktree', () => {
 		const root = temporaryRoot(temporaryRoots);
 		const live = path.join(root, 'live');
-		const worktree = path.join(root, '.nao', 'worktrees', 'safe', 'user');
+		const worktree = path.join(root, '.quarry', 'worktrees', 'safe', 'user');
 
 		expect(() => assertSafeDestructiveWorktreeCommand(worktree, root, ['restore', '--worktree', '.'])).toThrow(
 			'outside the context worktree',
@@ -2660,7 +2664,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 		const unsafe = { ...baseContext(live), projectId: '..' };
 		const operations = [
 			() => switchContextBranch(unsafe, 'main'),
-			() => createContextBranch(unsafe, 'nao/test'),
+			() => createContextBranch(unsafe, 'quarry/test'),
 			() => createContextBranchAndCommit(unsafe, { paths: ['/context.md'], message: 'test' }),
 			() => commitContextChanges(unsafe, { paths: ['/context.md'], message: 'test' }),
 			() => discardContextFileChange(unsafe, '/context.md'),
@@ -2677,7 +2681,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 
 	it.each([
 		['no-repo', null, 'token'],
-		['no-token', { provider: 'github' as const, repoFullName: 'nao/context' }, null],
+		['no-token', { provider: 'github' as const, repoFullName: 'quarry/context' }, null],
 	])('returns %s while preserving live browsing', async (reason, configOverride, token) => {
 		const root = temporaryRoot(temporaryRoots);
 		const live = path.join(root, 'live');
@@ -2702,7 +2706,7 @@ describe('context explorer worktrees', { timeout: 15_000 }, () => {
 			targetKind === 'live'
 				? live
 				: targetKind === 'worktrees'
-					? path.join(root, '.nao', 'worktrees')
+					? path.join(root, '.quarry', 'worktrees')
 					: path.join(root, 'repository');
 		expect(() => assertSafeDestructiveWorktreeTarget(target, live)).toThrow();
 	});
@@ -2758,7 +2762,7 @@ function createLocalCloneFixture(temporaryRoots: string[]): Fixture {
 	});
 	const clone = path.join(fixture.root, 'clone');
 	runGit(fixture.root, ['clone', fixture.bare, clone]);
-	runGit(clone, ['remote', 'set-url', 'origin', 'https://github.com/nao/context.git']);
+	runGit(clone, ['remote', 'set-url', 'origin', 'https://github.com/quarry/context.git']);
 	fixture.live = path.join(clone, 'project');
 	fixture.context = {
 		...baseContext(fixture.live),
@@ -2778,7 +2782,7 @@ function baseContext(
 	projectFolder: string,
 	configOverride: ContextExplorerGitContext['configOverride'] = {
 		provider: 'github',
-		repoFullName: 'nao/context',
+		repoFullName: 'quarry/context',
 	},
 ): TokenGitContext {
 	return {
@@ -2794,7 +2798,7 @@ function baseContext(
 
 function setContextSourceEnv({
 	source = 'git',
-	url = 'https://github.com/nao/context.git',
+	url = 'https://github.com/quarry/context.git',
 	branch,
 	subpath,
 	token,
@@ -2840,7 +2844,7 @@ function setContextSourceEnv({
 	__reloadContextEnvForTesting();
 }
 
-function localProvider(bare: string, publicUrl = 'https://github.com/nao/context.git'): ContextRepositoryProvider {
+function localProvider(bare: string, publicUrl = 'https://github.com/quarry/context.git'): ContextRepositoryProvider {
 	let openReviewRequest: { kind: 'created'; url: string } | null = null;
 	return {
 		getToken: async () => 'test-token',
@@ -2851,7 +2855,7 @@ function localProvider(bare: string, publicUrl = 'https://github.com/nao/context
 		cloneRepo: () => undefined,
 		getGitInfo: () => ({ branch: 'main' }),
 		getUserGitIdentity: async ({ user }) => user,
-		coAuthor: { name: 'nao', email: 'naoagent@getnao.io' },
+		coAuthor: { name: 'quarry', email: 'agent@quarry.invalid' },
 		commitAllAndPushBranch: () => '',
 		pushBranch: ({ dir, branch }) => {
 			runGit(dir, ['push', bare, `HEAD:refs/heads/${branch}`]);
@@ -2860,7 +2864,7 @@ function localProvider(bare: string, publicUrl = 'https://github.com/nao/context
 		findOpenReviewRequest: async () => openReviewRequest,
 		findReviewRequestByBranch: async () => null,
 		openReviewRequest: async () => {
-			openReviewRequest = { kind: 'created', url: 'https://github.com/nao/context/pull/1' };
+			openReviewRequest = { kind: 'created', url: 'https://github.com/quarry/context/pull/1' };
 			return openReviewRequest;
 		},
 	};
@@ -2890,7 +2894,7 @@ function writeFiles(root: string, files: Record<string, string>): void {
 }
 
 function temporaryRoot(temporaryRoots: string[]): string {
-	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-context-worktree-'));
+	const root = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-context-worktree-'));
 	temporaryRoots.push(root);
 	return root;
 }

@@ -73,7 +73,7 @@ beforeEach(() => {
 	mocks.boxes.splice(0);
 	mocks.exec.mockResolvedValue({ stdout: '', stderr: '', exitCode: 0 });
 	mocks.run.mockImplementation(async (_box, code) => code);
-	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-sandbox-project-'));
+	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-sandbox-project-'));
 });
 
 afterEach(() => {

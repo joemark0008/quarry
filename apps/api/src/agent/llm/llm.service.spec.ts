@@ -7,7 +7,7 @@ import type { ProjectLlmConfigRepository } from './project-llm-config.repository
 /**
  * Ports of upstream `tests/disabled-providers.test.ts`, `tests/annotation-model.test.ts` and
  * `tests/project-available-models.test.ts` (the parts covering `utils/llm.ts`). Upstream's query modules
- * are replaced by a mocked `ProjectLlmConfigRepository`. Quarry drops the managed `nao` provider (billing)
+ * are replaced by a mocked `ProjectLlmConfigRepository`. Quarry drops the managed `quarry` provider (billing)
  * and the `llm` block of `quarry_config.yaml`, so the cases about those are not ported.
  */
 const mocks = vi.hoisted(() => ({
@@ -159,5 +159,5 @@ describe('resolveAnnotationModelId', () => {
 	});
 });
 
-// Upstream's `getProjectAvailableModels` cases are not ported: the managed `nao` provider (credits, BYOK alongside
+// Upstream's `getProjectAvailableModels` cases are not ported: the managed `quarry` provider (credits, BYOK alongside
 // curated models) is dropped, and quarry does not read named openai-compatible endpoints from quarry_config.yaml.

@@ -29,7 +29,7 @@ describe('load_skill tool with project skills', () => {
 	let projectRoot: string;
 
 	beforeAll(async () => {
-		projectRoot = mkdtempSync(join(tmpdir(), 'nao-load-skill-'));
+		projectRoot = mkdtempSync(join(tmpdir(), 'quarry-load-skill-'));
 		const skillsFolder = join(projectRoot, 'agent', 'skills');
 		mkdirSync(skillsFolder, { recursive: true });
 		writeFileSync(

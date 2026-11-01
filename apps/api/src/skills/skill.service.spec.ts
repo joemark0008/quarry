@@ -25,7 +25,7 @@ const skillService = new SkillService({
 } as unknown as ProjectRepository);
 
 function createProjectWithSkill(prefix: string, skillName: string, body: string): string {
-	const root = mkdtempSync(join(tmpdir(), `nao-skill-${prefix}-`));
+	const root = mkdtempSync(join(tmpdir(), `quarry-skill-${prefix}-`));
 	const skillsDir = join(root, 'agent', 'skills');
 	mkdirSync(skillsDir, { recursive: true });
 	writeFileSync(
@@ -91,7 +91,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	async function initializeProject(projectId: string, skills: Record<string, string>): Promise<void> {
-		const root = mkdtempSync(join(tmpdir(), `nao-preload-${projectId}-`));
+		const root = mkdtempSync(join(tmpdir(), `quarry-preload-${projectId}-`));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		for (const [name, body] of Object.entries(skills)) {
@@ -124,7 +124,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it('preloads a skill whose frontmatter name carries surrounding whitespace', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-whitespace-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-whitespace-'));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		writeFileSync(
@@ -150,7 +150,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it('ignores skill files that are symlinks pointing outside the skills folder', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-symlink-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-symlink-'));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		const secretPath = join(root, 'secret.md');
@@ -168,8 +168,8 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it('ignores a skills folder that is a symlink pointing outside the project', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-folder-symlink-'));
-		const outside = mkdtempSync(join(tmpdir(), 'nao-preload-outside-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-folder-symlink-'));
+		const outside = mkdtempSync(join(tmpdir(), 'quarry-preload-outside-'));
 		writeFileSync(join(outside, 'leak.md'), '---\nname: leak\n---\n\nSECRET=value\n');
 		mkdirSync(join(root, 'agent'), { recursive: true });
 		symlinkSync(outside, join(root, 'agent', 'skills'));
@@ -182,7 +182,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it('skips a skill file with invalid frontmatter without hiding the others', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-invalid-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-invalid-'));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		writeFileSync(
@@ -202,7 +202,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it.skipIf(process.getuid?.() === 0)('masks the project path in filesystem load errors', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-unreadable-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-unreadable-'));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		const unreadablePath = join(skillsDir, 'unreadable.md');
@@ -220,7 +220,7 @@ describe('skillService.getPreloadedSkills', () => {
 	});
 
 	it('keeps only the first skill when two files resolve to the same name', async () => {
-		const root = mkdtempSync(join(tmpdir(), 'nao-preload-duplicate-'));
+		const root = mkdtempSync(join(tmpdir(), 'quarry-preload-duplicate-'));
 		const skillsDir = join(root, 'agent', 'skills');
 		mkdirSync(skillsDir, { recursive: true });
 		writeFileSync(join(skillsDir, 'a.md'), '---\nname: revenue\n---\n\nFirst body\n');

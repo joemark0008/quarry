@@ -27,7 +27,7 @@ import {
 	llmSelectedModelSchema,
 	modelSettingsMapSchema,
 } from '../agent/types/llm.js';
-import { extractConfiguredSemanticLayer } from '../agent/utils/nao-config.js';
+import { extractConfiguredSemanticLayer } from '../agent/utils/quarry-config.js';
 import { buildCredentialPreviews, previewApiKey } from '../agent/utils/utils.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import type { Prisma, Project, ProjectLlmConfig } from '../generated/prisma/client.js';
@@ -122,7 +122,7 @@ export class ModelSettingsService {
 	async upsertLlmConfig(projectId: string, rawInput: unknown) {
 		const input = parse(upsertLlmConfigSchema, rawInput);
 		if (isManagedProvider(input.provider)) {
-			throw new HandlerError('BAD_REQUEST', 'The nao-managed provider is configured by nao.');
+			throw new HandlerError('BAD_REQUEST', 'The quarry-managed provider is configured by quarry.');
 		}
 		const existingConfig = await this.configs.getProjectLlmConfigByProvider(projectId, input.provider);
 		const envApiKey = getEnvApiKey(input.provider);

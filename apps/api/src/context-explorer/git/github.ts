@@ -1,6 +1,6 @@
 import type { GitIdentity } from './git-identity.js';
 
-export { NAO_CO_AUTHOR } from './git-identity.js';
+export { QUARRY_CO_AUTHOR } from './git-identity.js';
 
 /**
  * Stand-in for upstream `services/github.ts`: the GitHub OAuth integration, its API calls and the managed GitHub

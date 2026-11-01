@@ -305,7 +305,7 @@ describe('system example story', () => {
 		]);
 
 		expect(users).toHaveLength(1);
-		expect(users[0]).toMatchObject({ name: 'Nao', email: 'system-example@getnao.invalid' });
+		expect(users[0]).toMatchObject({ name: 'Quarry', email: 'system-example@quarry.invalid' });
 		expect(chats).toHaveLength(1);
 		expect(storyRows).toHaveLength(1);
 		expect(storyRows[0]).toMatchObject({ slug: JAFFLE_SHOP_STORY.slug, title: JAFFLE_SHOP_STORY.title });

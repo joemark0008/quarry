@@ -16,7 +16,7 @@ const MAX_HTML_BYTES = 2_000_000;
 const MAX_CSS_BYTES = 1_500_000;
 const MAX_STYLESHEETS = 6;
 const FETCH_HEADERS = {
-	'user-agent': 'quarry-story-theme-bot/1.0 (+https://getnao.io)',
+	'user-agent': 'quarry-story-theme-bot/1.0',
 	accept: 'text/html,text/css,*/*',
 };
 
@@ -127,7 +127,7 @@ export function signalsFromProbe(probe: ProbeResult, url: string): DesignSignals
 	const unloadable = fonts.filter((f) => !f.loadable).map((f) => f.family);
 	if (unloadable.length) {
 		warnings.push(
-			`${unloadable.slice(0, 4).join(', ')} ${unloadable.length === 1 ? 'is' : 'are'} served from the brand's own domain, so nao cannot load ${unloadable.length === 1 ? 'it' : 'them'}. A close substitute is used instead.`,
+			`${unloadable.slice(0, 4).join(', ')} ${unloadable.length === 1 ? 'is' : 'are'} served from the brand's own domain, so quarry cannot load ${unloadable.length === 1 ? 'it' : 'them'}. A close substitute is used instead.`,
 		);
 	}
 	if (probe.documentInShell) {
@@ -139,7 +139,7 @@ export function signalsFromProbe(probe: ProbeResult, url: string): DesignSignals
 		warnings.push('No filled button was found, so the accent is inferred from other elements.');
 	}
 	if (probe.colors.length < 4 && probe.writtenColors.length < 3) {
-		warnings.push('The page paints very few distinct colours; the palette is largely nao defaults.');
+		warnings.push('The page paints very few distinct colours; the palette is largely quarry defaults.');
 	}
 
 	const written = probe.writtenColors.map((hex) => ({
@@ -206,7 +206,7 @@ async function staticSignals(url: URL): Promise<{ signals: DesignSignals; finalU
 		warnings.push('Few colours could be read. This site likely styles itself at runtime rather than in CSS.');
 	}
 	if (signals.fontFamilies.length === 0) {
-		warnings.push('No font families are declared in CSS; typography keeps the nao defaults.');
+		warnings.push('No font families are declared in CSS; typography keeps the quarry defaults.');
 	}
 	return { signals: { ...signals, warnings }, finalUrl: page.url };
 }

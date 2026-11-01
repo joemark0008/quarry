@@ -69,7 +69,7 @@ export const REVIEW_REQUEST_PROVIDERS: Record<InternalRepoProvider, ReviewReques
 		cloneRepo: github.cloneRepo,
 		getGitInfo: github.getGitInfo,
 		getUserGitIdentity: ({ token }) => github.getUserGitIdentity(requireToken(token)),
-		coAuthor: github.NAO_CO_AUTHOR,
+		coAuthor: github.QUARRY_CO_AUTHOR,
 		commitAllAndPushBranch: github.commitAllAndPushBranch,
 		pushBranch: (args) => github.pushBranch(args),
 		findOpenReviewRequest: ({ token, repoFullName, branch }) =>
@@ -90,7 +90,7 @@ export const REVIEW_REQUEST_PROVIDERS: Record<InternalRepoProvider, ReviewReques
 		cloneRepo: gitlab.cloneRepo,
 		getGitInfo: gitlab.getGitInfo,
 		getUserGitIdentity: ({ token }) => gitlab.getUserGitIdentity(requireToken(token)),
-		coAuthor: gitlab.NAO_CO_AUTHOR,
+		coAuthor: gitlab.QUARRY_CO_AUTHOR,
 		commitAllAndPushBranch: gitlab.commitAllAndPushBranch,
 		pushBranch: (args) => gitlab.pushBranch(args),
 		findOpenReviewRequest: ({ token, repoFullName, branch }) =>

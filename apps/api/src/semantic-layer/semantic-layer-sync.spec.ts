@@ -6,12 +6,18 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { syncSemanticLayerProvider } from './semantic-layer-sync.js';
 
-// Port of upstream `cli/tests/nao_core/semantic_layer/test_sync_provider.py`, plus a byte-for-byte comparison with
+// Port of upstream `cli/tests/upstream_core/semantic_layer/test_sync_provider.py`, plus a byte-for-byte comparison with
 // the docs upstream's Python sync generated for its example project. `test_provider_only_syncs_when_configured`
 // covered the Python provider registry; quarry's context sync only calls the provider when `semantic_layer` is set.
 const FIXTURES = path.join(import.meta.dirname, 'metricflow/__fixtures__');
 const FIXTURE_MANIFEST = path.join(FIXTURES, 'semantic_manifest.json');
 const UPSTREAM_EXAMPLE = path.join(import.meta.dirname, '../../../../../fork-reference/example');
+
+/** The two README lines that name the product differ from upstream on purpose. */
+function withoutProductName(content: string): string {
+	return content.replace(/^(Synced from the|Query metrics with the) .*$/gm, '');
+}
+
 const dirs: string[] = [];
 
 afterEach(() => {
@@ -131,8 +137,8 @@ describe('semantic layer sync', () => {
 				readdirSync(path.join(upstream, 'metrics')).sort(),
 			);
 			for (const file of files) {
-				expect(readFileSync(path.join(output, file), 'utf8'), file).toBe(
-					readFileSync(path.join(upstream, file), 'utf8'),
+				expect(withoutProductName(readFileSync(path.join(output, file), 'utf8')), file).toBe(
+					withoutProductName(readFileSync(path.join(upstream, file), 'utf8')),
 				);
 			}
 		},

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Job } from '../jobs/job.decorator.js';
 import { CONTEXT_SYNC_JOB, type ContextSyncJobData, ContextSyncService } from './context-sync.service.js';
 
-/** pg-boss handler of the `context.sync` job (port of `nao sync`, PLAN.md §7). */
+/** pg-boss handler of the `context.sync` job (port of `context sync`, PLAN.md §7). */
 @Injectable()
 export class ContextSyncHandler {
 	constructor(private readonly contextSync: ContextSyncService) {}

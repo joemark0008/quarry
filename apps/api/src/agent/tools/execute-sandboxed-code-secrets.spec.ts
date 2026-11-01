@@ -36,7 +36,7 @@ vi.mock('../services/storage/user-files.js', () => ({ readUserFileBytes: vi.fn()
 const { default: executeSandboxedCode } = await import('./execute-sandboxed-code.js');
 
 const SECRET_VALUE = 'sk-live-0123456789abcdef';
-const projectFolder = mkdtempSync(join(tmpdir(), 'nao-sandbox-secrets-'));
+const projectFolder = mkdtempSync(join(tmpdir(), 'quarry-sandbox-secrets-'));
 
 beforeAll(() => {
 	vi.useFakeTimers();

@@ -10,7 +10,7 @@ import { createContextTable, FakeConnection, tempProject } from './guard-test-ut
 import type { TableIdentity } from './query-guard.js';
 
 /**
- * Port of `cli/tests/nao_core/config/test_allow_listed_only_guard.py` on the Postgres dialect.
+ * Port of `cli/tests/upstream_core/config/test_allow_listed_only_guard.py` on the Postgres dialect.
  * Not ported: the DuckDB/MotherDuck/DuckLake/StarRocks/ClickHouse dialect cases (quarry only parses Postgres).
  */
 

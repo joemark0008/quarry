@@ -36,7 +36,7 @@ import { isWarehouseSqlEnabled, resolveSemanticLayerMode } from './services/sema
 import { customStoryAuthoringError } from './services/story-mount.js';
 import { tokenCounter } from './services/token-counter.js';
 import { fullProjectContextAccess } from './services/user-group-context-access.service.js';
-import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
+import { getSystemPromptOverride, hasQuarryPromptPlaceholder, injectQuarryPrompt } from './system-prompts.js';
 import { createSavedQueryTools, createWebSearchTools, getTools } from './tools/index.js';
 import type { AgentSettings } from './types/agent-settings.js';
 import type {
@@ -51,7 +51,7 @@ import type { ToolContext } from './types/tools.js';
 import { getConnections, getUserRules } from './user-rules.js';
 import { createChatTitle } from './utils/ai.js';
 import { buildImageUrl } from './utils/image.js';
-import { extractConfiguredDatabases, readProjectContext } from './utils/nao-config.js';
+import { extractConfiguredDatabases, readProjectContext } from './utils/quarry-config.js';
 import { isStoragePath, toStorageRelativePath, toStorageVirtualPath } from './utils/tools.js';
 
 /** The web chat's analytics agent (upstream `agents/profiles/analytics.ts`). */
@@ -372,7 +372,7 @@ export class AgentService {
 		};
 	}
 
-	/** `_buildProjectSystemPrompt`: the project's prompt override, or quarry's prompt (with `{{nao}}` injection). */
+	/** `_buildProjectSystemPrompt`: the project's prompt override, or quarry's prompt (with `{{quarry}}` injection). */
 	private async buildProjectSystemPrompt(
 		toolContext: ToolContext,
 		toolNames: string[],
@@ -393,7 +393,7 @@ export class AgentService {
 		timezone?: string,
 	): Promise<string> {
 		const override = getSystemPromptOverride(toolContext.projectFolder);
-		if (override && !hasNaoPromptPlaceholder(override)) {
+		if (override && !hasQuarryPromptPlaceholder(override)) {
 			return override;
 		}
 		const { repos, templates, presence } = readProjectContext(toolContext.projectFolder);
@@ -432,7 +432,7 @@ export class AgentService {
 				customStoriesEnabled: customStoryAuthoringError(toolContext.userGroupFeatures) === null,
 			},
 		});
-		return override ? injectNaoPrompt(override, defaultPrompt) : defaultPrompt;
+		return override ? injectQuarryPrompt(override, defaultPrompt) : defaultPrompt;
 	}
 
 	/** Upstream `safeInitializeSkills`: a broken skills folder must not block the run. */

@@ -1,8 +1,8 @@
 import { Block, Br, Code, List, ListItem, Title } from '../markdown/index.js';
-import type { ContextPresence } from '../utils/nao-config.js';
+import type { ContextPresence } from '../utils/quarry-config.js';
 
-/** Explains how the nao project context is laid out on disk. Shared by every system prompt. */
-export function NaoContextStructure({
+/** Explains how the quarry project context is laid out on disk. Shared by every system prompt. */
+export function QuarryContextStructure({
 	templates,
 	repoNames = [],
 	contextPresence,
@@ -21,7 +21,7 @@ export function NaoContextStructure({
 
 	return (
 		<Block>
-			<Title level={2}>How nao Works</Title>
+			<Title level={2}>How quarry Works</Title>
 			<List>
 				{[
 					<ListItem key='rules'>

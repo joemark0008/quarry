@@ -44,7 +44,7 @@ export const STORAGE_DISABLED_MESSAGE =
 let provider: StorageProvider | null = null;
 let storageEnv: StorageEnv | null = null;
 
-/** The storage variables (upstream `env.NAO_STORAGE_*`, quarry `QUARRY_STORAGE_*`). */
+/** The storage variables (`QUARRY_STORAGE_*`). */
 export const getStorageEnv = (): StorageEnv => {
 	if (!storageEnv) {
 		loadDotenv();
@@ -53,7 +53,7 @@ export const getStorageEnv = (): StorageEnv => {
 	return storageEnv;
 };
 
-/** Upstream `env.NAO_STORAGE_MAX_FILE_SIZE_MB`. */
+/** `QUARRY_STORAGE_MAX_FILE_SIZE_MB`. */
 export const getStorageMaxFileSizeMb = (): number => {
 	return getStorageEnv().QUARRY_STORAGE_MAX_FILE_SIZE_MB;
 };

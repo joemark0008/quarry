@@ -3,7 +3,7 @@ import type { GuardConnection } from './guards/query-guard.js';
 
 /**
  * One adapter per warehouse type (PLAN.md §6, `sql-engine`). Replaces the Ibis connections the Python service
- * opened from `nao_core/config/databases/*`. quarry ships the Postgres driver; others are added the same way.
+ * opened from `upstream_core/config/databases/*`. quarry ships the Postgres driver; others are added the same way.
  */
 export interface WarehouseDriver extends GuardConnection {
 	readonly config: DatabaseConfig;

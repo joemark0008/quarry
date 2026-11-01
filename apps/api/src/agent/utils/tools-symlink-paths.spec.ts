@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { clearNaoignoreCache, toRealPath, toVirtualPath } from './tools.js';
+import { clearQuarryignoreCache, toRealPath, toVirtualPath } from './tools.js';
 
 /**
  * `toRealPath` guards the agent's file tools. A lexical check alone lets a symlink inside the
@@ -15,14 +15,14 @@ describe('toRealPath with symlinks', () => {
 	let outside: string;
 
 	beforeEach(() => {
-		root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'nao-symlink-')));
+		root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-symlink-')));
 		projectFolder = path.join(root, 'project');
 		outside = path.join(root, 'outside');
 		fs.mkdirSync(projectFolder);
 		fs.mkdirSync(outside);
 		fs.writeFileSync(path.join(outside, 'secret.txt'), 'secret');
 		fs.writeFileSync(path.join(projectFolder, 'inside.txt'), 'inside');
-		clearNaoignoreCache();
+		clearQuarryignoreCache();
 	});
 
 	afterEach(() => {
@@ -67,13 +67,13 @@ describe('toRealPath with symlinks', () => {
 			expect(() => toRealPath('/metadata/config', projectFolder)).toThrow(/protected .git metadata/);
 		});
 
-		it('rejects a symlink to a file ignored by .naoignore', () => {
-			fs.writeFileSync(path.join(projectFolder, '.naoignore'), 'private/\n');
+		it('rejects a symlink to a file ignored by .quarryignore', () => {
+			fs.writeFileSync(path.join(projectFolder, '.quarryignore'), 'private/\n');
 			fs.mkdirSync(path.join(projectFolder, 'private'));
 			fs.writeFileSync(path.join(projectFolder, 'private', 'notes.md'), '');
 			fs.symlinkSync(path.join(projectFolder, 'private', 'notes.md'), path.join(projectFolder, 'notes.md'));
 
-			expect(() => toRealPath('/notes.md', projectFolder)).toThrow(/ignored by .naoignore/);
+			expect(() => toRealPath('/notes.md', projectFolder)).toThrow(/ignored by .quarryignore/);
 		});
 	});
 

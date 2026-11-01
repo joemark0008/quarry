@@ -28,7 +28,7 @@ export async function readWhiteLabelBrand(): Promise<WhiteLabelBrand | null> {
 
 export function renderWhiteLabelBrand(brand: WhiteLabelBrand, { logoAttached }: { logoAttached: boolean }): string {
 	return [
-		'WHITE-LABEL BRANDING, set by the admin in nao’s white-label settings:',
+		'WHITE-LABEL BRANDING, set by the admin in quarry’s white-label settings:',
 		brand.appName ? `  Brand name: ${brand.appName}` : '',
 		brand.brandColor
 			? `  Primary colour: ${brand.brandColor} — the brand's own declared primary. Use it as the accent and the first chart colour unless the admin guidance says otherwise.`

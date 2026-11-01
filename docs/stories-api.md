@@ -15,7 +15,7 @@ procedures of `trpc.chatFork`) as GraphQL, for the frontend migration.
 - **Errors**: `extensions.code` is upstream's tRPC code (`BAD_REQUEST`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`,
   `CONFLICT`); messages are upstream's.
 - **Selected project**: procedures upstream built on `projectProtectedProcedure` (and `canSend`/`admin`/story-theme
-  procedures) read the project from the `x-nao-project-id` header, like the rest of the API. A user outside that project gets
+  procedures) read the project from the `x-quarry-project-id` header, like the rest of the API. A user outside that project gets
   `BAD_REQUEST` "No project configured" (upstream's behaviour). The others find the project from the chat or story id in
   their input.
 - Implementation: `apps/api/src/stories/procedures/*.procedures.ts` are the upstream routers ported nearly verbatim on a

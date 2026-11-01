@@ -7,7 +7,7 @@ import {
 	resolveContextSourceGitToken,
 	sanitizeContextSourceRepositoryUrl,
 } from './context-repo.js';
-import { GitIdentity, NAO_CO_AUTHOR, withCoAuthors } from './git-identity.js';
+import { GitIdentity, QUARRY_CO_AUTHOR, withCoAuthors } from './git-identity.js';
 import { toGitError } from './git-repo.js';
 import * as github from './github.js';
 import * as gitlab from './gitlab.js';
@@ -29,7 +29,7 @@ export const GENERIC_GIT_PROVIDER: ReviewRequestProvider = {
 	cloneRepo,
 	getGitInfo,
 	getUserGitIdentity: async ({ user }) => user,
-	coAuthor: NAO_CO_AUTHOR,
+	coAuthor: QUARRY_CO_AUTHOR,
 	commitAllAndPushBranch,
 	pushBranch,
 	findOpenReviewRequest,

@@ -31,8 +31,8 @@ export class ExampleStoryRepository {
 async function runSeed(tx: Prisma.TransactionClient): Promise<void> {
 	const now = new Date();
 	const user = {
-		name: 'Nao',
-		email: 'system-example@getnao.invalid',
+		name: 'Quarry',
+		email: 'system-example@quarry.invalid',
 		emailVerified: true,
 		memoryEnabled: false,
 	};

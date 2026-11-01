@@ -23,7 +23,7 @@ export function LiveStoryRefreshPrompt({
 		<Block>
 			<Title>Instructions</Title>
 			<Span>
-				You refresh the narrative copy of a nao story using updated query results.
+				You refresh the narrative copy of a quarry story using updated query results.
 				<Br />
 				Return the full story markdown.
 			</Span>
@@ -78,7 +78,7 @@ export function LiveCustomStoryNarrativesPrompt({
 		<Block>
 			<Title>Instructions</Title>
 			<Span>
-				You refresh the narrative passages of a nao custom story using updated query results.
+				You refresh the narrative passages of a quarry custom story using updated query results.
 				<Br />
 				Each passage is plain text shown inside the story's own layout, next to charts that already show the new
 				data.

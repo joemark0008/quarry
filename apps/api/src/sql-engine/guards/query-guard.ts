@@ -1,7 +1,7 @@
 import type { BlockedFactory, TableRef } from './pg-ast.js';
 
 /**
- * Port of `nao_core/config/databases/query_guard.py` (table resolution against the live schema).
+ * Port of `upstream_core/config/databases/query_guard.py` (table resolution against the live schema).
  *
  * Postgres folds unquoted identifiers to lower case and keeps quoted ones as written; the parser has already
  * applied that rule, so a requested name matches a live schema or table only when it is equal to it.

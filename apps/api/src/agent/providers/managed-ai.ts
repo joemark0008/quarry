@@ -1,5 +1,5 @@
 /**
- * Upstream's managed AI (the `nao` provider billed against cloud credits) is not ported: quarry has no
+ * Upstream's managed AI (the provider billed against cloud credits) is not ported: quarry has no
  * billing. The usage context type stays because model resolution and telemetry carry it.
  */
 export interface ManagedAiUsageContext {

@@ -29,7 +29,7 @@ describe('docs context catalog', () => {
 		fs.writeFileSync(path.join(project, 'docs', 'a-folder', 'b.md'), 'b');
 		fs.writeFileSync(path.join(project, 'docs', 'root.md'), 'root');
 		fs.writeFileSync(path.join(project, 'docs', 'ignored.md'), 'ignored');
-		fs.writeFileSync(path.join(project, '.naoignore'), 'docs/ignored.md\n');
+		fs.writeFileSync(path.join(project, '.quarryignore'), 'docs/ignored.md\n');
 		fs.symlinkSync(path.join(project, 'docs', 'root.md'), path.join(project, 'docs', 'alias.md'));
 
 		expect(getDocsContextCatalog(project)).toEqual({
@@ -163,7 +163,7 @@ describe('project files context catalog', () => {
 		});
 	});
 
-	it('omits excluded entries and naoignore matches', () => {
+	it('omits excluded entries and quarryignore matches', () => {
 		const project = createProject();
 		fs.mkdirSync(path.join(project, '.git', 'objects'), { recursive: true });
 		fs.mkdirSync(path.join(project, '.meta'), { recursive: true });
@@ -175,12 +175,12 @@ describe('project files context catalog', () => {
 		fs.writeFileSync(path.join(project, '.env.local'), 'SECRET=2');
 		fs.writeFileSync(path.join(project, 'kept.md'), 'kept');
 		fs.writeFileSync(path.join(project, 'ignored.md'), 'ignored');
-		fs.writeFileSync(path.join(project, '.naoignore'), 'ignored.md\n');
+		fs.writeFileSync(path.join(project, '.quarryignore'), 'ignored.md\n');
 
 		expect(getFilesContextCatalog(project)).toEqual({
 			syncState: 'ready',
 			entries: [
-				{ kind: 'file', path: '.naoignore' },
+				{ kind: 'file', path: '.quarryignore' },
 				{ kind: 'file', path: 'kept.md' },
 			],
 		});
@@ -216,7 +216,7 @@ describe('project files context catalog', () => {
 });
 
 function createProject(): string {
-	const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-file-tree-catalog-'));
+	const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-file-tree-catalog-'));
 	temporaryFolders.push(folder);
 	return folder;
 }

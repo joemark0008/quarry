@@ -1,5 +1,5 @@
 /**
- * Port of upstream `cli/nao_core/semantic_layer/metricflow.py`. Upstream uses MetricFlow (Python) as a SQL compiler
+ * Port of upstream `cli/upstream_core/semantic_layer/metricflow.py`. Upstream uses MetricFlow (Python) as a SQL compiler
  * only; quarry has no Python, so `compiler.ts` compiles the manifest subset itself, for Postgres. The compiled SQL is
  * handed to the regular `execute_sql` pipeline, so credentials, allow-listing and column guards stay in one place.
  */
@@ -14,7 +14,7 @@ import { type ManifestMetric, parseManifest } from './manifest.js';
 
 export type { SemanticQuery } from './compiler.js';
 
-/** nao database types → MetricFlow SQL renderer. Types absent here have no MetricFlow renderer. */
+/** quarry database types → MetricFlow SQL renderer. Types absent here have no MetricFlow renderer. */
 export const METRICFLOW_DIALECTS: Record<string, string> = {
 	athena: 'athena',
 	bigquery: 'bigquery',
@@ -77,7 +77,7 @@ export function runtimeManifestPath(config: SemanticLayerConfig, projectPath: st
 	return resolveManifestPath(config, projectPath);
 }
 
-/** Map a nao database type to the MetricFlow dialect that renders SQL for it. */
+/** Map a quarry database type to the MetricFlow dialect that renders SQL for it. */
 export function metricflowDialectFor(databaseType: string): string {
 	const dialect = METRICFLOW_DIALECTS[databaseType];
 	if (dialect === undefined) {

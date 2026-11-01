@@ -32,7 +32,7 @@ let projectFolder: string;
 const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform')!;
 
 beforeEach(async () => {
-	root = await actualFs.mkdtemp(path.join(os.tmpdir(), 'nao-read-race-'));
+	root = await actualFs.mkdtemp(path.join(os.tmpdir(), 'quarry-read-race-'));
 	projectFolder = path.join(root, 'project');
 	await actualFs.mkdir(projectFolder);
 	fsControls.openMock.mockImplementation(fsControls.actualOpen);

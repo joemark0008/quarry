@@ -3,9 +3,9 @@ export interface GitIdentity {
 	email: string;
 }
 
-export const NAO_CO_AUTHOR: GitIdentity = {
-	name: 'nao',
-	email: 'naoagent@getnao.io',
+export const QUARRY_CO_AUTHOR: GitIdentity = {
+	name: 'quarry',
+	email: 'agent@quarry.invalid',
 };
 
 export function withCoAuthors(message: string, coAuthors: GitIdentity[]): string {

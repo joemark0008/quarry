@@ -144,7 +144,7 @@ function contextWithDocs(
 }
 
 function createTemporaryFolder(): string {
-	const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-docs-execution-'));
+	const folder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-docs-execution-'));
 	temporaryFolders.push(folder);
 	return folder;
 }

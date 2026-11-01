@@ -6,7 +6,7 @@ import yaml from 'js-yaml';
 import { type DatabaseConfig, getDatabaseFolderNames, postgresDatabaseConfigSchema } from './database-config.js';
 
 /**
- * Port of the parts of `NaoConfig.try_load` (`nao_core/config/base.py`, `secrets.py`) the SQL engine and sync
+ * Port of the parts of `QuarryConfig.try_load` (`upstream_core/config/base.py`, `secrets.py`) the SQL engine and sync
  * need: read `quarry_config.yaml` from the project folder, substitute `{{ env('VAR') }}` references (request env
  * first, then the process env), and validate the `databases` list. `aws()` / `k8s()` secrets are not supported.
  */

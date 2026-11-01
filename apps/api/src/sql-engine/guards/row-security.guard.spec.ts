@@ -12,7 +12,7 @@ import {
 } from './row-security.guard.js';
 
 /**
- * Port of `cli/tests/nao_core/config/test_row_security_guard.py` on the Postgres dialect. Rewritten SQL comes from
+ * Port of `cli/tests/upstream_core/config/test_row_security_guard.py` on the Postgres dialect. Rewritten SQL comes from
  * the Postgres deparser (lower-case `true`/`false`, identifiers quoted only when needed); the DuckDB execution
  * checks run on Postgres temp tables. Not ported: the BigQuery quoted-path and MySQL literal cases.
  */

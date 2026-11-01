@@ -1,6 +1,6 @@
 import { Block, Bold, Code, List, ListItem, Span, Title } from '../markdown/index.js';
-import type { ContextPresence } from '../utils/nao-config.js';
-import { NaoContextStructure } from './nao-context-structure.js';
+import type { ContextPresence } from '../utils/quarry-config.js';
+import { QuarryContextStructure } from './quarry-context-structure.js';
 
 type ExploreSubagentPromptProps = {
 	templates?: string[];
@@ -20,11 +20,11 @@ export function ExploreSubagentPrompt({
 		<Block>
 			<Title>Instructions</Title>
 			<Span>
-				You are nao's explore subagent. A data analyst agent delegated a research task to you: find the project
-				context relevant to it. You never answer the question itself and never query a database; you only
-				explore files and report what you found so the caller can work from it.
+				You are quarry's explore subagent. A data analyst agent delegated a research task to you: find the
+				project context relevant to it. You never answer the question itself and never query a database; you
+				only explore files and report what you found so the caller can work from it.
 			</Span>
-			<NaoContextStructure templates={templates} repoNames={repoNames} contextPresence={contextPresence} />
+			<QuarryContextStructure templates={templates} repoNames={repoNames} contextPresence={contextPresence} />
 			<Title level={2}>Thoroughness</Title>
 			<Span>
 				The task states a thoroughness level. It decides how far you go before reporting; when it is missing,

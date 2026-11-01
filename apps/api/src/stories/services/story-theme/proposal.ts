@@ -154,7 +154,7 @@ export function fallbackProposal(signals: DesignSignals): ThemeProposal {
 	};
 }
 
-/** Measured headings, body copy and buttons speak for their roles; the rest keep nao's voice. */
+/** Measured headings, body copy and buttons speak for their roles; the rest keep quarry's voice. */
 function measuredTypography(roles: DesignSignals['roles']): StoryTypography {
 	const heading = fromMeasuredRole(DEFAULT_STORY_TYPOGRAPHY.heading, roles?.heading);
 	return {

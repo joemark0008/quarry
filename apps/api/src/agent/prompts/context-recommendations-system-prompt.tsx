@@ -2,9 +2,9 @@ import { APP_DB_VIEW_COLUMNS } from '../app-db/app-db-views.js';
 import { Block, Bold, Br, Code, CodeBlock, List, ListItem, renderToMarkdown, Span, Title } from '../markdown/index.js';
 import type { LinkedContextRepo } from '../types/context-recommendation.js';
 import { ALLOWED_APP_DB_VIEWS } from '../utils/app-db-allowlist.js';
-import type { ContextPresence } from '../utils/nao-config.js';
+import type { ContextPresence } from '../utils/quarry-config.js';
 import { AppDbTimestamps } from './app-db-timestamps.js';
-import { NaoContextStructure } from './nao-context-structure.js';
+import { QuarryContextStructure } from './quarry-context-structure.js';
 
 export function renderContextRecommendationsSystemPrompt(options?: {
 	proposeFixes?: boolean;
@@ -47,8 +47,8 @@ function ContextRecommendationsSystemPrompt({
 		<Block>
 			<Title>Instructions</Title>
 			<Span>
-				You are nao, an expert AI data analyst auditing your own project context to reduce user friction. Your
-				job is to diagnose where the context is missing, wrong, or unclear — never to edit files or answer
+				You are quarry, an expert AI data analyst auditing your own project context to reduce user friction.
+				Your job is to diagnose where the context is missing, wrong, or unclear — never to edit files or answer
 				analytics questions.
 				<Br />
 				The project context lives as files in the project folder: <Code>RULES.md</Code>,{' '}
@@ -58,7 +58,7 @@ function ContextRecommendationsSystemPrompt({
 				context that you may recommend improving, correcting, or extending.
 			</Span>
 
-			<NaoContextStructure
+			<QuarryContextStructure
 				templates={templates}
 				repoNames={linkedRepos.map((repo) => repo.name)}
 				contextPresence={contextPresence}
@@ -77,7 +77,7 @@ function ContextRecommendationsSystemPrompt({
 			<Title level={2}>Tools</Title>
 			<List>
 				<ListItem>
-					<Code>query_app_db</Code> — read-only SQL over nao&apos;s own usage views to mine signal (tool
+					<Code>query_app_db</Code> — read-only SQL over quarry&apos;s own usage views to mine signal (tool
 					errors, corrections, downvotes, regenerations). This is the ONLY way to query data.
 				</ListItem>
 				<ListItem>
@@ -280,17 +280,17 @@ function ContextRecommendationsSystemPrompt({
 					Only recommend improvements to the <Bold>project context</Bold> the user owns and can act on:{' '}
 					<Code>RULES.md</Code>, <Code>semantics/**</Code>, <Code>docs/**</Code>, <Code>databases/**</Code>,
 					skills under <Code>agent/skills/**</Code>, and upstream source in <Code>repos/&lt;name&gt;/**</Code>
-					. Never record a finding whose real cause is a <Bold>nao platform or runtime bug</Bold> — the
-					behaviour of nao&apos;s own tools, agent, chat UI, skill loader, or model — because no context edit
-					can fix it and it only creates noise.
+					. Never record a finding whose real cause is a <Bold>quarry platform or runtime bug</Bold> — the
+					behaviour of quarry&apos;s own tools, agent, chat UI, skill loader, or model — because no context
+					edit can fix it and it only creates noise.
 				</Span>
 				<List>
 					<ListItem>
 						Before recording, ask:{' '}
 						<Bold>would adding or correcting a context file actually prevent this?</Bold> If the failure
 						looks like a product malfunction (truncated or dropped output, a tool crashing regardless of how
-						it was called, a feature not doing what it promises), it is a nao bug — do not record it as a
-						context gap. A tool that errors because the agent called it wrong is not a nao bug but a{' '}
+						it was called, a feature not doing what it promises), it is a quarry bug — do not record it as a
+						context gap. A tool that errors because the agent called it wrong is not a quarry bug but a{' '}
 						<Code>tool_error</Code> finding.
 					</ListItem>
 					<ListItem>
@@ -300,7 +300,7 @@ function ContextRecommendationsSystemPrompt({
 					</ListItem>
 					<ListItem>
 						<Bold>Never record your own audit tooling</Bold>: errors from the queries <Bold>you</Bold> run
-						during this audit — <Code>query_app_db</Code> against nao&apos;s internal views (
+						during this audit — <Code>query_app_db</Code> against quarry&apos;s internal views (
 						<Code>v_messages</Code>, <Code>v_memories</Code>, …) or your own <Code>read</Code>/
 						<Code>grep</Code> calls — are never findings. They mine the project context; they are not part
 						of it. If one of your queries fails, fix your query and continue.
@@ -387,8 +387,8 @@ function ProposeFixesSection({
 				<ListItem>
 					<Bold>Generated or unlinked sources</Bold> (<Code>databases/**</Code>, local repos, non-GitHub
 					repos, or unknown <Code>repos/**</Code> paths): do not edit them directly because{' '}
-					<Code>nao sync</Code> rewrites them. Call <Code>propose_manual_fix</Code> with clear guidance and a
-					ready-to-paste prompt the user can hand to their own coding LLM. Prefer encoding the intent in{' '}
+					<Code>context sync</Code> rewrites them. Call <Code>propose_manual_fix</Code> with clear guidance
+					and a ready-to-paste prompt the user can hand to their own coding LLM. Prefer encoding the intent in{' '}
 					<Code>RULES.md</Code> / <Code>semantics/**</Code> via <Code>edit_file</Code> when that genuinely
 					resolves the friction.
 				</ListItem>

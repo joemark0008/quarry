@@ -32,8 +32,8 @@ import type {
 	LinkedContextRepo,
 	RecommendationInsight,
 } from '../agent/types/context-recommendation.js';
-import { readProjectContext } from '../agent/utils/nao-config.js';
-import { extractConfiguredRepos } from '../agent/utils/nao-config.js';
+import { readProjectContext } from '../agent/utils/quarry-config.js';
+import { extractConfiguredRepos } from '../agent/utils/quarry-config.js';
 import { ChatRepository } from '../chats/chat.repository.js';
 import { HandlerError } from '../common/errors/handler-error.js';
 import { ConfigService } from '../config/config.service.js';
@@ -486,7 +486,7 @@ function manualFixFallback(finding: ProposedFinding): Partial<NewContextRecommen
 		? `${finding.suggestedAction}\n\nWhy: ${finding.rootCause}`
 		: finding.suggestedAction;
 	const prompt = [
-		`Update the nao project context file \`${finding.suggestedFile}\` to fix the following issue.`,
+		`Update the quarry project context file \`${finding.suggestedFile}\` to fix the following issue.`,
 		'',
 		`Problem: ${finding.rootCause || finding.summary}`,
 		'',

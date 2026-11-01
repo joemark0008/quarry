@@ -96,7 +96,7 @@ describe('dialect rules end-to-end from a synced project folder', () => {
 	let projectFolder: string;
 
 	beforeEach(() => {
-		projectFolder = mkdtempSync(join(tmpdir(), 'nao-dialect-'));
+		projectFolder = mkdtempSync(join(tmpdir(), 'quarry-dialect-'));
 		mkdirSync(join(projectFolder, 'databases', 'type=redshift', 'database=analytics'), { recursive: true });
 	});
 

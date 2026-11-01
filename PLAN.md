@@ -1,24 +1,24 @@
 # quarry — rewrite plan
 
-quarry is a rewrite of [getnao/nao](https://github.com/getnao/nao) (an analytics-agent platform) on a NestJS + GraphQL + Prisma backend, keeping the React frontend. The upstream source is in `../fork-reference` and is **read-only reference**.
+quarry is a rewrite of an Apache-2.0 analytics-agent platform (see [NOTICE](NOTICE)) on a NestJS + GraphQL + Prisma backend, keeping the React frontend. Maintainers may keep a clone of the upstream source in `../fork-reference` as a **read-only reference**.
 
 ## 1. Decisions
 
-| Area       | Choice                                                                                                                                                                                                                                  |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Backend    | NestJS 11 on Express (`apps/api`)                                                                                                                                                                                                       |
-| API        | GraphQL code-first (`@nestjs/graphql` + Apollo Server), single server, no federation                                                                                                                                                    |
-| REST       | Only where GraphQL doesn't fit: chat streaming, auth/OAuth callbacks, webhooks, file upload/download, MCP server (see §5)                                                                                                               |
-| ORM / DB   | Prisma, PostgreSQL only (SQLite support dropped)                                                                                                                                                                                        |
-| Auth       | better-auth (mounted at `/api/auth/*`), Nest guards that read the session via `GqlExecutionContext`                                                                                                                                     |
-| N+1        | DataLoader, request-scoped, one loader file per module                                                                                                                                                                                  |
-| Jobs       | pg-boss on the same Postgres (replaces upstream's custom `scheduled_job` poller)                                                                                                                                                        |
-| AI         | Vercel AI SDK (`ai` v6), same providers as upstream                                                                                                                                                                                     |
-| Frontend   | React app kept (TanStack Router, Mantine, CSS Modules; see docs/frontend-design.md); tRPC replaced by Apollo Client + GraphQL Code Generator (typed documents and hooks), matching `sda-graphql-crm`                                    |
-| Billing    | Dropped: self-hosted only, no Stripe, credits or cloud trials                                                                                                                                                                           |
-| SSO        | Own OIDC login on better-auth's generic OAuth plugin, written from scratch (upstream SSO is enterprise-licensed)                                                                                                                        |
-| SQL engine | Upstream Python service (`apps/backend/fastapi` + `nao_core`) is **ported to Node** inside `apps/api` (`sql-engine` module). No Python in quarry. First warehouse: **PostgreSQL** (`pg` driver); more added later, one Node driver each |
-| Licensing  | Nothing marked `/* @license Enterprise */` is ported (62 files: SSO/OIDC/Microsoft auth, license checks, backoffice, branding, member budgets, excluded columns)                                                                        |
+| Area       | Choice                                                                                                                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Backend    | NestJS 11 on Express (`apps/api`)                                                                                                                                                                                                            |
+| API        | GraphQL code-first (`@nestjs/graphql` + Apollo Server), single server, no federation                                                                                                                                                         |
+| REST       | Only where GraphQL doesn't fit: chat streaming, auth/OAuth callbacks, webhooks, file upload/download, MCP server (see §5)                                                                                                                    |
+| ORM / DB   | Prisma, PostgreSQL only (SQLite support dropped)                                                                                                                                                                                             |
+| Auth       | better-auth (mounted at `/api/auth/*`), Nest guards that read the session via `GqlExecutionContext`                                                                                                                                          |
+| N+1        | DataLoader, request-scoped, one loader file per module                                                                                                                                                                                       |
+| Jobs       | pg-boss on the same Postgres (replaces upstream's custom `scheduled_job` poller)                                                                                                                                                             |
+| AI         | Vercel AI SDK (`ai` v6), same providers as upstream                                                                                                                                                                                          |
+| Frontend   | React app kept (TanStack Router, Mantine, CSS Modules; see docs/frontend-design.md); tRPC replaced by Apollo Client + GraphQL Code Generator (typed documents and hooks), matching `sda-graphql-crm`                                         |
+| Billing    | Dropped: self-hosted only, no Stripe, credits or cloud trials                                                                                                                                                                                |
+| SSO        | Own OIDC login on better-auth's generic OAuth plugin, written from scratch (upstream SSO is enterprise-licensed)                                                                                                                             |
+| SQL engine | Upstream Python service (`apps/backend/fastapi` + `upstream_core`) is **ported to Node** inside `apps/api` (`sql-engine` module). No Python in quarry. First warehouse: **PostgreSQL** (`pg` driver); more added later, one Node driver each |
+| Licensing  | Nothing marked `/* @license Enterprise */` is ported (62 files: SSO/OIDC/Microsoft auth, license checks, backoffice, branding, member budgets, excluded columns)                                                                             |
 
 ## 2. Repository layout
 
@@ -36,7 +36,7 @@ quarry/
 │   │       ├── jobs/             pg-boss module, @Job() handler registry
 │   │       └── <feature>/        <feature>.module.ts, .resolver.ts, .service.ts, .repository.ts, .loader.ts, dto/, models/
 │   ├── frontend/                 React (copied from upstream, then migrated)
-│   └── shared/                   types/utils shared by api + frontend (replaces `@nao/backend/*` type exports)
+│   └── shared/                   types/utils shared by api + frontend (replaces `@upstream/backend/*` type exports)
 ├── package.json                  npm workspaces
 ├── PHASES.md
 └── PLAN.md
@@ -119,7 +119,7 @@ Upstream paths are relative to `fork-reference/apps/backend/src`. "trpc" = `trpc
 | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `projects`    | trpc `project`; `queries/project*.ts` (llm-config, saved-prompt, warehouse-credentials), `services/project*.ts`, `warehouse-*.ts`, `default-models.service.ts`, `example-project.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `warehouse`   | `services/warehouse-sql.service.ts`, `local-query.service.ts`, `duckdb.service.ts`, `query-result.service.ts`, `query-rows.service.ts`, trpc `sql`                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `sql-engine`  | Port of `fastapi/main.py` (`/execute_sql`, `/validate_sql`, `/validate_row_predicate`, `/warehouse/validate`, `/warehouse/prepare`) and `nao_core/config/databases/*` (connectors, allow-list, column access, row security guards). One `WarehouseDriver` interface, one adapter per supported warehouse; SQL checks on a JS SQL parser (e.g. `node-sql-parser`), validated against the upstream Python test cases                                                                                                                                                                                                      |
+| `sql-engine`  | Port of `fastapi/main.py` (`/execute_sql`, `/validate_sql`, `/validate_row_predicate`, `/warehouse/validate`, `/warehouse/prepare`) and `upstream_core/config/databases/*` (connectors, allow-list, column access, row security guards). One `WarehouseDriver` interface, one adapter per supported warehouse; SQL checks on a JS SQL parser (e.g. `node-sql-parser`), validated against the upstream Python test cases                                                                                                                                                                                                 |
 | `chats`       | trpc `chat`, `chat-fork`, `citation`, `favorite`, `feedback`, `shared-chat`; `queries/chat.queries.ts`, `citation`, `favorite`, `feedback`, `shared-chat`                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `agent`       | `routes/agent.ts`, `services/agent.ts`, `agent-run.ts`, `chat-artifacts.ts`, `compaction.ts`, `token-counter.ts`; whole `agents/` folder (providers, system prompts, compaction, subagents, stop conditions, telemetry, user rules)                                                                                                                                                                                                                                                                                                                                                                                     |
 | `agent/tools` | `agents/tools/*` — 32 files: `story`, `clarification`, `display-chart`, `display-map`, `execute-python`, `execute-sandboxed-code`, `execute-sql`, `execute-semantic-query`, `read-query-result`, `grep`, `list`, `read`, `write`, `str-replace`, `search`, `task`, `load-skill`, `web-search`, `mcp-call`, `mcp-connect`, `query-app-db`, `propose-context-fix`, `record-recommendation`, `suggest-follow-ups`, `request-warehouse-credentials`, `request-warehouse-selection`, `onboarding-agent-prompt`, `onboarding-command`, `onboarding-progress`, `generate-onboarding-rules`, `windows-descriptor-path`, `index` |
@@ -136,7 +136,7 @@ Tools are framework-agnostic AI SDK `tool()` definitions; port them nearly uncha
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `context-explorer`        | trpc `context-explorer`; `services/context-explorer*.ts`, `context-access.ts`, `git-repo.ts`, `generic-git.ts`, `file-tree-catalog.service.ts`, `agent-visible-project-file.service.ts` |
 | `context-recommendations` | trpc `context-recommendation`; `services/context-recommendation*.ts`, `handlers/context-recommendations.handler.ts`                                                                     |
-| `semantic-layer`          | `services/semantic-layer.service.ts` + port of `nao_core/semantic_layer` and `/semantic_layer/compile`                                                                                  |
+| `semantic-layer`          | `services/semantic-layer.service.ts` + port of `upstream_core/semantic_layer` and `/semantic_layer/compile`                                                                             |
 | `skills`                  | trpc `skill`, `services/skill.ts`, `agents/skills/*`                                                                                                                                    |
 | `memory`                  | trpc `memory`, `agents/memory/*`, `services/memory.ts`, `queries/memory.ts`                                                                                                             |
 | `onboarding`              | trpc `onboarding`, `services/onboarding-rules.ts`                                                                                                                                       |
@@ -180,25 +180,25 @@ trpc `branding`, `license`, `member-budget`; `routes/backoffice.ts`, `sso.ts`, `
 
 ## 7. Background jobs (pg-boss)
 
-| Job                       | Upstream handler                                                           | Phase |
-| ------------------------- | -------------------------------------------------------------------------- | ----- |
-| `automation.run`          | `automation.handler.ts`                                                    | 5     |
-| `story.refresh`           | `story-refresh.handler.ts`                                                 | 4     |
-| `story.deliver`           | `story-delivery.handler.ts`                                                | 4     |
-| `story.blob-cleanup`      | `story-blob-cleanup.handler.ts`                                            | 4     |
-| `context.recommendations` | `context-recommendations.handler.ts`                                       | 3     |
-| `context.sync`            | port of `nao_core/commands/sync` (schemas, table previews → context files) | 2     |
-| `context.branch.cleanup`  | `context-branch-cleanup.handler.ts`                                        | 3     |
-| `invitation.cleanup`      | `invitation-cleanup.handler.ts`                                            | 6     |
-| `log.cleanup`             | `log-cleanup.handler.ts`                                                   | 6     |
-| `mcp.queryData.cleanup`   | `mcp-query-data-cleanup.handler.ts`                                        | 7     |
+| Job                       | Upstream handler                                                                | Phase |
+| ------------------------- | ------------------------------------------------------------------------------- | ----- |
+| `automation.run`          | `automation.handler.ts`                                                         | 5     |
+| `story.refresh`           | `story-refresh.handler.ts`                                                      | 4     |
+| `story.deliver`           | `story-delivery.handler.ts`                                                     | 4     |
+| `story.blob-cleanup`      | `story-blob-cleanup.handler.ts`                                                 | 4     |
+| `context.recommendations` | `context-recommendations.handler.ts`                                            | 3     |
+| `context.sync`            | port of `upstream_core/commands/sync` (schemas, table previews → context files) | 2     |
+| `context.branch.cleanup`  | `context-branch-cleanup.handler.ts`                                             | 3     |
+| `invitation.cleanup`      | `invitation-cleanup.handler.ts`                                                 | 6     |
+| `log.cleanup`             | `log-cleanup.handler.ts`                                                        | 6     |
+| `mcp.queryData.cleanup`   | `mcp-query-data-cleanup.handler.ts`                                             | 7     |
 
 Upstream semantics to keep: per-project resolution (`resolveProjectId`), retry backoff 30s→10m, lease/reclaim (pg-boss `expireInSeconds` + retries), cron schedules from `cron-parser` → `boss.schedule()`. `jobs` module exposes `@Job(name)` handlers discovered at boot.
 
 ## 8. Frontend migration
 
 1. Copy `fork-reference/apps/frontend` into `quarry/apps/frontend` (drop enterprise-licensed components: 8 under `components/settings`, 4 under `components`, plus 1 each in `routes`, `lib`, `hooks`).
-2. Move the type exports the frontend imports from `@nao/backend/*` into `apps/shared` (usage counts: `chat` 56, `trpc` 21, `usage` 19, `llm` 8, `provider-meta` 7, `saved-prompts` 4, `memory` 2, others 1 each).
+2. Move the type exports the frontend imports from `@upstream/backend/*` into `apps/shared` (usage counts: `chat` 56, `trpc` 21, `usage` 19, `llm` 8, `provider-meta` 7, `saved-prompts` 4, `memory` 2, others 1 each).
 3. Add Apollo Client (`ApolloProvider`, `InMemoryCache` with type policies) and GraphQL Code Generator (`@graphql-codegen/client-preset`) reading the schema emitted by Nest (`autoSchemaFile: apps/api/schema.gql`). Documents live next to their feature: `src/graphql/<feature>.graphql`. Script: `npm run codegen`.
 4. Replace calls per feature area: `useQuery(trpc.x.y…)` → Apollo `useQuery(XyDocument)` / `useMutation`; `queryClient.invalidateQueries(trpc.x.pathFilter())` → `refetchQueries` or cache updates. TanStack Query stays only where non-GraphQL fetches need it. Heaviest areas: `project` (219 call sites), `story` (139), `contextExplorer` (54), `storyShare` (45), `userGroup` (38), `chat` (35).
 5. Chat keeps `useChat` from `@ai-sdk/react` against `POST /api/agent` (unchanged transport).
@@ -267,6 +267,6 @@ Phases 3–7 are **optional and independently skippable**; decide after phase 2.
 Resolved: billing dropped, own OIDC SSO, Apollo Client.
 Resolved: Python service and CLI dropped; SQL engine and semantic layer ported to Node.
 Resolved: first warehouse is PostgreSQL only; others added later as extra drivers.
-Resolved: context sync (replaces `nao sync`) is an in-app "Sync" action run as a pg-boss job.
+Resolved: context sync (replaces `context sync`) is an in-app "Sync" action run as a pg-boss job.
 
 No open questions.

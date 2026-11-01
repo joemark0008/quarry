@@ -21,11 +21,11 @@ import {
 	SYNCED_MANIFEST_RELATIVE_PATH,
 } from './semantic-layer.js';
 
-// Port of upstream cli/tests/nao_core/semantic_layer/test_metricflow.py. quarry compiles for Postgres only, so the
+// Port of upstream cli/tests/upstream_core/semantic_layer/test_metricflow.py. quarry compiles for Postgres only, so the
 // DuckDB assertions are made against the Postgres output and the BigQuery case expects the unsupported-dialect error.
 const FIXTURE_MANIFEST = path.join(import.meta.dirname, '__fixtures__', 'semantic_manifest.json');
 const EXAMPLE_MANIFEST = path.join(import.meta.dirname, '__fixtures__', 'example_semantic_manifest.json');
-// The metric files of upstream `example/semantics/metrics/`, which `nao sync` generates from that manifest.
+// The metric files of upstream `example/semantics/metrics/`, which `context sync` generates from that manifest.
 const EXAMPLE_DOCUMENTED_METRICS = [
 	'average_order_value',
 	'bank_transfer_revenue',
@@ -170,7 +170,7 @@ describe('MetricFlowSemanticLayer', () => {
 });
 
 describe('metricflowDialectFor', () => {
-	it('maps nao database types to MetricFlow dialects', () => {
+	it('maps quarry database types to MetricFlow dialects', () => {
 		expect(metricflowDialectFor('motherduck')).toBe('duckdb');
 		expect(metricflowDialectFor('snowflake')).toBe('snowflake');
 		expect(() => metricflowDialectFor('clickhouse')).toThrow(/clickhouse/);

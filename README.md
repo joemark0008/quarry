@@ -15,9 +15,8 @@ quarry connects to a Postgres warehouse, syncs its schema into a context the age
 agent that writes SQL and draws charts. Answers can be turned into stories, and the context the agent works from can be
 browsed, edited and improved from the app.
 
-It is a rewrite of [getnao/nao](https://github.com/getnao/nao) on NestJS 11 (Express) + GraphQL (Apollo, code-first) +
-Prisma/PostgreSQL, keeping nao's React frontend on Apollo Client. No Python: nao's SQL engine and semantic layer were
-ported to Node.
+It runs on NestJS 11 (Express) + GraphQL (Apollo, code-first) + Prisma/PostgreSQL, with a React frontend on Apollo
+Client. The SQL engine and semantic layer are written in Node, with no Python.
 
 ## Features
 
@@ -123,3 +122,7 @@ at its public URL.
 - [docs/deferred-features.md](docs/deferred-features.md) — areas not ported yet, and how to port them
 - [docs/stories-api.md](docs/stories-api.md) — the stories GraphQL API
 - [CLAUDE.md](CLAUDE.md) — module conventions and coding rules
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE), which credits the project quarry is derived from.

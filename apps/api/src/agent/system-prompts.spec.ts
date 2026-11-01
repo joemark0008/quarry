@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('fs');
 
-import { getSystemPromptOverride, hasNaoPromptPlaceholder, injectNaoPrompt } from './system-prompts.js';
+import { getSystemPromptOverride, hasQuarryPromptPlaceholder, injectQuarryPrompt } from './system-prompts.js';
 
 const mockExistsSync = vi.mocked(existsSync);
 const mockReadFileSync = vi.mocked(readFileSync);
@@ -106,26 +106,26 @@ describe('getSystemPromptOverride', () => {
 	});
 });
 
-describe('hasNaoPromptPlaceholder', () => {
+describe('hasQuarryPromptPlaceholder', () => {
 	it('detects the placeholder with varying whitespace', () => {
-		expect(hasNaoPromptPlaceholder('before {{ nao_prompt }} after')).toBe(true);
-		expect(hasNaoPromptPlaceholder('{{nao_prompt}}')).toBe(true);
-		expect(hasNaoPromptPlaceholder('{{   nao_prompt   }}')).toBe(true);
+		expect(hasQuarryPromptPlaceholder('before {{ quarry_prompt }} after')).toBe(true);
+		expect(hasQuarryPromptPlaceholder('{{quarry_prompt}}')).toBe(true);
+		expect(hasQuarryPromptPlaceholder('{{   quarry_prompt   }}')).toBe(true);
 	});
 
 	it('returns false when the placeholder is absent', () => {
-		expect(hasNaoPromptPlaceholder('Just my own prompt')).toBe(false);
-		expect(hasNaoPromptPlaceholder('{{ other_var }}')).toBe(false);
+		expect(hasQuarryPromptPlaceholder('Just my own prompt')).toBe(false);
+		expect(hasQuarryPromptPlaceholder('{{ other_var }}')).toBe(false);
 	});
 });
 
-describe('injectNaoPrompt', () => {
+describe('injectQuarryPrompt', () => {
 	it('replaces every placeholder occurrence with the default prompt', () => {
-		const result = injectNaoPrompt('Header\n{{ nao_prompt }}\nFooter {{nao_prompt}}', 'DEFAULT');
+		const result = injectQuarryPrompt('Header\n{{ quarry_prompt }}\nFooter {{quarry_prompt}}', 'DEFAULT');
 		expect(result).toBe('Header\nDEFAULT\nFooter DEFAULT');
 	});
 
 	it('leaves content unchanged when there is no placeholder', () => {
-		expect(injectNaoPrompt('No placeholder here', 'DEFAULT')).toBe('No placeholder here');
+		expect(injectQuarryPrompt('No placeholder here', 'DEFAULT')).toBe('No placeholder here');
 	});
 });

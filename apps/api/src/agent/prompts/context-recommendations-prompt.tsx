@@ -2,7 +2,7 @@ import type { ContextRecommendationRecord } from '../../context-recommendations/
 import type { FlaggedContextFile } from '../../context-recommendations/context-recommendations.file-costs.js';
 import { Block, Bold, Code, List, ListItem, renderToMarkdown, Span, Title } from '../markdown/index.js';
 import type { LinkedContextRepo } from '../types/context-recommendation.js';
-import type { ContextPresence } from '../utils/nao-config.js';
+import type { ContextPresence } from '../utils/quarry-config.js';
 
 type ExistingRecommendationSummary = Pick<
 	ContextRecommendationRecord,

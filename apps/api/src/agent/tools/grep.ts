@@ -25,7 +25,7 @@ import { isStoriesPath } from '../utils/story-mount.js';
 import {
 	isStoragePath,
 	isWithinProjectFolder,
-	loadNaoignorePatterns,
+	loadQuarryignorePatterns,
 	resolveCanonicalProjectPath,
 	toStorageRelativePath,
 	toStorageScope,
@@ -128,7 +128,7 @@ const projectTarget = (searchPath: string | undefined, context: ToolContext): Se
 	return {
 		root: root.realPath,
 		cwd: projectFolder,
-		ignoreGlobs: loadNaoignorePatterns(projectFolder),
+		ignoreGlobs: loadQuarryignorePatterns(projectFolder),
 		includeHidden: false,
 		toDisplayPath: (absolutePath) => {
 			const cacheKey = path.resolve(absolutePath);
@@ -321,7 +321,7 @@ function searchTarget(
 	}
 
 	for (const ignorePattern of target.ignoreGlobs) {
-		// Convert naoignore patterns to ripgrep glob exclusions
+		// Convert quarryignore patterns to ripgrep glob exclusions
 		const cleanPattern = ignorePattern.endsWith('/') ? ignorePattern.slice(0, -1) : ignorePattern;
 		args.push('--glob', `!${cleanPattern}`);
 		args.push('--glob', `!${cleanPattern}/**`);

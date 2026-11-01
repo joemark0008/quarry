@@ -6,8 +6,8 @@ import type { ContextRecommendationRecord } from './context-recommendation.types
 export function buildAgentPrompt(recs: ContextRecommendationRecord[], subPath: string): string {
 	const header =
 		recs.length === 1
-			? 'Apply this context recommendation to improve the nao agent context:\n\n'
-			: `Apply these ${recs.length} context recommendations to improve the nao agent context:\n\n`;
+			? 'Apply this context recommendation to improve the quarry agent context:\n\n'
+			: `Apply these ${recs.length} context recommendations to improve the quarry agent context:\n\n`;
 
 	const parts = recs.map((rec) => buildRecSection(rec, subPath));
 	return header + parts.join('\n\n---\n\n');

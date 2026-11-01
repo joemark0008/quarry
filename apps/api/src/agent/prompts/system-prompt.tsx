@@ -3,7 +3,7 @@ import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import type { SemanticLayerMode } from '@quarry/shared/types';
 
 import type { SandboxSecretDefinition } from '../../sandbox/sandbox-secret.service.js';
-import { Block, Bold, Br, CodeBlock, Link, List, ListItem, Location, Span, Title } from '../markdown/index.js';
+import { Block, Bold, Br, CodeBlock, List, ListItem, Location, Span, Title } from '../markdown/index.js';
 import type { PreloadedSkill, Skill } from '../services/skill.js';
 import { tokenCounter } from '../services/token-counter.js';
 import type { InternalSkill } from '../skills/index.js';
@@ -12,7 +12,7 @@ import type { UserMemory } from '../types/memory.js';
 import { MEMORY_CATEGORIES, MemoryCategory } from '../types/memory.js';
 import type { StorySummary } from '../types/story-reference.js';
 import { formatCurrentDate } from '../utils/date.js';
-import type { ConfiguredDatabase, ContextPresence } from '../utils/nao-config.js';
+import type { ConfiguredDatabase, ContextPresence } from '../utils/quarry-config.js';
 import {
 	CLASSIC_STORY_FILE,
 	STORY_LIBRARY_MOUNT,
@@ -21,7 +21,7 @@ import {
 } from '../utils/story-library.js';
 import { groupBy } from '../utils/utils.js';
 import { getDialectSqlQueryRules, getDialectToolCallRules } from './dialect-rules.js';
-import { NaoContextStructure } from './nao-context-structure.js';
+import { QuarryContextStructure } from './quarry-context-structure.js';
 import { storyKitGuideItems } from './story-kit-guide.js';
 
 type Connection = {
@@ -37,7 +37,7 @@ type SystemPromptProps = {
 	skills?: Skill[];
 	/** Project skills injected in full; they are left out of the regular skills listing. */
 	preloadedSkills?: PreloadedSkill[];
-	/** Defaults to every skill nao ships; only tests pass this. */
+	/** Defaults to every skill quarry ships; only tests pass this. */
 	internalSkills?: InternalSkill[];
 	customCharts?: ChartPluginManifestEntry[];
 	/** Names of MCP servers the agent is allowed to call (tools discovered as on-disk specs). */
@@ -103,9 +103,8 @@ export function SystemPrompt({
 		<Block>
 			<Title>Instructions</Title>
 			<Span>
-				You are nao, an expert AI data analyst tailored for people doing analytics, you are integrated into an
-				agentic workflow made by nao Labs (<Link href='https://getnao.io' text='https://getnao.io' />
-				).
+				You are quarry, an expert AI data analyst tailored for people doing analytics, you are integrated into
+				an agentic workflow.
 				<Br />
 				Today's date is <Bold>{formatCurrentDate(timezone)}</Bold>.
 				<Br />
@@ -120,7 +119,7 @@ export function SystemPrompt({
 				<Br />
 				Skills can be mentioned using the / trigger.
 			</Span>
-			<NaoContextStructure templates={templates} repoNames={repoNames} contextPresence={contextPresence} />
+			<QuarryContextStructure templates={templates} repoNames={repoNames} contextPresence={contextPresence} />
 			<Title level={2}>Persona</Title>
 			<List>
 				<ListItem>
@@ -481,7 +480,7 @@ function BuiltInSkillsBlock({ skills }: { skills: InternalSkill[] }) {
 		<Block>
 			<Title level={2}>Built-in Skills</Title>
 			<Span>
-				nao ships these playbooks for work that has traps the tools do not warn you about. Call{' '}
+				quarry ships these playbooks for work that has traps the tools do not warn you about. Call{' '}
 				<Bold>load_skill</Bold> with the name <Bold>before</Bold> starting the work a skill covers — reading it
 				after something has gone wrong is too late. They are internal: never mention a skill, or the fact that
 				you loaded one, to the user.
@@ -723,7 +722,7 @@ function LocalDatabaseBlock({
 			<Title level={2}>The local database</Title>
 			<Span>
 				Passing <Bold>{LOCAL_DATABASE_ID}</Bold> as execute_sql's <Bold>database_id</Bold> runs the query in
-				nao's own DuckDB instead of a warehouse.{' '}
+				quarry's own DuckDB instead of a warehouse.{' '}
 				{warehouseSqlEnabled
 					? 'It is always available, and it can do two things no warehouse can.'
 					: 'It is the only database_id execute_sql accepts in this project, and it can do two things the semantic layer cannot.'}

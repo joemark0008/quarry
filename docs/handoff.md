@@ -1,13 +1,10 @@
 # Handoff — 2026-10-29
 
-Context carried over from Claude Code sessions run under another account (transcripts in `~/.claude/projects/-Users-jjgimeno-Documents-Projects-personal-nao{,-quarry}/`). Read this, then [PLAN.md](../PLAN.md) and [PHASES.md](../PHASES.md).
-
 ## How we work
 
 - One **master session** plans and coordinates; **each phase runs in its own new session**, on branch `phase-N-…`, and reports back. Phases aren't implemented in the master session.
 - Phase sessions may use the `reverse-engineer-anything` (REA) skill, mainly to observe the running upstream app and compare behaviour. Ordinary porting is plain code reading.
-- `../fork-reference` is the upstream getnao/nao clone (remote `upstream`), read-only.
-- GitHub remote: `origin` → https://github.com/advancedlocal/explore-joe-ai-tools
+- `../fork-reference` is an optional local clone of the upstream project, read-only.
 
 ## Decisions (why the stack looks like this)
 
@@ -20,7 +17,7 @@ Context carried over from Claude Code sessions run under another account (transc
 | Frontend        | Keep upstream React app; **Apollo Client** + GraphQL Code Generator (matches `sda-graphql-crm`)                                                                                   |
 | Jobs            | pg-boss (no Redis)                                                                                                                                                                |
 | Billing         | Dropped (Stripe, credits, trials, budgets, license); its screens were removed at the cut-over (Phase 8)                                                                           |
-| Python          | None. FastAPI sidecar + `nao_core` ported to Node as `sql-engine`; Python CLI dropped; `nao sync` → in-app **Sync** button (`context.sync` job)                                   |
+| Python          | None. FastAPI sidecar + `upstream_core` ported to Node as `sql-engine`; Python CLI dropped; `context sync` → in-app **Sync** button (`context.sync` job)                          |
 | Warehouses      | Postgres only for now; more drivers later behind `WarehouseDriver`                                                                                                                |
 | SSO             | Own OIDC on better-auth generic OAuth (Phase 6), no upstream enterprise code                                                                                                      |
 | Enterprise code | Never ported                                                                                                                                                                      |
@@ -61,21 +58,21 @@ The Phase 2 session hit its usage limit at 10:56 (Manila) on 2026-10-29 mid-2c. 
     5. ~~Moved from 2b: `warehouse` run-SQL from the UI, query results/rows services~~ — done in the `chats` module.
     6. ~~Frontend: chat list/view, sharing, feedback on Apollo; Vite proxy sends `/api/agent` to `apps/api`~~ — done through `apps/frontend/src/lib/chat-api.ts`. Saved prompts and Settings → Agent (LLM providers, default models, agent settings) moved as well (`src/model-settings/`, `lib/project-api.ts`), checked in the browser.
     - Browser check (2026-10-29, split mode on :3000): asked "Show revenue by month for 2018 as a chart" in the jaffle project — streamed answer with chart and cited values; reload from GraphQL, chat list, star, thumbs-up feedback with text, share to project, shared-chat page, SQL view, data table (`queryRows`) and the context ring all worked.
-    - Verify items done: `test/agent-chat.e2e-spec.ts` (streamed chat saved, mock model) and the live upstream/quarry comparison in `docs/upstream-baseline.md` (upstream needs its FastAPI service on :8005: `npm run dev:fastapi` in `fork-reference`).
+    - Verify items done: `test/agent-chat.e2e-spec.ts` (streamed chat saved, mock model) and the live upstream/quarry comparison (upstream needs its FastAPI service on :8005: `npm run dev:fastapi` in `fork-reference`).
     7. ~~lint, test, format, tick PHASES.md, commit 2c~~ — done.
 
 ## Running locally
 
-Since Phase 8 there is one backend: the frontend (Vite, :3000) proxies `/graphql`, `/api`, `/health`, `/i/`, `/c/` to `apps/api` (:5006), which uses the `quarry` database. The upstream backend (:5005) and `nao_baseline` are no longer needed (`docs/upstream-baseline.md` still describes running upstream for comparisons).
+Since Phase 8 there is one backend: the frontend (Vite, :3000) proxies `/graphql`, `/api`, `/health`, `/i/`, `/c/` to `apps/api` (:5006), which uses the `quarry` database. The upstream backend (:5005) and `upstream_baseline` are no longer needed (the upstream baseline still describes running upstream for comparisons).
 
-- Postgres in Docker on **5434**: databases `quarry` and `warehouse` (jaffle_shop). Existing local volumes still have `nao_baseline`; new ones don't.
+- Postgres in Docker on **5434**: databases `quarry` and `warehouse` (jaffle_shop).
 - `npm run dev:api`, `npm run dev:frontend`; seed login `test@test.test` / `test1234` (`npm run db:seed -w @quarry/api`).
 - Production: `Dockerfile` + `docker-compose.prod.yml` (README "Deployment").
 
 ## Phase 3 notes (2026-10-29)
 
 - **Semantic layer without Python:** `apps/api/src/semantic-layer/metricflow/` compiles MetricFlow manifests to Postgres SQL. Manifests made by `dbt parse` against DuckDB name DuckDB relations (`"jaffle_shop"."main".orders`); a Postgres project needs a manifest whose `relation_name`s point at Postgres. Comparison script: `metricflow/__fixtures__/reference_queries.json` + the specs.
-- **Context explorer Git:** only the generic provider (`QUARRY_CONTEXT_SOURCE=git`, `QUARRY_CONTEXT_GIT_URL`, `_BRANCH`, `_SUBPATH`, `_TOKEN` or `_SSH_KEY`) works until Phase 7; edits happen in per-user worktrees under `<projects dir>/.nao/worktrees/`, reach the agent after the branch is merged and live context is pulled.
+- **Context explorer Git:** only the generic provider (`QUARRY_CONTEXT_SOURCE=git`, `QUARRY_CONTEXT_GIT_URL`, `_BRANCH`, `_SUBPATH`, `_TOKEN` or `_SSH_KEY`) works until Phase 7; edits happen in per-user worktrees under `<projects dir>/.quarry/worktrees/`, reach the agent after the branch is merged and live context is pulled.
 - **Agent profiles:** `AgentProfile` (agent-manager.ts) takes `tools`, `systemPrompt`, `maxSteps`, `skipMemoryExtraction`; `AgentService.create` honours them. Phases 4/5 (story refresh, automations) should build their runs the same way (see `agent/profiles/context-recommendations.ts`).
 - **For later phases:** `ensureContextRecommendationsScheduleForNewProject` exists but project creation doesn't call it; `AgentToolServices` (types/tools.ts) is where new services reach tools (`skills`, `scheduleOnboardingRules` added); `reviveDates` in the frontend's `apollo-procedures.ts` for JSON-scalar results; user-group grants (skills, files, docs) still use `fullProjectContextAccess()` until Phase 6.
 
@@ -92,13 +89,12 @@ Since Phase 8 there is one backend: the frontend (Vite, :3000) proxies `/graphql
 
 ## Phase 8 notes (2026-10-29)
 
-- **Branch:** `phase-8-cutover` in worktree `nao/quarry-phase-8`, built on `phase-4-stories` (which includes Phase 3). Merge order into `main`: `phase-2-core` → `phase-3-context` → `phase-4-stories` → `phase-8-cutover`.
+- **Branch:** `phase-8-cutover`, built on `phase-4-stories` (which includes Phase 3). Merge order into `main`: `phase-2-core` → `phase-3-context` → `phase-4-stories` → `phase-8-cutover`.
 - **Frontend API layer:** every call goes through a `lib/*-api.ts` module (`lib/apollo-procedures.ts`); `lib/api-types.ts` gives the procedures' input/output types in upstream's router shape. The story routers are inferred from apps/api's procedure objects (`stories/procedure.ts` now carries the client-side input type); the other procedures' types were generated once from upstream's router and point at quarry type modules, so keep them in step by hand when a GraphQL `JSON` field changes. Frontend code imports apps/api types with `import type … from '@quarry/api/…'` (tsconfig path + Vite alias); the only runtime modules it takes from apps/api are `agent/providers/provider-meta.ts`, `agent/types/llm.ts` and `stories/utils/story-summary.ts`.
 - **Tests:** frontend specs that need fake procedures mock `@/test/procedures` and point the api module under test at it (`vi.mock('@/lib/story-api', …)`).
 - **Stand-ins until Phase 6:** user-group access (`lib/effective-user-group-features.ts` `PROJECT_MEMBER_ACCESS`, `canSeeAdvancedSettings`), sharing audience (everyone may share with the project), `contexts/mcp.tsx` (no MCP servers, Phase 7). Project members can't be managed from the UI (the account page only edits the user's name).
 - **Git context source:** project folders created under `QUARRY_PROJECTS_DIR` are not Git checkouts. With `QUARRY_CONTEXT_SOURCE=git` the File Explorer only edits when the project folder is a clone of the context repository (checked by cloning the bare repo into the project folder). The default `./projects` lives inside the quarry checkout, so a non-clone project folder resolves quarry's own repository and reports "No tracked quarry_config.yaml". Worth a follow-up: clone the context repository into new projects, or keep `QUARRY_PROJECTS_DIR` outside any repository.
 - **Image size:** `quarry:phase8` is 3.9 GB (dev dependencies, since apps/api runs from TS sources, plus Chromium). Compiling apps/api with SWC and pruning dev dependencies would shrink it.
-- **Left as `nao`:** see PHASES.md Phase 8 (`.nao/` folders, `nao/` branch prefix, co-author, system prompt credit, file names).
 - **Seen in the browser check, not caused by the cut-over:** after creating a story the agent sometimes adds a `<story-reference>` card with the story's slug instead of its id, which shows "Story no longer available" (the system prompt meant it for existing library stories).
 
 ## Saved query tools (2026-10-30)

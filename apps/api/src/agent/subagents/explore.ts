@@ -5,7 +5,7 @@ import list from '../tools/list.js';
 import read from '../tools/read.js';
 import search from '../tools/search.js';
 import { getUserRules } from '../user-rules.js';
-import { readProjectContext } from '../utils/nao-config.js';
+import { readProjectContext } from '../utils/quarry-config.js';
 import { truncateMiddle } from '../utils/utils.js';
 import type { SubagentDefinition } from './types.js';
 

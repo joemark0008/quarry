@@ -70,12 +70,12 @@ const listProjectFolder = async (virtualPath: string, context: ToolContext): Pro
 	assertProjectContextPathAllowed(context, virtualPath, canonical.virtualPath, 'directory');
 	const realPath = canonical.realPath;
 
-	// Get the relative path of the parent directory for naoignore matching
+	// Get the relative path of the parent directory for quarryignore matching
 	const parentRelativePath = canonical.virtualPath.replace(/^\/+/, '');
 
 	const dirEntries = await readProjectDirectory(realPath, virtualPath, context);
 
-	// Filter out excluded entries (including .naoignore patterns)
+	// Filter out excluded entries (including .quarryignore patterns)
 	const filteredEntries = dirEntries.filter((entry) => {
 		const childPath = path.posix.join(canonical.virtualPath, entry.name);
 		return (

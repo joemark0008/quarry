@@ -457,7 +457,7 @@ async function executeSandboxedCodeLocked(
 			}
 		}
 
-		tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-sandbox-'));
+		tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-sandbox-'));
 
 		if (!reused) {
 			await box.exec('mkdir', '-p', OUTPUT_DIR);

@@ -1,7 +1,7 @@
 import type { ColumnDescription } from '../sql-engine/warehouse-driver.js';
 
 /**
- * Ports of upstream's default database templates (`nao_core/templates/defaults/databases/*.md.j2`) and the
+ * Ports of upstream's default database templates (`upstream_core/templates/defaults/databases/*.md.j2`) and the
  * sync file markers (`commands/sync/markers.py`). Only `columns` and `preview` (upstream's defaults) are
  * rendered; `profiling`, `ai_summary` and `query_history` are not ported yet.
  */

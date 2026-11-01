@@ -5,8 +5,8 @@ import { delay, isolateStoryPage, STORY_DOCUMENT_URL, waitForStoryReady } from '
 
 const RENDER_SETTLE_MS = 1_800;
 const MAX_REPORTED_ERRORS = 5;
-const BLOCK_ERROR_SELECTOR = '.nao-block__state--error';
-const STORY_FRAME_SELECTOR = '#root, .nao-canvas, .nao-canvas__viewport, .nao-canvas__surface, .nao-slide';
+const BLOCK_ERROR_SELECTOR = '.quarry-block__state--error';
+const STORY_FRAME_SELECTOR = '#root, .quarry-canvas, .quarry-canvas__viewport, .quarry-canvas__surface, .quarry-slide';
 const STORY_ERRORS_GLOBAL = '__quarryStoryErrors';
 
 export interface StoryScreenshot {

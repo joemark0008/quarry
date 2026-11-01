@@ -9,8 +9,8 @@ import { toGitError } from './git-repo.js';
 
 const ASKPASS_SCRIPT = `#!/bin/sh
 case "$1" in
-  *Username*) printf '%s\\n' "$NAO_GIT_USERNAME" ;;
-  *) printf '%s\\n' "$NAO_GIT_TOKEN" ;;
+  *Username*) printf '%s\\n' "$QUARRY_GIT_USERNAME" ;;
+  *) printf '%s\\n' "$QUARRY_GIT_TOKEN" ;;
 esac
 `;
 
@@ -81,7 +81,7 @@ export function getGitRemoteCredentialSecrets(
 }
 
 function runGitWithAskpass(cwd: string, args: string[], credential: GitOAuthCredential, timeout: number): Buffer {
-	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-git-auth-'));
+	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-git-auth-'));
 	const helperPath = path.join(helperDirectory, 'askpass');
 	try {
 		fs.writeFileSync(helperPath, ASKPASS_SCRIPT, { mode: 0o700 });
@@ -93,8 +93,8 @@ function runGitWithAskpass(cwd: string, args: string[], credential: GitOAuthCred
 				...process.env,
 				GIT_ASKPASS: helperPath,
 				GIT_TERMINAL_PROMPT: '0',
-				NAO_GIT_TOKEN: credential.token,
-				NAO_GIT_USERNAME: credential.username,
+				QUARRY_GIT_TOKEN: credential.token,
+				QUARRY_GIT_USERNAME: credential.username,
 			},
 		});
 	} catch (error) {
@@ -110,7 +110,7 @@ async function runGitWithAskpassAsync(
 	credential: GitOAuthCredential,
 	timeout: number,
 ): Promise<Buffer> {
-	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-git-auth-'));
+	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-git-auth-'));
 	const helperPath = path.join(helperDirectory, 'askpass');
 	try {
 		fs.writeFileSync(helperPath, ASKPASS_SCRIPT, { mode: 0o700 });
@@ -118,8 +118,8 @@ async function runGitWithAskpassAsync(
 			...process.env,
 			GIT_ASKPASS: helperPath,
 			GIT_TERMINAL_PROMPT: '0',
-			NAO_GIT_TOKEN: credential.token,
-			NAO_GIT_USERNAME: credential.username,
+			QUARRY_GIT_TOKEN: credential.token,
+			QUARRY_GIT_USERNAME: credential.username,
 		});
 	} catch (error) {
 		throw toGitError(error);
@@ -129,7 +129,7 @@ async function runGitWithAskpassAsync(
 }
 
 function runGitWithSshKey(cwd: string, args: string[], sshKey: string, timeout: number): Buffer {
-	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-git-ssh-'));
+	const helperDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-git-ssh-'));
 	const keyPath = path.join(helperDirectory, 'key');
 	try {
 		fs.writeFileSync(keyPath, sshKey, { mode: 0o600 });

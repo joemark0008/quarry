@@ -5,7 +5,7 @@ import { ColumnAccessError, validateColumnAccess } from './column-access.guard.j
 import { tempProject } from './guard-test-utils.js';
 
 /**
- * Port of `cli/tests/nao_core/config/test_column_access.py` on the Postgres dialect.
+ * Port of `cli/tests/upstream_core/config/test_column_access.py` on the Postgres dialect.
  * Not ported: `* EXCLUDE` / `* EXCEPT` / `REPLACE` / `RENAME` and `UNNEST(...)` alias cases (BigQuery, Snowflake,
  * DuckDB syntax). Postgres has no star exclusion, so the Postgres advice ("select columns explicitly") applies.
  * `exclude_columns_guard.py` is not ported: the FastAPI service only uses `column_access.py`.

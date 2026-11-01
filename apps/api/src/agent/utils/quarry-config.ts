@@ -18,7 +18,7 @@ export type ContextPresence = {
 	notionDocs: boolean;
 	databases: boolean;
 };
-const NAO_CONFIG_ENV_PATTERN = /\$?\{\{\s*env\(['"]([^'"]+)['"]\)\s*\}\}/g;
+const QUARRY_CONFIG_ENV_PATTERN = /\$?\{\{\s*env\(['"]([^'"]+)['"]\)\s*\}\}/g;
 const MCP_CONFIG_ENV_PATTERN = /\$\{(\w+)\}/g;
 const DATABASE_IDENTIFYING_FIELDS = ['database', 'project_id', 'dataset_id', 'catalog'] as const;
 
@@ -40,7 +40,7 @@ export function extractRequiredEnvVars(projectFolder: string): string[] {
 	const mcpConfigPath = path.join(projectFolder, 'agent', 'mcps', 'mcp.json');
 	const vars = new Set<string>();
 
-	addEnvVarsFromFile(configPath, NAO_CONFIG_ENV_PATTERN, vars);
+	addEnvVarsFromFile(configPath, QUARRY_CONFIG_ENV_PATTERN, vars);
 	addEnvVarsFromFile(mcpConfigPath, MCP_CONFIG_ENV_PATTERN, vars);
 
 	return [...vars];

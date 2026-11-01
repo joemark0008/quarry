@@ -3,7 +3,7 @@ import { isStoryMapTileUrl, storyMapTileCspSources } from '@quarry/shared/story-
 import { DEFAULT_STORY_THEME_PAIR, FONT_STYLESHEET_HOSTS, type StoryThemePair } from '@quarry/shared/story-theme';
 import type { HTTPRequest, Page } from 'puppeteer-core';
 
-export const STORY_DOCUMENT_URL = 'https://story-export.nao.invalid/';
+export const STORY_DOCUMENT_URL = 'https://story-export.quarry.invalid/';
 
 const READY_TIMEOUT_MS = 20_000;
 const FONT_HOSTS = new Set<string>(FONT_STYLESHEET_HOSTS);
@@ -61,7 +61,7 @@ function normalizeUrl(raw: string): string {
 /** Resolves to whether the story runtime finished mounting the app in time. */
 export async function waitForStoryReady(page: Page): Promise<boolean> {
 	return page
-		.waitForFunction(() => document.documentElement.dataset.naoStoryReady === 'true', {
+		.waitForFunction(() => document.documentElement.dataset.quarryStoryReady === 'true', {
 			timeout: READY_TIMEOUT_MS,
 		})
 		.then(

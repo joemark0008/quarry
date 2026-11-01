@@ -7,14 +7,14 @@ const PROMPTS_FOLDER = ['agent', 'prompts'];
 
 const DEFAULT_PROMPT_FILE = 'system.md';
 
-const NAO_PROMPT_PATTERN = '\\{\\{\\s*nao_prompt\\s*\\}\\}';
+const QUARRY_PROMPT_PATTERN = '\\{\\{\\s*quarry_prompt\\s*\\}\\}';
 
-export function hasNaoPromptPlaceholder(content: string): boolean {
-	return new RegExp(NAO_PROMPT_PATTERN).test(content);
+export function hasQuarryPromptPlaceholder(content: string): boolean {
+	return new RegExp(QUARRY_PROMPT_PATTERN).test(content);
 }
 
-export function injectNaoPrompt(override: string, naoPrompt: string): string {
-	return override.replace(new RegExp(NAO_PROMPT_PATTERN, 'g'), naoPrompt);
+export function injectQuarryPrompt(override: string, quarryPrompt: string): string {
+	return override.replace(new RegExp(QUARRY_PROMPT_PATTERN, 'g'), quarryPrompt);
 }
 
 function getPromptFileCandidates(provider?: Provider): string[] {

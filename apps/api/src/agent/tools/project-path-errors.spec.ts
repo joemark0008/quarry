@@ -5,7 +5,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { ToolContext } from '../types/tools.js';
-import { clearNaoignoreCache } from '../utils/tools.js';
+import { clearQuarryignoreCache } from '../utils/tools.js';
 import listTool from './list.js';
 import readTool from './read.js';
 
@@ -16,7 +16,7 @@ let outside: string;
 const TABLE_FOLDER = 'databases/type=bigquery/database=analytics/schema=warehouse/table=trips';
 
 beforeEach(async () => {
-	root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'nao-path-errors-')));
+	root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'quarry-path-errors-')));
 	projectFolder = path.join(root, 'project');
 	outside = path.join(root, 'outside');
 	await fs.mkdir(path.join(projectFolder, 'docs', 'notion'), { recursive: true });
@@ -25,7 +25,7 @@ beforeEach(async () => {
 	await fs.writeFile(path.join(projectFolder, 'docs', 'notion', 'glossary.md'), '# Glossary');
 	await fs.writeFile(path.join(projectFolder, TABLE_FOLDER, 'columns.md'), '# Columns');
 	await fs.writeFile(path.join(outside, 'secret.txt'), 'secret');
-	clearNaoignoreCache();
+	clearQuarryignoreCache();
 });
 
 afterEach(async () => {

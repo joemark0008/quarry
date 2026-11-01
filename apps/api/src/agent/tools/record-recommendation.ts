@@ -50,7 +50,7 @@ const RecordSchema = z.object({
 		.enum(CONTEXT_RECOMMENDATION_FIX_TARGETS)
 		.optional()
 		.describe(
-			'Which nao resource to change: rules (RULES.md guidance), data_model (table/column metadata), doc (prose docs), skill (a reusable agent skill), metric (a semantic-layer metric definition).',
+			'Which quarry resource to change: rules (RULES.md guidance), data_model (table/column metadata), doc (prose docs), skill (a reusable agent skill), metric (a semantic-layer metric definition).',
 		),
 	title: z
 		.string()

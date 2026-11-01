@@ -15,10 +15,10 @@ export function basemapByteBudgetForCount(mapCount: number): number {
 const FETCH_TIMEOUT_MS = 4000;
 const TILE_CACHE_MAX = 512;
 
-export const BASEMAP_TILE_URL = process.env.NAO_STORY_MAP_RASTER_URL || STORY_MAP_TILE_LAYERS.light.url;
+export const BASEMAP_TILE_URL = process.env.QUARRY_STORY_MAP_RASTER_URL || STORY_MAP_TILE_LAYERS.light.url;
 export const BASEMAP_ATTRIBUTION =
-	process.env.NAO_STORY_MAP_RASTER_ATTRIBUTION || STORY_MAP_TILE_LAYERS.light.attribution;
-const BASEMAP_SUBDOMAINS = (process.env.NAO_STORY_MAP_RASTER_SUBDOMAINS || 'abcd').split('');
+	process.env.QUARRY_STORY_MAP_RASTER_ATTRIBUTION || STORY_MAP_TILE_LAYERS.light.attribution;
+const BASEMAP_SUBDOMAINS = (process.env.QUARRY_STORY_MAP_RASTER_SUBDOMAINS || 'abcd').split('');
 
 export interface BasemapTile {
 	href: string;

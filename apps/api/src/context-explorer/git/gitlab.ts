@@ -1,7 +1,7 @@
 import { env } from '../context-env.js';
 import type { GitIdentity } from './git-identity.js';
 
-export { NAO_CO_AUTHOR } from './git-identity.js';
+export { QUARRY_CO_AUTHOR } from './git-identity.js';
 
 /**
  * Stand-in for upstream `services/gitlab.ts`: the GitLab OAuth integration, its API calls and the managed GitLab

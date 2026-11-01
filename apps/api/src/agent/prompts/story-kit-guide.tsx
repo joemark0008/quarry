@@ -51,10 +51,10 @@ export function storyKitGuideItems(): ReactElement[] {
 			Its children sit on the logo row: a period, a status or filter chips. Never put it in a deck.
 		</ListItem>,
 		<ListItem key='controls'>
-			Style filters and toggles as <Bold>{'className="nao-chip"'}</Bold> with <Bold>aria-pressed</Bold> on the
-			active one (group them in <Bold>nao-chips</Bold>) and actions as <Bold>nao-button</Bold> (or{' '}
-			<Bold>nao-button nao-button--outline</Bold>): they take the brand's button shape and colours. Give small
-			labels <Bold>nao-label</Bold> to follow the brand's casing.
+			Style filters and toggles as <Bold>{'className="quarry-chip"'}</Bold> with <Bold>aria-pressed</Bold> on the
+			active one (group them in <Bold>quarry-chips</Bold>) and actions as <Bold>quarry-button</Bold> (or{' '}
+			<Bold>quarry-button quarry-button--outline</Bold>): they take the brand's button shape and colours. Give
+			small labels <Bold>quarry-label</Bold> to follow the brand's casing.
 		</ListItem>,
 		<ListItem key='slides'>
 			For slides, a deck or a presentation, wrap the content in <Bold>{'<Slides>'}</Bold> with one{' '}
@@ -116,7 +116,7 @@ export function storyKitGuideItems(): ReactElement[] {
 		<ListItem key='bespoke-visuals'>
 			For bespoke visuals the kit has no block for, wrap Recharts or your own markup in{' '}
 			<Bold>{'<Block kind="..." queryId="...">'}</Bold> (the queryId it reads, so users can view its SQL) with{' '}
-			<Bold>{'<div className="nao-chart">'}</Bold>, <Bold>seriesColor(i)</Bold> and a plain Recharts{' '}
+			<Bold>{'<div className="quarry-chart">'}</Bold>, <Bold>seriesColor(i)</Bold> and a plain Recharts{' '}
 			<Bold>{'<Tooltip />'}</Bold> (already themed; format values with{' '}
 			<Bold>{'formatter={(value) => formatNumber(value, { format })}'}</Bold>). <Bold>useQueryData(queryId)</Bold>{' '}
 			returns <Bold>data: null</Bold> until <Bold>status</Bold> is "success", then the array of rows — guard
@@ -126,7 +126,7 @@ export function storyKitGuideItems(): ReactElement[] {
 			Maps: <Bold>{'<PointMap queryId="..." />'}</Bold> plots rows with latitude and longitude columns
 			(auto-detected; optional <Bold>latitudeKey</Bold>, <Bold>longitudeKey</Bold>, <Bold>sizeKey</Bold> for
 			bubbles, <Bold>labelKey</Bold>, <Bold>tooltipKeys</Bold>, <Bold>height</Bold>). For any other map, use{' '}
-			<Bold>react-leaflet</Bold> inside <Bold>{'<div className="nao-map">'}</Bold> (sized by your CSS; a
+			<Bold>react-leaflet</Bold> inside <Bold>{'<div className="quarry-map">'}</Bold> (sized by your CSS; a
 			full-screen map sits in your layout, not in a Block) with <Bold>{'<MapTiles />'}</Bold> as the first child
 			of MapContainer: the only tiles the story can reach, themed, kept to a single world and following the
 			container's size. Leaflet's CSS is already loaded; import nothing else for it.
@@ -138,11 +138,12 @@ export function storyKitGuideItems(): ReactElement[] {
 			<Bold>var(--radius)</Bold>, <Bold>var(--font-sans)</Bold>, <Bold>var(--font-heading)</Bold>,{' '}
 			<Bold>var(--chart-1…11)</Bold>, <Bold>var(--story-control-radius)</Bold>. Use var(--primary) for fills (with
 			var(--primary-foreground) on them) and <Bold>var(--story-accent-text)</Bold> when the accent is the text
-			colour itself: a bright brand accent can be unreadable as text. Headings, paragraphs, kit blocks, nao-chip,
-			nao-button and nao-label already speak in the brand's type voice; for your own text elements, take a role's{' '}
-			<Bold>var(--story-type-ROLE-font)</Bold>, <Bold>-weight</Bold>, <Bold>-case</Bold>, <Bold>-style</Bold> and{' '}
-			<Bold>-tracking</Bold> (ROLE: display, heading, subheading, body, label, button, figure) instead of setting
-			fonts or casing yourself. They follow theme changes live, so a re-theme needs no republish.
+			colour itself: a bright brand accent can be unreadable as text. Headings, paragraphs, kit blocks,
+			quarry-chip, quarry-button and quarry-label already speak in the brand's type voice; for your own text
+			elements, take a role's <Bold>var(--story-type-ROLE-font)</Bold>, <Bold>-weight</Bold>, <Bold>-case</Bold>,{' '}
+			<Bold>-style</Bold> and <Bold>-tracking</Bold> (ROLE: display, heading, subheading, body, label, button,
+			figure) instead of setting fonts or casing yourself. They follow theme changes live, so a re-theme needs no
+			republish.
 		</ListItem>,
 		<ListItem key='html-entry'>
 			<Bold>HTML stories are the exception:</Bold> use one only when the user hands you an HTML page to host as-is

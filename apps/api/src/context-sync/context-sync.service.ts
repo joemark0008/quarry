@@ -48,7 +48,7 @@ const IDLE_STATUS: ContextSyncStatus = {
 };
 
 /**
- * The in-app "Sync" action, replacing `nao sync` (PLAN.md §7): the mutation queues a `context.sync` pg-boss job,
+ * The in-app "Sync" action, replacing `context sync` (PLAN.md §7): the mutation queues a `context.sync` pg-boss job,
  * the job writes the database context files. The status lives next to the context, in `.meta/sync-status.json`,
  * so it needs no table (the split-mode database keeps upstream's schema).
  */
@@ -164,7 +164,7 @@ export class ContextSyncService {
 		return status;
 	}
 
-	/** Upstream `nao sync`'s semantic layer provider: `semantics/` docs and the `.meta/` manifest copy. */
+	/** Upstream `context sync`'s semantic layer provider: `semantics/` docs and the `.meta/` manifest copy. */
 	private syncSemanticLayer(
 		config: ProjectConfig | null,
 		projectPath: string,

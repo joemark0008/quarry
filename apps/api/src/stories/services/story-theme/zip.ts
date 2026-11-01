@@ -100,7 +100,7 @@ export function extractSignalsFromZip(zip: Uint8Array, label: string): ZipSignal
 	}
 	if (scan.skippedOverBudget > 0) {
 		warnings.push(
-			`${scan.skippedOverBudget} ${scan.skippedOverBudget === 1 ? 'file was' : 'files were'} skipped because the ZIP exceeds what nao reads at once.`,
+			`${scan.skippedOverBudget} ${scan.skippedOverBudget === 1 ? 'file was' : 'files were'} skipped because the ZIP exceeds what quarry reads at once.`,
 		);
 	}
 	const tokenCss = Object.entries(tokenColors)
@@ -130,7 +130,7 @@ function emptyZipMessage(skippedLarge: string[], skippedEmpty: string[], unread:
 	}
 	const found = unread.slice(0, 6);
 	const extra = found.length > 0 ? ` Found ${found.join(', ')}.` : '';
-	return `The ZIP contains no stylesheets, token files or images that nao can read (css, scss, json, html, svg, png, jpg, webp).${extra}`;
+	return `The ZIP contains no stylesheets, token files or images that quarry can read (css, scss, json, html, svg, png, jpg, webp).${extra}`;
 }
 
 function readEntries(zip: Uint8Array): ZipScan {
@@ -176,7 +176,7 @@ function readEntries(zip: Uint8Array): ZipScan {
 	try {
 		scan.entries = unzipSync(zip, { filter });
 	} catch {
-		throw new DesignSourceError('That file is not a ZIP nao can open.');
+		throw new DesignSourceError('That file is not a ZIP quarry can open.');
 	}
 	return scan;
 }
@@ -202,7 +202,7 @@ function largestImageNames(zip: Uint8Array): Set<string> {
 			},
 		});
 	} catch {
-		throw new DesignSourceError('That file is not a ZIP nao can open.');
+		throw new DesignSourceError('That file is not a ZIP quarry can open.');
 	}
 	return new Set(
 		candidates

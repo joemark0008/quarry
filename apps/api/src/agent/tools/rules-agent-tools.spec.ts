@@ -19,7 +19,7 @@ beforeEach(() => {
 	process.env.QUARRY_STORAGE_BACKEND = 'none';
 	__reloadEnvForTesting();
 	__resetStorageForTesting();
-	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'nao-rules-tools-'));
+	projectFolder = fs.mkdtempSync(path.join(os.tmpdir(), 'quarry-rules-tools-'));
 	fs.mkdirSync(path.join(projectFolder, 'docs'), { recursive: true });
 	fs.writeFileSync(path.join(projectFolder, 'docs', 'RULES.md'), 'Nested secret marker\n');
 });

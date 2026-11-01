@@ -660,6 +660,6 @@ export function unavailableMessage(reason: ContextGitUnavailableReason, provider
 		'no-repo': 'No context repository is connected. Connect one in Git settings to edit context files.',
 		'unsupported-provider': 'The connected repository provider is not supported by the context explorer.',
 		'project-not-found': 'No tracked quarry_config.yaml was found in the connected repository.',
-		'project-ambiguous': 'Multiple nao projects were found in the connected repository.',
+		'project-ambiguous': 'Multiple quarry projects were found in the connected repository.',
 	}[reason];
 }

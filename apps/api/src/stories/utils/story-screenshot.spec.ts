@@ -42,8 +42,8 @@ describe.skipIf(!isChromeAvailable)('rendering a story screenshot', () => {
 	it('is broken when story-kit blocks show an error', async () => {
 		const screenshot = await renderStoryScreenshot(
 			readyPage(`
-				<div class="nao-block__state nao-block__state--error">Query q1 is not part of this export.</div>
-				<div class="nao-block__state">No rows.</div>
+				<div class="quarry-block__state quarry-block__state--error">Query q1 is not part of this export.</div>
+				<div class="quarry-block__state">No rows.</div>
 			`),
 			VIEWPORT,
 			[],
@@ -83,7 +83,7 @@ describe.skipIf(!isChromeAvailable)('rendering a story screenshot', () => {
 	it('ignores block errors outside the captured first screen', async () => {
 		const screenshot = await renderStoryScreenshot(
 			readyPage(
-				`<p>content</p><div class="nao-block__state--error" style="margin-top: ${VIEWPORT.height * 2}px">Hidden error</div>`,
+				`<p>content</p><div class="quarry-block__state--error" style="margin-top: ${VIEWPORT.height * 2}px">Hidden error</div>`,
 			),
 			VIEWPORT,
 			[],
@@ -102,7 +102,7 @@ describe.skipIf(!isChromeAvailable)('rendering a story screenshot', () => {
 
 function readyPage(body: string, script = ''): string {
 	return `<html><body style="margin: 0">${body}<script>
-		document.documentElement.dataset.naoStoryReady = 'true';
+		document.documentElement.dataset.quarryStoryReady = 'true';
 		${script}
 	</script></body></html>`;
 }

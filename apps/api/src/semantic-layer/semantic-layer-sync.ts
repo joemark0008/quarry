@@ -24,7 +24,7 @@ export interface SemanticLayerSyncResult {
 }
 
 /**
- * Port of upstream `nao_core/commands/sync/providers/semantic_layer/provider.py` (`SemanticLayerSyncProvider.sync`):
+ * Port of upstream `upstream_core/commands/sync/providers/semantic_layer/provider.py` (`SemanticLayerSyncProvider.sync`):
  * part of the in-app context sync. A broken manifest leaves the last good copy and docs in place.
  */
 export function syncSemanticLayerProvider(
@@ -151,14 +151,14 @@ export function renderReadme(semanticLayer: SemanticLayerConfig, metricCount: nu
 	return (
 		'# Semantic layer\n' +
 		'\n' +
-		`Synced from the ${semanticLayer.type ?? 'metricflow'} manifest at \`${semanticLayer.manifest_path}\` by \`nao sync\`. ` +
+		`Synced from the ${semanticLayer.type ?? 'metricflow'} manifest at \`${semanticLayer.manifest_path}\` by \`context sync\`. ` +
 		'Do not edit generated files, they are rewritten on every sync.\n' +
 		'\n' +
 		`- \`${METRICS_DIR}/<metric>.md\` — one file per metric (${metricCount} metrics): definition, type and the ` +
 		'dimensions it can be grouped or filtered by.\n' +
 		`- \`${DIMENSIONS_FILENAME}\` — index of every dimension (${dimensionCount} dimensions).\n` +
 		'\n' +
-		'Query metrics with the `execute_semantic_query` tool: nao compiles the governed definition to SQL with ' +
+		'Query metrics with the `execute_semantic_query` tool: quarry compiles the governed definition to SQL with ' +
 		'MetricFlow and runs it on the configured database.\n' +
 		'\n' +
 		'## Query parameters\n' +

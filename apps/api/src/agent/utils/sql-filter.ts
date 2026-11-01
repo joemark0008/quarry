@@ -7,7 +7,7 @@ const WITH_RE = /^\s*WITH\b/i;
  * DuckDB table/scalar functions that open a live connection to whatever server
  * a database extension (postgres, mysql, sqlite) or `json_execute_serialized_sql`
  * is attached to, and run arbitrary SQL there — including against catalogs like
- * DuckLake's Postgres metadata store that nao attaches internally and never
+ * DuckLake's Postgres metadata store that quarry attaches internally and never
  * intends to expose. Because they are functions, a statement that calls them
  * still starts with SELECT/WITH and passes the read-only keyword check above,
  * so they need their own denylist. Matched case-insensitively; DuckDB itself
@@ -45,7 +45,7 @@ export async function isReadOnlySqlQuery(sql: string): Promise<boolean> {
  * read-only check above, so callers can enforce it even when write SQL is
  * otherwise permitted. These functions do not write to the connected
  * database — they open a side channel to whatever server the postgres/mysql/
- * sqlite extension is attached to, including catalogs nao attaches
+ * sqlite extension is attached to, including catalogs quarry attaches
  * internally (e.g. DuckLake's Postgres metadata store) and never intends to
  * expose. Allowing writes to a user's own data was never meant to also grant
  * a passthrough into unrelated servers, so this check applies unconditionally.

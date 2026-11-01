@@ -113,7 +113,7 @@ const MAPLIBRE_ESM_URL = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist
 // `setWorkerUrl` cannot fix file://, so the map script replaces `Worker` with a data: module importing this URL.
 const MAPLIBRE_WORKER_URL = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl-worker.mjs`;
 export const MAPLIBRE_CSS_URL = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
-export const MAP_STYLE_URL = process.env.NAO_STORY_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/positron';
+export const MAP_STYLE_URL = process.env.QUARRY_STORY_MAP_STYLE_URL || 'https://tiles.openfreemap.org/styles/positron';
 const MAP_HEIGHT = 568;
 
 // Static (sandbox) maps enhance the inline SVG with Leaflet — a DOM/raster tile map that needs no
@@ -121,12 +121,13 @@ const MAP_HEIGHT = 568;
 const LEAFLET_VERSION = '1.9.4';
 const LEAFLET_JS_URL = `https://unpkg.com/leaflet@${LEAFLET_VERSION}/dist/leaflet.js`;
 const LEAFLET_CSS_URL = `https://unpkg.com/leaflet@${LEAFLET_VERSION}/dist/leaflet.css`;
-const RASTER_TILE_URL = process.env.NAO_STORY_MAP_RASTER_URL || STORY_MAP_TILE_LAYERS.light.url;
-const RASTER_TILE_ATTRIBUTION = process.env.NAO_STORY_MAP_RASTER_ATTRIBUTION || STORY_MAP_TILE_LAYERS.light.attribution;
-const RASTER_TILE_SUBDOMAINS = process.env.NAO_STORY_MAP_RASTER_SUBDOMAINS || 'abcd';
+const RASTER_TILE_URL = process.env.QUARRY_STORY_MAP_RASTER_URL || STORY_MAP_TILE_LAYERS.light.url;
+const RASTER_TILE_ATTRIBUTION =
+	process.env.QUARRY_STORY_MAP_RASTER_ATTRIBUTION || STORY_MAP_TILE_LAYERS.light.attribution;
+const RASTER_TILE_SUBDOMAINS = process.env.QUARRY_STORY_MAP_RASTER_SUBDOMAINS || 'abcd';
 const RASTER_TILE_MAX_ZOOM =
-	Number(process.env.NAO_STORY_MAP_RASTER_MAX_ZOOM) ||
-	(process.env.NAO_STORY_MAP_RASTER_URL ? 19 : STORY_MAP_TILE_LAYERS.light.maxZoom);
+	Number(process.env.QUARRY_STORY_MAP_RASTER_MAX_ZOOM) ||
+	(process.env.QUARRY_STORY_MAP_RASTER_URL ? 19 : STORY_MAP_TILE_LAYERS.light.maxZoom);
 
 type InlinedBoundaries = Map<string, { geojson: unknown; joinProps: string[] | null }>;
 type Basemaps = Map<string, Basemap>;
@@ -489,7 +490,7 @@ function MarkdownBlock({ content }: { content: string }) {
 	if (emailSink) {
 		return <div dangerouslySetInnerHTML={{ __html: inlineMarkdownStyles(html, palette) }} />;
 	}
-	return <div className='nao-md' dangerouslySetInnerHTML={{ __html: html }} />;
+	return <div className='quarry-md' dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function markdownEmailStyles(palette: StoryExportPalette): Record<string, string> {
@@ -612,7 +613,7 @@ function ChartBlock({ chart: rawChart, queryData }: { chart: ParsedChartBlock; q
 		return (
 			<div style={{ margin: '16px 0' }}>
 				<div
-					className='nao-chart'
+					className='quarry-chart'
 					style={{ textAlign: 'center', position: 'relative' }}
 					data-chart={chartData}
 					dangerouslySetInnerHTML={{ __html: svg }}
@@ -1117,7 +1118,7 @@ function StaticMapShell({
 		<div style={{ margin: '16px 0' }}>
 			{title && <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 8 }}>{title}</div>}
 			<div
-				className='nao-map'
+				className='quarry-map'
 				data-leaflet={JSON.stringify(leafletPayload)}
 				style={{
 					position: 'relative',
@@ -1128,7 +1129,7 @@ function StaticMapShell({
 					border: `1px solid ${palette.border}`,
 				}}
 			>
-				<div className='nao-map-fallback' style={{ width: '100%', height: '100%' }}>
+				<div className='quarry-map-fallback' style={{ width: '100%', height: '100%' }}>
 					<svg
 						viewBox={viewBox}
 						width='100%'
@@ -1159,7 +1160,7 @@ function StaticMapShell({
 						))}
 						{children}
 					</svg>
-					{basemap && <div className='nao-map-attribution'>{basemap.attribution}</div>}
+					{basemap && <div className='quarry-map-attribution'>{basemap.attribution}</div>}
 				</div>
 				{legend}
 			</div>
@@ -1284,7 +1285,7 @@ function MapShell({
 			{title && <div style={{ fontSize: 14, fontWeight: 500, marginBottom: 8 }}>{title}</div>}
 			<div style={{ position: 'relative', width: '100%', height: MAP_HEIGHT }}>
 				<div
-					className='nao-map'
+					className='quarry-map'
 					data-map={JSON.stringify(payload)}
 					style={{
 						width: '100%',
@@ -1431,10 +1432,10 @@ function buildChoroplethPayload(
 
 function builtinBoundaryUrl(set: string): string {
 	if (set === 'world_countries') {
-		return process.env.NAO_STORY_MAP_BOUNDARIES_WORLD_URL || MAP_BOUNDARY_URLS.world_countries;
+		return process.env.QUARRY_STORY_MAP_BOUNDARIES_WORLD_URL || MAP_BOUNDARY_URLS.world_countries;
 	}
 	if (set === 'france_regions') {
-		return process.env.NAO_STORY_MAP_BOUNDARIES_FRANCE_URL || MAP_BOUNDARY_URLS.france_regions;
+		return process.env.QUARRY_STORY_MAP_BOUNDARIES_FRANCE_URL || MAP_BOUNDARY_URLS.france_regions;
 	}
 	return '';
 }
@@ -1569,49 +1570,49 @@ code{background:${palette.sunken};padding:2px 6px;border-radius:4px;font-size:12
 pre{background:${palette.sunken};padding:16px;border-radius:8px;overflow-x:auto;font-size:12px;font-family:source-code-pro,Menlo,Monaco,Consolas,monospace}
 blockquote{border-left:3px solid ${palette.strongBorder};padding-left:16px;margin:12px 0;color:${palette.muted}}
 a{color:${palette.link}}
-.nao-md table{width:100%;border-collapse:separate;border-spacing:0;margin:8px 0;font-size:12px;border:${palette.tableBorderWidth}px solid ${palette.tableBorder};border-radius:8px;overflow:hidden;background:${palette.tableBackground}}
-.nao-md thead{background:${palette.tableHeaderBackground}}
-.nao-md th{padding:8px 12px;text-align:left;font-weight:500;white-space:nowrap;color:${palette.tableHeaderText};border-bottom:1px solid ${palette.tableBorder}}
-.nao-md td{padding:4px 12px;font-family:source-code-pro,Menlo,Monaco,Consolas,monospace;font-size:11px;line-height:20px;white-space:nowrap;border-bottom:1px solid ${palette.tableDivider}}
-.nao-md tr:last-child td{border-bottom:none}
+.quarry-md table{width:100%;border-collapse:separate;border-spacing:0;margin:8px 0;font-size:12px;border:${palette.tableBorderWidth}px solid ${palette.tableBorder};border-radius:8px;overflow:hidden;background:${palette.tableBackground}}
+.quarry-md thead{background:${palette.tableHeaderBackground}}
+.quarry-md th{padding:8px 12px;text-align:left;font-weight:500;white-space:nowrap;color:${palette.tableHeaderText};border-bottom:1px solid ${palette.tableBorder}}
+.quarry-md td{padding:4px 12px;font-family:source-code-pro,Menlo,Monaco,Consolas,monospace;font-size:11px;line-height:20px;white-space:nowrap;border-bottom:1px solid ${palette.tableDivider}}
+.quarry-md tr:last-child td{border-bottom:none}
 svg{max-width:100%;height:auto}
 img{max-width:100%;height:auto;border-radius:4px;margin:8px 0}
-.nao-map{position:relative}
-.nao-map-canvas{position:absolute;inset:0;z-index:0}
-.nao-map-fallback{position:absolute;inset:0}
-.nao-map-fallback svg{cursor:grab}
-.nao-map-fallback svg:active{cursor:grabbing}
-.nao-map-fallback [data-tip]{cursor:pointer}
-.nao-map-attribution{position:absolute;bottom:0;right:0;z-index:1000;background:rgba(255,255,255,0.7);color:#3a4756;font-size:9px;line-height:1.4;padding:1px 5px;border-top-left-radius:4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-.nao-map-zoom{position:absolute;top:8px;right:8px;z-index:1100;display:flex;flex-direction:column;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.2);background:#fff}
-.nao-map-zoom button{width:28px;height:28px;border:none;background:#fff;color:#333;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
-.nao-map-zoom button:hover{background:#f3f4f6}
-.nao-map-zoom button+button{border-top:1px solid #e5e7eb}
-.nao-map-svg-tip{position:absolute;top:0;left:0;pointer-events:none;z-index:1200;opacity:0;transition:opacity .12s}
-.nao-map-svg-tip.visible{opacity:1}
-.leaflet-tooltip.nao-map-ltip{background:transparent;border:none;box-shadow:none;padding:0;white-space:normal}
-.leaflet-tooltip.nao-map-ltip:before{display:none}
+.quarry-map{position:relative}
+.quarry-map-canvas{position:absolute;inset:0;z-index:0}
+.quarry-map-fallback{position:absolute;inset:0}
+.quarry-map-fallback svg{cursor:grab}
+.quarry-map-fallback svg:active{cursor:grabbing}
+.quarry-map-fallback [data-tip]{cursor:pointer}
+.quarry-map-attribution{position:absolute;bottom:0;right:0;z-index:1000;background:rgba(255,255,255,0.7);color:#3a4756;font-size:9px;line-height:1.4;padding:1px 5px;border-top-left-radius:4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.quarry-map-zoom{position:absolute;top:8px;right:8px;z-index:1100;display:flex;flex-direction:column;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.2);background:#fff}
+.quarry-map-zoom button{width:28px;height:28px;border:none;background:#fff;color:#333;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.quarry-map-zoom button:hover{background:#f3f4f6}
+.quarry-map-zoom button+button{border-top:1px solid #e5e7eb}
+.quarry-map-svg-tip{position:absolute;top:0;left:0;pointer-events:none;z-index:1200;opacity:0;transition:opacity .12s}
+.quarry-map-svg-tip.visible{opacity:1}
+.leaflet-tooltip.quarry-map-ltip{background:transparent;border:none;box-shadow:none;padding:0;white-space:normal}
+.leaflet-tooltip.quarry-map-ltip:before{display:none}
 .maplibregl-popup.map-tooltip{pointer-events:none}
 .maplibregl-popup.map-tooltip .maplibregl-popup-content{padding:0;background:transparent;box-shadow:none;border-radius:0}
 .maplibregl-popup.map-tooltip .maplibregl-popup-tip{display:none}
-.nao-map-pop{display:grid;align-items:start;gap:6px;min-width:128px;background:${palette.popover};border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-.nao-map-pop-title{display:flex;align-items:center;gap:8px;font-weight:500;color:${palette.heading}}
-.nao-map-pop-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.nao-map-pop-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;line-height:1.25}
-.nao-map-pop-name{color:${palette.muted}}
-.nao-map-pop-val{color:${palette.heading};font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
-.nao-tooltip{position:absolute;pointer-events:none;background:${palette.popover};border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:10;opacity:0;transition:opacity .15s;min-width:128px;display:grid;gap:6px}
-.nao-tooltip.visible{opacity:1}
-.nao-tooltip-label{font-weight:500;color:${palette.heading};text-align:left}
-.nao-tooltip-rows{display:grid;gap:6px}
-.nao-tooltip-row{display:flex;align-items:center;gap:8px;width:100%}
-.nao-tooltip-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.nao-tooltip-name{color:${palette.muted};flex:1;text-align:left}
-.nao-tooltip-value{color:${palette.heading};font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:500;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;margin-left:auto}
-.nao-tooltip-total{display:flex;align-items:center;gap:8px;width:100%;border-top:1px solid rgba(0,0,0,0.08);padding-top:6px;margin-top:2px}
-.nao-tooltip-total .nao-tooltip-name{font-weight:500}
-.nao-tooltip-total .nao-tooltip-value{font-weight:500}
-@media print{body{padding:0;max-width:none}.nao-tooltip{display:none}.nao-chart{break-inside:avoid}.nao-map{break-inside:avoid}.maplibregl-ctrl{display:none!important}table{break-inside:avoid}div[style*="display:flex"]{break-inside:avoid}h1,h2,h3{break-after:avoid}svg{max-width:100%!important;height:auto!important}footer{break-inside:avoid}}
+.quarry-map-pop{display:grid;align-items:start;gap:6px;min-width:128px;background:${palette.popover};border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.quarry-map-pop-title{display:flex;align-items:center;gap:8px;font-weight:500;color:${palette.heading}}
+.quarry-map-pop-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.quarry-map-pop-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;line-height:1.25}
+.quarry-map-pop-name{color:${palette.muted}}
+.quarry-map-pop-val{color:${palette.heading};font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
+.quarry-tooltip{position:absolute;pointer-events:none;background:${palette.popover};border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:12px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:10;opacity:0;transition:opacity .15s;min-width:128px;display:grid;gap:6px}
+.quarry-tooltip.visible{opacity:1}
+.quarry-tooltip-label{font-weight:500;color:${palette.heading};text-align:left}
+.quarry-tooltip-rows{display:grid;gap:6px}
+.quarry-tooltip-row{display:flex;align-items:center;gap:8px;width:100%}
+.quarry-tooltip-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.quarry-tooltip-name{color:${palette.muted};flex:1;text-align:left}
+.quarry-tooltip-value{color:${palette.heading};font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-weight:500;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;margin-left:auto}
+.quarry-tooltip-total{display:flex;align-items:center;gap:8px;width:100%;border-top:1px solid rgba(0,0,0,0.08);padding-top:6px;margin-top:2px}
+.quarry-tooltip-total .quarry-tooltip-name{font-weight:500}
+.quarry-tooltip-total .quarry-tooltip-value{font-weight:500}
+@media print{body{padding:0;max-width:none}.quarry-tooltip{display:none}.quarry-chart{break-inside:avoid}.quarry-map{break-inside:avoid}.maplibregl-ctrl{display:none!important}table{break-inside:avoid}div[style*="display:flex"]{break-inside:avoid}h1,h2,h3{break-after:avoid}svg{max-width:100%!important;height:auto!important}footer{break-inside:avoid}}
 `;
 }
 
@@ -1662,16 +1663,16 @@ const STATIC_SVG_SCRIPT_TEMPLATE = `
 	function tipHtml(tip){
 		if(!tip)return '';
 		var parts=[];
-		if(tip.label!=null&&tip.label!=='')parts.push('<div class="nao-map-pop-title">'+esc(tip.label)+'</div>');
-		(tip.rows||[]).forEach(function(row){parts.push('<div class="nao-map-pop-row"><span class="nao-map-pop-name">'+esc(row[0])+'</span><span class="nao-map-pop-val">'+esc(row[1])+'</span></div>');});
-		return parts.length?'<div class="nao-map-pop">'+parts.join('')+'</div>':'';
+		if(tip.label!=null&&tip.label!=='')parts.push('<div class="quarry-map-pop-title">'+esc(tip.label)+'</div>');
+		(tip.rows||[]).forEach(function(row){parts.push('<div class="quarry-map-pop-row"><span class="quarry-map-pop-name">'+esc(row[0])+'</span><span class="quarry-map-pop-val">'+esc(row[1])+'</span></div>');});
+		return parts.length?'<div class="quarry-map-pop">'+parts.join('')+'</div>':'';
 	}
-	document.querySelectorAll('.nao-map-fallback').forEach(function(fallback){
+	document.querySelectorAll('.quarry-map-fallback').forEach(function(fallback){
 		var svg=fallback.querySelector('svg');
 		if(!svg)return;
-		var container=fallback.closest('.nao-map')||fallback;
+		var container=fallback.closest('.quarry-map')||fallback;
 		var tip=document.createElement('div');
-		tip.className='nao-map-svg-tip';
+		tip.className='quarry-map-svg-tip';
 		container.appendChild(tip);
 		function moveTip(e){
 			var cr=container.getBoundingClientRect();
@@ -1709,7 +1710,7 @@ const STATIC_SVG_SCRIPT_TEMPLATE = `
 			view.w=nw;view.h=nh;view.x=cx-nw/2;view.y=cy-nh/2;clamp();apply();
 		}
 		var ctrl=document.createElement('div');
-		ctrl.className='nao-map-zoom';
+		ctrl.className='quarry-map-zoom';
 		var plus=document.createElement('button');plus.type='button';plus.textContent='+';plus.setAttribute('aria-label','Zoom in');
 		var minus=document.createElement('button');minus.type='button';minus.textContent='\\u2212';minus.setAttribute('aria-label','Zoom out');
 		ctrl.appendChild(plus);ctrl.appendChild(minus);fallback.appendChild(ctrl);
@@ -1737,20 +1738,20 @@ const LEAFLET_MAP_SCRIPT_TEMPLATE = `
 	function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 	function tooltipHtml(label,rows){
 		var parts=[];
-		if(label!=null&&label!=='')parts.push('<div class="nao-map-pop-title">'+esc(label)+'</div>');
+		if(label!=null&&label!=='')parts.push('<div class="quarry-map-pop-title">'+esc(label)+'</div>');
 		(rows||[]).forEach(function(row){
-			parts.push('<div class="nao-map-pop-row"><span class="nao-map-pop-name">'+esc(row[0])+'</span><span class="nao-map-pop-val">'+esc(row[1])+'</span></div>');
+			parts.push('<div class="quarry-map-pop-row"><span class="quarry-map-pop-name">'+esc(row[0])+'</span><span class="quarry-map-pop-val">'+esc(row[1])+'</span></div>');
 		});
-		return parts.length?'<div class="nao-map-pop">'+parts.join('')+'</div>':'';
+		return parts.length?'<div class="quarry-map-pop">'+parts.join('')+'</div>':'';
 	}
 	function bindTip(layer,label,rows){
 		var html=tooltipHtml(label,rows);
-		if(html)layer.bindTooltip(html,{sticky:true,direction:'top',className:'nao-map-ltip',opacity:1});
+		if(html)layer.bindTooltip(html,{sticky:true,direction:'top',className:'quarry-map-ltip',opacity:1});
 	}
-	document.querySelectorAll('.nao-map[data-leaflet]').forEach(function(container){
+	document.querySelectorAll('.quarry-map[data-leaflet]').forEach(function(container){
 		var cfg;try{cfg=JSON.parse(container.getAttribute('data-leaflet'));}catch(e){return;}
 		var canvas=document.createElement('div');
-		canvas.className='nao-map-canvas';
+		canvas.className='quarry-map-canvas';
 		container.insertBefore(canvas,container.firstChild);
 		var map;
 		try{map=L.map(canvas,{attributionControl:true,scrollWheelZoom:false,zoomControl:true});}catch(e){canvas.remove();return;}
@@ -1775,7 +1776,7 @@ const LEAFLET_MAP_SCRIPT_TEMPLATE = `
 			if(bounds.isValid())map.fitBounds(bounds,{padding:[24,24],maxZoom:12});
 			else map.setView([20,0],1);
 		}catch(e){map.setView([20,0],1);}
-		var fallback=container.querySelector('.nao-map-fallback');
+		var fallback=container.querySelector('.quarry-map-fallback');
 		if(fallback)fallback.style.display='none';
 		setTimeout(function(){try{map.invalidateSize();}catch(e){}},60);
 	});
@@ -1877,7 +1878,7 @@ const TOOLTIP_SCRIPT_TEMPLATE = `
 		return number+suffix;
 	}
 
-	document.querySelectorAll('.nao-chart').forEach(function(container){
+	document.querySelectorAll('.quarry-chart').forEach(function(container){
 		var raw=container.getAttribute('data-chart');
 		if(!raw)return;
 		var cfg;try{cfg=JSON.parse(raw.replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&'))}catch(e){return}
@@ -1892,7 +1893,7 @@ const TOOLTIP_SCRIPT_TEMPLATE = `
 		}
 
 		var tip=document.createElement('div');
-		tip.className='nao-tooltip';
+		tip.className='quarry-tooltip';
 		container.appendChild(tip);
 
 		var svg=container.querySelector('svg');
@@ -1941,8 +1942,8 @@ const TOOLTIP_SCRIPT_TEMPLATE = `
 		function showTip(e,row){
 			var label=row[cfg.xAxisKey];
 			var isPie=!!pieColorMap;
-			var html='<div class="nao-tooltip-label">'+labelize(label!=null?label:'')+'</div>';
-			html+='<div class="nao-tooltip-rows">';
+			var html='<div class="quarry-tooltip-label">'+labelize(label!=null?label:'')+'</div>';
+			html+='<div class="quarry-tooltip-rows">';
 			var isPercent=cfg.chartType==='stacked_bar_100'||cfg.chartType==='stacked_area_100'||cfg.chartType==='horizontal_bar_100';
 			var isDualAxis=(cfg.series||[]).some(function(s){return s.y_axis==='right'});
 			var seriesTotal=0;
@@ -1966,17 +1967,17 @@ const TOOLTIP_SCRIPT_TEMPLATE = `
 				if(typeof val==='number')numericValues.push(val);
 				if(s.is_total)hasTotalSeries=true;
 				var rowName=isPie?labelize(label!=null?label:''):labelize(s.label||s.data_key);
-				html+='<div class="nao-tooltip-row">'
-					+'<span class="nao-tooltip-swatch" style="background:'+escHtml(color)+'"></span>'
-					+'<span class="nao-tooltip-name">'+rowName+'</span>'
-					+'<span class="nao-tooltip-value">'+escHtml(isPercent?pctShare(val):formatSeriesVal(val,s.value_format))+'</span>'
+				html+='<div class="quarry-tooltip-row">'
+					+'<span class="quarry-tooltip-swatch" style="background:'+escHtml(color)+'"></span>'
+					+'<span class="quarry-tooltip-name">'+rowName+'</span>'
+					+'<span class="quarry-tooltip-value">'+escHtml(isPercent?pctShare(val):formatSeriesVal(val,s.value_format))+'</span>'
 					+'</div>';
 			});
 			if(numericValues.length>1 && !isDualAxis && (isPercent || (!hasTotalSeries && !cfg.hideTotal))){
 				var total=numericValues.reduce(function(a,b){return a+b},0);
-				html+='<div class="nao-tooltip-total">'
-					+'<span class="nao-tooltip-name">Total</span>'
-					+'<span class="nao-tooltip-value">'+escHtml(isPercent?'100%':formatSeriesVal(total,firstNonTotalSeries&&firstNonTotalSeries.value_format))+'</span>'
+				html+='<div class="quarry-tooltip-total">'
+					+'<span class="quarry-tooltip-name">Total</span>'
+					+'<span class="quarry-tooltip-value">'+escHtml(isPercent?'100%':formatSeriesVal(total,firstNonTotalSeries&&firstNonTotalSeries.value_format))+'</span>'
 					+'</div>';
 			}
 			html+='</div>';
@@ -2000,7 +2001,7 @@ const TOOLTIP_SCRIPT_TEMPLATE = `
 `;
 
 const MAP_INIT_SCRIPT_TEMPLATE = `
-function naoInitMaps(maplibregl){
+function quarryInitMaps(maplibregl){
 	var STYLE_URL=__MAP_STYLE_URL__;
 	var MIN_OPACITY=${CHOROPLETH_MIN_OPACITY};
 	var MAX_OPACITY=${CHOROPLETH_MAX_OPACITY};
@@ -2008,24 +2009,24 @@ function naoInitMaps(maplibregl){
 		if(!domain||domain.min===domain.max)return (MIN_OPACITY+MAX_OPACITY)/2;
 		return ['interpolate',['linear'],['coalesce',['get','value'],domain.min],domain.min,MIN_OPACITY,domain.max,MAX_OPACITY];
 	}
-	var containers=document.querySelectorAll('.nao-map');
-	if(!containers.length){window.__naoMapsReady=true;window.__naoMapsRendered=0;return;}
+	var containers=document.querySelectorAll('.quarry-map');
+	if(!containers.length){window.__quarryMapsReady=true;window.__quarryMapsRendered=0;return;}
 	var pending=containers.length;
 	var rendered=0;
-	window.__naoMapsRendered=0;
-	function markRendered(){rendered++;window.__naoMapsRendered=rendered;}
-	function done(){pending--;if(pending<=0){window.__naoMapsReady=true;}}
+	window.__quarryMapsRendered=0;
+	function markRendered(){rendered++;window.__quarryMapsRendered=rendered;}
+	function done(){pending--;if(pending<=0){window.__quarryMapsReady=true;}}
 	function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 	function norm(v){return v==null?null:String(v).trim().toLowerCase()||null;}
 	function buildPopup(entry,color){
 		var parts=[];
 		if(entry.label!=null&&entry.label!==''){
-			parts.push('<div class="nao-map-pop-title"><span class="nao-map-pop-dot" style="background:'+esc(color)+'"></span>'+esc(entry.label)+'</div>');
+			parts.push('<div class="quarry-map-pop-title"><span class="quarry-map-pop-dot" style="background:'+esc(color)+'"></span>'+esc(entry.label)+'</div>');
 		}
 		(entry.rows||[]).forEach(function(row){
-			parts.push('<div class="nao-map-pop-row"><span class="nao-map-pop-name">'+esc(row[0])+'</span><span class="nao-map-pop-val">'+esc(row[1])+'</span></div>');
+			parts.push('<div class="quarry-map-pop-row"><span class="quarry-map-pop-name">'+esc(row[0])+'</span><span class="quarry-map-pop-val">'+esc(row[1])+'</span></div>');
 		});
-		return parts.length?'<div class="nao-map-pop">'+parts.join('')+'</div>':'';
+		return parts.length?'<div class="quarry-map-pop">'+parts.join('')+'</div>':'';
 	}
 	function extendBounds(bounds,coords){
 		if(!Array.isArray(coords))return;
@@ -2117,14 +2118,14 @@ function naoInitMaps(maplibregl){
 	});
 }
 (function(){
-	setTimeout(function(){window.__naoMapsReady=true;},12000);
-	function unavailable(){window.__naoMapsReady=true;window.__naoMapsRendered=0;}
-	if(!document.querySelector('.nao-map')){unavailable();return;}
+	setTimeout(function(){window.__quarryMapsReady=true;},12000);
+	function unavailable(){window.__quarryMapsReady=true;window.__quarryMapsRendered=0;}
+	if(!document.querySelector('.quarry-map')){unavailable();return;}
 	if(!/^https?:$/.test(location.protocol)){
 		var NativeWorker=window.Worker;
 		var workerUrl='data:text/javascript,'+encodeURIComponent('import '+JSON.stringify(__MAPLIBRE_WORKER_URL__));
 		window.Worker=function(url,options){return new NativeWorker(workerUrl,options);};
 	}
-	import(__MAPLIBRE_ESM_URL__).then(naoInitMaps,unavailable);
+	import(__MAPLIBRE_ESM_URL__).then(quarryInitMaps,unavailable);
 })();
 `;

@@ -42,16 +42,16 @@ export function assertSafeDestructiveWorktreeTarget(worktreeRoot: string, projec
 	const worktree = path.resolve(worktreeRoot);
 	const live = path.resolve(projectFolder);
 	const segments = worktree.split(path.sep);
-	const naoIndex = segments.lastIndexOf('.nao');
-	const worktreeSegments = naoIndex < 0 ? [] : segments.slice(naoIndex);
+	const quarryIndex = segments.lastIndexOf('.quarry');
+	const worktreeSegments = quarryIndex < 0 ? [] : segments.slice(quarryIndex);
 	if (
 		worktreeSegments.length !== 4 ||
-		worktreeSegments[0] !== '.nao' ||
+		worktreeSegments[0] !== '.quarry' ||
 		worktreeSegments[1] !== 'worktrees' ||
 		!isSafeWorktreeSegment(worktreeSegments[2]) ||
 		!isSafeWorktreeSegment(worktreeSegments[3])
 	) {
-		throw new Error('Refusing destructive Git operation outside a .nao/worktrees/<project>/<user> directory.');
+		throw new Error('Refusing destructive Git operation outside a .quarry/worktrees/<project>/<user> directory.');
 	}
 	if (worktree === live) {
 		throw new Error('Refusing destructive Git operation against the live project folder.');
@@ -317,7 +317,7 @@ function translateGitErrorMessage(message: string): string | null {
 		return `The branch name "${branchCollision[1]}" can't be used because "${branchCollision[2]}" already exists; choose a different branch name.`;
 	}
 	if (/non-fast-forward|fetch first/i.test(message)) {
-		return 'The branch changed on the remote repository since nao last checked it, so refresh and try again.';
+		return 'The branch changed on the remote repository since quarry last checked it, so refresh and try again.';
 	}
 	if (/protected branch|pre-receive hook declined/i.test(message)) {
 		return 'The remote repository refused this push because a branch protection rule blocks changes to this branch.';

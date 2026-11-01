@@ -104,9 +104,9 @@ export type ModelInferenceSettings = z.infer<typeof modelInferenceSettingsSchema
 export const modelSettingsMapSchema = z.record(z.string(), modelInferenceSettingsSchema);
 export type ModelSettingsMap = z.infer<typeof modelSettingsMapSchema>;
 
-/** Where a project's models and their credentials come from: its database config, quarry_config.yaml, the environment, or nao. */
+/** Where a project's models and their credentials come from: its database config, quarry_config.yaml, the environment, or quarry. */
 export type ModelSource = {
-	/** Serves the providers nao runs on its own keys. */
+	/** Serves the providers quarry runs on its own keys. */
 	readonly managed?: boolean;
 	listProviders(projectId: string): Promise<ProviderModelSource[]>;
 	resolveModel(request: ModelRequest): Promise<ProviderModelResult | null>;
@@ -240,7 +240,6 @@ export type OpenAICompatibleProvider = 'qwen' | 'minimax' | 'moonshot' | 'meta' 
 
 /** Map each provider kind to its specific config type */
 export type ProviderConfigMap = {
-	nao: OpenAIResponsesProviderOptions;
 	google: GoogleGenerativeAIProviderOptions;
 	openai: OpenAIResponsesProviderOptions;
 	anthropic: Omit<AnthropicProviderOptions, 'fallbacks'>;
@@ -305,7 +304,7 @@ export type ProviderMeta<P extends LlmProviderKind> = {
 	defaultBaseUrl?: string;
 	/** Set when the provider has no vendor endpoint to fall back on, so a base URL must be supplied. */
 	requiresBaseUrl?: boolean;
-	/** Set when nao runs the provider on its own keys and bills it through credits, so projects cannot configure it. */
+	/** Set when quarry runs the provider on its own keys and bills it through credits, so projects cannot configure it. */
 	managed?: boolean;
 	models: readonly ProviderModel<P>[];
 	extractorModelId: string;

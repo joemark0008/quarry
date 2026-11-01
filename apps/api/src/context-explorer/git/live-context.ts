@@ -497,7 +497,10 @@ function promoteStagedLiveRepository(
 	projectPrefix: string,
 ): void {
 	const projectFolder = path.resolve(context.projectFolder);
-	const backupPath = path.join(path.dirname(projectFolder), `.nao-live-backup-${context.projectId}-${randomUUID()}`);
+	const backupPath = path.join(
+		path.dirname(projectFolder),
+		`.quarry-live-backup-${context.projectId}-${randomUUID()}`,
+	);
 	const managedRoot = getManagedLiveRepositoryContainer(context.projectId, projectFolder);
 	if (projectPrefix && fs.existsSync(managedRoot)) {
 		throw new Error('The managed live repository location already exists.');
@@ -528,7 +531,7 @@ function assertSafeLiveReplacementTarget(context: ContextExplorerGitContext): vo
 	getManagedLiveRepositoryContainer(context.projectId, projectFolder);
 	const stat = fs.lstatSync(projectFolder);
 	if (stat.isSymbolicLink()) {
-		throw new Error('Refusing to replace a live project symlink that is not managed by nao.');
+		throw new Error('Refusing to replace a live project symlink that is not managed by quarry.');
 	}
 	if (!stat.isDirectory()) {
 		throw new Error('The configured live project path is not a directory.');
@@ -556,12 +559,12 @@ function validateManagedLiveProjectSymlink(context: ContextExplorerGitContext): 
 	const repositoryRoot = path.join(managedRoot, 'repository');
 	const target = fs.realpathSync(projectFolder);
 	if (target === fs.realpathSync(repositoryRoot) || !isSameOrAncestor(fs.realpathSync(repositoryRoot), target)) {
-		throw new Error('Refusing to use a live project symlink that is not managed by nao.');
+		throw new Error('Refusing to use a live project symlink that is not managed by quarry.');
 	}
 }
 
 function getManagedLiveRepositoriesParent(projectFolder: string): string {
-	return path.join(path.dirname(projectFolder), '.nao', 'live-repositories');
+	return path.join(path.dirname(projectFolder), '.quarry', 'live-repositories');
 }
 
 function getManagedLiveRepositoryContainer(projectId: string, projectFolder: string): string {

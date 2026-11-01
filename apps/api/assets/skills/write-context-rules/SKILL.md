@@ -1,27 +1,27 @@
 ---
 name: write-context-rules
-description: Create or extend a nao project's RULES.md. Owns the RULES.md template. Use when the user wants to generate the initial RULES.md from synced metadata (called by setup-context), or improve their existing RULES.md. Do not use for first-time scope setup (use setup-context) or for diagnosing existing problems (use audit-context).
+description: Create or extend a quarry project's RULES.md. Owns the RULES.md template. Use when the user wants to generate the initial RULES.md from synced metadata (called by setup-context), or improve their existing RULES.md. Do not use for first-time scope setup (use setup-context) or for diagnosing existing problems (use audit-context).
 ---
 
 # write-context-rules
 
-`RULES.md` is loaded with **every** message to the nao agent — keep it lean. Two purposes only:
+`RULES.md` is loaded with **every** message to the quarry agent — keep it lean. Two purposes only:
 
 1. **Orchestrator** — point the agent to the right context fast (which metric → which definition, which topic → which file, which question type → which skill).
 2. **Broad rules** — how to query and how to answer.
 
-Anything else (per-table schema, full metric semantics, domain-specific rules) belongs in a referenced file. **`RULES.md` should never duplicate context that already lives elsewhere in the repo** — it points to it. Reference: [docs.getnao.io/nao-agent/context-builder/rules-context](https://docs.getnao.io/nao-agent/context-builder/rules-context).
+Anything else (per-table schema, full metric semantics, domain-specific rules) belongs in a referenced file. **`RULES.md` should never duplicate context that already lives elsewhere in the repo** — it points to it.
 
 ## What already exists in a context repo (read before writing)
 
-`nao sync` populates these. The content of `RULES.md` depends on which are present, so **inventory them first** (Step 0):
+`context sync` populates these. The content of `RULES.md` depends on which are present, so **inventory them first** (Step 0):
 
 | Location                                        | What's in it                                                                                                                                                                                               | Implication for `RULES.md`                                                                                                                                            |
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `databases/type=*/database=*/schema=*/table=*/` | Per-table files synced from the warehouse when enabled in `nao_config.yaml` `templates:`: `columns.md`, `preview.md`, `profiling.md`, `query_history.md`, `ai_summary.md`                                  | If rich per-table docs exist here, **don't restate columns** in `RULES.md` — point to the folder.                                                                     |
+| `databases/type=*/database=*/schema=*/table=*/` | Per-table files synced from the warehouse when enabled in `quarry_config.yaml` `templates:`: `columns.md`, `preview.md`, `profiling.md`, `query_history.md`, `ai_summary.md`                               | If rich per-table docs exist here, **don't restate columns** in `RULES.md` — point to the folder.                                                                     |
 | `repos/<name>/`                                 | Synced git repos (dbt, ETL, BI). A dbt repo has `models/**/schema.yml` (or `*.yml`) column docs, `*.md` model docs, and possibly a **semantic layer / MetricFlow** file (`semantic_models:` + `metrics:`). | Map the key files in the Context Map. If dbt schema docs cover columns, point there. If a semantic layer exists, **don't write a Key Metrics section** — route to it. |
 | `docs/`                                         | Free-text business docs (Notion exports, CRM definitions, analytics decisions).                                                                                                                            | Note they exist, what's in each, and when to read them. If a doc defines a metric/segment, point to it instead of redefining.                                         |
-| `semantics/`                                    | nao YAML semantic layer (from `add-semantic-layer`).                                                                                                                                                       | Same as a dbt semantic layer — route metrics to it, don't redefine.                                                                                                   |
+| `semantics/`                                    | quarry YAML semantic layer (from `add-semantic-layer`).                                                                                                                                                    | Same as a dbt semantic layer — route metrics to it, don't redefine.                                                                                                   |
 | `profiling.md` (per table)                      | Distinct counts, min/max, and **`top_values` for categorical columns** — the actual values present in each column.                                                                                         | The agent must read it **before filtering on any column value** (Analysis Process).                                                                                   |
 
 ## Standard sections (see `templates/RULES.md`)
@@ -45,17 +45,17 @@ Anything else (per-table schema, full metric semantics, domain-specific rules) b
 
 Before writing anything, survey the repo so the rest of the flow knows what to point to vs. what to write:
 
-- `nao_config.yaml` — which `templates:` are synced per database (do `columns` / `preview` / `profiling` / `query_history` / `ai_summary` exist?), which `repos:` are wired.
+- `quarry_config.yaml` — which `templates:` are synced per database (do `columns` / `preview` / `profiling` / `query_history` / `ai_summary` exist?), which `repos:` are wired.
 - `databases/` — list tables and check how rich the per-table files are.
 - `repos/<name>/` — for each repo, find: column docs (`**/schema.yml`, `**/*.yml` with `models:`), model/domain docs (`*.md`), and a **semantic layer** (grep for `semantic_models:` / `metrics:` / MetricFlow). Note the paths.
 - `docs/` — list files and skim what each covers.
-- `semantics/` — nao YAML semantic layer present?
+- `semantics/` — quarry YAML semantic layer present?
 
 Produce a one-line inventory and state the two decisions it drives: **(a) write `### Tables detail` or point to existing table docs? (b) write `## Key Metrics Reference` or route to an existing semantic layer / metric docs?**
 
 ### Step 1 — `## Business overview`
 
-Sources: web search for the company name/domain (from `nao_config.yaml`), then `databases/` and `repos/<dbt>/`. Output two paragraphs: Product (what the company does) + Business model (revenue + customer journey).
+Sources: web search for the company name/domain (from `quarry_config.yaml`), then `databases/` and `repos/<dbt>/`. Output two paragraphs: Product (what the company does) + Business model (revenue + customer journey).
 
 ### Step 2 — `## Data architecture`
 

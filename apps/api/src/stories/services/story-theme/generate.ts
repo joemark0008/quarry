@@ -111,7 +111,7 @@ interface Brief {
 	instructions?: string;
 	whiteLabel: WhiteLabelBrand | null;
 	uploadedLogo?: boolean;
-	/** A site nao could not see properly (blocked, or read as bare stylesheets): the model recalls its brand. */
+	/** A site quarry could not see properly (blocked, or read as bare stylesheets): the model recalls its brand. */
 	recall?: { site: string; reason: string };
 }
 
@@ -306,7 +306,7 @@ async function generateStoryThemeFromSources(
 	}
 	if (blockedSite) {
 		extraWarnings.push(
-			`${blockedSite} turned nao away (${describeError(urlError)}), so the model recalled the brand from what it knows. Add a screenshot of the site for exact colours.`,
+			`${blockedSite} turned quarry away (${describeError(urlError)}), so the model recalled the brand from what it knows. Add a screenshot of the site for exact colours.`,
 		);
 	} else if (urlError) {
 		extraWarnings.push(
@@ -598,7 +598,7 @@ function describeBriefOnly(brief: Brief): string {
 }
 
 /**
- * Without a browser nao reads bare stylesheets: no screenshot, no measured
+ * Without a browser quarry reads bare stylesheets: no screenshot, no measured
  * card or button, so shapes and roles are unknown. The model recalls the brand
  * for what the stylesheets leave open, and the admin is told why.
  */
@@ -647,7 +647,7 @@ const SYSTEM_PROMPT = [
 	'0. ADMIN GUIDANCE, when present — the admin states preferences (accent, light or dark ground, shapes,',
 	'   typefaces, colours to avoid). They win over every source below. The sources still decide whatever the',
 	'   guidance leaves open.',
-	'0b. WHITE-LABEL BRANDING, when present — the name, primary colour and logo the admin already set for nao.',
+	'0b. WHITE-LABEL BRANDING, when present — the name, primary colour and logo the admin already set for quarry.',
 	'1. ROLE EVIDENCE — measured from rendered elements. The primary button is the accent. The card is the',
 	'   block background, its radius is the shape language, and whether it carries a border is the block border.',
 	'2. An attached screenshot — what a person sees. Use it over colour frequency, and to confirm roles.',
@@ -705,7 +705,7 @@ const SYSTEM_PROMPT = [
 	'  style: italic only where the brand sets that text in italics; otherwise normal.',
 	'  tracking: letter spacing in em, measured: usually -0.04 to 0.01, spaced capitals 0.08 to 0.25. Keep figure',
 	'  at or below 0.02 so numbers keep their shape.',
-	"  size: multiplier on nao's base size, 0.6 to 2; 1 unless the brand clearly sets that text larger or smaller.",
+	"  size: multiplier on quarry's base size, 0.6 to 2; 1 unless the brand clearly sets that text larger or smaller.",
 	'- blockRadius: radius of cards, panels and image tiles in px, read from those elements only. 0 is valid and',
 	'  common. Pill buttons say nothing about cards: many brands pair pill buttons with square cards. Do not',
 	'  default to 10 when the chrome is clearly rounder or squarer.',
@@ -803,7 +803,7 @@ function withBrief(prompt: string, { instructions, whiteLabel, recall, uploadedL
 	if (recall) {
 		sections.push(
 			'',
-			`KNOWN BRAND: nao could not see ${recall.site} properly (${recall.reason}). Use what you know about the`,
+			`KNOWN BRAND: quarry could not see ${recall.site} properly (${recall.reason}). Use what you know about the`,
 			'visual identity of the brand behind this domain to fill what the signals above leave open: its signature colours and how they are used,',
 			'its typefaces and type voice (capitals, spacing, weights), its button and card shapes. If you do not',
 			'recognise the brand, stay near-neutral and say so in the rationale.',
