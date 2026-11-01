@@ -237,9 +237,22 @@ interface FormTextFieldProps {
 	title: string;
 	placeholder?: string;
 	className?: string;
+	/** Help text under the input. */
+	description?: string;
+	/** A server-side error for this field, shown under the input. */
+	error?: string;
 }
 
-export function FormTextField({ form, name, type = 'text', title, placeholder, className }: FormTextFieldProps) {
+export function FormTextField({
+	form,
+	name,
+	type = 'text',
+	title,
+	placeholder,
+	className,
+	description,
+	error,
+}: FormTextFieldProps) {
 	const [showPassword, setShowPassword] = useState(false);
 	const { compact, emailLastUsed } = useContext(CompactFieldsContext);
 	const isPassword = type === 'password';
@@ -307,6 +320,12 @@ export function FormTextField({ form, name, type = 'text', title, placeholder, c
 							</button>
 						)}
 					</div>
+					{description && <p className={styles.formTextFieldDescription}>{description}</p>}
+					{error && (
+						<p role='alert' className={styles.formTextFieldError}>
+							{error}
+						</p>
+					)}
 				</div>
 			)}
 		</form.Field>

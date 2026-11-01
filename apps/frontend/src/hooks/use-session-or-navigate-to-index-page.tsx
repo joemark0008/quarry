@@ -8,7 +8,7 @@ import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { usePublicConfig } from '@/hooks/use-public-config';
 
 const AUTH_ENTRY_ROUTES = ['/login', '/forgot-password', '/reset-password'];
-const PUBLIC_AUTH_ROUTES = [...AUTH_ENTRY_ROUTES, '/email-verified'];
+const PUBLIC_AUTH_ROUTES = [...AUTH_ENTRY_ROUTES, '/email-verified', '/setup'];
 
 export const useSessionOrNavigateToIndexPage = () => {
 	const navigate = useNavigate();

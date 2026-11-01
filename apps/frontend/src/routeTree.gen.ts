@@ -14,6 +14,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as EmailVerifiedRouteImport } from './routes/email-verified'
 import { Route as EmbedRouteImport } from './routes/embed'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SetupRouteImport } from './routes/setup'
 import { Route as ProtectedChatLayoutRouteImport } from './routes/_protected/_chat-layout'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as PublicForgotPasswordRouteImport } from './routes/_public/forgot-password'
@@ -69,6 +70,11 @@ const EmbedRoute = EmbedRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedChatLayoutRoute = ProtectedChatLayoutRouteImport.update({
@@ -261,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/setup': typeof SetupRoute
   '/settings': typeof ProtectedSettingsRouteWithChildren
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
@@ -298,6 +305,7 @@ export interface FileRoutesByTo {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/setup': typeof SetupRoute
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
   '/signup': typeof PublicSignupRoute
@@ -335,6 +343,7 @@ export interface FileRoutesById {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/setup': typeof SetupRoute
   '/_protected/_chat-layout': typeof ProtectedChatLayoutRouteWithChildren
   '/_protected/settings': typeof ProtectedSettingsRouteWithChildren
   '/_public/forgot-password': typeof PublicForgotPasswordRoute
@@ -376,6 +385,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/setup'
     | '/settings'
     | '/forgot-password'
     | '/login'
@@ -413,6 +423,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/setup'
     | '/forgot-password'
     | '/login'
     | '/signup'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/setup'
     | '/_protected/_chat-layout'
     | '/_protected/settings'
     | '/_public/forgot-password'
@@ -490,6 +502,7 @@ export interface RootRouteChildren {
   EmailVerifiedRoute: typeof EmailVerifiedRoute
   EmbedRoute: typeof EmbedRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SetupRoute: typeof SetupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -527,6 +540,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/_chat-layout': {
@@ -897,6 +917,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailVerifiedRoute: EmailVerifiedRoute,
   EmbedRoute: EmbedRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  SetupRoute: SetupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

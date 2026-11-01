@@ -1,4 +1,4 @@
-const AUTH_PATHS = new Set(['/login', '/signup', '/forgot-password', '/reset-password', '/email-verified']);
+const AUTH_PATHS = new Set(['/login', '/signup', '/forgot-password', '/reset-password', '/email-verified', '/setup']);
 
 /**
  * Returns a redirect target only when it is a safe in-app path. Rejects
