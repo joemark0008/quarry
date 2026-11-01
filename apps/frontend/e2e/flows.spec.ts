@@ -76,6 +76,7 @@ test.describe('signed in', () => {
 			['Appearance', '/settings/appearance', 'Appearance'],
 			['Recommendations', '/settings/recommendations', null],
 			['File Explorer', '/settings/context-explorer', null],
+			['Users', '/settings/users', 'Users'],
 			['Storage', '/settings/storage', null],
 		] as const) {
 			await page.getByRole('link', { name: label, exact: true }).click();

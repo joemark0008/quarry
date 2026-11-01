@@ -2,6 +2,8 @@ import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import styles from './account-page.module.css';
 import { EditProfileDialog } from '@/feature/settings/components/edit-profile-dialog';
+import { ChangePasswordDialog } from '@/feature/settings/components/change-password-dialog';
+import { Button } from '@/components/ui/button';
 import { UpdateProfileDocument } from '@/graphql/generated/graphql';
 import { NewsletterSubscribeInlineForm } from '@/feature/settings/components/newsletter-subscribe';
 import { useSession } from '@/lib/auth-client';
@@ -29,6 +31,8 @@ export function GeneralPage() {
 	const [toolCallDensity, setToolCallDensity, toolCallDensityState] = useToolCallDensity();
 
 	const [editOpen, setEditOpen] = useState(false);
+	const [passwordOpen, setPasswordOpen] = useState(false);
+	const [passwordChanged, setPasswordChanged] = useState(false);
 
 	const [updateProfile] = useMutation(UpdateProfileDocument);
 
@@ -60,6 +64,35 @@ export function GeneralPage() {
 						onOpenChange={setEditOpen}
 						name={user?.name}
 						onSubmit={handleEdit}
+					/>
+
+					<SettingsCard title='Security' divide>
+						<SettingsControlRow
+							label='Password'
+							description={
+								passwordChanged
+									? 'Password changed. Your other sessions were signed out.'
+									: 'Change the password you log in with. Forgot it? Ask an admin for a reset link.'
+							}
+							control={
+								<Button
+									size='sm'
+									variant='outline'
+									onClick={() => {
+										setPasswordChanged(false);
+										setPasswordOpen(true);
+									}}
+								>
+									Change password
+								</Button>
+							}
+						/>
+					</SettingsCard>
+
+					<ChangePasswordDialog
+						open={passwordOpen}
+						onOpenChange={setPasswordOpen}
+						onChanged={() => setPasswordChanged(true)}
 					/>
 
 					<SettingsCard title='General Settings' divide>

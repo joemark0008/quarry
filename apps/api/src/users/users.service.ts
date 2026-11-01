@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { hashPassword } from 'better-auth/crypto';
+import { hashPassword, verifyPassword } from 'better-auth/crypto';
 
 import { HandlerError } from '../common/errors/handler-error.js';
 import { regexPassword } from '../common/utils/auth-utils.js';
@@ -49,6 +49,27 @@ export class UsersService {
 
 		const hashedPassword = await hashPassword(newPassword);
 		await this.users.updateAccountPassword(account.id, hashedPassword, userId, false);
+	}
+
+	/** Changes the signed-in user's own password, after checking the current one, and signs out their other sessions. */
+	async changePassword(
+		userId: string,
+		sessionId: string,
+		currentPassword: string,
+		newPassword: string,
+	): Promise<void> {
+		const account = await this.users.getCredentialAccount(userId);
+		if (!account?.password) {
+			throw new HandlerError('BAD_REQUEST', 'Your account has no password to change.');
+		}
+		if (!(await verifyPassword({ hash: account.password, password: currentPassword }))) {
+			throw new HandlerError('BAD_REQUEST', 'Your current password is incorrect.');
+		}
+		if (currentPassword === newPassword) {
+			throw new HandlerError('BAD_REQUEST', 'Choose a password different from your current one.');
+		}
+		await this.users.updateAccountPassword(account.id, await hashPassword(newPassword), userId, false);
+		await this.users.deleteOtherSessions(userId, sessionId);
 	}
 
 	/** Upstream `user.getPreferences` (minus the internal `supportRequestSentAt`). */

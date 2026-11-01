@@ -39,6 +39,7 @@ import { StorySharingModule } from './stories/sharing/story-sharing.module.js';
 import { StoriesModule } from './stories/stories.module.js';
 import { SystemModule } from './system/system.module.js';
 import { TranscribeModule } from './transcribe/transcribe.module.js';
+import { UserManagementModule } from './user-management/user-management.module.js';
 import { UsersModule } from './users/users.module.js';
 import { WarehouseModule } from './warehouse/warehouse.module.js';
 
@@ -72,6 +73,7 @@ export const SCHEMA_FILE = path.join(import.meta.dirname, '..', 'schema.gql');
 		JobsModule,
 		HealthModule,
 		UsersModule,
+		UserManagementModule,
 		SystemModule,
 		ProjectsModule,
 		WarehouseModule,

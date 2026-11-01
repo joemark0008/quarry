@@ -148,43 +148,27 @@ the token again. Once an admin exists nothing is printed and `/setup` redirects 
 be the public URL users open, because sign-in checks the request origin; if it does not match, the admin is created but
 signing in fails.
 
+### Users
+
+Nobody signs up. An organization admin adds people in **Settings → Users**: enter a name, an email and a role, and quarry
+gives you a one-time link to send them (no email is sent). They open it, choose a password and are signed in. The link
+works once and expires after 7 days; only a hash of it is stored, so copy it before closing the dialog.
+
+- **Roles** are `admin` (manages users and every project), `user` and `viewer`. They apply to every project of the
+  organization unless a project gives the person its own role.
+- **Forgotten password:** in the user's row, **Reset password** gives a new link that expires after 24 hours. The old
+  password keeps working until the link is used; then every session of that user is signed out. A new link voids the
+  previous one.
+- **Deactivate** signs the person out at once and blocks their sign-in and links until you reactivate them. Admins cannot
+  change their own role or deactivate themselves, so an organization always keeps an active admin.
+- **Your own password:** **Settings → Account → Change password** asks for the current one and signs out your other
+  sessions.
+
 ### Upgrading from a version with public sign-up
 
 Existing installs keep working and never see the wizard. What changes: public sign-up and the automatic joining of new
-people through social sign-in are gone, and `ENABLE_USER_SIGNUP` and `DEFAULT_USER_ROLE` are ignored. Until the admin
-users page ships, an admin adds someone directly in the database. A user needs four rows: the user, a `credential`
-account holding a password hash, a membership of the organization, and a membership of each project they should see.
-Roles are `admin`, `user`, `viewer` and `context_admin`.
-
-Hash the password with the same function the app uses (the image keeps it in `apps/api`), then run the SQL with `psql`
-variables. Set `ROLE` to the role the person gets, in the organization and in every project of it:
-
-```bash
-HASH=$(docker compose -f docker-compose.prod.yml exec -T -w /app/apps/api -e PW='their-initial-password' quarry \
-  node --input-type=module -e "import { hashPassword } from 'better-auth/crypto'; console.log(await hashPassword(process.env.PW))")
-
-docker compose -f docker-compose.prod.yml exec -T postgres psql -U quarry -d quarry -v ON_ERROR_STOP=1 \
-  -v name='Ada Lovelace' -v email='ada@example.com' -v role=user -v hash="$HASH" <<'SQL'
-WITH new_user AS (
-    INSERT INTO "user" (id, name, email, email_verified)
-    VALUES (gen_random_uuid()::text, :'name', lower(:'email'), true)
-    RETURNING id
-), new_account AS (
-    INSERT INTO account (id, account_id, provider_id, user_id, password, updated_at)
-    SELECT gen_random_uuid()::text, id, 'credential', id, :'hash', now() FROM new_user
-), new_org_member AS (
-    INSERT INTO org_member (org_id, user_id, role)
-    SELECT o.id, n.id, :'role' FROM new_user n CROSS JOIN organization o
-    RETURNING org_id, user_id
-)
-INSERT INTO project_member (project_id, user_id, role)
-SELECT p.id, m.user_id, :'role' FROM new_org_member m JOIN project p ON p.org_id = m.org_id;
-SQL
-```
-
-This assumes one organization (the default) and adds the person to all of its projects. Trim the last `SELECT` with a
-`WHERE p.name = '…'` to limit them. Adjust `-U`/`-d` if you changed the database user. Give them the initial password. To give an existing user a project instead, insert only a row:
-`INSERT INTO project_member (project_id, user_id, role) VALUES ('<project id>', '<user id>', 'user');`.
+people through social sign-in are gone, and `ENABLE_USER_SIGNUP` and `DEFAULT_USER_ROLE` are ignored. Admins add people
+in **Settings → Users** instead.
 
 ## Documentation
 

@@ -25,6 +25,11 @@ type CancelChatResult {
   outcome: String!
 }
 
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
 """Source of a project chart plugin (upstream `chartPlugin.source`)."""
 type ChartPluginSource {
   source: String!
@@ -177,6 +182,14 @@ input CreateSkillInput {
   name: String!
 }
 
+input CreateUserInput {
+  email: String!
+  name: String!
+
+  """admin, user or viewer."""
+  role: String!
+}
+
 type CreatedSkill {
   location: String!
   name: String!
@@ -235,6 +248,24 @@ type GroupedChatList {
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
 scalar JSON
+
+"""A member of the organization, as the admin users page lists them."""
+type ManagedUser {
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  name: String!
+
+  """Organization role: admin, user or viewer. Projects fall back to it."""
+  role: String!
+  status: ManagedUserStatus!
+}
+
+enum ManagedUserStatus {
+  ACTIVE
+  DEACTIVATED
+  INVITED
+}
 
 """
 A memory the agent extracted from (or the user edited after) a conversation.
@@ -296,6 +327,11 @@ type Mutation {
   """The run, with `alreadyTerminal` when it had already ended."""
   cancelContextRecommendationRun(runId: String!): JSON!
 
+  """
+  Changes your own password (needs the current one) and signs out your other sessions.
+  """
+  changePassword(input: ChangePasswordInput!): Boolean!
+
   """Upstream `trpc.chatFork.askStory`."""
   chatForkAskStory(input: JSON): JSON
 
@@ -318,11 +354,19 @@ type Mutation {
 
   """Not available until GitHub/GitLab land (Phase 7)."""
   createContextRecommendationPullRequest(id: String!): JSON!
+
+  """
+  A new set-password link for the user (an invite or a reset); the user's earlier links stop working.
+  """
+  createPasswordLink(userId: ID!): PasswordLink!
   createProject(input: CreateProjectInput!): ProjectSummary!
   createProjectQueryTool(input: CreateProjectQueryToolInput!): ProjectQueryTool!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
   createSkill(input: CreateSkillInput!): CreatedSkill!
+
+  """Creates a user and returns the link they set their password with."""
+  createUser(input: CreateUserInput!): PasswordLink!
 
   """Upstream `trpc.customStoryViewer.download`."""
   customStoryViewerDownload(input: JSON): JSON
@@ -385,8 +429,14 @@ type Mutation {
   setContextRecommendationStatus(input: SetContextRecommendationStatusInput!): Boolean!
   setMemoryEnabled(memoryEnabled: Boolean!): MemorySettings!
 
+  """Sets the password from a link and returns the email to sign in with."""
+  setPasswordWithLink(input: SetPasswordWithLinkInput!): String!
+
   """Creates a secret, or replaces the value of the one with that name."""
   setSandboxSecret(input: SetSandboxSecretInput!): SandboxSecret!
+
+  """Deactivating signs the user out and voids their password links."""
+  setUserActive(active: Boolean!, userId: ID!): ManagedUser!
 
   """Upstream `trpc.sharedStory.create`."""
   sharedStoryCreate(input: JSON): JSON
@@ -558,6 +608,7 @@ type Mutation {
 
   """Upstream `user.updatePreferences`."""
   updateUserPreferences(input: UpdateUserPreferencesInput!): JSON!
+  updateUserRole(input: UpdateUserRoleInput!): ManagedUser!
 
   """Upstream `project.upsertLlmConfig`."""
   upsertLlmConfig(input: JSON!): JSON!
@@ -569,6 +620,26 @@ type Mutation {
   Upstream `contextExplorer.writeFile`: `{ path, content, expectedHash }`.
   """
   writeContextFile(input: JSON!): JSON!
+}
+
+"""
+A one-time link the admin hands to a user so they can choose a password.
+"""
+type PasswordLink {
+  expiresAt: DateTime!
+
+  """Shown once: only a hash of its token is stored."""
+  url: String!
+  user: ManagedUser!
+}
+
+"""What the set-password page shows about a valid link."""
+type PasswordLinkInfo {
+  email: String!
+
+  """True for a new account (first password), false for a reset."""
+  isInvite: Boolean!
+  name: String!
 }
 
 input PreviewProjectQueryToolInput {
@@ -716,6 +787,9 @@ type Query {
   contextSearch(query: String!): JSON!
   contextSyncStatus: ContextSyncStatus!
 
+  """The signed-in user's organization role: admin, user or viewer."""
+  currentOrgRole: String!
+
   """The selected project (`x-quarry-project-id`)."""
   currentProject: ProjectSummary
 
@@ -788,6 +862,9 @@ type Query {
   """Upstream `project.getLlmConfigs`: provider configs, keys previewed."""
   llmConfigs: JSON!
 
+  """Every user of the organization (admins only)."""
+  managedUsers: [ManagedUser!]!
+
   """Upstream `project.getMapBoundaries`."""
   mapBoundaries: JSON!
 
@@ -799,6 +876,9 @@ type Query {
 
   """Whether the signed-in user has memory turned on."""
   memorySettings: MemorySettings!
+
+  """Null when the link is invalid or expired."""
+  passwordLink(token: String!): PasswordLinkInfo
 
   """Whether the project allows memory (admin agent setting)."""
   projectMemorySettings: MemorySettings!
@@ -1174,6 +1254,11 @@ input SetContextRecommendationStatusInput {
   status: String!
 }
 
+input SetPasswordWithLinkInput {
+  password: String!
+  token: String!
+}
+
 input SetSandboxSecretInput {
   description: String
   name: String!
@@ -1308,6 +1393,12 @@ input UpdateSkillInput {
 input UpdateUserPreferencesInput {
   """compact or detailed"""
   toolCallDensity: String
+}
+
+input UpdateUserRoleInput {
+  """admin, user or viewer."""
+  role: String!
+  userId: ID!
 }
 
 type UpdatedSkill {

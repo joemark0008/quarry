@@ -11,6 +11,7 @@ import {
 	Palette,
 	Settings2,
 	UserRound,
+	Users,
 	Wrench,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -144,6 +145,13 @@ export const navLinks: NavLink[] = [
 		exact: true,
 		leavesSettings: true,
 		visible: isContextManager,
+	},
+	{
+		icon: Users,
+		label: 'Users',
+		to: '/settings/users',
+		section: 'instance',
+		visible: ({ isAdmin }) => isAdmin,
 	},
 	{
 		icon: HardDrive,

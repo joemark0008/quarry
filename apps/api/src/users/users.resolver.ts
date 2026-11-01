@@ -1,9 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLJSON } from 'graphql-type-json';
 
-import type { AuthUser } from '../auth/auth.service.js';
-import { CurrentUser } from '../common/decorators/current.decorator.js';
+import type { AuthSession, AuthUser } from '../auth/auth.service.js';
+import { CurrentSession, CurrentUser } from '../common/decorators/current.decorator.js';
 import { Public } from '../common/decorators/public.decorator.js';
+import { ChangePasswordInput } from './dto/change-password.input.js';
 import { ModifyPasswordInput } from './dto/modify-password.input.js';
 import { UpdateProfileInput } from './dto/update-profile.input.js';
 import { UpdateUserPreferencesInput } from './dto/update-user-preferences.input.js';
@@ -35,6 +36,18 @@ export class UsersResolver {
 	@Mutation(() => Boolean)
 	async modifyPassword(@CurrentUser() user: AuthUser, @Args('input') input: ModifyPasswordInput): Promise<boolean> {
 		await this.users.modifyPassword(user.id, input.newPassword, input.confirmPassword);
+		return true;
+	}
+
+	@Mutation(() => Boolean, {
+		description: 'Changes your own password (needs the current one) and signs out your other sessions.',
+	})
+	async changePassword(
+		@CurrentUser() user: AuthUser,
+		@CurrentSession() session: AuthSession['session'],
+		@Args('input') input: ChangePasswordInput,
+	): Promise<boolean> {
+		await this.users.changePassword(user.id, session.id, input.currentPassword, input.newPassword);
 		return true;
 	}
 

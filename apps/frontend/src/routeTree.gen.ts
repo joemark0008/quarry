@@ -14,6 +14,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as EmailVerifiedRouteImport } from './routes/email-verified'
 import { Route as EmbedRouteImport } from './routes/embed'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SetPasswordRouteImport } from './routes/set-password'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as ProtectedChatLayoutRouteImport } from './routes/_protected/_chat-layout'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
@@ -29,6 +30,7 @@ import { Route as ProtectedSettingsMemoryRouteImport } from './routes/_protected
 import { Route as ProtectedSettingsProjectRouteImport } from './routes/_protected/settings.project'
 import { Route as ProtectedSettingsRecommendationsRouteImport } from './routes/_protected/settings.recommendations'
 import { Route as ProtectedSettingsStorageRouteImport } from './routes/_protected/settings.storage'
+import { Route as ProtectedSettingsUsersRouteImport } from './routes/_protected/settings.users'
 import { Route as ProtectedSettingsWhiteLabelRouteImport } from './routes/_protected/settings.white-label'
 import { Route as ProtectedSharedChatShareIdRouteImport } from './routes/_protected/shared-chat.$shareId'
 import { Route as ProtectedStoriesIndexRouteImport } from './routes/_protected/stories.index'
@@ -68,6 +70,11 @@ const EmbedRoute = EmbedRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetPasswordRoute = SetPasswordRouteImport.update({
+  id: '/set-password',
+  path: '/set-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SetupRoute = SetupRouteImport.update({
@@ -152,6 +159,11 @@ const ProtectedSettingsStorageRoute =
     path: '/storage',
     getParentRoute: () => ProtectedSettingsRoute,
   } as any)
+const ProtectedSettingsUsersRoute = ProtectedSettingsUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
 const ProtectedSettingsWhiteLabelRoute =
   ProtectedSettingsWhiteLabelRouteImport.update({
     id: '/white-label',
@@ -255,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/set-password': typeof SetPasswordRoute
   '/setup': typeof SetupRoute
   '/settings': typeof ProtectedSettingsRouteWithChildren
   '/forgot-password': typeof PublicForgotPasswordRoute
@@ -267,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/users': typeof ProtectedSettingsUsersRoute
   '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
   '/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
@@ -291,6 +305,7 @@ export interface FileRoutesByTo {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/set-password': typeof SetPasswordRoute
   '/setup': typeof SetupRoute
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
@@ -301,6 +316,7 @@ export interface FileRoutesByTo {
   '/settings/memory': typeof ProtectedSettingsMemoryRoute
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/users': typeof ProtectedSettingsUsersRoute
   '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
   '/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
@@ -327,6 +343,7 @@ export interface FileRoutesById {
   '/email-verified': typeof EmailVerifiedRoute
   '/embed': typeof EmbedRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/set-password': typeof SetPasswordRoute
   '/setup': typeof SetupRoute
   '/_protected/_chat-layout': typeof ProtectedChatLayoutRouteWithChildren
   '/_protected/settings': typeof ProtectedSettingsRouteWithChildren
@@ -340,6 +357,7 @@ export interface FileRoutesById {
   '/_protected/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/_protected/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/_protected/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/_protected/settings/users': typeof ProtectedSettingsUsersRoute
   '/_protected/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/_protected/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
   '/_protected/stories/$storyId': typeof ProtectedStoriesStoryIdRoute
@@ -367,6 +385,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/set-password'
     | '/setup'
     | '/settings'
     | '/forgot-password'
@@ -379,6 +398,7 @@ export interface FileRouteTypes {
     | '/settings/project'
     | '/settings/recommendations'
     | '/settings/storage'
+    | '/settings/users'
     | '/settings/white-label'
     | '/shared-chat/$shareId'
     | '/stories/$storyId'
@@ -403,6 +423,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/set-password'
     | '/setup'
     | '/forgot-password'
     | '/login'
@@ -413,6 +434,7 @@ export interface FileRouteTypes {
     | '/settings/memory'
     | '/settings/recommendations'
     | '/settings/storage'
+    | '/settings/users'
     | '/settings/white-label'
     | '/shared-chat/$shareId'
     | '/stories/$storyId'
@@ -438,6 +460,7 @@ export interface FileRouteTypes {
     | '/email-verified'
     | '/embed'
     | '/reset-password'
+    | '/set-password'
     | '/setup'
     | '/_protected/_chat-layout'
     | '/_protected/settings'
@@ -451,6 +474,7 @@ export interface FileRouteTypes {
     | '/_protected/settings/project'
     | '/_protected/settings/recommendations'
     | '/_protected/settings/storage'
+    | '/_protected/settings/users'
     | '/_protected/settings/white-label'
     | '/_protected/shared-chat/$shareId'
     | '/_protected/stories/$storyId'
@@ -478,6 +502,7 @@ export interface RootRouteChildren {
   EmailVerifiedRoute: typeof EmailVerifiedRoute
   EmbedRoute: typeof EmbedRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SetPasswordRoute: typeof SetPasswordRoute
   SetupRoute: typeof SetupRoute
 }
 
@@ -516,6 +541,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/set-password': {
+      id: '/set-password'
+      path: '/set-password'
+      fullPath: '/set-password'
+      preLoaderRoute: typeof SetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/setup': {
@@ -621,6 +653,13 @@ declare module '@tanstack/react-router' {
       path: '/storage'
       fullPath: '/settings/storage'
       preLoaderRoute: typeof ProtectedSettingsStorageRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
+    }
+    '/_protected/settings/users': {
+      id: '/_protected/settings/users'
+      path: '/users'
+      fullPath: '/settings/users'
+      preLoaderRoute: typeof ProtectedSettingsUsersRouteImport
       parentRoute: typeof ProtectedSettingsRoute
     }
     '/_protected/settings/white-label': {
@@ -795,6 +834,7 @@ interface ProtectedSettingsRouteChildren {
   ProtectedSettingsProjectRoute: typeof ProtectedSettingsProjectRouteWithChildren
   ProtectedSettingsRecommendationsRoute: typeof ProtectedSettingsRecommendationsRoute
   ProtectedSettingsStorageRoute: typeof ProtectedSettingsStorageRoute
+  ProtectedSettingsUsersRoute: typeof ProtectedSettingsUsersRoute
   ProtectedSettingsWhiteLabelRoute: typeof ProtectedSettingsWhiteLabelRoute
   ProtectedSettingsIndexRoute: typeof ProtectedSettingsIndexRoute
 }
@@ -807,6 +847,7 @@ const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
   ProtectedSettingsProjectRoute: ProtectedSettingsProjectRouteWithChildren,
   ProtectedSettingsRecommendationsRoute: ProtectedSettingsRecommendationsRoute,
   ProtectedSettingsStorageRoute: ProtectedSettingsStorageRoute,
+  ProtectedSettingsUsersRoute: ProtectedSettingsUsersRoute,
   ProtectedSettingsWhiteLabelRoute: ProtectedSettingsWhiteLabelRoute,
   ProtectedSettingsIndexRoute: ProtectedSettingsIndexRoute,
 }
@@ -875,6 +916,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmailVerifiedRoute: EmailVerifiedRoute,
   EmbedRoute: EmbedRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  SetPasswordRoute: SetPasswordRoute,
   SetupRoute: SetupRoute,
 }
 export const routeTree = rootRouteImport

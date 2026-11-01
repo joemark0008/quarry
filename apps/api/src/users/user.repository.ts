@@ -119,6 +119,10 @@ export class UserRepository {
 		]);
 	}
 
+	async deleteOtherSessions(userId: string, keepSessionId: string): Promise<void> {
+		await this.prisma.session.deleteMany({ where: { userId, id: { not: keepSessionId } } });
+	}
+
 	/** Port of upstream `queries/user-preference.queries.ts`. */
 	async getUserPreferences(userId: string): Promise<StoredUserPreferences> {
 		const row = await this.prisma.userPreference.findUnique({ where: { userId }, select: { preferences: true } });

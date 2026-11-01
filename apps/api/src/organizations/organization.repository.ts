@@ -6,7 +6,8 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import type { DbExecutor } from '../prisma/prisma.types.js';
 import { ProjectRepository } from '../projects/project.repository.js';
 
-export type OrgRole = 'admin' | 'user' | 'viewer';
+export const ORG_ROLES = ['admin', 'user', 'viewer'] as const;
+export type OrgRole = (typeof ORG_ROLES)[number];
 
 export type UserOrgMembership = OrgMember & { organization: Organization };
 

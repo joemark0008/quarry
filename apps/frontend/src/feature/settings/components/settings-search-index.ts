@@ -27,6 +27,13 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	{
 		page: '/settings/account',
 		pageLabel: 'Account',
+		title: 'Password',
+		description: 'Change your password; your other sessions are signed out.',
+		keywords: ['password', 'change password', 'reset', 'security', 'credentials'],
+	},
+	{
+		page: '/settings/account',
+		pageLabel: 'Account',
 		section: 'General Settings',
 		title: 'Sound notification',
 		description: 'Play a sound when the agent finishes responding.',
@@ -399,6 +406,24 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	// ── Project > Agent > MCP servers ───────────────────────
 
 	// ── Project > Integrations & MCP > quarry MCP ──────────────
+
+	// ── Users ───────────────────────────────────────────────
+	{
+		page: '/settings/users',
+		pageLabel: 'Users',
+		title: 'Users',
+		description: 'Add users, change their role, and deactivate or reactivate them.',
+		keywords: ['people', 'members', 'team', 'invite', 'add user', 'role', 'admin', 'viewer', 'deactivate'],
+		adminOnly: true,
+	},
+	{
+		page: '/settings/users',
+		pageLabel: 'Users',
+		title: 'Reset a user password',
+		description: 'Give a user a one-time link to choose a new password.',
+		keywords: ['password', 'reset', 'forgot', 'link', 'invite link', 'locked out'],
+		adminOnly: true,
+	},
 
 	// ── Storage ─────────────────────────────────────────────
 	{

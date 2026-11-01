@@ -4,6 +4,8 @@ import type { UserRole } from '@quarry/shared/types';
 import { fetchPublicConfig } from '@/hooks/use-public-config';
 import { fetchCurrentProject } from '@/hooks/use-current-project';
 import { canSeeAdvancedSettings } from '@/lib/effective-user-group-features';
+import { CurrentOrgRoleDocument } from '@/graphql/generated/graphql';
+import { apolloClient } from '@/lib/apollo-client';
 
 export async function requireAdvancedSettingsAccess(pathname: string) {
 	if (pathname.startsWith('/settings/account')) {
@@ -21,6 +23,17 @@ export async function requireAdvancedSettingsAccess(pathname: string) {
 export async function requireAdmin() {
 	const project = await fetchCurrentProject();
 	if (!project || project.userRole !== 'admin') {
+		throw redirect({ to: '/settings/account' });
+	}
+}
+
+/** Organization admins: the users page. A project admin role alone is not enough. */
+export async function requireOrgAdmin() {
+	const role = await apolloClient
+		.query({ query: CurrentOrgRoleDocument, fetchPolicy: 'network-only' })
+		.then(({ data }) => data?.currentOrgRole)
+		.catch(() => undefined);
+	if (role !== 'admin') {
 		throw redirect({ to: '/settings/account' });
 	}
 }
