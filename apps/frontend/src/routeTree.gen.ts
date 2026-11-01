@@ -30,6 +30,7 @@ import { Route as ProtectedSettingsMemoryRouteImport } from './routes/_protected
 import { Route as ProtectedSettingsProjectRouteImport } from './routes/_protected/settings.project'
 import { Route as ProtectedSettingsRecommendationsRouteImport } from './routes/_protected/settings.recommendations'
 import { Route as ProtectedSettingsStorageRouteImport } from './routes/_protected/settings.storage'
+import { Route as ProtectedSettingsUsageRouteImport } from './routes/_protected/settings.usage'
 import { Route as ProtectedSettingsUsersRouteImport } from './routes/_protected/settings.users'
 import { Route as ProtectedSettingsWhiteLabelRouteImport } from './routes/_protected/settings.white-label'
 import { Route as ProtectedSharedChatShareIdRouteImport } from './routes/_protected/shared-chat.$shareId'
@@ -159,6 +160,11 @@ const ProtectedSettingsStorageRoute =
     path: '/storage',
     getParentRoute: () => ProtectedSettingsRoute,
   } as any)
+const ProtectedSettingsUsageRoute = ProtectedSettingsUsageRouteImport.update({
+  id: '/usage',
+  path: '/usage',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
 const ProtectedSettingsUsersRoute = ProtectedSettingsUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -280,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/usage': typeof ProtectedSettingsUsageRoute
   '/settings/users': typeof ProtectedSettingsUsersRoute
   '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/settings/memory': typeof ProtectedSettingsMemoryRoute
   '/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/settings/usage': typeof ProtectedSettingsUsageRoute
   '/settings/users': typeof ProtectedSettingsUsersRoute
   '/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
@@ -357,6 +365,7 @@ export interface FileRoutesById {
   '/_protected/settings/project': typeof ProtectedSettingsProjectRouteWithChildren
   '/_protected/settings/recommendations': typeof ProtectedSettingsRecommendationsRoute
   '/_protected/settings/storage': typeof ProtectedSettingsStorageRoute
+  '/_protected/settings/usage': typeof ProtectedSettingsUsageRoute
   '/_protected/settings/users': typeof ProtectedSettingsUsersRoute
   '/_protected/settings/white-label': typeof ProtectedSettingsWhiteLabelRoute
   '/_protected/shared-chat/$shareId': typeof ProtectedSharedChatShareIdRoute
@@ -398,6 +407,7 @@ export interface FileRouteTypes {
     | '/settings/project'
     | '/settings/recommendations'
     | '/settings/storage'
+    | '/settings/usage'
     | '/settings/users'
     | '/settings/white-label'
     | '/shared-chat/$shareId'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
     | '/settings/memory'
     | '/settings/recommendations'
     | '/settings/storage'
+    | '/settings/usage'
     | '/settings/users'
     | '/settings/white-label'
     | '/shared-chat/$shareId'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/_protected/settings/project'
     | '/_protected/settings/recommendations'
     | '/_protected/settings/storage'
+    | '/_protected/settings/usage'
     | '/_protected/settings/users'
     | '/_protected/settings/white-label'
     | '/_protected/shared-chat/$shareId'
@@ -655,6 +667,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsStorageRouteImport
       parentRoute: typeof ProtectedSettingsRoute
     }
+    '/_protected/settings/usage': {
+      id: '/_protected/settings/usage'
+      path: '/usage'
+      fullPath: '/settings/usage'
+      preLoaderRoute: typeof ProtectedSettingsUsageRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
+    }
     '/_protected/settings/users': {
       id: '/_protected/settings/users'
       path: '/users'
@@ -834,6 +853,7 @@ interface ProtectedSettingsRouteChildren {
   ProtectedSettingsProjectRoute: typeof ProtectedSettingsProjectRouteWithChildren
   ProtectedSettingsRecommendationsRoute: typeof ProtectedSettingsRecommendationsRoute
   ProtectedSettingsStorageRoute: typeof ProtectedSettingsStorageRoute
+  ProtectedSettingsUsageRoute: typeof ProtectedSettingsUsageRoute
   ProtectedSettingsUsersRoute: typeof ProtectedSettingsUsersRoute
   ProtectedSettingsWhiteLabelRoute: typeof ProtectedSettingsWhiteLabelRoute
   ProtectedSettingsIndexRoute: typeof ProtectedSettingsIndexRoute
@@ -847,6 +867,7 @@ const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
   ProtectedSettingsProjectRoute: ProtectedSettingsProjectRouteWithChildren,
   ProtectedSettingsRecommendationsRoute: ProtectedSettingsRecommendationsRoute,
   ProtectedSettingsStorageRoute: ProtectedSettingsStorageRoute,
+  ProtectedSettingsUsageRoute: ProtectedSettingsUsageRoute,
   ProtectedSettingsUsersRoute: ProtectedSettingsUsersRoute,
   ProtectedSettingsWhiteLabelRoute: ProtectedSettingsWhiteLabelRoute,
   ProtectedSettingsIndexRoute: ProtectedSettingsIndexRoute,

@@ -222,6 +222,13 @@ input DeleteSkillInput {
   name: String!
 }
 
+type DeletedSavedUsagePeriod {
+  id: ID!
+
+  """The selection after the delete."""
+  selection: UsagePeriodSelection
+}
+
 input EditMemoryInput {
   content: String!
   memoryId: ID!
@@ -362,6 +369,9 @@ type Mutation {
   createProject(input: CreateProjectInput!): ProjectSummary!
   createProjectQueryTool(input: CreateProjectQueryToolInput!): ProjectQueryTool!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
+
+  """Saves a period and selects it."""
+  createSavedUsagePeriod(projectId: ID!, savedPeriod: SavedUsagePeriodInput!): SavedUsagePeriod!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
   createSkill(input: CreateSkillInput!): CreatedSkill!
 
@@ -388,6 +398,7 @@ type Mutation {
   deleteProjectQueryTool(id: ID!): Boolean!
   deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
+  deleteSavedUsagePeriod(id: ID!, projectId: ID!): DeletedSavedUsagePeriod!
   deleteSharedChat(shareId: ID!): Boolean!
   deleteSkill(input: DeleteSkillInput!): Boolean!
   disconnectWarehouse(name: String!): Boolean!
@@ -600,11 +611,13 @@ type Mutation {
   updateProjectQueryTool(input: UpdateProjectQueryToolInput!): ProjectQueryTool!
   updateSandboxSecretDescription(input: UpdateSandboxSecretDescriptionInput!): SandboxSecret!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
+  updateSavedUsagePeriod(projectId: ID!, savedPeriod: UpdateSavedUsagePeriodInput!): SavedUsagePeriod!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
   updateSkill(input: UpdateSkillInput!): UpdatedSkill!
 
   """Runs an edited query and saves it in the chat's message."""
   updateSqlQuery(input: SqlEditInput!): SqlEditResult!
+  updateUsagePeriodSelection(projectId: ID!, selection: UsagePeriodSelectionInput!): UsagePeriodSelection
 
   """Upstream `user.updatePreferences`."""
   updateUserPreferences(input: UpdateUserPreferencesInput!): JSON!
@@ -1096,6 +1109,20 @@ type Query {
   """Upstream `trpc.storyTheme.listVersions`."""
   storyThemeListVersions(input: JSON): JSON
 
+  """Messages, tokens and cost per user and chart bucket."""
+  usageByUser(filter: UsageFilterInput!): [UsageByUserRecord!]!
+
+  """Messages, tokens and cost per chart bucket."""
+  usageMessages(filter: UsageFilterInput!): [UsageRecord!]!
+  usagePeriodSettings(projectId: ID!): UsagePeriodSettings!
+
+  """Providers that appear in the usage."""
+  usageProviders: [String!]!
+  usageTotal(filter: UsageFilterInput!): TotalUsage!
+
+  """Users with chats in the project and their chat count."""
+  usageUserFacets: [UsageUserFacet!]!
+
   """The signed-in user's preferences (upstream `user.getPreferences`)."""
   userPreferences: JSON!
   version: AppVersion!
@@ -1225,6 +1252,21 @@ input SavedPromptInput {
   title: String!
 }
 
+type SavedUsagePeriod {
+  days: Int!
+
+  """hour, day or month."""
+  granularity: String!
+  id: ID!
+}
+
+input SavedUsagePeriodInput {
+  days: Int!
+
+  """hour, day or month."""
+  granularity: String!
+}
+
 input SelectionInput {
   end: Int!
   start: Int!
@@ -1348,6 +1390,11 @@ type SqlEditResult {
   toolCallId: String!
 }
 
+type TotalUsage {
+  totalMessages: Int!
+  uniqueUsers: Int!
+}
+
 type UpdateCheck {
   currentVersion: String!
   latestVersion: String
@@ -1379,6 +1426,14 @@ input UpdateSavedPromptInput {
   title: String
 }
 
+input UpdateSavedUsagePeriodInput {
+  days: Int!
+
+  """hour, day or month."""
+  granularity: String!
+  id: ID!
+}
+
 input UpdateSkillInput {
   body: String!
   description: String!
@@ -1406,6 +1461,82 @@ type UpdatedSkill {
   name: String!
 }
 
+type UsageByUserRecord {
+  date: String!
+  users: [UserUsageBreakdown!]!
+}
+
+input UsageFilterInput {
+  """hour, day or month; defaults to the coarsest that fits the chart."""
+  granularity: String
+  period: UsagePeriodRangeInput!
+  provider: String
+
+  """Message sources (web, admin, contextRecommendations…)."""
+  sources: [String!]
+  userNames: [String!]
+}
+
+input UsagePeriodRangeInput {
+  """hour, day or month."""
+  unit: String!
+  value: Int!
+}
+
+type UsagePeriodSelection {
+  """24h, 15d, 6m or saved."""
+  mode: String!
+  savedPeriodId: String
+}
+
+input UsagePeriodSelectionInput {
+  """24h, 15d, 6m or saved."""
+  mode: String!
+  savedPeriodId: String
+}
+
+"""
+The usage period the user picked in the project, and the periods they saved.
+"""
+type UsagePeriodSettings {
+  savedPeriods: [SavedUsagePeriod!]!
+  selection: UsagePeriodSelection
+}
+
+"""Messages, tokens and cost (USD) of one chart bucket."""
+type UsageRecord {
+  adminMessageCount: Int!
+  contextRecommendationsMessageCount: Int!
+
+  """The bucket: YYYY-MM-DD HH:00, YYYY-MM-DD or YYYY-MM (UTC)."""
+  date: String!
+  discordMessageCount: Int!
+  inputCacheReadCost: Float!
+  inputCacheReadTokens: Float!
+  inputCacheWriteCost: Float!
+  inputCacheWriteTokens: Float!
+  inputNoCacheCost: Float!
+  inputNoCacheTokens: Float!
+  mattermostMessageCount: Int!
+  mcpMessageCount: Int!
+  messageCount: Int!
+  outputCost: Float!
+  outputTotalTokens: Float!
+  slackMessageCount: Int!
+  teamsMessageCount: Int!
+  telegramMessageCount: Int!
+  totalCost: Float!
+  totalTokens: Float!
+  webMessageCount: Int!
+  whatsappMessageCount: Int!
+}
+
+"""A user with chats in the project, for the usage filters."""
+type UsageUserFacet {
+  chatCount: Int!
+  userName: String!
+}
+
 type User {
   createdAt: DateTime!
   email: String!
@@ -1419,6 +1550,13 @@ type User {
 
   """Set for invited users until they choose their own password."""
   requiresPasswordReset: Boolean!
+}
+
+type UserUsageBreakdown {
+  messageCount: Int!
+  totalCost: Float!
+  totalTokens: Float!
+  userName: String!
 }
 
 """

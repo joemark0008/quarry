@@ -78,6 +78,7 @@ test.describe('signed in', () => {
 			['File Explorer', '/settings/context-explorer', null],
 			['Users', '/settings/users', 'Users'],
 			['Storage', '/settings/storage', null],
+			['Usage & Costs', '/settings/usage', 'Usage'],
 		] as const) {
 			await page.getByRole('link', { name: label, exact: true }).click();
 			await expect(page).toHaveURL(new RegExp(`${path}(\\?.*)?$`));
@@ -136,6 +137,21 @@ test.describe('signed in', () => {
 		expect(errors).toEqual([]);
 		await page.reload();
 		await expect(page.getByText('PONG', { exact: true }).first()).toBeVisible();
+	});
+
+	test('the usage page shows messages, tokens and cost', async ({ page }) => {
+		const errors = trackErrors(page);
+		await page.goto('/settings/usage');
+		await expect(page.getByRole('heading', { name: 'Usage' })).toBeVisible();
+		await expect(page.getByText('Total messages').first()).toBeVisible();
+		await expect(page.getByText('Number of messages by source')).toBeVisible();
+		await expect(page.getByText('Tokens', { exact: true }).first()).toBeVisible();
+
+		await page.getByRole('combobox').filter({ hasText: 'Show in tokens' }).click();
+		await page.getByRole('option', { name: 'Show in dollars' }).click();
+		await expect(page.getByText('Cost', { exact: true }).first()).toBeVisible();
+		await expect(page).toHaveURL(/tokenView=dollars/);
+		expect(errors).toEqual([]);
 	});
 
 	test('sign out returns to login', async ({ page }) => {

@@ -131,11 +131,19 @@ export class UserRepository {
 
 	/** Merges `partial` into the stored preferences, with the row locked so concurrent updates don't drop keys. */
 	updateUserPreferences(userId: string, partial: Partial<StoredUserPreferences>): Promise<StoredUserPreferences> {
+		return this.mutateUserPreferences(userId, (current) => ({ ...current, ...partial }));
+	}
+
+	/** Replaces the stored preferences with `transform(current)`, with the row locked so concurrent transforms queue. */
+	mutateUserPreferences(
+		userId: string,
+		transform: (current: StoredUserPreferences) => StoredUserPreferences,
+	): Promise<StoredUserPreferences> {
 		return this.prisma.$transaction(async (tx) => {
 			await tx.userPreference.upsert({ where: { userId }, create: { userId, preferences: {} }, update: {} });
 			const [row] = await tx.$queryRaw<{ preferences: StoredUserPreferences }[]>`
 				SELECT preferences FROM user_preference WHERE user_id = ${userId} FOR UPDATE`;
-			const preferences = { ...(row?.preferences ?? {}), ...partial };
+			const preferences = transform(row?.preferences ?? {});
 			await tx.userPreference.update({
 				where: { userId },
 				data: { preferences: preferences as Prisma.InputJsonValue },

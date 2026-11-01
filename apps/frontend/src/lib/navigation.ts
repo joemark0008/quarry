@@ -1,4 +1,5 @@
 import {
+	ChartColumn,
 	BookOpen,
 	BookOpenText,
 	Boxes,
@@ -135,6 +136,14 @@ export const navLinks: NavLink[] = [
 		to: '/settings/context-explorer',
 		section: 'context',
 		visible: isContextManager,
+	},
+	{
+		icon: ChartColumn,
+		label: 'Usage & Costs',
+		to: '/settings/usage',
+		section: 'observability',
+		requiresProject: true,
+		visible: ({ isViewer }) => !isViewer,
 	},
 	{
 		icon: MessagesSquare,

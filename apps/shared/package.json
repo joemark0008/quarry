@@ -19,6 +19,7 @@
 		"./keyboard-shortcut": "./src/keyboard-shortcut.ts",
 		"./map": "./src/map.ts",
 		"./types": "./src/types.ts",
+		"./usage": "./src/usage.ts",
 		"./user-group-context": "./src/user-group-context.ts",
 		"./user-group-features": "./src/user-group-features.ts",
 		"./user-group-mcp": "./src/user-group-mcp.ts",

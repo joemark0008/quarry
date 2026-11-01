@@ -497,6 +497,35 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 	// ── Project > Automations ────────────────────────────────
 
 	// ── Usage & Costs ──────────────────────────────────────────
+	{
+		page: '/settings/usage',
+		pageLabel: 'Usage & Costs',
+		title: 'Messages',
+		description: 'How many messages have you sent?',
+		keywords: ['usage', 'analytics', 'statistics'],
+	},
+	{
+		page: '/settings/usage',
+		pageLabel: 'Usage & Costs',
+		title: 'Tokens',
+		description: 'Tokens used by your chats.',
+		keywords: ['token usage', 'input tokens', 'output tokens'],
+	},
+	{
+		page: '/settings/usage',
+		pageLabel: 'Usage & Costs',
+		title: 'Cost',
+		description: 'Estimated cost in USD based on token usage and model pricing.',
+		keywords: ['price', 'billing', 'expense', 'spending'],
+	},
+	{
+		page: '/settings/usage',
+		pageLabel: 'Usage & Costs',
+		title: 'Split per user',
+		description: 'Break down messages, tokens and cost per user instead of per source or token category.',
+		keywords: ['per user', 'by user', 'user breakdown', 'who spends', 'top users', 'split'],
+		adminOnly: true,
+	},
 
 	// ── Usage & Costs > Chats Replay ─────────────────────────
 

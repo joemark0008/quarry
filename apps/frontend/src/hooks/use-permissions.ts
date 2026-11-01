@@ -18,6 +18,8 @@ export function usePermissions() {
 			canShare: role === 'admin' || role === 'user' || role === 'context_admin',
 			canEditSettings: role === 'admin',
 			canInvite: role === 'admin',
+			canViewUsage: role === 'admin' || role === 'user' || role === 'context_admin',
+			canViewAllUsage: role === 'admin',
 			canViewRecommendations: role === 'admin' || role === 'context_admin',
 			canChatWithQuarryData: role === 'admin' || role === 'context_admin',
 			canStartNewChat: role !== 'viewer' && !!role,

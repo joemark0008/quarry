@@ -14,6 +14,7 @@ export const APP_ROUTES = [
 	'/settings/context-explorer',
 	'/settings/memory',
 	'/settings/storage',
+	'/settings/usage',
 	'/settings/white-label',
 ];
 
