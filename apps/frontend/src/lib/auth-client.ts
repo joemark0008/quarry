@@ -19,8 +19,7 @@ export const authClient = createAuthClient({
 	],
 });
 
-export const { useSession, signIn, signUp, signOut, requestPasswordReset, resetPassword, sendVerificationEmail } =
-	authClient;
+export const { useSession, signIn, signOut, requestPasswordReset, resetPassword, sendVerificationEmail } = authClient;
 
 const handleGoogleSignIn = async (callbackURL = '/') => {
 	await authClient.signIn.social({

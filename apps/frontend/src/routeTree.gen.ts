@@ -19,7 +19,6 @@ import { Route as ProtectedChatLayoutRouteImport } from './routes/_protected/_ch
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as PublicForgotPasswordRouteImport } from './routes/_public/forgot-password'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
-import { Route as PublicSignupRouteImport } from './routes/_public/signup'
 import { Route as ProtectedChatLayoutIndexRouteImport } from './routes/_protected/_chat-layout.index'
 import { Route as ProtectedChatLayoutChatIdRouteImport } from './routes/_protected/_chat-layout.$chatId'
 import { Route as ProtectedSettingsIndexRouteImport } from './routes/_protected/settings.index'
@@ -94,11 +93,6 @@ const PublicForgotPasswordRoute = PublicForgotPasswordRouteImport.update({
 const PublicLoginRoute = PublicLoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PublicSignupRoute = PublicSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
   getParentRoute: () => PublicRoute,
 } as any)
 const ProtectedChatLayoutIndexRoute =
@@ -271,7 +265,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof ProtectedSettingsRouteWithChildren
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
-  '/signup': typeof PublicSignupRoute
   '/$chatId': typeof ProtectedChatLayoutChatIdRoute
   '/settings/account': typeof ProtectedSettingsAccountRoute
   '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
@@ -308,7 +301,6 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
-  '/signup': typeof PublicSignupRoute
   '/$chatId': typeof ProtectedChatLayoutChatIdRoute
   '/settings/account': typeof ProtectedSettingsAccountRoute
   '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
@@ -348,7 +340,6 @@ export interface FileRoutesById {
   '/_protected/settings': typeof ProtectedSettingsRouteWithChildren
   '/_public/forgot-password': typeof PublicForgotPasswordRoute
   '/_public/login': typeof PublicLoginRoute
-  '/_public/signup': typeof PublicSignupRoute
   '/_protected/_chat-layout/$chatId': typeof ProtectedChatLayoutChatIdRoute
   '/_protected/settings/account': typeof ProtectedSettingsAccountRoute
   '/_protected/settings/appearance': typeof ProtectedSettingsAppearanceRoute
@@ -389,7 +380,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/forgot-password'
     | '/login'
-    | '/signup'
     | '/$chatId'
     | '/settings/account'
     | '/settings/appearance'
@@ -426,7 +416,6 @@ export interface FileRouteTypes {
     | '/setup'
     | '/forgot-password'
     | '/login'
-    | '/signup'
     | '/$chatId'
     | '/settings/account'
     | '/settings/appearance'
@@ -465,7 +454,6 @@ export interface FileRouteTypes {
     | '/_protected/settings'
     | '/_public/forgot-password'
     | '/_public/login'
-    | '/_public/signup'
     | '/_protected/_chat-layout/$chatId'
     | '/_protected/settings/account'
     | '/_protected/settings/appearance'
@@ -575,13 +563,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof PublicLoginRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_public/signup': {
-      id: '/_public/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof PublicSignupRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_protected/_chat-layout/': {
@@ -885,13 +866,11 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 interface PublicRouteChildren {
   PublicForgotPasswordRoute: typeof PublicForgotPasswordRoute
   PublicLoginRoute: typeof PublicLoginRoute
-  PublicSignupRoute: typeof PublicSignupRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicForgotPasswordRoute: PublicForgotPasswordRoute,
   PublicLoginRoute: PublicLoginRoute,
-  PublicSignupRoute: PublicSignupRoute,
 }
 
 const PublicRouteWithChildren =

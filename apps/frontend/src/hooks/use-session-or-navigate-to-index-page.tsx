@@ -3,7 +3,6 @@ import { useNavigate, useRouter, useRouterState } from '@tanstack/react-router';
 
 import { useSession } from '@/lib/auth-client';
 import { invalidateSession } from '@/lib/session';
-import { useAuthRoute } from '@/hooks/use-auth-route';
 import { getSafeRedirectPath } from '@/lib/safe-redirect';
 import { usePublicConfig } from '@/hooks/use-public-config';
 
@@ -14,19 +13,16 @@ export const useSessionOrNavigateToIndexPage = () => {
 	const navigate = useNavigate();
 	const router = useRouter();
 	const session = useSession();
-	const navigation = useAuthRoute();
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 	const searchStr = useRouterState({ select: (s) => s.location.searchStr });
 	const config = usePublicConfig();
-	const isUserSignupEnabled = config.data?.enableUserSignup === true;
 
 	useEffect(() => {
 		if (session.isPending || config.isPending) {
 			return;
 		}
 
-		const canStayUnauthenticated =
-			PUBLIC_AUTH_ROUTES.includes(pathname) || (pathname === '/signup' && isUserSignupEnabled);
+		const canStayUnauthenticated = PUBLIC_AUTH_ROUTES.includes(pathname);
 
 		if (!session.data) {
 			invalidateSession();
@@ -34,14 +30,10 @@ export const useSessionOrNavigateToIndexPage = () => {
 
 		if (!session.data && !canStayUnauthenticated) {
 			const redirect = getSafeRedirectPath(`${pathname}${searchStr ?? ''}`) ?? undefined;
-			if (pathname === '/signup') {
-				navigate({ to: '/login', search: { error: 'Sign up is disabled.', redirect } });
-			} else {
-				navigate({ to: navigation, search: { redirect } });
-			}
+			navigate({ to: '/login', search: { error: undefined, redirect } });
 		}
 
-		// The _public guard handles login, signup and forgot-password, without racing a sign-out in progress.
+		// The _public guard handles login and forgot-password, without racing a sign-out in progress.
 		if (session.data && pathname === '/reset-password') {
 			const redirect = getSafeRedirectPath(new URLSearchParams(searchStr ?? '').get('redirect'));
 			if (redirect) {
@@ -50,17 +42,7 @@ export const useSessionOrNavigateToIndexPage = () => {
 				navigate({ to: '/' });
 			}
 		}
-	}, [
-		session.isPending,
-		session.data,
-		config.isPending,
-		navigate,
-		router,
-		navigation,
-		pathname,
-		searchStr,
-		isUserSignupEnabled,
-	]);
+	}, [session.isPending, session.data, config.isPending, navigate, router, pathname, searchStr]);
 
 	return {
 		...session,

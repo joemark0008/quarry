@@ -6,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactNode } from 'react';
 import { EmailVerified } from '@/feature/auth/email-verified-page';
 import { Login } from '@/feature/auth/login-page';
-import { SignUp } from '@/feature/auth/signup-page';
 
 const mocks = vi.hoisted(() => ({
 	formValues: {} as Record<string, string | boolean>,
@@ -14,14 +13,12 @@ const mocks = vi.hoisted(() => ({
 	publicConfig: {
 		emailVerificationEnabled: true,
 		enableUserLogin: true,
-		enableUserSignup: true,
 		quarryMode: 'cloud',
 	},
 	push: vi.fn(),
 	searchByPath: {} as Record<string, { error?: string; redirect?: string }>,
 	sendVerificationEmail: vi.fn(),
 	signInEmail: vi.fn(),
-	signUpEmail: vi.fn(),
 }));
 
 vi.mock('@tanstack/react-router', () => ({
@@ -90,7 +87,6 @@ vi.mock('@/hooks/use-quarry-mode', () => ({
 vi.mock('@/lib/auth-client', () => ({
 	sendVerificationEmail: (...args: unknown[]) => mocks.sendVerificationEmail(...args),
 	signIn: { email: (...args: unknown[]) => mocks.signInEmail(...args) },
-	signUp: { email: (...args: unknown[]) => mocks.signUpEmail(...args) },
 }));
 
 vi.mock('@/lib/last-sign-in-method', () => ({
@@ -103,7 +99,6 @@ describe('email verification auth routes', () => {
 		mocks.publicConfig = {
 			emailVerificationEnabled: true,
 			enableUserLogin: true,
-			enableUserSignup: true,
 			quarryMode: 'cloud',
 		};
 		mocks.searchByPath = {};
@@ -111,58 +106,10 @@ describe('email verification auth routes', () => {
 		mocks.push.mockReset();
 		mocks.sendVerificationEmail.mockReset().mockResolvedValue({ error: null });
 		mocks.signInEmail.mockReset();
-		mocks.signUpEmail.mockReset();
 		window.history.replaceState({}, '', '/');
 	});
 
 	afterEach(cleanup);
-
-	it('replaces successful cloud sign-up with a check-inbox state', async () => {
-		mocks.searchByPath['/_public/signup'] = { redirect: '/settings' };
-		mocks.formValues = {
-			name: 'New User',
-			email: 'new@example.com',
-			password: 'password123',
-			requiresPasswordReset: false,
-			messagingProviderCode: '',
-		};
-		mocks.signUpEmail.mockResolvedValue({ error: null });
-
-		render(<SignUp />);
-		fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-
-		expect(await screen.findByRole('heading', { name: 'Check your inbox' })).toBeTruthy();
-		expect(mocks.signUpEmail).toHaveBeenCalledWith(
-			expect.objectContaining({
-				email: 'new@example.com',
-				callbackURL: '/email-verified?redirect=%2Fsettings',
-			}),
-			{ disableSignal: true },
-		);
-		expect(mocks.navigate).not.toHaveBeenCalledWith({ to: '/' });
-
-		fireEvent.click(screen.getByRole('button', { name: 'Use a different email' }));
-		expect(screen.getByRole('heading', { name: 'Sign up' })).toBeTruthy();
-	});
-
-	it('continues after cloud sign-up when email verification is disabled', async () => {
-		mocks.publicConfig.emailVerificationEnabled = false;
-		mocks.searchByPath['/_public/signup'] = { redirect: '/settings' };
-		mocks.formValues = {
-			name: 'New User',
-			email: 'new@example.com',
-			password: 'password123',
-			requiresPasswordReset: false,
-			messagingProviderCode: '',
-		};
-		mocks.signUpEmail.mockResolvedValue({ error: null });
-
-		render(<SignUp />);
-		fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
-
-		await waitFor(() => expect(mocks.push).toHaveBeenCalledWith('/settings'));
-		expect(screen.queryByRole('heading', { name: 'Check your inbox' })).toBeNull();
-	});
 
 	it('requests a verification email and shows check-inbox for an unverified login', async () => {
 		mocks.searchByPath['/_public/login'] = { redirect: '/settings' };

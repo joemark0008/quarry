@@ -5,7 +5,6 @@ import styles from './login-page.module.css';
 import { sendVerificationEmail, signIn } from '@/lib/auth-client';
 import { AuthForm, FormTextField } from '@/feature/auth/components/auth-form';
 import { EmailVerificationPending } from '@/feature/auth/components/email-verification-pending';
-import { useIsCloud } from '@/hooks/use-quarry-mode';
 import {
 	buildEmailVerificationCallbackUrl,
 	getSignInErrorMessage,
@@ -35,9 +34,7 @@ export function Login() {
 	const [pendingEmail, setPendingEmail] = useState<string>();
 	const isSmtpSetup = useSmtpSetup();
 	const config = usePublicConfig();
-	const isCloud = useIsCloud();
 	const isUserLoginEnabled = config.data?.enableUserLogin;
-	const isUserSignupEnabled = config.data?.enableUserSignup;
 
 	const oauthAuthorizeUrl = buildOAuthAuthorizeUrl();
 	const safeRedirect = getSafeRedirectPath(redirect);
@@ -109,20 +106,6 @@ export function Login() {
 						callbackURL={verificationCallbackURL}
 						onChangeEmail={() => setPendingEmail(undefined)}
 					/>
-				) : undefined
-			}
-			footer={
-				!pendingEmail && isCloud && isUserSignupEnabled ? (
-					<>
-						Don&apos;t have an account?{' '}
-						<Link
-							to='/signup'
-							search={{ error: undefined, redirect: safeRedirect ?? undefined }}
-							className={styles.loginLink}
-						>
-							Create an account
-						</Link>
-					</>
 				) : undefined
 			}
 		>
