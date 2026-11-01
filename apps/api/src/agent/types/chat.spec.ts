@@ -23,3 +23,28 @@ describe('agent chat modes', () => {
 
 	// Upstream's `getChatModeMismatchError` (services/agent-run.ts) is not ported: onboarding chats are not in quarry yet.
 });
+
+describe('AgentRequestSchema query workbench', () => {
+	const message = { text: 'Top customers' };
+	const workbench = { sql: 'SELECT 1', databaseId: null };
+
+	it('accepts the editor context in query_workbench mode', () => {
+		const request = AgentRequestSchema.parse({ message, mode: 'query_workbench', workbench });
+		expect(request.workbench).toEqual(workbench);
+	});
+
+	it('rejects the editor context in other modes', () => {
+		expect(AgentRequestSchema.safeParse({ message, workbench }).success).toBe(false);
+		expect(AgentRequestSchema.safeParse({ message, mode: 'onboarding', workbench }).success).toBe(false);
+	});
+
+	it('rejects an oversized editor', () => {
+		const sql = 'x'.repeat(64_001);
+		const parsed = AgentRequestSchema.safeParse({
+			message,
+			mode: 'query_workbench',
+			workbench: { sql, databaseId: null },
+		});
+		expect(parsed.success).toBe(false);
+	});
+});

@@ -8,7 +8,7 @@ import { useLocalStorage } from './use-local-storage';
 import { usePrevRef } from './use-prev';
 import { useMemoObject } from './useMemoObject';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import type { UIMessage } from '@quarry/api/agent/types/chat';
+import type { QueryWorkbenchContext, UIMessage } from '@quarry/api/agent/types/chat';
 import type { ImageUploadData } from '@quarry/shared/attachments';
 import type { CitationData, LlmSelectedModel } from '@quarry/shared/types';
 import type { DocumentAttachment } from '@/lib/attachments';
@@ -41,7 +41,7 @@ import { useCurrentProject } from '@/hooks/use-current-project';
 import { chatApi } from '@/lib/chat-api';
 import { projectApi } from '@/lib/project-api';
 
-export type AgentMode = 'default' | 'onboarding' | 'example';
+export type AgentMode = 'default' | 'onboarding' | 'example' | 'query_workbench';
 
 export interface AgentHelpers {
 	chatId: string | undefined;
@@ -103,9 +103,11 @@ const agentSendRefsStore = new WeakMap<Agent<UIMessage>, AgentSendRefs>();
 export const useAgent = ({
 	disableNavigation = false,
 	mode = 'default',
+	getWorkbenchContext,
 }: {
 	disableNavigation?: boolean;
 	mode?: AgentMode;
+	getWorkbenchContext?: () => QueryWorkbenchContext;
 } = {}): AgentState => {
 	const navigate = useNavigate();
 	const contextChatId = useChatId();
@@ -134,6 +136,8 @@ export const useAgent = ({
 	selectedModelRef.current = hasProject ? pinnedModel : null;
 	const modeRef = useRef(mode);
 	modeRef.current = mode;
+	const getWorkbenchContextRef = useRef(getWorkbenchContext);
+	getWorkbenchContextRef.current = getWorkbenchContext;
 	const mentionsRef = useRef<MentionOption[]>([]);
 	const [adminMode, setAdminModeState] = useState(false);
 	const adminModeRef = useRef(false);
@@ -258,6 +262,7 @@ export const useAgent = ({
 							mentions: mentions.length > 0 ? mentions : undefined,
 							timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 							adminMode: adminModeAtSend || undefined,
+							workbench: getWorkbenchContextRef.current?.(),
 						},
 					};
 				},
@@ -391,7 +396,9 @@ export const useAgent = ({
 
 			if (result.chatDeleted) {
 				queryClient.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
-				await navigate({ to: '/' });
+				if (!disableNavigation) {
+					await navigate({ to: '/' });
+				}
 				if (restorePayload) {
 					chatInputRestoreStore.set(restorePayload);
 				}
@@ -401,7 +408,7 @@ export const useAgent = ({
 		} finally {
 			cancellingMessageIdStore.setCancelling(undefined);
 		}
-	}, [chatId, agentInstance, cancelAgentMutation.mutateAsync, setMessages, navigate, queryClient]); // eslint-disable-line
+	}, [chatId, agentInstance, cancelAgentMutation.mutateAsync, setMessages, navigate, queryClient, disableNavigation]); // eslint-disable-line
 
 	const handleSendMessage = useCallback<UseChatHelpers<UIMessage>['sendMessage']>(
 		async (...args) => {

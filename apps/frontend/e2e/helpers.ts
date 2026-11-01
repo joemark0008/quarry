@@ -56,3 +56,37 @@ export async function controlInventory(page: Page) {
 		};
 	});
 }
+
+/** Makes a project with a warehouse connection the active one, and returns false if the user has none. */
+export async function selectProjectWithWarehouse(page: Page): Promise<boolean> {
+	const projectId = await page.evaluate(async () => {
+		const graphql = async (query: string, scope?: string) => {
+			const response = await fetch('/graphql', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json',
+					...(scope && { 'x-quarry-project-id': scope }),
+				},
+				body: JSON.stringify({ query }),
+			});
+			return (await response.json()).data;
+		};
+		const { projects } = await graphql('{ projects { id } }');
+		for (const { id } of projects as { id: string }[]) {
+			const data = await graphql('{ warehouseConnections { name } }', id);
+			if (data?.warehouseConnections?.length) {
+				return id;
+			}
+		}
+		return null;
+	});
+	if (!projectId) {
+		return false;
+	}
+	// Before each page load: the app could otherwise pick its own project first.
+	await page.addInitScript(
+		(activeId) => localStorage.setItem('quarry.active-project-id', JSON.stringify(activeId)),
+		projectId,
+	);
+	return true;
+}

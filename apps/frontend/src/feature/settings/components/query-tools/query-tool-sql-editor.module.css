@@ -1,5 +1,6 @@
 .queryToolSqlEditorDiv {
-	height: 16rem;
+	height: 100%;
+	min-height: 10rem;
 	overflow: hidden;
 	border-radius: calc(var(--app-radius) - 2px);
 	border-style: var(--fx-border-style);

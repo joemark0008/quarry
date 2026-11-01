@@ -152,7 +152,10 @@ export const SqlToolCallView = ({
 						id: 'save-as-tool',
 						label: <BookmarkPlus className={styles.actionsTableIcon} strokeWidth={2.25} />,
 						onClick: () =>
-							navigate({ to: '/settings/project/query-tools', search: { sql: input.sql_query } }),
+							navigate({
+								to: '/settings/project/query-tools',
+								search: { tool: 'new', sql: input.sql_query },
+							}),
 						title: 'Save as query tool',
 					},
 				]

@@ -67,6 +67,11 @@
 		padding: 2rem;
 	}
 }
+.settingsPageWrapperFull {
+	max-width: none;
+	padding-block: 1.5rem;
+	padding-inline: 1.5rem;
+}
 .settingsPageWrapperDiv3 {
 	max-width: 72rem;
 	gap: 1.5rem;

@@ -1,6 +1,6 @@
 import { createContext, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/shim/with-selector';
-import type { UIMessage } from '@quarry/api/agent/types/chat';
+import type { UIMessage, QueryWorkbenchContext } from '@quarry/api/agent/types/chat';
 
 import type { AgentHelpers, AgentMode } from '@/hooks/use-agent';
 import { useAgent, useSyncMessages } from '@/hooks/use-agent';
@@ -39,10 +39,12 @@ export interface Props {
 	children: React.ReactNode;
 	disableNavigation?: boolean;
 	mode?: AgentMode;
+	/** Query workbench: what the editor holds, sent with each message. */
+	getWorkbenchContext?: () => QueryWorkbenchContext;
 }
 
-export const AgentProvider = ({ children, disableNavigation, mode = 'default' }: Props) => {
-	const agent = useAgent({ disableNavigation, mode });
+export const AgentProvider = ({ children, disableNavigation, mode = 'default', getWorkbenchContext }: Props) => {
+	const agent = useAgent({ disableNavigation, mode, getWorkbenchContext });
 	const [messagesStore] = useState(() => createAgentMessagesStore(agent.messages));
 	const value = useMemo<AgentHelpers>(
 		() => ({

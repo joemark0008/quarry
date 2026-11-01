@@ -203,15 +203,28 @@ export const AgentRequestUserMessageSchema = z.object({
 	citation: CitationDataSchema.optional(),
 });
 
-export type AgentRequest = z.infer<typeof AgentRequestSchema>;
-export const AgentRequestSchema = z.object({
-	message: AgentRequestUserMessageSchema,
-	chatId: z.string().optional(),
-	messageToEditId: z.string().optional(),
-	model: llmSelectedModelSchema.optional(),
-	mentions: z.array(MentionSchema).optional(),
-	timezone: z.string().optional(),
-	/** When true, the message runs in admin mode: it queries quarry's own usage database instead of the warehouse. */
-	adminMode: z.boolean().optional(),
-	mode: z.enum(['default', 'onboarding', 'example']).default('default'),
+/** What the query workbench's editor holds when a message is sent. */
+export type QueryWorkbenchContext = z.infer<typeof QueryWorkbenchContextSchema>;
+export const QueryWorkbenchContextSchema = z.object({
+	sql: z.string().max(64_000),
+	databaseId: z.string().nullable(),
 });
+
+export type AgentRequest = z.infer<typeof AgentRequestSchema>;
+export const AgentRequestSchema = z
+	.object({
+		message: AgentRequestUserMessageSchema,
+		chatId: z.string().optional(),
+		messageToEditId: z.string().optional(),
+		model: llmSelectedModelSchema.optional(),
+		mentions: z.array(MentionSchema).optional(),
+		timezone: z.string().optional(),
+		/** When true, the message runs in admin mode: it queries quarry's own usage database instead of the warehouse. */
+		adminMode: z.boolean().optional(),
+		mode: z.enum(['default', 'onboarding', 'example', 'query_workbench']).default('default'),
+		workbench: QueryWorkbenchContextSchema.optional(),
+	})
+	.refine((request) => !request.workbench || request.mode === 'query_workbench', {
+		message: '`workbench` is only accepted in query_workbench mode',
+		path: ['workbench'],
+	});

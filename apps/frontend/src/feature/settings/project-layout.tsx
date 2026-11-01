@@ -13,13 +13,16 @@ declare module '@tanstack/react-router' {
 
 export function ProjectPage() {
 	const project = useCurrentProject();
-	const pageHeader = useMatches().at(-1)?.staticData;
+	const lastMatch = useMatches().at(-1);
+	const pageHeader = lastMatch?.staticData;
+	// The query workbench takes the whole page and has its own header.
+	const isFullPage = Boolean((lastMatch?.search as { tool?: string } | undefined)?.tool);
 	const emptyMessage = 'No project selected. Create one with New project in the project switcher.';
 
 	return (
-		<SettingsPageWrapper>
+		<SettingsPageWrapper full={isFullPage}>
 			<div className={styles.projectPageDiv}>
-				{pageHeader?.title && (
+				{pageHeader?.title && !isFullPage && (
 					<div>
 						<h1 className={styles.projectPageH1}>{pageHeader.title}</h1>
 						{pageHeader.description && <p className={styles.projectPageP}>{pageHeader.description}</p>}

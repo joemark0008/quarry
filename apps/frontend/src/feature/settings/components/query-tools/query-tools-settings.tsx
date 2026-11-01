@@ -1,6 +1,5 @@
 import { Pencil, Plus, TerminalSquare, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { QueryToolEditor } from './query-tool-editor';
 import styles from './query-tools-settings.module.css';
 import type { ProjectQueryTool } from '@/lib/api-types';
 
@@ -15,37 +14,12 @@ import { usePermissions } from '@/hooks/use-permissions';
 import { cn } from '@/lib/utils';
 import { useQueryToolMutations, useQueryToolsQuery } from '@/queries/use-query-tools';
 
-type EditorState = { mode: 'create'; sql?: string } | { mode: 'edit'; tool: ProjectQueryTool } | null;
-
 /** Settings → Project → Query tools: the project's saved queries the agent can call. */
-export function QueryToolsSettings({
-	initialSql,
-	onInitialSqlUsed,
-}: {
-	initialSql?: string;
-	onInitialSqlUsed?: () => void;
-}) {
+export function QueryToolsSettings({ onOpen }: { onOpen: (tool: string) => void }) {
 	const tools = useQueryToolsQuery();
 	const { updateMutation, deleteMutation } = useQueryToolMutations();
 	const { canSendMessages } = usePermissions();
-	const [editor, setEditor] = useState<EditorState>(initialSql ? { mode: 'create', sql: initialSql } : null);
 	const [toolToDelete, setToolToDelete] = useState<ProjectQueryTool | null>(null);
-
-	const closeEditor = () => {
-		setEditor(null);
-		onInitialSqlUsed?.();
-	};
-
-	if (editor) {
-		return (
-			<QueryToolEditor
-				key={editor.mode === 'edit' ? editor.tool.id : 'new'}
-				tool={editor.mode === 'edit' ? editor.tool : undefined}
-				initialSql={editor.mode === 'create' ? editor.sql : undefined}
-				onDone={closeEditor}
-			/>
-		);
-	}
 
 	return (
 		<SettingsCard
@@ -53,9 +27,9 @@ export function QueryToolsSettings({
 			description='Named SQL queries the agent can call in chat.'
 			action={
 				canSendMessages && (
-					<Button size='sm' onClick={() => setEditor({ mode: 'create' })}>
+					<Button size='sm' onClick={() => onOpen('new')}>
 						<Plus />
-						New query tool
+						New query
 					</Button>
 				)
 			}
@@ -69,7 +43,7 @@ export function QueryToolsSettings({
 			) : tools.isError ? (
 				<ErrorMessage message={tools.error.message} />
 			) : !tools.data?.length ? (
-				<Empty>No query tools yet. Build a query and save it as a tool the agent can call.</Empty>
+				<Empty>No query tools yet. Write a query, run it and save it as a tool the agent can call.</Empty>
 			) : (
 				<div className={styles.queryToolsSettingsDiv2}>
 					{tools.data.map((tool) => (
@@ -103,7 +77,7 @@ export function QueryToolsSettings({
 								<Button
 									variant='ghost-muted'
 									size='icon-sm'
-									onClick={() => setEditor({ mode: 'edit', tool })}
+									onClick={() => onOpen(tool.id)}
 									aria-label={`Edit ${tool.name}`}
 								>
 									<Pencil />

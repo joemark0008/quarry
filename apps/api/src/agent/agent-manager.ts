@@ -50,6 +50,7 @@ import type {
 	ForkMetadata,
 	Mention,
 	MessageCustomDataParts,
+	QueryWorkbenchContext,
 	TokenUsage,
 	UIMessage,
 	UIMessagePart,
@@ -114,6 +115,8 @@ export interface AgentProfile {
 	systemPrompt?: (context: { timezone?: string }) => string;
 	/** Background runs (context recommendations) don't extract memories from their own prompt. */
 	skipMemoryExtraction?: boolean;
+	/** Runs in the query workbench: its focused tool set and prompt section. */
+	queryWorkbench?: boolean;
 }
 
 export interface AgentManagerDependencies {
@@ -232,7 +235,12 @@ export class AgentManager {
 
 	stream(
 		uiMessages: UIMessage[],
-		opts: { events?: Partial<MessageCustomDataParts>; mentions?: Mention[]; timezone?: string } = {},
+		opts: {
+			events?: Partial<MessageCustomDataParts>;
+			mentions?: Mention[];
+			timezone?: string;
+			workbench?: QueryWorkbenchContext;
+		} = {},
 	): ReadableStream<InferUIMessageChunk<UIMessage>> {
 		let error: unknown = undefined;
 		let result: StreamTextResult<AgentTools, never> | undefined;
@@ -258,7 +266,12 @@ export class AgentManager {
 				}
 
 				this._streamWriter = writer;
-				const messages = await this._buildModelMessages(uiMessages, opts.mentions, opts.timezone);
+				const messages = await this._buildModelMessages(
+					uiMessages,
+					opts.mentions,
+					opts.timezone,
+					opts.workbench,
+				);
 				result = await this._agent.stream({
 					messages,
 					abortSignal: this._abortController.signal,
@@ -346,6 +359,7 @@ export class AgentManager {
 		uiMessages: UIMessage[],
 		mentions?: Mention[],
 		timezone?: string,
+		workbench?: QueryWorkbenchContext,
 	): Promise<ModelMessage[]> {
 		const settled = await settleToolParts(uiMessages);
 		const artifacts = await safeGetChatArtifacts(this.chat.id, settled, this.chat.projectId);
@@ -356,7 +370,8 @@ export class AgentManager {
 		const withStoryMode = this._addStoryMode(withCollapsedStories, mentions);
 		const withSkills = this._addSkills(withStoryMode, mentions);
 		const withCitation = this._addCitationContext(withSkills);
-		const withDbContext = this._addDatabaseContext(withCitation, mentions);
+		const withWorkbench = workbench ? this._addWorkbenchContext(withCitation, workbench) : withCitation;
+		const withDbContext = this._addDatabaseContext(withWorkbench, mentions);
 		const withStoryQuestion = addStoryQuestionReference(withDbContext, this.chat.forkMetadata);
 		const withCompaction = keepStoryReferencesThroughCompaction(
 			withStoryQuestion,
@@ -468,6 +483,12 @@ export class AgentManager {
 		}
 		const context = describeCitation(lastUserMessage.citation);
 		return this._transformLastUserMessageText(messages, (text) => (text ? `${context}\n\n${text}` : context));
+	}
+
+	/** The editor as it is now, so the agent builds on the user's edits. Only the model sees it, it isn't saved. */
+	private _addWorkbenchContext(messages: UIMessage[], workbench: QueryWorkbenchContext): UIMessage[] {
+		const context = describeWorkbench(workbench);
+		return this._transformLastUserMessageText(messages, (text) => `${context}\n\n${text}`);
 	}
 
 	private _scheduleMemoryExtraction(uiMessages: UIMessage[]): void {
@@ -587,6 +608,12 @@ export class AgentManager {
 			emptyMessages: 'remove',
 		});
 	}
+}
+
+export function describeWorkbench({ sql, databaseId }: QueryWorkbenchContext): string {
+	const connection = `Selected connection: ${databaseId ?? 'the default connection'}.`;
+	const editor = sql.trim() ? `The editor contains:\n\`\`\`sql\n${sql}\n\`\`\`` : 'The editor is empty.';
+	return `[Query workbench] ${connection} ${editor}`;
 }
 
 const IMAGE_URL_PATTERN = /^\/i\/([a-f0-9-]+)$/;

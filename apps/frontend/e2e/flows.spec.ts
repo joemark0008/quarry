@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { logIn, trackErrors, USER } from './helpers';
+import { logIn, selectProjectWithWarehouse, trackErrors, USER } from './helpers';
 import type { Page } from '@playwright/test';
 
 const isDark = (page: Page) =>
@@ -113,7 +113,7 @@ test.describe('signed in', () => {
 	});
 
 	test('a chat from the list opens with its messages', async ({ page }) => {
-		const firstChat = page.getByRole('link', { name: /booking|Facilities|Warehouse|order amount/i }).first();
+		const firstChat = page.getByRole('link', { name: /\bago$/ }).first();
 		await firstChat.click();
 		await expect(page).toHaveURL(/\/[0-9a-z-]{10,}$/i);
 		await expect(
@@ -144,5 +144,92 @@ test.describe('signed in', () => {
 		await expect(page).toHaveURL(/\/login/);
 		await page.goto('/settings/account');
 		await expect(page).toHaveURL(/\/login/);
+	});
+});
+
+test.describe('query workbench', () => {
+	test.beforeEach(async ({ page }) => {
+		await logIn(page);
+		test.skip(!(await selectProjectWithWarehouse(page)), 'needs a project with a warehouse connection');
+	});
+
+	/** Through Monaco's API: Playwright's ⌘ shortcuts don't reach it in headless Chromium on macOS. */
+	const runEditorAction = (page: Page, action: string) =>
+		page.evaluate((id) => {
+			(window as any).monaco.editor.getEditors()[0].trigger('e2e', id, null);
+		}, action);
+
+	const typeSql = async (page: Page, sql: string) => {
+		await page.getByTestId('query-tool-sql-editor').locator('.view-lines').click();
+		await runEditorAction(page, 'editor.action.selectAll');
+		await page.keyboard.type(sql);
+	};
+
+	test('runs a query first, then saves it as a tool', async ({ page }) => {
+		const name = `e2e_orders_${Date.now()}`;
+		await page.goto('/settings/project/query-tools');
+		await page.getByRole('button', { name: 'New query' }).click();
+		await expect(page).toHaveURL(/tool=new/);
+
+		await typeSql(page, 'SELECT 1 AS one');
+		await page.getByRole('button', { name: 'Run', exact: true }).click();
+		await expect(page.getByTestId('query-tool-preview')).toContainText('1 row');
+
+		await page.reload();
+		await expect(page.getByTestId('query-tool-sql-editor')).toContainText('SELECT 1 AS one');
+
+		await page.getByRole('button', { name: 'Save as tool' }).click();
+		await page.getByPlaceholder('orders_by_status').fill(name);
+		await page.getByPlaceholder(/What the query returns/).fill('One row, from the e2e flow.');
+		await page.getByRole('button', { name: 'Save tool' }).click();
+		await expect(page.getByRole('heading', { name: `qt_${name}` })).toBeVisible();
+		await expect(page).toHaveURL(/tool=(?!new)/);
+
+		await typeSql(page, 'SELECT 2 AS two');
+		await expect(page.getByText('Unsaved changes')).toBeVisible();
+		await page.getByRole('button', { name: 'Update', exact: true }).click();
+		await expect(page.getByText('Unsaved changes')).toBeHidden();
+		await expect(page.getByRole('button', { name: 'Saved', exact: true })).toBeDisabled();
+
+		await page.getByRole('button', { name: 'Back to query tools' }).click();
+		await page.getByRole('button', { name: `Delete ${name}` }).click();
+		await page.getByRole('button', { name: 'Delete', exact: true }).click();
+		await expect(page.getByRole('button', { name: `Delete ${name}` })).toBeHidden();
+	});
+
+	test('a failed run offers the assistant', async ({ page }) => {
+		await page.goto('/settings/project/query-tools?tool=new');
+		await page.getByRole('button', { name: 'New draft' }).click();
+		await typeSql(page, 'SELECT missing_column FROM missing_table');
+		await page.getByRole('button', { name: 'Run', exact: true }).click();
+		await expect(page.getByRole('button', { name: 'Ask assistant to fix' })).toBeVisible();
+	});
+
+	test('the assistant proposes a tested query that the user applies (real LLM call)', async ({ page }) => {
+		await page.goto('/settings/project/query-tools?tool=new');
+		await page.getByRole('button', { name: 'New draft' }).click();
+		await page.getByPlaceholder('Ask for a query…').fill('How many orders are there in total?');
+		await page.getByPlaceholder('Ask for a query…').press('Enter');
+
+		const card = page.getByTestId('propose-sql');
+		await expect(card).toBeVisible({ timeout: 120_000 });
+		await expect(page.getByTestId('query-tool-sql-editor')).not.toContainText('SELECT');
+		await card.getByRole('button', { name: 'Apply to editor' }).click();
+		await expect(page.getByTestId('query-tool-sql-editor')).toContainText('SELECT');
+
+		await runEditorAction(page, 'undo');
+		await expect(page.getByTestId('query-tool-sql-editor')).not.toContainText('SELECT');
+		await card.getByRole('button', { name: 'Apply to editor' }).click();
+		await expect(page.getByTestId('query-tool-sql-editor')).toContainText('SELECT');
+
+		await page.getByRole('button', { name: 'Run', exact: true }).click();
+		await expect(page.getByTestId('query-tool-preview')).toBeVisible();
+
+		await page.reload();
+		await expect(page.getByTestId('propose-sql')).toBeVisible();
+		await expect(page.getByTestId('propose-sql').getByRole('button', { name: 'In the editor' })).toBeVisible();
+
+		await page.goto('/');
+		await expect(page.getByText('How many orders are there in total?')).toBeHidden();
 	});
 });

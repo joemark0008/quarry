@@ -14,6 +14,7 @@ import { ListToolCall } from './list';
 import { McpToolCall } from './mcp';
 import { OnboardingAgentPromptToolCall } from './onboarding-agent-prompt';
 import { OnboardingCommandToolCall } from './onboarding-command';
+import { ProposeSqlToolCall } from './propose-sql';
 import { QueryAppDbToolCall } from './query-app-db';
 import { ReadToolCall } from './read';
 import { ReadQueryResultToolCall } from './read-query-result';
@@ -49,6 +50,7 @@ const toolComponents: Partial<{
 	list: ListToolCall,
 	onboarding_agent_prompt: OnboardingAgentPromptToolCall,
 	onboarding_command: OnboardingCommandToolCall,
+	propose_sql: ProposeSqlToolCall,
 	read: ReadToolCall,
 	read_query_result: ReadQueryResultToolCall,
 	request_warehouse_selection: RequestWarehouseSelectionToolCall,

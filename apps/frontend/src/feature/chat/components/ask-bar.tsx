@@ -314,7 +314,7 @@ function AskPanelHeader({ onCollapse, onClose }: { onCollapse?: () => void; onCl
 	);
 }
 
-function AskInput({
+export function AskInput({
 	inputRef,
 	placeholder,
 	selection,

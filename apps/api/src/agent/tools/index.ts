@@ -23,6 +23,7 @@ import loadSkill from './load-skill.js';
 import onboardingAgentPrompt from './onboarding-agent-prompt.js';
 import onboardingCommand from './onboarding-command.js';
 import onboardingProgress from './onboarding-progress.js';
+import proposeSql from './propose-sql.js';
 import read from './read.js';
 import readQueryResult from './read-query-result.js';
 import requestWarehouseCredentials from './request-warehouse-credentials.js';
@@ -78,7 +79,21 @@ export const tools = {
 	write,
 	str_replace: strReplace,
 	suggest_follow_ups: suggestFollowUps,
+	propose_sql: proposeSql,
 };
+
+/** What the query workbench's agent may use: it writes and tests SQL, and has nothing to do with charts or stories. */
+export const QUERY_WORKBENCH_TOOLS = [
+	'execute_sql',
+	'read_query_result',
+	'read',
+	'grep',
+	'list',
+	'search',
+	'clarification',
+	'load_skill',
+	'propose_sql',
+];
 
 export const uiToolset = { ...tools, display_map: createDisplayMapTool() };
 
@@ -88,6 +103,8 @@ export const getTools = (
 	options: {
 		excludeFollowUps?: boolean;
 		onboarding?: boolean;
+		/** The query workbench's tool set: `propose_sql` plus `QUERY_WORKBENCH_TOOLS`; extra tools are still kept. */
+		queryWorkbench?: boolean;
 		/** Restricts built-in tools to this allowlist by name; `extraTools` are always kept. */
 		builtinToolAllowlist?: string[];
 		/** Drops these built-in tools from the returned set. */
@@ -114,6 +131,7 @@ export const getTools = (
 		request_warehouse_credentials: requestWarehouseCredentialsTool,
 		request_warehouse_selection: requestWarehouseSelectionTool,
 		generate_onboarding_rules: generateOnboardingRulesTool,
+		propose_sql,
 		suggest_follow_ups,
 		task: taskTool,
 		write: writeTool,
@@ -137,6 +155,7 @@ export const getTools = (
 
 	const allTools = {
 		...baseTools,
+		...(options.queryWorkbench && { propose_sql }),
 		...(options.onboarding && {
 			onboarding_agent_prompt: onboardingAgentPromptTool,
 			onboarding_command: onboardingCommandTool,
@@ -154,8 +173,9 @@ export const getTools = (
 	};
 
 	let result = allTools;
-	if (options.builtinToolAllowlist) {
-		const allowed = new Set(options.builtinToolAllowlist);
+	const toolAllowlist = options.queryWorkbench ? QUERY_WORKBENCH_TOOLS : options.builtinToolAllowlist;
+	if (toolAllowlist) {
+		const allowed = new Set(toolAllowlist);
 		result = keepTools(result, extraTools, (name) => allowed.has(name));
 	}
 	if (options.excludeBuiltinTools) {

@@ -1,0 +1,48 @@
+.proposeSqlSkeleton {
+	height: 6rem;
+	width: 100%;
+}
+.proposeSqlCard {
+	display: flex;
+	flex-direction: column;
+	gap: 0.625rem;
+	border: 1px solid var(--app-line);
+	border-radius: 0.5rem;
+	padding: 0.75rem;
+}
+.proposeSqlSummary {
+	font-size: 0.8125rem;
+	color: var(--app-text);
+}
+.proposeSqlCode {
+	max-height: 16rem;
+	overflow: auto;
+	white-space: pre-wrap;
+	font-family: var(--app-font-mono);
+	font-size: 0.75rem;
+	color: var(--app-text);
+}
+.proposeSqlCode code {
+	background: none;
+	padding: 0;
+	font: inherit;
+}
+.proposeSqlFooter {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+.proposeSqlTested,
+.proposeSqlUntested {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 0.75rem;
+	color: var(--app-muted);
+}
+.proposeSqlTested svg,
+.proposeSqlUntested svg {
+	width: 0.875rem;
+	height: 0.875rem;
+}

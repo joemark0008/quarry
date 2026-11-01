@@ -15,6 +15,7 @@ export * as mcpConnect from './mcp-connect';
 export * as onboardingAgentPrompt from './onboarding-agent-prompt';
 export * as onboardingCommand from './onboarding-command';
 export * as onboardingProgress from './onboarding-progress';
+export * as proposeSql from './propose-sql';
 export { QueryIdSchema } from './query-id';
 export * as readFile from './read';
 export * as readQueryResult from './read-query-result';

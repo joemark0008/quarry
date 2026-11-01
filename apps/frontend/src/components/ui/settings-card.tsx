@@ -1,13 +1,26 @@
 import styles from './settings-card.module.css';
 import { cn } from '@/lib/utils';
 
-export function SettingsPageWrapper({ children, wide }: { children: React.ReactNode; wide?: boolean }) {
+export function SettingsPageWrapper({
+	children,
+	wide,
+	full,
+}: {
+	children: React.ReactNode;
+	wide?: boolean;
+	/** No width limit: for pages that lay themselves out. */
+	full?: boolean;
+}) {
 	return (
 		<div className={styles.settingsPageWrapperDiv}>
 			<div
 				className={cn(
 					styles.settingsPageWrapperDiv2,
-					wide ? styles.settingsPageWrapperDiv3 : styles.settingsPageWrapperDiv4,
+					full
+						? styles.settingsPageWrapperFull
+						: wide
+							? styles.settingsPageWrapperDiv3
+							: styles.settingsPageWrapperDiv4,
 				)}
 			>
 				{children}

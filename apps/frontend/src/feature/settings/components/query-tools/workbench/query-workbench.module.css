@@ -1,0 +1,205 @@
+.workbench {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	/* The viewport minus the top bar and the page's own padding. */
+	height: calc(100dvh - 7rem);
+	min-height: 34rem;
+}
+.header {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.headerEnd {
+	margin-left: auto;
+}
+.title {
+	font-family: var(--app-font-mono);
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--app-text);
+}
+.paneTitle {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--app-text);
+}
+.mutedText {
+	font-size: 0.75rem;
+	color: var(--app-muted);
+}
+.mobileTabs {
+	@media (width >= 64rem) {
+		display: none;
+	}
+}
+.panes {
+	display: grid;
+	flex: 1;
+	min-height: 0;
+	gap: 0.75rem;
+	grid-template-columns: minmax(0, 1fr);
+	@media (width >= 64rem) {
+		grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
+	}
+}
+.paneHiddenOnMobile {
+	@media (width < 64rem) {
+		display: none !important;
+	}
+}
+.assistantPane,
+.editorPane {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	min-width: 0;
+	border: 1px solid var(--app-line);
+	border-radius: 0.5rem;
+}
+.editorPane {
+	gap: 0.75rem;
+	padding: 0.75rem;
+}
+.assistant {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+.assistantHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	min-height: 2.75rem;
+	padding: 0.25rem 0.75rem;
+	border-bottom: 1px solid var(--app-line);
+}
+.assistantConversation {
+	flex: 1;
+	min-height: 0;
+}
+.assistantConversationContent {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding: 0.75rem;
+}
+.assistantInput {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.5rem;
+	padding: 0.75rem;
+}
+.assistantInput form {
+	width: 100%;
+}
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+}
+.toolbarEnd {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-left: auto;
+}
+.connection {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.connectionTrigger {
+	min-width: 11rem;
+}
+.editorArea {
+	display: flex;
+	flex: 3;
+	gap: 0.75rem;
+	min-height: 12rem;
+}
+.editorColumn {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 0.75rem;
+	min-width: 0;
+}
+.editor {
+	flex: 1;
+	min-height: 0;
+}
+.parameters {
+	max-height: 12rem;
+	overflow: auto;
+}
+.results {
+	flex: 2;
+	min-height: 10rem;
+	overflow: auto;
+}
+.resultsTable,
+.resultsError {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+.resultsTable {
+	align-items: stretch;
+}
+.resultsSkeleton {
+	height: 8rem;
+	width: 100%;
+}
+.schemaPane {
+	width: 16rem;
+	flex-shrink: 0;
+	overflow: auto;
+}
+.schema {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.schemaSkeleton {
+	height: 8rem;
+	width: 100%;
+}
+.schemaList,
+.schemaColumns {
+	display: flex;
+	flex-direction: column;
+	gap: 0.125rem;
+	list-style: none;
+}
+.schemaColumns {
+	padding-left: 1.25rem;
+}
+.schemaRow {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+.schemaToggle {
+	display: inline-flex;
+	color: var(--app-muted);
+}
+.schemaToggle svg {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+.schemaName {
+	overflow: hidden;
+	text-align: left;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--app-font-mono);
+	font-size: 0.75rem;
+	color: var(--app-text);
+}

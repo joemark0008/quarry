@@ -28,6 +28,7 @@ import { LlmService } from './llm/llm.service.js';
 import { ProjectLlmConfigRepository } from './llm/project-llm-config.repository.js';
 import { renderToMarkdown } from './markdown/render-to-markdown.js';
 import { ChatForkContextPrompt } from './prompts/chat-fork-context-prompt.js';
+import { QUERY_WORKBENCH_PROMPT } from './prompts/query-workbench-prompt.js';
 import { renderSystemPrompt } from './prompts/render-system-prompt.js';
 import { getContextWindow } from './providers/providers.js';
 import { listChartPlugins } from './services/chart-plugin.js';
@@ -56,6 +57,7 @@ import { isStoragePath, toStorageRelativePath, toStorageVirtualPath } from './ut
 
 /** The web chat's analytics agent (upstream `agents/profiles/analytics.ts`). */
 export const analyticsAgent: AgentProfile = { source: 'web' };
+export const queryWorkbenchAgent: AgentProfile = { source: 'web', queryWorkbench: true, skipMemoryExtraction: true };
 
 export interface AgentRequestResult {
 	chatId: string;
@@ -100,7 +102,7 @@ export class AgentService {
 		body: AgentRequest,
 	): Promise<AgentRequestResult> {
 		const projectId = await this.resolveProjectId(currentProject, body);
-		if (body.mode !== 'default') {
+		if (body.mode !== 'default' && body.mode !== 'query_workbench') {
 			throw new HandlerError('FORBIDDEN', `Invalid ${body.mode} conversation`);
 		}
 		const userRole = await this.projects.getUserRoleInProject(projectId, userId);
@@ -113,11 +115,12 @@ export class AgentService {
 		const agent = await this.create(
 			{ id: chatId, projectId, userId, forkMetadata: chat.forkMetadata },
 			model,
-			analyticsAgent,
+			body.mode === 'query_workbench' ? queryWorkbenchAgent : analyticsAgent,
 		);
 		const stream = agent.stream(chat.messages, {
 			mentions: body.mentions,
 			timezone: body.timezone,
+			workbench: body.workbench,
 			events: {
 				newChat: isNewChat
 					? {
@@ -159,10 +162,14 @@ export class AgentService {
 			modelSelection,
 		});
 		toolContext.linkedStory = await resolveLinkedStory(chat);
-		const webTools = await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
-		const savedQueryTools = profile.tools
+		const webTools = profile.queryWorkbench
 			? {}
-			: await this.resolveSavedQueryTools(chat.projectId, toolContext.semanticLayerMode);
+			: await this.resolveWebTools(chat.projectId, modelSelection.provider, agentSettings);
+		// The workbench writes SQL the user can edit, so it doesn't call saved tools.
+		const savedQueryTools =
+			profile.tools || profile.queryWorkbench
+				? {}
+				: await this.resolveSavedQueryTools(chat.projectId, toolContext.semanticLayerMode);
 		// The analytics profile's tool set (upstream `analyticsToolsExcluding([])`) unless the profile brings its own.
 		const tools = (
 			profile.tools
@@ -171,6 +178,7 @@ export class AgentService {
 						agentSettings,
 						{ ...webTools, ...savedQueryTools },
 						{
+							queryWorkbench: profile.queryWorkbench,
 							customBoundaries,
 							semanticLayerMode: toolContext.semanticLayerMode,
 							subagentsEnabled: this.config.env.BETA_SUBAGENTS_ENABLED,
@@ -192,10 +200,18 @@ export class AgentService {
 				llm: this.llm,
 				compaction: this.compaction,
 				getImageById: (id) => this.images.getImageById(id),
-				buildSystemPrompt: async ({ toolNames, timezone }) =>
-					profile.systemPrompt
-						? profile.systemPrompt({ timezone })
-						: this.buildProjectSystemPrompt(toolContext, toolNames, timezone, chat.forkMetadata),
+				buildSystemPrompt: async ({ toolNames, timezone }) => {
+					if (profile.systemPrompt) {
+						return profile.systemPrompt({ timezone });
+					}
+					const prompt = await this.buildProjectSystemPrompt(
+						toolContext,
+						toolNames,
+						timezone,
+						chat.forkMetadata,
+					);
+					return profile.queryWorkbench ? `${prompt}\n\n${QUERY_WORKBENCH_PROMPT}` : prompt;
+				},
 				getSkillContent: (skillName) => this.skills.getSkillContent(chat.projectId, skillName),
 				scheduleMemoryExtraction: ({ messages, provider, modelId }) =>
 					this.memory.safeScheduleMemoryExtraction({
@@ -469,7 +485,12 @@ export class AgentService {
 		if (!chatId) {
 			const attachmentParts = await this.buildAttachmentParts(message, scope);
 			const [chat, firstMessage] = await this.chats.createChat(
-				{ title: createChatTitle(message), userId, projectId },
+				{
+					title: createChatTitle(message),
+					userId,
+					projectId,
+					...(body.mode === 'query_workbench' && { surface: 'query_workbench' }),
+				},
 				{ text: message.text, citation: message.citation, source },
 				attachmentParts,
 			);

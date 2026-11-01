@@ -128,7 +128,7 @@ export class ChatRepository {
 
 	/** Chat creation with its first user message (upstream `createChat`). */
 	createChat(
-		newChat: { userId: string; projectId: string; title: string },
+		newChat: { userId: string; projectId: string; title: string; surface?: string },
 		newUserMessage: { text: string; source?: UIMessage['source']; citation?: CitationData },
 		additionalParts: UIMessagePart[] = [],
 	): Promise<[Chat, ChatMessage]> {
@@ -366,7 +366,7 @@ export class ChatRepository {
 			FROM chat c
 			JOIN project p ON p.id = c.project_id
 			JOIN "user" u ON u.id = c.user_id
-			WHERE c.user_id = ${userId} AND c.deleted_at IS NULL
+			WHERE c.user_id = ${userId} AND c.deleted_at IS NULL AND c.surface = 'chat'
 				AND NOT exists(SELECT 1 FROM automation_run r WHERE r.chat_id = c.id)
 				AND NOT ${IS_QUICK_QUESTION}
 			ORDER BY c.updated_at DESC`;

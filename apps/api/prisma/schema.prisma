@@ -189,6 +189,7 @@ model Chat {
   whatsappThreadId          String?                    @map("whatsapp_thread_id")
   deletedAt                 DateTime?                  @map("deleted_at") @db.Timestamp(6)
   forkMetadata              Json?                      @map("fork_metadata")
+  surface                   String                     @default("chat")
   mattermostThreadId        String?                    @map("mattermost_thread_id")
   discordThreadId           String?                    @map("discord_thread_id")
   activities                Activity[]

@@ -28,8 +28,8 @@ Client. The SQL engine and semantic layer are written in Node, with no Python.
 - **Context** — **Sync** pulls the warehouse schema into project context files. The context explorer edits them (optionally
   in a Git repository), and context recommendations propose fixes from chat feedback.
 - **Semantic layer** — MetricFlow-style metrics compiled to Postgres SQL in process.
-- **Saved query tools** — build a parameterized query in **Settings**, or save one from a chat, and the agent can call it
-  as a tool.
+- **Query workbench and saved query tools** — write SQL in an editor, or ask the assistant for a query it tests first,
+  run it on the warehouse, then save it as a tool the agent can call by name (or save one from a chat)
 - **Skills and memory** — Markdown skills the agent loads on demand; memories extracted from chats and added to the
   system prompt.
 - **Stories** — turn answers into stories with folders, themes, sharing, embeds, scheduled refresh and delivery, and
