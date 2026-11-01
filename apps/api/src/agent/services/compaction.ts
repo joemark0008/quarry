@@ -2,6 +2,7 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import type { LlmProvider } from '@quarry/shared/types';
 import type { ModelMessage, Tool } from 'ai';
 
+import { LlmInferenceService } from '../../usage/llm-inference.service.js';
 import { CompactionLLM } from '../compaction/index.js';
 import { LlmService } from '../llm/llm.service.js';
 import { renderToMarkdown, XML } from '../markdown/index.js';
@@ -101,10 +102,7 @@ export class RunCompaction {
 	}
 }
 
-/**
- * Port of upstream `services/compaction.ts`. Model resolution goes through `LlmService`; the inference record
- * (`scheduleSaveLlmInferenceRecord`) comes with usage tracking.
- */
+/** Port of upstream `services/compaction.ts`. Model resolution goes through `LlmService`. */
 @Injectable()
 export class CompactionService {
 	private readonly _tc: ITokenCounter;
@@ -112,6 +110,7 @@ export class CompactionService {
 
 	constructor(
 		private readonly llmService: LlmService,
+		private readonly inferences: LlmInferenceService,
 		@Optional() @Inject(COMPACTION_SERVICE_OPTIONS) options?: CompactionServiceOptions,
 	) {
 		this.options = options ?? defaultOptions;
@@ -222,7 +221,10 @@ export class CompactionService {
 			throw new CompactionError('Failed to resolve LLM.');
 		}
 
-		return this._compactUpToLastUserMessage(compaction, opts, firstNonSystemIndex, lastUserIndex);
+		const result = await this._compactUpToLastUserMessage(compaction, opts, firstNonSystemIndex, lastUserIndex);
+		this._trackInference(opts, compaction.provider, compaction.llm.modelId, result.usage);
+
+		return result;
 	}
 
 	private _findLastUserMessageIndex(messages: ModelMessage[]): number {
@@ -293,5 +295,22 @@ export class CompactionService {
 				}),
 			),
 		};
+	}
+
+	private _trackInference(
+		opts: CompactConversationOptions,
+		provider: LlmProvider,
+		modelId: string,
+		usage: TokenUsage,
+	): void {
+		this.inferences.scheduleSave({
+			type: 'compaction',
+			projectId: opts.chat.projectId,
+			userId: opts.chat.userId,
+			chatId: opts.chat.id,
+			llmProvider: provider,
+			llmModelId: modelId,
+			...usage,
+		});
 	}
 }

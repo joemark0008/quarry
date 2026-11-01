@@ -54,6 +54,7 @@ vi.mock('../story-queries.js', () => ({
 			resolveDefaultModelSelection: mocks.resolveDefaultModelSelection,
 			resolveProviderModel: mocks.resolveProviderModel,
 		},
+		inferences: { scheduleSave: vi.fn() },
 	},
 }));
 

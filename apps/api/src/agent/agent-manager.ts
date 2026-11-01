@@ -33,6 +33,7 @@ import {
 	keepStoryReferencesThroughCompaction,
 	safeExpandStoryReferences,
 } from '../stories/services/story-reference.js';
+import type { LlmInferenceService } from '../usage/llm-inference.service.js';
 import type { LlmService } from './llm/llm.service.js';
 import {
 	disableModelReasoning,
@@ -123,6 +124,8 @@ export interface AgentManagerDependencies {
 	chats: ChatRepository;
 	llm: LlmService;
 	compaction: CompactionService;
+	/** `scheduleSaveLlmInferenceRecord`: the usage of the title generation. */
+	inferences: Pick<LlmInferenceService, 'scheduleSave'>;
 	/** `imageQueries.getImageById`: an attached image's data, inlined for the model. */
 	getImageById: (id: string) => Promise<{ data: string; mediaType: string } | undefined>;
 	/** Renders the project system prompt for the run (`_buildDefaultSystemPrompt`). */
@@ -417,7 +420,7 @@ export class AgentManager {
 			return;
 		}
 
-		const { text } = await generateText({
+		const { text, usage } = await generateText({
 			...disableModelReasoning(provider, modelResult),
 			system: 'Generate a short, descriptive title (3-8 words) for this conversation based on the user message. Always generate a title, no matter the input. Only capitalize the first letter of the title and nouns. Answer with the title alone, without quotes or any other text.',
 			messages: [{ role: 'user', content: titleGenerationUserMessage(userMessageText) }],
@@ -428,6 +431,7 @@ export class AgentManager {
 				tags: [provider],
 			}),
 		});
+		this._trackTitleGenerationInference(provider, summaryModelId, convertToTokenUsage(usage));
 
 		const title = sanitizeTitle(text) || titleFromPrompt(userMessageText);
 		if (!title) {
@@ -439,6 +443,18 @@ export class AgentManager {
 		} catch {
 			// The stream may already be closed: the database is updated regardless.
 		}
+	}
+
+	private _trackTitleGenerationInference(provider: LlmProvider, modelId: string, usage: TokenUsage): void {
+		this._deps.inferences.scheduleSave({
+			type: 'title_generation',
+			projectId: this.chat.projectId,
+			userId: this.chat.userId,
+			chatId: this.chat.id,
+			llmProvider: provider,
+			llmModelId: modelId,
+			...usage,
+		});
 	}
 
 	private async _getTotalUsage(

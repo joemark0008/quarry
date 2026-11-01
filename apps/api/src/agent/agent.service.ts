@@ -20,6 +20,7 @@ import { SandboxSecretService } from '../sandbox/sandbox-secret.service.js';
 import { SkillService } from '../skills/skill.service.js';
 import { resolveLinkedStory } from '../stories/services/story-question.js';
 import { listTrustedStoriesForPrompt } from '../stories/services/story-reference.js';
+import { LlmInferenceService } from '../usage/llm-inference.service.js';
 import { WarehouseCredentialsService } from '../warehouse/warehouse-credentials.service.js';
 import { WarehouseSqlService } from '../warehouse/warehouse-sql.service.js';
 import { type AgentChat, AgentManager, type AgentProfile } from './agent-manager.js';
@@ -93,6 +94,7 @@ export class AgentService {
 		private readonly memory: MemoryService,
 		private readonly onboarding: OnboardingService,
 		private readonly queryTools: QueryToolService,
+		private readonly inferences: LlmInferenceService,
 	) {}
 
 	/** `POST /api/agent`: `authorizeAgentRun` + `handleAgentRoute`. */
@@ -199,6 +201,7 @@ export class AgentService {
 				chats: this.chats,
 				llm: this.llm,
 				compaction: this.compaction,
+				inferences: this.inferences,
 				getImageById: (id) => this.images.getImageById(id),
 				buildSystemPrompt: async ({ toolNames, timezone }) => {
 					if (profile.systemPrompt) {
@@ -362,6 +365,7 @@ export class AgentService {
 				skills: this.skills,
 				scheduleOnboardingRules: (projectId, businessContext, modelSelection) =>
 					this.onboarding.scheduleRules(projectId, businessContext, modelSelection),
+				recordLlmInference: (record) => this.inferences.scheduleSave(record),
 			},
 			projectFolder: project.path,
 			chatId: opts.chatId,

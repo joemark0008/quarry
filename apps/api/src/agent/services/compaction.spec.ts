@@ -1,6 +1,7 @@
 import type { ModelMessage } from 'ai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { LlmInferenceService } from '../../usage/llm-inference.service.js';
 import type { LlmService } from '../llm/llm.service.js';
 import { createProviderModel } from '../providers/providers.js';
 import type { AgentTools, UIMessage } from '../types/chat.js';
@@ -12,6 +13,7 @@ const mocks = vi.hoisted(() => ({
 	resolveProviderModelMock: vi.fn(),
 	resolveAnnotationModelIdMock: vi.fn(),
 	resolveDefaultModelSelectionMock: vi.fn(),
+	scheduleSaveMock: vi.fn(),
 }));
 
 // Upstream mocks `utils/llm`; quarry resolves models through the injected `LlmService`.
@@ -21,7 +23,9 @@ const llmService = {
 	resolveDefaultModelSelection: mocks.resolveDefaultModelSelectionMock,
 } as unknown as LlmService;
 
-const createService = (options: CompactionServiceOptions) => new CompactionService(llmService, options);
+const inferences = { scheduleSave: mocks.scheduleSaveMock } as unknown as LlmInferenceService;
+
+const createService = (options: CompactionServiceOptions) => new CompactionService(llmService, inferences, options);
 
 class FakeTokenCounter implements ITokenCounter {
 	estimateMessages = vi.fn<(messages: ModelMessage[]) => number>();
@@ -187,6 +191,15 @@ describe('compactionService.compactConversationIfNeeded', () => {
 			expect.objectContaining({ role: 'assistant', content: expect.stringContaining('Conversation summary') }),
 		);
 		expect(messages[2]).toEqual({ role: 'user', content: 'Current turn' });
+		expect(mocks.scheduleSaveMock).toHaveBeenCalledExactlyOnceWith({
+			type: 'compaction',
+			projectId: 'project-2',
+			userId: 'user-2',
+			chatId: 'chat-2',
+			llmProvider: 'openai',
+			llmModelId: 'gpt-4.1-mini',
+			totalTokens: 123,
+		});
 	});
 
 	it('sanitizes tool call ids for the compaction provider, not the chat provider', async () => {

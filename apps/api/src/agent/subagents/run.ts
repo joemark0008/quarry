@@ -3,7 +3,9 @@ import { type ModelMessage, stepCountIs, streamText } from 'ai';
 
 import { fitThinkingBudget } from '../providers/providers.js';
 import { llmTelemetry } from '../telemetry.js';
+import type { TokenUsage } from '../types/chat.js';
 import type { ToolContext } from '../types/tools.js';
+import { convertToTokenUsage } from '../utils/ai.js';
 import { normalizeCitationMarkersStream } from '../utils/citation-markers-stream.js';
 import { cachedSystemInstructions } from '../utils/prompt-cache.js';
 import { truncateMiddle } from '../utils/utils.js';
@@ -75,10 +77,21 @@ export async function* runSubagent(
 		}
 	}
 
-	// quarry: the inference record (`scheduleSaveLlmInferenceRecord`) comes with usage tracking.
-	await result.totalUsage;
+	trackInference(context, model, convertToTokenUsage(await result.totalUsage));
 
 	yield progress.complete((await result.text).trim() || noReportFallback(definition));
+}
+
+function trackInference(context: ToolContext, model: SubagentModel, usage: TokenUsage): void {
+	context.services.recordLlmInference({
+		type: 'subagent',
+		projectId: context.projectId,
+		userId: context.userId,
+		chatId: context.chatId,
+		llmProvider: model.selection.provider,
+		llmModelId: model.selection.modelId,
+		...usage,
+	});
 }
 
 class SubagentProgress {

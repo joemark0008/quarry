@@ -17,6 +17,7 @@ import {
 import { getDefaultModelId } from '../../agent/providers/provider-meta.js';
 import { llmTelemetry } from '../../agent/telemetry.js';
 import type { QueryResult, ToolContext } from '../../agent/types/tools.js';
+import { convertToTokenUsage } from '../../agent/utils/ai.js';
 import {
 	chatQueries,
 	executeSqlQueries,
@@ -475,7 +476,7 @@ async function generateLiveStoryOutput<T>(
 	instruction: string,
 	schema: z.ZodType<T>,
 ): Promise<T> {
-	const { output } = await generateText({
+	const { output, usage } = await generateText({
 		...model,
 		system: systemPrompt,
 		messages: [{ role: 'user', content: instruction }],
@@ -484,7 +485,15 @@ async function generateLiveStoryOutput<T>(
 		experimental_telemetry: llmTelemetry('quarry-live-story', { projectId: target.projectId, tags: [provider] }),
 	});
 
-	// quarry: usage tracking (`llm_inference` records) is not ported; upstream saved one here.
+	storyRuntime.inferences.scheduleSave({
+		type: 'live_story_refresh',
+		projectId: target.projectId,
+		userId: target.userId,
+		chatId: target.chatId,
+		llmProvider: provider,
+		llmModelId: model.model.modelId,
+		...convertToTokenUsage(usage),
+	});
 
 	return output;
 }

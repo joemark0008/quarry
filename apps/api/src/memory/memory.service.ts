@@ -13,13 +13,13 @@ import type {
 	UserMemory,
 	UserProfile,
 } from '../agent/types/memory.js';
+import { LlmInferenceService } from '../usage/llm-inference.service.js';
 import { MemoryRepository } from './memory.repository.js';
 import { MemoryExtractorLLM } from './memory-extractor-llm.js';
 
 /**
  * Port of upstream `services/memory.ts`: injects a user's memories into the agent's system prompt and extracts new
- * ones in the background after each user message. Dropped with usage tracking: PostHog events and `llm_inference`
- * records of the extraction.
+ * ones in the background after each user message. Dropped: the PostHog event of each extraction.
  */
 @Injectable()
 export class MemoryService {
@@ -28,6 +28,7 @@ export class MemoryService {
 	constructor(
 		private readonly memories: MemoryRepository,
 		private readonly llm: LlmService,
+		private readonly inferences: LlmInferenceService,
 	) {}
 
 	/** Safely gets active memories for a user to be injected into the system prompt. */
@@ -103,6 +104,15 @@ export class MemoryService {
 		if (!extractorResult) {
 			return;
 		}
+		this.inferences.scheduleSave({
+			type: 'memory_extraction',
+			projectId: opts.projectId,
+			userId: opts.userId,
+			chatId: opts.chatId,
+			llmProvider: provider,
+			llmModelId: modelId,
+			...extractorResult.usage,
+		});
 
 		await this.persistExtractedMemories({
 			userId: opts.userId,

@@ -6,6 +6,7 @@ import * as chatModule from '../chats/chat.repository.js';
 import type { SharedChatRepository } from '../chats/shared-chat.repository.js';
 import type { Prisma } from '../generated/prisma/client.js';
 import type { ProjectRepository } from '../projects/project.repository.js';
+import type { LlmInferenceService } from '../usage/llm-inference.service.js';
 import type { McpEmbedRepository } from './repositories/mcp-embed.repository.js';
 import type { SharedStoryRepository } from './repositories/shared-story.repository.js';
 import * as sharedStoryModule from './repositories/shared-story.repository.js';
@@ -119,7 +120,7 @@ export type DBTransaction = Prisma.TransactionClient;
 
 /**
  * Services of other modules upstream's story code imported as functions (`buildToolContext`, `queryAppDb`, the
- * `utils/llm` helpers). `StoriesModule` binds them at boot.
+ * `utils/llm` helpers, `scheduleSaveLlmInferenceRecord`). `StoriesModule` binds them at boot.
  */
 export interface StoryRuntime {
 	/** Upstream `services/agent` `buildToolContext` (project agent settings included). */
@@ -132,6 +133,8 @@ export interface StoryRuntime {
 	/** Upstream `agentService.get(chatId)`: whether an agent run is going on in the chat. */
 	isAgentRunning(chatId: string): boolean;
 	llm: Pick<LlmService, 'resolveDefaultModelSelection' | 'resolveProviderModel' | 'getProjectModelProvider'>;
+	/** Upstream `scheduleSaveLlmInferenceRecord`: the usage of live story refreshes and theme generation. */
+	inferences: Pick<LlmInferenceService, 'scheduleSave'>;
 }
 
 let runtime: Partial<StoryRuntime> = {};

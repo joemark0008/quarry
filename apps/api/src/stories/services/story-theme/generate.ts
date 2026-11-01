@@ -25,6 +25,7 @@ import {
 	type ProviderModelResult,
 } from '../../../agent/providers/providers.js';
 import { llmTelemetry } from '../../../agent/telemetry.js';
+import { convertToTokenUsage } from '../../../agent/utils/ai.js';
 import { storyRuntime } from '../../story-queries.js';
 import { applyGuards, type GenerateResult, type GuardContext } from './guard.js';
 import { detectGround, type ImageSample, sampleImage, snapToImageColors } from './pixels.js';
@@ -835,14 +836,21 @@ async function proposeWithModel(
 		image: image.data,
 		mediaType: image.mediaType,
 	}));
-	const { output } = await generateText({
+	const { output, usage } = await generateText({
 		...disableModelReasoning(model.provider, model.model),
 		output: Output.object({ schema: modelProposalSchema }),
 		system: SYSTEM_PROMPT,
 		messages: [{ role: 'user', content: [{ type: 'text', text: prompt }, ...imageParts] }],
 		experimental_telemetry: llmTelemetry('quarry-story-theme-generate', { projectId: scope.projectId }),
 	});
-	// Upstream records the usage in `llm_inference`; usage tracking is not ported.
+	storyRuntime.inferences.scheduleSave({
+		type: 'story_theme_generation',
+		projectId: scope.projectId,
+		userId: scope.userId,
+		llmProvider: model.provider,
+		llmModelId: model.modelId,
+		...convertToTokenUsage(usage),
+	});
 	return toThemeProposal(output);
 }
 

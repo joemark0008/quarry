@@ -7,6 +7,7 @@ import type { LlmSelectedModel, SemanticLayerMode, StoryFormat } from '@quarry/s
 import type { ChatImage } from '../../attachments/image.repository.js';
 import type { ResolvedSandboxSecret } from '../../sandbox/sandbox-secret.service.js';
 import type { SkillService } from '../../skills/skill.service.js';
+import type { NewLlmInference } from '../../usage/llm-inference.repository.js';
 import type { WarehouseSqlOptions, WarehouseSqlResult } from '../../warehouse/warehouse-sql.service.js';
 import type { ProviderModelResult } from '../providers/providers.js';
 import type { WarehouseTableAccess } from '../services/context-access.js';
@@ -84,6 +85,8 @@ export interface AgentToolServices {
 		businessContext: generateOnboardingRules.Input['businessContext'],
 		modelSelection: LlmSelectedModel,
 	): void;
+	/** `scheduleSaveLlmInferenceRecord`: the usage of a model call outside the run's own messages (subagents). */
+	recordLlmInference(record: NewLlmInference): void;
 }
 
 export interface ToolContext {

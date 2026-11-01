@@ -4,6 +4,7 @@ import { AgentModule } from '../agent/agent.module.js';
 import { AgentService } from '../agent/agent.service.js';
 import { AppDbRepository } from '../agent/app-db/app-db.repository.js';
 import { LlmService } from '../agent/llm/llm.service.js';
+import { LlmInferenceService } from '../usage/llm-inference.service.js';
 import {
 	ChatForkStoryResolver,
 	CustomStoryViewerResolver,
@@ -18,7 +19,7 @@ import { bindStoryRuntime } from './story-queries.js';
 /**
  * Stories (Phase 4): the GraphQL API of upstream's `story`, `storyFolder`, `storyTheme` and `customStoryViewer`
  * routers. The story services are upstream's module-level code; this module binds what they need from the agent
- * (tool context, app-database queries, model resolution, running agents) at boot, next to the repositories that
+ * (tool context, app-database queries, model resolution, running agents, inference records) at boot, next to the repositories that
  * `StoriesCoreModule` binds.
  */
 @Module({
@@ -38,6 +39,7 @@ export class StoriesModule implements OnModuleInit, OnModuleDestroy {
 		private readonly agent: AgentService,
 		private readonly appDb: AppDbRepository,
 		private readonly llm: LlmService,
+		private readonly inferences: LlmInferenceService,
 	) {}
 
 	onModuleInit(): void {
@@ -46,6 +48,7 @@ export class StoriesModule implements OnModuleInit, OnModuleDestroy {
 			runScopedAppDbQuery: (projectId, sql) => this.appDb.runScopedAppDbQuery(projectId, sql),
 			isAgentRunning: (chatId) => this.agent.get(chatId) !== undefined,
 			llm: this.llm,
+			inferences: this.inferences,
 		});
 	}
 

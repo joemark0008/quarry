@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { LlmService } from '../agent/llm/llm.service.js';
 import type { MemoryRecord } from '../agent/types/memory.js';
+import type { LlmInferenceService } from '../usage/llm-inference.service.js';
 import type { MemoryRepository } from './memory.repository.js';
 import { MemoryService } from './memory.service.js';
 
@@ -37,8 +38,13 @@ function createService(opts: { enabled?: boolean; existing?: MemoryRecord[] } = 
 		resolveAnnotationModelId: vi.fn(async () => 'claude-haiku-4-5'),
 		resolveProviderModel: vi.fn(async () => ({ model: {}, providerOptions: {} })),
 	};
-	const service = new MemoryService(repository as unknown as MemoryRepository, llm as unknown as LlmService);
-	return { service, repository, llm };
+	const inferences = { scheduleSave: vi.fn() };
+	const service = new MemoryService(
+		repository as unknown as MemoryRepository,
+		llm as unknown as LlmService,
+		inferences as unknown as LlmInferenceService,
+	);
+	return { service, repository, llm, inferences };
 }
 
 const extraction = {
@@ -76,7 +82,7 @@ describe('MemoryService', () => {
 	});
 
 	it('persists extracted memories and only supersedes memories that exist', async () => {
-		const { service, repository } = createService({ existing: [memory('m1')] });
+		const { service, repository, inferences } = createService({ existing: [memory('m1')] });
 		extract.mockResolvedValueOnce({
 			output: {
 				user_instructions: [
@@ -85,11 +91,20 @@ describe('MemoryService', () => {
 				],
 				user_profile: [{ content: 'The user is a data analyst', supersedes_id: null }],
 			},
-			usage: {},
+			usage: { totalTokens: 42 },
 		});
 
 		await service.extractMemory(extraction);
 
+		expect(inferences.scheduleSave).toHaveBeenCalledExactlyOnceWith({
+			type: 'memory_extraction',
+			projectId: 'project-1',
+			userId: 'user-1',
+			chatId: 'chat-1',
+			llmProvider: 'anthropic',
+			llmModelId: 'claude-haiku-4-5',
+			totalTokens: 42,
+		});
 		expect(repository.upsertAndSupersedeMemories).toHaveBeenCalledWith([
 			{
 				userId: 'user-1',

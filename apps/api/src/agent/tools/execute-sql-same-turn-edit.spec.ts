@@ -18,6 +18,7 @@ const services = {
 	getImagesByChatId: vi.fn(),
 	skills: vi.fn(),
 	scheduleOnboardingRules: vi.fn(),
+	recordLlmInference: vi.fn(),
 } satisfies Record<keyof AgentToolServices, ReturnType<typeof vi.fn>>;
 
 describe('execute_sql in-place edit of a query created in the current turn', () => {
