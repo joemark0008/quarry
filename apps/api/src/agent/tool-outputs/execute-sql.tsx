@@ -34,7 +34,6 @@ export const ExecuteSqlOutput = ({
 			<Block>
 				<Span>Query ID: {output.id}</Span>
 				<Span>The query was successfully executed and returned no rows.</Span>
-				{output.saved_file && <SavedFile file={output.saved_file} />}
 				{templateWarnings.length > 0 && <TemplateWarnings warnings={templateWarnings} />}
 			</Block>
 		);
@@ -70,8 +69,6 @@ export const ExecuteSqlOutput = ({
 				</Span>
 			)}
 
-			{output.saved_file && <SavedFile file={output.saved_file} />}
-
 			{templateWarnings.length > 0 && <TemplateWarnings warnings={templateWarnings} />}
 
 			<QueryRows rows={visibleRows} />
@@ -85,21 +82,6 @@ export const ExecuteSqlOutput = ({
 		</Block>
 	);
 };
-
-function SavedFile({ file }: { file: NonNullable<executeSql.Output['saved_file']> }) {
-	return (
-		<Span>
-			The full result is saved at {file.path} ({formatSize(file.size)}). Tell the user that path, and read it back
-			with the local database rather than re-running this query.
-		</Span>
-	);
-}
-
-function formatSize(bytes: number): string {
-	return bytes < 1024 * 1024
-		? `${Math.max(1, Math.round(bytes / 1024))} KB`
-		: `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 function TemplateWarnings({ warnings }: { warnings: string[] }) {
 	return (

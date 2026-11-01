@@ -52,7 +52,7 @@
 .queryToolsSettingsDiv6 {
 	display: flex;
 	min-width: 0px;
-	align-items: baseline;
+	align-items: center;
 	gap: 0.5rem;
 }
 .queryToolsSettingsSpan {

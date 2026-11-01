@@ -1,10 +1,11 @@
 import { useQuery as useApolloQuery } from '@apollo/client/react';
 import { extractQueryToolPlaceholders } from '@quarry/shared/query-tools';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, ChevronDown, FilePlus, Play, Save, TableProperties } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronDown, FilePlus, Play, Save, TableProperties } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { QueryToolParameters } from '../query-tool-parameters';
+import { CopyToolNameButton } from '../copy-tool-name-button';
 import { QueryToolSqlEditor } from '../query-tool-sql-editor';
 import styles from './query-workbench.module.css';
 import { SaveQueryToolDialog } from './save-query-tool-dialog';
@@ -150,7 +151,7 @@ function QueryWorkbenchLayout({
 }) {
 	const { createMutation, updateMutation, previewMutation } = useQueryToolMutations();
 	const connections = useApolloQuery(WarehouseConnectionsDocument);
-	const { queueOrSendMessage } = useAgentContext();
+	const { queueOrSendMessage, isRunning: isAssistantRunning } = useAgentContext();
 	const [result, setResult] = useState<QueryToolPreview | null>(null);
 	const [isSchemaOpen, setIsSchemaOpen] = useState(false);
 	const [mobilePane, setMobilePane] = useState<MobilePane>('editor');
@@ -207,6 +208,14 @@ function QueryWorkbenchLayout({
 		void queueOrSendMessage({ text: `This query failed. Please fix it.\n\nError: ${message}` });
 	};
 
+	const createSkill = () => {
+		setMobilePane('assistant');
+		const tool = savedTool ? ` It is saved as the query tool ${savedTool.agentToolName}, so use that.` : '';
+		void queueOrSendMessage({
+			text: `Create a skill from the query in the editor.${tool} Run it if you need to see its results, then draft the skill.`,
+		});
+	};
+
 	const saveNew = async (details: QueryToolDetails) => {
 		const created = await createMutation.mutateAsync({ ...details, sqlTemplate: sql, parameters, databaseId });
 		if (!savedTool) {
@@ -238,6 +247,7 @@ function QueryWorkbenchLayout({
 						<ArrowLeft />
 					</Button>
 					<h1 className={styles.title}>{savedTool?.agentToolName ?? 'New query'}</h1>
+					{savedTool && <CopyToolNameButton name={savedTool.agentToolName} />}
 					{hasChanges && (
 						<>
 							<span className={styles.mutedText}>Unsaved changes</span>
@@ -324,6 +334,15 @@ function QueryWorkbenchLayout({
 										Schema
 									</Button>
 									<div className={styles.toolbarEnd}>
+										<Button
+											variant='ghost-muted'
+											size='sm'
+											onClick={createSkill}
+											disabled={!sql.trim() || isAssistantRunning}
+										>
+											<BookOpen />
+											Create skill
+										</Button>
 										<Button variant='outline' size='sm' onClick={run} disabled={!canRun}>
 											<Play />
 											Run

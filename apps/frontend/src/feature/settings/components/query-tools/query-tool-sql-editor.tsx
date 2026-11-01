@@ -6,10 +6,13 @@ import type { editor } from 'monaco-editor';
 import { useEditorTheme } from '@/hooks/use-editor-theme';
 import { SQL_SHIKI_THEME, setupSqlHighlighting } from '@/lib/sql-shiki-theme';
 
+/** Monaco can use `\r\n` for a new model. The rest of the app, and saved queries, use `\n`. */
+const toUnixLineEndings = (text: string) => text.replace(/\r\n/g, '\n');
+
 /** Replaces the editor's text as an edit, so ⌘Z brings the earlier text back. */
 function replaceText(instance: editor.IStandaloneCodeEditor, text: string) {
 	const model = instance.getModel();
-	if (!model || instance.getValue() === text) {
+	if (!model || toUnixLineEndings(instance.getValue()) === toUnixLineEndings(text)) {
 		return;
 	}
 	instance.executeEdits('query-tool-sql-editor', [
@@ -46,6 +49,15 @@ export function QueryToolSqlEditor({
 	valueRef.current = value;
 	/** What the editor reported and `value` hasn't come back with yet, oldest first. */
 	const pendingValues = useRef<string[]>([]);
+	/** The change being applied came from `value`, so it has nothing to report back. */
+	const isApplyingValue = useRef(false);
+	const applyValue = (text: string) => {
+		if (instanceRef.current) {
+			isApplyingValue.current = true;
+			replaceText(instanceRef.current, text);
+			isApplyingValue.current = false;
+		}
+	};
 
 	useEffect(() => {
 		const pendingIndex = pendingValues.current.indexOf(value);
@@ -54,10 +66,8 @@ export function QueryToolSqlEditor({
 			return;
 		}
 		pendingValues.current = [];
-		if (instanceRef.current) {
-			replaceText(instanceRef.current, value);
-		}
-	}, [value]);
+		applyValue(value);
+	}, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
 		if (!monaco) {
@@ -85,13 +95,17 @@ export function QueryToolSqlEditor({
 			<Editor
 				defaultValue={value}
 				onChange={(next) => {
-					const text = next ?? '';
+					if (isApplyingValue.current) {
+						return;
+					}
+					const text = toUnixLineEndings(next ?? '');
 					pendingValues.current.push(text);
 					onChange(text);
 				}}
 				onMount={(instance, monacoInstance) => {
 					instanceRef.current = instance;
-					replaceText(instance, valueRef.current);
+					instance.getModel()?.setEOL(monacoInstance.editor.EndOfLineSequence.LF);
+					applyValue(valueRef.current);
 					onReady?.(instance);
 					if (onRun) {
 						instance.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Enter, onRun);

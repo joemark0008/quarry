@@ -29,6 +29,8 @@ export const PRELOADED_SKILL_CHAR_LIMIT = 8_000;
 export const PRELOADED_SKILLS_TOTAL_CHAR_LIMIT = 24_000;
 
 const SKILLS_FOLDER_LOCATION = '/agent/skills';
+/** How long a load stays fresh without a watch event, which network volumes and other replicas never get. */
+const RELOAD_AFTER_MS = 5_000;
 
 interface ProjectSkills {
 	projectPath: string;
@@ -36,6 +38,7 @@ interface ProjectSkills {
 	skills: Skill[];
 	loadErrors: SkillLoadError[];
 	fileWatcher: ReturnType<typeof watch> | null;
+	loadedAt: number;
 	debouncedReload: () => void;
 }
 
@@ -54,7 +57,11 @@ export class SkillService implements OnModuleDestroy {
 	private _initPromises = new Map<string, Promise<void>>();
 
 	public async initializeSkills(projectId: string): Promise<void> {
-		if (this._projects.has(projectId)) {
+		const known = this._projects.get(projectId);
+		if (known) {
+			if (Date.now() - known.loadedAt > RELOAD_AFTER_MS) {
+				this.reloadSkills(projectId);
+			}
 			return;
 		}
 
@@ -68,6 +75,14 @@ export class SkillService implements OnModuleDestroy {
 		}
 
 		return initPromise;
+	}
+
+	/** Reads the skills folder now, and starts watching it if it only appeared after the first load. */
+	public reloadSkills(projectId: string): void {
+		this._loadSkills(projectId);
+		if (!this._projects.get(projectId)?.fileWatcher) {
+			this._setupFileWatcher(projectId);
+		}
 	}
 
 	public getSkills(projectId: string): Skill[] {
@@ -166,6 +181,7 @@ export class SkillService implements OnModuleDestroy {
 			skills: [],
 			loadErrors: [],
 			fileWatcher: null,
+			loadedAt: 0,
 			debouncedReload: debounce(() => this._loadSkills(projectId), 2000),
 		});
 
@@ -178,10 +194,11 @@ export class SkillService implements OnModuleDestroy {
 		if (!entry) {
 			return;
 		}
+		entry.loadedAt = Date.now();
 
 		try {
 			if (!existsSync(entry.skillsFolderPath)) {
-				logger.warn(`Skills folder not found: ${entry.skillsFolderPath}`);
+				logger.debug(`Skills folder not found: ${entry.skillsFolderPath}`);
 				entry.skills = [];
 				entry.loadErrors = [];
 				return;

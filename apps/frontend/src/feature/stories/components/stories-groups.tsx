@@ -11,6 +11,7 @@ import {
 	Pin,
 	ShieldCheck,
 	Star,
+	Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
 import { CustomStoryThumbnail } from './custom-story-thumbnail';
@@ -34,6 +35,7 @@ import {
 	SharingBadge,
 } from '@/components/item-card';
 import { ShareStoryDialog } from '@/components/share-dialog.story';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import StoryIcon from '@/components/ui/story-icon';
 import { SimpleTooltip } from '@/components/ui/tooltip';
 import { useToggleFavorite } from '@/hooks/use-toggle-favorite';
@@ -257,6 +259,7 @@ export function StoryCard({
 										<StoryMoveToFolderButton item={item} onMoveToFolder={moveHandler} />
 									)}
 									<StoryArchiveButton item={item} showArchived={showArchived} />
+									<StoryDeleteButton item={item} />
 								</div>
 							</>
 						)}
@@ -384,6 +387,7 @@ function StoryActions({
 					<StoryMoveToFolderButton item={item} onMoveToFolder={onMoveToFolder} />
 				)}
 				<StoryArchiveButton item={item} showArchived={showArchived} />
+				<StoryDeleteButton item={item} />
 			</div>
 		</div>
 	);
@@ -552,6 +556,71 @@ function QuickActionButton({
 	);
 }
 
+function canManageStory(item: StoryItem, isAdmin: boolean): boolean {
+	return (
+		(item.kind === 'own' && Boolean(item.chatId && item.storySlug)) ||
+		item.kind === 'own-standalone' ||
+		(item.kind === 'shared-project' && isAdmin)
+	);
+}
+
+function StoryDeleteButton({ item }: { item: StoryItem }) {
+	const queryClient = useQueryClient();
+	const { isViewer, isAdmin } = usePermissions();
+	const [confirming, setConfirming] = useState(false);
+	const deleteStory = useMutation(
+		storyApi.story.deletePermanently.mutationOptions({
+			onSuccess: () => {
+				setConfirming(false);
+				invalidateStoryArchiveCaches(queryClient);
+			},
+		}),
+	);
+
+	if (!canManageStory(item, isAdmin) || isViewer) {
+		return null;
+	}
+
+	return (
+		<>
+			<QuickActionButton
+				active={false}
+				interactive
+				pending={deleteStory.isPending}
+				onClick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					deleteStory.reset();
+					setConfirming(true);
+				}}
+				tooltip='Delete permanently'
+				fillOnHover={false}
+			>
+				<Trash2 className={styles.storyCheckboxCircleCheck} />
+			</QuickActionButton>
+			{/* React events bubble out of the dialog's portal, and the card around this button is a link. */}
+			<div
+				onClick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				}}
+			>
+				<ConfirmationDialog
+					open={confirming}
+					onOpenChange={setConfirming}
+					title='Delete this story permanently?'
+					description={`"${item.title}" will be deleted for everyone, along with its versions and shares. This cannot be undone. The chat that created it stays.`}
+					confirmLabel='Delete permanently'
+					onConfirm={() => deleteStory.mutate({ storyId: item.storyId })}
+					isPending={deleteStory.isPending}
+					error={deleteStory.error?.message}
+					preventCloseWhilePending
+				/>
+			</div>
+		</>
+	);
+}
+
 function StoryArchiveButton({ item, showArchived }: { item: StoryItem; showArchived: boolean }) {
 	const queryClient = useQueryClient();
 	const { isViewer, isAdmin } = usePermissions();
@@ -582,12 +651,7 @@ function StoryArchiveButton({ item, showArchived }: { item: StoryItem; showArchi
 		storyApi.story.unarchiveShared.mutationOptions({ onSuccess: invalidateAfterArchive }),
 	);
 
-	const canArchive =
-		(item.kind === 'own' && item.chatId && item.storySlug) ||
-		item.kind === 'own-standalone' ||
-		(item.kind === 'shared-project' && isAdmin);
-
-	if (!canArchive || isViewer) {
+	if (!canManageStory(item, isAdmin) || isViewer) {
 		return null;
 	}
 

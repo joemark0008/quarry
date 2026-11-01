@@ -195,6 +195,30 @@ describe('stories (e2e)', () => {
 		expect(all.data).toEqual([expect.objectContaining({ id: storyId })]);
 	});
 
+	it('deletes a story for good, only for its owner, and keeps the chat', async () => {
+		const created = await call('mutation', 'storyCreateVersion', {
+			chatId,
+			storySlug: 'to-delete',
+			title: 'To delete',
+			code: STORY_CODE,
+			action: 'create',
+		});
+		const deletedId = (created.data as { storyId: string }).storyId;
+
+		const refused = await call('mutation', 'storyDeletePermanently', { storyId: deletedId }, strangerCookie);
+		expect(refused.code).toBeDefined();
+		expect(await prisma.story.count({ where: { id: deletedId } })).toBe(1);
+
+		const deleted = await call('mutation', 'storyDeletePermanently', { storyId: deletedId });
+		expect(deleted.code).toBeUndefined();
+		expect(await prisma.story.count({ where: { id: deletedId } })).toBe(0);
+		expect(await prisma.storyVersion.count({ where: { storyId: deletedId } })).toBe(0);
+		expect(await prisma.chat.count({ where: { id: chatId } })).toBe(1);
+
+		const missing = await call('mutation', 'storyDeletePermanently', { storyId: deletedId });
+		expect(missing.code).toBe('NOT_FOUND');
+	});
+
 	it('asks about and forks the story into new chats (`chatFork.askStory`, `forkStory`)', async () => {
 		const asked = await call('mutation', 'chatForkAskStory', { storyId, selectionText: 'Revenue grew' });
 		expect(asked.code).toBeUndefined();
@@ -234,5 +258,54 @@ describe('stories (e2e)', () => {
 
 		const state = await call('query', 'storyThemeGetState');
 		expect(state.code).toBe('FORBIDDEN');
+	});
+
+	describe('deleting chats', () => {
+		const owner = () => prisma.user.findFirstOrThrow({ where: { email: 'ada@example.com' } });
+		const chatWithStory = async (slug: string, data: { isStarred?: boolean; deletedAt?: Date } = {}) => {
+			const chat = await prisma.chat.create({
+				data: { userId: (await owner()).id, projectId, title: slug, ...data },
+			});
+			const created = await call('mutation', 'storyCreateVersion', {
+				chatId: chat.id,
+				storySlug: slug,
+				title: slug,
+				code: STORY_CODE,
+				action: 'create',
+			});
+			expect(created.code).toBeUndefined();
+			return { chatId: chat.id, storyId: (created.data as { storyId: string }).storyId };
+		};
+		const exists = async ({ chatId: id, storyId: story }: { chatId: string; storyId: string }) => [
+			await prisma.chat.count({ where: { id } }),
+			await prisma.story.count({ where: { id: story } }),
+		];
+
+		it('removes one chat and its stories for its owner only', async () => {
+			const target = await chatWithStory('single');
+			const mutation = 'mutation ($chatId: ID!) { deleteChat(chatId: $chatId) }';
+
+			const refused = await graphql(strangerCookie, mutation, { chatId: target.chatId });
+			expect(refused.body.errors?.[0]).toBeDefined();
+			expect(await exists(target)).toEqual([1, 1]);
+
+			const deleted = await graphql(ownerCookie, mutation, { chatId: target.chatId });
+			expect(deleted.body.errors).toBeUndefined();
+			expect(await exists(target)).toEqual([0, 0]);
+		});
+
+		it('removes non-starred chats and their stories from the database, and keeps starred ones', async () => {
+			const plain = await chatWithStory('plain');
+			const hidden = await chatWithStory('hidden', { deletedAt: new Date() });
+			const starred = await chatWithStory('starred', { isStarred: true });
+
+			const res = await graphql(ownerCookie, 'mutation { deleteAllNonStarredChats }');
+			expect(res.body.errors).toBeUndefined();
+			expect(res.body.data.deleteAllNonStarredChats).toBeGreaterThanOrEqual(2);
+
+			expect(await exists(plain)).toEqual([0, 0]);
+			expect(await exists(hidden)).toEqual([0, 0]);
+			expect(await exists(starred)).toEqual([1, 1]);
+		});
 	});
 });

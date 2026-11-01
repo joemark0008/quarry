@@ -5,7 +5,7 @@ import {
 	validateSqlFilterTemplate,
 } from '@quarry/shared/sql-template';
 import type { executeSql } from '@quarry/shared/tools';
-import { executeSql as schemas, LOCAL_DATABASE_ID } from '@quarry/shared/tools';
+import { executeSql as schemas } from '@quarry/shared/tools';
 
 import { env } from '../../stories/env.js';
 import { isWarehouseSqlEnabled } from '../services/semantic-layer.service.js';
@@ -16,14 +16,6 @@ import { createTool } from '../utils/tools.js';
 import { queryAppDb } from './query-app-db.js';
 
 const EXECUTE_SEMANTIC_QUERY_TOOL_NAME = 'execute_semantic_query';
-
-/** quarry: no local DuckDB (files and earlier results) yet; upstream's `local-query.service.ts` is not ported. */
-async function runQueryOnLocalFiles(..._args: unknown[]): Promise<{
-	result: { columns: string[]; data: Record<string, unknown>[] };
-	savedFile?: { path: string; size: number };
-}> {
-	throw new Error(`The "${LOCAL_DATABASE_ID}" database is not available: query the warehouse instead.`);
-}
 
 /** Upstream gated this on the enterprise license; quarry enforces `exclude_columns` whenever it is configured. */
 async function resolveExcludedColumnEnforcement(..._args: unknown[]): Promise<boolean> {
@@ -48,12 +40,12 @@ type ExecuteQueryOptions = {
 };
 
 export async function executeQuery(
-	{ sql_query, database_id, query_id, save_to }: executeSql.Input,
+	{ sql_query, database_id, query_id }: executeSql.Input,
 	context: ToolContext,
 	options: ExecuteQueryOptions = {},
 ): Promise<executeSql.Output> {
 	if (!options.compiledBySemanticLayer) {
-		assertWarehouseSqlAllowed(database_id, context);
+		assertWarehouseSqlAllowed(context);
 	}
 	const templateWarnings = env.BETA_STORY_FILTERS_ENABLED ? validateSqlFilterTemplate(sql_query) : [];
 	const effectiveSql = stripSqlFilterBlocks(sql_query);
@@ -73,30 +65,13 @@ export async function executeQuery(
 		);
 	}
 
-	if (options.params && (context.adminMode || database_id === LOCAL_DATABASE_ID)) {
+	if (options.params && context.adminMode) {
 		throw new Error('Query parameters are only supported on the warehouse.');
-	}
-
-	if (save_to && context.adminMode) {
-		throw new Error('save_to is unavailable in admin mode. Run the query without save_to.');
-	}
-
-	if (save_to && database_id !== LOCAL_DATABASE_ID) {
-		throw new Error(
-			`save_to only works with the "${LOCAL_DATABASE_ID}" database. To keep a warehouse result, re-run it against ${LOCAL_DATABASE_ID} as "SELECT * FROM <query_id>".`,
-		);
 	}
 
 	if (context.adminMode) {
 		return withTemplateWarnings(
 			await executeAppDbQuery(effectiveSql, context, { queryId: query_id, sqlQuery: sql_query }),
-			templateWarnings,
-		);
-	}
-
-	if (database_id === LOCAL_DATABASE_ID) {
-		return withTemplateWarnings(
-			await executeLocalQuery(effectiveSql, context, { queryId: query_id, sqlQuery: sql_query, saveTo: save_to }),
 			templateWarnings,
 		);
 	}
@@ -134,32 +109,6 @@ export async function executeQuery(
 		},
 		templateWarnings,
 	);
-}
-
-/** Files and earlier results, in quarry's own DuckDB. No warehouse is involved. */
-async function executeLocalQuery(
-	effectiveSql: string,
-	context: ToolContext,
-	{ queryId, sqlQuery, saveTo }: SameTurnQueryOptions & { saveTo?: executeSql.SaveTo },
-): Promise<executeSql.Output> {
-	const {
-		result: { columns, data },
-		savedFile,
-	} = await runQueryOnLocalFiles(effectiveSql, context, saveTo);
-	const id = queryId ?? (`query_${crypto.randomUUID().slice(0, 8)}` as const);
-	context.queryResults.set(id, { columns, data, sqlQuery, databaseId: LOCAL_DATABASE_ID });
-	const appliedLimit = detectQueryRowLimit(effectiveSql);
-
-	return {
-		_version: '1',
-		data,
-		row_count: data.length,
-		columns,
-		id,
-		dialect: 'duckdb',
-		...(appliedLimit !== null && { applied_limit: appliedLimit }),
-		...(savedFile && { saved_file: savedFile }),
-	};
 }
 
 async function executeAppDbQuery(
@@ -205,12 +154,10 @@ async function updateExistingQuery(
 		);
 	}
 
-	const saveTo = input.save_to ?? existing.toolInput.save_to;
 	const nextInput: executeSql.Input = {
 		sql_query: input.sql_query,
 		database_id: input.database_id ?? existing.toolInput.database_id,
 		name: input.name ?? existing.toolInput.name,
-		...(saveTo && { save_to: saveTo }),
 	};
 
 	const output = await executeQuery({ ...nextInput, query_id: input.query_id }, context);
@@ -250,21 +197,13 @@ function semanticQueryNotEditableError(queryId: string): Error {
 	);
 }
 
-/** Semantics-only mode: the warehouse is reached through the layer, raw SQL stays for the local database. */
-function assertWarehouseSqlAllowed(databaseId: string | undefined, context: ToolContext): void {
-	if (context.adminMode || isWarehouseSqlEnabled(context.semanticLayerMode) || databaseId === LOCAL_DATABASE_ID) {
+/** Semantics-only mode: the warehouse is reached through the layer, never through raw SQL. */
+function assertWarehouseSqlAllowed(context: ToolContext): void {
+	if (context.adminMode || isWarehouseSqlEnabled(context.semanticLayerMode)) {
 		return;
 	}
-	throw new Error(
-		`Raw SQL on the warehouse is disabled in this project: query metrics with execute_semantic_query. execute_sql only accepts database_id "${LOCAL_DATABASE_ID}", to reshape earlier results (SELECT * FROM <query_id>) or read files.`,
-	);
+	throw new Error('Raw SQL on the warehouse is disabled in this project: query metrics with execute_semantic_query.');
 }
-
-const LOCAL_ONLY_DESCRIPTION = [
-	`Run DuckDB SQL in quarry's local database ("${LOCAL_DATABASE_ID}", the only accepted database_id): the warehouse is only reachable through execute_semantic_query in this project.`,
-	'Every earlier query result, including semantic ones, is a table named after its query id (the "Query ID" line of its tool output, e.g. query_ab12cd34), so post-process them here: joins, pivots, shares, deltas. It also reads CSV, JSON, Parquet and Excel files under /home and the project folder by their path; remote URLs are not readable.',
-	'To edit a previous local query in-place (keep the same query_id for charts/stories), pass query_id from an earlier execute_sql result.',
-].join(' ');
 
 function buildExecuteSqlToolDescription() {
 	return [
@@ -282,7 +221,7 @@ function buildExecuteSqlToolDescription() {
 	].join(' ');
 }
 
-const executeSqlTool = createTool<executeSql.Input, executeSql.Output>({
+export default createTool<executeSql.Input, executeSql.Output>({
 	description: buildExecuteSqlToolDescription(),
 	inputSchema: schemas.InputSchema,
 	outputSchema: schemas.OutputSchema,
@@ -294,7 +233,3 @@ const executeSqlTool = createTool<executeSql.Input, executeSql.Output>({
 	},
 	toModelOutput: ({ output }) => renderToModelOutput(ExecuteSqlOutput({ output }), output),
 });
-
-export const localOnlyExecuteSql = { ...executeSqlTool, description: LOCAL_ONLY_DESCRIPTION };
-
-export default executeSqlTool;

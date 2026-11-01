@@ -86,6 +86,7 @@ export const interactiveStopConditions: StopCondition<AgentTools>[] = [
 	hasFollowUpsWithText,
 	hasToolCall('clarification'),
 	hasToolCall('propose_sql'),
+	hasToolCall('propose_skill'),
 	hasToolCall('request_warehouse_selection'),
 	hasRepeatedInvalidToolCalls,
 	hasRepeatedToolErrors,

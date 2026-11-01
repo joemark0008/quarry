@@ -21,8 +21,7 @@ const MODE_LABELS: Record<SemanticLayerMode, { label: string; description: strin
 	},
 	exclusive: {
 		label: 'Semantics only',
-		description:
-			"Every warehouse question goes through the semantic layer; SQL is limited to quarry's local DuckDB to reshape results and read files.",
+		description: 'Every warehouse question goes through the semantic layer; the agent cannot run raw SQL.',
 	},
 	disabled: {
 		label: "Don't use semantics",

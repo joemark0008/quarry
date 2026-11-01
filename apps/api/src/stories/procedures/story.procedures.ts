@@ -131,9 +131,10 @@ const bulkStoryItemsInput = z.object({
 		.max(BULK_ITEMS_LIMIT),
 });
 
-async function assertCanArchiveSharedStory(
+async function assertCanManageStory(
 	storyId: string,
 	ctx: { user: { id: string }; userRole: UserRole | null; project: { id: string } },
+	action: 'archive' | 'delete' = 'archive',
 ): Promise<void> {
 	const ownerId = await storyQueries.getStoryOwnerId(storyId);
 	if (!ownerId) {
@@ -144,7 +145,7 @@ async function assertCanArchiveSharedStory(
 		throw new HandlerError('NOT_FOUND', 'Story not found.');
 	}
 	if (ownerId !== ctx.user.id && ctx.userRole !== 'admin') {
-		throw new HandlerError('FORBIDDEN', 'Only the owner or an admin can archive this story.');
+		throw new HandlerError('FORBIDDEN', `Only the owner or an admin can ${action} this story.`);
 	}
 }
 
@@ -1076,14 +1077,21 @@ export const storyRoutes = {
 		return withKpiPreviewData(items, (story) => story.storyId);
 	}),
 
+	/** quarry addition: upstream only archives. Versions, shares and caches cascade; the chat stays. */
+	deletePermanently: canSendProcedure.input(z.object({ storyId: z.string() })).mutation(async ({ input, ctx }) => {
+		await assertCanManageStory(input.storyId, ctx, 'delete');
+		await unscheduleStoryRefreshJob(input.storyId);
+		await storyQueries.deleteStory(input.storyId);
+	}),
+
 	archiveShared: canSendProcedure.input(z.object({ storyId: z.string() })).mutation(async ({ input, ctx }) => {
-		await assertCanArchiveSharedStory(input.storyId, ctx);
+		await assertCanManageStory(input.storyId, ctx);
 		await storyQueries.archiveByStoryId(input.storyId);
 		await unscheduleStoryRefreshJob(input.storyId);
 	}),
 
 	unarchiveShared: canSendProcedure.input(z.object({ storyId: z.string() })).mutation(async ({ input, ctx }) => {
-		await assertCanArchiveSharedStory(input.storyId, ctx);
+		await assertCanManageStory(input.storyId, ctx);
 		await storyQueries.unarchiveByStoryId(input.storyId);
 		await storyFolderQueries.rehomeUnarchivedStory(ctx.user.id, ctx.project.id, input.storyId);
 	}),
@@ -1366,7 +1374,7 @@ async function assertBulkItemsOwnership(
 			}
 		}),
 		...sharedIds.map(async (storyId) => {
-			await assertCanArchiveSharedStory(storyId, ctx);
+			await assertCanManageStory(storyId, ctx);
 		}),
 	]);
 }

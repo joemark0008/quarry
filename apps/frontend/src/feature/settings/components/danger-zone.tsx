@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { SettingsCard } from '@/components/ui/settings-card';
+import { invalidateStoriesCaches } from '@/lib/stories-cache';
 import { chatApi } from '@/lib/chat-api';
 
 export function DangerZone() {
@@ -24,6 +25,7 @@ export function DangerZone() {
 		chatApi.chat.deleteAllNonStarred.mutationOptions({
 			onSuccess: (_data, _, __, ctx) => {
 				ctx.client.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
+				invalidateStoriesCaches(ctx.client);
 				setIsOpen(false);
 				navigate({ to: '/' });
 			},
@@ -37,7 +39,8 @@ export function DangerZone() {
 					<div className={styles.dangerZoneDiv2}>
 						<p className={styles.dangerZoneP}>Delete all chats</p>
 						<p className={styles.dangerZoneP2}>
-							Permanently delete all your non-starred conversations. Starred chats will be kept.
+							Permanently delete all your non-starred conversations and the stories created in them.
+							Starred chats and their stories will be kept.
 						</p>
 					</div>
 					<Button variant='destructive' size='sm' onClick={() => setIsOpen(true)}>
@@ -51,8 +54,9 @@ export function DangerZone() {
 					<AlertDialogHeader>
 						<AlertDialogTitle>Delete all non-starred chats?</AlertDialogTitle>
 						<AlertDialogDescription>
-							This will permanently delete all your conversations that are not starred. This action cannot
-							be undone.
+							This will permanently delete all your conversations that are not starred. Any stories
+							created in them will be deleted too, including for people they are shared with. This action
+							cannot be undone.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

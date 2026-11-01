@@ -1,5 +1,6 @@
 import { Pencil, Plus, TerminalSquare, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { CopyToolNameButton } from './copy-tool-name-button';
 import styles from './query-tools-settings.module.css';
 import type { ProjectQueryTool } from '@/lib/api-types';
 
@@ -54,6 +55,7 @@ export function QueryToolsSettings({ onOpen }: { onOpen: (tool: string) => void 
 							<div className={styles.queryToolsSettingsDiv5}>
 								<div className={styles.queryToolsSettingsDiv6}>
 									<span className={styles.queryToolsSettingsSpan}>{tool.agentToolName}</span>
+									<CopyToolNameButton name={tool.agentToolName} />
 									{tool.parameters.length > 0 && (
 										<span className={styles.queryToolsSettingsSpan2}>
 											({tool.parameters.map((parameter) => parameter.name).join(', ')})

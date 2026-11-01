@@ -8,6 +8,7 @@ export const APP_ROUTES = [
 	'/settings/project/agent',
 	'/settings/project/models',
 	'/settings/project/query-tools',
+	'/settings/project/skills',
 	'/settings/appearance',
 	'/settings/git',
 	'/settings/recommendations',

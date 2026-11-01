@@ -595,13 +595,6 @@ export class StoryRepository {
 		return this.chats.getLatestSqlQueriesByIds(chatId, queryIds);
 	}
 
-	getSqlQueriesByIds(
-		chatId: string,
-		queryIds: Set<string>,
-	): Promise<Record<string, { sqlQuery: string; databaseId?: string; adminMode: boolean }>> {
-		return this.chats.getLatestSqlQueriesByIds(chatId, queryIds);
-	}
-
 	async getSqlQueryById(
 		chatId: string,
 		queryId: string,

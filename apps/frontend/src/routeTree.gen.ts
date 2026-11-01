@@ -41,6 +41,7 @@ import { Route as ProtectedSettingsProjectIndexRouteImport } from './routes/_pro
 import { Route as ProtectedSettingsProjectAgentRouteImport } from './routes/_protected/settings.project.agent'
 import { Route as ProtectedSettingsProjectModelsRouteImport } from './routes/_protected/settings.project.models'
 import { Route as ProtectedSettingsProjectQueryToolsRouteImport } from './routes/_protected/settings.project.query-tools'
+import { Route as ProtectedSettingsProjectSkillsRouteImport } from './routes/_protected/settings.project.skills'
 import { Route as ProtectedSettingsProjectWarehouseRouteImport } from './routes/_protected/settings.project.warehouse'
 import { Route as ProtectedStoriesSharedShareIdRouteImport } from './routes/_protected/stories.shared.$shareId'
 import { Route as ProtectedStoriesStandaloneStoryIdRouteImport } from './routes/_protected/stories.standalone.$storyId'
@@ -218,6 +219,12 @@ const ProtectedSettingsProjectQueryToolsRoute =
     path: '/query-tools',
     getParentRoute: () => ProtectedSettingsProjectRoute,
   } as any)
+const ProtectedSettingsProjectSkillsRoute =
+  ProtectedSettingsProjectSkillsRouteImport.update({
+    id: '/skills',
+    path: '/skills',
+    getParentRoute: () => ProtectedSettingsProjectRoute,
+  } as any)
 const ProtectedSettingsProjectWarehouseRoute =
   ProtectedSettingsProjectWarehouseRouteImport.update({
     id: '/warehouse',
@@ -278,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
   '/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
   '/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/settings/project/skills': typeof ProtectedSettingsProjectSkillsRoute
   '/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
   '/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
@@ -312,6 +320,7 @@ export interface FileRoutesByTo {
   '/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
   '/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
   '/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/settings/project/skills': typeof ProtectedSettingsProjectSkillsRoute
   '/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
   '/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
   '/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
@@ -352,6 +361,7 @@ export interface FileRoutesById {
   '/_protected/settings/project/agent': typeof ProtectedSettingsProjectAgentRoute
   '/_protected/settings/project/models': typeof ProtectedSettingsProjectModelsRoute
   '/_protected/settings/project/query-tools': typeof ProtectedSettingsProjectQueryToolsRoute
+  '/_protected/settings/project/skills': typeof ProtectedSettingsProjectSkillsRoute
   '/_protected/settings/project/warehouse': typeof ProtectedSettingsProjectWarehouseRoute
   '/_protected/stories/shared/$shareId': typeof ProtectedStoriesSharedShareIdRoute
   '/_protected/stories/standalone/$storyId': typeof ProtectedStoriesStandaloneStoryIdRoute
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/settings/project/agent'
     | '/settings/project/models'
     | '/settings/project/query-tools'
+    | '/settings/project/skills'
     | '/settings/project/warehouse'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -424,6 +435,7 @@ export interface FileRouteTypes {
     | '/settings/project/agent'
     | '/settings/project/models'
     | '/settings/project/query-tools'
+    | '/settings/project/skills'
     | '/settings/project/warehouse'
     | '/stories/shared/$shareId'
     | '/stories/standalone/$storyId'
@@ -463,6 +475,7 @@ export interface FileRouteTypes {
     | '/_protected/settings/project/agent'
     | '/_protected/settings/project/models'
     | '/_protected/settings/project/query-tools'
+    | '/_protected/settings/project/skills'
     | '/_protected/settings/project/warehouse'
     | '/_protected/stories/shared/$shareId'
     | '/_protected/stories/standalone/$storyId'
@@ -705,6 +718,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsProjectQueryToolsRouteImport
       parentRoute: typeof ProtectedSettingsProjectRoute
     }
+    '/_protected/settings/project/skills': {
+      id: '/_protected/settings/project/skills'
+      path: '/skills'
+      fullPath: '/settings/project/skills'
+      preLoaderRoute: typeof ProtectedSettingsProjectSkillsRouteImport
+      parentRoute: typeof ProtectedSettingsProjectRoute
+    }
     '/_protected/settings/project/warehouse': {
       id: '/_protected/settings/project/warehouse'
       path: '/warehouse'
@@ -763,6 +783,7 @@ interface ProtectedSettingsProjectRouteChildren {
   ProtectedSettingsProjectAgentRoute: typeof ProtectedSettingsProjectAgentRoute
   ProtectedSettingsProjectModelsRoute: typeof ProtectedSettingsProjectModelsRoute
   ProtectedSettingsProjectQueryToolsRoute: typeof ProtectedSettingsProjectQueryToolsRoute
+  ProtectedSettingsProjectSkillsRoute: typeof ProtectedSettingsProjectSkillsRoute
   ProtectedSettingsProjectWarehouseRoute: typeof ProtectedSettingsProjectWarehouseRoute
   ProtectedSettingsProjectIndexRoute: typeof ProtectedSettingsProjectIndexRoute
 }
@@ -773,6 +794,7 @@ const ProtectedSettingsProjectRouteChildren: ProtectedSettingsProjectRouteChildr
     ProtectedSettingsProjectModelsRoute: ProtectedSettingsProjectModelsRoute,
     ProtectedSettingsProjectQueryToolsRoute:
       ProtectedSettingsProjectQueryToolsRoute,
+    ProtectedSettingsProjectSkillsRoute: ProtectedSettingsProjectSkillsRoute,
     ProtectedSettingsProjectWarehouseRoute:
       ProtectedSettingsProjectWarehouseRoute,
     ProtectedSettingsProjectIndexRoute: ProtectedSettingsProjectIndexRoute,

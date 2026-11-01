@@ -233,3 +233,67 @@ test.describe('query workbench', () => {
 		await expect(page.getByText('How many orders are there in total?')).toBeHidden();
 	});
 });
+
+test.describe('skills', () => {
+	test.beforeEach(async ({ page }) => {
+		await logIn(page);
+		test.skip(!(await selectProjectWithWarehouse(page)), 'needs a project with a warehouse connection');
+	});
+
+	const deleteSkill = async (page: Page, name: string) => {
+		await page.goto('/settings/project/skills');
+		await page.getByRole('button', { name: `Delete ${name}` }).click();
+		await page.getByRole('button', { name: 'Delete', exact: true }).click();
+		await expect(page.getByRole('button', { name: `Delete ${name}` })).toBeHidden();
+	};
+
+	test('creates a skill in the form, finds it in chat, edits and deletes it', async ({ page }) => {
+		const name = `e2e-skill-${Date.now()}`;
+		await page.goto('/settings/project/skills');
+		await page.getByRole('button', { name: 'New skill' }).click();
+		await page.getByPlaceholder('churn-analysis').fill(name);
+		await page.getByPlaceholder(/Use when the user asks/).fill('Use for the e2e flow.');
+		await page.getByPlaceholder(/Call qt_monthly_churn/).fill('1. Say hello.');
+		await page.getByRole('button', { name: 'Save skill' }).click();
+		await expect(page.getByText(`/${name}`)).toBeVisible();
+
+		await page.goto('/');
+		await page.locator('[contenteditable]').first().click();
+		await page.keyboard.type(`/${name.slice(0, 12)}`);
+		await expect(page.getByText(name).first()).toBeVisible();
+
+		await page.goto('/settings/project/skills');
+		await page.getByRole('button', { name: `Edit ${name}` }).click();
+		await expect(page.getByPlaceholder(/Call qt_monthly_churn/)).toHaveValue('1. Say hello.');
+		await page.getByPlaceholder(/Use when the user asks/).fill('Edited description.');
+		await page.getByRole('button', { name: 'Save skill' }).click();
+		await expect(page.getByText('Edited description.')).toBeVisible();
+
+		await deleteSkill(page, name);
+	});
+
+	test('the assistant drafts a skill from a query and the user saves it (real LLM call)', async ({ page }) => {
+		test.setTimeout(180_000);
+		await page.goto('/settings/project/query-tools?tool=new');
+		await page.getByRole('button', { name: 'New draft' }).click();
+		await page.getByTestId('query-tool-sql-editor').locator('.view-lines').click();
+		await page.keyboard.type('SELECT count(*) AS order_count FROM public.orders');
+		await page.getByRole('button', { name: 'Create skill' }).click();
+
+		const card = page.getByTestId('propose-skill');
+		await expect(card).toBeVisible({ timeout: 120_000 });
+		const saved = (await card.getByText(/^\/[a-z0-9-]+$/).innerText()).slice(1);
+		await expect(page.getByRole('button', { name: 'Save skill' })).toBeEnabled({ timeout: 30_000 });
+		await page.getByRole('button', { name: 'Save skill' }).click();
+		await expect(card.getByText('Saved', { exact: true })).toBeVisible({ timeout: 30_000 });
+
+		await page.goto('/settings/project/skills');
+		await page.getByRole('button', { name: `Edit ${saved}` }).click();
+		const instructions = page.getByPlaceholder(/Call qt_monthly_churn/);
+		await expect(instructions).toHaveValue(/order/i);
+		expect((await instructions.inputValue()).length).toBeGreaterThan(40);
+		await page.getByRole('button', { name: 'Cancel' }).click();
+
+		await deleteSkill(page, saved);
+	});
+});

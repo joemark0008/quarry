@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises';
-
 import { documentMediaType, fileExtension, isBinaryDocument, toSafeFileName } from '@quarry/shared/attachments';
 
 import { toReadableText } from '../file-text.js';
@@ -64,15 +62,6 @@ export const writeUserFileBytes = async (
 	return getStorage().write(key, data, {
 		contentType: documentMediaType(relativePath) ?? 'application/octet-stream',
 	});
-};
-
-/** Stores a file another process left on disk, such as a result DuckDB wrote out. */
-export const writeUserFileFromDisk = async (
-	scope: StorageScope,
-	relativePath: string,
-	sourcePath: string,
-): Promise<StorageObject> => {
-	return writeUserFileBytes(scope, relativePath, await readFile(sourcePath));
 };
 
 export const statUserFile = async (scope: StorageScope, relativePath: string): Promise<StorageObject | null> => {

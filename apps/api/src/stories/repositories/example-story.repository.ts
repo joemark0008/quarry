@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 
 import type { Prisma } from '../../generated/prisma/client.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
@@ -94,13 +93,11 @@ async function runSeed(tx: Prisma.TransactionClient): Promise<void> {
 			toolState: 'output-available',
 			toolInput: {
 				sql_query: query.sql,
-				database_id: LOCAL_DATABASE_ID,
 				name: query.name,
 			},
 			toolOutput: {
 				_version: '1',
 				id: queryId,
-				dialect: 'duckdb',
 				columns: query.columns,
 				data: query.data,
 				row_count: query.data.length,

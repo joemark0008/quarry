@@ -74,6 +74,8 @@ const baseEnvSchema = z.object({
 
 	QUARRY_DEFAULT_PROJECT_PATH: z.string().optional(),
 	QUARRY_PROJECTS_DIR: z.string().default('./projects'),
+	/** `off`: skills are managed as files only, the app and the agent's drafts can't save them. */
+	QUARRY_SKILL_AUTHORING: z.enum(['auto', 'off']).default('auto'),
 	/** Built frontend (`apps/frontend/dist`) served by the API, as in the Docker image. Unset in development (Vite). */
 	QUARRY_FRONTEND_DIST: optionalNonEmptyString,
 	QUARRY_CONTEXT_SOURCE: z.enum(['local', 'git', 'api']).optional(),

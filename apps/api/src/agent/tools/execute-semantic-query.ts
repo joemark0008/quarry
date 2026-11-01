@@ -9,7 +9,7 @@ import { executeQuery } from './execute-sql.js';
 const DESCRIPTION = [
 	'Query the governed metrics of the semantic layer. quarry compiles the metrics, dimensions and filters to SQL with the official definitions and runs it on the database the layer is configured for.',
 	'Discover metrics in semantics/metrics/<metric>.md and dimensions in semantics/dimensions.md first.',
-	'The result is a normal query result: its query id works with display_chart, stories, read_query_result and the local database.',
+	'The result is a normal query result: its query id works with display_chart, stories and read_query_result.',
 ].join(' ');
 
 export default createTool<executeSemanticQuery.Input, executeSemanticQuery.Output>({

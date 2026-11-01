@@ -105,15 +105,14 @@ describe('execute_semantic_query exposure', () => {
 		expect(toolNames('exclusive')).toContain('execute_semantic_query');
 	}, 15_000);
 
-	it('restricts execute_sql to the local database in semantics-only mode', async () => {
+	it('leaves execute_sql out in semantics-only mode', async () => {
 		const { getTools } = await import('../tools/index.js');
-		const sqlDescription = (mode?: SemanticLayerMode | null) =>
-			getTools(null, {}, { semanticLayerMode: mode }).execute_sql.description ?? '';
+		const toolNames = (mode?: SemanticLayerMode | null) =>
+			Object.keys(getTools(null, {}, { semanticLayerMode: mode }));
 
-		expect(sqlDescription()).toContain('against the connected database');
-		expect(sqlDescription('prioritized')).toContain('against the connected database');
-		expect(sqlDescription('exclusive')).toContain('the only accepted database_id');
-		expect(sqlDescription('exclusive')).toContain('including semantic ones');
+		expect(toolNames()).toContain('execute_sql');
+		expect(toolNames('prioritized')).toContain('execute_sql');
+		expect(toolNames('exclusive')).not.toContain('execute_sql');
 	});
 
 	it('refuses warehouse SQL in semantics-only mode', async () => {
@@ -130,7 +129,6 @@ describe('execute_semantic_query exposure', () => {
 
 		await expect(run('warehouse')).rejects.toThrow('query metrics with execute_semantic_query');
 		await expect(run()).rejects.toThrow('query metrics with execute_semantic_query');
-		// quarry: no local DuckDB (PHASES.md 2d), so upstream's `run('duckdb_local')` success case is not ported.
 		const compiledError = await executeQuery({ sql_query: 'SELECT 1', database_id: 'warehouse' }, context, {
 			compiledBySemanticLayer: true,
 		}).catch((error: Error) => error.message);
@@ -155,15 +153,12 @@ describe('SystemPrompt semantic layer block', () => {
 		expect(markdown).not.toContain('**must** go through');
 	});
 
-	it('forbids warehouse SQL but keeps the local database in exclusive mode', () => {
-		const markdown = render('exclusive', ['execute_sql', 'execute_semantic_query']);
+	it('forbids warehouse SQL in exclusive mode', () => {
+		const markdown = render('exclusive', ['execute_semantic_query']);
 		expect(markdown).toContain('Every warehouse question **must** go through execute_semantic_query');
 		expect(markdown).not.toContain('Fall back to execute_sql only when');
 		expect(markdown).not.toContain('use the execute_sql tool for it');
-		expect(markdown).toContain('## The local database');
-		expect(markdown).toContain('the only database_id execute_sql accepts');
-		expect(markdown).toContain('execute_sql and execute_semantic_query result in this chat');
-		expect(markdown).toContain('shown in the execute_sql or execute_semantic_query tool output');
+		expect(markdown).toContain('shown in the execute_semantic_query tool output');
 	});
 
 	it('keeps the definitions as context only when the tool is absent', () => {

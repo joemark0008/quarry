@@ -27,29 +27,15 @@ export const excelSkill: InternalSkill = {
 					the only way to know which sheets exist — never infer them, or what they hold, from the file name.
 				</Span>
 				{canRunSandbox ? (
-					<>
-						<Span>Then read the data itself with the tool that suits the sheet.</Span>
-						<List>
-							<ListItem>
-								<Bold>execute_sql</Bold> against the local database reads a sheet in place with{' '}
-								<Code>read_xlsx</Code>, mounting nothing. This is the main route, and the only one when
-								the answer involves joining the sheet to warehouse data. It is DuckDB, so write DuckDB
-								SQL.
-							</ListItem>
-							<ListItem>
-								<Bold>execute_sandboxed_code</Bold> with the file mounted through{' '}
-								<Code>storage_files</Code> gives you pandas and openpyxl. Reach for it when a sheet is
-								too irregular to describe as a range: stacked tables, merged headers two rows deep, a
-								grid that has to be reshaped before it means anything.
-							</ListItem>
-						</List>
-					</>
+					<Span>
+						Then read the data itself with <Bold>execute_sandboxed_code</Bold>, with the file mounted
+						through <Code>storage_files</Code>, which gives you pandas and openpyxl.
+					</Span>
 				) : (
 					<Span>
-						Then read the data itself with <Bold>execute_sql</Bold> against the local database, which reads
-						a sheet in place with <Code>read_xlsx</Code> and mounts nothing. It is the only route you have
-						here, and the right one whenever the answer involves joining the sheet to warehouse data. It is
-						DuckDB, so write DuckDB SQL.
+						Nothing available here can read the cells, so stop at the outline: name the sheet you need and
+						ask for the sheet as a CSV, which <Bold>read</Bold> opens as text. The advice below applies to
+						that export as well.
 					</Span>
 				)}
 				<Span>
@@ -64,55 +50,15 @@ export const excelSkill: InternalSkill = {
 					: ask for it as <Code>.xlsx</Code> or CSV.
 				</Span>
 
-				<Title level={2}>Reading a sheet in SQL</Title>
-				<Span>
-					<Code>read_xlsx</Code> takes the first sheet unless told otherwise, and infers both the used range
-					and whether its first row is a header. Name the sheet explicitly, every time, using a name from the
-					outline — a name you guessed will simply fail.
-				</Span>
-				<CodeBlock header='sql'>
-					{`-- database_id: duckdb_local
-SELECT * FROM read_xlsx('/home/uploads/2026-01-31/budget.xlsx', sheet = 'FY26') LIMIT 20`}
-				</CodeBlock>
-				<Span>
-					Two signs it inferred the shape wrongly: columns named <Code>A1</Code>, <Code>B1</Code>… mean it
-					found no header row, and a column that is all <Code>NULL</Code> where the sheet clearly has values
-					means the range is not the one you wanted.
-				</Span>
-
-				<Title level={2}>Look at the grid before you load it</Title>
-				<Span>
-					The single biggest source of wrong answers from a spreadsheet is loading it as if it were a CSV.
-					Print the top-left corner raw first — no header, no type inference — so you can see where the table
-					actually starts.
-				</Span>
-				<CodeBlock header='sql'>
-					{`-- database_id: duckdb_local
-SELECT * FROM read_xlsx(
-    '/home/uploads/2026-01-31/budget.xlsx',
-    sheet = 'FY26', range = 'A1:H15', header = false, all_varchar = true
-)`}
-				</CodeBlock>
-				<Span>
-					Once you can see it, read the table with the range and header you decided on, and use the options
-					for what the sheet actually contains: <Code>range</Code> to skip a title block or stop before a
-					totals block, <Code>header = true</Code> once the first row of the range is the header,{' '}
-					<Code>empty_as_varchar</Code> when a column starts with blanks, <Code>ignore_errors</Code> when a
-					few cells cannot be cast, and <Code>all_varchar</Code> when you would rather cast everything
-					yourself.
-				</Span>
-				<CodeBlock header='sql'>
-					{`-- database_id: duckdb_local
-SELECT * FROM read_xlsx(
-    '/home/uploads/2026-01-31/budget.xlsx',
-    sheet = 'FY26', range = 'A4:N412', header = true
-)`}
-				</CodeBlock>
 				{canRunSandbox && (
 					<>
+						<Title level={2}>Look at the grid before you load it</Title>
 						<Span>
-							In the sandbox the same look costs one <Code>print</Code>, and gives you the whole grid to
-							reshape:
+							The single biggest source of wrong answers from a spreadsheet is loading it as if it were a
+							CSV. Print the top-left corner raw first — no header, no type inference — so you can see
+							where the table actually starts. Name the sheet explicitly, every time, using a name from
+							the outline: <Code>read_excel</Code> takes the first sheet unless told otherwise, and a name
+							you guessed will simply fail.
 						</Span>
 						<CodeBlock>
 							{`storage_files: ["/home/uploads/2026-01-31/budget.xlsx"]
@@ -124,6 +70,14 @@ packages: ["pandas", "openpyxl"]`}
 path = "files/uploads/2026-01-31/budget.xlsx"
 print(pd.read_excel(path, sheet_name="FY26", header=None, nrows=12).to_string())`}
 						</CodeBlock>
+						<Span>
+							Once you can see it, read the table with the header you decided on: <Code>skiprows</Code> to
+							skip a title block, <Code>nrows</Code> to stop before a totals block, <Code>usecols</Code>{' '}
+							for a range of columns, and <Code>dtype=str</Code> when you would rather convert everything
+							yourself. Two signs the shape is wrong: columns named <Code>Unnamed: 1</Code> mean it found
+							no header in that row, and a column that is all <Code>NaN</Code> where the sheet clearly has
+							values means you are not reading the range you wanted.
+						</Span>
 					</>
 				)}
 
@@ -136,24 +90,21 @@ print(pd.read_excel(path, sheet_name="FY26", header=None, nrows=12).to_string())
 					</ListItem>
 					<ListItem>
 						<Bold>The header is rarely row 1.</Bold> Titles, logos and blank spacer rows push it down, and a
-						report title read as column names turns every real row into data. Pass{' '}
-						{canRunSandbox ? (
-							<>
-								<Code>range</Code> (or <Code>skiprows</Code> in pandas)
-							</>
-						) : (
-							<Code>range</Code>
-						)}{' '}
-						once you have seen where the table starts.
-					</ListItem>
-					<ListItem>
-						<Bold>Merged cells read as empty.</Bold> Only the top-left cell of a merge holds the value, so a
-						grouping column that looks filled in Excel arrives mostly <Code>NULL</Code>. Carry it down
-						explicitly
+						report title read as column names turns every real row into data.
 						{canRunSandbox && (
 							<>
 								{' '}
-								(<Code>ffill()</Code> in pandas, or the SQL below)
+								Pass <Code>skiprows</Code> once you have seen where the table starts.
+							</>
+						)}
+					</ListItem>
+					<ListItem>
+						<Bold>Merged cells read as empty.</Bold> Only the top-left cell of a merge holds the value, so a
+						grouping column that looks filled in Excel arrives mostly empty. Carry it down explicitly
+						{canRunSandbox && (
+							<>
+								{' '}
+								with <Code>ffill()</Code>
 							</>
 						)}
 						, and confirm the result against the grid you printed.
@@ -169,20 +120,13 @@ print(pd.read_excel(path, sheet_name="FY26", header=None, nrows=12).to_string())
 						contains. If your row count does not match what they expect, this is usually why.
 					</ListItem>
 				</List>
-				<Span>Filling a merged grouping column down, in SQL:</Span>
-				<CodeBlock header='sql'>
-					{`WITH sheet AS (
-    SELECT row_number() OVER () AS sheet_row, * FROM read_xlsx('...', sheet = 'FY26')
-)
-SELECT last_value(region IGNORE NULLS) OVER (ORDER BY sheet_row) AS region, amount FROM sheet`}
-				</CodeBlock>
 
 				<Title level={2}>Formulas may have no value</Title>
 				<Span>
-					Cells hold a formula and, separately, the value Excel last cached for it. Every reader here returns
-					the cached value, which is what you want — but a workbook written by a script and never opened in
-					Excel has nothing cached, so those cells arrive empty. The column is not empty, it is uncomputed:
-					say so, and do not treat the gaps as zeros.
+					Cells hold a formula and, separately, the value Excel last cached for it. Readers return the cached
+					value, which is what you want — but a workbook written by a script and never opened in Excel has
+					nothing cached, so those cells arrive empty. The column is not empty, it is uncomputed: say so, and
+					do not treat the gaps as zeros.
 					{canRunSandbox && (
 						<>
 							{' '}
@@ -198,25 +142,22 @@ SELECT last_value(region IGNORE NULLS) OVER (ORDER BY sheet_row) AS region, amou
 					Excel stores a date as a serial number and a hand-typed figure as whatever the typist produced, so a
 					column is only as clean as the person who filled it. Dates can arrive as integers, numbers as
 					strings with thousands separators, currency symbols or a decimal comma, and IDs can lose their
-					leading zeros. Read the column as text and convert it yourself when it looks like that — with{' '}
-					{canRunSandbox ? (
+					leading zeros. Read the column as text and convert it yourself when it looks like that
+					{canRunSandbox && (
 						<>
-							<Code>pd.to_numeric(errors=&quot;coerce&quot;)</Code> and <Code>pd.to_datetime</Code>, or{' '}
-							<Code>TRY_CAST</Code> and <Code>strptime</Code> in SQL
-						</>
-					) : (
-						<>
-							<Code>TRY_CAST</Code>, <Code>replace</Code> and <Code>strptime</Code>
+							{' '}
+							— with <Code>pd.to_numeric(errors=&quot;coerce&quot;)</Code> and <Code>pd.to_datetime</Code>{' '}
+							—
 						</>
 					)}{' '}
-					— then count what failed to convert. A silently dropped value is a dropped row in every total that
+					then count what failed to convert. A silently dropped value is a dropped row in every total that
 					follows.
 				</Span>
 
 				<Title level={2}>Keep the workbook out of the conversation</Title>
 				<Span>
 					A sheet can hold hundreds of thousands of rows. Aggregate where the data is and return only what you
-					need — a handful of rows, or the figure you were asked for. Never <Italic>select</Italic> a whole
+					need — a handful of rows, or the figure you were asked for. Never <Italic>print</Italic> a whole
 					sheet to get it into your context: it will be truncated somewhere arbitrary, and you will reason
 					over half a table without knowing it.
 				</Span>

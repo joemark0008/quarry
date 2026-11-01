@@ -129,8 +129,18 @@ export const settingsSearchIndex: SettingsSearchEntry[] = [
 		pageLabel: 'Query tools',
 		section: 'Query tools',
 		title: 'Saved query tools',
-		description: 'Save SQL queries on the warehouse, or build them, as tools the agent can call in chat.',
+		description: 'Write and run SQL on the warehouse, and save queries as tools the agent can call in chat.',
 		keywords: ['query', 'queries', 'sql', 'saved', 'tool', 'tools', 'builder', 'parameters', 'warehouse', 'agent'],
+	},
+	// ── Project > Skills ─────────────────────────────────
+	{
+		page: '/settings/project/skills',
+		pageLabel: 'Skills',
+		section: 'Skills',
+		title: 'Project skills',
+		description: 'Create and edit the playbooks the agent loads when a question matches.',
+		keywords: ['skill', 'skills', 'playbook', 'instructions', 'slash', 'builder'],
+		adminOrContextAdmin: true,
 	},
 	// ── Project > Agent > Models ─────────────────────────────
 	{

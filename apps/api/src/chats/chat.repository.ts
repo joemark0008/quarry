@@ -337,12 +337,23 @@ export class ChatRepository {
 		return chat;
 	}
 
-	async softDeleteNonStarredChats(userId: string): Promise<{ count: number }> {
-		const { count } = await this.prisma.chat.updateMany({
-			where: { userId, isStarred: false, deletedAt: null },
-			data: { deletedAt: new Date() },
-		});
+	async deleteNonStarredChats(userId: string): Promise<{ count: number }> {
+		const { count } = await this.prisma.chat.deleteMany({ where: { userId, isStarred: false } });
 		return { count };
+	}
+
+	/** The stories that go when the chat does: they cascade from it. */
+	async listChatStoryIds(chatId: string): Promise<string[]> {
+		const stories = await this.prisma.story.findMany({ where: { chatId }, select: { id: true } });
+		return stories.map((story) => story.id);
+	}
+
+	async listNonStarredChatStoryIds(userId: string): Promise<string[]> {
+		const stories = await this.prisma.story.findMany({
+			where: { chat: { userId, isStarred: false } },
+			select: { id: true },
+		});
+		return stories.map((story) => story.id);
 	}
 
 	async toggleStarred(chatId: string, isStarred: boolean): Promise<void> {

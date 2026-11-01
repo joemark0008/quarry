@@ -314,3 +314,4 @@ Port of the Python service and `upstream_core/config/databases/*` (PLAN.md §6).
 ## After cut-over
 
 - [x] Query workbench on `/settings/project/query-tools`: write and run SQL first, with an embedded agent (`query_workbench` mode, `propose_sql`), then save as a tool; replaces the query builder — _spec: `docs/superpowers/specs/2026-11-01-query-workbench-design.md`. Create skill from a result comes with the skill builder._
+- [x] Skill builder: Settings → Skills, `createSkill`/`updateSkill`/`deleteSkill`, the `propose_skill` chat card, the `skill-creator` built-in skill and **Create skill** in the query workbench — _spec: `docs/superpowers/specs/2026-11-01-skill-builder-design.md`._

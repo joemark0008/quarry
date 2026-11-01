@@ -1,4 +1,4 @@
-import { LOCAL_DATABASE_ID, proposeSql } from '@quarry/shared/tools';
+import { proposeSql } from '@quarry/shared/tools';
 
 import type { ToolContext } from '../types/tools.js';
 import { createTool } from '../utils/tools.js';
@@ -12,7 +12,6 @@ export const wasSqlTested = (sql: string, databaseId: string | undefined, contex
 		(result) =>
 			result.sqlQuery !== undefined &&
 			normalizeSql(result.sqlQuery) === target &&
-			result.databaseId !== LOCAL_DATABASE_ID &&
 			!result.compiledBySemanticLayer &&
 			(!databaseId || !result.databaseId || result.databaseId === databaseId),
 	);

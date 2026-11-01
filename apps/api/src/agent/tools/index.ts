@@ -15,7 +15,7 @@ import { createDisplayMapTool } from './display-map.js';
 import executePython from './execute-python.js';
 import executeSandboxedCode from './execute-sandboxed-code.js';
 import executeSemanticQuery from './execute-semantic-query.js';
-import executeSql, { localOnlyExecuteSql } from './execute-sql.js';
+import executeSql from './execute-sql.js';
 import generateOnboardingRules from './generate-onboarding-rules.js';
 import grep from './grep.js';
 import list from './list.js';
@@ -23,6 +23,7 @@ import loadSkill from './load-skill.js';
 import onboardingAgentPrompt from './onboarding-agent-prompt.js';
 import onboardingCommand from './onboarding-command.js';
 import onboardingProgress from './onboarding-progress.js';
+import proposeSkill from './propose-skill.js';
 import proposeSql from './propose-sql.js';
 import read from './read.js';
 import readQueryResult from './read-query-result.js';
@@ -80,6 +81,7 @@ export const tools = {
 	str_replace: strReplace,
 	suggest_follow_ups: suggestFollowUps,
 	propose_sql: proposeSql,
+	propose_skill: proposeSkill,
 };
 
 /** What the query workbench's agent may use: it writes and tests SQL, and has nothing to do with charts or stories. */
@@ -93,6 +95,7 @@ export const QUERY_WORKBENCH_TOOLS = [
 	'clarification',
 	'load_skill',
 	'propose_sql',
+	'propose_skill',
 ];
 
 export const uiToolset = { ...tools, display_map: createDisplayMapTool() };
@@ -111,7 +114,7 @@ export const getTools = (
 		excludeBuiltinTools?: string[];
 		/** Custom GeoJSON boundary sets defined by the project admin. */
 		customBoundaries?: CustomBoundarySet[];
-		/** Semantic layer mode of the run; `exclusive` restricts `execute_sql` to the local database. */
+		/** Semantic layer mode of the run; `exclusive` leaves `execute_sql` out. */
 		semanticLayerMode?: SemanticLayerMode | null;
 		/** Whether the run's user may author custom stories; omit to follow the instance flag alone. */
 		customStoryAuthoring?: boolean;
@@ -141,7 +144,7 @@ export const getTools = (
 	const baseTools = {
 		...rest,
 		...(options.subagentsEnabled && { task: taskTool }),
-		execute_sql: isWarehouseSqlEnabled(options.semanticLayerMode) ? execute_sql : localOnlyExecuteSql,
+		...(isWarehouseSqlEnabled(options.semanticLayerMode) && { execute_sql }),
 		...(isSemanticQueryToolEnabled(options.semanticLayerMode) && { execute_semantic_query }),
 		...((isStorageEnabled() || customStoryAuthoring) && {
 			write: writeTool,

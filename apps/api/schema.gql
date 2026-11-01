@@ -164,6 +164,22 @@ input CreateSharedChatInput {
   visibility: String! = "project"
 }
 
+input CreateSkillInput {
+  body: String!
+  description: String!
+  name: String!
+}
+
+type CreatedSkill {
+  location: String!
+
+  """
+  `direct`: usable now. `git`: goes live after the change is merged and pulled.
+  """
+  mode: String!
+  name: String!
+}
+
 """A synced warehouse table (upstream `project.getDatabaseObjects`)."""
 type DatabaseObject {
   database: String!
@@ -185,6 +201,11 @@ type DatabaseSyncResult {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input DeleteSkillInput {
+  expectedHash: String!
+  name: String!
+}
 
 input EditMemoryInput {
   content: String!
@@ -312,6 +333,7 @@ type Mutation {
   createProjectQueryTool(input: CreateProjectQueryToolInput!): ProjectQueryTool!
   createSavedPrompt(input: SavedPromptInput!): SavedPrompt!
   createSharedChat(input: CreateSharedChatInput!): SharedChat!
+  createSkill(input: CreateSkillInput!): CreatedSkill!
 
   """Upstream `trpc.customStoryViewer.download`."""
   customStoryViewerDownload(input: JSON): JSON
@@ -334,6 +356,9 @@ type Mutation {
   deleteSandboxSecret(secretId: ID!): Boolean!
   deleteSavedPrompt(promptId: ID!): Boolean!
   deleteSharedChat(shareId: ID!): Boolean!
+
+  """Projects without a context repository only."""
+  deleteSkill(input: DeleteSkillInput!): Boolean!
 
   """Upstream `contextExplorer.discardAllChanges`."""
   discardAllContextChanges: JSON!
@@ -434,6 +459,9 @@ type Mutation {
 
   """Upstream `trpc.story.createVersion`."""
   storyCreateVersion(input: JSON): JSON
+
+  """Deletes a story for good (quarry addition)."""
+  storyDeletePermanently(input: JSON): JSON
 
   """Upstream `trpc.story.downloadCustom`."""
   storyDownloadCustom(input: JSON): JSON
@@ -559,6 +587,9 @@ type Mutation {
   updateSandboxSecretDescription(input: UpdateSandboxSecretDescriptionInput!): SandboxSecret!
   updateSavedPrompt(input: UpdateSavedPromptInput!): SavedPrompt!
   updateSharedChatAccess(allowedUserIds: [String!]!, shareId: ID!): Boolean!
+
+  """Projects without a context repository only."""
+  updateSkill(input: UpdateSkillInput!): UpdatedSkill!
 
   """Runs an edited query and saves it in the chat's message."""
   updateSqlQuery(input: SqlEditInput!): SqlEditResult!
@@ -912,7 +943,9 @@ type Query {
 
   """Every project skill, for the admin settings."""
   skillCatalog: [Skill!]!
+  skillDetail(name: String!): SkillDetail!
   skillLoadErrors: [SkillLoadError!]!
+  skillSaveStatus: SkillSaveStatus!
 
   """The project skills the signed-in user may use (the `/` picker)."""
   skills: [Skill!]!
@@ -1245,10 +1278,27 @@ type Skill {
   name: String!
 }
 
+"""A skill with its instructions, for editing."""
+type SkillDetail {
+  body: String!
+  description: String!
+  hash: String!
+  name: String!
+}
+
 """A skill file that could not be loaded."""
 type SkillLoadError {
   location: String!
   message: String!
+}
+
+"""How this project saves skills written in the app."""
+type SkillSaveStatus {
+  """Why saving is blocked, in the blocked modes."""
+  message: String
+
+  """`direct`, `git`, `unavailable` or `disabled`."""
+  mode: String!
 }
 
 input SqlEditInput {
@@ -1301,9 +1351,25 @@ input UpdateSavedPromptInput {
   title: String
 }
 
+input UpdateSkillInput {
+  body: String!
+  description: String!
+
+  """
+  Hash from `skillDetail`, so an edit never overwrites a newer version of the file.
+  """
+  expectedHash: String!
+  name: String!
+}
+
 input UpdateUserPreferencesInput {
   """compact or detailed"""
   toolCallDensity: String
+}
+
+type UpdatedSkill {
+  hash: String!
+  name: String!
 }
 
 type User {

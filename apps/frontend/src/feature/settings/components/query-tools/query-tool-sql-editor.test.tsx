@@ -10,11 +10,13 @@ const editor = vi.hoisted(() => ({
 	text: '',
 	onChange: undefined as ((value: string) => void) | undefined,
 	getValue: () => editor.text,
-	getModel: () => ({ getFullModelRange: () => 'whole' }),
+	getModel: () => ({ getFullModelRange: () => 'whole', setEOL: vi.fn() }),
 	addCommand: vi.fn(),
 	pushUndoStop: vi.fn(),
 	executeEdits: vi.fn((_source: string, edits: { text: string }[]) => {
 		editor.text = edits[0].text;
+		// Monaco reports every content change, including edits from code.
+		editor.onChange?.(edits[0].text);
 	}),
 	/** A keystroke: Monaco changes its text, then reports it. */
 	type: (text: string) => {
@@ -37,7 +39,11 @@ vi.mock('@monaco-editor/react', () => ({
 		editor.onChange = onChange;
 		useEffect(() => {
 			editor.text = defaultValue;
-			onMount(editor, { KeyMod: { CtrlCmd: 0 }, KeyCode: { Enter: 0 } });
+			onMount(editor, {
+				KeyMod: { CtrlCmd: 0 },
+				KeyCode: { Enter: 0 },
+				editor: { EndOfLineSequence: { LF: 0 } },
+			});
 			// Monaco mounts once.
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
@@ -87,6 +93,34 @@ describe('QueryToolSqlEditor', () => {
 		rerender(field('saved'));
 
 		expect(editor.text).toBe('saved');
+	});
+
+	it('applies the same value again after the user changed it', () => {
+		const { rerender } = render(field(''));
+		rerender(field('SELECT 1'));
+		expect(editor.text).toBe('SELECT 1');
+
+		editor.type('SELECT 1 edited');
+		rerender(field('SELECT 1 edited'));
+		rerender(field('SELECT 1'));
+
+		expect(editor.text).toBe('SELECT 1');
+	});
+
+	it('reports plain line endings, whatever Monaco uses', () => {
+		const onChange = vi.fn();
+		render(<QueryToolSqlEditor value='' onChange={onChange} />);
+		editor.type('SELECT 1\r\nFROM t');
+		expect(onChange).toHaveBeenCalledWith('SELECT 1\nFROM t');
+	});
+
+	it('leaves the editor alone when only the line endings differ', () => {
+		render(field('a\nb'));
+		const before = editor.executeEdits.mock.calls.length;
+		editor.text = 'a\r\nb';
+		cleanup();
+		render(field('a\nb'));
+		expect(editor.executeEdits.mock.calls.length).toBe(before);
 	});
 
 	it('starts with the value', () => {

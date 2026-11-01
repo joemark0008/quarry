@@ -75,7 +75,7 @@ describe('load_skill tool with project skills', () => {
 		const output = await runLoadSkill('excel-handling', { skillsAccess: restrictedSkills(['revenue']) });
 
 		expect(output.body).not.toBe('Use the Finance tab only.');
-		expect(output.body).toContain('read_xlsx');
+		expect(output.body).toContain('Working with Excel workbooks');
 	});
 
 	it('loads a skill granted to the user group', async () => {

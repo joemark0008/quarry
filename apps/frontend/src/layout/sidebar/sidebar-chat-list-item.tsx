@@ -6,6 +6,8 @@ import styles from './sidebar-chat-list-item.module.css';
 import type { ComponentProps } from 'react';
 import type { GroupedChatItem } from '@quarry/shared/types';
 import { ShareChatDialog } from '@/components/share-dialog.chat.tsx';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
+import { invalidateStoriesCaches } from '@/lib/stories-cache';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -39,6 +41,7 @@ export function ChatListItem({ chat }: Props) {
 	const [title, setTitle] = useState(chat.title);
 	const [isRenaming, setIsRenaming] = useState(false);
 	const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
 	const deleteChat = useMutation(
 		chatApi.chat.delete.mutationOptions({
@@ -49,8 +52,10 @@ export function ChatListItem({ chat }: Props) {
 						storage.set(null);
 					}
 				}
+				setIsDeleteDialogOpen(false);
 				navigate({ to: '/' });
 				ctx.client.invalidateQueries({ queryKey: [['chat', 'listGrouped']] });
+				invalidateStoriesCaches(ctx.client);
 			},
 		}),
 	);
@@ -94,7 +99,8 @@ export function ChatListItem({ chat }: Props) {
 	};
 
 	const handleDeleteSelect = () => {
-		deleteChat.mutate({ chatId: chat.id });
+		deleteChat.reset();
+		setIsDeleteDialogOpen(true);
 	};
 
 	const handleStarSelect = () => {
@@ -145,7 +151,11 @@ export function ChatListItem({ chat }: Props) {
 									variant='ghost'
 									size='icon-xs'
 									className={styles.chatListItemButton}
-									onClick={(event) => event.stopPropagation()}
+									onClick={(event) => {
+										// Inside the row's link: without this the browser follows it and the menu never shows.
+										event.preventDefault();
+										event.stopPropagation();
+									}}
 								>
 									<EllipsisVertical />
 								</Button>
@@ -182,6 +192,17 @@ export function ChatListItem({ chat }: Props) {
 			</Link>
 
 			<ShareChatDialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen} chatId={chat.id} />
+			<ConfirmationDialog
+				open={isDeleteDialogOpen}
+				onOpenChange={setIsDeleteDialogOpen}
+				title='Delete this chat?'
+				description={`"${chat.title}" will be permanently deleted. Any stories created in this chat will be deleted too, including for people they are shared with. This cannot be undone.`}
+				confirmLabel='Delete chat and stories'
+				onConfirm={() => deleteChat.mutate({ chatId: chat.id })}
+				isPending={deleteChat.isPending}
+				error={deleteChat.error?.message}
+				preventCloseWhilePending
+			/>
 		</>
 	);
 }

@@ -126,7 +126,7 @@ function ClarificationQuestion({
  * looking for a user message that appears after the assistant message
  * containing this tool call.
  */
-function findAnswerForToolCall(messages: UIMessage[], toolCallId: string): string | null {
+export function findAnswerForToolCall(messages: UIMessage[], toolCallId: string): string | null {
 	const toolMessageIndex = messages.findIndex((message) =>
 		message.parts.some((part) => isToolUIPart(part) && part.toolCallId === toolCallId),
 	);

@@ -22,17 +22,17 @@ describe('describeWorkbook', () => {
 		]);
 	});
 
-	it('shows how to query a sheet, naming one that really exists', () => {
+	it('shows how to open a sheet, naming one that really exists', () => {
 		const outline = describeWorkbook(buildWorkbook([{ name: 'Budget FY26', range: 'A1:C3' }]));
 
 		expect(outline).toContain('Excel workbook with 1 sheet');
-		expect(outline).toContain("read_xlsx('<path>', sheet = 'Budget FY26')");
+		expect(outline).toContain('sheet_name="Budget FY26"');
 	});
 
-	it('escapes an apostrophe in the suggested SQL sheet name', () => {
+	it('keeps an apostrophe in the suggested sheet name intact', () => {
 		const outline = describeWorkbook(buildWorkbook([{ name: "Director's view", range: 'A1:C3' }]));
 
-		expect(outline).toContain("sheet = 'Director''s view'");
+		expect(outline).toContain('sheet_name="Director\'s view"');
 	});
 
 	it('flags a hidden sheet rather than passing it off as the working copy', () => {

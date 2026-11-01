@@ -3,10 +3,9 @@ import { type UnzipFileFilter, unzipSync } from 'fflate';
 /**
  * Describes the sheets of an .xlsx without reading a single cell.
  *
- * A workbook is the one attachment whose shape has to be known before it can be queried:
- * `read_xlsx` takes the first sheet unless told otherwise, and DuckDB offers no way to list the
- * others, so a question about the second sheet is unanswerable until someone names it. This is
- * the equivalent of looking at the tabs, and it costs a few lines of context rather than a
+ * A workbook is the one attachment whose shape has to be known before it can be opened: readers
+ * take the first sheet unless told otherwise, so a question about the second sheet is unanswerable
+ * until someone names it. This is the equivalent of looking at the tabs, and it costs a few lines of context rather than a
  * sheet's worth of rows.
  * @throws Error when the file is not a readable workbook.
  */
@@ -18,13 +17,11 @@ export const describeWorkbook = (data: Buffer): string => {
 	}
 
 	return [
-		`Excel workbook with ${sheets.length} ${sheets.length === 1 ? 'sheet' : 'sheets'}, in tab order. No cells are read here: query a sheet by name with the local database, e.g. SELECT * FROM read_xlsx('<path>', sheet = '${escapeSqlLiteral(first.name)}') LIMIT 20.`,
+		`Excel workbook with ${sheets.length} ${sheets.length === 1 ? 'sheet' : 'sheets'}, in tab order. No cells are read here: open a sheet by name in the sandbox, e.g. pd.read_excel(path, sheet_name=${JSON.stringify(first.name)}), or without a sandbox ask for it as a CSV.`,
 		...sheets.map(describeSheet),
 		'The counts are the used range the file records, so they include any title, blank or totals rows around the table — look at the first rows before deciding where the header is.',
 	].join('\n');
 };
-
-const escapeSqlLiteral = (value: string): string => value.replaceAll("'", "''");
 
 interface Sheet {
 	name: string;

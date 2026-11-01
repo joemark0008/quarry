@@ -35,6 +35,7 @@ import {
 	updateContextWorktree,
 } from './git/context-explorer-git.js';
 import { pushContextExplorerBranch } from './git/context-explorer-pr.js';
+import { getWorktreeProjectRoot } from './git/context-repo.js';
 import {
 	ContextProjectResolutionError,
 	resolveContextRepository,
@@ -42,6 +43,9 @@ import {
 } from './git/context-repo.js';
 import { getRepoProviderDisplayName } from './git/review-request-provider.js';
 import { logger, serializeError } from './logger.js';
+
+export type ContextWriteTarget =
+	{ mode: 'direct' | 'git'; root: string } | { mode: 'unavailable' | 'disabled'; message: string };
 
 export interface ContextExplorerProject {
 	id: string;
@@ -286,6 +290,21 @@ export class ContextExplorerService {
 
 	async pushBranch(project: ContextExplorerProject, user: ContextExplorerUser) {
 		return pushContextExplorerBranch(await this.createGitContext(project, user));
+	}
+
+	/**
+	 * Where the app may write a new context file for this user: the live folder when the project has no context
+	 * repository, the user's worktree when it has one. A repository that isn't usable blocks writing, since files
+	 * in a live checkout would skip review and could conflict with the next pull.
+	 */
+	async resolveWriteTarget(project: ContextExplorerProject, user: ContextExplorerUser): Promise<ContextWriteTarget> {
+		const { git, projectFolder } = await this.createSafeFileAccess(project, user);
+		if (git.status === 'available') {
+			return { mode: 'git', root: getWorktreeProjectRoot(git.repo) };
+		}
+		return git.reason === 'no-repo'
+			? { mode: 'direct', root: projectFolder }
+			: { mode: 'unavailable', message: git.message };
 	}
 
 	private async createSafeFileAccess(

@@ -137,6 +137,56 @@ export async function writeFileContent(
 	return { hash: hashContent(contentBuffer) };
 }
 
+/** A new file; parent folders are created. It never replaces an existing file. */
+export function createContextFile(filePath: string, content: string, projectRoot: string): void {
+	validateContentBuffer(Buffer.from(content, 'utf-8'));
+	try {
+		const { realPath, root } = resolveAndValidatePath(filePath, projectRoot);
+		const assertFree = () => {
+			if (fsSync.existsSync(realPath)) {
+				throw new HandlerError('CONFLICT', `${filePath} already exists.`);
+			}
+		};
+		assertFree();
+		fsSync.mkdirSync(path.dirname(realPath), { recursive: true });
+		writeFileAtomically({ beforeRename: assertFree, content, displayPath: filePath, root, target: realPath });
+	} catch (error) {
+		throw toFileError(error, filePath);
+	}
+}
+
+/** Replaces a file directly under `projectRoot`, unless it changed since it was read. Returns the new hash. */
+export function overwriteContextFile(
+	filePath: string,
+	content: string,
+	expectedHash: string,
+	projectRoot: string,
+): string {
+	const contentBuffer = Buffer.from(content, 'utf-8');
+	validateContentBuffer(contentBuffer);
+	try {
+		const { realPath, root } = resolveAndValidatePath(filePath, projectRoot);
+		const assertUnchanged = () =>
+			assertExpectedHash(readValidatedContextFileSync(realPath, filePath), expectedHash);
+		assertUnchanged();
+		writeFileAtomically({ beforeRename: assertUnchanged, content, displayPath: filePath, root, target: realPath });
+	} catch (error) {
+		throw toFileError(error, filePath);
+	}
+	return hashContent(contentBuffer);
+}
+
+/** Deletes a file directly under `projectRoot`, unless it changed since it was read. */
+export function removeContextFile(filePath: string, expectedHash: string, projectRoot: string): void {
+	try {
+		const { realPath } = resolveAndValidatePath(filePath, projectRoot);
+		assertExpectedHash(readValidatedContextFileSync(realPath, filePath), expectedHash);
+		fsSync.rmSync(realPath);
+	} catch (error) {
+		throw toFileError(error, filePath);
+	}
+}
+
 export function getFileEditability(
 	filePath: string,
 	realPath: string,
@@ -629,6 +679,13 @@ function toFileError(error: unknown, filePath: string): HandlerError {
 	const code = (error as NodeJS.ErrnoException).code;
 	if (code === 'ENOENT') {
 		return new HandlerError('NOT_FOUND', `File not found: ${filePath}`);
+	}
+	// These messages quote the absolute path, which project members must not see.
+	if (code === 'EACCES' || code === 'EPERM' || code === 'EROFS' || code === 'ENOSPC') {
+		return new HandlerError(
+			'BAD_REQUEST',
+			`The server could not write ${filePath}: its disk is read-only or full.`,
+		);
 	}
 	if (code === 'ELOOP' || code === 'EMLINK') {
 		return new HandlerError('FORBIDDEN', `Access denied for path: ${filePath}`);

@@ -1,6 +1,5 @@
 import type { INestApplication } from '@nestjs/common';
 import { SYSTEM_EXAMPLE_PROJECT_ID } from '@quarry/shared';
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { ChatRepository } from '../src/chats/chat.repository.js';
@@ -316,9 +315,6 @@ describe('system example story', () => {
 		expect(parts.map(({ toolOutput }) => (toolOutput as { id: string }).id).sort()).toEqual(
 			Object.keys(JAFFLE_SHOP_STORY.queries).sort(),
 		);
-		expect(
-			parts.every(({ toolInput }) => (toolInput as { database_id?: string }).database_id === LOCAL_DATABASE_ID),
-		).toBe(true);
 
 		const queryData = await app
 			.get(ChatRepository)

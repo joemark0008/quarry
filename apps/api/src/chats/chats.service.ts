@@ -6,6 +6,7 @@ import type { ContextUsage, ForkMetadata, UIMessage } from '../agent/types/chat.
 import { applyChatFilters, buildChatGroups, type EnrichedChat } from '../agent/utils/chat-list.js';
 import { withQueryResultPreviewsInChat } from '../agent/utils/query-result-preview.js';
 import { HandlerError } from '../common/errors/handler-error.js';
+import { unscheduleStoryRefreshJob } from '../stories/services/story-schedule.js';
 import { ChatRepository, type SearchChatResult } from './chat.repository.js';
 import type { Chat } from './models/chat.model.js';
 
@@ -74,6 +75,7 @@ export class ChatsService {
 
 	async deleteChat(chatId: string, userId: string): Promise<void> {
 		await this.assertOwner(chatId, userId);
+		await this.unscheduleStories(await this.chats.listChatStoryIds(chatId));
 		await this.chats.deleteChat(chatId);
 	}
 
@@ -100,8 +102,14 @@ export class ChatsService {
 	}
 
 	async deleteAllNonStarred(userId: string): Promise<number> {
-		const { count } = await this.chats.softDeleteNonStarredChats(userId);
+		await this.unscheduleStories(await this.chats.listNonStarredChatStoryIds(userId));
+		const { count } = await this.chats.deleteNonStarredChats(userId);
 		return count;
+	}
+
+	/** A chat's stories are deleted with it, and a schedule left behind would keep failing on the missing story. */
+	private async unscheduleStories(storyIds: string[]): Promise<void> {
+		await Promise.all(storyIds.map((storyId) => unscheduleStoryRefreshJob(storyId)));
 	}
 
 	async setStarred(chatId: string, userId: string, isStarred: boolean): Promise<void> {

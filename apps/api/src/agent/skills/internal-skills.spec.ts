@@ -1,4 +1,3 @@
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import { describe, expect, it } from 'vitest';
 
 import loadSkillTool from '../tools/load-skill.js';
@@ -98,19 +97,23 @@ describe('the excel skill', () => {
 		expect(body).toMatch(/never infer them/i);
 	});
 
-	it('offers the local database, naming the reader and the sheet argument', () => {
+	it('reads a sheet by name in the sandbox', () => {
+		const body = bodyOf('excel-handling', true);
+
+		expect(body).toContain('read_excel');
+		expect(body).toMatch(/sheet_name="FY26"/);
+	});
+
+	it('asks for a CSV when nothing here can read the cells', () => {
 		const body = bodyOf('excel-handling', false);
 
-		expect(body).toContain('read_xlsx');
-		expect(body).toContain(LOCAL_DATABASE_ID);
-		expect(body).toMatch(/sheet = 'FY26'/);
+		expect(body).toMatch(/ask for the sheet as a CSV/i);
+		expect(body).not.toContain('read_excel');
 	});
 
 	it('warns about the header row rather than assuming row 1', () => {
-		const body = bodyOf('excel-handling', false);
-
-		expect(body).toMatch(/header is rarely row 1/i);
-		expect(body).toContain('range');
+		expect(bodyOf('excel-handling', false)).toMatch(/header is rarely row 1/i);
+		expect(bodyOf('excel-handling', true)).toContain('skiprows');
 	});
 
 	it('warns about the traps that silently corrupt a total', () => {
@@ -118,14 +121,6 @@ describe('the excel skill', () => {
 
 		expect(body).toMatch(/merged cells/i);
 		expect(body).toMatch(/double counts/i);
-	});
-
-	it('gives a SQL way through a messy sheet when there is no sandbox', () => {
-		const body = bodyOf('excel-handling', false);
-
-		expect(body).toContain('header = false');
-		expect(body).toContain('IGNORE NULLS');
-		expect(body).toContain('empty_as_varchar');
 	});
 
 	it('adds pandas and openpyxl only when a sandbox can run them', () => {

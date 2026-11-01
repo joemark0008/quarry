@@ -1,4 +1,5 @@
 import {
+	BookOpen,
 	BookOpenText,
 	Boxes,
 	Database,
@@ -104,6 +105,14 @@ export const navLinks: NavLink[] = [
 		section: 'project',
 		requiresProject: true,
 		visible: isMember,
+	},
+	{
+		icon: BookOpen,
+		label: 'Skills',
+		to: '/settings/project/skills',
+		section: 'project',
+		requiresProject: true,
+		visible: isContextManager,
 	},
 	{
 		icon: Palette,

@@ -913,6 +913,17 @@ interface GraphQLProcedures {
 		catalog: Procedure<void, Skill[]>;
 		list: Procedure<void, Skill[]>;
 		listLoadErrors: Procedure<void, SkillLoadError[]>;
+		saveStatus: Procedure<void, { mode: string; message?: string | null }>;
+		detail: Procedure<{ name: string }, { name: string; description: string; body: string; hash: string }>;
+		create: Procedure<
+			{ name: string; description: string; body: string },
+			{ name: string; location: string; mode: string }
+		>;
+		update: Procedure<
+			{ name: string; description: string; body: string; expectedHash: string },
+			{ name: string; hash: string }
+		>;
+		delete: Procedure<{ name: string; expectedHash: string }, void>;
 	};
 	sql: {
 		previewQuery: Procedure<
@@ -932,7 +943,6 @@ interface GraphQLProcedures {
 				applied_limit?: number | undefined;
 				template_warnings?: string[] | undefined;
 				superseded?: boolean | undefined;
-				saved_file?: { path: string; size: number } | undefined;
 				revision?: number | undefined;
 				is_preview?: boolean | undefined;
 			}
@@ -950,7 +960,6 @@ interface GraphQLProcedures {
 					name?: string | undefined;
 					query_id?: `query_${string}` | undefined;
 					database_id?: string | undefined;
-					save_to?: { format: 'csv' | 'parquet'; path: string } | undefined;
 				};
 				output: {
 					id: `query_${string}`;
@@ -962,7 +971,6 @@ interface GraphQLProcedures {
 					applied_limit?: number | undefined;
 					template_warnings?: string[] | undefined;
 					superseded?: boolean | undefined;
-					saved_file?: { path: string; size: number } | undefined;
 					revision?: number | undefined;
 					is_preview?: boolean | undefined;
 				};

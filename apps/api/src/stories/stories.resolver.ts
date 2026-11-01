@@ -477,6 +477,17 @@ export class StoryResolver {
 	}
 
 	@ProjectAccess()
+	@Mutation(() => GraphQLJSON, { nullable: true, description: 'Deletes a story for good (quarry addition).' })
+	storyDeletePermanently(
+		@CurrentUser() user: AuthUser,
+		@CurrentProject() project: Project | undefined,
+		@CurrentUserRole() userRole: UserRole | null | undefined,
+		@Args('input', { type: () => GraphQLJSON, nullable: true }) input?: unknown,
+	) {
+		return this.stories.run(storyRoutes, 'deletePermanently', { user, project, userRole }, input);
+	}
+
+	@ProjectAccess()
 	@Mutation(() => GraphQLJSON, { nullable: true, description: 'Upstream `trpc.story.archiveShared`.' })
 	storyArchiveShared(
 		@CurrentUser() user: AuthUser,

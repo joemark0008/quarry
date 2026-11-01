@@ -48,8 +48,8 @@ export function isSemanticQueryToolEnabled(mode: SemanticLayerMode | null | unde
 }
 
 /**
- * In semantics-only mode the warehouse is only reachable through the layer: `execute_sql` stays
- * available but is restricted to the local database (files and earlier results).
+ * In semantics-only mode the warehouse is only reachable through the layer: `execute_sql` and the
+ * saved query tools are left out.
  */
 export function isWarehouseSqlEnabled(mode: SemanticLayerMode | null | undefined): boolean {
 	return mode !== 'exclusive';

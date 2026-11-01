@@ -214,6 +214,10 @@ query StoryDownloadStandalone($input: JSON) {
 	storyDownloadStandalone(input: $input)
 }
 
+mutation StoryDeletePermanently($input: JSON) {
+	storyDeletePermanently(input: $input)
+}
+
 mutation StoryEditCustomStoryBlock($input: JSON) {
 	storyEditCustomStoryBlock(input: $input)
 }

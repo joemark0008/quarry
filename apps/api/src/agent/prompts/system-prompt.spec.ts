@@ -1,4 +1,3 @@
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renderToMarkdown } from '../markdown/index.js';
@@ -252,21 +251,6 @@ describe('SystemPrompt saved files rules', () => {
 		expect(markdown).not.toContain('Saved Files');
 	});
 
-	it('does not recommend save_to when execute_sql is unavailable', () => {
-		const markdown = renderToMarkdown(SystemPrompt({ toolNames: ['write'] }));
-		expect(markdown).not.toContain('**save_to**');
-	});
-
-	it('does not recommend save_to when write only serves custom stories', () => {
-		const markdown = renderToMarkdown(
-			SystemPrompt({
-				toolNames: ['execute_sql', 'write', 'story'],
-				options: { savedFilesEnabled: false, customStoriesEnabled: true },
-			}),
-		);
-		expect(markdown).not.toContain('**save_to**');
-	});
-
 	it('tells custom stories to persist what a viewer would redo on every visit', () => {
 		const markdown = renderToMarkdown(
 			SystemPrompt({
@@ -351,44 +335,6 @@ describe('SystemPrompt configured database ids', () => {
 		expect(withoutDatabases).not.toContain('## Databases');
 		expect(withOneDatabase).not.toContain('## Databases');
 		expect(withOneDatabase).not.toContain('duckdb-jaffle-shop');
-	});
-});
-
-describe('SystemPrompt local database rules', () => {
-	it('names the reserved database id and what it is for', () => {
-		const markdown = renderToMarkdown(SystemPrompt({}));
-
-		expect(markdown).toContain('The local database');
-		expect(markdown).toContain(`**${LOCAL_DATABASE_ID}**`);
-		expect(markdown).toContain('read_xlsx');
-		expect(markdown).toContain('SELECT * FROM query_ab12cd34');
-	});
-
-	it('offers save_to only when there is somewhere to save to', () => {
-		const withStorage = renderToMarkdown(SystemPrompt({ toolNames: ['execute_sql', 'write'] }));
-		const withoutStorage = renderToMarkdown(SystemPrompt({ toolNames: ['execute_sql'] }));
-
-		expect(withStorage).toContain('**save_to**');
-		expect(withStorage).toContain('format: "parquet"');
-		expect(withStorage).toContain('**saved-file** chip');
-		expect(withoutStorage).not.toContain('**save_to**');
-	});
-
-	it('still tells the model the query itself cannot write a file', () => {
-		expect(renderToMarkdown(SystemPrompt({}))).toContain('**COPY … TO**');
-	});
-
-	it('says a workbook needs its sheet named, and where to get the name', () => {
-		const markdown = renderToMarkdown(SystemPrompt({}));
-
-		expect(markdown).toContain("**sheet = 'Name'**");
-		expect(markdown).toContain('**read** on the file lists the names to pass');
-	});
-
-	it('omits it when the run cannot run SQL at all', () => {
-		const markdown = renderToMarkdown(SystemPrompt({ toolNames: ['write'] }));
-
-		expect(markdown).not.toContain('The local database');
 	});
 });
 

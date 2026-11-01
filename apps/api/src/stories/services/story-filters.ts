@@ -5,7 +5,6 @@ import {
 	stripSqlFilterBlocks,
 } from '@quarry/shared/sql-template';
 import { getStoryFiltersFromCode } from '@quarry/shared/story-segments';
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 
 import { HandlerError } from '../../common/errors/handler-error.js';
 import { env } from '../env.js';
@@ -120,8 +119,7 @@ async function loadStoryExecutionContext(chatId: string, storySlug: string) {
 		loadStoryCodeAndQueries(chatId, storySlug),
 		createStoryExecutionContext(chatId),
 	]);
-	const databaseIds = Object.values(sqlQueries).flatMap((query) => (query.databaseId ? [query.databaseId] : []));
-	const databaseId = databaseIds.find((id) => id !== LOCAL_DATABASE_ID) ?? databaseIds[0];
+	const databaseId = Object.values(sqlQueries).find((query) => query.databaseId)?.databaseId;
 
 	return {
 		code,

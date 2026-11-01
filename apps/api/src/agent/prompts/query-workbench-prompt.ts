@@ -9,5 +9,6 @@ export const QUERY_WORKBENCH_PROMPT = [
 	'- Run the exact SQL with `execute_sql` on the selected connection in this turn, and fix any error before you finish.',
 	'- Finish with `propose_sql` rather than pasting the query in your answer. Do not write a long explanation after it: the user sees the query in a card and decides whether to apply it.',
 	'- If the question is ambiguous in a way that changes the query, ask with `clarification`.',
+	'- If the user asks to create a skill, load the `skill-creator` skill and finish with `propose_skill` instead of `propose_sql`.',
 	'- If the user asks for a placeholder such as `{{ status }}`, write it in the SQL. It cannot be run as written, so test a version with a sample value, then propose the placeholder version and say it was tested with that value.',
 ].join('\n');

@@ -50,6 +50,8 @@ const describeToolActivity = (part: UIToolPart): string | null => {
 		case 'execute_sql':
 		case 'execute_semantic_query':
 			return withAsset('Running', asString(input.name)) ?? 'Running query';
+		case 'propose_skill':
+			return 'Drafting the skill';
 		case 'propose_sql':
 			return 'Preparing the query';
 		case 'mcp_call':

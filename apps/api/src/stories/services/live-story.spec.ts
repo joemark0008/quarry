@@ -8,7 +8,6 @@ const mocks = vi.hoisted(() => ({
 	getChatProjectId: vi.fn(),
 	getLatestVersionByChatAndSlug: vi.fn(),
 	getSqlQueriesFromCode: vi.fn(),
-	getSqlQueriesByIds: vi.fn(),
 	getSqlQueryById: vi.fn(),
 	getStoryDataCacheByChatAndSlug: vi.fn(),
 	getQueryDataFromCode: vi.fn(),
@@ -40,7 +39,6 @@ vi.mock('../story-queries.js', () => ({
 	storyQueries: {
 		getLatestVersionByChatAndSlug: mocks.getLatestVersionByChatAndSlug,
 		getSqlQueriesFromCode: mocks.getSqlQueriesFromCode,
-		getSqlQueriesByIds: mocks.getSqlQueriesByIds,
 		getSqlQueryById: mocks.getSqlQueryById,
 		getStoryDataCacheByChatAndSlug: mocks.getStoryDataCacheByChatAndSlug,
 		upsertStoryDataCache: mocks.upsertStoryDataCache,
@@ -90,7 +88,6 @@ describe('live story SQL execution', () => {
 			isLiveTextDynamic: false,
 			format: 'classic',
 		});
-		mocks.getSqlQueriesByIds.mockResolvedValue({});
 		mocks.buildToolContext.mockImplementation(async () => ({
 			services: { executeWarehouseSql: mocks.executeWarehouseSql },
 			projectFolder: '/project',
@@ -245,9 +242,6 @@ describe('live story SQL execution', () => {
 			{},
 		);
 	});
-
-	// quarry: no local DuckDB yet, so upstream's two local-query cases ('refreshes a local query in DuckDB after
-	// re-running the warehouse query it reads from', 'never sends a local live query to the warehouse') are not ported.
 
 	it('returns non-live stored data regardless of row security', async () => {
 		const code = '<table query_id="query_warehouse" />';

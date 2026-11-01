@@ -1,9 +1,8 @@
 import { type ChartPluginManifestEntry, STORY_REFERENCE_TAG } from '@quarry/shared';
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import type { SemanticLayerMode } from '@quarry/shared/types';
 
 import type { SandboxSecretDefinition } from '../../sandbox/sandbox-secret.service.js';
-import { Block, Bold, Br, CodeBlock, List, ListItem, Location, Span, Title } from '../markdown/index.js';
+import { Block, Bold, Br, List, ListItem, Location, Span, Title } from '../markdown/index.js';
 import type { PreloadedSkill, Skill } from '../services/skill.js';
 import { tokenCounter } from '../services/token-counter.js';
 import type { InternalSkill } from '../skills/index.js';
@@ -92,7 +91,11 @@ export function SystemPrompt({
 	const { canGrepSavedFiles = true, savedFilesEnabled = true, customStoriesEnabled = false } = options;
 	const hasTool = (name: string) => !toolNames || toolNames.includes(name);
 	const hasStoryLibrary = hasTool('list') && hasTool('read');
-	const queryToolLabel = hasTool('execute_semantic_query') ? 'execute_sql or execute_semantic_query' : 'execute_sql';
+	const queryToolLabel = !hasTool('execute_semantic_query')
+		? 'execute_sql'
+		: hasTool('execute_sql')
+			? 'execute_sql or execute_semantic_query'
+			: 'execute_semantic_query';
 	const visibleMemories = getMemoriesInTokenRange(memories, MEMORY_TOKEN_LIMIT);
 	const dialectToolCallRules = getDialectToolCallRules(connections);
 	const dialectSqlQueryRules = getDialectSqlQueryRules(connections);
@@ -206,7 +209,6 @@ export function SystemPrompt({
 				<PermanentStorageBlock
 					canGrepSavedFiles={canGrepSavedFiles}
 					canRunSandbox={hasTool('execute_sandboxed_code')}
-					canExecuteSql={hasTool('execute_sql')}
 					canReplace={hasTool('str_replace')}
 				/>
 			)}
@@ -214,13 +216,6 @@ export function SystemPrompt({
 				<CustomStoriesBlock canReplace={hasTool('str_replace')} />
 			)}
 			{hasStoryLibrary && <ExistingStoriesBlock trustedStories={trustedStories} canGrep={hasTool('grep')} />}
-			{hasTool('execute_sql') && (
-				<LocalDatabaseBlock
-					canSaveResults={hasTool('write') && savedFilesEnabled}
-					hasSemanticResults={hasTool('execute_semantic_query')}
-					warehouseSqlEnabled={semanticLayerMode !== 'exclusive'}
-				/>
-			)}
 			{semanticLayerMode && (
 				<SemanticLayerBlock mode={semanticLayerMode} canQuery={hasTool('execute_semantic_query')} />
 			)}
@@ -499,12 +494,10 @@ function BuiltInSkillsBlock({ skills }: { skills: InternalSkill[] }) {
 function PermanentStorageBlock({
 	canGrepSavedFiles,
 	canRunSandbox,
-	canExecuteSql,
 	canReplace,
 }: {
 	canGrepSavedFiles: boolean;
 	canRunSandbox: boolean;
-	canExecuteSql: boolean;
 	canReplace: boolean;
 }) {
 	return (
@@ -539,13 +532,6 @@ function PermanentStorageBlock({
 						</>
 					)}
 					Everything else in the tree is read-only. Do not save intermediate work nobody asked for.
-					{canExecuteSql && (
-						<>
-							{' '}
-							To keep query rows, pass <Bold>save_to</Bold> to execute_sql rather than formatting them
-							into a file yourself.
-						</>
-					)}
 					{canRunSandbox && (
 						<>
 							{' '}
@@ -563,9 +549,8 @@ function PermanentStorageBlock({
 				<ListItem>
 					<Bold>read</Bold> extracts the text of a PDF, page by page. On an <Bold>.xlsx</Bold> it returns the
 					workbook's outline instead of its cells — every sheet in tab order, with the row and column counts
-					of each — so read one before querying it and you will know which sheet you want. Parquet and Word
-					documents are not text, so <Bold>read</Bold> refuses them. Tabular data is best queried in place:
-					point execute_sql's local database at the <Bold>/home</Bold> path instead of reading the file.{' '}
+					of each — so read one before opening it and you will know which sheet you want. Parquet and Word
+					documents are not text, so <Bold>read</Bold> refuses them.{' '}
 					{canRunSandbox ? (
 						<>
 							For anything it cannot parse, use <Bold>execute_sandboxed_code</Bold> with the{' '}
@@ -708,87 +693,6 @@ function describeTrustedStory(story: StorySummary): string {
 	return `${JSON.stringify(story.title)} (id: ${story.id}) — ${trust}`;
 }
 
-function LocalDatabaseBlock({
-	canSaveResults,
-	hasSemanticResults,
-	warehouseSqlEnabled,
-}: {
-	canSaveResults: boolean;
-	hasSemanticResults: boolean;
-	warehouseSqlEnabled: boolean;
-}) {
-	return (
-		<Block>
-			<Title level={2}>The local database</Title>
-			<Span>
-				Passing <Bold>{LOCAL_DATABASE_ID}</Bold> as execute_sql's <Bold>database_id</Bold> runs the query in
-				quarry's own DuckDB instead of a warehouse.{' '}
-				{warehouseSqlEnabled
-					? 'It is always available, and it can do two things no warehouse can.'
-					: 'It is the only database_id execute_sql accepts in this project, and it can do two things the semantic layer cannot.'}
-			</Span>
-			<List>
-				<ListItem>
-					<Bold>Query a file by its path.</Bold> CSV, JSON, Parquet and Excel, read straight from{' '}
-					<Bold>/home</Bold> or the project folder — no loading step, and the file never enters your context.
-					Use <Bold>read_csv</Bold>, <Bold>read_json</Bold>, <Bold>read_parquet</Bold> or{' '}
-					<Bold>read_xlsx</Bold> and lastly <Bold>read_text</Bold> for text files (but use it only if you have
-					to). <Bold>{"SELECT * FROM read_csv('/home/uploads/2026-01-31/sales.csv') LIMIT 20"}</Bold>.{' '}
-					<Bold>read_xlsx</Bold> reads the first sheet of a workbook unless you pass{' '}
-					<Bold>{"sheet = 'Name'"}</Bold>, and <Bold>read</Bold> on the file lists the names to pass.
-				</ListItem>
-				<ListItem>
-					<Bold>Query an earlier result by its id.</Bold> Every{' '}
-					{hasSemanticResults ? 'execute_sql and execute_semantic_query' : 'execute_sql'} result in this chat
-					is a table named after its query id, so <Bold>{'SELECT * FROM query_ab12cd34'}</Bold> reshapes rows
-					you already have without hitting the warehouse again
-					{hasSemanticResults ? ': join two metrics, pivot a breakdown, compute shares or deltas.' : '.'}
-				</ListItem>
-				<ListItem>
-					<Bold>Join the two.</Bold> A file joined to a query result is the point of this database: an
-					uploaded list of accounts against warehouse revenue, a budget spreadsheet against actuals.{' '}
-					<Bold>
-						{
-							"SELECT q.region, q.revenue, f.budget FROM query_ab12cd34 AS q JOIN read_xlsx('/home/uploads/2026-01-31/budget.xlsx', sheet = 'FY26') AS f ON q.region = f.region"
-						}
-					</Bold>
-					. The table name is the query id exactly as the <Bold>Query ID</Bold> line of the tool output spells
-					it, never the name you gave the query.
-				</ListItem>
-			</List>
-			{canSaveResults && (
-				<>
-					<Span>
-						<Bold>save_to</Bold> keeps the result as a file as well as returning it. Pass a{' '}
-						<Bold>/home</Bold> path and a format: <Bold>parquet</Bold> for a step you intend to query again,
-						because it keeps the column types, and <Bold>csv</Bold> for something the user will open. The
-						extension has to match the format.
-					</Span>
-					<CodeBlock>
-						{`save_to: { path: "/home/exports/revenue-by-region.parquet", format: "parquet" }`}
-					</CodeBlock>
-					<Span>
-						Use it for a long computation worth keeping — a heavy join later steps build on, or an export
-						the user asked for — and tell them the path. Do not save every query: an ordinary answer is the
-						rows, not a file. Return it with the <Bold>saved-file</Bold> chip described above, not as a bare
-						path.
-					</Span>
-				</>
-			)}
-			<Span>
-				It is DuckDB, so write DuckDB SQL. The query itself only reads: writing a file is what{' '}
-				{canSaveResults ? <Bold>save_to</Bold> : 'the write tool'} is for, and a <Bold>COPY … TO</Bold> in the
-				SQL is rejected. It sees only the user's own saved files under <Bold>/home</Bold> and the project
-				folder: a remote URL (http, https, s3) is not readable, so a file the user links to has to be uploaded
-				first.{' '}
-				{warehouseSqlEnabled
-					? 'For questions a warehouse can answer on its own, keep using the warehouse — this is for files and for results you already have.'
-					: 'It holds no warehouse data of its own: get the numbers from execute_semantic_query first, then reshape them here.'}
-			</Span>
-		</Block>
-	);
-}
-
 function SemanticLayerBlock({ mode, canQuery }: { mode: SemanticLayerMode; canQuery: boolean }) {
 	return (
 		<Block>
@@ -826,11 +730,10 @@ function SemanticLayerQueryRules({ exclusive }: { exclusive: boolean }) {
 			{exclusive ? (
 				<ListItem>
 					Every warehouse question <Bold>must</Bold> go through execute_semantic_query: raw SQL against the
-					warehouse is not available in this project, and you must not write it even when asked. execute_sql
-					only accepts <Bold>{LOCAL_DATABASE_ID}</Bold>, to post-process semantic results (
-					<Bold>{'SELECT * FROM <query_id>'}</Bold>) or read files. If the layer cannot express the question
-					(missing metric, dimension or filter), say so plainly and offer what the layer can answer instead.
-					To look up the values a dimension takes, query a metric grouped by that dimension.
+					warehouse is not available in this project, and you must not write it even when asked. If the layer
+					cannot express the question (missing metric, dimension or filter), say so plainly and offer what the
+					layer can answer instead. To look up the values a dimension takes, query a metric grouped by that
+					dimension.
 				</ListItem>
 			) : (
 				<ListItem>

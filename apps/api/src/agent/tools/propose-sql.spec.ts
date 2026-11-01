@@ -1,4 +1,3 @@
-import { LOCAL_DATABASE_ID } from '@quarry/shared/tools';
 import { describe, expect, it } from 'vitest';
 
 import type { QueryResult, ToolContext } from '../types/tools.js';
@@ -34,8 +33,7 @@ describe('wasSqlTested', () => {
 		expect(wasSqlTested(SQL, 'other', context)).toBe(true);
 	});
 
-	it('does not count the local database or compiled semantic queries', () => {
-		expect(wasSqlTested(SQL, undefined, contextWith({ sqlQuery: SQL, databaseId: LOCAL_DATABASE_ID }))).toBe(false);
+	it('does not count compiled semantic queries', () => {
 		expect(wasSqlTested(SQL, undefined, contextWith({ sqlQuery: SQL, compiledBySemanticLayer: true }))).toBe(false);
 	});
 });
