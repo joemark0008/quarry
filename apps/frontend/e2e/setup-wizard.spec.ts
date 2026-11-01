@@ -42,7 +42,11 @@ test('install wizard creates the first admin and closes sign-up', async ({ page 
 	await expect(page).toHaveURL(/\/login/);
 	await expect(page.locator('a[href*="signup"]')).toHaveCount(0);
 
+	// There is no sign-up route: a signed-out visit to an old bookmark lands on the login page, without
+	// carrying /signup along as a post-login redirect.
 	await page.goto('/signup');
+	await expect(page).toHaveURL(/\/login$/);
+	await expect(page.locator('input[name="email"]')).toBeVisible();
 	await expect(page.locator('input[name="token"]')).toHaveCount(0);
 	await expect(page.getByRole('button', { name: /sign up|create account|create admin account/i })).toHaveCount(0);
 });

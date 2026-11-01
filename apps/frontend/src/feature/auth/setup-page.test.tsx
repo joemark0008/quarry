@@ -133,7 +133,10 @@ describe('Setup page', () => {
 		await waitFor(() =>
 			expect(mocks.navigate).toHaveBeenCalledWith({
 				to: '/login',
-				search: { error: undefined, redirect: undefined },
+				search: {
+					error: expect.stringContaining('Your admin account was created, but signing in failed'),
+					redirect: undefined,
+				},
 				replace: true,
 			}),
 		);

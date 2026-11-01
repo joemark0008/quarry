@@ -10,6 +10,8 @@ import { rememberSignInMethod } from '@/lib/last-sign-in-method';
 import { completeSetup, markSetupComplete } from '@/lib/setup-api';
 
 const INVALID_TOKEN_MESSAGE = 'Invalid setup token.';
+const SIGN_IN_FAILED_MESSAGE =
+	"Your admin account was created, but signing in failed. Check that BETTER_AUTH_URL matches this site's address, then log in.";
 
 export function Setup() {
 	const navigate = useNavigate();
@@ -41,7 +43,11 @@ export function Setup() {
 			const { error } = await signIn.email({ email: value.email, password: value.password });
 			if (error) {
 				// The admin exists, so sign-in from the login page is the way forward.
-				navigate({ to: '/login', search: { error: undefined, redirect: undefined }, replace: true });
+				navigate({
+					to: '/login',
+					search: { error: SIGN_IN_FAILED_MESSAGE, redirect: undefined },
+					replace: true,
+				});
 				return;
 			}
 

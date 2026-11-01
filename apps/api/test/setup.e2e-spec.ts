@@ -83,6 +83,12 @@ describe('setup (e2e)', () => {
 		await signIn('ADMIN@example.com').expect(200);
 	});
 
+	it('refuses an email that better-auth could not sign in, and creates nothing', async () => {
+		const res = await complete(valid({ email: 'é@x.com' }));
+		expect(res.body.errors).toBeDefined();
+		expect(await countUsers()).toBe(0);
+	});
+
 	it('refuses a second setup', async () => {
 		await complete(valid());
 		const res = await complete(valid({ email: 'other@example.com' }));
@@ -131,7 +137,7 @@ describe('setup (e2e)', () => {
 		const ctx = await (await app.get(AuthService).getAuth()).$context;
 		await expect(
 			ctx.internalAdapter.createUser({ name: 'Social', email: 'social@example.com', emailVerified: false }),
-		).rejects.toThrow();
+		).rejects.toThrow('signup_disabled');
 		expect(await countUsers()).toBe(0);
 	});
 

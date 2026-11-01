@@ -222,9 +222,9 @@ Phases 3–7 are **optional and independently skippable**; decide after phase 2.
 ### Phase 1 — API skeleton + auth
 
 - Nest app, ConfigModule, PrismaModule (schema per §4), GraphQL module, better-auth mount, guards/decorators (§3), pg-boss module, `users` + `system` modules, codegen wired in frontend, Vite proxy split.
-- **Done:** sign up / log in / current user / public config served by `apps/api`; frontend login flow uses generated hooks.
+- **Done:** log in / current user / public config served by `apps/api`; frontend login flow uses generated hooks.
 - **Install wizard (replaces public sign-up):** `/setup` creates the first admin on an empty database, gated by a setup token derived from `BETTER_AUTH_SECRET` and printed by the API at startup. Public sign-up is gone (no `/signup` route; only the wizard and admins create accounts) and the `DEFAULT_USER_ROLE` setting is removed. Browser test: `npm run test:e2e:setup`.
-- **Verify:** e2e test (Supertest) for sign-up → session → `me` query; guard unit tests for each access level; `prisma migrate reset` from scratch works.
+- **Verify:** e2e test (Supertest) for first-admin setup → log in → session → `me` query, and for refused sign-up; guard unit tests for each access level; `prisma migrate reset` from scratch works.
 
 ### Phase 2 — core
 

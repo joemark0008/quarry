@@ -39,7 +39,8 @@ const baseEnvSchema = z.object({
 		.transform((val) => val === 'true'),
 
 	BETTER_AUTH_URL: z.url({ message: 'BETTER_AUTH_URL must be a valid URL' }).default('http://localhost:5005/'),
-	BETTER_AUTH_SECRET: z.string().min(20).default(crypto.randomBytes(32).toString('hex')),
+	/** Required in `prod` (see `envSchema`); `dev` and `test` get a random secret per process when unset. */
+	BETTER_AUTH_SECRET: optionalNonEmptyString.pipe(z.string().min(20).optional()),
 
 	GOOGLE_CLIENT_ID: z.string().optional(),
 	GOOGLE_CLIENT_SECRET: z.string().optional(),
@@ -132,15 +133,28 @@ const baseEnvSchema = z.object({
 	BETA_SUBAGENTS_ENABLED: booleanString('false'),
 });
 
-export const envSchema = baseEnvSchema.superRefine((data, ctx) => {
-	if (data.QUARRY_STORAGE_BACKEND === 's3' && !data.QUARRY_STORAGE_S3_BUCKET) {
-		ctx.addIssue({
-			code: 'custom',
-			path: ['QUARRY_STORAGE_S3_BUCKET'],
-			message: 'QUARRY_STORAGE_S3_BUCKET is required when QUARRY_STORAGE_BACKEND=s3.',
-		});
-	}
-});
+export const envSchema = baseEnvSchema
+	.superRefine((data, ctx) => {
+		if (data.MODE === 'prod' && !data.BETTER_AUTH_SECRET) {
+			ctx.addIssue({
+				code: 'custom',
+				path: ['BETTER_AUTH_SECRET'],
+				message:
+					'BETTER_AUTH_SECRET is required when MODE=prod: it signs sessions and derives the setup token, so every replica and restart must share one value (generate one with `openssl rand -base64 32`).',
+			});
+		}
+		if (data.QUARRY_STORAGE_BACKEND === 's3' && !data.QUARRY_STORAGE_S3_BUCKET) {
+			ctx.addIssue({
+				code: 'custom',
+				path: ['QUARRY_STORAGE_S3_BUCKET'],
+				message: 'QUARRY_STORAGE_S3_BUCKET is required when QUARRY_STORAGE_BACKEND=s3.',
+			});
+		}
+	})
+	.transform((data) => ({
+		...data,
+		BETTER_AUTH_SECRET: data.BETTER_AUTH_SECRET ?? crypto.randomBytes(32).toString('hex'),
+	}));
 
 export type Env = z.output<typeof envSchema>;
 

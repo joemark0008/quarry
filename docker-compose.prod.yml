@@ -29,6 +29,8 @@ services:
         environment:
             DATABASE_URL: postgresql://${POSTGRES_USER:-quarry}:${POSTGRES_PASSWORD:-quarry}@postgres:5432/quarry
             PORT: 5006
+            # Required: MODE=prod refuses to boot without a stable secret (it also derives the setup token).
+            BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
         ports:
             - '${QUARRY_PORT:-8080}:5006'
         volumes:

@@ -94,15 +94,19 @@ After changing the GraphQL schema, `npm run codegen` regenerates the frontend's 
 | Variable                                                                   | Purpose                                                                       |
 | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | `DATABASE_URL`                                                             | quarry's Postgres database (Prisma)                                           |
-| `BETTER_AUTH_SECRET`                                                       | signs sessions; keep it stable                                                |
+| `BETTER_AUTH_SECRET`                                                       | signs sessions and derives the setup token; keep it stable (required in prod) |
 | `BETTER_AUTH_URL`                                                          | the public URL users open (auth checks the origin)                            |
 | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, …                                   | LLM providers from the environment; more can be added in **Settings → Agent** |
+| `ENABLE_USER_LOGIN`                                                        | `false` turns off email and password login (see the note below the table)     |
 | `QUARRY_PROJECTS_DIR`, `QUARRY_STORAGE_LOCAL_PATH`                         | project context folders and stored files                                      |
 | `QUARRY_STORAGE_BACKEND` (`local`, `s3`, `none`) and `QUARRY_STORAGE_S3_*` | where attachments and saved files go                                          |
 | `QUARRY_CONTEXT_SOURCE=git`, `QUARRY_CONTEXT_GIT_*`                        | keep context files in a Git repository                                        |
 | `QUARRY_SKILL_AUTHORING` (`auto`, `off`)                                   | `off` keeps skills file-only: no saving from the app or chat                  |
 | `QUARRY_FRONTEND_DIST`                                                     | built frontend the API serves (set by the Docker image)                       |
 | `VITE_QUARRY_*`                                                            | frontend links (docs, support, repository…), build time; unset hides them     |
+
+With `ENABLE_USER_LOGIN=false` and no social provider configured, the setup wizard's email and password admin cannot sign
+in until one of those changes.
 
 ## Skills
 
@@ -129,7 +133,60 @@ docker compose -f docker-compose.prod.yml up -d --build
 
 The container applies pending migrations on start. Data lives in two volumes: `quarry_postgres_data` (database) and
 `quarry_data` (`/data/projects`, `/data/storage`). Put a TLS-terminating proxy in front and point `BETTER_AUTH_URL`
-at its public URL.
+at its public URL. `BETTER_AUTH_SECRET` is required: with `MODE=prod` (the image's default) quarry refuses to start
+without it, so every replica and restart shares one secret and prints the same setup token.
+
+### First admin
+
+On an empty database, open `/setup` on your public URL and create the first admin. The page asks for a setup token, which
+quarry prints in its log at startup:
+
+```bash
+docker compose -f docker-compose.prod.yml logs quarry | grep "setup token"
+```
+
+If the logs were rotated, restart the container (`docker compose -f docker-compose.prod.yml restart quarry`) and it prints
+the token again. Once an admin exists nothing is printed and `/setup` redirects to the login page. `BETTER_AUTH_URL` must
+be the public URL users open, because sign-in checks the request origin; if it does not match, the admin is created but
+signing in fails.
+
+### Upgrading from a version with public sign-up
+
+Existing installs keep working and never see the wizard. What changes: public sign-up and the automatic joining of new
+people through social sign-in are gone, and `ENABLE_USER_SIGNUP` and `DEFAULT_USER_ROLE` are ignored. Until the admin
+users page ships, an admin adds someone directly in the database. A user needs four rows: the user, a `credential`
+account holding a password hash, a membership of the organization, and a membership of each project they should see.
+Roles are `admin`, `user`, `viewer` and `context_admin`.
+
+Hash the password with the same function the app uses (the image keeps it in `apps/api`), then run the SQL with `psql`
+variables. Set `ROLE` to the role the person gets, in the organization and in every project of it:
+
+```bash
+HASH=$(docker compose -f docker-compose.prod.yml exec -T -w /app/apps/api -e PW='their-initial-password' quarry \
+  node --input-type=module -e "import { hashPassword } from 'better-auth/crypto'; console.log(await hashPassword(process.env.PW))")
+
+docker compose -f docker-compose.prod.yml exec -T postgres psql -U quarry -d quarry -v ON_ERROR_STOP=1 \
+  -v name='Ada Lovelace' -v email='ada@example.com' -v role=user -v hash="$HASH" <<'SQL'
+WITH new_user AS (
+    INSERT INTO "user" (id, name, email, email_verified)
+    VALUES (gen_random_uuid()::text, :'name', lower(:'email'), true)
+    RETURNING id
+), new_account AS (
+    INSERT INTO account (id, account_id, provider_id, user_id, password, updated_at)
+    SELECT gen_random_uuid()::text, id, 'credential', id, :'hash', now() FROM new_user
+), new_org_member AS (
+    INSERT INTO org_member (org_id, user_id, role)
+    SELECT o.id, n.id, :'role' FROM new_user n CROSS JOIN organization o
+    RETURNING org_id, user_id
+)
+INSERT INTO project_member (project_id, user_id, role)
+SELECT p.id, m.user_id, :'role' FROM new_org_member m JOIN project p ON p.org_id = m.org_id;
+SQL
+```
+
+This assumes one organization (the default) and adds the person to all of its projects. Trim the last `SELECT` with a
+`WHERE p.name = '…'` to limit them. Adjust `-U`/`-d` if you changed the database user. Give them the initial password. To give an existing user a project instead, insert only a row:
+`INSERT INTO project_member (project_id, user_id, role) VALUES ('<project id>', '<user id>', 'user');`.
 
 ## Documentation
 

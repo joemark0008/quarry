@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 
 import type { PublicConfigQuery } from '@/graphql/generated/graphql';
-import { HasUsersDocument, PublicConfigDocument } from '@/graphql/generated/graphql';
+import { PublicConfigDocument } from '@/graphql/generated/graphql';
 import { apolloClient } from '@/lib/apollo-client';
 
 /**
@@ -29,9 +29,4 @@ export async function fetchPublicConfig(): Promise<PublicConfig> {
 export function useSmtpSetup() {
 	const config = usePublicConfig();
 	return { data: config.data?.authProviders.smtp, isPending: config.isPending };
-}
-
-export function useHasUsers() {
-	const { data, loading } = useQuery(HasUsersDocument);
-	return { data: data?.hasUsers, isPending: loading && !data };
 }

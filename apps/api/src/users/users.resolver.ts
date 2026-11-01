@@ -15,7 +15,9 @@ export class UsersResolver {
 	constructor(private readonly users: UsersService) {}
 
 	@Public()
-	@Query(() => Boolean, { description: 'Whether anyone has signed up yet (the login page offers sign-up when not).' })
+	@Query(() => Boolean, {
+		description: 'Whether any user exists yet (when none does, the app sends visitors to the /setup wizard).',
+	})
 	hasUsers(): Promise<boolean> {
 		return this.users.hasUsers();
 	}

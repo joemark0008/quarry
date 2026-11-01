@@ -49,6 +49,23 @@ describe('required and cross-field variables', () => {
 		);
 	});
 
+	it('requires BETTER_AUTH_SECRET in prod, so every replica prints the same setup token', () => {
+		const unset = loadEnvWithOverrides({ MODE: 'prod' });
+		expect(unset.status).toBe(1);
+		expect(unset.issues.join('\n')).toContain('BETTER_AUTH_SECRET is required when MODE=prod');
+		expect(loadEnvWithOverrides({ MODE: 'prod', BETTER_AUTH_SECRET: '' }).status).toBe(1);
+		expect(loadEnvWithOverrides({ MODE: 'prod', BETTER_AUTH_SECRET: 'x'.repeat(32) }).env?.BETTER_AUTH_SECRET).toBe(
+			'x'.repeat(32),
+		);
+	});
+
+	it('generates a random BETTER_AUTH_SECRET in dev and test', () => {
+		for (const MODE of ['dev', 'test']) {
+			const secret = loadEnvWithOverrides({ MODE }).env?.BETTER_AUTH_SECRET;
+			expect(secret).toMatch(/^[0-9a-f]{64}$/);
+		}
+	});
+
 	it('parses booleans and defaults', () => {
 		const env = loadEnvWithOverrides({}).env;
 
