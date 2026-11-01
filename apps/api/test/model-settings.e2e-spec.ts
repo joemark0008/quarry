@@ -7,9 +7,8 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { isSandboxAvailable } from '../src/agent/services/sandbox-runtime.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const MODEL_SETTINGS = {
 	'claude-sonnet-4-6': { reasoningEffort: 'high' },
 	'claude-sonnet-4-5': { temperature: 0.2 },
@@ -30,12 +29,7 @@ describe('model settings (e2e)', () => {
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 		const project = await graphql('mutation { createProject(input: { name: "Models" }) { id } }');
 		projectId = project.body.data.createProject.id;
 	});

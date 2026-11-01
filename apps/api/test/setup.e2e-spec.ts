@@ -3,6 +3,7 @@ import pg from 'pg';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
+import { AuthService } from '../src/auth/auth.service.js';
 import { deriveSetupToken } from '../src/setup/setup-token.js';
 import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
 
@@ -110,5 +111,32 @@ describe('setup (e2e)', () => {
 		const res = await complete(valid({ password: 'a'.repeat(128) }));
 		expect(res.body.errors).toBeUndefined();
 		await signIn('admin@example.com', 'a'.repeat(128)).expect(200);
+	});
+
+	const signUp = (email: string) =>
+		request(app.getHttpServer())
+			.post('/api/auth/sign-up/email')
+			.set('Origin', ORIGIN)
+			.send({ name: 'Intruder', email, password: 'Sup3r-secret!' });
+
+	it('refuses email sign-up before and after setup', async () => {
+		expect((await signUp('a@example.com')).status).not.toBe(200);
+		expect(await countUsers()).toBe(0);
+		await complete(valid());
+		expect((await signUp('b@example.com')).status).not.toBe(200);
+		expect(await countUsers()).toBe(1);
+	});
+
+	it('refuses user creation through better-auth, which covers first-time social sign-in', async () => {
+		const ctx = await (await app.get(AuthService).getAuth()).$context;
+		await expect(
+			ctx.internalAdapter.createUser({ name: 'Social', email: 'social@example.com', emailVerified: false }),
+		).rejects.toThrow();
+		expect(await countUsers()).toBe(0);
+	});
+
+	it('still signs in an existing user', async () => {
+		await complete(valid());
+		await signIn('admin@example.com').expect(200);
 	});
 });

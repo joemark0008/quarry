@@ -6,9 +6,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
-
-const ORIGIN = 'http://localhost:3000';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
 /**
  * The project and user settings ported at cut-over (Phase 8): `databaseObjects`, `displaySettings`,
@@ -26,12 +24,7 @@ describe('project and user settings (e2e)', () => {
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 		const project = await graphql('mutation { createProject(input: { name: "Settings" }) { id path } }');
 		projectId = project.body.data.createProject.id;
 		projectPath = project.body.data.createProject.path;

@@ -57,9 +57,6 @@ const baseEnvSchema = z.object({
 	GITLAB_BASE_URL: optionalNonEmptyString.pipe(z.url({ message: 'GITLAB_BASE_URL must be a valid URL' }).optional()),
 
 	ENABLE_USER_LOGIN: booleanString('true'),
-	ENABLE_USER_SIGNUP: booleanString('false'),
-
-	DEFAULT_USER_ROLE: z.enum(['admin', 'user', 'viewer']).default('user'),
 
 	SMTP_HOST: optionalNonEmptyString,
 	SMTP_MAIL_FROM: optionalNonEmptyString,

@@ -21,6 +21,9 @@ export function getSignInErrorMessage(error: string | undefined): string | undef
 	if (error?.toLowerCase() === 'account_not_linked') {
 		return 'An account with this email already exists. Log in with your email and password to verify it, then try again.';
 	}
+	if (error?.toLowerCase() === 'signup_disabled' || error?.toLowerCase() === 'unable_to_create_user') {
+		return 'You do not have an account yet. Ask your admin to add you.';
+	}
 	return error;
 }
 

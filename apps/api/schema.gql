@@ -682,7 +682,6 @@ type PublicConfig {
   betaSubagentsEnabled: Boolean!
   emailVerificationEnabled: Boolean!
   enableUserLogin: Boolean!
-  enableUserSignup: Boolean!
 
   """Always "self-hosted": quarry has no cloud mode."""
   quarryMode: String!

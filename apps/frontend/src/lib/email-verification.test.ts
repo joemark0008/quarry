@@ -26,4 +26,13 @@ describe('email verification flow helpers', () => {
 		expect(getSignInErrorMessage('account_not_linked')).toContain('already exists');
 		expect(getSignInErrorMessage('Sign up is disabled.')).toBe('Sign up is disabled.');
 	});
+
+	it('explains a refused first-time social sign-in', () => {
+		expect(getSignInErrorMessage('signup_disabled')).toBe(
+			'You do not have an account yet. Ask your admin to add you.',
+		);
+		expect(getSignInErrorMessage('unable_to_create_user')).toBe(
+			'You do not have an account yet. Ask your admin to add you.',
+		);
+	});
 });

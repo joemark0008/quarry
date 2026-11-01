@@ -7,9 +7,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { loadDotenv } from '../src/config/env.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
-
-const ORIGIN = 'http://localhost:3000';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
 /** Phase 2b flow on `apps/api`: create a project → connect the jaffle_shop warehouse → sync its context. */
 describe('projects, warehouse connection and context sync (e2e)', () => {
@@ -27,12 +25,7 @@ describe('projects, warehouse connection and context sync (e2e)', () => {
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 	});
 
 	afterAll(async () => {

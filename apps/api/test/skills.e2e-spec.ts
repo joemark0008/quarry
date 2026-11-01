@@ -12,9 +12,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { LlmService } from '../src/agent/llm/llm.service.js';
 import type { ProviderModelResult } from '../src/agent/providers/providers.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const MODEL = { provider: 'openai', modelId: 'gpt-4.1-mini' };
 const CREATE = 'mutation ($input: CreateSkillInput!) { createSkill(input: $input) { name location mode } }';
 const DRAFT = { name: 'churn-analysis', description: 'Use for churn questions.', body: '1. Do the thing.' };
@@ -29,16 +28,7 @@ describe('skills (e2e)', () => {
 	let memberCookie: string[] = [];
 	let viewerCookie: string[] = [];
 
-	const signUp = async (name: string, email: string) => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name, email, password: 'Sup3r-secret!' });
-		return {
-			cookie: [res.headers['set-cookie']].flat().filter(Boolean) as string[],
-			userId: res.body.user.id as string,
-		};
-	};
+	const signUp = (name: string, email: string) => createTestUser(app, { name, email, password: 'Sup3r-secret!' });
 
 	const graphql = (cookie: string[], query: string, variables: Record<string, unknown> = {}) =>
 		request(app.getHttpServer())
@@ -51,7 +41,6 @@ describe('skills (e2e)', () => {
 		const databaseUrl = useTestDatabase();
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
-		process.env.ENABLE_USER_SIGNUP = 'true';
 		app = await createTestApp();
 		prisma = app.get(PrismaService);
 		vi.spyOn(app.get(LlmService, { strict: false }), 'resolveProviderModel').mockResolvedValue(scriptedModel());
@@ -78,7 +67,6 @@ describe('skills (e2e)', () => {
 	});
 
 	afterAll(async () => {
-		process.env.ENABLE_USER_SIGNUP = 'false';
 		await app?.close();
 	});
 

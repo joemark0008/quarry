@@ -16,9 +16,8 @@ import { PrismaService } from '../src/prisma/prisma.service.js';
 import { generateEmbedToken } from '../src/stories/sharing/embed-token.js';
 import { closeBrowser, getBrowser } from '../src/stories/utils/headless-browser.js';
 import { storyThemeFingerprint } from '../src/stories/utils/story-theme-fingerprint.js';
-import { resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const STORY_CODE = '# Orders\n\nOrders by status.\n\n<table query_id="query_orders" title="Orders by status" />';
 
 const isChromeAvailable = await getBrowser().then(
@@ -44,7 +43,6 @@ describe('story sharing (e2e)', () => {
 
 	beforeAll(async () => {
 		const databaseUrl = useTestDatabase();
-		process.env.ENABLE_USER_SIGNUP = 'true';
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -93,19 +91,12 @@ describe('story sharing (e2e)', () => {
 	});
 
 	afterAll(async () => {
-		process.env.ENABLE_USER_SIGNUP = 'false';
 		await closeBrowser();
 		await app?.close();
 	});
 
-	const signUp = async (name: string, email: string): Promise<string[]> => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name, email, password: 'Sup3r-secret!' })
-			.expect(200);
-		return [res.headers['set-cookie']].flat().filter(Boolean) as string[];
-	};
+	const signUp = async (name: string, email: string): Promise<string[]> =>
+		(await createTestUser(app, { name, email, password: 'Sup3r-secret!' })).cookie;
 
 	const graphql = (cookie: string[], query: string, variables: Record<string, unknown> = {}) =>
 		request(app.getHttpServer())

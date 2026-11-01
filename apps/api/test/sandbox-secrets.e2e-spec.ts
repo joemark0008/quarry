@@ -9,9 +9,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { AgentService } from '../src/agent/agent.service.js';
 import { PrismaService } from '../src/prisma/prisma.service.js';
 import { SandboxSecretService } from '../src/sandbox/sandbox-secret.service.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const SECRET_VALUE = 'sk-live-0123456789abcdef';
 const OTHER_USER_ID = 'sandbox-secrets-other-user';
 
@@ -35,13 +34,11 @@ describe('sandbox secrets (e2e)', () => {
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
 		prisma = app.get(PrismaService);
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
-		userId = res.body.user.id;
+		({ cookie, userId } = await createTestUser(app, {
+			name: 'Ada',
+			email: 'ada@example.com',
+			password: 'Sup3r-secret!',
+		}));
 		const project = await graphql('mutation { createProject(input: { name: "Sandbox" }) { id } }');
 		projectId = project.body.data.createProject.id;
 	});

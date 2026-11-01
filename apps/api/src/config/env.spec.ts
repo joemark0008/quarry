@@ -50,9 +50,8 @@ describe('required and cross-field variables', () => {
 	});
 
 	it('parses booleans and defaults', () => {
-		const env = loadEnvWithOverrides({ ENABLE_USER_SIGNUP: 'true' }).env;
+		const env = loadEnvWithOverrides({}).env;
 
-		expect(env?.ENABLE_USER_SIGNUP).toBe(true);
 		expect(env?.ENABLE_USER_LOGIN).toBe(true);
 		expect(env?.PORT).toBe(5006);
 		expect(env?.DISABLED_PROVIDERS).toEqual([]);

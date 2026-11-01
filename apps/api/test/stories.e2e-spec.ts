@@ -7,9 +7,8 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { PrismaService } from '../src/prisma/prisma.service.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const STORY_CODE = '# Revenue\n\nRevenue grew this quarter.';
 
 /**
@@ -27,7 +26,6 @@ describe('stories (e2e)', () => {
 
 	beforeAll(async () => {
 		const databaseUrl = useTestDatabase();
-		process.env.ENABLE_USER_SIGNUP = 'true';
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
@@ -42,18 +40,11 @@ describe('stories (e2e)', () => {
 	});
 
 	afterAll(async () => {
-		process.env.ENABLE_USER_SIGNUP = 'false';
 		await app?.close();
 	});
 
-	const signUp = async (name: string, email: string): Promise<string[]> => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name, email, password: 'Sup3r-secret!' })
-			.expect(200);
-		return [res.headers['set-cookie']].flat().filter(Boolean) as string[];
-	};
+	const signUp = async (name: string, email: string): Promise<string[]> =>
+		(await createTestUser(app, { name, email, password: 'Sup3r-secret!' })).cookie;
 
 	const graphql = (cookie: string[], query: string, variables: Record<string, unknown> = {}) =>
 		request(app.getHttpServer())

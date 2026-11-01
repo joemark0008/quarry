@@ -11,9 +11,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { LlmService } from '../src/agent/llm/llm.service.js';
 import type { ProviderModelResult } from '../src/agent/providers/providers.js';
 import { __resetStorageForTesting } from '../src/attachments/storage/index.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const MODEL = { provider: 'openai', modelId: 'gpt-4.1-mini' };
 const CSV = 'week,customers\n1,42\n';
 /** A 1×1 transparent PNG. */
@@ -46,12 +45,7 @@ describe('attachments (e2e)', () => {
 			recordingModel(prompts),
 		);
 
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 		const project = await graphql('mutation { createProject(input: { name: "Files" }) { id } }');
 		projectId = project.body.data.createProject.id;
 	});

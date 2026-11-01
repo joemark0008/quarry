@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '../config/config.service.js';
 import { OrganizationRepository } from '../organizations/organization.repository.js';
-import { UserRepository } from '../users/user.repository.js';
 import type { PublicConfig } from './models/public-config.model.js';
 import type { AppVersion } from './models/version.model.js';
 
@@ -11,7 +10,6 @@ import type { AppVersion } from './models/version.model.js';
 export class SystemService {
 	constructor(
 		private readonly config: ConfigService,
-		private readonly users: UserRepository,
 		private readonly organizations: OrganizationRepository,
 	) {}
 
@@ -21,7 +19,6 @@ export class SystemService {
 		return {
 			quarryMode: 'self-hosted',
 			enableUserLogin: env.ENABLE_USER_LOGIN,
-			enableUserSignup: await this.isUserSignupAvailable(),
 			emailVerificationEnabled: false,
 			betaAutomationsEnabled: env.BETA_AUTOMATIONS_ENABLED,
 			betaContextRecommendationsEnabled: env.BETA_CONTEXT_RECOMMENDATIONS_ENABLED,
@@ -41,12 +38,5 @@ export class SystemService {
 	getVersion(): AppVersion {
 		const { env } = this.config;
 		return { version: env.APP_VERSION, commit: env.APP_COMMIT, buildDate: env.APP_BUILD_DATE };
-	}
-
-	private async isUserSignupAvailable(): Promise<boolean> {
-		if (this.config.env.ENABLE_USER_SIGNUP) {
-			return true;
-		}
-		return (await this.users.countUsers()) === 0;
 	}
 }

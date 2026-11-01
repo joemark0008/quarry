@@ -18,9 +18,8 @@ import { StoryFeedbackModule } from '../src/stories/feedback/story-feedback.modu
 import { STORY_BLOB_CLEANUP_JOB_NAME } from '../src/stories/jobs/story-blob-cleanup.handler.js';
 import { StoryJobsModule } from '../src/stories/jobs/story-jobs.module.js';
 import { STORY_REFRESH_JOB_NAME, storyRefreshScheduleKey } from '../src/stories/services/story-schedule.js';
-import { resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const STORY_CODE = '# Revenue\n\nRevenue grew this quarter.';
 
 async function waitFor<T>(check: () => Promise<T | undefined>, timeoutMs = 20_000): Promise<T> {
@@ -55,7 +54,6 @@ describe('story jobs, favorites and story feedback (e2e)', () => {
 
 	beforeAll(async () => {
 		const databaseUrl = useTestDatabase();
-		process.env.ENABLE_USER_SIGNUP = 'true';
 		process.env.QUARRY_PROJECTS_DIR = await mkdtemp(path.join(tmpdir(), 'quarry-projects-'));
 		await resetDatabase(databaseUrl);
 		// The story modules as app.module.ts imports them (importing them again here is harmless once it does).
@@ -90,7 +88,6 @@ describe('story jobs, favorites and story feedback (e2e)', () => {
 	});
 
 	afterAll(async () => {
-		process.env.ENABLE_USER_SIGNUP = 'false';
 		if (jobs && storyId) {
 			await jobs
 				.getBoss()
@@ -100,14 +97,8 @@ describe('story jobs, favorites and story feedback (e2e)', () => {
 		await app?.close();
 	});
 
-	const signUp = async (name: string, email: string): Promise<string[]> => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name, email, password: 'Sup3r-secret!' })
-			.expect(200);
-		return [res.headers['set-cookie']].flat().filter(Boolean) as string[];
-	};
+	const signUp = async (name: string, email: string): Promise<string[]> =>
+		(await createTestUser(app, { name, email, password: 'Sup3r-secret!' })).cookie;
 
 	const graphql = (cookie: string[], query: string, variables: Record<string, unknown> = {}) =>
 		request(app.getHttpServer())

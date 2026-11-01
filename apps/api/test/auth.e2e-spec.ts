@@ -3,7 +3,7 @@ import pg from 'pg';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
 const ORIGIN = 'http://localhost:3000';
 const ME = '{ me { id name email emailVerified isActive } }';
@@ -31,11 +31,11 @@ describe('auth (e2e)', () => {
 		expect(res.body).toMatchObject({ status: 'ok', database: 'ok' });
 	});
 
-	it('offers sign-up while there are no users', async () => {
-		const res = await graphql('{ hasUsers publicConfig { quarryMode enableUserLogin enableUserSignup } }');
+	it('reports no users yet', async () => {
+		const res = await graphql('{ hasUsers publicConfig { quarryMode enableUserLogin } }');
 		expect(res.body.data).toEqual({
 			hasUsers: false,
-			publicConfig: { quarryMode: 'self-hosted', enableUserLogin: true, enableUserSignup: true },
+			publicConfig: { quarryMode: 'self-hosted', enableUserLogin: true },
 		});
 	});
 
@@ -44,15 +44,8 @@ describe('auth (e2e)', () => {
 		expect(res.body.errors[0].extensions.code).toBe('UNAUTHORIZED');
 	});
 
-	it('signs up the first user and sets a session cookie', async () => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-
-		expect(res.body.user).toMatchObject({ email: 'ada@example.com', name: 'Ada' });
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+	it('creates the first user and sets a session cookie', async () => {
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 		expect(cookie.some((c) => c.startsWith('better-auth.session_token='))).toBe(true);
 	});
 
@@ -77,16 +70,8 @@ describe('auth (e2e)', () => {
 			await client.end();
 		}
 
-		const res = await graphql('{ hasUsers publicConfig { enableUserSignup } }', cookie);
-		expect(res.body.data).toEqual({ hasUsers: true, publicConfig: { enableUserSignup: false } });
-	});
-
-	it('closes email sign-up after the first user', async () => {
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Eve', email: 'eve@example.com', password: 'Sup3r-secret!' });
-		expect(res.status).toBeGreaterThanOrEqual(400);
+		const res = await graphql('{ hasUsers }', cookie);
+		expect(res.body.data).toEqual({ hasUsers: true });
 	});
 
 	it('updates the profile', async () => {

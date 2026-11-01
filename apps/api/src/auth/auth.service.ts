@@ -3,14 +3,13 @@ import { APIError, betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { bearer } from 'better-auth/plugins/bearer';
 
-import { buildUsernameAllowlist, isEmailDomainAllowed, resolveProviderId } from '../common/utils/auth-utils.js';
+import { buildUsernameAllowlist } from '../common/utils/auth-utils.js';
 import { memoizeUntilRejected } from '../common/utils/memoize-until-rejected.js';
 import { ConfigService } from '../config/config.service.js';
 import { OrganizationRepository } from '../organizations/organization.repository.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { DEACTIVATED_ACCOUNT_MESSAGE } from '../users/account-status.js';
-import { createMessagingProviderCode, UserRepository } from '../users/user.repository.js';
-import { UserOnboardingService } from '../users/user-onboarding.service.js';
+import { UserRepository } from '../users/user.repository.js';
 
 export type AuthInstance = Awaited<ReturnType<AuthService['createAuthInstance']>>;
 export type AuthSession = NonNullable<Awaited<ReturnType<AuthInstance['api']['getSession']>>>;
@@ -41,7 +40,7 @@ interface GitlabProfile {
  * enterprise SSO (Microsoft, OIDC, SSO session expiry), cloud email verification and billing hooks.
  *
  * Like upstream, the instance is built lazily and rebuilt by `updateAuth()` when its inputs change
- * (the first sign-up disables further email sign-ups; Google settings are edited in the app).
+ * (Google settings are edited in the app).
  */
 @Injectable()
 export class AuthService {
@@ -53,7 +52,6 @@ export class AuthService {
 		private readonly prisma: PrismaService,
 		private readonly users: UserRepository,
 		private readonly organizations: OrganizationRepository,
-		private readonly onboarding: UserOnboardingService,
 	) {}
 
 	getAuth(): Promise<AuthInstance> {
@@ -74,7 +72,6 @@ export class AuthService {
 		const baseURL = env.BETTER_AUTH_URL;
 		const githubAllowlist = buildUsernameAllowlist(env.GITHUB_ALLOWED_USERS);
 		const gitlabAllowlist = buildUsernameAllowlist(env.GITLAB_ALLOWED_USERS);
-		const disableEmailSignUp = await this.shouldDisableEmailSignUp();
 
 		// Self-hosted reads the org-level Google credential, with the env as fallback.
 		const googleConfig = await this.organizations.getGoogleConfig();
@@ -169,7 +166,7 @@ export class AuthService {
 			trustedOrigins: [baseURL, ...(this.config.isDev ? ['http://localhost:3000'] : [])],
 			emailAndPassword: {
 				enabled: env.ENABLE_USER_LOGIN === true,
-				disableSignUp: disableEmailSignUp,
+				disableSignUp: true,
 				sendResetPassword: async ({ user }) => {
 					// Email delivery comes with the notifications module (Phase 5).
 					this.logger.warn(`Password reset requested for ${user.email}, but email is not set up yet.`);
@@ -190,35 +187,10 @@ export class AuthService {
 			databaseHooks: {
 				user: {
 					create: {
-						before: async (user, ctx) => {
-							const providerId = resolveProviderId(ctx);
-							if (
-								providerId === 'google' &&
-								!isEmailDomainAllowed(user.email, googleConfig.authDomains)
-							) {
-								throw new APIError('FORBIDDEN', {
-									message: 'This email domain is not authorized to access this application.',
-								});
-							}
-							return { data: { ...user, messagingProviderCode: createMessagingProviderCode() } };
-						},
-						after: async (user, ctx) => {
-							try {
-								await this.onboarding.initializeSelfHostedUserAfterCreation(
-									user.id,
-									resolveProviderId(ctx),
-								);
-								await this.refreshAuthAfterInitialSignup();
-							} catch (err) {
-								this.logger.error(
-									`Failed to initialize organization after creating user ${user.id}`,
-									err instanceof Error ? err.stack : String(err),
-								);
-								throw new APIError('INTERNAL_SERVER_ERROR', {
-									message:
-										'Account setup could not be completed. Please try again or contact support.',
-								});
-							}
+						// Accounts come from the setup wizard and from admins, never from better-auth, which also
+						// covers the first sign-in through a social provider.
+						before: async () => {
+							throw new APIError('FORBIDDEN', { message: 'signup_disabled' });
 						},
 					},
 				},
@@ -240,22 +212,5 @@ export class AuthService {
 				},
 			},
 		});
-	}
-
-	/** Without ENABLE_USER_SIGNUP, only the first user can sign up with email and password. */
-	private async shouldDisableEmailSignUp(): Promise<boolean> {
-		if (this.config.env.ENABLE_USER_SIGNUP) {
-			return false;
-		}
-		return (await this.users.countUsers()) > 0;
-	}
-
-	private async refreshAuthAfterInitialSignup(): Promise<void> {
-		if (this.config.env.ENABLE_USER_SIGNUP) {
-			return;
-		}
-		if ((await this.users.countUsers()) === 1) {
-			this.updateAuth();
-		}
 	}
 }

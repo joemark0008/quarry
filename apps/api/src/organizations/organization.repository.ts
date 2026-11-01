@@ -102,25 +102,4 @@ export class OrganizationRepository {
 			await tx.projectMember.create({ data: { projectId: project.id, userId, role: 'admin' } });
 		}
 	}
-
-	/** Adds a user to the default organization and project. Idempotent. */
-	async addUserToDefaultProjectIfExists(userId: string): Promise<void> {
-		const org = await this.getFirstOrganization();
-		if (!org) {
-			return;
-		}
-		const project = await this.projects.getDefaultProject();
-		if (!project) {
-			return;
-		}
-
-		const role = this.config.env.DEFAULT_USER_ROLE;
-		await this.prisma.$transaction(async (tx) => {
-			await this.addOrgMemberIfMissing({ orgId: org.id, userId, role }, tx);
-			await tx.projectMember.createMany({
-				data: [{ projectId: project.id, userId, role }],
-				skipDuplicates: true,
-			});
-		});
-	}
 }

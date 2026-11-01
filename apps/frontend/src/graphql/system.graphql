@@ -2,7 +2,6 @@ query PublicConfig {
 	publicConfig {
 		quarryMode
 		enableUserLogin
-		enableUserSignup
 		emailVerificationEnabled
 		betaAutomationsEnabled
 		betaContextRecommendationsEnabled

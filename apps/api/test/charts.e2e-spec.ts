@@ -7,7 +7,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { PrismaService } from '../src/prisma/prisma.service.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
 /** Boundary URLs are fetched through `safeFetch`, which refuses local hosts: serve a fixed FeatureCollection. */
 const mocks = vi.hoisted(() => ({ fetchedUrls: [] as string[] }));
@@ -39,7 +39,6 @@ vi.mock('../src/agent/utils/safe-fetch.js', async (importOriginal) => {
 	};
 });
 
-const ORIGIN = 'http://localhost:3000';
 const OTHER_USER_ID = 'charts-other-user';
 const OTHER_PROJECT_ID = 'charts-other-project';
 const IMAGE_ID = '6f1d1f0e-8a0e-4a59-9f0b-6a5c2d7a9e11';
@@ -78,13 +77,11 @@ describe('charts and maps (e2e)', () => {
 		await resetDatabase(databaseUrl);
 		app = await createTestApp();
 		prisma = app.get(PrismaService);
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
-		userId = res.body.user.id;
+		({ cookie, userId } = await createTestUser(app, {
+			name: 'Ada',
+			email: 'ada@example.com',
+			password: 'Sup3r-secret!',
+		}));
 		const project = await graphql('mutation { createProject(input: { name: "Charts" }) { id } }');
 		if (!project.body.data) {
 			throw new Error(JSON.stringify(project.body.errors));

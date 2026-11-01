@@ -11,9 +11,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { LlmService } from '../src/agent/llm/llm.service.js';
 import type { ProviderModelResult } from '../src/agent/providers/providers.js';
 import { loadDotenv } from '../src/config/env.js';
-import { createTestApp, resetDatabase, useTestDatabase } from './test-app.js';
+import { createTestApp, createTestUser, resetDatabase, useTestDatabase } from './test-app.js';
 
-const ORIGIN = 'http://localhost:3000';
 const MODEL = { provider: 'openai', modelId: 'gpt-4.1-mini' };
 const TESTED_SQL = 'SELECT count(*) AS order_count FROM public.orders';
 const EDITOR_SQL = 'SELECT 1 AS my_manual_edit';
@@ -40,12 +39,7 @@ describe('query workbench agent (e2e)', () => {
 		app = await createTestApp();
 		vi.spyOn(app.get(LlmService, { strict: false }), 'resolveProviderModel').mockResolvedValue(scripted.result);
 
-		const res = await request(app.getHttpServer())
-			.post('/api/auth/sign-up/email')
-			.set('Origin', ORIGIN)
-			.send({ name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' })
-			.expect(200);
-		cookie = [res.headers['set-cookie']].flat().filter(Boolean) as string[];
+		({ cookie } = await createTestUser(app, { name: 'Ada', email: 'ada@example.com', password: 'Sup3r-secret!' }));
 
 		const project = await graphql('mutation { createProject(input: { name: "Jaffle" }) { id } }');
 		projectId = project.body.data.createProject.id;

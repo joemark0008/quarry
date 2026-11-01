@@ -24,9 +24,6 @@ export class PublicConfig {
 	enableUserLogin: boolean;
 
 	@Field()
-	enableUserSignup: boolean;
-
-	@Field()
 	emailVerificationEnabled: boolean;
 
 	@Field()
