@@ -1,9 +1,6 @@
 quarry
 Copyright 2026 The quarry contributors
 
-This product is derived from nao (https://github.com/getnao/nao),
+Portions of this software are derived from nao (https://github.com/getnao/nao),
 Copyright 2025 nao Labs, licensed under the Apache License, Version 2.0.
-The upstream source has been modified and rewritten. Files carried over from it
-were changed throughout, including their names, identifiers and text.
-
-Code the upstream project licenses under its commercial terms is not included.
+Those portions have been modified.
