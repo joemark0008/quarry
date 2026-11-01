@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
-import type { Browser, Page } from '@playwright/test';
-
 import { logIn, trackErrors } from './helpers';
+import type { Browser, Page } from '@playwright/test';
 
 /** Each run adds a new user to the seeded database; the email keeps runs apart. */
 const runId = Date.now();
