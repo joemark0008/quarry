@@ -15,13 +15,7 @@ quarry connects to a Postgres warehouse and syncs its schema into a context that
 that writes SQL and draws charts, and you can turn its answers into stories. You can browse, edit and improve that
 context from the app.
 
-<p align="center">
-    <a href="docs/quarry-demo.mp4">
-        <img alt="Watch the quarry demo" src="docs/quarry-demo-preview.jpg" width="100%" />
-    </a>
-    <br />
-    <a href="docs/quarry-demo.mp4">▶ Watch the demo (70 s)</a>
-</p>
+https://github.com/user-attachments/assets/a57a9703-9ccb-4470-96ed-e2d103b14a4a
 
 ## Features
 
