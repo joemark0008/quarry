@@ -16,9 +16,11 @@ that writes SQL and draws charts, and you can turn its answers into stories. You
 context from the app.
 
 <p align="center">
-    <video src="https://github.com/joemark0008/quarry/raw/main/docs/quarry-demo.mp4" controls muted width="100%">
-        <a href="docs/quarry-demo.mp4">Watch the demo</a>
-    </video>
+    <a href="docs/quarry-demo.mp4">
+        <img alt="Watch the quarry demo" src="docs/quarry-demo-preview.jpg" width="100%" />
+    </a>
+    <br />
+    <a href="docs/quarry-demo.mp4">▶ Watch the demo (70 s)</a>
 </p>
 
 ## Features
