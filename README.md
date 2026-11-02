@@ -9,6 +9,12 @@
     An analytics agent for your Postgres warehouse: ask in plain language, get SQL, charts and stories.
 </p>
 
+<p align="center">
+    <video src="https://github.com/joemark0008/quarry/raw/main/docs/quarry-demo.mp4" controls muted width="100%">
+        <a href="docs/quarry-demo.mp4">Watch the demo</a>
+    </video>
+</p>
+
 ---
 
 quarry connects to a Postgres warehouse and syncs its schema into a context that the agent reads. You chat with an agent
