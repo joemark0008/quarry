@@ -9,6 +9,12 @@
     An analytics agent for your Postgres warehouse: ask in plain language, get SQL, charts and stories.
 </p>
 
+<p align="center">
+    <a href="https://github.com/joemark0008/quarry/actions/workflows/ci.yml"><img src="https://github.com/joemark0008/quarry/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0" /></a>
+    <img src="https://img.shields.io/badge/status-pre--1.0-orange" alt="Status: pre-1.0" />
+</p>
+
 ---
 
 quarry connects to a Postgres warehouse and syncs its schema into a context that the agent reads. You chat with an agent
@@ -70,23 +76,23 @@ https://github.com/user-attachments/assets/a57a9703-9ccb-4470-96ed-e2d103b14a4a
 
 ### Local development
 
-1. **Clone and install**
+1. **Clone and configure the environment**
 
     ```bash
     git clone https://github.com/joemark0008/quarry.git
     cd quarry
-    nvm use
-    npm install
-    ```
-
-2. **Configure the environment**
-
-    ```bash
     cp .env.example .env
     ```
 
     In `.env`, set `BETTER_AUTH_SECRET` (generate it with `openssl rand -base64 32`) and at least one LLM key, such as
     `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`.
+
+2. **Install**, after creating `.env` (the install runs `prisma generate`, which reads `DATABASE_URL` from it)
+
+    ```bash
+    nvm use
+    npm install
+    ```
 
 3. **Start Postgres**
 
@@ -110,8 +116,14 @@ https://github.com/user-attachments/assets/a57a9703-9ccb-4470-96ed-e2d103b14a4a
     JAFFLE_SHOP_DUCKDB=/path/to/jaffle_shop.duckdb npm run warehouse:load
     ```
 
-    This copies the jaffle_shop dataset from a DuckDB file into the `warehouse` database. Skip this step if you will
-    connect your own warehouse.
+    This copies the jaffle_shop dataset from a DuckDB file into the `warehouse` database. Without the DuckDB CLI, load
+    the same data from the SQL copy in the repository:
+
+    ```bash
+    docker exec -i quarry_postgres psql -U quarry -d warehouse < docker/postgres/warehouse-example.sql
+    ```
+
+    Skip this step if you will connect your own warehouse. The tests expect the example data.
 
 6. **Run the app**, in two terminals:
 
@@ -208,6 +220,21 @@ npm run test:e2e -w @quarry/frontend   # with the local stack running
 ```
 
 After you change the GraphQL schema, run `npm run codegen` to regenerate the frontend's typed operations.
+
+[CI](.github/workflows/ci.yml) runs the same checks on every pull request and push to `main`, against Postgres with the
+example warehouse, then builds the Docker image. Pushes to `main` and version tags (`v*`) publish it to
+`ghcr.io/joemark0008/quarry`.
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), the [Code of Conduct](CODE_OF_CONDUCT.md), and
+[SECURITY.md](SECURITY.md) for reporting vulnerabilities privately.
+
+### Contributors
+
+<a href="https://github.com/joemark0008/quarry/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=joemark0008/quarry" alt="Contributors to quarry" />
+</a>
 
 ## Acknowledgements
 
